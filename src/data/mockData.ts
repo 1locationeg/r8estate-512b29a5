@@ -9,6 +9,8 @@ export interface Developer {
   projectsCompleted: number;
   location: string;
   specialties: string[];
+  sentimentScore: number;
+  isClaimed: boolean;
 }
 
 export interface Review {
@@ -34,6 +36,8 @@ export const developers: Developer[] = [
     projectsCompleted: 145,
     location: "Dubai, UAE",
     specialties: ["Luxury Residential", "Mixed-Use", "Commercial"],
+    sentimentScore: 8.7,
+    isClaimed: false,
   },
   {
     id: "damac",
@@ -46,6 +50,8 @@ export const developers: Developer[] = [
     projectsCompleted: 98,
     location: "Dubai, UAE",
     specialties: ["Luxury Villas", "High-Rise", "Golf Communities"],
+    sentimentScore: 7.9,
+    isClaimed: false,
   },
   {
     id: "meraas",
@@ -58,6 +64,8 @@ export const developers: Developer[] = [
     projectsCompleted: 67,
     location: "Dubai, UAE",
     specialties: ["Waterfront", "Lifestyle", "Entertainment"],
+    sentimentScore: 8.3,
+    isClaimed: false,
   },
   {
     id: "dubai-properties",
@@ -70,6 +78,8 @@ export const developers: Developer[] = [
     projectsCompleted: 112,
     location: "Dubai, UAE",
     specialties: ["Residential", "Community Development", "Retail"],
+    sentimentScore: 7.5,
+    isClaimed: false,
   },
   {
     id: "nakheel",
@@ -82,6 +92,36 @@ export const developers: Developer[] = [
     projectsCompleted: 86,
     location: "Dubai, UAE",
     specialties: ["Iconic Projects", "Islands", "Master Communities"],
+    sentimentScore: 7.2,
+    isClaimed: false,
+  },
+  {
+    id: "sobha",
+    name: "Sobha Realty",
+    logo: "🏛️",
+    rating: 4.7,
+    reviewCount: 456,
+    trustScore: 91,
+    verified: true,
+    projectsCompleted: 54,
+    location: "Dubai, UAE",
+    specialties: ["Premium Residential", "Luxury Apartments", "Quality Craftsmanship"],
+    sentimentScore: 8.1,
+    isClaimed: false,
+  },
+  {
+    id: "aldar",
+    name: "Aldar Properties",
+    logo: "🏙️",
+    rating: 4.6,
+    reviewCount: 612,
+    trustScore: 90,
+    verified: true,
+    projectsCompleted: 78,
+    location: "Abu Dhabi, UAE",
+    specialties: ["Mixed-Use", "Residential Communities", "Commercial"],
+    sentimentScore: 7.8,
+    isClaimed: false,
   },
 ];
 
