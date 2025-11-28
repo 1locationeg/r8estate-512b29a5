@@ -1,0 +1,49 @@
+import { Star, CheckCircle2 } from "lucide-react";
+import { Review, developers } from "@/data/mockData";
+import { Card } from "@/components/ui/card";
+
+interface ReviewCardProps {
+  review: Review;
+}
+
+export const ReviewCard = ({ review }: ReviewCardProps) => {
+  const developer = developers.find((d) => d.id === review.developerId);
+
+  return (
+    <Card className="p-6 border-border hover:border-primary/50 transition-all">
+      <div className="flex items-start justify-between mb-3">
+        <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-semibold text-foreground">{review.author}</span>
+            {review.verified && (
+              <CheckCircle2 className="w-4 h-4 text-verified fill-verified" />
+            )}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {review.project} • {developer?.name}
+          </div>
+        </div>
+        <div className="flex items-center gap-1">
+          {[...Array(5)].map((_, i) => (
+            <Star
+              key={i}
+              className={`w-4 h-4 ${
+                i < review.rating
+                  ? "fill-accent text-accent"
+                  : "text-muted"
+              }`}
+            />
+          ))}
+        </div>
+      </div>
+      <p className="text-sm text-foreground leading-relaxed mb-3">{review.comment}</p>
+      <div className="text-xs text-muted-foreground">
+        {new Date(review.date).toLocaleDateString("en-US", {
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        })}
+      </div>
+    </Card>
+  );
+};

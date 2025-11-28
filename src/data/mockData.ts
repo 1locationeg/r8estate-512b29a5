@@ -1,0 +1,239 @@
+export interface Developer {
+  id: string;
+  name: string;
+  logo: string;
+  rating: number;
+  reviewCount: number;
+  trustScore: number;
+  verified: boolean;
+  projectsCompleted: number;
+  location: string;
+  specialties: string[];
+}
+
+export interface Review {
+  id: string;
+  developerId: string;
+  author: string;
+  rating: number;
+  date: string;
+  project: string;
+  comment: string;
+  verified: boolean;
+}
+
+export const developers: Developer[] = [
+  {
+    id: "emaar",
+    name: "Emaar Properties",
+    logo: "🏗️",
+    rating: 4.8,
+    reviewCount: 1247,
+    trustScore: 96,
+    verified: true,
+    projectsCompleted: 145,
+    location: "Dubai, UAE",
+    specialties: ["Luxury Residential", "Mixed-Use", "Commercial"],
+  },
+  {
+    id: "damac",
+    name: "Damac Properties",
+    logo: "🏢",
+    rating: 4.6,
+    reviewCount: 892,
+    trustScore: 92,
+    verified: true,
+    projectsCompleted: 98,
+    location: "Dubai, UAE",
+    specialties: ["Luxury Villas", "High-Rise", "Golf Communities"],
+  },
+  {
+    id: "meraas",
+    name: "Meraas Holding",
+    logo: "🌆",
+    rating: 4.7,
+    reviewCount: 634,
+    trustScore: 94,
+    verified: true,
+    projectsCompleted: 67,
+    location: "Dubai, UAE",
+    specialties: ["Waterfront", "Lifestyle", "Entertainment"],
+  },
+  {
+    id: "dubai-properties",
+    name: "Dubai Properties",
+    logo: "🏘️",
+    rating: 4.5,
+    reviewCount: 523,
+    trustScore: 89,
+    verified: true,
+    projectsCompleted: 112,
+    location: "Dubai, UAE",
+    specialties: ["Residential", "Community Development", "Retail"],
+  },
+  {
+    id: "nakheel",
+    name: "Nakheel",
+    logo: "🏝️",
+    rating: 4.4,
+    reviewCount: 789,
+    trustScore: 87,
+    verified: true,
+    projectsCompleted: 86,
+    location: "Dubai, UAE",
+    specialties: ["Iconic Projects", "Islands", "Master Communities"],
+  },
+];
+
+export const reviews: Review[] = [
+  {
+    id: "1",
+    developerId: "emaar",
+    author: "Ahmed Al-Rashid",
+    rating: 5,
+    date: "2024-01-15",
+    project: "Dubai Creek Harbour",
+    comment: "Exceptional quality and timely delivery. The attention to detail in the finishing is outstanding. Highly recommend for serious investors.",
+    verified: true,
+  },
+  {
+    id: "2",
+    developerId: "emaar",
+    author: "Sarah Thompson",
+    rating: 4,
+    date: "2024-01-10",
+    project: "Arabian Ranches III",
+    comment: "Great community facilities and excellent location. Minor delays in handover but overall satisfied with the purchase.",
+    verified: true,
+  },
+  {
+    id: "3",
+    developerId: "emaar",
+    author: "Mohammed Hassan",
+    rating: 5,
+    date: "2024-01-05",
+    project: "Dubai Hills Estate",
+    comment: "Premium development with world-class amenities. The ROI has exceeded expectations. Professional team throughout.",
+    verified: true,
+  },
+  {
+    id: "4",
+    developerId: "damac",
+    author: "Elena Rodriguez",
+    rating: 5,
+    date: "2024-01-18",
+    project: "DAMAC Hills 2",
+    comment: "Stunning architecture and thoughtful design. The branded residences concept is executed brilliantly. Very happy with the investment.",
+    verified: true,
+  },
+  {
+    id: "5",
+    developerId: "damac",
+    author: "James Mitchell",
+    rating: 4,
+    date: "2024-01-12",
+    project: "DAMAC Lagoons",
+    comment: "Innovative concept with beautiful water features. Construction quality is solid. Customer service could be more responsive.",
+    verified: true,
+  },
+  {
+    id: "6",
+    developerId: "damac",
+    author: "Fatima Al-Mansoori",
+    rating: 5,
+    date: "2024-01-08",
+    project: "Cavalli Tower",
+    comment: "Luxury at its finest. The branded collaboration adds significant value. Premium finishes and excellent location.",
+    verified: true,
+  },
+  {
+    id: "7",
+    developerId: "meraas",
+    author: "David Chen",
+    rating: 5,
+    date: "2024-01-20",
+    project: "Bluewaters Residences",
+    comment: "Exceptional waterfront living with unbeatable views. The resort-style amenities are world-class. Worth every dirham.",
+    verified: true,
+  },
+  {
+    id: "8",
+    developerId: "meraas",
+    author: "Layla Ahmed",
+    rating: 4,
+    date: "2024-01-14",
+    project: "City Walk",
+    comment: "Vibrant community with great retail and dining. Perfect for young professionals. Slightly higher service charges but justified.",
+    verified: true,
+  },
+  {
+    id: "9",
+    developerId: "meraas",
+    author: "Robert Williams",
+    rating: 5,
+    date: "2024-01-09",
+    project: "La Mer",
+    comment: "Beach living redefined. The lifestyle offering is unmatched in Dubai. Excellent build quality and community atmosphere.",
+    verified: true,
+  },
+  {
+    id: "10",
+    developerId: "dubai-properties",
+    author: "Aisha Ibrahim",
+    rating: 4,
+    date: "2024-01-17",
+    project: "Villanova",
+    comment: "Family-friendly community with excellent schools nearby. Good value for money. Construction timelines were accurate.",
+    verified: true,
+  },
+  {
+    id: "11",
+    developerId: "dubai-properties",
+    author: "Marco Rossi",
+    rating: 5,
+    date: "2024-01-11",
+    project: "Jumeirah Beach Residence",
+    comment: "Prime beachfront location with great rental yields. Professional handover process. Very satisfied investor.",
+    verified: true,
+  },
+  {
+    id: "12",
+    developerId: "dubai-properties",
+    author: "Noor Al-Said",
+    rating: 4,
+    date: "2024-01-06",
+    project: "Mudon",
+    comment: "Peaceful community with good connectivity. Ideal for families. Amenities continue to improve over time.",
+    verified: true,
+  },
+  {
+    id: "13",
+    developerId: "nakheel",
+    author: "Thomas Anderson",
+    rating: 5,
+    date: "2024-01-19",
+    project: "Palm Jumeirah",
+    comment: "Iconic address that speaks for itself. Prestige and luxury combined. Excellent appreciation over the years.",
+    verified: true,
+  },
+  {
+    id: "14",
+    developerId: "nakheel",
+    author: "Hiba Khalil",
+    rating: 4,
+    date: "2024-01-13",
+    project: "The Gardens",
+    comment: "Well-maintained community with mature landscaping. Great for families. Some units need modernization but overall solid investment.",
+    verified: true,
+  },
+  {
+    id: "15",
+    developerId: "nakheel",
+    author: "Alexander Petrov",
+    rating: 4,
+    date: "2024-01-07",
+    project: "Dragon City",
+    comment: "Unique concept with good commercial potential. Strategic location near airport. Growing community with good prospects.",
+    verified: true,
+  },
+];
