@@ -4,10 +4,62 @@ import { SearchBar } from "@/components/SearchBar";
 import { DeveloperCard } from "@/components/DeveloperCard";
 import { ReviewCard } from "@/components/ReviewCard";
 import { developers, reviews } from "@/data/mockData";
-import { TrendingUp, Shield, Users, Award } from "lucide-react";
+import { TrendingUp, Shield, Users, Award, LogOut } from "lucide-react";
+import { signInWithPopup, signOut, User } from "firebase/auth";
+import { auth, googleProvider } from "@/lib/firebase";
+import { useToast } from "@/hooks/use-toast";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Index = () => {
   const [currentView, setCurrentView] = useState<"buyers" | "industry">("buyers");
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const { toast } = useToast();
+
+  const handleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signInWithPopup(auth, googleProvider);
+      setUser(result.user);
+      toast({
+        title: "Welcome!",
+        description: `Signed in as ${result.user.displayName}`,
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign in. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      setUser(null);
+      toast({
+        title: "Signed out",
+        description: "You have been signed out successfully.",
+      });
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign out.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const stats = [
     { icon: Users, label: "Verified Reviews", value: "4,185+" },
@@ -41,9 +93,39 @@ const Index = () => {
               About
             </a>
           </nav>
-          <button className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-            Sign In
-          </button>
+          {user ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger className="focus:outline-none">
+                <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
+                  <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                  <AvatarFallback className="bg-primary text-primary-foreground">
+                    {user.displayName?.charAt(0) || "U"}
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>
+                  <div className="flex flex-col">
+                    <span className="font-medium">{user.displayName}</span>
+                    <span className="text-xs text-muted-foreground">{user.email}</span>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <button 
+              onClick={handleSignIn}
+              disabled={isLoading}
+              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+            >
+              {isLoading ? "Signing in..." : "Sign In"}
+            </button>
+          )}
         </div>
       </header>
 
