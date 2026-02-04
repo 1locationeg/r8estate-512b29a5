@@ -4,6 +4,7 @@ import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { TrustBadge } from "./TrustBadge";
 import { TrustScore } from "./TrustScore";
+import { getRatingColorClass } from "@/lib/ratingColors";
 
 interface DeveloperCardProps {
   developer: Developer;
@@ -32,7 +33,7 @@ export const DeveloperCard = ({ developer }: DeveloperCardProps) => {
 
       <div className="flex items-center gap-4 mb-4 pb-4 border-b border-border">
         <div className="flex items-center gap-1">
-          <Star className="w-5 h-5 fill-accent text-accent" />
+          <Star className={`w-5 h-5 ${getRatingColorClass(developer.rating)}`} />
           <span className="text-2xl font-bold text-foreground">{developer.rating}</span>
           <span className="text-sm text-muted-foreground">({developer.reviewCount})</span>
         </div>
