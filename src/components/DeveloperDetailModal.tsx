@@ -10,8 +10,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { Mail, CheckCircle, TrendingUp, Clock, Shield, AlertTriangle } from "lucide-react";
-import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 
 interface DeveloperDetailModalProps {
@@ -22,34 +22,37 @@ interface DeveloperDetailModalProps {
 
 export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDetailModalProps) => {
   const { toast } = useToast();
-  const [isUnlocked, setIsUnlocked] = useState(false);
+  const navigate = useNavigate();
+  const { user, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+
+  // If user is logged in, show unlocked content
+  const isUnlocked = !!user;
 
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signInWithPopup(auth, googleProvider);
-      setIsUnlocked(true);
-      toast({
-        title: "Report Unlocked",
-        description: "You now have full access to this developer's report.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to sign in with Google. Please try again.",
-        variant: "destructive",
-      });
+      const { error } = await signInWithGoogle();
+      if (error) {
+        toast({
+          title: "Error",
+          description: "Failed to sign in with Google. Please try again.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Report Unlocked",
+          description: "You now have full access to this developer's report.",
+        });
+      }
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleEmailSignIn = () => {
-    toast({
-      title: "Coming Soon",
-      description: "Email authentication will be available soon.",
-    });
+    onClose();
+    navigate('/auth');
   };
 
   if (!developer) return null;
