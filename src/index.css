@@ -2,91 +2,107 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
+/* R8ESTATE Brand Design System
+   Brand Colors: Navy Blue #1E3957, Gold #C5AD67, Red #D03438
+   Font: Montserrat
+   All colors in HSL format
 */
 
 @layer base {
   :root {
+    /* Navy Blue - Primary brand color */
     --background: 0 0% 100%;
-    --foreground: 210 20% 15%;
+    --foreground: 213 51% 23%;
 
     --card: 0 0% 100%;
-    --card-foreground: 210 20% 15%;
+    --card-foreground: 213 51% 23%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 210 20% 15%;
+    --popover-foreground: 213 51% 23%;
 
-    --primary: 190 75% 45%;
+    /* Navy Blue as primary */
+    --primary: 213 51% 23%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 15% 96%;
-    --secondary-foreground: 210 20% 15%;
+    --secondary: 213 15% 96%;
+    --secondary-foreground: 213 51% 23%;
 
-    --muted: 210 15% 96%;
-    --muted-foreground: 210 12% 50%;
+    --muted: 213 15% 96%;
+    --muted-foreground: 213 20% 50%;
 
-    --accent: 45 95% 55%;
-    --accent-foreground: 210 20% 15%;
+    /* Gold as accent */
+    --accent: 43 40% 59%;
+    --accent-foreground: 213 51% 23%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* Red for destructive/emphasis */
+    --destructive: 359 66% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 90%;
-    --input: 210 20% 90%;
-    --ring: 190 75% 45%;
+    --border: 213 20% 90%;
+    --input: 213 20% 90%;
+    --ring: 213 51% 23%;
 
-    --verified: 45 95% 55%;
-    --verified-foreground: 210 20% 15%;
+    /* Gold for verified badges */
+    --verified: 43 40% 59%;
+    --verified-foreground: 213 51% 23%;
 
+    /* Trust score colors */
     --trust-excellent: 142 76% 36%;
-    --trust-good: 45 95% 55%;
+    --trust-good: 43 40% 59%;
     --trust-fair: 25 95% 53%;
 
-    --hero-gradient-start: 190 85% 50%;
-    --hero-gradient-end: 210 85% 60%;
+    /* Hero gradient using navy */
+    --hero-gradient-start: 213 51% 23%;
+    --hero-gradient-end: 213 51% 33%;
+
+    /* Brand red for accents */
+    --brand-red: 359 66% 51%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 210 25% 8%;
-    --foreground: 210 10% 95%;
+    --background: 213 30% 8%;
+    --foreground: 213 10% 95%;
 
-    --card: 210 20% 12%;
-    --card-foreground: 210 10% 95%;
+    --card: 213 25% 12%;
+    --card-foreground: 213 10% 95%;
 
-    --popover: 210 20% 12%;
-    --popover-foreground: 210 10% 95%;
+    --popover: 213 25% 12%;
+    --popover-foreground: 213 10% 95%;
 
-    --primary: 190 75% 50%;
+    /* Navy Blue - lighter for dark mode */
+    --primary: 213 51% 45%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 20% 18%;
-    --secondary-foreground: 210 10% 95%;
+    --secondary: 213 25% 18%;
+    --secondary-foreground: 213 10% 95%;
 
-    --muted: 210 20% 18%;
-    --muted-foreground: 210 10% 65%;
+    --muted: 213 25% 18%;
+    --muted-foreground: 213 10% 65%;
 
-    --accent: 45 95% 60%;
-    --accent-foreground: 210 20% 15%;
+    /* Gold - slightly brighter for dark mode */
+    --accent: 43 45% 65%;
+    --accent-foreground: 213 51% 15%;
 
-    --destructive: 0 62.8% 50%;
+    --destructive: 359 60% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 210 20% 20%;
-    --input: 210 20% 20%;
-    --ring: 190 75% 50%;
+    --border: 213 25% 20%;
+    --input: 213 25% 20%;
+    --ring: 213 51% 45%;
 
-    --verified: 45 95% 60%;
-    --verified-foreground: 210 20% 15%;
+    --verified: 43 45% 65%;
+    --verified-foreground: 213 51% 15%;
 
     --trust-excellent: 142 76% 45%;
-    --trust-good: 45 95% 60%;
+    --trust-good: 43 45% 65%;
     --trust-fair: 25 95% 58%;
 
-    --hero-gradient-start: 190 85% 40%;
-    --hero-gradient-end: 210 85% 50%;
+    --hero-gradient-start: 213 51% 20%;
+    --hero-gradient-end: 213 51% 30%;
+
+    --brand-red: 359 66% 58%;
   }
 }
 
@@ -97,5 +113,6 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground;
+    font-family: 'Montserrat', sans-serif;
   }
 }

@@ -56,6 +56,10 @@ export default {
           good: "hsl(var(--trust-good))",
           fair: "hsl(var(--trust-fair))",
         },
+        "brand-red": "hsl(var(--brand-red))",
+      },
+      fontFamily: {
+        sans: ['Montserrat', 'sans-serif'],
       },
       borderRadius: {
         lg: "var(--radius)",
