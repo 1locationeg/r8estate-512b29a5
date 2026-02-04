@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ViewToggle } from "@/components/ViewToggle";
 import { SearchBar } from "@/components/SearchBar";
@@ -6,9 +7,8 @@ import { DeveloperCard } from "@/components/DeveloperCard";
 import { ReviewCard } from "@/components/ReviewCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { developers, reviews } from "@/data/mockData";
-import { TrendingUp, Shield, Users, Award, LogOut } from "lucide-react";
-import { signInWithPopup, signOut, User } from "firebase/auth";
-import { auth, googleProvider } from "@/lib/firebase";
+import { TrendingUp, Shield, Users, Award, LogOut, LayoutDashboard } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -22,46 +22,23 @@ import {
 
 const Index = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<"buyers" | "industry">("buyers");
-  const [user, setUser] = useState<User | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
-  const handleSignIn = async () => {
-    setIsLoading(true);
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      setUser(result.user);
-      toast({
-        title: t("common.welcome"),
-        description: t("common.signedInAs", { name: result.user.displayName }),
-      });
-    } catch (error) {
-      toast({
-        title: t("common.error"),
-        description: t("common.signInError"),
-        variant: "destructive",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+  const handleSignOut = async () => {
+    await signOut();
+    toast({
+      title: t("common.signedOut"),
+      description: t("common.signedOutSuccess"),
+    });
   };
 
-  const handleSignOut = async () => {
-    try {
-      await signOut(auth);
-      setUser(null);
-      toast({
-        title: t("common.signedOut"),
-        description: t("common.signedOutSuccess"),
-      });
-    } catch (error) {
-      toast({
-        title: t("common.error"),
-        description: t("common.signOutError"),
-        variant: "destructive",
-      });
-    }
+  const getDashboardRoute = () => {
+    if (role === 'admin') return '/admin';
+    if (role === 'developer') return '/developer';
+    return '/buyer';
   };
 
   const stats = [
@@ -102,20 +79,25 @@ const Index = () => {
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
                   <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
-                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                    <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.full_name || "User"} />
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                      {user.displayName?.charAt(0) || "U"}
+                      {profile?.full_name?.charAt(0) || user.email?.charAt(0) || "U"}
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end" className="w-56">
                   <DropdownMenuLabel>
                     <div className="flex flex-col">
-                      <span className="font-medium">{user.displayName}</span>
+                      <span className="font-medium">{profile?.full_name || 'User'}</span>
                       <span className="text-xs text-muted-foreground">{user.email}</span>
+                      <span className="text-xs text-primary mt-1 capitalize">{role || 'Buyer'}</span>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => navigate(getDashboardRoute())} className="cursor-pointer">
+                    <LayoutDashboard className="w-4 h-4 me-2" />
+                    Dashboard
+                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
                     <LogOut className="w-4 h-4 me-2" />
                     {t("common.signOut")}
@@ -124,7 +106,7 @@ const Index = () => {
               </DropdownMenu>
             ) : (
               <button 
-                onClick={handleSignIn}
+                onClick={() => navigate('/auth')}
                 disabled={isLoading}
                 className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
               >
