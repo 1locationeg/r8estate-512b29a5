@@ -16,17 +16,6 @@ export const ViewToggle = ({ onViewChange }: ViewToggleProps) => {
   return (
     <div className="inline-flex items-center gap-1 p-1 bg-secondary rounded-full">
       <button
-        onClick={() => handleToggle("buyers")}
-        className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
-          activeView === "buyers"
-            ? "bg-primary text-primary-foreground shadow-md"
-            : "text-muted-foreground hover:text-foreground"
-        }`}
-      >
-        <Users className="w-4 h-4" />
-        <span>For Buyers</span>
-      </button>
-      <button
         onClick={() => handleToggle("industry")}
         className={`flex items-center gap-2 px-6 py-3 rounded-full font-medium transition-all ${
           activeView === "industry"
