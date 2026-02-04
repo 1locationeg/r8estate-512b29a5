@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Star, CheckCircle2 } from "lucide-react";
 import { Review, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
+import { getStarColorClass } from "@/lib/ratingColors";
 
 interface ReviewCardProps {
   review: Review;
@@ -29,11 +30,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
           {[...Array(5)].map((_, i) => (
             <Star
               key={i}
-              className={`w-4 h-4 ${
-                i < review.rating
-                  ? "fill-accent text-accent"
-                  : "text-muted"
-              }`}
+              className={`w-4 h-4 ${getStarColorClass(review.rating, i)}`}
             />
           ))}
         </div>
