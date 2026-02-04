@@ -24,7 +24,7 @@ export const ViewToggle = ({ onViewChange }: ViewToggleProps) => {
         }`}
       >
         <Building2 className="w-4 h-4" />
-        <span>For Industry Pros</span>
+        <span>For Business</span>
       </button>
     </div>
   );
