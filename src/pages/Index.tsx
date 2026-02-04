@@ -55,7 +55,7 @@ const Index = () => {
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <img src={logoIcon} alt="R8ESTATE" className="w-10 h-10" />
+            <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto object-contain" />
             <span className="text-2xl font-bold">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
@@ -207,7 +207,7 @@ const Index = () => {
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <img src={logoIcon} alt="R8ESTATE" className="w-10 h-10" />
+                <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto object-contain" />
                 <span className="text-xl font-bold">
                   <span className="text-brand-red">R8</span>
                   <span className="text-primary">ESTATE</span>
