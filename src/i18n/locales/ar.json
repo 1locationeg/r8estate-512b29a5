@@ -1,0 +1,76 @@
+{
+  "common": {
+    "signIn": "تسجيل الدخول",
+    "signOut": "تسجيل الخروج",
+    "signingIn": "جاري تسجيل الدخول...",
+    "welcome": "أهلاً وسهلاً!",
+    "signedInAs": "تم تسجيل الدخول بإسم {{name}}",
+    "signedOut": "تم تسجيل الخروج",
+    "signedOutSuccess": "تم تسجيل خروجك بنجاح.",
+    "error": "خطأ",
+    "signInError": "فشل تسجيل الدخول. يرجى المحاولة مرة أخرى.",
+    "signOutError": "فشل تسجيل الخروج.",
+    "viewAll": "← عرض الكل"
+  },
+  "nav": {
+    "developers": "المطورين",
+    "projects": "المشاريع",
+    "reviews": "التقييمات",
+    "about": "من نحن"
+  },
+  "hero": {
+    "forBusiness": "للأعمال",
+    "buyersTitle1": "موثوقية معتمدة.",
+    "buyersTitle2": "استثمارات آمنة.",
+    "industryTitle1": "ابنِ",
+    "industryTitle2": "نقاط سمعتك.",
+    "buyersDescription": "اتخذ قرارات مستنيرة مع تقييمات موثقة من مشترين حقيقيين. ابحث عن المطورين والمشاريع قبل الاستثمار.",
+    "industryDescription": "اعرض سجلك الحافل وابنِ الثقة مع المشترين المحتملين. أدر سمعتك بتحليلات قوية.",
+    "searchPlaceholder": "ما هو المطور أو المشروع الذي تبحث عنه؟",
+    "popularSearches": "عمليات البحث الشائعة:",
+    "emaarProperties": "إعمار العقارية",
+    "dubaiCreekHarbour": "ميناء خور دبي",
+    "downtownDubai": "وسط دبي"
+  },
+  "stats": {
+    "verifiedReviews": "تقييمات موثقة",
+    "verifiedDevelopers": "مطورين موثقين",
+    "projectsRated": "مشاريع مُقيّمة",
+    "trustScoreAvg": "متوسط نقاط الثقة"
+  },
+  "developers": {
+    "topRated": "أفضل المطورين تقييماً",
+    "verifiedByBuyers": "موثق من آلاف المشترين الحقيقيين",
+    "rating": "التقييم",
+    "reviews": "تقييم",
+    "trustScore": "نقاط الثقة",
+    "verified": "موثق",
+    "projectsCompleted": "مشروع مكتمل",
+    "publicSentimentScore": "نقاط الرأي العام",
+    "unclaimedProfile": "ملف غير مُطالب به"
+  },
+  "reviews": {
+    "recentReviews": "أحدث التقييمات",
+    "realFeedback": "ملاحظات حقيقية من مشترين موثقين",
+    "verifiedPurchase": "شراء موثق"
+  },
+  "footer": {
+    "tagline": "موثوقية معتمدة. استثمارات آمنة. منصة السمعة للعقارات على المخطط.",
+    "platform": "المنصة",
+    "resources": "الموارد",
+    "blog": "المدونة",
+    "helpCenter": "مركز المساعدة",
+    "apiDocs": "وثائق API",
+    "contact": "اتصل بنا",
+    "legal": "قانوني",
+    "privacy": "الخصوصية",
+    "terms": "الشروط",
+    "guidelines": "الإرشادات",
+    "copyright": "© 2024 R8ESTATE. جميع الحقوق محفوظة."
+  },
+  "directory": {
+    "title": "دليل المطورين",
+    "majorDevelopers": "كبار مطوري العقارات",
+    "exploreDescription": "اكتشف بيانات الرأي العام والسمعة لأبرز المطورين في المنطقة"
+  }
+}

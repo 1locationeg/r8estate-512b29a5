@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ViewToggle } from "@/components/ViewToggle";
 import { SearchBar } from "@/components/SearchBar";
 import { DeveloperCard } from "@/components/DeveloperCard";
 import { ReviewCard } from "@/components/ReviewCard";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { developers, reviews } from "@/data/mockData";
 import { TrendingUp, Shield, Users, Award, LogOut } from "lucide-react";
 import { signInWithPopup, signOut, User } from "firebase/auth";
@@ -19,6 +21,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Index = () => {
+  const { t } = useTranslation();
   const [currentView, setCurrentView] = useState<"buyers" | "industry">("buyers");
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -30,13 +33,13 @@ const Index = () => {
       const result = await signInWithPopup(auth, googleProvider);
       setUser(result.user);
       toast({
-        title: "Welcome!",
-        description: `Signed in as ${result.user.displayName}`,
+        title: t("common.welcome"),
+        description: t("common.signedInAs", { name: result.user.displayName }),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to sign in. Please try again.",
+        title: t("common.error"),
+        description: t("common.signInError"),
         variant: "destructive",
       });
     } finally {
@@ -49,23 +52,23 @@ const Index = () => {
       await signOut(auth);
       setUser(null);
       toast({
-        title: "Signed out",
-        description: "You have been signed out successfully.",
+        title: t("common.signedOut"),
+        description: t("common.signedOutSuccess"),
       });
     } catch (error) {
       toast({
-        title: "Error",
-        description: "Failed to sign out.",
+        title: t("common.error"),
+        description: t("common.signOutError"),
         variant: "destructive",
       });
     }
   };
 
   const stats = [
-    { icon: Users, label: "Verified Reviews", value: "4,185+" },
-    { icon: Shield, label: "Verified Developers", value: "150+" },
-    { icon: TrendingUp, label: "Projects Rated", value: "580+" },
-    { icon: Award, label: "Trust Score Avg", value: "91.6" },
+    { icon: Users, label: t("stats.verifiedReviews"), value: "4,185+" },
+    { icon: Shield, label: t("stats.verifiedDevelopers"), value: "150+" },
+    { icon: TrendingUp, label: t("stats.projectsRated"), value: "580+" },
+    { icon: Award, label: t("stats.trustScoreAvg"), value: "91.6" },
   ];
 
   return (
@@ -81,51 +84,54 @@ const Index = () => {
           </div>
           <nav className="hidden md:flex items-center gap-8">
             <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Developers
+              {t("nav.developers")}
             </a>
             <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Projects
+              {t("nav.projects")}
             </a>
             <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              Reviews
+              {t("nav.reviews")}
             </a>
             <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              About
+              {t("nav.about")}
             </a>
           </nav>
-          {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none">
-                <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
-                  <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
-                  <AvatarFallback className="bg-primary text-primary-foreground">
-                    {user.displayName?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{user.displayName}</span>
-                    <span className="text-xs text-muted-foreground">{user.email}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
-                  <LogOut className="w-4 h-4 mr-2" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <button 
-              onClick={handleSignIn}
-              disabled={isLoading}
-              className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
-            >
-              {isLoading ? "Signing in..." : "Sign In"}
-            </button>
-          )}
+          <div className="flex items-center gap-4">
+            <LanguageSwitcher />
+            {user ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger className="focus:outline-none">
+                  <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
+                    <AvatarImage src={user.photoURL || undefined} alt={user.displayName || "User"} />
+                    <AvatarFallback className="bg-primary text-primary-foreground">
+                      {user.displayName?.charAt(0) || "U"}
+                    </AvatarFallback>
+                  </Avatar>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-56">
+                  <DropdownMenuLabel>
+                    <div className="flex flex-col">
+                      <span className="font-medium">{user.displayName}</span>
+                      <span className="text-xs text-muted-foreground">{user.email}</span>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
+                    <LogOut className="w-4 h-4 me-2" />
+                    {t("common.signOut")}
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <button 
+                onClick={handleSignIn}
+                disabled={isLoading}
+                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+              >
+                {isLoading ? t("common.signingIn") : t("common.signIn")}
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -140,22 +146,22 @@ const Index = () => {
             <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
               {currentView === "buyers" ? (
                 <>
-                  Trust Verified.
+                  {t("hero.buyersTitle1")}
                   <br />
-                  <span className="text-primary">Investments Secured.</span>
+                  <span className="text-primary">{t("hero.buyersTitle2")}</span>
                 </>
               ) : (
                 <>
-                  Build Your
+                  {t("hero.industryTitle1")}
                   <br />
-                  <span className="text-primary">Reputation Score.</span>
+                  <span className="text-primary">{t("hero.industryTitle2")}</span>
                 </>
               )}
             </h1>
             <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
               {currentView === "buyers"
-                ? "Make informed decisions with verified reviews from real buyers. Investigate developers and projects before you invest."
-                : "Showcase your track record and build trust with potential buyers. Manage your reputation with powerful analytics."}
+                ? t("hero.buyersDescription")
+                : t("hero.industryDescription")}
             </p>
             <SearchBar />
           </div>
@@ -180,10 +186,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">Top Rated Developers</h2>
-              <p className="text-muted-foreground">Verified by thousands of real buyers</p>
+              <h2 className="text-3xl font-bold text-foreground mb-2">{t("developers.topRated")}</h2>
+              <p className="text-muted-foreground">{t("developers.verifiedByBuyers")}</p>
             </div>
-            <button className="text-primary font-semibold hover:underline">View All →</button>
+            <button className="text-primary font-semibold hover:underline">{t("common.viewAll")}</button>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {developers.map((developer) => (
@@ -198,10 +204,10 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">Recent Reviews</h2>
-              <p className="text-muted-foreground">Real feedback from verified buyers</p>
+              <h2 className="text-3xl font-bold text-foreground mb-2">{t("reviews.recentReviews")}</h2>
+              <p className="text-muted-foreground">{t("reviews.realFeedback")}</p>
             </div>
-            <button className="text-primary font-semibold hover:underline">View All →</button>
+            <button className="text-primary font-semibold hover:underline">{t("common.viewAll")}</button>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {reviews.slice(0, 6).map((review) => (
@@ -223,38 +229,38 @@ const Index = () => {
                 <span className="text-xl font-bold text-foreground">R8ESTATE</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                Trust verified. Investments secured. The reputation platform for off-plan real estate.
+                {t("footer.tagline")}
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Platform</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.platform")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Developers</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Projects</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Reviews</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">TrustScore</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.developers")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.projects")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.reviews")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("developers.trustScore")}</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Resources</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.resources")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Blog</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Help Center</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">API Docs</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Contact</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.blog")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.helpCenter")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.apiDocs")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.contact")}</a></li>
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-foreground mb-4">Legal</h3>
+              <h3 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h3>
               <ul className="space-y-2 text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">Privacy</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Terms</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">Guidelines</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.privacy")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.terms")}</a></li>
+                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.guidelines")}</a></li>
               </ul>
             </div>
           </div>
           <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
-            © 2024 R8ESTATE. All rights reserved.
+            {t("footer.copyright")}
           </div>
         </div>
       </footer>

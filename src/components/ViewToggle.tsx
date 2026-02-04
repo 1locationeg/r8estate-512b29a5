@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Users, Building2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { Building2 } from "lucide-react";
 
 interface ViewToggleProps {
   onViewChange: (view: "buyers" | "industry") => void;
 }
 
 export const ViewToggle = ({ onViewChange }: ViewToggleProps) => {
+  const { t } = useTranslation();
   const [activeView, setActiveView] = useState<"buyers" | "industry">("buyers");
 
   const handleToggle = (view: "buyers" | "industry") => {
@@ -24,7 +26,7 @@ export const ViewToggle = ({ onViewChange }: ViewToggleProps) => {
         }`}
       >
         <Building2 className="w-4 h-4" />
-        <span>For Business</span>
+        <span>{t("hero.forBusiness")}</span>
       </button>
     </div>
   );

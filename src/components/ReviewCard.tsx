@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Star, CheckCircle2 } from "lucide-react";
 import { Review, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
@@ -7,6 +8,7 @@ interface ReviewCardProps {
 }
 
 export const ReviewCard = ({ review }: ReviewCardProps) => {
+  const { t, i18n } = useTranslation();
   const developer = developers.find((d) => d.id === review.developerId);
 
   return (
@@ -38,7 +40,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
       </div>
       <p className="text-sm text-foreground leading-relaxed mb-3">{review.comment}</p>
       <div className="text-xs text-muted-foreground">
-        {new Date(review.date).toLocaleDateString("en-US", {
+        {new Date(review.date).toLocaleDateString(i18n.language === 'ar' ? 'ar-AE' : 'en-US', {
           month: "long",
           day: "numeric",
           year: "numeric",
