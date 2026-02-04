@@ -1,0 +1,76 @@
+{
+  "common": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signingIn": "Signing in...",
+    "welcome": "Welcome!",
+    "signedInAs": "Signed in as {{name}}",
+    "signedOut": "Signed out",
+    "signedOutSuccess": "You have been signed out successfully.",
+    "error": "Error",
+    "signInError": "Failed to sign in. Please try again.",
+    "signOutError": "Failed to sign out.",
+    "viewAll": "View All →"
+  },
+  "nav": {
+    "developers": "Developers",
+    "projects": "Projects",
+    "reviews": "Reviews",
+    "about": "About"
+  },
+  "hero": {
+    "forBusiness": "For Business",
+    "buyersTitle1": "Trust Verified.",
+    "buyersTitle2": "Investments Secured.",
+    "industryTitle1": "Build Your",
+    "industryTitle2": "Reputation Score.",
+    "buyersDescription": "Make informed decisions with verified reviews from real buyers. Investigate developers and projects before you invest.",
+    "industryDescription": "Showcase your track record and build trust with potential buyers. Manage your reputation with powerful analytics.",
+    "searchPlaceholder": "Which developer or project are you investigating?",
+    "popularSearches": "Popular searches:",
+    "emaarProperties": "Emaar Properties",
+    "dubaiCreekHarbour": "Dubai Creek Harbour",
+    "downtownDubai": "Downtown Dubai"
+  },
+  "stats": {
+    "verifiedReviews": "Verified Reviews",
+    "verifiedDevelopers": "Verified Developers",
+    "projectsRated": "Projects Rated",
+    "trustScoreAvg": "Trust Score Avg"
+  },
+  "developers": {
+    "topRated": "Top Rated Developers",
+    "verifiedByBuyers": "Verified by thousands of real buyers",
+    "rating": "Rating",
+    "reviews": "reviews",
+    "trustScore": "Trust Score",
+    "verified": "Verified",
+    "projectsCompleted": "projects completed",
+    "publicSentimentScore": "Public Sentiment Score",
+    "unclaimedProfile": "Unclaimed Profile"
+  },
+  "reviews": {
+    "recentReviews": "Recent Reviews",
+    "realFeedback": "Real feedback from verified buyers",
+    "verifiedPurchase": "Verified Purchase"
+  },
+  "footer": {
+    "tagline": "Trust verified. Investments secured. The reputation platform for off-plan real estate.",
+    "platform": "Platform",
+    "resources": "Resources",
+    "blog": "Blog",
+    "helpCenter": "Help Center",
+    "apiDocs": "API Docs",
+    "contact": "Contact",
+    "legal": "Legal",
+    "privacy": "Privacy",
+    "terms": "Terms",
+    "guidelines": "Guidelines",
+    "copyright": "© 2024 R8ESTATE. All rights reserved."
+  },
+  "directory": {
+    "title": "Developer Directory",
+    "majorDevelopers": "Major Real Estate Developers",
+    "exploreDescription": "Explore public sentiment and reputation data for leading developers in the region"
+  }
+}

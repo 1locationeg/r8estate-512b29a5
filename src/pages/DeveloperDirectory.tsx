@@ -1,19 +1,25 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { developers } from "@/data/mockData";
 import { DeveloperDirectoryCard } from "@/components/DeveloperDirectoryCard";
 import { DeveloperDetailModal } from "@/components/DeveloperDetailModal";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Developer } from "@/data/mockData";
 
 const DeveloperDirectory = () => {
+  const { t } = useTranslation();
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-6">
-          <h1 className="text-3xl font-bold text-foreground">R8ESTATE</h1>
-          <p className="text-muted-foreground mt-2">Developer Directory</p>
+        <div className="container mx-auto px-4 py-6 flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">R8ESTATE</h1>
+            <p className="text-muted-foreground mt-2">{t("directory.title")}</p>
+          </div>
+          <LanguageSwitcher />
         </div>
       </header>
 
@@ -21,10 +27,10 @@ const DeveloperDirectory = () => {
       <main className="container mx-auto px-4 py-12">
         <div className="mb-8">
           <h2 className="text-2xl font-bold text-foreground mb-2">
-            Major Real Estate Developers
+            {t("directory.majorDevelopers")}
           </h2>
           <p className="text-muted-foreground">
-            Explore public sentiment and reputation data for leading developers in the region
+            {t("directory.exploreDescription")}
           </p>
         </div>
 

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Star, MapPin, Building } from "lucide-react";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
@@ -9,6 +10,8 @@ interface DeveloperCardProps {
 }
 
 export const DeveloperCard = ({ developer }: DeveloperCardProps) => {
+  const { t } = useTranslation();
+
   return (
     <Card className="p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50">
       <div className="flex items-start justify-between mb-4">
@@ -39,8 +42,8 @@ export const DeveloperCard = ({ developer }: DeveloperCardProps) => {
       <div className="space-y-3 mb-4">
         <div className="flex items-center gap-2 text-sm">
           <Building className="w-4 h-4 text-muted-foreground" />
-          <span className="text-muted-foreground">Projects Completed:</span>
-          <span className="font-semibold text-foreground">{developer.projectsCompleted}</span>
+          <span className="text-muted-foreground">{developer.projectsCompleted}</span>
+          <span className="font-semibold text-foreground">{t("developers.projectsCompleted")}</span>
         </div>
         <div className="flex flex-wrap gap-2">
           {developer.specialties.map((specialty) => (
@@ -55,7 +58,7 @@ export const DeveloperCard = ({ developer }: DeveloperCardProps) => {
       </div>
 
       <button className="w-full py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors">
-        View Profile
+        {t("common.viewAll").replace(" →", "")}
       </button>
     </Card>
   );
