@@ -38,7 +38,7 @@ export const developers: Developer[] = [
   {
     id: "emaar",
     name: "Emaar Properties",
-    logo: "🏗️",
+    logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=100&h=100&fit=crop",
     rating: 4.8,
     reviewCount: 1247,
     trustScore: 96,
@@ -52,7 +52,7 @@ export const developers: Developer[] = [
   {
     id: "damac",
     name: "Damac Properties",
-    logo: "🏢",
+    logo: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=100&h=100&fit=crop",
     rating: 4.6,
     reviewCount: 892,
     trustScore: 92,
@@ -66,7 +66,7 @@ export const developers: Developer[] = [
   {
     id: "meraas",
     name: "Meraas Holding",
-    logo: "🌆",
+    logo: "https://images.unsplash.com/photo-1464938050520-ef2571ea41d2?w=100&h=100&fit=crop",
     rating: 4.7,
     reviewCount: 634,
     trustScore: 94,
@@ -80,7 +80,7 @@ export const developers: Developer[] = [
   {
     id: "dubai-properties",
     name: "Dubai Properties",
-    logo: "🏘️",
+    logo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=100&h=100&fit=crop",
     rating: 4.5,
     reviewCount: 523,
     trustScore: 89,
@@ -94,7 +94,7 @@ export const developers: Developer[] = [
   {
     id: "nakheel",
     name: "Nakheel",
-    logo: "🏝️",
+    logo: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=100&h=100&fit=crop",
     rating: 4.4,
     reviewCount: 789,
     trustScore: 87,
@@ -108,7 +108,7 @@ export const developers: Developer[] = [
   {
     id: "sobha",
     name: "Sobha Realty",
-    logo: "🏛️",
+    logo: "https://images.unsplash.com/photo-1565363887715-ae45c0c03dfe?w=100&h=100&fit=crop",
     rating: 4.7,
     reviewCount: 456,
     trustScore: 91,
@@ -122,7 +122,7 @@ export const developers: Developer[] = [
   {
     id: "aldar",
     name: "Aldar Properties",
-    logo: "🏙️",
+    logo: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=100&h=100&fit=crop",
     rating: 4.6,
     reviewCount: 612,
     trustScore: 90,
