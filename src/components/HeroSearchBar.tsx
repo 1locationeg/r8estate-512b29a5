@@ -1,0 +1,186 @@
+import { useState, useMemo } from "react";
+import { Search, Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { developers } from "@/data/mockData";
+import { cn } from "@/lib/utils";
+
+interface SearchResult {
+  id: string;
+  name: string;
+  logo: string;
+  reviewCount: number;
+  rating: number;
+}
+
+interface HeroSearchBarProps {
+  onSelectDeveloper: (developerId: string) => void;
+}
+
+export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
+  const { t } = useTranslation();
+  const [query, setQuery] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+
+  const searchResults = useMemo((): SearchResult[] => {
+    if (!query.trim()) return [];
+    const lowerQuery = query.toLowerCase();
+    return developers
+      .filter((dev) => dev.name.toLowerCase().includes(lowerQuery))
+      .map((dev) => ({
+        id: dev.id,
+        name: dev.name,
+        logo: dev.logo,
+        reviewCount: dev.reviewCount,
+        rating: dev.rating,
+      }));
+  }, [query]);
+
+  const showResults = isFocused && query.trim().length > 0;
+
+  return (
+    <div className="w-full max-w-3xl mx-auto relative">
+      {/* Search Container */}
+      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2">
+        {/* Ask AI Button */}
+        <button className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:bg-primary/90 transition-colors">
+          <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
+          <span>{t("hero.askAI")}</span>
+        </button>
+
+        {/* Search Input */}
+        <div className="flex-1 relative">
+          <input
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setIsFocused(true)}
+            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            placeholder={t("hero.searchPlaceholder")}
+            className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
+          />
+        </div>
+
+        {/* Search Icon */}
+        <Search className="w-5 h-5 text-muted-foreground me-2" />
+
+        {/* Validate Decision Button */}
+        <button className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors">
+          {t("hero.validateDecision")}
+        </button>
+      </div>
+
+      {/* Search Results Dropdown */}
+      {showResults && searchResults.length > 0 && (
+        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50">
+          {searchResults.map((result) => (
+            <button
+              key={result.id}
+              onClick={() => {
+                onSelectDeveloper(result.id);
+                setQuery("");
+              }}
+              className="w-full flex items-center gap-3 p-3 hover:bg-secondary/50 transition-colors text-start"
+            >
+              <img
+                src={result.logo}
+                alt={result.name}
+                className="w-10 h-10 rounded-lg object-cover"
+              />
+              <div className="flex-1 min-w-0">
+                <div className="font-semibold text-foreground text-sm">
+                  {result.name}
+                </div>
+                <div className="text-xs text-muted-foreground">
+                  {result.reviewCount} {t("reviews.reviews")}
+                </div>
+              </div>
+              <div className="flex items-center gap-1 px-2 py-1 bg-accent/20 rounded-lg">
+                <Star className="w-3.5 h-3.5 fill-accent text-accent" />
+                <span className="text-sm font-semibold text-accent">
+                  {result.rating}
+                </span>
+              </div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+interface CategoryLink {
+  icon: string;
+  label: string;
+}
+
+export const HeroCategoryLinks = () => {
+  const { t } = useTranslation();
+
+  const categories: CategoryLink[] = [
+    { icon: "🏆", label: t("hero.bestOf2025") },
+    { icon: "📈", label: t("hero.trendingProjects") },
+    { icon: "🚀", label: t("hero.newLaunches") },
+  ];
+
+  return (
+    <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
+      {categories.map((cat) => (
+        <button
+          key={cat.label}
+          className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <span>{cat.icon}</span>
+          <span>{cat.label}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
+interface BottomCategory {
+  icon: React.ReactNode;
+  label: string;
+}
+
+export const HeroBottomBar = () => {
+  const { t } = useTranslation();
+
+  const categories: BottomCategory[] = [
+    { icon: "🗄️", label: t("categories.units") },
+    { icon: "📁", label: t("categories.apps") },
+    { icon: "📂", label: t("categories.shares") },
+    { icon: "📋", label: t("categories.platforms") },
+    { icon: "🤝", label: t("categories.brokers") },
+    { icon: "🖥️", label: t("categories.exhibitions") },
+    { icon: "📺", label: t("categories.channels") },
+  ];
+
+  return (
+    <div className="relative flex items-center bg-card border-t border-border">
+      {/* Left Arrow */}
+      <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
+        <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+      </button>
+
+      {/* Scrollable Categories */}
+      <div className="flex-1 overflow-x-auto scrollbar-hide">
+        <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
+          {categories.map((cat) => (
+            <button
+              key={cat.label}
+              className="flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 bg-secondary rounded-lg text-xs md:text-sm text-foreground hover:bg-secondary/80 transition-colors whitespace-nowrap"
+            >
+              <span>{cat.icon}</span>
+              <span>{cat.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Right Arrow */}
+      <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-s border-border">
+        <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+      </button>
+    </div>
+  );
+};

@@ -19,6 +19,16 @@
     "about": "About"
   },
   "hero": {
+    "trustMeter": "Trust Meter",
+    "tagline": "Buy your Off-Plan home with:",
+    "taglineHighlight": "Zero risk and 100% Confident Decision",
+    "description": "Make your decision with complete confidence, risk-free, backed by results from the experiences and expertise of previous customers.",
+    "askAI": "Ask AI",
+    "searchPlaceholder": "Search for the trusted story",
+    "validateDecision": "Validate Decision",
+    "bestOf2025": "BEST OF 2025",
+    "trendingProjects": "Trending Projects",
+    "newLaunches": "New Launches",
     "forBusiness": "For Business",
     "buyersTitle1": "Trust Verified.",
     "buyersTitle2": "Investments Secured.",
@@ -26,11 +36,19 @@
     "industryTitle2": "Reputation Score.",
     "buyersDescription": "Make informed decisions with verified reviews from real buyers. Investigate developers and projects before you invest.",
     "industryDescription": "Showcase your track record and build trust with potential buyers. Manage your reputation with powerful analytics.",
-    "searchPlaceholder": "Which developer or project are you investigating?",
     "popularSearches": "Popular searches:",
     "emaarProperties": "Emaar Properties",
     "dubaiCreekHarbour": "Dubai Creek Harbour",
     "downtownDubai": "Downtown Dubai"
+  },
+  "categories": {
+    "units": "UNITS",
+    "apps": "Apps",
+    "shares": "Shares",
+    "platforms": "Platforms",
+    "brokers": "Brokers",
+    "exhibitions": "Exhibitions",
+    "channels": "Channels"
   },
   "stats": {
     "verifiedReviews": "Verified Reviews",
@@ -43,17 +61,43 @@
     "verifiedByBuyers": "Verified by thousands of real buyers",
     "rating": "Rating",
     "reviews": "reviews",
-    "trustScore": "Trust Score",
+    "trustScore": "TRUST SCORE",
     "verified": "Verified",
     "projectsCompleted": "projects completed",
     "publicSentimentScore": "Public Sentiment Score",
     "unclaimedProfile": "Unclaimed Profile"
   },
+  "trust": {
+    "categories": "Trust Categories",
+    "projectTimeliness": "Project Timeliness",
+    "constructionQuality": "Construction Quality",
+    "developerCommunication": "Developer Communication",
+    "valueForMoney": "Value for Money",
+    "documentationLegality": "Documentation & Legality",
+    "customerService": "Customer Service"
+  },
   "reviews": {
     "all": "All",
+    "reviews": "reviews",
     "recentReviews": "Recent Reviews",
     "realFeedback": "Real feedback from verified buyers",
-    "verifiedPurchase": "Verified Purchase"
+    "verifiedPurchase": "Verified Purchase",
+    "writeReview": "Write a Review",
+    "customerReviews": "Customer Reviews",
+    "sortBy": "Sort by",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "highest": "Highest rated",
+    "lowest": "Lowest rated",
+    "noReviews": "No reviews yet"
+  },
+  "actions": {
+    "downloadReport": "Download Report",
+    "compareWith": "Compare with another developer",
+    "like": "Like",
+    "dislike": "Dislike",
+    "report": "Report",
+    "share": "Share"
   },
   "footer": {
     "tagline": "Trust verified. Investments secured. The reputation platform for off-plan real estate.",

@@ -1,15 +1,12 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ViewToggle } from "@/components/ViewToggle";
-import { SearchBar } from "@/components/SearchBar";
-import { DeveloperCard } from "@/components/DeveloperCard";
-import { ReviewCard } from "@/components/ReviewCard";
-import { ReviewFilters, ReviewFilterType } from "@/components/ReviewFilters";
+import { HeroSearchBar, HeroCategoryLinks, HeroBottomBar } from "@/components/HeroSearchBar";
+import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
-import { developers, reviews } from "@/data/mockData";
-import { TrendingUp, Shield, Users, Award, LogOut, LayoutDashboard } from "lucide-react";
+import { developers } from "@/data/mockData";
+import { LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import logoIcon from "@/assets/logo-icon.png";
@@ -26,16 +23,14 @@ import {
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [currentView, setCurrentView] = useState<"buyers" | "industry">("buyers");
-  const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
+  const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
-  const filteredReviews = useMemo(() => {
-    if (reviewFilter === "all") return reviews.slice(0, 6);
-    const ratingFilter = parseInt(reviewFilter);
-    return reviews.filter((r) => r.rating === ratingFilter).slice(0, 6);
-  }, [reviewFilter]);
+  const selectedDeveloper = useMemo(() => {
+    if (!selectedDeveloperId) return null;
+    return developers.find((d) => d.id === selectedDeveloperId) || null;
+  }, [selectedDeveloperId]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -51,42 +46,13 @@ const Index = () => {
     return '/buyer';
   };
 
-  const stats = [
-    { icon: Users, label: t("stats.verifiedReviews"), value: "4,185+" },
-    { icon: Shield, label: t("stats.verifiedDevelopers"), value: "150+" },
-    { icon: TrendingUp, label: t("stats.projectsRated"), value: "580+" },
-    { icon: Award, label: t("stats.trustScoreAvg"), value: "91.6" },
-  ];
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header - Mobile First */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
-          {/* Logo */}
-          <div className="flex items-center gap-1.5">
-            <img src={logoIcon} alt="R8ESTATE" className="h-10 md:h-14 w-auto object-contain" />
-            <span className="text-xl md:text-2xl font-bold">
-              <span className="text-brand-red">R8</span>
-              <span className="text-primary">ESTATE</span>
-            </span>
-          </div>
-
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              {t("nav.developers")}
-            </a>
-            <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              {t("nav.projects")}
-            </a>
-            <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              {t("nav.reviews")}
-            </a>
-            <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
-              {t("nav.about")}
-            </a>
-          </nav>
+    <div className="min-h-screen bg-background flex flex-col">
+      {/* Header */}
+      <header className="absolute top-0 left-0 right-0 z-50">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          {/* Logo - hidden on this page since we show it in hero */}
+          <div className="w-10" />
 
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
@@ -136,155 +102,70 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Hero Section - Mobile First */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-primary/5 py-12 md:py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section */}
+      <section className="flex-1 flex flex-col bg-background">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-20">
+          {/* Brand Title */}
           <div className="text-center mb-6 md:mb-8">
-            <ViewToggle onViewChange={setCurrentView} />
-          </div>
-
-          <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
-              {currentView === "buyers" ? (
-                <>
-                  {t("hero.buyersTitle1")}
-                  <br />
-                  <span className="text-primary">{t("hero.buyersTitle2")}</span>
-                </>
-              ) : (
-                <>
-                  {t("hero.industryTitle1")}
-                  <br />
-                  <span className="text-primary">{t("hero.industryTitle2")}</span>
-                </>
-              )}
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-2">
+              <span className="text-brand-red">R8</span>
+              <span className="text-primary">ESTATE</span>
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 md:mb-10 max-w-2xl mx-auto px-2">
-              {currentView === "buyers"
-                ? t("hero.buyersDescription")
-                : t("hero.industryDescription")}
+            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
+              {t("hero.trustMeter")}
             </p>
-            <SearchBar />
           </div>
 
-          {/* Stats - Mobile First Grid */}
-          <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
-            {stats.map((stat) => (
-              <div key={stat.label} className="text-center p-3 md:p-0">
-                <div className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-xl mb-2 md:mb-3">
-                  <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
-                </div>
-                <div className="text-xl md:text-2xl font-bold text-foreground mb-0.5 md:mb-1">{stat.value}</div>
-                <div className="text-xs md:text-sm text-muted-foreground">{stat.label}</div>
-              </div>
-            ))}
+          {/* Tagline */}
+          <div className="text-center mb-4 md:mb-6 max-w-3xl">
+            <p className="text-base sm:text-lg md:text-xl">
+              <span className="text-foreground">{t("hero.tagline")} </span>
+              <span className="text-accent font-semibold">{t("hero.taglineHighlight")}</span>
+            </p>
           </div>
+
+          {/* Description */}
+          <p className="text-sm md:text-base text-muted-foreground text-center max-w-2xl mb-8 md:mb-10 px-4">
+            {t("hero.description")}
+          </p>
+
+          {/* Search Bar */}
+          <div className="w-full max-w-3xl px-4 mb-6 md:mb-8">
+            <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+          </div>
+
+          {/* Category Links */}
+          <HeroCategoryLinks />
+
+          {/* Developer Detail Card (appears when developer is selected) */}
+          {selectedDeveloper && (
+            <div className="w-full max-w-3xl px-4 mt-8">
+              <DeveloperDetailCard
+                developer={selectedDeveloper}
+                onClose={() => setSelectedDeveloperId(null)}
+              />
+            </div>
+          )}
         </div>
+
+        {/* Bottom Category Bar */}
+        <HeroBottomBar />
       </section>
 
-      {/* Developers Section - Mobile First */}
-      <section className="py-10 md:py-16 bg-background">
+      {/* Footer */}
+      <footer className="bg-card border-t border-border py-6 md:py-8">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">{t("developers.topRated")}</h2>
-              <p className="text-sm md:text-base text-muted-foreground">{t("developers.verifiedByBuyers")}</p>
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-1.5">
+              <img src={logoIcon} alt="R8ESTATE" className="h-8 md:h-10 w-auto object-contain" />
+              <span className="text-base md:text-lg font-bold">
+                <span className="text-brand-red">R8</span>
+                <span className="text-primary">ESTATE</span>
+              </span>
             </div>
-            <button className="text-primary font-semibold hover:underline text-sm md:text-base self-start sm:self-center">
-              {t("common.viewAll")}
-            </button>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {developers.map((developer) => (
-              <DeveloperCard key={developer.id} developer={developer} />
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Recent Reviews Section - Mobile First */}
-      <section className="py-10 md:py-16 bg-secondary/30">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col gap-4 mb-6 md:mb-8">
-            <div>
-              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">{t("reviews.recentReviews")}</h2>
-              <p className="text-sm md:text-base text-muted-foreground">{t("reviews.realFeedback")}</p>
-            </div>
-            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
-              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-                <ReviewFilters activeFilter={reviewFilter} onFilterChange={setReviewFilter} />
-              </div>
-              <button className="text-primary font-semibold hover:underline whitespace-nowrap text-sm md:text-base self-start">
-                {t("common.viewAll")}
-              </button>
-            </div>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {filteredReviews.length > 0 ? (
-              filteredReviews.map((review) => (
-                <ReviewCard key={review.id} review={review} />
-              ))
-            ) : (
-              <div className="col-span-full text-center py-8 md:py-12 text-muted-foreground text-sm md:text-base">
-                No reviews found for this rating.
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
-      {/* Footer - Mobile First */}
-      <footer className="bg-card border-t border-border py-8 md:py-12">
-        <div className="container mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
-            {/* Brand */}
-            <div className="col-span-2 md:col-span-1">
-              <div className="flex items-center gap-1.5 mb-3 md:mb-4">
-                <img src={logoIcon} alt="R8ESTATE" className="h-10 md:h-14 w-auto object-contain" />
-                <span className="text-lg md:text-xl font-bold">
-                  <span className="text-brand-red">R8</span>
-                  <span className="text-primary">ESTATE</span>
-                </span>
-              </div>
-              <p className="text-xs md:text-sm text-muted-foreground">
-                {t("footer.tagline")}
-              </p>
-            </div>
-
-            {/* Platform */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.platform")}</h3>
-              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.developers")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.projects")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("nav.reviews")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("developers.trustScore")}</a></li>
-              </ul>
-            </div>
-
-            {/* Resources */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.resources")}</h3>
-              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.blog")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.helpCenter")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.apiDocs")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.contact")}</a></li>
-              </ul>
-            </div>
-
-            {/* Legal */}
-            <div>
-              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.legal")}</h3>
-              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.privacy")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.terms")}</a></li>
-                <li><a href="#" className="hover:text-primary transition-colors">{t("footer.guidelines")}</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-6 md:pt-8 border-t border-border text-center text-xs md:text-sm text-muted-foreground">
-            {t("footer.copyright")}
+            <p className="text-xs md:text-sm text-muted-foreground text-center">
+              {t("footer.copyright")}
+            </p>
           </div>
         </div>
       </footer>
