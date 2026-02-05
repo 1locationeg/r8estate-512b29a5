@@ -3,107 +3,110 @@
 @tailwind utilities;
 
 /* R8ESTATE Brand Design System
-   Brand Colors: Navy Blue #1E3957, Gold #C5AD67, Red #D03438
+   Brand Colors: 
+   - Red: #ed1b40 (HSL 350 85% 52%)
+   - Navy Blue: #0a3d62 (HSL 203 81% 21%)
+   - Gold: #fac417 (HSL 45 96% 54%)
    Font: Montserrat
    All colors in HSL format
 */
 
 @layer base {
   :root {
-    /* Navy Blue - Primary brand color */
+    /* Background & Foreground */
     --background: 0 0% 100%;
-    --foreground: 213 51% 23%;
+    --foreground: 203 81% 21%;
 
     --card: 0 0% 100%;
-    --card-foreground: 213 51% 23%;
+    --card-foreground: 203 81% 21%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 213 51% 23%;
+    --popover-foreground: 203 81% 21%;
 
-    /* Navy Blue as primary */
-    --primary: 213 51% 23%;
+    /* Navy Blue #0a3d62 as primary */
+    --primary: 203 81% 21%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 213 15% 96%;
-    --secondary-foreground: 213 51% 23%;
+    --secondary: 203 20% 96%;
+    --secondary-foreground: 203 81% 21%;
 
-    --muted: 213 15% 96%;
-    --muted-foreground: 213 20% 50%;
+    --muted: 203 15% 95%;
+    --muted-foreground: 203 30% 45%;
 
-    /* Gold as accent */
-    --accent: 43 40% 59%;
-    --accent-foreground: 213 51% 23%;
+    /* Gold #fac417 as accent */
+    --accent: 45 96% 54%;
+    --accent-foreground: 203 81% 21%;
 
-    /* Red for destructive/emphasis */
-    --destructive: 359 66% 51%;
+    /* Red #ed1b40 for destructive/emphasis */
+    --destructive: 350 85% 52%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 213 20% 90%;
-    --input: 213 20% 90%;
-    --ring: 213 51% 23%;
+    --border: 203 20% 88%;
+    --input: 203 20% 88%;
+    --ring: 203 81% 21%;
 
     /* Gold for verified badges */
-    --verified: 43 40% 59%;
-    --verified-foreground: 213 51% 23%;
+    --verified: 45 96% 54%;
+    --verified-foreground: 203 81% 21%;
 
     /* Trust score colors - percentage based */
     /* 66-100% green, 50-65% gold/yellow, 0-49% red */
     --trust-excellent: 142 76% 36%;
-    --trust-good: 45 93% 47%;
-    --trust-fair: 359 66% 51%;
+    --trust-good: 45 96% 54%;
+    --trust-fair: 350 85% 52%;
 
     /* Hero gradient using navy */
-    --hero-gradient-start: 213 51% 23%;
-    --hero-gradient-end: 213 51% 33%;
+    --hero-gradient-start: 203 81% 21%;
+    --hero-gradient-end: 203 81% 31%;
 
-    /* Brand red for accents */
-    --brand-red: 359 66% 51%;
+    /* Brand red #ed1b40 for accents */
+    --brand-red: 350 85% 52%;
 
     --radius: 0.75rem;
   }
 
   .dark {
-    --background: 213 30% 8%;
-    --foreground: 213 10% 95%;
+    --background: 203 50% 8%;
+    --foreground: 203 10% 95%;
 
-    --card: 213 25% 12%;
-    --card-foreground: 213 10% 95%;
+    --card: 203 40% 12%;
+    --card-foreground: 203 10% 95%;
 
-    --popover: 213 25% 12%;
-    --popover-foreground: 213 10% 95%;
+    --popover: 203 40% 12%;
+    --popover-foreground: 203 10% 95%;
 
     /* Navy Blue - lighter for dark mode */
-    --primary: 213 51% 45%;
+    --primary: 203 81% 40%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 213 25% 18%;
-    --secondary-foreground: 213 10% 95%;
+    --secondary: 203 30% 18%;
+    --secondary-foreground: 203 10% 95%;
 
-    --muted: 213 25% 18%;
-    --muted-foreground: 213 10% 65%;
+    --muted: 203 30% 18%;
+    --muted-foreground: 203 15% 60%;
 
     /* Gold - slightly brighter for dark mode */
-    --accent: 43 45% 65%;
-    --accent-foreground: 213 51% 15%;
+    --accent: 45 96% 58%;
+    --accent-foreground: 203 81% 15%;
 
-    --destructive: 359 60% 55%;
+    --destructive: 350 80% 55%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 213 25% 20%;
-    --input: 213 25% 20%;
-    --ring: 213 51% 45%;
+    --border: 203 30% 22%;
+    --input: 203 30% 22%;
+    --ring: 203 81% 40%;
 
-    --verified: 43 45% 65%;
-    --verified-foreground: 213 51% 15%;
+    --verified: 45 96% 58%;
+    --verified-foreground: 203 81% 15%;
 
     --trust-excellent: 142 76% 45%;
-    --trust-good: 45 93% 52%;
-    --trust-fair: 359 60% 55%;
+    --trust-good: 45 96% 58%;
+    --trust-fair: 350 80% 55%;
 
-    --hero-gradient-start: 213 51% 20%;
-    --hero-gradient-end: 213 51% 30%;
+    --hero-gradient-start: 203 81% 18%;
+    --hero-gradient-end: 203 81% 28%;
 
-    --brand-red: 359 66% 58%;
+    --brand-red: 350 85% 58%;
   }
 }
 
