@@ -50,6 +50,7 @@
     "unclaimedProfile": "Unclaimed Profile"
   },
   "reviews": {
+    "all": "All",
     "recentReviews": "Recent Reviews",
     "realFeedback": "Real feedback from verified buyers",
     "verifiedPurchase": "Verified Purchase"

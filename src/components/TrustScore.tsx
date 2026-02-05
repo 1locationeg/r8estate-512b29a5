@@ -4,14 +4,14 @@ interface TrustScoreProps {
 
 export const TrustScore = ({ score }: TrustScoreProps) => {
   const getColor = (score: number) => {
-    if (score >= 90) return "text-trust-excellent";
-    if (score >= 80) return "text-trust-good";
+    if (score >= 66) return "text-trust-excellent";
+    if (score >= 50) return "text-trust-good";
     return "text-trust-fair";
   };
 
   const getLabel = (score: number) => {
-    if (score >= 90) return "Excellent";
-    if (score >= 80) return "Good";
+    if (score >= 66) return "Excellent";
+    if (score >= 50) return "Good";
     return "Fair";
   };
 

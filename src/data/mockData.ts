@@ -22,6 +22,11 @@ export interface Review {
   project: string;
   comment: string;
   verified: boolean;
+  developerReply?: {
+    author: string;
+    date: string;
+    comment: string;
+  };
 }
 
 export const developers: Developer[] = [
@@ -135,6 +140,11 @@ export const reviews: Review[] = [
     project: "Dubai Creek Harbour",
     comment: "Exceptional quality and timely delivery. The attention to detail in the finishing is outstanding. Highly recommend for serious investors.",
     verified: true,
+    developerReply: {
+      author: "Emaar Properties Team",
+      date: "2024-01-16",
+      comment: "Thank you for your kind words, Ahmed! We're delighted to hear about your positive experience at Dubai Creek Harbour. Your satisfaction is our priority.",
+    },
   },
   {
     id: "2",
@@ -145,6 +155,11 @@ export const reviews: Review[] = [
     project: "Arabian Ranches III",
     comment: "Great community facilities and excellent location. Minor delays in handover but overall satisfied with the purchase.",
     verified: true,
+    developerReply: {
+      author: "Emaar Properties Team",
+      date: "2024-01-11",
+      comment: "Thank you for your feedback, Sarah. We apologize for the minor delays and are continuously working to improve our delivery timelines.",
+    },
   },
   {
     id: "3",
@@ -165,6 +180,11 @@ export const reviews: Review[] = [
     project: "DAMAC Hills 2",
     comment: "Stunning architecture and thoughtful design. The branded residences concept is executed brilliantly. Very happy with the investment.",
     verified: true,
+    developerReply: {
+      author: "DAMAC Properties",
+      date: "2024-01-19",
+      comment: "Thank you, Elena! We're thrilled you appreciate our branded residences concept. Welcome to the DAMAC family!",
+    },
   },
   {
     id: "5",

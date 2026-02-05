@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ViewToggle } from "@/components/ViewToggle";
 import { SearchBar } from "@/components/SearchBar";
 import { DeveloperCard } from "@/components/DeveloperCard";
 import { ReviewCard } from "@/components/ReviewCard";
+import { ReviewFilters, ReviewFilterType } from "@/components/ReviewFilters";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { developers, reviews } from "@/data/mockData";
 import { TrendingUp, Shield, Users, Award, LogOut, LayoutDashboard } from "lucide-react";
@@ -25,8 +26,15 @@ const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [currentView, setCurrentView] = useState<"buyers" | "industry">("buyers");
+  const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
+
+  const filteredReviews = useMemo(() => {
+    if (reviewFilter === "all") return reviews.slice(0, 6);
+    const ratingFilter = parseInt(reviewFilter);
+    return reviews.filter((r) => r.rating === ratingFilter).slice(0, 6);
+  }, [reviewFilter]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -186,17 +194,26 @@ const Index = () => {
       {/* Recent Reviews Section */}
       <section className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <h2 className="text-3xl font-bold text-foreground mb-2">{t("reviews.recentReviews")}</h2>
               <p className="text-muted-foreground">{t("reviews.realFeedback")}</p>
             </div>
-            <button className="text-primary font-semibold hover:underline">{t("common.viewAll")}</button>
+            <div className="flex items-center gap-4">
+              <ReviewFilters activeFilter={reviewFilter} onFilterChange={setReviewFilter} />
+              <button className="text-primary font-semibold hover:underline whitespace-nowrap">{t("common.viewAll")}</button>
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {reviews.slice(0, 6).map((review) => (
-              <ReviewCard key={review.id} review={review} />
-            ))}
+            {filteredReviews.length > 0 ? (
+              filteredReviews.map((review) => (
+                <ReviewCard key={review.id} review={review} />
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12 text-muted-foreground">
+                No reviews found for this rating.
+              </div>
+            )}
           </div>
         </div>
       </section>
