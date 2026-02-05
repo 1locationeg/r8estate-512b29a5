@@ -3,6 +3,7 @@ import { Search, Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react"
 import { useTranslation } from "react-i18next";
 import { developers } from "@/data/mockData";
 import { cn } from "@/lib/utils";
+import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 
 interface SearchResult {
   id: string;
@@ -20,6 +21,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const { t } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
+  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
 
   const searchResults = useMemo((): SearchResult[] => {
     if (!query.trim()) return [];
@@ -42,7 +44,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
       {/* Search Container */}
       <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2">
         {/* Ask AI Button */}
-        <button className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:bg-primary/90 transition-colors">
+        <button 
+          onClick={() => setIsAIModalOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:bg-primary/90 transition-colors"
+        >
           <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
           <span>{t("hero.askAI")}</span>
         </button>
@@ -104,6 +109,9 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           ))}
         </div>
       )}
+
+      {/* AI Trust Insights Modal */}
+      <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
     </div>
   );
 };

@@ -117,5 +117,35 @@
     "title": "Developer Directory",
     "majorDevelopers": "Major Real Estate Developers",
     "exploreDescription": "Explore public sentiment and reputation data for leading developers in the region"
+  },
+  "trustInsights": {
+    "title": "AI Trust Insights",
+    "subtitle": "Powered by R8ESTATE Intelligence",
+    "welcomeTitle": "How can I help you?",
+    "welcomeDescription": "Ask me anything about off-plan real estate, developer trust, risks, and market insights.",
+    "developerTrust": "Developer Trust",
+    "riskAssessment": "Risk Assessment",
+    "buyerExperience": "Buyer Experience",
+    "marketInsights": "Market Insights",
+    "suggestedQuestions": "Suggested Questions",
+    "selectCategory": "Select a category above to see suggested questions",
+    "inputPlaceholder": "Ask about developers, risks, or market trends...",
+    "thinking": "Analyzing...",
+    "newChat": "New Chat",
+    "disclaimer": "AI insights are for informational purposes. Always conduct your own due diligence.",
+    "questions": {
+      "developerTrackRecord": "How can I verify a developer's track record before buying?",
+      "developerDeliveryHistory": "What should I look for in a developer's delivery history?",
+      "developerFinancialStability": "How do I assess a developer's financial stability?",
+      "offPlanRisks": "What are the main risks of buying off-plan property?",
+      "paymentPlanSafety": "How do I know if a payment plan is safe?",
+      "reraProtection": "What RERA protections exist for off-plan buyers?",
+      "customerService": "What customer service standards should I expect from developers?",
+      "transparencyPractices": "How can I evaluate a developer's transparency practices?",
+      "communicationQuality": "What communication should I expect during construction?",
+      "marketTiming": "Is now a good time to invest in off-plan property?",
+      "locationValue": "How do I evaluate the long-term value of a location?",
+      "investmentPotential": "What factors affect off-plan property appreciation?"
+    }
   }
 }
