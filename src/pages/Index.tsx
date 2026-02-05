@@ -7,6 +7,7 @@ import { DeveloperCard } from "@/components/DeveloperCard";
 import { ReviewCard } from "@/components/ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "@/components/ReviewFilters";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { MobileNav } from "@/components/MobileNav";
 import { developers, reviews } from "@/data/mockData";
 import { TrendingUp, Shield, Users, Award, LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -59,17 +60,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
+      {/* Header - Mobile First */}
       <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="container mx-auto px-4 py-3 md:py-4 flex items-center justify-between">
+          {/* Logo */}
           <div className="flex items-center gap-1.5">
-            <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto object-contain" />
-            <span className="text-2xl font-bold">
+            <img src={logoIcon} alt="R8ESTATE" className="h-10 md:h-14 w-auto object-contain" />
+            <span className="text-xl md:text-2xl font-bold">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
             </span>
           </div>
-          <nav className="hidden md:flex items-center gap-8">
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8">
             <a href="#" className="text-sm font-medium text-foreground hover:text-primary transition-colors">
               {t("nav.developers")}
             </a>
@@ -83,7 +87,9 @@ const Index = () => {
               {t("nav.about")}
             </a>
           </nav>
-          <div className="flex items-center gap-4">
+
+          {/* Desktop Actions */}
+          <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
             {user ? (
               <DropdownMenu>
@@ -118,24 +124,27 @@ const Index = () => {
               <button 
                 onClick={() => navigate('/auth')}
                 disabled={isLoading}
-                className="px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50"
+                className="px-4 lg:px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
               >
                 {isLoading ? t("common.signingIn") : t("common.signIn")}
               </button>
             )}
           </div>
+
+          {/* Mobile Menu */}
+          <MobileNav onSignOut={handleSignOut} getDashboardRoute={getDashboardRoute} />
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-primary/5 py-20">
+      {/* Hero Section - Mobile First */}
+      <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-primary/5 py-12 md:py-20">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 md:mb-8">
             <ViewToggle onViewChange={setCurrentView} />
           </div>
 
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h1 className="text-5xl md:text-6xl font-bold text-foreground mb-6 leading-tight">
+          <div className="max-w-4xl mx-auto text-center mb-8 md:mb-12">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-foreground mb-4 md:mb-6 leading-tight">
               {currentView === "buyers" ? (
                 <>
                   {t("hero.buyersTitle1")}
@@ -150,7 +159,7 @@ const Index = () => {
                 </>
               )}
             </h1>
-            <p className="text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground mb-6 md:mb-10 max-w-2xl mx-auto px-2">
               {currentView === "buyers"
                 ? t("hero.buyersDescription")
                 : t("hero.industryDescription")}
@@ -158,32 +167,34 @@ const Index = () => {
             <SearchBar />
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto">
+          {/* Stats - Mobile First Grid */}
+          <div className="grid grid-cols-2 gap-4 md:gap-6 max-w-4xl mx-auto">
             {stats.map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="inline-flex items-center justify-center w-12 h-12 bg-primary/10 rounded-xl mb-3">
-                  <stat.icon className="w-6 h-6 text-primary" />
+              <div key={stat.label} className="text-center p-3 md:p-0">
+                <div className="inline-flex items-center justify-center w-10 h-10 md:w-12 md:h-12 bg-primary/10 rounded-xl mb-2 md:mb-3">
+                  <stat.icon className="w-5 h-5 md:w-6 md:h-6 text-primary" />
                 </div>
-                <div className="text-2xl font-bold text-foreground mb-1">{stat.value}</div>
-                <div className="text-sm text-muted-foreground">{stat.label}</div>
+                <div className="text-xl md:text-2xl font-bold text-foreground mb-0.5 md:mb-1">{stat.value}</div>
+                <div className="text-xs md:text-sm text-muted-foreground">{stat.label}</div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Developers Section */}
-      <section className="py-16 bg-background">
+      {/* Developers Section - Mobile First */}
+      <section className="py-10 md:py-16 bg-background">
         <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 md:mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">{t("developers.topRated")}</h2>
-              <p className="text-muted-foreground">{t("developers.verifiedByBuyers")}</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">{t("developers.topRated")}</h2>
+              <p className="text-sm md:text-base text-muted-foreground">{t("developers.verifiedByBuyers")}</p>
             </div>
-            <button className="text-primary font-semibold hover:underline">{t("common.viewAll")}</button>
+            <button className="text-primary font-semibold hover:underline text-sm md:text-base self-start sm:self-center">
+              {t("common.viewAll")}
+            </button>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {developers.map((developer) => (
               <DeveloperCard key={developer.id} developer={developer} />
             ))}
@@ -191,26 +202,30 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Recent Reviews Section */}
-      <section className="py-16 bg-secondary/30">
+      {/* Recent Reviews Section - Mobile First */}
+      <section className="py-10 md:py-16 bg-secondary/30">
         <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+          <div className="flex flex-col gap-4 mb-6 md:mb-8">
             <div>
-              <h2 className="text-3xl font-bold text-foreground mb-2">{t("reviews.recentReviews")}</h2>
-              <p className="text-muted-foreground">{t("reviews.realFeedback")}</p>
+              <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-1 md:mb-2">{t("reviews.recentReviews")}</h2>
+              <p className="text-sm md:text-base text-muted-foreground">{t("reviews.realFeedback")}</p>
             </div>
-            <div className="flex items-center gap-4">
-              <ReviewFilters activeFilter={reviewFilter} onFilterChange={setReviewFilter} />
-              <button className="text-primary font-semibold hover:underline whitespace-nowrap">{t("common.viewAll")}</button>
+            <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+              <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+                <ReviewFilters activeFilter={reviewFilter} onFilterChange={setReviewFilter} />
+              </div>
+              <button className="text-primary font-semibold hover:underline whitespace-nowrap text-sm md:text-base self-start">
+                {t("common.viewAll")}
+              </button>
             </div>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {filteredReviews.length > 0 ? (
               filteredReviews.map((review) => (
                 <ReviewCard key={review.id} review={review} />
               ))
             ) : (
-              <div className="col-span-full text-center py-12 text-muted-foreground">
+              <div className="col-span-full text-center py-8 md:py-12 text-muted-foreground text-sm md:text-base">
                 No reviews found for this rating.
               </div>
             )}
@@ -218,50 +233,57 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-card border-t border-border py-12">
+      {/* Footer - Mobile First */}
+      <footer className="bg-card border-t border-border py-8 md:py-12">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
-            <div>
-              <div className="flex items-center gap-1.5 mb-4">
-                <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto object-contain" />
-                <span className="text-xl font-bold">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 mb-6 md:mb-8">
+            {/* Brand */}
+            <div className="col-span-2 md:col-span-1">
+              <div className="flex items-center gap-1.5 mb-3 md:mb-4">
+                <img src={logoIcon} alt="R8ESTATE" className="h-10 md:h-14 w-auto object-contain" />
+                <span className="text-lg md:text-xl font-bold">
                   <span className="text-brand-red">R8</span>
                   <span className="text-primary">ESTATE</span>
                 </span>
               </div>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-xs md:text-sm text-muted-foreground">
                 {t("footer.tagline")}
               </p>
             </div>
+
+            {/* Platform */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.platform")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.platform")}</h3>
+              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
                 <li><a href="#" className="hover:text-primary transition-colors">{t("nav.developers")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("nav.projects")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("nav.reviews")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("developers.trustScore")}</a></li>
               </ul>
             </div>
+
+            {/* Resources */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.resources")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.resources")}</h3>
+              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.blog")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.helpCenter")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.apiDocs")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.contact")}</a></li>
               </ul>
             </div>
+
+            {/* Legal */}
             <div>
-              <h3 className="font-semibold text-foreground mb-4">{t("footer.legal")}</h3>
-              <ul className="space-y-2 text-sm text-muted-foreground">
+              <h3 className="font-semibold text-foreground mb-3 md:mb-4 text-sm md:text-base">{t("footer.legal")}</h3>
+              <ul className="space-y-2 text-xs md:text-sm text-muted-foreground">
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.privacy")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.terms")}</a></li>
                 <li><a href="#" className="hover:text-primary transition-colors">{t("footer.guidelines")}</a></li>
               </ul>
             </div>
           </div>
-          <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
+          <div className="pt-6 md:pt-8 border-t border-border text-center text-xs md:text-sm text-muted-foreground">
             {t("footer.copyright")}
           </div>
         </div>
