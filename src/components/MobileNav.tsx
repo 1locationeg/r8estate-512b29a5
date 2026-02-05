@@ -7,6 +7,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import logoIcon from "@/assets/logo-icon.png";
 
 interface MobileNavProps {
   onSignOut: () => void;
@@ -39,10 +40,13 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           {/* Header */}
           <div className="p-4 border-b border-border">
             <div className="flex items-center justify-between">
-              <span className="text-lg font-bold">
-                <span className="text-brand-red">R8</span>
-                <span className="text-primary">ESTATE</span>
-              </span>
+              <div className="flex items-center gap-1.5">
+                <img src={logoIcon} alt="R8ESTATE" className="h-8 w-auto object-contain" />
+                <span className="text-lg font-bold">
+                  <span className="text-brand-red">R8</span>
+                  <span className="text-primary">ESTATE</span>
+                </span>
+              </div>
               <LanguageSwitcher />
             </div>
           </div>
