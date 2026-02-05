@@ -107,13 +107,17 @@ const Index = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-20">
           {/* Brand Title */}
           <div className="text-center mb-6 md:mb-8">
-            <div className="flex items-center justify-center gap-2 md:gap-3 mb-2">
-              <img src={logoIcon} alt="R8ESTATE" className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto object-contain" />
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold">
+            <h1 className="inline-flex items-center justify-center gap-2 md:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-2">
+              <img
+                src={logoIcon}
+                alt="R8ESTATE"
+                className="h-[1em] w-auto object-contain"
+              />
+              <span className="inline-flex">
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
-              </h1>
-            </div>
+              </span>
+            </h1>
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
               {t("hero.trustMeter")}
             </p>
