@@ -19,6 +19,16 @@
     "about": "من نحن"
   },
   "hero": {
+    "trustMeter": "مقياس الثقة",
+    "tagline": "اشترِ منزلك على المخطط مع:",
+    "taglineHighlight": "صفر مخاطر و 100% قرار واثق",
+    "description": "اتخذ قرارك بثقة تامة، بدون مخاطر، مدعومًا بنتائج من تجارب وخبرات العملاء السابقين.",
+    "askAI": "اسأل AI",
+    "searchPlaceholder": "ابحث عن القصة الموثوقة",
+    "validateDecision": "تحقق من القرار",
+    "bestOf2025": "الأفضل لعام 2025",
+    "trendingProjects": "المشاريع الرائجة",
+    "newLaunches": "إطلاقات جديدة",
     "forBusiness": "للأعمال",
     "buyersTitle1": "موثوقية معتمدة.",
     "buyersTitle2": "استثمارات آمنة.",
@@ -26,11 +36,19 @@
     "industryTitle2": "نقاط سمعتك.",
     "buyersDescription": "اتخذ قرارات مستنيرة مع تقييمات موثقة من مشترين حقيقيين. ابحث عن المطورين والمشاريع قبل الاستثمار.",
     "industryDescription": "اعرض سجلك الحافل وابنِ الثقة مع المشترين المحتملين. أدر سمعتك بتحليلات قوية.",
-    "searchPlaceholder": "ما هو المطور أو المشروع الذي تبحث عنه؟",
     "popularSearches": "عمليات البحث الشائعة:",
     "emaarProperties": "إعمار العقارية",
     "dubaiCreekHarbour": "ميناء خور دبي",
     "downtownDubai": "وسط دبي"
+  },
+  "categories": {
+    "units": "الوحدات",
+    "apps": "التطبيقات",
+    "shares": "الأسهم",
+    "platforms": "المنصات",
+    "brokers": "الوسطاء",
+    "exhibitions": "المعارض",
+    "channels": "القنوات"
   },
   "stats": {
     "verifiedReviews": "تقييمات موثقة",
@@ -49,11 +67,37 @@
     "publicSentimentScore": "نقاط الرأي العام",
     "unclaimedProfile": "ملف غير مُطالب به"
   },
+  "trust": {
+    "categories": "فئات الثقة",
+    "projectTimeliness": "التزام المواعيد",
+    "constructionQuality": "جودة البناء",
+    "developerCommunication": "تواصل المطور",
+    "valueForMoney": "القيمة مقابل المال",
+    "documentationLegality": "التوثيق والقانونية",
+    "customerService": "خدمة العملاء"
+  },
   "reviews": {
     "all": "الكل",
+    "reviews": "تقييمات",
     "recentReviews": "أحدث التقييمات",
     "realFeedback": "ملاحظات حقيقية من مشترين موثقين",
-    "verifiedPurchase": "شراء موثق"
+    "verifiedPurchase": "شراء موثق",
+    "writeReview": "اكتب تقييم",
+    "customerReviews": "تقييمات العملاء",
+    "sortBy": "ترتيب حسب",
+    "newest": "الأحدث",
+    "oldest": "الأقدم",
+    "highest": "الأعلى تقييمًا",
+    "lowest": "الأدنى تقييمًا",
+    "noReviews": "لا توجد تقييمات بعد"
+  },
+  "actions": {
+    "downloadReport": "تحميل التقرير",
+    "compareWith": "قارن مع مطور آخر",
+    "like": "إعجاب",
+    "dislike": "عدم إعجاب",
+    "report": "إبلاغ",
+    "share": "مشاركة"
   },
   "footer": {
     "tagline": "موثوقية معتمدة. استثمارات آمنة. منصة السمعة للعقارات على المخطط.",
