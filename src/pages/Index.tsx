@@ -125,9 +125,11 @@ const Index = () => {
 
           {/* Tagline */}
           <div className="text-center mb-4 md:mb-6 max-w-3xl">
-            <p className="text-base sm:text-lg md:text-xl">
-              <span className="text-foreground">{t("hero.tagline")} </span>
-              <span className="text-accent font-semibold">{t("hero.taglineHighlight")}</span>
+            <p className="text-base sm:text-lg md:text-xl text-foreground">
+              {t("hero.tagline")}
+            </p>
+            <p className="text-base sm:text-lg md:text-xl text-accent font-semibold mt-1">
+              {t("hero.taglineHighlight")}
             </p>
           </div>
 
