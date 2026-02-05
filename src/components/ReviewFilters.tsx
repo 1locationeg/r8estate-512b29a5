@@ -21,13 +21,13 @@ export const ReviewFilters = ({ activeFilter, onFilterChange }: ReviewFiltersPro
   ];
 
   return (
-    <div className="flex flex-wrap gap-2">
+    <div className="flex gap-1.5 md:gap-2">
       {filters.map((filter) => (
         <button
           key={filter.value}
           onClick={() => onFilterChange(filter.value)}
           className={cn(
-            "px-4 py-2 rounded-full text-sm font-medium transition-all",
+            "px-2.5 md:px-4 py-1.5 md:py-2 rounded-full text-xs md:text-sm font-medium transition-all whitespace-nowrap",
             activeFilter === filter.value
               ? "bg-primary text-primary-foreground"
               : "bg-secondary text-foreground hover:bg-secondary/80"
