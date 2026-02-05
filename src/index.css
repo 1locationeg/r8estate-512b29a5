@@ -46,10 +46,11 @@
     --verified: 43 40% 59%;
     --verified-foreground: 213 51% 23%;
 
-    /* Trust score colors */
+    /* Trust score colors - percentage based */
+    /* 66-100% green, 50-65% gold/yellow, 0-49% red */
     --trust-excellent: 142 76% 36%;
-    --trust-good: 43 40% 59%;
-    --trust-fair: 25 95% 53%;
+    --trust-good: 45 93% 47%;
+    --trust-fair: 359 66% 51%;
 
     /* Hero gradient using navy */
     --hero-gradient-start: 213 51% 23%;
@@ -96,8 +97,8 @@
     --verified-foreground: 213 51% 15%;
 
     --trust-excellent: 142 76% 45%;
-    --trust-good: 43 45% 65%;
-    --trust-fair: 25 95% 58%;
+    --trust-good: 45 93% 52%;
+    --trust-fair: 359 60% 55%;
 
     --hero-gradient-start: 213 51% 20%;
     --hero-gradient-end: 213 51% 30%;
