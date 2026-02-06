@@ -1,17 +1,11 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { Search, Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { developers } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
-
-interface SearchResult {
-  id: string;
-  name: string;
-  logo: string;
-  reviewCount: number;
-  rating: number;
-}
+import { SearchSuggestions } from "@/components/SearchSuggestions";
+import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
@@ -22,22 +16,76 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(-1);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const blurTimeoutRef = useRef<NodeJS.Timeout>();
 
-  const searchResults = useMemo((): SearchResult[] => {
-    if (!query.trim()) return [];
-    const lowerQuery = query.toLowerCase();
-    return developers
-      .filter((dev) => dev.name.toLowerCase().includes(lowerQuery))
-      .map((dev) => ({
-        id: dev.id,
-        name: dev.name,
-        logo: dev.logo,
-        reviewCount: dev.reviewCount,
-        rating: dev.rating,
-      }));
+  // Reset selected index when query changes
+  useEffect(() => {
+    setSelectedIndex(-1);
   }, [query]);
 
-  const showResults = isFocused && query.trim().length > 0;
+  const handleSelect = useCallback((item: SearchItem) => {
+    if (item.category === 'developers') {
+      onSelectDeveloper(item.id);
+    }
+    // For other categories, we could navigate to different pages
+    // For now, just close the dropdown
+    setQuery("");
+    setIsFocused(false);
+  }, [onSelectDeveloper]);
+
+  const handleCorrection = useCallback((corrected: string) => {
+    setQuery(corrected);
+    inputRef.current?.focus();
+  }, []);
+
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (!isFocused) return;
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        setSelectedIndex(prev => prev + 1);
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        setSelectedIndex(prev => Math.max(-1, prev - 1));
+        break;
+      case 'Escape':
+        setIsFocused(false);
+        inputRef.current?.blur();
+        break;
+      case 'Enter':
+        // If an item is selected, trigger selection
+        // This would need access to the flat items list
+        break;
+    }
+  }, [isFocused]);
+
+  const handleFocus = useCallback(() => {
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+    }
+    setIsFocused(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    // Delay to allow click on suggestions
+    blurTimeoutRef.current = setTimeout(() => {
+      setIsFocused(false);
+      setSelectedIndex(-1);
+    }, 200);
+  }, []);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div className="w-full max-w-3xl mx-auto relative">
@@ -55,11 +103,13 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         {/* Search Input */}
         <div className="flex-1 relative">
           <input
+            ref={inputRef}
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            onFocus={() => setIsFocused(true)}
-            onBlur={() => setTimeout(() => setIsFocused(false), 200)}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            onKeyDown={handleKeyDown}
             placeholder={t("hero.searchPlaceholder")}
             className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
@@ -74,41 +124,14 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         </button>
       </div>
 
-      {/* Search Results Dropdown */}
-      {showResults && searchResults.length > 0 && (
-        <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50">
-          {searchResults.map((result) => (
-            <button
-              key={result.id}
-              onClick={() => {
-                onSelectDeveloper(result.id);
-                setQuery("");
-              }}
-              className="w-full flex items-center gap-3 p-3 hover:bg-secondary/50 transition-colors text-start"
-            >
-              <img
-                src={result.logo}
-                alt={result.name}
-                className="w-10 h-10 rounded-lg object-cover"
-              />
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-foreground text-sm">
-                  {result.name}
-                </div>
-                <div className="text-xs text-muted-foreground">
-                  {result.reviewCount} {t("reviews.reviews")}
-                </div>
-              </div>
-              <div className="flex items-center gap-1 px-2 py-1 bg-accent/20 rounded-lg">
-                <Star className="w-3.5 h-3.5 fill-accent text-accent" />
-                <span className="text-sm font-semibold text-accent">
-                  {result.rating}
-                </span>
-              </div>
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Search Suggestions Dropdown */}
+      <SearchSuggestions
+        query={query}
+        isOpen={isFocused}
+        onSelect={handleSelect}
+        onCorrection={handleCorrection}
+        selectedIndex={selectedIndex}
+      />
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />

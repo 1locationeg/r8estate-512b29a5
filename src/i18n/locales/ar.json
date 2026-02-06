@@ -1,4 +1,18 @@
 {
+  "search": {
+    "didYouMean": "هل تقصد",
+    "noResults": "لا توجد نتائج",
+    "popular": "عمليات البحث الشائعة",
+    "recent": "عمليات البحث الأخيرة",
+    "developers": "المطورون",
+    "projects": "المشاريع",
+    "locations": "المواقع",
+    "categories": "الفئات",
+    "units": "أنواع الوحدات",
+    "brokers": "الوسطاء",
+    "apps": "التطبيقات والمنصات",
+    "reviews": "التقييمات"
+  },
   "common": {
     "signIn": "تسجيل الدخول",
     "signOut": "تسجيل الخروج",

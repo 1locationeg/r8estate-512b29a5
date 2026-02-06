@@ -135,6 +135,193 @@ export const developers: Developer[] = [
   },
 ];
 
+// Projects data
+export interface Project {
+  id: string;
+  name: string;
+  developerId: string;
+  location: string;
+  status: 'Pre-Launch' | 'Launched' | 'Under Construction' | 'Completed' | 'Occupied';
+  image?: string;
+  unitTypes: string[];
+  priceRange: string;
+}
+
+export const projects: Project[] = [
+  {
+    id: "dubai-creek-harbour",
+    name: "Dubai Creek Harbour",
+    developerId: "emaar",
+    location: "Dubai Creek",
+    status: "Under Construction",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=100&h=100&fit=crop",
+    unitTypes: ["1BR", "2BR", "3BR+"],
+    priceRange: "AED 1.2M - 5M"
+  },
+  {
+    id: "arabian-ranches-3",
+    name: "Arabian Ranches III",
+    developerId: "emaar",
+    location: "Dubai Land",
+    status: "Under Construction",
+    image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop",
+    unitTypes: ["3BR+", "Villa"],
+    priceRange: "AED 2.5M - 8M"
+  },
+  {
+    id: "dubai-hills-estate",
+    name: "Dubai Hills Estate",
+    developerId: "emaar",
+    location: "Dubai Hills",
+    status: "Completed",
+    image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=100&h=100&fit=crop",
+    unitTypes: ["Studio", "1BR", "2BR", "3BR+"],
+    priceRange: "AED 800K - 6M"
+  },
+  {
+    id: "damac-hills-2",
+    name: "DAMAC Hills 2",
+    developerId: "damac",
+    location: "DAMAC Hills",
+    status: "Under Construction",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&h=100&fit=crop",
+    unitTypes: ["2BR", "3BR+", "Villa"],
+    priceRange: "AED 1M - 4M"
+  },
+  {
+    id: "damac-lagoons",
+    name: "DAMAC Lagoons",
+    developerId: "damac",
+    location: "DAMAC South",
+    status: "Pre-Launch",
+    image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=100&h=100&fit=crop",
+    unitTypes: ["Villa", "Townhouse"],
+    priceRange: "AED 1.5M - 6M"
+  },
+  {
+    id: "palm-jumeirah",
+    name: "Palm Jumeirah",
+    developerId: "nakheel",
+    location: "Palm Jumeirah",
+    status: "Occupied",
+    image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=100&h=100&fit=crop",
+    unitTypes: ["1BR", "2BR", "3BR+", "Villa"],
+    priceRange: "AED 2M - 50M"
+  },
+  {
+    id: "bluewaters-residences",
+    name: "Bluewaters Residences",
+    developerId: "meraas",
+    location: "Bluewaters Island",
+    status: "Completed",
+    image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=100&h=100&fit=crop",
+    unitTypes: ["1BR", "2BR", "3BR+"],
+    priceRange: "AED 1.8M - 8M"
+  },
+  {
+    id: "yas-island",
+    name: "Yas Island",
+    developerId: "aldar",
+    location: "Abu Dhabi",
+    status: "Under Construction",
+    image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=100&h=100&fit=crop",
+    unitTypes: ["Studio", "1BR", "2BR", "3BR+"],
+    priceRange: "AED 600K - 4M"
+  }
+];
+
+// Locations data
+export interface Location {
+  id: string;
+  name: string;
+  region: string;
+  projectCount: number;
+}
+
+export const locations: Location[] = [
+  { id: "downtown-dubai", name: "Downtown Dubai", region: "Dubai", projectCount: 45 },
+  { id: "dubai-marina", name: "Dubai Marina", region: "Dubai", projectCount: 78 },
+  { id: "palm-jumeirah", name: "Palm Jumeirah", region: "Dubai", projectCount: 32 },
+  { id: "dubai-creek", name: "Dubai Creek", region: "Dubai", projectCount: 28 },
+  { id: "jbr", name: "Jumeirah Beach Residence", region: "Dubai", projectCount: 24 },
+  { id: "business-bay", name: "Business Bay", region: "Dubai", projectCount: 56 },
+  { id: "dubai-hills", name: "Dubai Hills", region: "Dubai", projectCount: 18 },
+  { id: "yas-island", name: "Yas Island", region: "Abu Dhabi", projectCount: 22 },
+  { id: "saadiyat-island", name: "Saadiyat Island", region: "Abu Dhabi", projectCount: 15 },
+  { id: "al-reem-island", name: "Al Reem Island", region: "Abu Dhabi", projectCount: 34 }
+];
+
+// Brokerages data
+export interface Brokerage {
+  id: string;
+  name: string;
+  logo?: string;
+  specialty: string;
+  agentCount: number;
+}
+
+export const brokerages: Brokerage[] = [
+  { id: "allsopp-allsopp", name: "Allsopp & Allsopp", specialty: "Premium Properties", agentCount: 150 },
+  { id: "betterhomes", name: "Better Homes", specialty: "Residential & Commercial", agentCount: 200 },
+  { id: "driven-properties", name: "Driven Properties", specialty: "Luxury Real Estate", agentCount: 80 },
+  { id: "fam-properties", name: "Fäm Properties", specialty: "Off-Plan Specialists", agentCount: 120 },
+  { id: "haus-haus", name: "haus & haus", specialty: "Dubai Property Experts", agentCount: 95 }
+];
+
+// Apps/Platforms data
+export interface App {
+  id: string;
+  name: string;
+  type: string;
+  icon?: string;
+  rating: number;
+  downloads: string;
+}
+
+export const apps: App[] = [
+  { id: "bayut", name: "Bayut", type: "Property Portal", rating: 4.6, downloads: "1M+" },
+  { id: "property-finder", name: "Property Finder", type: "Property Portal", rating: 4.5, downloads: "500K+" },
+  { id: "dubizzle", name: "Dubizzle Property", type: "Marketplace", rating: 4.3, downloads: "2M+" },
+  { id: "zoom-property", name: "Zoom Property", type: "Property Portal", rating: 4.2, downloads: "100K+" }
+];
+
+// Unit types
+export interface UnitType {
+  id: string;
+  name: string;
+  description: string;
+  averagePrice: string;
+}
+
+export const unitTypes: UnitType[] = [
+  { id: "studio", name: "Studio", description: "Single room units", averagePrice: "AED 400K - 800K" },
+  { id: "1br", name: "1 Bedroom", description: "One bedroom apartments", averagePrice: "AED 600K - 1.5M" },
+  { id: "2br", name: "2 Bedrooms", description: "Two bedroom apartments", averagePrice: "AED 900K - 2.5M" },
+  { id: "3br", name: "3+ Bedrooms", description: "Three or more bedrooms", averagePrice: "AED 1.5M - 5M" },
+  { id: "villa", name: "Villa", description: "Standalone villas", averagePrice: "AED 2M - 15M" },
+  { id: "townhouse", name: "Townhouse", description: "Townhouse units", averagePrice: "AED 1.5M - 6M" },
+  { id: "penthouse", name: "Penthouse", description: "Luxury penthouses", averagePrice: "AED 5M - 50M" },
+  { id: "commercial", name: "Commercial", description: "Office & retail spaces", averagePrice: "AED 500K - 10M" }
+];
+
+// Categories for navigation
+export interface Category {
+  id: string;
+  name: string;
+  icon: string;
+  count: number;
+}
+
+export const categories: Category[] = [
+  { id: "units", name: "UNITS", icon: "🗄️", count: 8 },
+  { id: "apps", name: "Apps", icon: "📁", count: 4 },
+  { id: "shares", name: "Shares", icon: "📂", count: 0 },
+  { id: "platforms", name: "Platforms", icon: "📋", count: 3 },
+  { id: "brokers", name: "Brokers", icon: "🤝", count: 5 },
+  { id: "exhibitions", name: "Exhibitions", icon: "🖥️", count: 0 },
+  { id: "channels", name: "Channels", icon: "📺", count: 0 }
+];
+
 export const reviews: Review[] = [
   {
     id: "1",
