@@ -162,27 +162,30 @@ export function findSpellCorrection(
   return bestMatch;
 }
 
-// Common misspelling patterns for UAE real estate
+// Common misspelling patterns for Egypt real estate
 export const commonMisspellings: Record<string, string> = {
-  'emar': 'Emaar',
-  'emaaar': 'Emaar',
-  'emmar': 'Emaar',
-  'damak': 'Damac',
-  'damack': 'Damac',
-  'nakeel': 'Nakheel',
-  'nakhel': 'Nakheel',
-  'sobah': 'Sobha',
-  'soba': 'Sobha',
-  'meras': 'Meraas',
-  'merass': 'Meraas',
-  'aldar': 'Aldar',
-  'aldaar': 'Aldar',
-  'dubai creek': 'Dubai Creek Harbour',
-  'creek harbour': 'Dubai Creek Harbour',
-  'palm jumeira': 'Palm Jumeirah',
-  'palm jumerah': 'Palm Jumeirah',
-  'downtown': 'Downtown Dubai',
-  'marina': 'Dubai Marina',
+  'palm hills': 'Palm Hills Developments',
+  'palmhills': 'Palm Hills Developments',
+  'palm hils': 'Palm Hills Developments',
+  'emaar': 'Emaar Misr',
+  'emar': 'Emaar Misr',
+  'sodec': 'SODIC',
+  'sodik': 'SODIC',
+  'ora': 'Ora Developers',
+  'tatwir': 'Tatweer Misr',
+  'tatwer': 'Tatweer Misr',
+  'mountain veiw': 'Mountain View',
+  'hyde parl': 'Hyde Park Developments',
+  'new cayro': 'New Cairo',
+  'sheik zayed': 'Sheikh Zayed',
+  'sheikh zaied': 'Sheikh Zayed',
+  'sokna': 'Ain Sokhna',
+  'sokhna': 'Ain Sokhna',
+  'sahel': 'North Coast',
+  'north coast': 'North Coast',
+  'new capital': 'New Administrative Capital',
+  'marassi': 'Marassi',
+  'marasi': 'Marassi',
 };
 
 // Check common misspellings first
