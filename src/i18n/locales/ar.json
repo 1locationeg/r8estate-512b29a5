@@ -12,7 +12,13 @@
     "property-types": "أنواع العقارات",
     "brokers": "الوسطاء",
     "apps": "التطبيقات والمنصات",
-    "reviews": "التقييمات"
+    "reviews": "التقييمات",
+    "writeReview": "اكتب تقييم",
+    "writeReviewTooltip": "اكتب تقييماً لهذا العنصر",
+    "voiceReviewTooltip": "سجل تقييماً صوتياً",
+    "downloadReportTooltip": "تحميل تقرير الثقة",
+    "compare": "قارن",
+    "compareTooltip": "قارن مع عنصر مماثل آخر"
   },
   "common": {
     "signIn": "تسجيل الدخول",
