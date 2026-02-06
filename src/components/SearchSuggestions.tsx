@@ -1,9 +1,10 @@
 import { useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Hotel, Stethoscope, Briefcase } from "lucide-react";
+import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { performSearch, getPopularItems, type SearchItem, type SearchCategory, type SearchResults } from "@/data/searchIndex";
-
+import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { TrustGaugeMini } from "./TrustGaugeMini";
+import { getRatingColorClass } from "@/lib/ratingColors";
 interface SearchSuggestionsProps {
   query: string;
   isOpen: boolean;
@@ -101,9 +102,25 @@ export const SearchSuggestions = ({
   
   let itemIndex = -1;
   
+  // Generate a deterministic trust score for non-developer items based on id
+  const generateTrustScore = (item: SearchItem): number => {
+    // Developers already have trustScore in meta
+    if (item.category === 'developers' && item.meta?.trustScore) {
+      return item.meta.trustScore as number;
+    }
+    // Generate a consistent score based on item id hash
+    let hash = 0;
+    for (let i = 0; i < item.id.length; i++) {
+      hash = ((hash << 5) - hash) + item.id.charCodeAt(i);
+      hash = hash & hash;
+    }
+    return 55 + Math.abs(hash % 40); // Range 55-94
+  };
+
   const renderItem = (item: SearchItem, isSelected: boolean) => {
     itemIndex++;
     const currentIndex = itemIndex;
+    const trustScore = generateTrustScore(item);
     
     return (
       <button
@@ -140,10 +157,14 @@ export const SearchSuggestions = ({
           )}
         </div>
         
+        {/* Trust Gauge - shown for all items */}
+        <TrustGaugeMini score={trustScore} size="xs" />
+        
+        {/* Star Rating */}
         {item.rating && (
-          <div className="flex items-center gap-1 px-2 py-1 bg-accent/20 rounded-lg flex-shrink-0">
-            <Star className="w-3 h-3 fill-accent text-accent" />
-            <span className="text-xs font-semibold text-accent">
+          <div className="flex items-center gap-1 px-2 py-1 bg-secondary/50 rounded-lg flex-shrink-0">
+            <Star className={`w-3 h-3 fill-current ${getRatingColorClass(item.rating)}`} />
+            <span className={`text-xs font-semibold ${getRatingColorClass(item.rating)}`}>
               {item.rating}
             </span>
           </div>
