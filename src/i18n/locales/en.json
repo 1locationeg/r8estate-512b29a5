@@ -12,7 +12,13 @@
     "property-types": "Property Types",
     "brokers": "Brokers",
     "apps": "Apps & Platforms",
-    "reviews": "Reviews"
+    "reviews": "Reviews",
+    "writeReview": "Write Review",
+    "writeReviewTooltip": "Write a review for this item",
+    "voiceReviewTooltip": "Record a voice review",
+    "downloadReportTooltip": "Download trust report",
+    "compare": "Compare",
+    "compareTooltip": "Compare with another similar item"
   },
   "common": {
     "signIn": "Sign In",
