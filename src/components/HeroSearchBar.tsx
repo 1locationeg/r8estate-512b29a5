@@ -5,7 +5,6 @@ import { developers } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
-import { BestOfModal } from "@/components/BestOfModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -65,10 +64,6 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [isFocused]);
 
   const handleFocus = useCallback(() => {
-    if (import.meta.env.DEV) {
-      console.debug("[HeroSearchBar] focus");
-    }
-
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
     }
@@ -76,42 +71,11 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, []);
 
   const handleBlur = useCallback(() => {
-    if (import.meta.env.DEV) {
-      console.debug("[HeroSearchBar] blur (scheduled)");
-    }
-
     // Delay to allow click on suggestions
     blurTimeoutRef.current = setTimeout(() => {
       setIsFocused(false);
       setSelectedIndex(-1);
-
-      if (import.meta.env.DEV) {
-        console.debug("[HeroSearchBar] blur (applied)");
-      }
     }, 200);
-  }, []);
-
-  // If something (e.g. an invisible overlay) intercepts taps/clicks,
-  // make the entire search container refocus the input.
-  const handleContainerPointerDownCapture = useCallback((e: React.PointerEvent) => {
-    const target = e.target as HTMLElement | null;
-    if (!target) return;
-
-    // Don't steal interaction from actual buttons.
-    if (target.closest("button")) return;
-
-    // Clicking inside the input should behave normally.
-    if (target.tagName === "INPUT") return;
-
-    inputRef.current?.focus();
-
-    if (import.meta.env.DEV) {
-      const active = document.activeElement as HTMLElement | null;
-      console.debug("[HeroSearchBar] container pointerdown -> focus input", {
-        activeTag: active?.tagName,
-        activeClass: active?.className,
-      });
-    }
   }, []);
 
   // Cleanup timeout on unmount
@@ -126,10 +90,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto relative">
       {/* Search Container */}
-      <div
-        className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2"
-        onPointerDownCapture={handleContainerPointerDownCapture}
-      >
+      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2">
         {/* Ask AI Button */}
         <button 
           onClick={() => setIsAIModalOpen(true)}
@@ -144,10 +105,6 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           <input
             ref={inputRef}
             type="text"
-            inputMode="search"
-            autoCorrect="off"
-            autoCapitalize="none"
-            spellCheck={false}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={handleFocus}
@@ -185,45 +142,29 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
 interface CategoryLink {
   icon: string;
   label: string;
-  category: "best" | "trending" | "new";
 }
 
 export const HeroCategoryLinks = () => {
   const { t } = useTranslation();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<"best" | "trending" | "new">("best");
 
   const categories: CategoryLink[] = [
-    { icon: "🏆", label: t("hero.bestOf2025"), category: "best" },
-    { icon: "📈", label: t("hero.trendingProjects"), category: "trending" },
-    { icon: "🚀", label: t("hero.newLaunches"), category: "new" },
+    { icon: "🏆", label: t("hero.bestOf2025") },
+    { icon: "📈", label: t("hero.trendingProjects") },
+    { icon: "🚀", label: t("hero.newLaunches") },
   ];
 
-  const handleClick = (category: "best" | "trending" | "new") => {
-    setActiveCategory(category);
-    setModalOpen(true);
-  };
-
   return (
-    <>
-      <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
-        {categories.map((cat) => (
-          <button
-            key={cat.label}
-            onClick={() => handleClick(cat.category)}
-            className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <span>{cat.icon}</span>
-            <span>{cat.label}</span>
-          </button>
-        ))}
-      </div>
-      <BestOfModal 
-        open={modalOpen} 
-        onOpenChange={setModalOpen} 
-        category={activeCategory} 
-      />
-    </>
+    <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
+      {categories.map((cat) => (
+        <button
+          key={cat.label}
+          className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <span>{cat.icon}</span>
+          <span>{cat.label}</span>
+        </button>
+      ))}
+    </div>
   );
 };
 

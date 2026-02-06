@@ -33,20 +33,11 @@ const Index = () => {
   }, [selectedDeveloperId]);
 
   const handleSignOut = async () => {
-    try {
-      await signOut();
-      toast({
-        title: t("common.signedOut"),
-        description: t("common.signedOutSuccess"),
-      });
-    } catch (error) {
-      console.error("Sign out failed:", error);
-      toast({
-        title: t("common.error"),
-        description: t("common.tryAgain"),
-        variant: "destructive",
-      });
-    }
+    await signOut();
+    toast({
+      title: t("common.signedOut"),
+      description: t("common.signedOutSuccess"),
+    });
   };
 
   const getDashboardRoute = () => {

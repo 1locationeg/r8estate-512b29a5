@@ -1,12 +1,10 @@
-import { useMemo, useEffect, useRef, useState } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { TrustGaugeMini } from "./TrustGaugeMini";
 import { getRatingColorClass } from "@/lib/ratingColors";
-import { ItemDetailModal } from "./ItemDetailModal";
-
 interface SearchSuggestionsProps {
   query: string;
   isOpen: boolean;
@@ -40,53 +38,36 @@ export const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
-  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-
-  const handleItemClick = (item: SearchItem) => {
-    setSelectedItem(item);
-    setIsModalOpen(true);
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    setSelectedItem(null);
-  };
   
-  // Perform search or get popular items (guarded so typing can never crash the page)
+  // Perform search or get popular items
   const { results, popular, flatItems } = useMemo(() => {
-    try {
-      if (query.trim().length > 0) {
-        const searchResults = performSearch(query);
-        const flat: SearchItem[] = [];
-
-        // Flatten grouped results in category order
-        for (const cat of categoryOrder) {
-          flat.push(...(searchResults.groupedResults[cat] || []));
-        }
-
-        return {
-          results: searchResults,
-          popular: null,
-          flatItems: flat,
-        };
+    if (query.trim().length > 0) {
+      const searchResults = performSearch(query);
+      const flat: SearchItem[] = [];
+      
+      // Flatten grouped results in category order
+      for (const cat of categoryOrder) {
+        flat.push(...searchResults.groupedResults[cat]);
       }
-
+      
+      return { 
+        results: searchResults, 
+        popular: null, 
+        flatItems: flat 
+      };
+    } else {
       const popularItems = getPopularItems();
       const flat: SearchItem[] = [];
-
+      
       for (const cat of categoryOrder) {
-        flat.push(...(popularItems[cat] || []));
+        flat.push(...popularItems[cat]);
       }
-
-      return {
-        results: null,
+      
+      return { 
+        results: null, 
         popular: popularItems,
-        flatItems: flat,
+        flatItems: flat 
       };
-    } catch (error) {
-      console.error("SearchSuggestions crashed while computing results:", error);
-      return { results: null, popular: null, flatItems: [] as SearchItem[] };
     }
   }, [query]);
   
@@ -145,7 +126,7 @@ export const SearchSuggestions = ({
       <button
         key={`${item.category}-${item.id}`}
         data-index={currentIndex}
-        onClick={() => handleItemClick(item)}
+        onClick={() => onSelect(item)}
         className={cn(
           "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-start rounded-lg",
           isSelected 
@@ -223,61 +204,51 @@ export const SearchSuggestions = ({
     : popular;
   
   return (
-    <>
-      <div 
-        ref={containerRef}
-        className={cn(
-          "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[400px] overflow-y-auto",
-          className
-        )}
-      >
-        {/* Spell Correction Banner */}
-        {results?.spellCorrection && (
-          <button
-            onClick={() => onCorrection(results.spellCorrection!.corrected)}
-            className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-primary/5 border-b border-border hover:bg-primary/10 transition-colors"
-          >
-            <div className="flex items-center gap-2 text-sm">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-muted-foreground">{t("search.didYouMean")}</span>
-              <span className="font-semibold text-primary">
-                "{results.spellCorrection.corrected}"
-              </span>
-            </div>
-            <ArrowRight className="w-4 h-4 text-primary" />
-          </button>
-        )}
-        
-        {/* Trending/Most Searched Header (when no query) */}
-        {!query.trim() && (
-          <div className="px-4 py-3 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
-            <div className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5" />
-              <span>{t("search.trending")}</span>
-            </div>
+    <div 
+      ref={containerRef}
+      className={cn(
+        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[400px] overflow-y-auto",
+        className
+      )}
+    >
+      {/* Spell Correction Banner */}
+      {results?.spellCorrection && (
+        <button
+          onClick={() => onCorrection(results.spellCorrection!.corrected)}
+          className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-primary/5 border-b border-border hover:bg-primary/10 transition-colors"
+        >
+          <div className="flex items-center gap-2 text-sm">
+            <Sparkles className="w-4 h-4 text-primary" />
+            <span className="text-muted-foreground">{t("search.didYouMean")}</span>
+            <span className="font-semibold text-primary">
+              "{results.spellCorrection.corrected}"
+            </span>
           </div>
-        )}
-        
-        {/* Category Sections */}
-        <div className="divide-y divide-border/50">
-          {groupedToRender && categoryOrder.map((cat) => {
-            const items = groupedToRender[cat] || [];
-            if (items.length === 0) return null;
-            
-            const labelKey = `search.${cat}` as const;
-            const label = t(labelKey);
-            
-            return renderCategorySection(cat, items, label);
-          })}
+          <ArrowRight className="w-4 h-4 text-primary" />
+        </button>
+      )}
+      
+      {/* Popular Header (when no query) */}
+      {!query.trim() && (
+        <div className="px-4 py-3 border-b border-border">
+          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+            {t("search.popular")}
+          </div>
         </div>
+      )}
+      
+      {/* Category Sections */}
+      <div className="divide-y divide-border/50">
+        {groupedToRender && categoryOrder.map((cat) => {
+          const items = groupedToRender[cat] || [];
+          if (items.length === 0) return null;
+          
+          const labelKey = `search.${cat}` as const;
+          const label = t(labelKey);
+          
+          return renderCategorySection(cat, items, label);
+        })}
       </div>
-
-      {/* Item Detail Modal - rendered outside the dropdown */}
-      <ItemDetailModal
-        item={selectedItem}
-        open={isModalOpen}
-        onClose={handleCloseModal}
-      />
-    </>
+    </div>
   );
 };

@@ -213,65 +213,32 @@ export function performSearch(query: string, limit: number = 15): SearchResults 
   };
 }
 
-// Get most searched/interactive items when no query - prioritized by engagement
+// Get popular/trending items when no query
 export function getPopularItems(): Record<SearchCategory, SearchItem[]> {
   const index = getSearchIndex();
   
-  // Score items by engagement (reviewCount, rating, meta data)
-  const scoreItem = (item: SearchItem): number => {
-    let score = 0;
-    score += (item.reviewCount || 0) * 2;
-    score += (item.rating || 0) * 100;
-    if (item.meta?.trustScore) score += (item.meta.trustScore as number) * 5;
-    if (item.meta?.projectCount) score += (item.meta.projectCount as number) * 3;
-    if (item.meta?.downloads) {
-      const downloads = String(item.meta.downloads);
-      if (downloads.includes('M')) score += 500;
-      else if (downloads.includes('K')) score += 100;
-    }
-    return score;
-  };
-  
   const popular: Record<SearchCategory, SearchItem[]> = {
-    // Top developers by reviews & trust score
     developers: index
       .filter(i => i.category === 'developers')
-      .sort((a, b) => scoreItem(b) - scoreItem(a))
-      .slice(0, 4),
-    // Top projects (from highest-rated developers)
+      .sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0))
+      .slice(0, 3),
     projects: index
       .filter(i => i.category === 'projects')
-      .sort((a, b) => scoreItem(b) - scoreItem(a))
       .slice(0, 3),
-    // Most popular locations by project count
     locations: index
       .filter(i => i.category === 'locations')
-      .sort((a, b) => ((b.meta?.projectCount as number) || 0) - ((a.meta?.projectCount as number) || 0))
-      .slice(0, 4),
-    // Top brokers
-    brokers: index
-      .filter(i => i.category === 'brokers')
-      .sort((a, b) => ((b.meta?.agentCount as number) || 0) - ((a.meta?.agentCount as number) || 0))
       .slice(0, 3),
-    // Top apps by rating & downloads
-    apps: index
-      .filter(i => i.category === 'apps')
-      .sort((a, b) => scoreItem(b) - scoreItem(a))
-      .slice(0, 3),
-    // Most searched unit types
+    brokers: [],
+    apps: [],
     units: index
       .filter(i => i.category === 'units')
       .slice(0, 4),
-    // Property types
     'property-types': index
       .filter(i => i.category === 'property-types')
-      .sort((a, b) => ((b.meta?.count as number) || 0) - ((a.meta?.count as number) || 0))
       .slice(0, 4),
-    // Top categories
     categories: index
       .filter(i => i.category === 'categories')
-      .sort((a, b) => ((b.meta?.count as number) || 0) - ((a.meta?.count as number) || 0))
-      .slice(0, 3),
+      .slice(0, 4),
     reviews: []
   };
   
