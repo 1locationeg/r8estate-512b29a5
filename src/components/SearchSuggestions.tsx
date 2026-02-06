@@ -1,10 +1,12 @@
-import { useMemo, useEffect, useRef } from "react";
+import { useMemo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { TrustGaugeMini } from "./TrustGaugeMini";
 import { getRatingColorClass } from "@/lib/ratingColors";
+import { ItemDetailModal } from "./ItemDetailModal";
+
 interface SearchSuggestionsProps {
   query: string;
   isOpen: boolean;
@@ -38,6 +40,18 @@ export const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleItemClick = (item: SearchItem) => {
+    setSelectedItem(item);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedItem(null);
+  };
   
   // Perform search or get popular items
   const { results, popular, flatItems } = useMemo(() => {
@@ -126,7 +140,7 @@ export const SearchSuggestions = ({
       <button
         key={`${item.category}-${item.id}`}
         data-index={currentIndex}
-        onClick={() => onSelect(item)}
+        onClick={() => handleItemClick(item)}
         className={cn(
           "w-full flex items-center gap-3 px-3 py-2.5 transition-colors text-start rounded-lg",
           isSelected 
@@ -249,6 +263,13 @@ export const SearchSuggestions = ({
           return renderCategorySection(cat, items, label);
         })}
       </div>
+
+      {/* Item Detail Modal */}
+      <ItemDetailModal
+        item={selectedItem}
+        open={isModalOpen}
+        onClose={handleCloseModal}
+      />
     </div>
   );
 };
