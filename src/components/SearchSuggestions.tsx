@@ -248,11 +248,12 @@ export const SearchSuggestions = ({
           </button>
         )}
         
-        {/* Popular Header (when no query) */}
+        {/* Trending/Most Searched Header (when no query) */}
         {!query.trim() && (
-          <div className="px-4 py-3 border-b border-border">
-            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-              {t("search.popular")}
+          <div className="px-4 py-3 border-b border-border bg-gradient-to-r from-primary/5 to-transparent">
+            <div className="flex items-center gap-2 text-xs font-semibold text-primary uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{t("search.trending")}</span>
             </div>
           </div>
         )}
