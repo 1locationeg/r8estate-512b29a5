@@ -218,58 +218,60 @@ export const SearchSuggestions = ({
     : popular;
   
   return (
-    <div 
-      ref={containerRef}
-      className={cn(
-        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[400px] overflow-y-auto",
-        className
-      )}
-    >
-      {/* Spell Correction Banner */}
-      {results?.spellCorrection && (
-        <button
-          onClick={() => onCorrection(results.spellCorrection!.corrected)}
-          className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-primary/5 border-b border-border hover:bg-primary/10 transition-colors"
-        >
-          <div className="flex items-center gap-2 text-sm">
-            <Sparkles className="w-4 h-4 text-primary" />
-            <span className="text-muted-foreground">{t("search.didYouMean")}</span>
-            <span className="font-semibold text-primary">
-              "{results.spellCorrection.corrected}"
-            </span>
+    <>
+      <div 
+        ref={containerRef}
+        className={cn(
+          "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[400px] overflow-y-auto",
+          className
+        )}
+      >
+        {/* Spell Correction Banner */}
+        {results?.spellCorrection && (
+          <button
+            onClick={() => onCorrection(results.spellCorrection!.corrected)}
+            className="w-full flex items-center justify-between gap-2 px-4 py-3 bg-primary/5 border-b border-border hover:bg-primary/10 transition-colors"
+          >
+            <div className="flex items-center gap-2 text-sm">
+              <Sparkles className="w-4 h-4 text-primary" />
+              <span className="text-muted-foreground">{t("search.didYouMean")}</span>
+              <span className="font-semibold text-primary">
+                "{results.spellCorrection.corrected}"
+              </span>
+            </div>
+            <ArrowRight className="w-4 h-4 text-primary" />
+          </button>
+        )}
+        
+        {/* Popular Header (when no query) */}
+        {!query.trim() && (
+          <div className="px-4 py-3 border-b border-border">
+            <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              {t("search.popular")}
+            </div>
           </div>
-          <ArrowRight className="w-4 h-4 text-primary" />
-        </button>
-      )}
-      
-      {/* Popular Header (when no query) */}
-      {!query.trim() && (
-        <div className="px-4 py-3 border-b border-border">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            {t("search.popular")}
-          </div>
+        )}
+        
+        {/* Category Sections */}
+        <div className="divide-y divide-border/50">
+          {groupedToRender && categoryOrder.map((cat) => {
+            const items = groupedToRender[cat] || [];
+            if (items.length === 0) return null;
+            
+            const labelKey = `search.${cat}` as const;
+            const label = t(labelKey);
+            
+            return renderCategorySection(cat, items, label);
+          })}
         </div>
-      )}
-      
-      {/* Category Sections */}
-      <div className="divide-y divide-border/50">
-        {groupedToRender && categoryOrder.map((cat) => {
-          const items = groupedToRender[cat] || [];
-          if (items.length === 0) return null;
-          
-          const labelKey = `search.${cat}` as const;
-          const label = t(labelKey);
-          
-          return renderCategorySection(cat, items, label);
-        })}
       </div>
 
-      {/* Item Detail Modal */}
+      {/* Item Detail Modal - rendered outside the dropdown */}
       <ItemDetailModal
         item={selectedItem}
         open={isModalOpen}
         onClose={handleCloseModal}
       />
-    </div>
+    </>
   );
 };
