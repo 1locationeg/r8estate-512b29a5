@@ -5,6 +5,7 @@ import { developers } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
+import { BestOfModal } from "@/components/BestOfModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -184,29 +185,45 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
 interface CategoryLink {
   icon: string;
   label: string;
+  category: "best" | "trending" | "new";
 }
 
 export const HeroCategoryLinks = () => {
   const { t } = useTranslation();
+  const [modalOpen, setModalOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<"best" | "trending" | "new">("best");
 
   const categories: CategoryLink[] = [
-    { icon: "🏆", label: t("hero.bestOf2025") },
-    { icon: "📈", label: t("hero.trendingProjects") },
-    { icon: "🚀", label: t("hero.newLaunches") },
+    { icon: "🏆", label: t("hero.bestOf2025"), category: "best" },
+    { icon: "📈", label: t("hero.trendingProjects"), category: "trending" },
+    { icon: "🚀", label: t("hero.newLaunches"), category: "new" },
   ];
 
+  const handleClick = (category: "best" | "trending" | "new") => {
+    setActiveCategory(category);
+    setModalOpen(true);
+  };
+
   return (
-    <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
-      {categories.map((cat) => (
-        <button
-          key={cat.label}
-          className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
-        >
-          <span>{cat.icon}</span>
-          <span>{cat.label}</span>
-        </button>
-      ))}
-    </div>
+    <>
+      <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
+        {categories.map((cat) => (
+          <button
+            key={cat.label}
+            onClick={() => handleClick(cat.category)}
+            className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
+          >
+            <span>{cat.icon}</span>
+            <span>{cat.label}</span>
+          </button>
+        ))}
+      </div>
+      <BestOfModal 
+        open={modalOpen} 
+        onOpenChange={setModalOpen} 
+        category={activeCategory} 
+      />
+    </>
   );
 };
 
