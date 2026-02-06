@@ -1,4 +1,4 @@
-import { developers, reviews, projects, locations, brokerages, apps, unitTypes, categories } from './mockData';
+import { developers, reviews, projects, locations, brokerages, apps, unitTypes, categories, propertyTypes } from './mockData';
 import { fuzzySearch, findSpellCorrection, checkCommonMisspelling, type FuzzyMatchResult } from '@/lib/fuzzySearch';
 
 export type SearchCategory = 
@@ -8,6 +8,7 @@ export type SearchCategory =
   | 'brokers' 
   | 'apps' 
   | 'units' 
+  | 'property-types'
   | 'categories'
   | 'reviews';
 
@@ -100,7 +101,18 @@ function buildSearchIndex(): SearchItem[] {
       name: unit.name,
       category: 'units',
       subtitle: unit.description,
-      meta: { averagePrice: unit.averagePrice }
+      meta: { averagePrice: unit.averagePrice, propertyType: unit.propertyType }
+    });
+  }
+  
+  // Add property types
+  for (const propType of propertyTypes) {
+    items.push({
+      id: propType.id,
+      name: propType.name,
+      category: 'property-types',
+      subtitle: propType.description,
+      meta: { icon: propType.icon, count: propType.count }
     });
   }
   
@@ -179,6 +191,7 @@ export function performSearch(query: string, limit: number = 15): SearchResults 
     brokers: [],
     apps: [],
     units: [],
+    'property-types': [],
     categories: [],
     reviews: []
   };
@@ -217,7 +230,12 @@ export function getPopularItems(): Record<SearchCategory, SearchItem[]> {
       .slice(0, 3),
     brokers: [],
     apps: [],
-    units: [],
+    units: index
+      .filter(i => i.category === 'units')
+      .slice(0, 4),
+    'property-types': index
+      .filter(i => i.category === 'property-types')
+      .slice(0, 4),
     categories: index
       .filter(i => i.category === 'categories')
       .slice(0, 4),

@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles } from "lucide-react";
+import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Hotel, Stethoscope, Briefcase } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory, type SearchResults } from "@/data/searchIndex";
 
@@ -20,11 +20,12 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   brokers: <Users className="w-4 h-4" />,
   apps: <Smartphone className="w-4 h-4" />,
   units: <LayoutGrid className="w-4 h-4" />,
+  'property-types': <Building className="w-4 h-4" />,
   categories: <FolderOpen className="w-4 h-4" />,
   reviews: <Star className="w-4 h-4" />
 };
 
-const categoryOrder: SearchCategory[] = ['developers', 'locations', 'projects', 'categories', 'brokers', 'apps', 'units'];
+const categoryOrder: SearchCategory[] = ['developers', 'locations', 'projects', 'property-types', 'units', 'categories', 'brokers', 'apps'];
 
 export const SearchSuggestions = ({
   query,
