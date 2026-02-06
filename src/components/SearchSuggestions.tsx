@@ -53,35 +53,40 @@ export const SearchSuggestions = ({
     setSelectedItem(null);
   };
   
-  // Perform search or get popular items
+  // Perform search or get popular items (guarded so typing can never crash the page)
   const { results, popular, flatItems } = useMemo(() => {
-    if (query.trim().length > 0) {
-      const searchResults = performSearch(query);
-      const flat: SearchItem[] = [];
-      
-      // Flatten grouped results in category order
-      for (const cat of categoryOrder) {
-        flat.push(...searchResults.groupedResults[cat]);
+    try {
+      if (query.trim().length > 0) {
+        const searchResults = performSearch(query);
+        const flat: SearchItem[] = [];
+
+        // Flatten grouped results in category order
+        for (const cat of categoryOrder) {
+          flat.push(...(searchResults.groupedResults[cat] || []));
+        }
+
+        return {
+          results: searchResults,
+          popular: null,
+          flatItems: flat,
+        };
       }
-      
-      return { 
-        results: searchResults, 
-        popular: null, 
-        flatItems: flat 
-      };
-    } else {
+
       const popularItems = getPopularItems();
       const flat: SearchItem[] = [];
-      
+
       for (const cat of categoryOrder) {
-        flat.push(...popularItems[cat]);
+        flat.push(...(popularItems[cat] || []));
       }
-      
-      return { 
-        results: null, 
+
+      return {
+        results: null,
         popular: popularItems,
-        flatItems: flat 
+        flatItems: flat,
       };
+    } catch (error) {
+      console.error("SearchSuggestions crashed while computing results:", error);
+      return { results: null, popular: null, flatItems: [] as SearchItem[] };
     }
   }, [query]);
   
