@@ -9,6 +9,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { 
   Star, 
   Building2, 
@@ -22,13 +24,17 @@ import {
   CheckCircle,
   ShieldCheck,
   TrendingUp,
-  Clock,
   Heart,
   Share2,
-  ExternalLink
+  ExternalLink,
+  MessageSquare,
+  ChevronRight,
+  Trophy,
+  Medal,
+  Award
 } from "lucide-react";
 import { TrustCategoryBar } from "./TrustCategoryBar";
-import { getRatingColorClass } from "@/lib/ratingColors";
+import { getRatingColorClass, getStarColorClass } from "@/lib/ratingColors";
 import type { SearchItem, SearchCategory } from "@/data/searchIndex";
 
 interface ItemDetailModalProps {
@@ -146,16 +152,106 @@ const getScoreLabel = (score: number) => {
   return "Fair";
 };
 
+// Generate mock reviews for any item
+interface MockReview {
+  id: string;
+  author: string;
+  avatar?: string;
+  rating: number;
+  comment: string;
+  date: string;
+  verified: boolean;
+  tier: 'gold' | 'silver' | 'bronze';
+  reply?: {
+    author: string;
+    comment: string;
+    date: string;
+  };
+}
+
+const generateMockReviews = (itemId: string, itemName: string): MockReview[] => {
+  const reviewTemplates = [
+    { 
+      author: "Ahmed Mostafa", 
+      comment: "Exceptional quality and timely delivery. The attention to detail in the finishing is outstanding. Highly recommend for serious investors.",
+      tier: 'gold' as const
+    },
+    { 
+      author: "Sara Mahmoud", 
+      comment: "Great community facilities and excellent location in New Cairo. We really enjoyed our overall experience with the purchase process.",
+      tier: 'silver' as const
+    },
+    { 
+      author: "Mohamed Ibrahim", 
+      comment: "Professional team and transparent communication throughout. The value for money is excellent compared to other options.",
+      tier: 'bronze' as const
+    },
+    { 
+      author: "Fatma Hassan", 
+      comment: "Very satisfied with the quality of construction and the amenities provided. Customer service is responsive and helpful.",
+      tier: 'gold' as const
+    }
+  ];
+  
+  // Generate deterministic reviews based on item id
+  let hash = 0;
+  for (let i = 0; i < itemId.length; i++) {
+    hash = ((hash << 5) - hash) + itemId.charCodeAt(i);
+    hash = hash & hash;
+  }
+  
+  const numReviews = 2 + Math.abs(hash % 2);
+  const reviews: MockReview[] = [];
+  
+  for (let i = 0; i < numReviews; i++) {
+    const template = reviewTemplates[(hash + i) % reviewTemplates.length];
+    const reviewHash = hash + i * 1000;
+    const rating = 3 + Math.abs(reviewHash % 3);
+    const daysAgo = 5 + Math.abs(reviewHash % 60);
+    const date = new Date();
+    date.setDate(date.getDate() - daysAgo);
+    
+    reviews.push({
+      id: `${itemId}-review-${i}`,
+      author: template.author,
+      rating,
+      comment: template.comment,
+      date: date.toISOString(),
+      verified: Math.abs(reviewHash) % 3 !== 0,
+      tier: template.tier,
+      reply: i === 0 ? {
+        author: `${itemName} Team`,
+        comment: "Thank you for your positive feedback. We're delighted to hear about your experience and we're continuously working to improve our services.",
+        date: new Date(date.getTime() + 86400000).toISOString()
+      } : undefined
+    });
+  }
+  
+  return reviews;
+};
+
+const getTierConfig = (tier: 'gold' | 'silver' | 'bronze') => {
+  switch (tier) {
+    case "gold":
+      return { label: "Gold", icon: Trophy, className: "bg-accent text-accent-foreground" };
+    case "silver":
+      return { label: "Silver", icon: Medal, className: "bg-muted text-muted-foreground" };
+    case "bronze":
+      return { label: "Bronze", icon: Award, className: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400" };
+  }
+};
+
 export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const { trustScore, categoryScores, categoryBreakdown, reviewCount } = useMemo(() => {
-    if (!item) return { trustScore: 0, categoryScores: [], categoryBreakdown: [], reviewCount: 0 };
+  const { trustScore, categoryScores, categoryBreakdown, reviewCount, mockReviews, rating } = useMemo(() => {
+    if (!item) return { trustScore: 0, categoryScores: [], categoryBreakdown: [], reviewCount: 0, mockReviews: [], rating: 4 };
     
     const breakdown = getCategoryBreakdown(item.category);
     const scores = generateScores(item.id, breakdown.length);
     const trust = generateTrustScore(item);
+    const reviews = generateMockReviews(item.id, item.name);
     
     // Generate review count based on id
     let hash = 0;
@@ -163,19 +259,22 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
       hash = ((hash << 5) - hash) + item.id.charCodeAt(i);
       hash = hash & hash;
     }
-    const reviews = item.reviewCount || (50 + Math.abs(hash % 450));
+    const count = item.reviewCount || (50 + Math.abs(hash % 450));
+    
+    // Generate rating
+    const ratingValue = item.rating || (3.5 + (Math.abs(hash % 15) / 10));
     
     return { 
       trustScore: trust, 
       categoryScores: scores, 
       categoryBreakdown: breakdown,
-      reviewCount: reviews
+      reviewCount: count,
+      mockReviews: reviews,
+      rating: ratingValue
     };
   }, [item]);
 
   if (!item) return null;
-
-  const rating = item.rating || (3 + Math.random() * 2);
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
@@ -286,7 +385,7 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
         <div className="px-6 py-5">
           <h4 className="text-sm font-semibold text-foreground mb-4 flex items-center gap-2">
             <TrendingUp className="w-4 h-4 text-primary" />
-            {t("search.categories")} Breakdown
+            Trust Breakdown
           </h4>
           <div className="space-y-3">
             {categoryBreakdown.map((cat, index) => (
@@ -301,27 +400,93 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
 
         <Separator />
 
-        {/* Quick Stats */}
-        <div className="px-6 py-4">
-          <div className="grid grid-cols-3 gap-3">
-            <div className="text-center p-3 bg-secondary/50 rounded-lg">
-              <div className="text-lg font-bold text-foreground">
-                {reviewCount}
-              </div>
-              <div className="text-xs text-muted-foreground">{t("reviews.reviews")}</div>
-            </div>
-            <div className="text-center p-3 bg-secondary/50 rounded-lg">
-              <div className="text-lg font-bold text-foreground">
-                {rating.toFixed(1)}
-              </div>
-              <div className="text-xs text-muted-foreground">Rating</div>
-            </div>
-            <div className="text-center p-3 bg-secondary/50 rounded-lg">
-              <div className="flex items-center justify-center">
-                <Clock className="w-4 h-4 text-muted-foreground" />
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">Updated</div>
-            </div>
+        {/* Reviews Section */}
+        <div className="px-6 py-5">
+          <div className="flex items-center justify-between mb-4">
+            <h4 className="text-sm font-semibold text-foreground flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-primary" />
+              {t("reviews.latestReviews")}
+            </h4>
+            <Button variant="ghost" size="sm" className="text-xs text-primary gap-1 h-auto p-1">
+              {t("reviews.viewAll")}
+              <ChevronRight className="w-3 h-3" />
+            </Button>
+          </div>
+          
+          <div className="space-y-4">
+            {mockReviews.map((review) => {
+              const tierConfig = getTierConfig(review.tier);
+              const TierIcon = tierConfig.icon;
+              
+              return (
+                <div key={review.id} className="border border-border rounded-lg p-4">
+                  {/* Review Header */}
+                  <div className="flex items-start justify-between gap-3 mb-2">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="w-8 h-8 border border-border">
+                        <AvatarImage src={review.avatar} alt={review.author} />
+                        <AvatarFallback className="bg-primary/10 text-primary text-xs font-semibold">
+                          {review.author.split(" ").map(n => n[0]).join("").slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-sm font-medium text-foreground">{review.author}</span>
+                          {review.verified && (
+                            <ShieldCheck className="w-3.5 h-3.5 text-trust-excellent" />
+                          )}
+                          <Badge variant="outline" className={`text-[10px] px-1.5 py-0 h-4 ${tierConfig.className}`}>
+                            <TierIcon className="w-2.5 h-2.5 mr-0.5" />
+                            {tierConfig.label}
+                          </Badge>
+                        </div>
+                        <span className="text-[10px] text-muted-foreground">
+                          {new Date(review.date).toLocaleDateString(
+                            i18n.language === "ar" ? "ar-EG" : "en-US",
+                            { month: "short", day: "numeric", year: "numeric" }
+                          )}
+                        </span>
+                      </div>
+                    </div>
+                    
+                    {/* Stars */}
+                    <div className="flex items-center gap-0.5">
+                      {[0, 1, 2, 3, 4].map((i) => (
+                        <Star key={i} className={`w-3 h-3 ${getStarColorClass(review.rating, i)}`} />
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Review Content */}
+                  <p className="text-xs text-foreground leading-relaxed mb-2 line-clamp-2">
+                    {review.comment}
+                  </p>
+                  
+                  {/* Developer Reply */}
+                  {review.reply && (
+                    <div className="mt-3 pt-3 border-t border-border">
+                      <div className="flex items-start gap-2 bg-secondary/50 rounded-lg p-3">
+                        <MessageSquare className="w-3 h-3 text-primary mt-0.5 flex-shrink-0" />
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="text-xs font-semibold text-foreground">{review.reply.author}</span>
+                            <span className="text-[10px] text-muted-foreground">
+                              {new Date(review.reply.date).toLocaleDateString(
+                                i18n.language === "ar" ? "ar-EG" : "en-US",
+                                { month: "short", day: "numeric" }
+                              )}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2">
+                            {review.reply.comment}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
 
