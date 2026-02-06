@@ -64,6 +64,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [isFocused]);
 
   const handleFocus = useCallback(() => {
+    if (import.meta.env.DEV) {
+      console.debug("[HeroSearchBar] focus");
+    }
+
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
     }
@@ -71,11 +75,42 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, []);
 
   const handleBlur = useCallback(() => {
+    if (import.meta.env.DEV) {
+      console.debug("[HeroSearchBar] blur (scheduled)");
+    }
+
     // Delay to allow click on suggestions
     blurTimeoutRef.current = setTimeout(() => {
       setIsFocused(false);
       setSelectedIndex(-1);
+
+      if (import.meta.env.DEV) {
+        console.debug("[HeroSearchBar] blur (applied)");
+      }
     }, 200);
+  }, []);
+
+  // If something (e.g. an invisible overlay) intercepts taps/clicks,
+  // make the entire search container refocus the input.
+  const handleContainerPointerDownCapture = useCallback((e: React.PointerEvent) => {
+    const target = e.target as HTMLElement | null;
+    if (!target) return;
+
+    // Don't steal interaction from actual buttons.
+    if (target.closest("button")) return;
+
+    // Clicking inside the input should behave normally.
+    if (target.tagName === "INPUT") return;
+
+    inputRef.current?.focus();
+
+    if (import.meta.env.DEV) {
+      const active = document.activeElement as HTMLElement | null;
+      console.debug("[HeroSearchBar] container pointerdown -> focus input", {
+        activeTag: active?.tagName,
+        activeClass: active?.className,
+      });
+    }
   }, []);
 
   // Cleanup timeout on unmount
@@ -90,7 +125,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto relative">
       {/* Search Container */}
-      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2">
+      <div
+        className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2"
+        onPointerDownCapture={handleContainerPointerDownCapture}
+      >
         {/* Ask AI Button */}
         <button 
           onClick={() => setIsAIModalOpen(true)}
@@ -105,6 +143,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           <input
             ref={inputRef}
             type="text"
+            inputMode="search"
+            autoCorrect="off"
+            autoCapitalize="none"
+            spellCheck={false}
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             onFocus={handleFocus}
