@@ -285,23 +285,73 @@ export const apps: App[] = [
   { id: "waseet", name: "Waseet", type: "Property Portal", rating: 4.2, downloads: "100K+" }
 ];
 
-// Unit types
+// Property Types (Off-Plan Categories)
+export interface PropertyType {
+  id: string;
+  name: string;
+  description: string;
+  icon: string;
+  count: number;
+}
+
+export const propertyTypes: PropertyType[] = [
+  { id: "residential", name: "Residential", description: "Apartments, Villas, Townhouses & Duplexes", icon: "🏠", count: 156 },
+  { id: "commercial", name: "Commercial", description: "Retail, Shops, Malls & Showrooms", icon: "🏪", count: 48 },
+  { id: "administrative", name: "Administrative", description: "Office Spaces & Business Centers", icon: "🏢", count: 35 },
+  { id: "medical", name: "Medical", description: "Clinics, Hospitals & Medical Centers", icon: "🏥", count: 22 },
+  { id: "service-apartments", name: "Service Apartments", description: "Furnished & Serviced Units", icon: "🛎️", count: 18 },
+  { id: "hotels", name: "Hotels", description: "Hotel Rooms & Hospitality Units", icon: "🏨", count: 12 },
+  { id: "mixed-use", name: "Mixed Use", description: "Combined Residential & Commercial", icon: "🏗️", count: 28 }
+];
+
+// Unit types (Residential)
 export interface UnitType {
   id: string;
   name: string;
   description: string;
   averagePrice: string;
+  propertyType: string;
 }
 
 export const unitTypes: UnitType[] = [
-  { id: "studio", name: "Studio", description: "Single room units", averagePrice: "EGP 800K - 1.5M" },
-  { id: "1br", name: "1 Bedroom", description: "One bedroom apartments", averagePrice: "EGP 1.2M - 3M" },
-  { id: "2br", name: "2 Bedrooms", description: "Two bedroom apartments", averagePrice: "EGP 2M - 5M" },
-  { id: "3br", name: "3+ Bedrooms", description: "Three or more bedrooms", averagePrice: "EGP 3M - 10M" },
-  { id: "villa", name: "Villa", description: "Standalone villas", averagePrice: "EGP 8M - 50M" },
-  { id: "townhouse", name: "Townhouse", description: "Townhouse units", averagePrice: "EGP 5M - 20M" },
-  { id: "penthouse", name: "Penthouse", description: "Luxury penthouses", averagePrice: "EGP 10M - 80M" },
-  { id: "commercial", name: "Commercial", description: "Office & retail spaces", averagePrice: "EGP 2M - 30M" }
+  // Residential Units
+  { id: "studio", name: "Studio", description: "Single room apartments", averagePrice: "EGP 800K - 1.5M", propertyType: "residential" },
+  { id: "1br", name: "1 Bedroom", description: "One bedroom apartments", averagePrice: "EGP 1.2M - 3M", propertyType: "residential" },
+  { id: "2br", name: "2 Bedrooms", description: "Two bedroom apartments", averagePrice: "EGP 2M - 5M", propertyType: "residential" },
+  { id: "3br", name: "3+ Bedrooms", description: "Three or more bedrooms", averagePrice: "EGP 3M - 10M", propertyType: "residential" },
+  { id: "villa", name: "Villa", description: "Standalone villas", averagePrice: "EGP 8M - 50M", propertyType: "residential" },
+  { id: "twin-villa", name: "Twin Villa", description: "Semi-detached villas", averagePrice: "EGP 6M - 35M", propertyType: "residential" },
+  { id: "townhouse", name: "Townhouse", description: "Townhouse units", averagePrice: "EGP 5M - 20M", propertyType: "residential" },
+  { id: "duplex", name: "Duplex", description: "Two-floor apartments", averagePrice: "EGP 4M - 15M", propertyType: "residential" },
+  { id: "penthouse", name: "Penthouse", description: "Luxury penthouses", averagePrice: "EGP 10M - 80M", propertyType: "residential" },
+  { id: "chalet", name: "Chalet", description: "Beach chalets & resort units", averagePrice: "EGP 2M - 12M", propertyType: "residential" },
+  
+  // Commercial Units
+  { id: "retail-shop", name: "Retail Shop", description: "Ground floor retail spaces", averagePrice: "EGP 2M - 15M", propertyType: "commercial" },
+  { id: "mall-unit", name: "Mall Unit", description: "Shopping mall units", averagePrice: "EGP 3M - 25M", propertyType: "commercial" },
+  { id: "showroom", name: "Showroom", description: "Large display spaces", averagePrice: "EGP 5M - 40M", propertyType: "commercial" },
+  { id: "food-court", name: "Food Court", description: "Restaurant & F&B spaces", averagePrice: "EGP 2M - 10M", propertyType: "commercial" },
+  
+  // Administrative Units
+  { id: "office", name: "Office", description: "Standard office spaces", averagePrice: "EGP 1.5M - 8M", propertyType: "administrative" },
+  { id: "business-center", name: "Business Center", description: "Premium office suites", averagePrice: "EGP 3M - 20M", propertyType: "administrative" },
+  { id: "coworking", name: "Co-working Space", description: "Shared office spaces", averagePrice: "EGP 1M - 5M", propertyType: "administrative" },
+  
+  // Medical Units
+  { id: "clinic", name: "Clinic", description: "Medical clinic spaces", averagePrice: "EGP 2M - 12M", propertyType: "medical" },
+  { id: "pharmacy", name: "Pharmacy", description: "Pharmacy retail units", averagePrice: "EGP 1.5M - 6M", propertyType: "medical" },
+  { id: "medical-center", name: "Medical Center", description: "Multi-specialty centers", averagePrice: "EGP 5M - 30M", propertyType: "medical" },
+  { id: "lab", name: "Laboratory", description: "Medical laboratory spaces", averagePrice: "EGP 2M - 10M", propertyType: "medical" },
+  
+  // Service Apartments
+  { id: "serviced-studio", name: "Serviced Studio", description: "Furnished studio units", averagePrice: "EGP 1.2M - 2.5M", propertyType: "service-apartments" },
+  { id: "serviced-1br", name: "Serviced 1BR", description: "Furnished one bedroom", averagePrice: "EGP 2M - 4M", propertyType: "service-apartments" },
+  { id: "serviced-2br", name: "Serviced 2BR", description: "Furnished two bedroom", averagePrice: "EGP 3M - 6M", propertyType: "service-apartments" },
+  
+  // Hotel Units
+  { id: "hotel-room", name: "Hotel Room", description: "Standard hotel rooms", averagePrice: "EGP 1.5M - 4M", propertyType: "hotels" },
+  { id: "hotel-suite", name: "Hotel Suite", description: "Luxury hotel suites", averagePrice: "EGP 3M - 10M", propertyType: "hotels" },
+  { id: "branded-residence", name: "Branded Residence", description: "Luxury branded units", averagePrice: "EGP 8M - 50M", propertyType: "hotels" }
 ];
 
 // Categories for navigation
@@ -313,7 +363,8 @@ export interface Category {
 }
 
 export const categories: Category[] = [
-  { id: "units", name: "UNITS", icon: "🗄️", count: 8 },
+  { id: "property-types", name: "Property Types", icon: "🏠", count: 7 },
+  { id: "units", name: "UNITS", icon: "🗄️", count: 27 },
   { id: "apps", name: "Apps", icon: "📁", count: 4 },
   { id: "shares", name: "Shares", icon: "📂", count: 0 },
   { id: "platforms", name: "Platforms", icon: "📋", count: 3 },
