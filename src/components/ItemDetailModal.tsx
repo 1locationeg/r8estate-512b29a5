@@ -204,9 +204,10 @@ const generateMockReviews = (itemId: string, itemName: string): MockReview[] => 
   const reviews: MockReview[] = [];
   
   for (let i = 0; i < numReviews; i++) {
-    const template = reviewTemplates[(hash + i) % reviewTemplates.length];
-    const reviewHash = hash + i * 1000;
-    const rating = 3 + Math.abs(reviewHash % 3);
+    const templateIndex = Math.abs((hash + i) % reviewTemplates.length);
+    const template = reviewTemplates[templateIndex];
+    const reviewHash = Math.abs(hash + i * 1000);
+    const rating = 3 + (reviewHash % 3);
     const daysAgo = 5 + Math.abs(reviewHash % 60);
     const date = new Date();
     date.setDate(date.getDate() - daysAgo);
