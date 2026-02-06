@@ -40,13 +40,11 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           {/* Header */}
           <div className="p-4 border-b border-border">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5">
-                <img src={logoIcon} alt="R8ESTATE" className="h-8 w-auto object-contain" />
-                <span className="text-lg font-bold">
-                  <span className="text-brand-red">R8</span>
-                  <span className="text-primary">ESTATE</span>
-                </span>
-              </div>
+              <span className="text-xl font-bold inline-flex items-center gap-2">
+                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain" />
+                <span className="text-brand-red">R8</span>
+                <span className="text-primary">ESTATE</span>
+              </span>
               <LanguageSwitcher />
             </div>
           </div>
