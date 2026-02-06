@@ -165,9 +165,9 @@ const Index = () => {
       <footer className="bg-card border-t border-border py-6 md:py-8">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-1.5">
-              <img src={logoIcon} alt="R8ESTATE" className="h-8 md:h-10 w-auto object-contain" />
-              <span className="text-base md:text-lg font-bold">
+            <div className="flex items-center gap-2">
+              <span className="text-lg md:text-xl font-bold inline-flex items-center gap-2">
+                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain" />
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
               </span>
