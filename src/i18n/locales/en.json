@@ -1,4 +1,18 @@
 {
+  "search": {
+    "didYouMean": "Did you mean",
+    "noResults": "No results found",
+    "popular": "Popular Searches",
+    "recent": "Recent Searches",
+    "developers": "Developers",
+    "projects": "Projects",
+    "locations": "Locations",
+    "categories": "Categories",
+    "units": "Unit Types",
+    "brokers": "Brokers",
+    "apps": "Apps & Platforms",
+    "reviews": "Reviews"
+  },
   "common": {
     "signIn": "Sign In",
     "signOut": "Sign Out",
