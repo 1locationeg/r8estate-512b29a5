@@ -167,7 +167,7 @@ const Index = () => {
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
               <span className="text-lg md:text-xl font-bold inline-flex items-center gap-2">
-                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain" />
+                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
               </span>

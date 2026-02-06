@@ -41,7 +41,7 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           <div className="p-4 border-b border-border">
             <div className="flex items-center justify-between">
               <span className="text-xl font-bold inline-flex items-center gap-2">
-                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain" />
+                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
               </span>
