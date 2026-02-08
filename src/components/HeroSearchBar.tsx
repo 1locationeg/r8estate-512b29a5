@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
-import { ItemDetailModal } from "@/components/ItemDetailModal";
+import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -18,7 +18,6 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
-  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -28,9 +27,8 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [query]);
 
   const handleSelect = useCallback((item: SearchItem) => {
-    // Open detail modal for any item type
+    // Show item detail inline on the page
     setSelectedItem(item);
-    setIsItemModalOpen(true);
     setQuery("");
     setIsFocused(false);
     
@@ -39,6 +37,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
       onSelectDeveloper(item.id);
     }
   }, [onSelectDeveloper]);
+
+  const handleCloseDetail = useCallback(() => {
+    setSelectedItem(null);
+  }, []);
 
   const handleValidateDecision = useCallback(() => {
     // If there's a query with results, open the first result
@@ -154,12 +156,13 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
       
-      {/* Item Detail Modal */}
-      <ItemDetailModal 
-        item={selectedItem} 
-        open={isItemModalOpen} 
-        onClose={() => setIsItemModalOpen(false)} 
-      />
+      {/* Item Detail Section - Inline on page */}
+      {selectedItem && (
+        <ItemDetailSection 
+          item={selectedItem} 
+          onClose={handleCloseDetail} 
+        />
+      )}
     </div>
   );
 };
