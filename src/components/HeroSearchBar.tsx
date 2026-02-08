@@ -1,10 +1,10 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { Search, Sparkles, Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { useState, useCallback, useRef, useEffect } from "react";
+import { Search, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { developers } from "@/data/mockData";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
+import { ItemDetailModal } from "@/components/ItemDetailModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -17,6 +17,8 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
+  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
+  const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -26,14 +28,27 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [query]);
 
   const handleSelect = useCallback((item: SearchItem) => {
+    // Open detail modal for any item type
+    setSelectedItem(item);
+    setIsItemModalOpen(true);
+    setQuery("");
+    setIsFocused(false);
+    
+    // Also trigger developer selection for developers
     if (item.category === 'developers') {
       onSelectDeveloper(item.id);
     }
-    // For other categories, we could navigate to different pages
-    // For now, just close the dropdown
-    setQuery("");
-    setIsFocused(false);
   }, [onSelectDeveloper]);
+
+  const handleValidateDecision = useCallback(() => {
+    // If there's a query with results, open the first result
+    // Otherwise, show a prompt to search first
+    if (query.trim()) {
+      setIsFocused(true);
+    } else {
+      inputRef.current?.focus();
+    }
+  }, [query]);
 
   const handleCorrection = useCallback((corrected: string) => {
     setQuery(corrected);
@@ -119,7 +134,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         <Search className="w-5 h-5 text-muted-foreground me-2" />
 
         {/* Validate Decision Button */}
-        <button className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors">
+        <button 
+          onClick={handleValidateDecision}
+          className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
+        >
           {t("hero.validateDecision")}
         </button>
       </div>
@@ -135,6 +153,13 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
+      
+      {/* Item Detail Modal */}
+      <ItemDetailModal 
+        item={selectedItem} 
+        open={isItemModalOpen} 
+        onClose={() => setIsItemModalOpen(false)} 
+      />
     </div>
   );
 };

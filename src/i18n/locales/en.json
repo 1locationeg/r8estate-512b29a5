@@ -1,4 +1,27 @@
 {
+  "itemDetail": {
+    "voiceReview": "Voice Review",
+    "downloadReport": "Download Report",
+    "compareItem": "Compare"
+  },
+  "trustInsights": {
+    "categoryBreakdown": "Trust Category Breakdown"
+  },
+  "reviews": {
+    "title": "Reviews",
+    "all": "All",
+    "noReviewsFilter": "No reviews match this filter",
+    "mockReview1": "Great experience overall. The quality exceeded my expectations and the team was very professional throughout the process.",
+    "mockReview2": "Good value for money. There were some minor delays but communication was excellent.",
+    "mockReview3": "Satisfied with the service. Would recommend to others looking for similar options.",
+    "mockReview4": "Professional team with good attention to detail. The final result was impressive."
+  },
+  "common": {
+    "averageRating": "Average Rating"
+  },
+  "trustScore": {
+    "label": "Trust Score"
+  },
   "search": {
     "didYouMean": "Did you mean",
     "noResults": "No results found",
