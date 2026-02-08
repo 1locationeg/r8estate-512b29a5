@@ -101,13 +101,68 @@ const getCategoryMetrics = (category: SearchCategory): { label: string; key: str
   }
 };
 
-// Mock reviewers with tiers
+// Mock reviewers with tiers and gender-appropriate avatars
 const mockReviewers = [
-  { id: '1', name: 'Ahmed Hassan', avatar: 'https://i.pravatar.cc/150?u=ahmed', tier: 'gold', verified: true },
-  { id: '2', name: 'Sara Mohamed', avatar: 'https://i.pravatar.cc/150?u=sara', tier: 'silver', verified: true },
-  { id: '3', name: 'Omar Khaled', avatar: 'https://i.pravatar.cc/150?u=omar', tier: 'bronze', verified: false },
-  { id: '4', name: 'Fatima Ali', avatar: 'https://i.pravatar.cc/150?u=fatima', tier: 'silver', verified: true },
+  { id: '1', name: 'Ahmed Hassan', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', tier: 'gold', verified: true, gender: 'male' },
+  { id: '2', name: 'Sara Mohamed', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', tier: 'silver', verified: true, gender: 'female' },
+  { id: '3', name: 'Omar Khaled', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', tier: 'bronze', verified: false, gender: 'male' },
+  { id: '4', name: 'Fatima Ali', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', tier: 'silver', verified: true, gender: 'female' },
 ];
+
+// Category-specific review content
+const getCategoryReviews = (category: SearchCategory): string[] => {
+  switch (category) {
+    case 'developers':
+      return [
+        "Excellent build quality and they delivered on time. The finishing was exactly as shown in the brochure. Very professional team.",
+        "Good communication throughout the project. Minor delays but they kept us informed. Would recommend for first-time buyers.",
+        "The construction quality exceeded my expectations. Their after-sales support is responsive and helpful.",
+        "Reliable developer with a solid track record. The handover process was smooth and well-organized.",
+      ];
+    case 'projects':
+      return [
+        "Beautiful project with great amenities. The pool and gym facilities are top-notch. Location is perfect for families.",
+        "Modern design and spacious units. The green areas are well-maintained. Parking was a bit limited during peak hours.",
+        "Great value for money in this area. The community feel is excellent and neighbors are friendly.",
+        "Impressive master plan and the developers are executing it well. Looking forward to phase 2 completion.",
+      ];
+    case 'locations':
+      return [
+        "Prime location with easy access to highways and metro. Schools and hospitals are nearby. Property values are rising steadily.",
+        "Up-and-coming area with lots of development. Good investment potential for the next 5 years.",
+        "Peaceful neighborhood with excellent security. Family-friendly with parks and walking paths.",
+        "Strategic location near business districts. Rental demand is high and yields are attractive.",
+      ];
+    case 'brokers':
+      return [
+        "Very professional and knowledgeable about the market. Helped me find exactly what I was looking for within budget.",
+        "Responsive and honest throughout the process. No pressure tactics, just genuine advice.",
+        "Great negotiation skills - saved me 8% on my purchase. Highly recommend for first-time buyers.",
+        "Excellent after-sale support. Still helps with any issues even after the deal closed.",
+      ];
+    case 'apps':
+      return [
+        "User-friendly interface with all the features I need. Property search filters are very detailed.",
+        "Best real estate app in the market. Virtual tours feature saved me so much time.",
+        "Great app but could use faster loading. Customer support is helpful when needed.",
+        "Reliable notifications for new listings. Helped me find my dream home before others.",
+      ];
+    case 'units':
+      return [
+        "Spacious 2-bedroom with great natural light. The kitchen layout is very practical for daily use.",
+        "Premium finishes and smart home features included. The view from the balcony is stunning.",
+        "Good investment unit with high rental potential. Tenant found within 2 weeks of listing.",
+        "Well-designed floor plan with no wasted space. Storage areas are thoughtfully placed.",
+      ];
+    default:
+      return [
+        "Exceeded my expectations in every way. Would definitely recommend to friends and family.",
+        "Good overall experience with minor areas for improvement. Value for money is fair.",
+        "Professional service and transparent process. Communication could be slightly better.",
+        "Solid choice in this category. Met all my requirements and delivered as promised.",
+      ];
+  }
+};
 
 const getTierIcon = (tier: string) => {
   switch (tier) {
@@ -144,16 +199,14 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       scores[metric.key] = Math.max(30, Math.min(95, baseScore + variance));
     });
     
-    // Generate mock reviews
+    // Get category-specific reviews
+    const categoryReviews = getCategoryReviews(item.category);
+    
+    // Generate mock reviews with category-specific content
     const reviewsList = mockReviewers.map((reviewer, idx) => ({
       ...reviewer,
       rating: Math.max(1, Math.min(5, Math.round(baseRating + (idx % 3) - 1))),
-      text: [
-        t("reviews.mockReview1"),
-        t("reviews.mockReview2"),
-        t("reviews.mockReview3"),
-        t("reviews.mockReview4"),
-      ][idx % 4],
+      text: categoryReviews[idx % categoryReviews.length],
       date: new Date(Date.now() - (idx * 7 * 24 * 60 * 60 * 1000)).toLocaleDateString(),
     }));
     
@@ -163,7 +216,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       categoryScores: scores,
       reviews: reviewsList,
     };
-  }, [item, t]);
+  }, [item]);
 
   if (!item) return null;
 
