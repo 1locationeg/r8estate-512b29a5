@@ -1,7 +1,8 @@
 import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { HeroSearchBar, HeroCategoryLinks, HeroBottomBar } from "@/components/HeroSearchBar";
+import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
+import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
@@ -158,7 +159,7 @@ const Index = () => {
         </div>
 
         {/* Bottom Category Bar */}
-        <HeroBottomBar />
+        <HeroCategoryItems />
       </section>
 
       {/* Footer */}
