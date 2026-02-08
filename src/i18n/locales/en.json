@@ -7,6 +7,100 @@
   "trustInsights": {
     "categoryBreakdown": "Trust Category Breakdown"
   },
+  "categoryMetrics": {
+    "developers": {
+      "delivery": "Delivery Track Record",
+      "quality": "Build Quality",
+      "financial": "Financial Stability",
+      "support": "Customer Support"
+    },
+    "projects": {
+      "progress": "Construction Progress",
+      "location": "Location Value",
+      "price": "Price Competitiveness",
+      "amenities": "Amenities Quality"
+    },
+    "locations": {
+      "demand": "Market Demand",
+      "infrastructure": "Infrastructure",
+      "potential": "Future Potential",
+      "safety": "Safety & Security"
+    },
+    "apps": {
+      "usability": "Usability",
+      "performance": "Performance",
+      "features": "Features",
+      "support": "Support"
+    },
+    "units": {
+      "demand": "Market Demand",
+      "roi": "Investment ROI",
+      "space": "Space Efficiency",
+      "resale": "Resale Value"
+    },
+    "brokers": {
+      "success": "Transaction Success",
+      "response": "Response Time",
+      "knowledge": "Market Knowledge",
+      "negotiation": "Negotiation Skills"
+    },
+    "default": {
+      "quality": "Overall Quality",
+      "reliability": "Reliability",
+      "value": "Value",
+      "satisfaction": "Satisfaction"
+    }
+  },
+  "categoryReviews": {
+    "developers": [
+      "Excellent build quality and they delivered on time. The finishing was exactly as shown in the brochure. Very professional team.",
+      "Good communication throughout the project. Minor delays but they kept us informed. Would recommend for first-time buyers.",
+      "The construction quality exceeded my expectations. Their after-sales support is responsive and helpful.",
+      "Reliable developer with a solid track record. The handover process was smooth and well-organized."
+    ],
+    "projects": [
+      "Beautiful project with great amenities. The pool and gym facilities are top-notch. Location is perfect for families.",
+      "Modern design and spacious units. The green areas are well-maintained. Parking was a bit limited during peak hours.",
+      "Great value for money in this area. The community feel is excellent and neighbors are friendly.",
+      "Impressive master plan and the developers are executing it well. Looking forward to phase 2 completion."
+    ],
+    "locations": [
+      "Prime location with easy access to highways and metro. Schools and hospitals are nearby. Property values are rising steadily.",
+      "Up-and-coming area with lots of development. Good investment potential for the next 5 years.",
+      "Peaceful neighborhood with excellent security. Family-friendly with parks and walking paths.",
+      "Strategic location near business districts. Rental demand is high and yields are attractive."
+    ],
+    "brokers": [
+      "Very professional and knowledgeable about the market. Helped me find exactly what I was looking for within budget.",
+      "Responsive and honest throughout the process. No pressure tactics, just genuine advice.",
+      "Great negotiation skills - saved me 8% on my purchase. Highly recommend for first-time buyers.",
+      "Excellent after-sale support. Still helps with any issues even after the deal closed."
+    ],
+    "apps": [
+      "User-friendly interface with all the features I need. Property search filters are very detailed.",
+      "Best real estate app in the market. Virtual tours feature saved me so much time.",
+      "Great app but could use faster loading. Customer support is helpful when needed.",
+      "Reliable notifications for new listings. Helped me find my dream home before others."
+    ],
+    "units": [
+      "Spacious 2-bedroom with great natural light. The kitchen layout is very practical for daily use.",
+      "Premium finishes and smart home features included. The view from the balcony is stunning.",
+      "Good investment unit with high rental potential. Tenant found within 2 weeks of listing.",
+      "Well-designed floor plan with no wasted space. Storage areas are thoughtfully placed."
+    ],
+    "default": [
+      "Exceeded my expectations in every way. Would definitely recommend to friends and family.",
+      "Good overall experience with minor areas for improvement. Value for money is fair.",
+      "Professional service and transparent process. Communication could be slightly better.",
+      "Solid choice in this category. Met all my requirements and delivered as promised."
+    ]
+  },
+  "reviewerNames": {
+    "ahmed": "Ahmed Hassan",
+    "sara": "Sara Mohamed",
+    "omar": "Omar Khaled",
+    "fatima": "Fatima Ali"
+  },
   "reviews": {
     "title": "Reviews",
     "all": "All",

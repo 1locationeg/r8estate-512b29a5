@@ -46,123 +46,34 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   reviews: <Star className="w-6 h-6" />
 };
 
-// Category-specific trust breakdown metrics
-const getCategoryMetrics = (category: SearchCategory): { label: string; key: string }[] => {
+// Category-specific trust breakdown metrics keys
+const getCategoryMetricKeys = (category: SearchCategory): string[] => {
   switch (category) {
     case 'developers':
-      return [
-        { label: 'Delivery Track Record', key: 'delivery' },
-        { label: 'Build Quality', key: 'quality' },
-        { label: 'Financial Stability', key: 'financial' },
-        { label: 'Customer Support', key: 'support' },
-      ];
+      return ['delivery', 'quality', 'financial', 'support'];
     case 'projects':
-      return [
-        { label: 'Construction Progress', key: 'progress' },
-        { label: 'Location Value', key: 'location' },
-        { label: 'Price Competitiveness', key: 'price' },
-        { label: 'Amenities Quality', key: 'amenities' },
-      ];
+      return ['progress', 'location', 'price', 'amenities'];
     case 'locations':
-      return [
-        { label: 'Market Demand', key: 'demand' },
-        { label: 'Infrastructure', key: 'infrastructure' },
-        { label: 'Future Potential', key: 'potential' },
-        { label: 'Safety & Security', key: 'safety' },
-      ];
+      return ['demand', 'infrastructure', 'potential', 'safety'];
     case 'apps':
-      return [
-        { label: 'Usability', key: 'usability' },
-        { label: 'Performance', key: 'performance' },
-        { label: 'Features', key: 'features' },
-        { label: 'Support', key: 'support' },
-      ];
+      return ['usability', 'performance', 'features', 'support'];
     case 'units':
-      return [
-        { label: 'Market Demand', key: 'demand' },
-        { label: 'Investment ROI', key: 'roi' },
-        { label: 'Space Efficiency', key: 'space' },
-        { label: 'Resale Value', key: 'resale' },
-      ];
+      return ['demand', 'roi', 'space', 'resale'];
     case 'brokers':
-      return [
-        { label: 'Transaction Success', key: 'success' },
-        { label: 'Response Time', key: 'response' },
-        { label: 'Market Knowledge', key: 'knowledge' },
-        { label: 'Negotiation Skills', key: 'negotiation' },
-      ];
+      return ['success', 'response', 'knowledge', 'negotiation'];
     default:
-      return [
-        { label: 'Overall Quality', key: 'quality' },
-        { label: 'Reliability', key: 'reliability' },
-        { label: 'Value', key: 'value' },
-        { label: 'Satisfaction', key: 'satisfaction' },
-      ];
+      return ['quality', 'reliability', 'value', 'satisfaction'];
   }
 };
 
 // Mock reviewers with tiers and gender-appropriate avatars
-const mockReviewers = [
-  { id: '1', name: 'Ahmed Hassan', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', tier: 'gold', verified: true, gender: 'male' },
-  { id: '2', name: 'Sara Mohamed', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', tier: 'silver', verified: true, gender: 'female' },
-  { id: '3', name: 'Omar Khaled', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', tier: 'bronze', verified: false, gender: 'male' },
-  { id: '4', name: 'Fatima Ali', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', tier: 'silver', verified: true, gender: 'female' },
+const mockReviewerKeys = ['ahmed', 'sara', 'omar', 'fatima'] as const;
+const mockReviewerData = [
+  { id: '1', key: 'ahmed', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', tier: 'gold', verified: true },
+  { id: '2', key: 'sara', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', tier: 'silver', verified: true },
+  { id: '3', key: 'omar', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', tier: 'bronze', verified: false },
+  { id: '4', key: 'fatima', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', tier: 'silver', verified: true },
 ];
-
-// Category-specific review content
-const getCategoryReviews = (category: SearchCategory): string[] => {
-  switch (category) {
-    case 'developers':
-      return [
-        "Excellent build quality and they delivered on time. The finishing was exactly as shown in the brochure. Very professional team.",
-        "Good communication throughout the project. Minor delays but they kept us informed. Would recommend for first-time buyers.",
-        "The construction quality exceeded my expectations. Their after-sales support is responsive and helpful.",
-        "Reliable developer with a solid track record. The handover process was smooth and well-organized.",
-      ];
-    case 'projects':
-      return [
-        "Beautiful project with great amenities. The pool and gym facilities are top-notch. Location is perfect for families.",
-        "Modern design and spacious units. The green areas are well-maintained. Parking was a bit limited during peak hours.",
-        "Great value for money in this area. The community feel is excellent and neighbors are friendly.",
-        "Impressive master plan and the developers are executing it well. Looking forward to phase 2 completion.",
-      ];
-    case 'locations':
-      return [
-        "Prime location with easy access to highways and metro. Schools and hospitals are nearby. Property values are rising steadily.",
-        "Up-and-coming area with lots of development. Good investment potential for the next 5 years.",
-        "Peaceful neighborhood with excellent security. Family-friendly with parks and walking paths.",
-        "Strategic location near business districts. Rental demand is high and yields are attractive.",
-      ];
-    case 'brokers':
-      return [
-        "Very professional and knowledgeable about the market. Helped me find exactly what I was looking for within budget.",
-        "Responsive and honest throughout the process. No pressure tactics, just genuine advice.",
-        "Great negotiation skills - saved me 8% on my purchase. Highly recommend for first-time buyers.",
-        "Excellent after-sale support. Still helps with any issues even after the deal closed.",
-      ];
-    case 'apps':
-      return [
-        "User-friendly interface with all the features I need. Property search filters are very detailed.",
-        "Best real estate app in the market. Virtual tours feature saved me so much time.",
-        "Great app but could use faster loading. Customer support is helpful when needed.",
-        "Reliable notifications for new listings. Helped me find my dream home before others.",
-      ];
-    case 'units':
-      return [
-        "Spacious 2-bedroom with great natural light. The kitchen layout is very practical for daily use.",
-        "Premium finishes and smart home features included. The view from the balcony is stunning.",
-        "Good investment unit with high rental potential. Tenant found within 2 weeks of listing.",
-        "Well-designed floor plan with no wasted space. Storage areas are thoughtfully placed.",
-      ];
-    default:
-      return [
-        "Exceeded my expectations in every way. Would definitely recommend to friends and family.",
-        "Good overall experience with minor areas for improvement. Value for money is fair.",
-        "Professional service and transparent process. Communication could be slightly better.",
-        "Solid choice in this category. Met all my requirements and delivered as promised.",
-      ];
-  }
-};
 
 const getTierIcon = (tier: string) => {
   switch (tier) {
@@ -174,12 +85,12 @@ const getTierIcon = (tier: string) => {
 };
 
 export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
 
   // Generate deterministic scores based on item id
-  const { trustScore, rating, categoryScores, reviews } = useMemo(() => {
-    if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [] };
+  const { trustScore, rating, categoryScores, reviews, metricKeys } = useMemo(() => {
+    if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [] };
 
     // Generate hash from id
     let hash = 0;
@@ -191,23 +102,20 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     const baseScore = 55 + Math.abs(hash % 40);
     const baseRating = 3 + Math.abs(hash % 20) / 10;
     
-    // Generate category scores
-    const metrics = getCategoryMetrics(item.category);
+    // Get category metric keys
+    const keys = getCategoryMetricKeys(item.category);
     const scores: Record<string, number> = {};
-    metrics.forEach((metric, idx) => {
+    keys.forEach((key, idx) => {
       const variance = ((hash >> (idx * 4)) % 30) - 15;
-      scores[metric.key] = Math.max(30, Math.min(95, baseScore + variance));
+      scores[key] = Math.max(30, Math.min(95, baseScore + variance));
     });
     
-    // Get category-specific reviews
-    const categoryReviews = getCategoryReviews(item.category);
-    
-    // Generate mock reviews with category-specific content
-    const reviewsList = mockReviewers.map((reviewer, idx) => ({
+    // Generate mock reviews with translated content
+    const reviewsList = mockReviewerData.map((reviewer, idx) => ({
       ...reviewer,
       rating: Math.max(1, Math.min(5, Math.round(baseRating + (idx % 3) - 1))),
-      text: categoryReviews[idx % categoryReviews.length],
-      date: new Date(Date.now() - (idx * 7 * 24 * 60 * 60 * 1000)).toLocaleDateString(),
+      reviewIndex: idx,
+      date: new Date(Date.now() - (idx * 7 * 24 * 60 * 60 * 1000)),
     }));
     
     return {
@@ -215,18 +123,36 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       rating: baseRating,
       categoryScores: scores,
       reviews: reviewsList,
+      metricKeys: keys,
     };
   }, [item]);
 
   if (!item) return null;
 
-  const metrics = getCategoryMetrics(item.category);
+  // Get translated category for metrics path
+  const metricsCategory = ['developers', 'projects', 'locations', 'apps', 'units', 'brokers'].includes(item.category) 
+    ? item.category 
+    : 'default';
   
   // Trust gauge color
   const getGaugeColor = (score: number) => {
     if (score >= 66) return 'text-trust-excellent';
     if (score >= 50) return 'text-trust-good';
     return 'text-trust-fair';
+  };
+
+  // Get translated reviewer name
+  const getReviewerName = (key: string) => t(`reviewerNames.${key}`);
+  
+  // Get translated review text
+  const getReviewText = (index: number) => {
+    const reviews = t(`categoryReviews.${metricsCategory}`, { returnObjects: true }) as string[];
+    return reviews[index % reviews.length];
+  };
+
+  // Format date based on locale
+  const formatDate = (date: Date) => {
+    return date.toLocaleDateString(i18n.language === 'ar' ? 'ar-EG' : 'en-US');
   };
 
   const filteredReviews = activeFilter 
@@ -336,11 +262,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         <div className="space-y-3">
           <h3 className="font-semibold text-foreground">{t("trustInsights.categoryBreakdown")}</h3>
           <div className="space-y-3">
-            {metrics.map((metric) => (
+            {metricKeys.map((key) => (
               <TrustCategoryBar
-                key={metric.key}
-                label={metric.label}
-                percentage={categoryScores[metric.key] || 50}
+                key={key}
+                label={t(`categoryMetrics.${metricsCategory}.${key}`)}
+                percentage={categoryScores[key] || 50}
               />
             ))}
           </div>
@@ -409,47 +335,50 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                 {t("reviews.noReviewsFilter")}
               </p>
             ) : (
-              filteredReviews.map((review) => (
-                <div key={review.id} className="bg-secondary/30 rounded-lg p-4 space-y-2">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="w-9 h-9">
-                      <AvatarImage src={review.avatar} />
-                      <AvatarFallback className="text-xs">
-                        {review.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-sm truncate">{review.name}</span>
-                        {review.verified && (
-                          <ShieldCheck className="w-3.5 h-3.5 text-primary flex-shrink-0" />
-                        )}
-                        {getTierIcon(review.tier)}
-                      </div>
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <div className="flex items-center gap-0.5">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <Star
-                              key={s}
-                              className={cn(
-                                "w-3 h-3",
-                                s <= review.rating
-                                  ? `fill-current ${getRatingColorClass(review.rating)}`
-                                  : "text-secondary"
-                              )}
-                            />
-                          ))}
+              filteredReviews.map((review) => {
+                const reviewerName = getReviewerName(review.key);
+                return (
+                  <div key={review.id} className="bg-secondary/30 rounded-lg p-4 space-y-2">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-9 h-9">
+                        <AvatarImage src={review.avatar} />
+                        <AvatarFallback className="text-xs">
+                          {reviewerName.split(' ').map(n => n[0]).join('')}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="font-medium text-sm truncate">{reviewerName}</span>
+                          {review.verified && (
+                            <ShieldCheck className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+                          )}
+                          {getTierIcon(review.tier)}
                         </div>
-                        <span>•</span>
-                        <span>{review.date}</span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star
+                                key={s}
+                                className={cn(
+                                  "w-3 h-3",
+                                  s <= review.rating
+                                    ? `fill-current ${getRatingColorClass(review.rating)}`
+                                    : "text-secondary"
+                                )}
+                              />
+                            ))}
+                          </div>
+                          <span>•</span>
+                          <span>{formatDate(review.date)}</span>
+                        </div>
                       </div>
                     </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {getReviewText(review.reviewIndex)}
+                    </p>
                   </div>
-                  <p className="text-sm text-muted-foreground leading-relaxed">
-                    {review.text}
-                  </p>
-                </div>
-              ))
+                );
+              })
             )}
           </div>
         </div>
