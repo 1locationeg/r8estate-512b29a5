@@ -103,10 +103,10 @@ const getCategoryMetrics = (category: SearchCategory): { label: string; key: str
 
 // Mock reviewers with tiers
 const mockReviewers = [
-  { id: '1', name: 'Ahmed Hassan', avatar: '', tier: 'gold', verified: true },
-  { id: '2', name: 'Sara Mohamed', avatar: '', tier: 'silver', verified: true },
-  { id: '3', name: 'Omar Khaled', avatar: '', tier: 'bronze', verified: false },
-  { id: '4', name: 'Fatima Ali', avatar: '', tier: 'silver', verified: true },
+  { id: '1', name: 'Ahmed Hassan', avatar: 'https://i.pravatar.cc/150?u=ahmed', tier: 'gold', verified: true },
+  { id: '2', name: 'Sara Mohamed', avatar: 'https://i.pravatar.cc/150?u=sara', tier: 'silver', verified: true },
+  { id: '3', name: 'Omar Khaled', avatar: 'https://i.pravatar.cc/150?u=omar', tier: 'bronze', verified: false },
+  { id: '4', name: 'Fatima Ali', avatar: 'https://i.pravatar.cc/150?u=fatima', tier: 'silver', verified: true },
 ];
 
 const getTierIcon = (tier: string) => {
