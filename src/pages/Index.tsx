@@ -25,6 +25,7 @@ const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
+  const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -145,7 +146,7 @@ const Index = () => {
           </div>
 
           {/* Category Links */}
-          <HeroCategoryLinks />
+          <HeroCategoryLinks onViewSelect={setActiveView} />
 
           {/* Developer Detail Card (appears when developer is selected) */}
           {selectedDeveloper && (
@@ -159,7 +160,7 @@ const Index = () => {
         </div>
 
         {/* Bottom Category Bar */}
-        <HeroCategoryItems />
+        <HeroCategoryItems initialView={activeView} />
       </section>
 
       {/* Footer */}
