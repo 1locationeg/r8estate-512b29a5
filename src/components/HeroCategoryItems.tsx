@@ -236,19 +236,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
         {/* Scrollable Categories */}
         <div className="flex-1 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
-            {/* Best of 2025 Button */}
-            <button
-              onClick={() => handleSpecialClick('bestOf')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showBestOf2025
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-accent/20 text-accent-foreground hover:bg-accent/40"
-              )}
-            >
-              <Trophy className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span>{t("hero.bestOf2025")}</span>
-            </button>
+
+
 
             {/* Trending Projects Button */}
             <button
