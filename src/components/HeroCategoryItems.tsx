@@ -108,6 +108,16 @@ const categories: Category[] = [
       { id: "bait-sameh", nameEn: "Bait Sameh", nameAr: "بيت سامح", avatar: "https://randomuser.me/api/portraits/men/41.jpg", rating: 4.7, reviewCount: 4567, likes: 9876, shares: 2345, replies: 1234, launchDate: "2023-06-01", trendScore: 91 },
     ],
   },
+  {
+    icon: "⚖️",
+    labelKey: "categories.lawFirms",
+    items: [
+      { id: "diyaa-eldin", nameEn: "Diyaa Eldin", nameAr: "ضياء الدين", avatar: "https://randomuser.me/api/portraits/men/55.jpg", rating: 4.6, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-03-01", trendScore: 80 },
+      { id: "mashoralaw", nameEn: "Mashoralaw", nameAr: "مشورة للمحاماة", avatar: "https://randomuser.me/api/portraits/men/60.jpg", rating: 4.4, reviewCount: 654, likes: 1876, shares: 432, replies: 189, launchDate: "2024-01-15", trendScore: 75 },
+      { id: "partners-law", nameEn: "Partners Law", nameAr: "بارتنرز لو", avatar: "https://randomuser.me/api/portraits/men/48.jpg", rating: 4.5, reviewCount: 543, likes: 1567, shares: 389, replies: 156, launchDate: "2024-05-20", trendScore: 72 },
+      { id: "adsero", nameEn: "ADSERO", nameAr: "أدسيرو", avatar: "https://randomuser.me/api/portraits/men/38.jpg", rating: 4.7, reviewCount: 987, likes: 2876, shares: 678, replies: 312, launchDate: "2023-09-10", trendScore: 86 },
+    ],
+  },
 ];
 
 const getRatingColor = (rating: number) => {
