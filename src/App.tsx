@@ -11,6 +11,7 @@ import DeveloperDashboard from "./pages/DeveloperDashboard";
 import AdminDashboard from "./pages/AdminDashboard";
 import DeveloperDirectory from "./pages/DeveloperDirectory";
 import NotFound from "./pages/NotFound";
+import Install from "./pages/Install";
 
 const queryClient = new QueryClient();
 
@@ -28,6 +29,7 @@ const App = () => (
             <Route path="/developer/*" element={<DeveloperDashboard />} />
             <Route path="/admin/*" element={<AdminDashboard />} />
             <Route path="/directory" element={<DeveloperDirectory />} />
+            <Route path="/install" element={<Install />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

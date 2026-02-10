@@ -118,5 +118,34 @@
   body {
     @apply bg-background text-foreground;
     font-family: 'Montserrat', sans-serif;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* Fluid typography scaling: 16px mobile → 18px tablet → 20px desktop */
+  @media (min-width: 768px) {
+    body { font-size: 18px; }
+  }
+  @media (min-width: 1024px) {
+    body { font-size: 20px; }
+  }
+}
+
+/* Touch-friendly interactive elements */
+@layer components {
+  .touch-target {
+    @apply min-h-[44px] min-w-[44px];
+  }
+}
+
+/* Safe area padding for notched devices */
+@supports (padding: env(safe-area-inset-bottom)) {
+  .safe-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  .safe-top {
+    padding-top: env(safe-area-inset-top);
   }
 }
