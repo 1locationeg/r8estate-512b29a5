@@ -172,20 +172,25 @@ interface CategoryLink {
   label: string;
 }
 
-export const HeroCategoryLinks = () => {
+interface HeroCategoryLinksProps {
+  onViewSelect?: (view: 'bestOf' | 'trending' | 'newLaunches') => void;
+}
+
+export const HeroCategoryLinks = ({ onViewSelect }: HeroCategoryLinksProps) => {
   const { t } = useTranslation();
 
-  const categories: CategoryLink[] = [
-    { icon: "🏆", label: t("hero.bestOf2025") },
-    { icon: "📈", label: t("hero.trendingProjects") },
-    { icon: "🚀", label: t("hero.newLaunches") },
+  const categories: { icon: string; label: string; view: 'bestOf' | 'trending' | 'newLaunches' }[] = [
+    { icon: "🏆", label: t("hero.bestOf2025"), view: 'bestOf' },
+    { icon: "📈", label: t("hero.trendingProjects"), view: 'trending' },
+    { icon: "🚀", label: t("hero.newLaunches"), view: 'newLaunches' },
   ];
 
   return (
     <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
       {categories.map((cat) => (
         <button
-          key={cat.label}
+          key={cat.view}
+          onClick={() => onViewSelect?.(cat.view)}
           className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <span>{cat.icon}</span>

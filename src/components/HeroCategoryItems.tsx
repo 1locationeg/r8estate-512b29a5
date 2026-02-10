@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -133,13 +133,27 @@ const calculateEngagementScore = (item: CategoryItem) => {
   );
 };
 
-export const HeroCategoryItems = () => {
+interface HeroCategoryItemsProps {
+  initialView?: 'bestOf' | 'trending' | 'newLaunches' | null;
+}
+
+export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [showBestOf2025, setShowBestOf2025] = useState(false);
-  const [showTrending, setShowTrending] = useState(false);
-  const [showNewLaunches, setShowNewLaunches] = useState(false);
+  const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
+  const [showTrending, setShowTrending] = useState(initialView === 'trending');
+  const [showNewLaunches, setShowNewLaunches] = useState(initialView === 'newLaunches');
   const isRTL = i18n.language === "ar";
+
+  // Sync with external initialView prop
+  useEffect(() => {
+    if (initialView) {
+      setActiveCategory(null);
+      setShowBestOf2025(initialView === 'bestOf');
+      setShowTrending(initialView === 'trending');
+      setShowNewLaunches(initialView === 'newLaunches');
+    }
+  }, [initialView]);
 
   const allItemsWithMeta = useMemo(() => {
     const allItems: CategoryItem[] = [];
