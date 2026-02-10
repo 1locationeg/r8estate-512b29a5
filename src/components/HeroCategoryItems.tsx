@@ -239,19 +239,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
 
 
 
-            {/* Trending Projects Button */}
-            <button
-              onClick={() => handleSpecialClick('trending')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showTrending
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-primary/20 text-primary hover:bg-primary/30"
-              )}
-            >
-              <TrendingUp className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span>{t("hero.trendingProjects")}</span>
-            </button>
+
+
 
             {/* New Launches Button */}
             <button
