@@ -16,6 +16,10 @@ interface DashboardSidebarProps {
   navItems: NavItem[];
   portalLabel: string;
   portalColor?: string;
+  companyInfo?: {
+    name: string;
+    subtitle: string;
+  };
   bottomAction?: {
     icon: React.ReactNode;
     label: string;
@@ -23,7 +27,7 @@ interface DashboardSidebarProps {
   };
 }
 
-export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-primary', bottomAction }: DashboardSidebarProps) => {
+export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-primary', companyInfo, bottomAction }: DashboardSidebarProps) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
@@ -51,19 +55,32 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
 
       {/* Profile Card */}
       <div className="p-4 border-b border-primary-foreground/10">
-        <div className="flex items-center gap-3">
-          <Avatar className="h-10 w-10 ring-2 ring-accent/30">
-            <AvatarImage src={profile?.avatar_url || undefined} />
-            <AvatarFallback className="bg-accent text-accent-foreground text-sm font-bold">
-              {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-semibold truncate">{profile?.full_name || 'User'}</p>
-            <p className="text-[11px] text-primary-foreground/50 truncate">{user?.email}</p>
+        {companyInfo ? (
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
+              {companyInfo.name.charAt(0)}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate">{companyInfo.name}</p>
+              <p className="text-[11px] text-primary-foreground/50 truncate">{companyInfo.subtitle}</p>
+            </div>
+            <ChevronDown className="w-4 h-4 text-primary-foreground/40" />
           </div>
-          <ChevronDown className="w-4 h-4 text-primary-foreground/40" />
-        </div>
+        ) : (
+          <div className="flex items-center gap-3">
+            <Avatar className="h-10 w-10 ring-2 ring-accent/30">
+              <AvatarImage src={profile?.avatar_url || undefined} />
+              <AvatarFallback className="bg-accent text-accent-foreground text-sm font-bold">
+                {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold truncate">{profile?.full_name || 'User'}</p>
+              <p className="text-[11px] text-primary-foreground/50 truncate">{user?.email}</p>
+            </div>
+            <ChevronDown className="w-4 h-4 text-primary-foreground/40" />
+          </div>
+        )}
       </div>
 
       {/* Navigation */}
