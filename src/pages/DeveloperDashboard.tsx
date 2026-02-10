@@ -1,31 +1,56 @@
 import { useEffect } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
-  Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image
+  Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
+  Tag, Plug
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 // Use first developer as "my business"
 const myDev = developers[0];
 const myReviews = reviews.filter(r => r.developerId === myDev.id);
 const myProjects = projects.filter(p => p.developerId === myDev.id);
 
+// Mock chart data
+const reviewsChartData = Array.from({ length: 14 }, (_, i) => ({
+  date: `${(i * 2 + 1).toString().padStart(2, '0')} Feb`,
+  reviews: i === 0 ? 1 : i === 6 ? 2 : 0,
+}));
+
+const viewsChartData = [
+  { date: '01 Feb', views: 28 },
+  { date: '03 Feb', views: 10 },
+  { date: '05 Feb', views: 32 },
+  { date: '07 Feb', views: 22 },
+  { date: '09 Feb', views: 14 },
+  { date: '11 Feb', views: 18 },
+  { date: '13 Feb', views: 10 },
+  { date: '15 Feb', views: 0 },
+  { date: '17 Feb', views: 0 },
+  { date: '19 Feb', views: 0 },
+  { date: '21 Feb', views: 0 },
+  { date: '23 Feb', views: 0 },
+  { date: '25 Feb', views: 0 },
+  { date: '27 Feb', views: 0 },
+];
+
 const DevOverview = () => {
   const stats = [
     { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent' },
-    { icon: MessageSquare, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary' },
+    { icon: Edit, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary' },
     { icon: Eye, label: 'Total Visitors', value: '7.0K', iconBg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent' },
   ];
 
   return (
     <div>
-      {/* Stats cards like reference */}
+      {/* Stats cards */}
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         {stats.map((s) => (
           <div key={s.label} className="bg-card border border-border rounded-xl p-5">
@@ -39,7 +64,7 @@ const DevOverview = () => {
               {s.label === 'Average Rating' && (
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`w-4 h-4 ${i < Math.round(myDev.rating) ? getRatingColorClass(myDev.rating) : 'text-muted'}`} />
+                    <Star key={i} className={`w-4 h-4 ${i < Math.round(myDev.rating) ? 'text-accent fill-accent' : 'text-muted'}`} />
                   ))}
                 </div>
               )}
@@ -49,21 +74,32 @@ const DevOverview = () => {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6">
-        {/* Reviews Statistics Chart Placeholder */}
+      <div className="grid lg:grid-cols-3 gap-6 mb-8">
+        {/* Reviews Statistics Chart */}
         <div className="lg:col-span-2">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-foreground">Reviews Statistics</h3>
-            <Button variant="outline" size="sm" className="text-xs">
-              February 2026 ▾
+            <Button variant="outline" size="sm" className="text-xs gap-2">
+              📅 February 2026 ▾
             </Button>
           </div>
-          <div className="bg-card border border-border rounded-xl p-6 h-64 flex items-center justify-center">
-            <div className="text-center">
-              <BarChart3 className="w-12 h-12 text-muted-foreground/30 mx-auto mb-2" />
-              <p className="text-sm text-muted-foreground">Reviews chart coming soon</p>
-              <p className="text-xs text-muted-foreground/60">Monthly review statistics will appear here</p>
-            </div>
+          <div className="bg-card border border-border rounded-xl p-6">
+            <ResponsiveContainer width="100%" height={250}>
+              <LineChart data={reviewsChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: 'hsl(var(--card))',
+                    border: '1px solid hsl(var(--border))',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                  }}
+                />
+                <Line type="monotone" dataKey="reviews" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ fill: 'hsl(var(--accent))', r: 4 }} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -74,12 +110,12 @@ const DevOverview = () => {
             <button className="text-xs text-accent font-semibold hover:underline">View All →</button>
           </div>
           <div className="space-y-3">
-            {myReviews.map((r) => (
+            {myReviews.slice(0, 6).map((r) => (
               <div key={r.id} className="bg-card border border-border rounded-xl p-3">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
                     {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                    <AvatarFallback className="text-[10px] bg-accent text-accent-foreground">
+                    <AvatarFallback className="text-[10px] bg-accent text-accent-foreground font-bold">
                       {r.author.split(' ').map(n=>n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
@@ -91,7 +127,7 @@ const DevOverview = () => {
                     <span className="text-xs font-bold">{r.rating}.0</span>
                     <div className="flex">
                       {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'text-accent fill-accent' : 'text-muted'}`} />
                       ))}
                     </div>
                   </div>
@@ -99,6 +135,34 @@ const DevOverview = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
+
+      {/* Views Statistics Chart */}
+      <div>
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-lg font-semibold text-foreground">Views Statistics</h3>
+          <Button variant="outline" size="sm" className="text-xs gap-2">
+            📅 February 2026 ▾
+          </Button>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-6">
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={viewsChartData}>
+              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+              <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+              <Tooltip
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  fontSize: '12px',
+                }}
+              />
+              <Line type="monotone" dataKey="views" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ fill: 'hsl(var(--accent))', r: 4 }} />
+            </LineChart>
+          </ResponsiveContainer>
         </div>
       </div>
     </div>
@@ -143,36 +207,6 @@ const DevReviews = () => (
   </div>
 );
 
-const DevProjects = () => (
-  <div>
-    <div className="flex items-center justify-between mb-4">
-      <h2 className="text-2xl font-bold text-foreground">My Projects</h2>
-      <Button><Plus className="w-4 h-4 me-1" /> Add Project</Button>
-    </div>
-    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {myProjects.map((p) => (
-        <div key={p.id} className="bg-card border border-border rounded-xl overflow-hidden">
-          <div className="h-32 bg-secondary">
-            {p.image && <img src={p.image} alt={p.name} className="w-full h-full object-cover" />}
-          </div>
-          <div className="p-4">
-            <h3 className="font-semibold text-foreground text-sm mb-1">{p.name}</h3>
-            <p className="text-xs text-muted-foreground mb-2">{p.location}</p>
-            <div className="flex items-center justify-between">
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
-                p.status === 'Completed' ? 'bg-trust-excellent/10 text-trust-excellent' :
-                p.status === 'Under Construction' ? 'bg-accent/20 text-accent-foreground' :
-                'bg-primary/10 text-primary'
-              }`}>{p.status}</span>
-              <Button size="sm" variant="ghost"><Edit className="w-3 h-3" /></Button>
-            </div>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
 const DevGallery = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Gallery</h2>
@@ -208,6 +242,30 @@ const DevEmployees = () => (
   </div>
 );
 
+const DevCategories = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Categories</h2>
+    <div className="bg-card border border-border rounded-xl p-12 text-center">
+      <Tag className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+      <h3 className="font-semibold text-foreground mb-1">Manage Categories</h3>
+      <p className="text-sm text-muted-foreground mb-4">Organize your projects by category</p>
+      <Button><Plus className="w-4 h-4 me-1" /> Add Category</Button>
+    </div>
+  </div>
+);
+
+const DevIntegration = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Integrations</h2>
+    <div className="bg-card border border-border rounded-xl p-12 text-center">
+      <Plug className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
+      <h3 className="font-semibold text-foreground mb-1">Connect Your Tools</h3>
+      <p className="text-sm text-muted-foreground mb-4">Integrate with CRM, social media, and more</p>
+      <Button><Plus className="w-4 h-4 me-1" /> Add Integration</Button>
+    </div>
+  </div>
+);
+
 const DevSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Business Settings</h2>
@@ -236,7 +294,8 @@ const DevSettings = () => (
 
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
-  const { user, role, isLoading } = useAuth();
+  const location = useLocation();
+  const { user, role, profile, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
@@ -248,22 +307,31 @@ const DeveloperDashboard = () => {
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || (role !== 'developer' && role !== 'admin')) return null;
 
+  // Determine breadcrumb from current path
+  const subPath = location.pathname.replace('/developer', '').replace('/', '');
+  const pageTitle = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Dashboard';
+
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
-    { icon: <Building2 className="w-4 h-4" />, label: 'Projects', path: '/developer/projects' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
+    { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/developer/categories' },
+    { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/developer/integration' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
 
   return (
     <DashboardLayout
-      title="Dashboard"
-      breadcrumb="Business > Dashboard"
+      title={pageTitle}
+      breadcrumb={`Business > ${pageTitle}`}
       sidebarProps={{
         navItems,
         portalLabel: 'Business',
+        companyInfo: {
+          name: profile?.full_name || myDev.name,
+          subtitle: `${myDev.reviewCount} Reviews`,
+        },
         bottomAction: {
           icon: <Plus className="w-4 h-4" />,
           label: 'Add Business',
@@ -274,9 +342,10 @@ const DeveloperDashboard = () => {
       <Routes>
         <Route index element={<DevOverview />} />
         <Route path="reviews" element={<DevReviews />} />
-        <Route path="projects" element={<DevProjects />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
+        <Route path="categories" element={<DevCategories />} />
+        <Route path="integration" element={<DevIntegration />} />
         <Route path="settings" element={<DevSettings />} />
       </Routes>
     </DashboardLayout>
