@@ -92,7 +92,7 @@ const Index = () => {
               <button 
                 onClick={() => navigate('/auth')}
                 disabled={isLoading}
-                className="px-4 lg:px-6 py-2 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
+                className="px-4 lg:px-6 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
               >
                 {isLoading ? t("common.signingIn") : t("common.signIn")}
               </button>
@@ -149,7 +149,7 @@ const Index = () => {
           <div className="mb-6 md:mb-8">
             <button
               onClick={() => navigate('/auth?type=business')}
-              className="px-6 py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors text-sm"
+              className="px-6 py-3 min-h-[44px] bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors text-sm"
             >
               {t("common.forBusiness", "For Business")}
             </button>
