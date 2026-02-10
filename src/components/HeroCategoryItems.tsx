@@ -242,19 +242,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
 
 
 
-            {/* New Launches Button */}
-            <button
-              onClick={() => handleSpecialClick('newLaunches')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showNewLaunches
-                  ? "bg-destructive text-destructive-foreground"
-                  : "bg-destructive/20 text-destructive hover:bg-destructive/30"
-              )}
-            >
-              <Rocket className="w-3.5 h-3.5 md:w-4 md:h-4" />
-              <span>{t("hero.newLaunches")}</span>
-            </button>
+
+
 
             {/* Category Buttons */}
             {categories.map((cat) => (
