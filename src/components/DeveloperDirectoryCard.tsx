@@ -18,8 +18,8 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
     >
       <div className="flex flex-col items-center text-center space-y-4">
         {/* Logo */}
-        <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center text-4xl">
-          {developer.logo}
+        <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
+          <img src={developer.logo} alt={developer.name} className="w-full h-full object-cover" />
         </div>
 
         {/* Developer Name */}

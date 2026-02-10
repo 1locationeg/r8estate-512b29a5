@@ -1,23 +1,42 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { developers } from "@/data/mockData";
 import { DeveloperDirectoryCard } from "@/components/DeveloperDirectoryCard";
 import { DeveloperDetailModal } from "@/components/DeveloperDetailModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Developer } from "@/data/mockData";
+import logoIcon from "@/assets/logo-icon.png";
+import { ArrowLeft } from "lucide-react";
 
 const DeveloperDirectory = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
 
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}
       <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-6 flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">R8ESTATE</h1>
-            <p className="text-muted-foreground mt-2">{t("directory.title")}</p>
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={() => navigate('/')}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+            >
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <div className="flex items-center gap-2">
+              <img
+                src={logoIcon}
+                alt="R8ESTATE"
+                className="h-8 w-auto object-contain"
+              />
+              <h1 className="text-2xl font-bold inline-flex">
+                <span className="text-brand-red">R8</span>
+                <span className="text-primary">ESTATE</span>
+              </h1>
+            </div>
           </div>
           <LanguageSwitcher />
         </div>
