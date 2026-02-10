@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Search, Sparkles } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
@@ -179,10 +179,10 @@ interface HeroCategoryLinksProps {
 export const HeroCategoryLinks = ({ onViewSelect }: HeroCategoryLinksProps) => {
   const { t } = useTranslation();
 
-  const categories: { icon: string; label: string; view: 'bestOf' | 'trending' | 'newLaunches' }[] = [
-    { icon: "🏆", label: t("hero.bestOf2025"), view: 'bestOf' },
-    { icon: "📈", label: t("hero.trendingProjects"), view: 'trending' },
-    { icon: "🚀", label: t("hero.newLaunches"), view: 'newLaunches' },
+  const categories: { icon: React.ReactNode; label: string; view: 'bestOf' | 'trending' | 'newLaunches' }[] = [
+    { icon: <Award className="w-4 h-4 text-accent" />, label: t("hero.bestOf2025"), view: 'bestOf' },
+    { icon: <TrendingUp className="w-4 h-4 text-primary" />, label: t("hero.trendingProjects"), view: 'trending' },
+    { icon: <Zap className="w-4 h-4 text-brand-red" />, label: t("hero.newLaunches"), view: 'newLaunches' },
   ];
 
   return (
@@ -191,9 +191,9 @@ export const HeroCategoryLinks = ({ onViewSelect }: HeroCategoryLinksProps) => {
         <button
           key={cat.view}
           onClick={() => onViewSelect?.(cat.view)}
-          className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1.5 text-xs md:text-sm text-muted-foreground hover:text-foreground transition-colors group"
         >
-          <span>{cat.icon}</span>
+          <span className="group-hover:scale-110 transition-transform">{cat.icon}</span>
           <span>{cat.label}</span>
         </button>
       ))}
