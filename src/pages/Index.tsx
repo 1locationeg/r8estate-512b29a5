@@ -109,11 +109,11 @@ const Index = () => {
         <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-20">
           {/* Brand Title */}
           <div className="text-center mb-6 md:mb-8">
-            <h1 className="inline-flex items-center justify-center gap-2 md:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-2">
+             <h1 className="inline-flex items-center justify-center gap-2 md:gap-3 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-2">
               <img
                 src={logoIcon}
                 alt="R8ESTATE"
-                className="h-[1em] w-auto object-contain"
+                className="h-[1.15em] w-auto object-contain"
               />
               <span className="inline-flex">
                 <span className="text-brand-red">R8</span>
@@ -178,8 +178,8 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="text-lg md:text-xl font-bold inline-flex items-center gap-2">
-                <img src={logoIcon} alt="R8ESTATE" className="h-[1em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
+              <span className="text-xl md:text-2xl font-bold inline-flex items-center gap-2">
+                <img src={logoIcon} alt="R8ESTATE" className="h-[1.15em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
               </span>
