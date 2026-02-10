@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
@@ -7,24 +7,37 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, Lock, User, ArrowLeft, Loader2 } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
+import { Mail, Lock, User, ArrowLeft, Loader2, Building2, UserCircle } from 'lucide-react';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
 const passwordSchema = z.string().min(6, 'Password must be at least 6 characters');
 
+type AccountType = 'buyer' | 'business';
+
 const Auth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user, role, signIn, signUp, signInWithGoogle, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   
+  const initialType = searchParams.get('type') === 'business' ? 'business' : 'buyer';
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const [accountType, setAccountType] = useState<AccountType>(initialType);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
+  const [companyName, setCompanyName] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+
+  // Sync accountType if query param changes
+  useEffect(() => {
+    const type = searchParams.get('type');
+    if (type === 'business') setAccountType('business');
+  }, [searchParams]);
 
   // Redirect if already logged in
   useEffect(() => {
@@ -89,7 +102,7 @@ const Auth = () => {
         });
         // Role-based redirect will happen via useEffect
       } else {
-        const { error } = await signUp(email, password, fullName);
+        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'developer' : 'buyer');
         if (error) {
           if (error.message.includes('already registered')) {
             toast({
@@ -106,10 +119,22 @@ const Auth = () => {
           }
           return;
         }
-        toast({
-          title: 'Account created!',
-          description: 'Please check your email to verify your account.',
-        });
+
+        // If business account, assign developer role after signup
+        if (accountType === 'business') {
+          // The role will be assigned by a trigger or we update it here
+          // We need to wait for the user to be created first
+          // For now, show a message that admin will verify
+          toast({
+            title: 'Business account requested!',
+            description: 'Please check your email to verify your account. Your business account will be activated shortly.',
+          });
+        } else {
+          toast({
+            title: 'Account created!',
+            description: 'Please check your email to verify your account.',
+          });
+        }
       }
     } finally {
       setIsLoading(false);
@@ -165,14 +190,49 @@ const Auth = () => {
           {/* Title */}
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-foreground mb-2">
-              {mode === 'signin' ? 'Welcome back' : 'Create your account'}
+              {mode === 'signin' ? 'Welcome back' : 
+                accountType === 'business' ? 'Register your business' : 'Create your account'}
             </h1>
             <p className="text-muted-foreground">
               {mode === 'signin' 
                 ? 'Sign in to access your account' 
-                : 'Sign up to start exploring trusted developers'}
+                : accountType === 'business'
+                  ? 'List your projects and manage reviews'
+                  : 'Sign up to start exploring trusted developers'}
             </p>
           </div>
+
+          {/* Account type toggle - only on signup */}
+          {mode === 'signup' && (
+            <div className="grid grid-cols-2 gap-3 mb-6">
+              <button
+                type="button"
+                onClick={() => setAccountType('buyer')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                  accountType === 'buyer' 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-border text-muted-foreground hover:border-primary/40'
+                }`}
+              >
+                <UserCircle className="w-6 h-6" />
+                <span className="text-sm font-semibold">Buyer / Reviewer</span>
+                <span className="text-xs text-muted-foreground">Browse & review projects</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setAccountType('business')}
+                className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                  accountType === 'business' 
+                    ? 'border-primary bg-primary/5 text-primary' 
+                    : 'border-border text-muted-foreground hover:border-primary/40'
+                }`}
+              >
+                <Building2 className="w-6 h-6" />
+                <span className="text-sm font-semibold">Business Account</span>
+                <span className="text-xs text-muted-foreground">List projects & manage</span>
+              </button>
+            </div>
+          )}
 
           {/* Social login buttons */}
           <div className="space-y-3 mb-6">
@@ -217,20 +277,39 @@ const Auth = () => {
           {/* Email form */}
           <form onSubmit={handleEmailAuth} className="space-y-4">
             {mode === 'signup' && (
-              <div className="space-y-2">
-                <Label htmlFor="fullName">Full Name</Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                  <Input
-                    id="fullName"
-                    type="text"
-                    placeholder="John Doe"
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="ps-10"
-                  />
+              <>
+                <div className="space-y-2">
+                  <Label htmlFor="fullName">Full Name</Label>
+                  <div className="relative">
+                    <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Input
+                      id="fullName"
+                      type="text"
+                      placeholder="John Doe"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      className="ps-10"
+                    />
+                  </div>
                 </div>
-              </div>
+
+                {accountType === 'business' && (
+                  <div className="space-y-2">
+                    <Label htmlFor="companyName">Company / Developer Name</Label>
+                    <div className="relative">
+                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Input
+                        id="companyName"
+                        type="text"
+                        placeholder="Your company name"
+                        value={companyName}
+                        onChange={(e) => setCompanyName(e.target.value)}
+                        className="ps-10"
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
             )}
 
             <div className="space-y-2">
