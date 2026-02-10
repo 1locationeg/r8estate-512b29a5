@@ -145,6 +145,16 @@ const Index = () => {
             <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
           </div>
 
+          {/* For Business CTA */}
+          <div className="mb-6 md:mb-8">
+            <button
+              onClick={() => navigate('/auth?type=business')}
+              className="px-6 py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold hover:bg-accent/90 transition-colors text-sm"
+            >
+              {t("common.forBusiness", "For Business")}
+            </button>
+          </div>
+
           {/* Category Links */}
           <HeroCategoryLinks onViewSelect={setActiveView} />
 
