@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
-import { TrustGaugeMini } from "./TrustGaugeMini";
+
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { Button } from "./ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "./ui/tooltip";
@@ -125,65 +125,88 @@ export const SearchSuggestions = ({
     // These would trigger modals/actions in a full implementation
   };
 
+  const renderStars = (rating: number) => {
+    const fullStars = Math.floor(rating);
+    const hasHalf = rating - fullStars >= 0.3;
+    const colorClass = getRatingColorClass(rating);
+    
+    return (
+      <div className="flex items-center gap-0.5">
+        <span className={`text-sm font-bold me-1.5 ${colorClass}`}>{rating.toFixed(1)}</span>
+        {Array.from({ length: 5 }, (_, i) => (
+          <Star
+            key={i}
+            className={cn(
+              "w-4 h-4",
+              i < fullStars ? colorClass : (i === fullStars && hasHalf ? colorClass + " opacity-50" : "text-muted-foreground/30")
+            )}
+          />
+        ))}
+      </div>
+    );
+  };
+
   const renderItem = (item: SearchItem, isSelected: boolean) => {
     itemIndex++;
     const currentIndex = itemIndex;
     const trustScore = generateTrustScore(item);
-    const itemRating = item.rating || (3 + Math.abs(generateTrustScore(item) % 3)); // Generate rating if not present
+    const itemRating = item.rating || (3 + Math.abs(generateTrustScore(item) % 3));
     
     return (
       <div
         key={`${item.category}-${item.id}`}
         data-index={currentIndex}
         className={cn(
-          "px-3 py-2.5 transition-colors rounded-lg",
+          "px-4 py-3.5 transition-colors border-b border-border/40 last:border-b-0",
           isSelected 
-            ? "bg-primary/10" 
-            : "hover:bg-secondary/50"
+            ? "bg-primary/5" 
+            : "hover:bg-secondary/30"
         )}
       >
         {/* Main item row - clickable */}
         <button
           onClick={() => onSelect(item)}
-          className="w-full flex items-center gap-3 text-start"
+          className="w-full flex items-center gap-4 text-start"
         >
-          {item.image ? (
-            <img
-              src={item.image}
-              alt={item.name}
-              className="w-9 h-9 rounded-lg object-cover flex-shrink-0"
-            />
-          ) : (
-            <div className="w-9 h-9 rounded-lg bg-secondary flex items-center justify-center flex-shrink-0">
-              {categoryIcons[item.category]}
+          {/* Logo with verification badge */}
+          <div className="relative flex-shrink-0">
+            {item.image ? (
+              <img
+                src={item.image}
+                alt={item.name}
+                className="w-11 h-11 rounded-xl object-cover bg-secondary"
+              />
+            ) : (
+              <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center">
+                {categoryIcons[item.category]}
+              </div>
+            )}
+            {/* Verification badge */}
+            <div className="absolute -bottom-1 -end-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center ring-2 ring-card">
+              <svg className="w-3 h-3 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
             </div>
-          )}
+          </div>
           
+          {/* Name & subtitle */}
           <div className="flex-1 min-w-0">
-            <div className="font-medium text-foreground text-sm truncate">
+            <div className="font-semibold text-foreground text-sm truncate">
               {item.name}
             </div>
             {item.subtitle && (
-              <div className="text-xs text-muted-foreground truncate">
+              <div className="text-xs text-muted-foreground truncate mt-0.5">
                 {item.subtitle}
               </div>
             )}
           </div>
           
-          {/* Trust Gauge */}
-          <TrustGaugeMini score={trustScore} size="xs" />
-          
-          {/* Star Rating */}
-          <div className="flex items-center gap-1 px-2 py-1 bg-secondary/50 rounded-lg flex-shrink-0">
-            <Star className={`w-3 h-3 fill-current ${getRatingColorClass(itemRating)}`} />
-            <span className={`text-xs font-semibold ${getRatingColorClass(itemRating)}`}>
-              {itemRating.toFixed(1)}
-            </span>
-          </div>
+          {/* Star Rating - visual stars like the reference */}
+          {renderStars(itemRating)}
         </button>
         
         {/* Action buttons row */}
-        <div className="flex items-center gap-1.5 mt-2 ms-12">
+        <div className="flex items-center gap-1.5 mt-2.5 ms-[60px]">
           <TooltipProvider delayDuration={300}>
             <Tooltip>
               <TooltipTrigger asChild>
