@@ -16,7 +16,7 @@ const passwordSchema = z.string().min(6, 'Password must be at least 6 characters
 const Auth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, signIn, signUp, signInWithGoogle, isLoading: authLoading } = useAuth();
+  const { user, role, signIn, signUp, signInWithGoogle, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
@@ -29,9 +29,11 @@ const Auth = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && user) {
-      navigate('/');
+      if (role === 'admin') navigate('/admin');
+      else if (role === 'developer') navigate('/developer');
+      else navigate('/buyer');
     }
-  }, [user, authLoading, navigate]);
+  }, [user, role, authLoading, navigate]);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -85,7 +87,7 @@ const Auth = () => {
           title: 'Welcome back!',
           description: 'You have successfully signed in.',
         });
-        navigate('/');
+        // Role-based redirect will happen via useEffect
       } else {
         const { error } = await signUp(email, password, fullName);
         if (error) {

@@ -1,255 +1,329 @@
 import { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useTranslation } from 'react-i18next';
+import { useNavigate, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
-import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
-  Users, 
-  Building2, 
-  MessageSquare, 
-  Shield,
-  Settings, 
-  LogOut, 
-  Bell,
-  BarChart3,
-  AlertTriangle,
-  CheckCircle,
-  Loader2
+  Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
+  Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
+  Ban, Eye, TrendingUp, Star
 } from 'lucide-react';
+import { developers, reviews } from '@/data/mockData';
+import { getRatingColorClass } from '@/lib/ratingColors';
+
+const AdminOverview = () => {
+  const stats = [
+    { icon: Users, label: 'Total Users', value: '12,847', status: 'success' as const },
+    { icon: Building2, label: 'Verified Developers', value: '156', status: 'success' as const },
+    { icon: MessageSquare, label: 'Pending Reviews', value: '23', status: 'warning' as const },
+    { icon: AlertTriangle, label: 'Flagged Content', value: '5', status: 'error' as const },
+  ];
+
+  const statusColors = {
+    success: { bg: 'bg-trust-excellent/10', text: 'text-trust-excellent' },
+    warning: { bg: 'bg-accent/20', text: 'text-accent' },
+    error: { bg: 'bg-brand-red/10', text: 'text-brand-red' },
+  };
+
+  return (
+    <div>
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        {stats.map((s) => (
+          <div key={s.label} className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className={`w-10 h-10 ${statusColors[s.status].bg} rounded-lg flex items-center justify-center`}>
+                <s.icon className={`w-5 h-5 ${statusColors[s.status].text}`} />
+              </div>
+              {s.status === 'success' && <CheckCircle className="w-4 h-4 text-trust-excellent" />}
+              {s.status === 'warning' && <AlertTriangle className="w-4 h-4 text-accent" />}
+              {s.status === 'error' && <AlertTriangle className="w-4 h-4 text-brand-red" />}
+            </div>
+            <div className="text-2xl font-bold text-foreground">{s.value}</div>
+            <div className="text-xs text-muted-foreground">{s.label}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Pending Actions */}
+      <h3 className="text-lg font-semibold text-foreground mb-3">Pending Actions</h3>
+      <div className="bg-card border border-border rounded-xl divide-y divide-border mb-6">
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center">
+              <MessageSquare className="w-5 h-5 text-accent" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground text-sm">23 reviews pending moderation</p>
+              <p className="text-xs text-muted-foreground">Flagged by users or system</p>
+            </div>
+          </div>
+          <Button size="sm">Review</Button>
+        </div>
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
+              <Building2 className="w-5 h-5 text-primary" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground text-sm">7 developers awaiting verification</p>
+              <p className="text-xs text-muted-foreground">New registration requests</p>
+            </div>
+          </div>
+          <Button size="sm">Verify</Button>
+        </div>
+        <div className="p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-brand-red/10 rounded-lg flex items-center justify-center">
+              <AlertTriangle className="w-5 h-5 text-brand-red" />
+            </div>
+            <div>
+              <p className="font-medium text-foreground text-sm">5 flagged content items</p>
+              <p className="text-xs text-muted-foreground">Reported for policy violations</p>
+            </div>
+          </div>
+          <Button size="sm" variant="destructive">Review</Button>
+        </div>
+      </div>
+
+      {/* Platform Activity */}
+      <h3 className="text-lg font-semibold text-foreground mb-3">Recent Platform Activity</h3>
+      <div className="bg-card border border-border rounded-xl p-6 h-48 flex items-center justify-center">
+        <div className="text-center">
+          <BarChart3 className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">Activity charts coming soon</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AdminUsers = () => {
+  const mockUsers = [
+    { name: 'Ahmed Mostafa', email: 'ahmed@example.com', role: 'buyer', status: 'active', joined: '2024-01-15' },
+    { name: 'Sara Mahmoud', email: 'sara@example.com', role: 'buyer', status: 'active', joined: '2024-01-10' },
+    { name: 'Palm Hills Developments', email: 'admin@palmhills.com', role: 'developer', status: 'active', joined: '2023-06-01' },
+    { name: 'Mohammed Hassan', email: 'mohammed@example.com', role: 'buyer', status: 'suspended', joined: '2024-01-05' },
+    { name: 'Emaar Misr', email: 'admin@emaarmisr.com', role: 'developer', status: 'active', joined: '2023-07-01' },
+  ];
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-4">User Management</h2>
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b border-border bg-secondary/50">
+                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">User</th>
+                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Role</th>
+                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Status</th>
+                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Joined</th>
+                <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Actions</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-border">
+              {mockUsers.map((u) => (
+                <tr key={u.email} className="hover:bg-secondary/30 transition-colors">
+                  <td className="px-4 py-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-8 w-8"><AvatarFallback className="text-[10px] bg-primary/10 text-primary">{u.name[0]}</AvatarFallback></Avatar>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{u.name}</p>
+                        <p className="text-[10px] text-muted-foreground">{u.email}</p>
+                      </div>
+                    </div>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize ${
+                      u.role === 'developer' ? 'bg-primary/10 text-primary' : 'bg-accent/20 text-accent-foreground'
+                    }`}>{u.role}</span>
+                  </td>
+                  <td className="px-4 py-3">
+                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize ${
+                      u.status === 'active' ? 'bg-trust-excellent/10 text-trust-excellent' : 'bg-brand-red/10 text-brand-red'
+                    }`}>{u.status}</span>
+                  </td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">{u.joined}</td>
+                  <td className="px-4 py-3 text-end">
+                    <div className="flex items-center gap-1 justify-end">
+                      <Button size="sm" variant="ghost"><Eye className="w-3 h-3" /></Button>
+                      <Button size="sm" variant="ghost"><Ban className="w-3 h-3" /></Button>
+                    </div>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const AdminDevelopers = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Developer Verification</h2>
+    <div className="space-y-3">
+      {developers.map((d) => (
+        <div key={d.id} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-12 h-12 rounded-lg bg-secondary overflow-hidden">
+              <img src={d.logo} alt={d.name} className="w-full h-full object-cover" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <p className="font-semibold text-foreground text-sm">{d.name}</p>
+                {d.verified && <CheckCircle className="w-3.5 h-3.5 text-trust-excellent" />}
+              </div>
+              <p className="text-xs text-muted-foreground">{d.location} · {d.projectsCompleted} projects</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 me-3">
+              <Star className={`w-3.5 h-3.5 ${getRatingColorClass(d.rating)}`} />
+              <span className="text-sm font-bold text-foreground">{d.rating}</span>
+            </div>
+            {d.verified ? (
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-trust-excellent/10 text-trust-excellent font-medium">Verified</span>
+            ) : (
+              <Button size="sm">Verify</Button>
+            )}
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const AdminReviewMod = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Review Moderation</h2>
+    <div className="space-y-4">
+      {reviews.slice(0, 6).map((r) => (
+        <div key={r.id} className="bg-card border border-border rounded-xl p-4">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-2">
+              <Avatar className="h-8 w-8">
+                {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
+                <AvatarFallback className="text-[10px]">{r.author[0]}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-sm font-semibold text-foreground">{r.author}</p>
+                <p className="text-[10px] text-muted-foreground">{r.project} · {r.date}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+              ))}
+            </div>
+          </div>
+          <p className="text-sm text-muted-foreground mb-3">{r.comment}</p>
+          <div className="flex gap-2">
+            <Button size="sm" className="bg-trust-excellent hover:bg-trust-excellent/90 text-white"><CheckCircle className="w-3 h-3 me-1" /> Approve</Button>
+            <Button size="sm" variant="destructive"><Ban className="w-3 h-3 me-1" /> Reject</Button>
+            <Button size="sm" variant="outline"><Eye className="w-3 h-3 me-1" /> Flag</Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
+const AdminAnalytics = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Platform Analytics</h2>
+    <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      {[
+        { label: 'New Users (30d)', value: '1,247', icon: Users },
+        { label: 'Reviews (30d)', value: '89', icon: MessageSquare },
+        { label: 'Page Views', value: '45.2K', icon: Eye },
+        { label: 'Growth Rate', value: '+12.5%', icon: TrendingUp },
+      ].map((s) => (
+        <div key={s.label} className="bg-card border border-border rounded-xl p-4">
+          <s.icon className="w-5 h-5 text-primary mb-2" />
+          <div className="text-2xl font-bold text-foreground">{s.value}</div>
+          <div className="text-xs text-muted-foreground">{s.label}</div>
+        </div>
+      ))}
+    </div>
+    <div className="bg-card border border-border rounded-xl p-8 h-64 flex items-center justify-center">
+      <div className="text-center">
+        <BarChart3 className="w-12 h-12 text-muted-foreground/30 mx-auto mb-2" />
+        <p className="text-sm text-muted-foreground">Detailed analytics coming soon</p>
+      </div>
+    </div>
+  </div>
+);
+
+const AdminSettings = () => (
+  <div>
+    <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
+    <div className="max-w-lg space-y-4">
+      {[
+        { title: 'Auto-approve reviews', desc: 'Automatically approve reviews from verified users' },
+        { title: 'Email notifications', desc: 'Send email alerts for flagged content' },
+        { title: 'Maintenance mode', desc: 'Put the platform in maintenance mode' },
+      ].map((s) => (
+        <div key={s.title} className="bg-card border border-border rounded-xl p-4 flex items-center justify-between">
+          <div>
+            <p className="text-sm font-semibold text-foreground">{s.title}</p>
+            <p className="text-xs text-muted-foreground">{s.desc}</p>
+          </div>
+          <div className="w-10 h-6 bg-secondary rounded-full relative cursor-pointer">
+            <div className="w-4 h-4 bg-muted-foreground/30 rounded-full absolute top-1 left-1" />
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+);
 
 const AdminDashboard = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role, isLoading, signOut } = useAuth();
+  const { user, role, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
-      if (!user) {
-        navigate('/auth');
-      } else if (role !== 'admin') {
-        // Redirect non-admins based on their role
-        if (role === 'developer') {
-          navigate('/developer');
-        } else {
-          navigate('/buyer');
-        }
+      if (!user) navigate('/auth');
+      else if (role !== 'admin') {
+        navigate(role === 'developer' ? '/developer' : '/buyer');
       }
     }
   }, [user, role, isLoading, navigate]);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate('/');
-  };
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-background">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || role !== 'admin') return null;
 
-  const stats = [
-    { icon: Users, label: 'Total Users', value: '12,847', status: 'success' },
-    { icon: Building2, label: 'Verified Developers', value: '156', status: 'success' },
-    { icon: MessageSquare, label: 'Pending Reviews', value: '23', status: 'warning' },
-    { icon: AlertTriangle, label: 'Flagged Content', value: '5', status: 'error' },
+  const navItems = [
+    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/admin' },
+    { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
+    { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
+    { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
+    { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate('/')}>
-            <div className="w-10 h-10 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-xl">
-              R8
-            </div>
-            <span className="text-2xl font-bold text-foreground">R8ESTATE</span>
-            <span className="text-xs bg-destructive/10 text-destructive px-2 py-1 rounded-full font-medium">
-              Admin
-            </span>
-          </div>
-          
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" className="relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-1 end-1 w-2 h-2 bg-destructive rounded-full" />
-            </Button>
-            <LanguageSwitcher />
-            <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none">
-                <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-destructive/20 hover:ring-destructive/40 transition-all">
-                  <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.full_name || 'Admin'} />
-                  <AvatarFallback className="bg-destructive text-destructive-foreground">
-                    {profile?.full_name?.charAt(0) || 'A'}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{profile?.full_name || 'Admin'}</span>
-                    <span className="text-xs text-muted-foreground">{user.email}</span>
-                    <span className="text-xs text-destructive mt-1 capitalize flex items-center gap-1">
-                      <Shield className="w-3 h-3" />
-                      Administrator
-                    </span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate('/settings')} className="cursor-pointer">
-                  <Settings className="w-4 h-4 me-2" />
-                  Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
-                  <LogOut className="w-4 h-4 me-2" />
-                  Sign Out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="container mx-auto px-4 py-8">
-        {/* Welcome Section */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-foreground mb-2">
-            Admin Dashboard
-          </h1>
-          <p className="text-muted-foreground">
-            Manage users, developers, reviews, and platform settings
-          </p>
-        </div>
-
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-          {stats.map((stat) => (
-            <div key={stat.label} className="bg-card border border-border rounded-xl p-4">
-              <div className="flex items-center justify-between mb-2">
-                <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                  stat.status === 'success' ? 'bg-green-100 text-green-600' :
-                  stat.status === 'warning' ? 'bg-amber-100 text-amber-600' :
-                  'bg-red-100 text-red-600'
-                }`}>
-                  <stat.icon className="w-5 h-5" />
-                </div>
-                {stat.status === 'success' && <CheckCircle className="w-4 h-4 text-green-600" />}
-                {stat.status === 'warning' && <AlertTriangle className="w-4 h-4 text-amber-600" />}
-                {stat.status === 'error' && <AlertTriangle className="w-4 h-4 text-red-600" />}
-              </div>
-              <div className="text-2xl font-bold text-foreground">{stat.value}</div>
-              <div className="text-sm text-muted-foreground">{stat.label}</div>
-            </div>
-          ))}
-        </div>
-
-        {/* Admin Actions */}
-        <div className="mb-8">
-          <h2 className="text-xl font-semibold text-foreground mb-4">Administration</h2>
-          <div className="grid md:grid-cols-4 gap-4">
-            <Button
-              variant="outline"
-              className="h-auto p-6 flex flex-col items-start gap-2"
-            >
-              <Users className="w-6 h-6 text-primary" />
-              <span className="font-semibold">User Management</span>
-              <span className="text-sm text-muted-foreground text-start">
-                View, suspend, or ban users
-              </span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto p-6 flex flex-col items-start gap-2"
-            >
-              <Building2 className="w-6 h-6 text-primary" />
-              <span className="font-semibold">Developer Verification</span>
-              <span className="text-sm text-muted-foreground text-start">
-                Approve & verify developers
-              </span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto p-6 flex flex-col items-start gap-2"
-            >
-              <MessageSquare className="w-6 h-6 text-primary" />
-              <span className="font-semibold">Review Moderation</span>
-              <span className="text-sm text-muted-foreground text-start">
-                Moderate flagged reviews
-              </span>
-            </Button>
-            <Button
-              variant="outline"
-              className="h-auto p-6 flex flex-col items-start gap-2"
-            >
-              <BarChart3 className="w-6 h-6 text-primary" />
-              <span className="font-semibold">Platform Analytics</span>
-              <span className="text-sm text-muted-foreground text-start">
-                View platform statistics
-              </span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Pending Actions */}
-        <div>
-          <h2 className="text-xl font-semibold text-foreground mb-4">Pending Actions</h2>
-          <div className="bg-card border border-border rounded-xl divide-y divide-border">
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-amber-100 rounded-lg flex items-center justify-center">
-                  <MessageSquare className="w-5 h-5 text-amber-600" />
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">23 reviews pending moderation</p>
-                  <p className="text-sm text-muted-foreground">Flagged by users or system</p>
-                </div>
-              </div>
-              <Button size="sm">Review</Button>
-            </div>
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-                  <Building2 className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">7 developers awaiting verification</p>
-                  <p className="text-sm text-muted-foreground">New registration requests</p>
-                </div>
-              </div>
-              <Button size="sm">Verify</Button>
-            </div>
-            <div className="p-4 flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 bg-red-100 rounded-lg flex items-center justify-center">
-                  <AlertTriangle className="w-5 h-5 text-red-600" />
-                </div>
-                <div>
-                  <p className="font-medium text-foreground">5 flagged content items</p>
-                  <p className="text-sm text-muted-foreground">Reported for policy violations</p>
-                </div>
-              </div>
-              <Button size="sm" variant="destructive">Review</Button>
-            </div>
-          </div>
-        </div>
-      </main>
-    </div>
+    <DashboardLayout
+      title="Admin Dashboard"
+      breadcrumb="Admin > Dashboard"
+      sidebarProps={{
+        navItems,
+        portalLabel: 'Admin',
+      }}
+    >
+      <Routes>
+        <Route index element={<AdminOverview />} />
+        <Route path="users" element={<AdminUsers />} />
+        <Route path="developers" element={<AdminDevelopers />} />
+        <Route path="reviews" element={<AdminReviewMod />} />
+        <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="settings" element={<AdminSettings />} />
+      </Routes>
+    </DashboardLayout>
   );
 };
 
