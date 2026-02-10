@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -15,26 +15,22 @@ interface CategoryItem {
   shares?: number;
   replies?: number;
   categoryKey?: string;
-  categoryIcon?: string;
+  categoryIcon?: React.ReactNode;
   launchDate?: string; // ISO date for "New Launches" sorting
   trendScore?: number; // recent momentum score for "Trending"
 }
 
 interface Category {
-  icon: string;
+  icon: React.ReactNode;
   labelKey: string;
   items: CategoryItem[];
 }
 
-interface Category {
-  icon: string;
-  labelKey: string;
-  items: CategoryItem[];
-}
+// (duplicate interface removed)
 
 const categories: Category[] = [
   {
-    icon: "🗄️",
+    icon: <LayoutGrid className="w-4 h-4 text-primary" />,
     labelKey: "categories.units",
     items: [
       { id: "studio", nameEn: "Studio", nameAr: "ستوديو", avatar: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=100&h=100&fit=crop", rating: 4.2, reviewCount: 156, likes: 342, shares: 89, replies: 45, launchDate: "2025-01-15", trendScore: 78 },
@@ -48,7 +44,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "📁",
+    icon: <Smartphone className="w-4 h-4 text-accent" />,
     labelKey: "categories.apps",
     items: [
       { id: "nawy", nameEn: "Nawy App", nameAr: "تطبيق ناوي", avatar: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 1250, likes: 3456, shares: 890, replies: 456, launchDate: "2024-03-10", trendScore: 97 },
@@ -58,7 +54,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "📂",
+    icon: <BarChart3 className="w-4 h-4 text-brand-red" />,
     labelKey: "categories.shares",
     items: [
       { id: "orascom", nameEn: "Orascom Development", nameAr: "أوراسكوم للتنمية", avatar: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=100&h=100&fit=crop", rating: 4.2, reviewCount: 456, likes: 1234, shares: 345, replies: 167, launchDate: "2023-05-01", trendScore: 60 },
@@ -68,7 +64,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "📋",
+    icon: <Globe className="w-4 h-4 text-primary" />,
     labelKey: "categories.platforms",
     items: [
       { id: "aqarmap", nameEn: "Aqarmap", nameAr: "عقار ماب", avatar: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 2340, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-01-01", trendScore: 88 },
@@ -78,7 +74,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "🤝",
+    icon: <Users className="w-4 h-4 text-accent" />,
     labelKey: "categories.brokers",
     items: [
       { id: "the-address", nameEn: "The Address", nameAr: "ذا أدرس", avatar: "https://randomuser.me/api/portraits/men/32.jpg", rating: 4.7, reviewCount: 456, likes: 1234, shares: 345, replies: 167, launchDate: "2023-04-10", trendScore: 81 },
@@ -90,7 +86,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "🖥️",
+    icon: <CalendarDays className="w-4 h-4 text-brand-red" />,
     labelKey: "categories.exhibitions",
     items: [
       { id: "cityscape", nameEn: "Cityscape", nameAr: "سيتي سكيب", avatar: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=100&h=100&fit=crop", rating: 4.8, reviewCount: 3456, likes: 8901, shares: 2345, replies: 1234, launchDate: "2024-04-15", trendScore: 99 },
@@ -100,7 +96,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "📺",
+    icon: <Tv className="w-4 h-4 text-primary" />,
     labelKey: "categories.channels",
     items: [
       { id: "property-insider", nameEn: "Property Insider", nameAr: "بروبرتي إنسايدر", avatar: "https://randomuser.me/api/portraits/men/52.jpg", rating: 4.6, reviewCount: 5678, likes: 12345, shares: 3456, replies: 1567, launchDate: "2022-08-01", trendScore: 94 },
@@ -109,7 +105,7 @@ const categories: Category[] = [
     ],
   },
   {
-    icon: "⚖️",
+    icon: <Scale className="w-4 h-4 text-accent" />,
     labelKey: "categories.lawFirms",
     items: [
       { id: "diyaa-eldin", nameEn: "Diyaa Eldin", nameAr: "ضياء الدين", avatar: "https://randomuser.me/api/portraits/men/55.jpg", rating: 4.6, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-03-01", trendScore: 80 },
