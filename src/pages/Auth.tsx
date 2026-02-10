@@ -180,11 +180,11 @@ const Auth = () => {
         {/* Auth card */}
         <div className="bg-card border border-border rounded-2xl p-8 shadow-xl">
           {/* Logo */}
-          <div className="flex items-center justify-center gap-3 mb-8">
-            <div className="w-12 h-12 bg-gradient-to-br from-primary to-primary/70 rounded-xl flex items-center justify-center text-primary-foreground font-bold text-2xl">
+          <div className="flex items-center justify-center gap-4 mb-8">
+            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center text-primary-foreground font-bold text-3xl">
               R8
             </div>
-            <span className="text-2xl font-bold text-foreground">R8ESTATE</span>
+            <span className="text-3xl font-bold text-foreground">R8ESTATE</span>
           </div>
 
           {/* Title */}
