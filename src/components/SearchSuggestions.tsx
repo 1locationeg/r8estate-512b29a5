@@ -132,12 +132,12 @@ export const SearchSuggestions = ({
     
     return (
       <div className="flex items-center gap-0.5">
-        <span className={`text-sm font-bold me-1.5 ${colorClass}`}>{rating.toFixed(1)}</span>
+        <span className={`text-xs md:text-sm font-bold me-1.5 ${colorClass}`}>{rating.toFixed(1)}</span>
         {Array.from({ length: 5 }, (_, i) => (
           <Star
             key={i}
             className={cn(
-              "w-4 h-4",
+              "w-3 h-3 md:w-4 md:h-4",
               i < fullStars ? colorClass : (i === fullStars && hasHalf ? colorClass + " opacity-50" : "text-muted-foreground/30")
             )}
           />
@@ -157,7 +157,7 @@ export const SearchSuggestions = ({
         key={`${item.category}-${item.id}`}
         data-index={currentIndex}
         className={cn(
-          "px-4 py-3.5 transition-colors border-b border-border/40 last:border-b-0",
+          "px-3 py-2.5 md:px-4 md:py-3.5 transition-colors border-b border-border/40 last:border-b-0",
           isSelected 
             ? "bg-primary/5" 
             : "hover:bg-secondary/30"
@@ -166,7 +166,7 @@ export const SearchSuggestions = ({
         {/* Main item row - clickable */}
         <button
           onClick={() => onSelect(item)}
-          className="w-full flex items-center gap-4 text-start"
+          className="w-full flex items-center gap-2.5 md:gap-4 text-start"
         >
           {/* Logo with verification badge */}
           <div className="relative flex-shrink-0">
@@ -174,16 +174,16 @@ export const SearchSuggestions = ({
               <img
                 src={item.image}
                 alt={item.name}
-                className="w-11 h-11 rounded-xl object-cover bg-secondary"
+                className="w-9 h-9 md:w-11 md:h-11 rounded-xl object-cover bg-secondary"
               />
             ) : (
-              <div className="w-11 h-11 rounded-xl bg-secondary flex items-center justify-center">
+              <div className="w-9 h-9 md:w-11 md:h-11 rounded-xl bg-secondary flex items-center justify-center">
                 {categoryIcons[item.category]}
               </div>
             )}
             {/* Verification badge */}
-            <div className="absolute -bottom-1 -end-1 w-5 h-5 bg-primary rounded-full flex items-center justify-center ring-2 ring-card">
-              <svg className="w-3 h-3 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+            <div className="absolute -bottom-1 -end-1 w-4 h-4 md:w-5 md:h-5 bg-primary rounded-full flex items-center justify-center ring-2 ring-card">
+              <svg className="w-2.5 h-2.5 md:w-3 md:h-3 text-primary-foreground" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <polyline points="20 6 9 17 4 12" />
               </svg>
             </div>
@@ -206,18 +206,18 @@ export const SearchSuggestions = ({
         </button>
         
         {/* Action buttons row */}
-        <div className="flex items-center gap-1.5 mt-2.5 ms-[60px]">
+        <div className="flex items-center gap-1.5 mt-2 md:mt-2.5 ms-[46px] md:ms-[60px]">
           <TooltipProvider delayDuration={300}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 px-2.5 text-xs gap-1.5"
+                  className="h-6 md:h-7 px-2 md:px-2.5 text-xs gap-1.5"
                   onClick={(e) => handleActionClick(e, 'write-review', item)}
                 >
                   <PenLine className="w-3 h-3" />
-                  {t("search.writeReview")}
+                  <span className="hidden md:inline">{t("search.writeReview")}</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{t("search.writeReviewTooltip")}</TooltipContent>
@@ -228,7 +228,7 @@ export const SearchSuggestions = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 w-7 p-0"
+                  className="h-6 w-6 md:h-7 md:w-7 p-0"
                   onClick={(e) => handleActionClick(e, 'voice-review', item)}
                 >
                   <Mic className="w-3.5 h-3.5" />
@@ -242,7 +242,7 @@ export const SearchSuggestions = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 w-7 p-0"
+                  className="h-6 w-6 md:h-7 md:w-7 p-0"
                   onClick={(e) => handleActionClick(e, 'download-report', item)}
                 >
                   <FileDown className="w-3.5 h-3.5" />
@@ -256,11 +256,11 @@ export const SearchSuggestions = ({
                 <Button
                   size="sm"
                   variant="outline"
-                  className="h-7 px-2.5 text-xs gap-1.5"
+                  className="h-6 md:h-7 px-2 md:px-2.5 text-xs gap-1.5"
                   onClick={(e) => handleActionClick(e, 'compare', item)}
                 >
                   <GitCompare className="w-3 h-3" />
-                  {t("search.compare")}
+                  <span className="hidden md:inline">{t("search.compare")}</span>
                 </Button>
               </TooltipTrigger>
               <TooltipContent>{t("search.compareTooltip")}</TooltipContent>
@@ -299,7 +299,7 @@ export const SearchSuggestions = ({
     <div 
       ref={containerRef}
       className={cn(
-        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[400px] overflow-y-auto",
+        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[320px] md:max-h-[400px] overflow-y-auto",
         className
       )}
     >
