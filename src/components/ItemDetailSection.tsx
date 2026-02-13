@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { WriteReviewModal } from "./WriteReviewModal";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -87,6 +88,7 @@ const getTierIcon = (tier: string) => {
 export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => {
   const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   // Generate deterministic scores based on item id
   const { trustScore, rating, categoryScores, reviews, metricKeys } = useMemo(() => {
@@ -276,11 +278,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
 
         {/* Action Buttons */}
         <div className="flex flex-wrap gap-2">
-          <Button variant="default" size="sm" className="gap-2">
+          <Button variant="default" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
             <PenLine className="w-4 h-4" />
             {t("search.writeReview")}
           </Button>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
             <Mic className="w-4 h-4" />
             {t("itemDetail.voiceReview")}
           </Button>
@@ -383,6 +385,12 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           </div>
         </div>
       </div>
+      <WriteReviewModal
+        open={isReviewModalOpen}
+        onOpenChange={setIsReviewModalOpen}
+        developerName={item?.name || ""}
+        developerId={item?.id || ""}
+      />
     </div>
   );
 };

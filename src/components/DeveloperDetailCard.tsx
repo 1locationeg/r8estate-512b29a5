@@ -4,6 +4,7 @@ import { Developer, reviews } from "@/data/mockData";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
+import { WriteReviewModal } from "./WriteReviewModal";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
 import {
@@ -28,6 +29,7 @@ export const DeveloperDetailCard = ({
   const { t } = useTranslation();
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   // Get trust score color based on percentage
   const getTrustScoreColor = (score: number) => {
@@ -172,10 +174,16 @@ export const DeveloperDetailCard = ({
 
         {/* Action Buttons */}
         <div className="flex items-center justify-center gap-2 mb-4">
-          <button className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors">
+          <button
+            onClick={() => setIsReviewModalOpen(true)}
+            className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors"
+          >
             {t("reviews.writeReview")}
           </button>
-          <button className="p-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors">
+          <button
+            onClick={() => setIsReviewModalOpen(true)}
+            className="p-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
+          >
             <Mic className="w-4 h-4 text-foreground" />
           </button>
         </div>
@@ -244,6 +252,14 @@ export const DeveloperDetailCard = ({
           )}
         </div>
       </div>
+
+      {/* Write Review Modal */}
+      <WriteReviewModal
+        open={isReviewModalOpen}
+        onOpenChange={setIsReviewModalOpen}
+        developerName={developer.name}
+        developerId={developer.id}
+      />
     </div>
   );
 };
