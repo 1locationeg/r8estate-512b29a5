@@ -12,6 +12,7 @@ interface SearchSuggestionsProps {
   isOpen: boolean;
   onSelect: (item: SearchItem) => void;
   onCorrection: (corrected: string) => void;
+  onWriteReview?: (item: SearchItem) => void;
   selectedIndex: number;
   className?: string;
 }
@@ -35,6 +36,7 @@ export const SearchSuggestions = ({
   isOpen,
   onSelect,
   onCorrection,
+  onWriteReview,
   selectedIndex,
   className
 }: SearchSuggestionsProps) => {
@@ -121,8 +123,11 @@ export const SearchSuggestions = ({
 
   const handleActionClick = (e: React.MouseEvent, action: string, item: SearchItem) => {
     e.stopPropagation();
-    console.log(`Action: ${action} for item:`, item);
-    // These would trigger modals/actions in a full implementation
+    if (action === 'write-review' && onWriteReview) {
+      onWriteReview(item);
+    } else {
+      console.log(`Action: ${action} for item:`, item);
+    }
   };
 
   const renderStars = (rating: number) => {
