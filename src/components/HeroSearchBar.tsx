@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
+import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -18,6 +19,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
+  const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -40,6 +42,11 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
 
   const handleCloseDetail = useCallback(() => {
     setSelectedItem(null);
+  }, []);
+
+  const handleWriteReview = useCallback((item: SearchItem) => {
+    setReviewItem(item);
+    setIsFocused(false);
   }, []);
 
   const handleValidateDecision = useCallback(() => {
@@ -150,11 +157,20 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         isOpen={isFocused}
         onSelect={handleSelect}
         onCorrection={handleCorrection}
+        onWriteReview={handleWriteReview}
         selectedIndex={selectedIndex}
       />
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
+
+      {/* Write Review Modal */}
+      <WriteReviewModal
+        open={!!reviewItem}
+        onOpenChange={(open) => !open && setReviewItem(null)}
+        developerName={reviewItem?.name || ""}
+        developerId={reviewItem?.id || ""}
+      />
       
       {/* Item Detail Section - Inline on page */}
       {selectedItem && (
