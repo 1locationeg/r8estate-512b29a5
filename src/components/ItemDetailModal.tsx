@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { WriteReviewModal } from "./WriteReviewModal";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -128,6 +129,7 @@ const getTierIcon = (tier: string) => {
 export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) => {
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   // Generate deterministic scores based on item id
   const { trustScore, rating, categoryScores, reviews } = useMemo(() => {
@@ -296,11 +298,11 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" size="sm" className="gap-2">
+            <Button variant="default" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
               <PenLine className="w-4 h-4" />
               {t("search.writeReview")}
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
               <Mic className="w-4 h-4" />
               {t("itemDetail.voiceReview")}
             </Button>
@@ -401,6 +403,12 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
           </div>
         </div>
       </DialogContent>
+      <WriteReviewModal
+        open={isReviewModalOpen}
+        onOpenChange={setIsReviewModalOpen}
+        developerName={item?.name || ""}
+        developerId={item?.id || ""}
+      />
     </Dialog>
   );
 };
