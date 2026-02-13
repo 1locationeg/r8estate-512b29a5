@@ -30,7 +30,7 @@ const DeveloperDirectory = () => {
               <img
                 src={logoIcon}
                 alt="R8ESTATE"
-                className="h-10 w-auto object-contain"
+                className="h-14 w-auto object-contain"
               />
               <h1 className="text-2xl font-bold inline-flex">
                 <span className="text-brand-red">R8</span>

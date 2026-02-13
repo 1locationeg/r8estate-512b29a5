@@ -46,7 +46,7 @@ const Install = () => {
         </button>
 
         <div className="flex items-center justify-center gap-3">
-          <img src={logoIcon} alt="R8ESTATE" className="h-16 w-auto" />
+          <img src={logoIcon} alt="R8ESTATE" className="h-20 w-auto" />
           <span className="text-3xl font-extrabold">
             <span className="text-brand-red">R8</span>
             <span className="text-primary">ESTATE</span>
