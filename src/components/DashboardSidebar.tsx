@@ -42,7 +42,7 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
       {/* Brand */}
       <div className="p-4 border-b border-primary-foreground/10">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto" />
+          <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto" />
           <div>
             <h1 className="text-lg font-bold leading-tight">
               <span className="text-brand-red">R8</span>
