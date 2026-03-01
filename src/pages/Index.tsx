@@ -6,6 +6,7 @@ import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
+import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -49,9 +50,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x">
       {/* Header */}
-      <header className="absolute top-0 left-0 right-0 z-50">
+      <header className="absolute top-0 left-0 right-0 z-50 safe-top">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
           {/* Logo - hidden on this page since we show it in hero */}
           <div className="w-10" />
@@ -106,10 +107,10 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-        <div className="flex-1 flex flex-col items-center justify-center px-4 py-16 md:py-20">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8 sm:py-16 md:py-20">
           {/* Brand Title */}
           <div className="text-center mb-6 md:mb-8">
-             <h1 className="inline-flex items-center justify-center gap-2 md:gap-3 text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extrabold mb-2">
+             <h1 className="inline-flex items-center justify-center gap-2 md:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-2">
               <img
                 src={logoIcon}
                 alt="R8ESTATE"
@@ -164,7 +165,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="bg-card border-t border-border py-6 md:py-8">
+      <footer className="bg-card border-t border-border py-6 md:py-8 safe-bottom">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
@@ -180,6 +181,9 @@ const Index = () => {
           </div>
         </div>
       </footer>
+
+      {/* PWA Install Banner */}
+      <PWAInstallBanner />
     </div>
   );
 };
