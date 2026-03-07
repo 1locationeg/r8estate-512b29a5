@@ -344,14 +344,19 @@ export interface Brokerage {
   logo?: string;
   specialty: string;
   agentCount: number;
+  yearFounded: number;
+  location: string;
+  dealsCompleted: number;
+  activeListings: number;
+  languages: string[];
 }
 
 export const brokerages: Brokerage[] = [
-  { id: "coldwell-banker", name: "Coldwell Banker Egypt", specialty: "Premium Properties", agentCount: 150 },
-  { id: "remax-egypt", name: "RE/MAX Egypt", specialty: "Residential & Commercial", agentCount: 200 },
-  { id: "aqarmap", name: "Aqarmap", specialty: "Property Portal", agentCount: 80 },
-  { id: "nawy", name: "Nawy", specialty: "Off-Plan Specialists", agentCount: 120 },
-  { id: "the-address", name: "The Address Real Estate", specialty: "Egypt Property Experts", agentCount: 95 }
+  { id: "coldwell-banker", name: "Coldwell Banker Egypt", specialty: "Premium Properties", agentCount: 150, yearFounded: 2001, location: "New Cairo, Egypt", dealsCompleted: 8500, activeListings: 420, languages: ["Arabic", "English", "French"] },
+  { id: "remax-egypt", name: "RE/MAX Egypt", specialty: "Residential & Commercial", agentCount: 200, yearFounded: 2005, location: "Heliopolis, Egypt", dealsCompleted: 12000, activeListings: 650, languages: ["Arabic", "English"] },
+  { id: "aqarmap", name: "Aqarmap", specialty: "Property Portal", agentCount: 80, yearFounded: 2011, location: "Smart Village, Egypt", dealsCompleted: 5200, activeListings: 15000, languages: ["Arabic", "English"] },
+  { id: "nawy", name: "Nawy", specialty: "Off-Plan Specialists", agentCount: 120, yearFounded: 2016, location: "New Cairo, Egypt", dealsCompleted: 6800, activeListings: 3200, languages: ["Arabic", "English"] },
+  { id: "the-address", name: "The Address Real Estate", specialty: "Egypt Property Experts", agentCount: 95, yearFounded: 2009, location: "6th of October, Egypt", dealsCompleted: 4300, activeListings: 280, languages: ["Arabic", "English", "German"] }
 ];
 
 // Apps/Platforms data
@@ -362,13 +367,18 @@ export interface App {
   icon?: string;
   rating: number;
   downloads: string;
+  launchYear: number;
+  platform: string[];
+  monthlyActiveUsers: string;
+  featuredListings: number;
+  supportedRegions: string[];
 }
 
 export const apps: App[] = [
-  { id: "aqarmap", name: "Aqarmap", type: "Property Portal", rating: 4.6, downloads: "1M+" },
-  { id: "nawy", name: "Nawy", type: "Property Portal", rating: 4.5, downloads: "500K+" },
-  { id: "olx-egypt", name: "OLX Egypt Property", type: "Marketplace", rating: 4.3, downloads: "5M+" },
-  { id: "waseet", name: "Waseet", type: "Property Portal", rating: 4.2, downloads: "100K+" }
+  { id: "aqarmap", name: "Aqarmap", type: "Property Portal", rating: 4.6, downloads: "1M+", launchYear: 2012, platform: ["iOS", "Android", "Web"], monthlyActiveUsers: "850K", featuredListings: 12000, supportedRegions: ["Cairo", "Giza", "Alexandria", "North Coast"] },
+  { id: "nawy", name: "Nawy", type: "Property Portal", rating: 4.5, downloads: "500K+", launchYear: 2017, platform: ["iOS", "Android", "Web"], monthlyActiveUsers: "420K", featuredListings: 8500, supportedRegions: ["Cairo", "North Coast", "Sokhna"] },
+  { id: "olx-egypt", name: "OLX Egypt Property", type: "Marketplace", rating: 4.3, downloads: "5M+", launchYear: 2012, platform: ["iOS", "Android", "Web"], monthlyActiveUsers: "3.2M", featuredListings: 45000, supportedRegions: ["All Egypt"] },
+  { id: "waseet", name: "Waseet", type: "Property Portal", rating: 4.2, downloads: "100K+", launchYear: 2019, platform: ["iOS", "Android"], monthlyActiveUsers: "65K", featuredListings: 3200, supportedRegions: ["Cairo", "Giza"] }
 ];
 
 // Property Types (Off-Plan Categories)
