@@ -213,7 +213,7 @@ export const DeveloperDetailCard = ({
             {t("actions.downloadReport")}
           </button>
           <button
-            onClick={onCompare}
+            onClick={() => setIsCompareOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors"
           >
             <GitCompare className="w-4 h-4" />
