@@ -271,9 +271,12 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
     ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
     : null;
 
+  const activeCategoryData = activeCategory ? categories.find(c => c.labelKey === activeCategory) : null;
+
   return (
     <div className="relative bg-card border-t border-border">
-      {/* Category Tabs */}
+      {/* Category Tabs - hidden when a category or item is selected */}
+      {!activeCategory && !selectedItem && (
       <div className="relative flex items-center">
         {/* Left Arrow */}
         <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
@@ -283,8 +286,6 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
         {/* Scrollable Categories */}
         <div className="flex-1 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
-
-
 
 
 
@@ -316,6 +317,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
           <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
         </button>
       </div>
+      )}
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
       {!selectedItem && activeSpecialItems && activeSpecialLabel && (
@@ -415,13 +417,25 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       )}
 
       {/* Category Items Dropdown */}
-      {!selectedItem && activeCategory && (
+      {!selectedItem && activeCategory && activeCategoryData && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
+            {/* Category Header with Back */}
+            <div className="flex items-center gap-3 mb-4">
+              <button
+                onClick={() => setActiveCategory(null)}
+                className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+              >
+                <ChevronLeft className={cn("w-5 h-5 text-muted-foreground", isRTL && "rotate-180")} />
+              </button>
+              <div className="flex items-center gap-2">
+                {activeCategoryData.icon}
+                <h3 className="text-lg font-bold text-foreground">{t(activeCategoryData.labelKey)}</h3>
+                <span className="text-sm text-muted-foreground">({activeCategoryData.items.length})</span>
+              </div>
+            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-              {categories
-                .find((c) => c.labelKey === activeCategory)
-                ?.items.map((item) => (
+              {activeCategoryData.items.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleItemClick(item, activeCategory || undefined)}
@@ -446,8 +460,6 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
                           ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
                         </span>
                       </div>
-                      
-                      {/* Engagement Stats for regular items too */}
                       <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
                         <div className="flex items-center gap-0.5">
                           <Heart className="w-2.5 h-2.5" />
