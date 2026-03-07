@@ -11,6 +11,10 @@ export interface Developer {
   specialties: string[];
   sentimentScore: number;
   isClaimed: boolean;
+  yearEstablished: number;
+  employees: number;
+  registeredUsers: number;
+  capital: string;
 }
 
 export type ReviewerTier = "gold" | "silver" | "bronze";
