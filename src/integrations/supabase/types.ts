@@ -53,6 +53,42 @@ export type Database = {
         }
         Relationships: []
       }
+      receipt_submissions: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          developer_id: string | null
+          developer_name: string | null
+          id: string
+          image_url: string
+          reviewed_at: string | null
+          status: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          id?: string
+          image_url: string
+          reviewed_at?: string | null
+          status?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          id?: string
+          image_url?: string
+          reviewed_at?: string | null
+          status?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
