@@ -3,6 +3,8 @@ import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, 
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { ItemDetailSection } from "./ItemDetailSection";
+import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
 
 interface CategoryItem {
   id: string;
@@ -149,7 +151,36 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
   const [showTrending, setShowTrending] = useState(initialView === 'trending');
   const [showNewLaunches, setShowNewLaunches] = useState(initialView === 'newLaunches');
+  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
+
+  // Convert CategoryItem to SearchItem for detail view
+  const categoryToSearchCategory = (labelKey: string): SearchCategory => {
+    const map: Record<string, SearchCategory> = {
+      'categories.units': 'units',
+      'categories.apps': 'apps',
+      'categories.shares': 'developers',
+      'categories.platforms': 'apps',
+      'categories.brokers': 'brokers',
+      'categories.exhibitions': 'categories',
+      'categories.channels': 'categories',
+      'categories.lawFirms': 'categories',
+    };
+    return map[labelKey] || 'categories';
+  };
+
+  const handleItemClick = (item: CategoryItem, catKey?: string) => {
+    const searchItem: SearchItem = {
+      id: item.id,
+      name: isRTL ? item.nameAr : item.nameEn,
+      category: categoryToSearchCategory(catKey || ''),
+      subtitle: catKey ? t(catKey) : undefined,
+      image: item.avatar,
+      rating: item.rating,
+      reviewCount: item.reviewCount,
+    };
+    setSelectedItem(searchItem);
+  };
 
   // Sync with external initialView prop
   useEffect(() => {
@@ -293,7 +324,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
               {activeSpecialItems.map((item, index) => (
                 <button
                   key={item.id}
-                  className="relative flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-accent/50 hover:shadow-lg transition-all group"
+                  onClick={() => handleItemClick(item, item.categoryKey)}
+                  className="relative flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-accent/50 hover:shadow-lg transition-all group cursor-pointer"
                 >
                   {/* Rank Badge */}
                   <div className={cn(
@@ -382,7 +414,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
                 ?.items.map((item) => (
                   <button
                     key={item.id}
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group"
+                    onClick={() => handleItemClick(item, activeCategory || undefined)}
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
                   >
                     <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-border group-hover:ring-primary/50 transition-all">
                       <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
@@ -424,6 +457,16 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
                 ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Item Detail Section (Trustpilot-style) */}
+      {selectedItem && (
+        <div className="border-t border-border">
+          <ItemDetailSection
+            item={selectedItem}
+            onClose={() => setSelectedItem(null)}
+          />
         </div>
       )}
     </div>
