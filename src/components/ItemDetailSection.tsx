@@ -287,7 +287,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             <Mic className="w-4 h-4" />
             {t("itemDetail.voiceReview")}
           </Button>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => item && downloadTrustReport(item)}>
             <FileDown className="w-4 h-4" />
             {t("itemDetail.downloadReport")}
           </Button>

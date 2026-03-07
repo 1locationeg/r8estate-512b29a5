@@ -191,7 +191,10 @@ export const DeveloperDetailCard = ({
 
         {/* Secondary Actions */}
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <button className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors">
+          <button
+            onClick={() => downloadTrustReport({ id: developer.id, name: developer.name, category: 'developers', subtitle: developer.location, image: developer.logo, rating: developer.rating, reviewCount: developer.reviewCount, meta: { trustScore: developer.trustScore, verified: developer.verified } })}
+            className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors"
+          >
             <Download className="w-4 h-4" />
             {t("actions.downloadReport")}
           </button>
