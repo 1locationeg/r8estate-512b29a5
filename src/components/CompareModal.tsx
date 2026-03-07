@@ -72,7 +72,7 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
   const searchResults = useMemo(() => {
     if (!searchQuery.trim() || !item) return [];
     const results = performSearch(searchQuery, 10);
-    return results.results.filter(r => r.id !== item.id);
+    return results.items.filter(r => r.id !== item.id);
   }, [searchQuery, item]);
 
   const itemScores = useMemo(() => item ? generateScores(item) : null, [item]);
