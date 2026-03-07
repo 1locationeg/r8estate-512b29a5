@@ -295,9 +295,16 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             {t("itemDetail.downloadReport")}
           </Button>
           <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsCompareOpen(true)}>
-            <GitCompare className="w-4 h-4" />
+          <GitCompare className="w-4 h-4" />
             {t("itemDetail.compareItem")}
           </Button>
+          <ShareMenu
+            title={item.name}
+            description={`Trust Score: ${trustScore} • ${rating.toFixed(1)}★`}
+            variant="outline"
+            size="sm"
+            iconOnly={false}
+          />
         </div>
 
         <Separator />
