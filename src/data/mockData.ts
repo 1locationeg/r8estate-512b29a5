@@ -194,7 +194,13 @@ export const projects: Project[] = [
     status: "Under Construction",
     image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=100&h=100&fit=crop",
     unitTypes: ["1BR", "2BR", "3BR+"],
-    priceRange: "EGP 3M - 15M"
+    priceRange: "EGP 3M - 15M",
+    totalUnits: 1200,
+    builtUpArea: "450,000 sqm",
+    launchDate: "2022-Q1",
+    expectedCompletion: "2026-Q4",
+    paymentPlan: "70/30",
+    amenities: ["Club House", "Swimming Pool", "Gym", "Parks", "Commercial Strip"]
   },
   {
     id: "marassi",
@@ -204,7 +210,13 @@ export const projects: Project[] = [
     status: "Completed",
     image: "https://images.unsplash.com/photo-1564013799919-ab600027ffc6?w=100&h=100&fit=crop",
     unitTypes: ["3BR+", "Villa"],
-    priceRange: "EGP 5M - 25M"
+    priceRange: "EGP 5M - 25M",
+    totalUnits: 800,
+    builtUpArea: "1,200,000 sqm",
+    launchDate: "2014-Q2",
+    expectedCompletion: "2023-Q1",
+    paymentPlan: "60/40",
+    amenities: ["Beach Access", "Golf Course", "Marina", "Hotels", "Water Park"]
   },
   {
     id: "uptown-cairo",
@@ -214,7 +226,13 @@ export const projects: Project[] = [
     status: "Completed",
     image: "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=100&h=100&fit=crop",
     unitTypes: ["Studio", "1BR", "2BR", "3BR+"],
-    priceRange: "EGP 2M - 12M"
+    priceRange: "EGP 2M - 12M",
+    totalUnits: 2500,
+    builtUpArea: "600,000 sqm",
+    launchDate: "2007-Q3",
+    expectedCompletion: "2020-Q2",
+    paymentPlan: "50/50",
+    amenities: ["Shopping Mall", "International School", "Hospital", "Sports Club"]
   },
   {
     id: "sodic-east",
@@ -224,7 +242,13 @@ export const projects: Project[] = [
     status: "Under Construction",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=100&h=100&fit=crop",
     unitTypes: ["2BR", "3BR+", "Villa"],
-    priceRange: "EGP 4M - 18M"
+    priceRange: "EGP 4M - 18M",
+    totalUnits: 950,
+    builtUpArea: "350,000 sqm",
+    launchDate: "2021-Q4",
+    expectedCompletion: "2027-Q2",
+    paymentPlan: "70/30",
+    amenities: ["Club House", "Jogging Track", "Kids Area", "Commercial Area"]
   },
   {
     id: "sodic-west",
@@ -234,7 +258,13 @@ export const projects: Project[] = [
     status: "Occupied",
     image: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=100&h=100&fit=crop",
     unitTypes: ["Villa", "Townhouse"],
-    priceRange: "EGP 6M - 30M"
+    priceRange: "EGP 6M - 30M",
+    totalUnits: 600,
+    builtUpArea: "500,000 sqm",
+    launchDate: "2010-Q1",
+    expectedCompletion: "2018-Q3",
+    paymentPlan: "60/40",
+    amenities: ["Golf Course", "Club House", "International School", "Medical Center"]
   },
   {
     id: "silversands",
@@ -244,7 +274,13 @@ export const projects: Project[] = [
     status: "Under Construction",
     image: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=100&h=100&fit=crop",
     unitTypes: ["1BR", "2BR", "3BR+", "Villa"],
-    priceRange: "EGP 4M - 20M"
+    priceRange: "EGP 4M - 20M",
+    totalUnits: 1500,
+    builtUpArea: "800,000 sqm",
+    launchDate: "2021-Q2",
+    expectedCompletion: "2027-Q1",
+    paymentPlan: "70/30",
+    amenities: ["Beach Access", "Lagoon", "Water Sports", "Restaurants", "Spa"]
   },
   {
     id: "il-monte-galala",
@@ -254,7 +290,13 @@ export const projects: Project[] = [
     status: "Under Construction",
     image: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=100&h=100&fit=crop",
     unitTypes: ["1BR", "2BR", "3BR+"],
-    priceRange: "EGP 3M - 15M"
+    priceRange: "EGP 3M - 15M",
+    totalUnits: 3000,
+    builtUpArea: "2,000,000 sqm",
+    launchDate: "2017-Q1",
+    expectedCompletion: "2028-Q4",
+    paymentPlan: "60/40",
+    amenities: ["Cable Car", "Water Park", "Hotels", "Crystal Lagoon", "Sports Complex"]
   },
   {
     id: "bloomfields",
@@ -264,7 +306,13 @@ export const projects: Project[] = [
     status: "Under Construction",
     image: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=100&h=100&fit=crop",
     unitTypes: ["Studio", "1BR", "2BR", "3BR+"],
-    priceRange: "EGP 2M - 10M"
+    priceRange: "EGP 2M - 10M",
+    totalUnits: 4000,
+    builtUpArea: "415,000 sqm",
+    launchDate: "2019-Q3",
+    expectedCompletion: "2026-Q2",
+    paymentPlan: "50/50",
+    amenities: ["University", "Club House", "Commercial Hub", "Parks", "Medical Facilities"]
   }
 ];
 
