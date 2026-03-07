@@ -39,6 +39,7 @@ export const SearchSuggestions = ({
   onSelect,
   onCorrection,
   onWriteReview,
+  onCompare,
   selectedIndex,
   className
 }: SearchSuggestionsProps) => {
