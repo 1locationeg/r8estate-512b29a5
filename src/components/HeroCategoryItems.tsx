@@ -414,7 +414,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
                 ?.items.map((item) => (
                   <button
                     key={item.id}
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group"
+                    onClick={() => handleItemClick(item, activeCategory || undefined)}
+                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
                   >
                     <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-border group-hover:ring-primary/50 transition-all">
                       <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
