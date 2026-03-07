@@ -271,9 +271,12 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
     ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
     : null;
 
+  const activeCategoryData = activeCategory ? categories.find(c => c.labelKey === activeCategory) : null;
+
   return (
     <div className="relative bg-card border-t border-border">
-      {/* Category Tabs */}
+      {/* Category Tabs - hidden when a category or item is selected */}
+      {!activeCategory && !selectedItem && (
       <div className="relative flex items-center">
         {/* Left Arrow */}
         <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
@@ -283,8 +286,6 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
         {/* Scrollable Categories */}
         <div className="flex-1 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
-
-
 
 
 
