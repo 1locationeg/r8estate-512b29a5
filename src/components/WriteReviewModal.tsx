@@ -588,17 +588,19 @@ export const WriteReviewModal = ({
                 variant="outline"
                 size="sm"
                 className="h-9 gap-1.5 text-xs"
+                disabled={isReceiptUploading}
                 onClick={() => {
-                  if (fileInputRef.current) {
-                    fileInputRef.current.accept = "image/*";
-                    fileInputRef.current.capture = "environment";
-                    fileInputRef.current.click();
-                    fileInputRef.current.removeAttribute("capture");
-                    fileInputRef.current.accept = "image/*,.pdf,.doc,.docx";
+                  if (receiptCameraRef.current) {
+                    receiptCameraRef.current.click();
                   }
                 }}
               >
-                <Camera className="w-3.5 h-3.5" /> Scan Receipt
+                {isReceiptUploading ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Camera className="w-3.5 h-3.5" />
+                )}
+                {isReceiptUploading ? "Uploading..." : "Scan Receipt"}
               </Button>
             </div>
 
@@ -609,6 +611,15 @@ export const WriteReviewModal = ({
               accept="image/*,.pdf,.doc,.docx"
               multiple
               onChange={handleFileSelect}
+            />
+
+            <input
+              ref={receiptCameraRef}
+              type="file"
+              className="hidden"
+              accept="image/*"
+              capture="environment"
+              onChange={handleReceiptCapture}
             />
 
             {attachments.length > 0 && (
