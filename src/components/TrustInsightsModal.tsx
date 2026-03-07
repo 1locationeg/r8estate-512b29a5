@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
