@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { downloadTrustReport } from "@/lib/generateTrustReport";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { Button } from "./ui/button";
@@ -125,6 +126,8 @@ export const SearchSuggestions = ({
     e.stopPropagation();
     if (action === 'write-review' && onWriteReview) {
       onWriteReview(item);
+    } else if (action === 'download-report') {
+      downloadTrustReport(item);
     } else {
       console.log(`Action: ${action} for item:`, item);
     }
