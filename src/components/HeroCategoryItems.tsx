@@ -151,7 +151,36 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
   const [showTrending, setShowTrending] = useState(initialView === 'trending');
   const [showNewLaunches, setShowNewLaunches] = useState(initialView === 'newLaunches');
+  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
+
+  // Convert CategoryItem to SearchItem for detail view
+  const categoryToSearchCategory = (labelKey: string): SearchCategory => {
+    const map: Record<string, SearchCategory> = {
+      'categories.units': 'units',
+      'categories.apps': 'apps',
+      'categories.shares': 'developers',
+      'categories.platforms': 'apps',
+      'categories.brokers': 'brokers',
+      'categories.exhibitions': 'categories',
+      'categories.channels': 'categories',
+      'categories.lawFirms': 'categories',
+    };
+    return map[labelKey] || 'categories';
+  };
+
+  const handleItemClick = (item: CategoryItem, catKey?: string) => {
+    const searchItem: SearchItem = {
+      id: item.id,
+      name: isRTL ? item.nameAr : item.nameEn,
+      category: categoryToSearchCategory(catKey || ''),
+      subtitle: catKey ? t(catKey) : undefined,
+      image: item.avatar,
+      rating: item.rating,
+      reviewCount: item.reviewCount,
+    };
+    setSelectedItem(searchItem);
+  };
 
   // Sync with external initialView prop
   useEffect(() => {
