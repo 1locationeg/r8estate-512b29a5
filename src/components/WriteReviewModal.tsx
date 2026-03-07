@@ -268,6 +268,59 @@ export const WriteReviewModal = ({
     setVerificationFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // Receipt camera handler
+  const handleReceiptCapture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!user) {
+      toast({ title: "Sign in required", description: "Please sign in to scan a receipt.", variant: "destructive" });
+      onOpenChange(false);
+      navigate("/auth");
+      return;
+    }
+
+    setIsReceiptUploading(true);
+    try {
+      const filePath = `receipts/${user.id}/${Date.now()}-${file.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("review-attachments")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("review-attachments")
+        .getPublicUrl(filePath);
+
+      const { error: dbError } = await supabase
+        .from("receipt_submissions")
+        .insert({
+          user_id: user.id,
+          developer_id: developerId || null,
+          developer_name: developerName || null,
+          image_url: urlData.publicUrl,
+          status: "pending",
+        });
+
+      if (dbError) throw dbError;
+
+      const preview = URL.createObjectURL(file);
+      setAttachments((prev) => [...prev, { file, preview, type: "receipt" }]);
+
+      toast({
+        title: "📸 Receipt captured!",
+        description: "Your receipt has been submitted for admin verification.",
+      });
+    } catch (err) {
+      console.error("Receipt upload error:", err);
+      toast({ title: "Upload failed", description: "Could not upload receipt. Please try again.", variant: "destructive" });
+    } finally {
+      setIsReceiptUploading(false);
+      e.target.value = "";
+    }
+  };
+
   // Submit
   const handleSubmit = async () => {
     if (!user) {
