@@ -278,6 +278,10 @@ export const DeveloperDetailCard = ({
         developerName={developer.name}
         developerId={developer.id}
       />
-    </div>
+      <CompareModal
+        item={developerAsSearchItem}
+        open={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+      />
   );
 };
