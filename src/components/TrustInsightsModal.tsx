@@ -25,6 +25,8 @@ import {
   Bot,
   User,
   X,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 interface Message {
