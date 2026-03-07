@@ -37,7 +37,17 @@ function buildSearchIndex(): SearchItem[] {
       image: dev.logo,
       rating: dev.rating,
       reviewCount: dev.reviewCount,
-      meta: { trustScore: dev.trustScore, verified: dev.verified }
+      meta: { 
+        trustScore: dev.trustScore, 
+        verified: dev.verified,
+        yearEstablished: dev.yearEstablished,
+        employees: dev.employees,
+        registeredUsers: dev.registeredUsers,
+        capital: dev.capital,
+        projectsCompleted: dev.projectsCompleted,
+        location: dev.location,
+        specialties: dev.specialties,
+      }
     });
   }
   
