@@ -177,6 +177,12 @@ export interface Project {
   image?: string;
   unitTypes: string[];
   priceRange: string;
+  totalUnits: number;
+  builtUpArea: string;
+  launchDate: string;
+  expectedCompletion: string;
+  paymentPlan: string;
+  amenities: string[];
 }
 
 export const projects: Project[] = [
