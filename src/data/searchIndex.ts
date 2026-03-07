@@ -37,7 +37,17 @@ function buildSearchIndex(): SearchItem[] {
       image: dev.logo,
       rating: dev.rating,
       reviewCount: dev.reviewCount,
-      meta: { trustScore: dev.trustScore, verified: dev.verified }
+      meta: { 
+        trustScore: dev.trustScore, 
+        verified: dev.verified,
+        yearEstablished: dev.yearEstablished,
+        employees: dev.employees,
+        registeredUsers: dev.registeredUsers,
+        capital: dev.capital,
+        projectsCompleted: dev.projectsCompleted,
+        location: dev.location,
+        specialties: dev.specialties,
+      }
     });
   }
   
@@ -53,7 +63,16 @@ function buildSearchIndex(): SearchItem[] {
       meta: { 
         location: project.location, 
         status: project.status,
-        developerId: project.developerId 
+        developerId: project.developerId,
+        developerName: developer?.name,
+        unitTypes: project.unitTypes,
+        priceRange: project.priceRange,
+        totalUnits: project.totalUnits,
+        builtUpArea: project.builtUpArea,
+        launchDate: project.launchDate,
+        expectedCompletion: project.expectedCompletion,
+        paymentPlan: project.paymentPlan,
+        amenities: project.amenities,
       }
     });
   }
@@ -77,7 +96,15 @@ function buildSearchIndex(): SearchItem[] {
       category: 'brokers',
       subtitle: broker.specialty,
       image: broker.logo,
-      meta: { agentCount: broker.agentCount }
+      meta: { 
+        agentCount: broker.agentCount,
+        yearFounded: broker.yearFounded,
+        location: broker.location,
+        dealsCompleted: broker.dealsCompleted,
+        activeListings: broker.activeListings,
+        languages: broker.languages,
+        specialty: broker.specialty,
+      }
     });
   }
   
@@ -90,7 +117,15 @@ function buildSearchIndex(): SearchItem[] {
       subtitle: app.type,
       image: app.icon,
       rating: app.rating,
-      meta: { downloads: app.downloads }
+      meta: { 
+        downloads: app.downloads,
+        launchYear: app.launchYear,
+        platform: app.platform,
+        monthlyActiveUsers: app.monthlyActiveUsers,
+        featuredListings: app.featuredListings,
+        supportedRegions: app.supportedRegions,
+        type: app.type,
+      }
     });
   }
   
