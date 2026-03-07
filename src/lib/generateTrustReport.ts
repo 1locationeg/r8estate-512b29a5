@@ -30,9 +30,9 @@ const getCategoryMetrics = (category: SearchCategory): string[] => {
 };
 
 const getScoreColor = (score: number): [number, number, number] => {
-  if (score >= 66) return [34, 139, 34]; // green
-  if (score >= 50) return [218, 165, 32]; // gold
-  return [220, 53, 69]; // red
+  if (score >= 66) return [34, 139, 34];
+  if (score >= 50) return [218, 165, 32];
+  return [220, 53, 69];
 };
 
 const getCategoryLabel = (cat: SearchCategory): string => {
@@ -50,130 +50,158 @@ const getCategoryLabel = (cat: SearchCategory): string => {
   return labels[cat] || cat;
 };
 
-export const downloadTrustReport = (item: SearchItem) => {
+// Load image as base64 data URL
+const loadImageAsBase64 = (url: string): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return reject("No canvas context");
+      ctx.drawImage(img, 0, 0);
+      resolve(canvas.toDataURL("image/jpeg", 0.92));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+};
+
+export const downloadTrustReport = async (item: SearchItem) => {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
-  const pageW = doc.internal.pageSize.getWidth();
-  const margin = 18;
+  const pageW = doc.internal.pageSize.getWidth(); // 210
+  const pageH = doc.internal.pageSize.getHeight(); // 297
+
+  // Load and add letterhead background
+  try {
+    const letterheadData = await loadImageAsBase64("/images/letterhead.jpg");
+    doc.addImage(letterheadData, "JPEG", 0, 0, pageW, pageH);
+  } catch (e) {
+    console.warn("Could not load letterhead, continuing without background", e);
+  }
+
+  // Content area: below the letterhead header (~55mm) and above footer (~250mm)
+  const margin = 25;
   const contentW = pageW - margin * 2;
-  let y = margin;
+  let y = 62; // Start below the R8ESTATE logo + tagline area
 
   const trustScore = generateTrustScore(item);
   const rating = item.rating || 3 + Math.abs(trustScore % 3);
   const scoreColor = getScoreColor(trustScore);
   const metrics = getCategoryMetrics(item.category);
+  const categoryLabel = getCategoryLabel(item.category);
 
-  // --- Header band ---
-  doc.setFillColor(15, 46, 83); // dark navy
-  doc.rect(0, 0, pageW, 38, "F");
-
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(22);
+  // --- "Trust Report" title ---
+  doc.setTextColor(15, 46, 83);
+  doc.setFontSize(20);
   doc.setFont("helvetica", "bold");
-  doc.text("R8ESTATE", margin, 16);
-
-  doc.setFontSize(10);
-  doc.setFont("helvetica", "normal");
-  doc.text("Trust Report", margin, 24);
+  doc.text("Trust Report", pageW / 2, y, { align: "center" });
+  y += 6;
 
   doc.setFontSize(8);
-  doc.text(`Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`, margin, 31);
-
-  y = 48;
-
-  // --- Item Name & Category ---
-  doc.setTextColor(15, 46, 83);
-  doc.setFontSize(18);
-  doc.setFont("helvetica", "bold");
-  doc.text(item.name, margin, y);
-  y += 7;
-
-  doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(120, 120, 120);
-  const categoryLabel = getCategoryLabel(item.category);
-  const subtitleParts = [categoryLabel];
-  if (item.subtitle) subtitleParts.push(item.subtitle);
-  doc.text(subtitleParts.join("  •  "), margin, y);
-  y += 12;
+  doc.text(
+    `Generated: ${new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`,
+    pageW / 2, y, { align: "center" }
+  );
+  y += 10;
 
-  // --- Trust Score Section ---
-  doc.setDrawColor(230, 230, 230);
-  doc.setLineWidth(0.5);
+  // --- Divider ---
+  doc.setDrawColor(15, 46, 83);
+  doc.setLineWidth(0.6);
   doc.line(margin, y, pageW - margin, y);
   y += 10;
 
-  // Trust Score circle (drawn as filled circle with text)
-  const circleX = margin + 22;
+  // --- Item Name & Category ---
+  doc.setTextColor(15, 46, 83);
+  doc.setFontSize(16);
+  doc.setFont("helvetica", "bold");
+  doc.text(item.name, margin, y);
+  y += 6;
+
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(120, 120, 120);
+  const subtitleParts = [categoryLabel];
+  if (item.subtitle) subtitleParts.push(item.subtitle);
+  doc.text(subtitleParts.join("  •  "), margin, y);
+  y += 10;
+
+  // --- Trust Score & Rating side by side ---
+  // Trust Score circle
+  const circleX = margin + 20;
   const circleY = y + 12;
-  const circleR = 16;
+  const circleR = 14;
 
   // Outer ring
   doc.setDrawColor(...scoreColor);
-  doc.setLineWidth(3);
+  doc.setLineWidth(2.5);
   doc.circle(circleX, circleY, circleR);
 
-  // Inner background
-  doc.setFillColor(250, 250, 250);
-  doc.circle(circleX, circleY, circleR - 2.5, "F");
+  // Inner background (white to overlay letterhead pattern)
+  doc.setFillColor(255, 255, 255);
+  doc.circle(circleX, circleY, circleR - 2, "F");
 
   // Score number
   doc.setTextColor(...scoreColor);
-  doc.setFontSize(20);
+  doc.setFontSize(18);
   doc.setFont("helvetica", "bold");
   doc.text(`${trustScore}%`, circleX, circleY + 2, { align: "center" });
 
-  // "Trust Score" label below circle
-  doc.setFontSize(8);
+  // "Trust Score" label
+  doc.setFontSize(7);
   doc.setTextColor(120, 120, 120);
   doc.setFont("helvetica", "normal");
-  doc.text("Trust Score", circleX, circleY + circleR + 6, { align: "center" });
+  doc.text("Trust Score", circleX, circleY + circleR + 5, { align: "center" });
 
-  // Rating stars text next to circle
+  // Rating info next to circle
   const ratingX = circleX + circleR + 14;
   doc.setTextColor(15, 46, 83);
-  doc.setFontSize(14);
+  doc.setFontSize(13);
   doc.setFont("helvetica", "bold");
-  doc.text(`${rating.toFixed(1)} / 5.0`, ratingX, circleY - 4);
+  doc.text(`${rating.toFixed(1)} / 5.0`, ratingX, circleY - 3);
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(120, 120, 120);
   const stars = "★".repeat(Math.round(rating)) + "☆".repeat(5 - Math.round(rating));
-  doc.text(stars, ratingX, circleY + 3);
+  doc.text(stars, ratingX, circleY + 4);
 
   if (item.reviewCount) {
     doc.text(`${item.reviewCount.toLocaleString()} reviews`, ratingX, circleY + 10);
   }
 
-  // Verified badge
   if (item.meta?.verified) {
     doc.setTextColor(34, 139, 34);
     doc.setFontSize(9);
-    doc.text("✓ Verified", ratingX, circleY + 18);
+    doc.text("✓ Verified", ratingX, circleY + 17);
   }
 
-  y = circleY + circleR + 16;
+  y = circleY + circleR + 14;
 
   // --- Category Metrics Breakdown ---
-  doc.setDrawColor(230, 230, 230);
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.3);
   doc.line(margin, y, pageW - margin, y);
-  y += 8;
+  y += 7;
 
   doc.setTextColor(15, 46, 83);
-  doc.setFontSize(13);
+  doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.text("Trust Category Breakdown", margin, y);
-  y += 8;
+  y += 7;
 
-  // Generate deterministic scores for each metric
-  metrics.forEach((metric, i) => {
+  metrics.forEach((metric) => {
     let metricHash = 0;
     const seed = item.id + metric;
     for (let j = 0; j < seed.length; j++) {
       metricHash = ((metricHash << 5) - metricHash) + seed.charCodeAt(j);
       metricHash = metricHash & metricHash;
     }
-    const metricScore = 45 + Math.abs(metricHash % 50); // 45-94
+    const metricScore = 45 + Math.abs(metricHash % 50);
     const mColor = getScoreColor(metricScore);
 
     // Label
@@ -188,31 +216,32 @@ export const downloadTrustReport = (item: SearchItem) => {
     doc.text(`${metricScore}%`, pageW - margin, y + 3, { align: "right" });
 
     // Bar background
-    const barX = margin + 52;
-    const barW = contentW - 72;
-    const barH = 4;
-    doc.setFillColor(235, 235, 235);
-    doc.roundedRect(barX, y, barW, barH, 2, 2, "F");
+    const barX = margin + 48;
+    const barW = contentW - 66;
+    const barH = 3.5;
+    doc.setFillColor(230, 230, 230);
+    doc.roundedRect(barX, y, barW, barH, 1.5, 1.5, "F");
 
     // Bar fill
     doc.setFillColor(...mColor);
-    doc.roundedRect(barX, y, barW * (metricScore / 100), barH, 2, 2, "F");
+    doc.roundedRect(barX, y, barW * (metricScore / 100), barH, 1.5, 1.5, "F");
 
-    y += 11;
+    y += 10;
   });
 
-  y += 4;
+  y += 3;
 
-  // --- Summary Section ---
-  doc.setDrawColor(230, 230, 230);
+  // --- Summary ---
+  doc.setDrawColor(200, 200, 200);
+  doc.setLineWidth(0.3);
   doc.line(margin, y, pageW - margin, y);
-  y += 8;
+  y += 7;
 
   doc.setTextColor(15, 46, 83);
-  doc.setFontSize(13);
+  doc.setFontSize(12);
   doc.setFont("helvetica", "bold");
   doc.text("Summary", margin, y);
-  y += 7;
+  y += 6;
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
@@ -231,26 +260,13 @@ export const downloadTrustReport = (item: SearchItem) => {
 
   summaryLines.forEach((line) => {
     if (line === "") {
-      y += 4;
+      y += 3;
       return;
     }
     const split = doc.splitTextToSize(line, contentW);
     doc.text(split, margin, y);
     y += split.length * 4.5;
   });
-
-  y += 8;
-
-  // --- Footer ---
-  doc.setDrawColor(230, 230, 230);
-  doc.line(margin, y, pageW - margin, y);
-  y += 6;
-
-  doc.setFontSize(7);
-  doc.setTextColor(160, 160, 160);
-  doc.text("© R8ESTATE Trust Meter  •  This report is for informational purposes only and does not constitute investment advice.", margin, y);
-  y += 4;
-  doc.text("Data sourced from verified community reviews and platform analytics.", margin, y);
 
   // Save
   const safeName = item.name.replace(/[^a-zA-Z0-9]/g, "_");
