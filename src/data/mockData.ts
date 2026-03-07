@@ -142,6 +142,10 @@ export const developers: Developer[] = [
     specialties: ["Premium Residential", "Luxury Apartments", "Quality Craftsmanship"],
     sentimentScore: 8.1,
     isClaimed: false,
+    yearEstablished: 2006,
+    employees: 1500,
+    registeredUsers: 35000,
+    capital: "EGP 7B",
   },
   {
     id: "hyde-park",
