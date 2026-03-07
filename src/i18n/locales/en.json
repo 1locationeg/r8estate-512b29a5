@@ -238,6 +238,17 @@
     "report": "Report",
     "share": "Share"
   },
+  "compare": {
+    "selectTitle": "Compare Items",
+    "selectDescription": "Search for an item to compare with {{name}}",
+    "searchPlaceholder": "Search developers, projects, locations...",
+    "resultTitle": "Comparison Results",
+    "resultDescription": "Side-by-side trust score comparison",
+    "summary": "Comparison Summary",
+    "winnerMessage": "{{winner}} leads with a trust score of {{score}} compared to {{loser}} at {{loserScore}}.",
+    "tieMessage": "{{scoreA}} and {{scoreB}} have equal trust scores — a close match!",
+    "changeSelection": "Change Selection"
+  },
   "footer": {
     "tagline": "Trust verified. Investments secured. The reputation platform for off-plan real estate.",
     "platform": "Platform",

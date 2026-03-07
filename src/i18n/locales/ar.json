@@ -238,6 +238,17 @@
     "report": "إبلاغ",
     "share": "مشاركة"
   },
+  "compare": {
+    "selectTitle": "مقارنة العناصر",
+    "selectDescription": "ابحث عن عنصر للمقارنة مع {{name}}",
+    "searchPlaceholder": "ابحث عن مطورين، مشاريع، مواقع...",
+    "resultTitle": "نتائج المقارنة",
+    "resultDescription": "مقارنة جنبًا إلى جنب لدرجة الثقة",
+    "summary": "ملخص المقارنة",
+    "winnerMessage": "{{winner}} يتصدر بدرجة ثقة {{score}} مقارنة بـ {{loser}} بدرجة {{loserScore}}.",
+    "tieMessage": "{{scoreA}} و {{scoreB}} لديهما درجات ثقة متساوية — تطابق قريب!",
+    "changeSelection": "تغيير الاختيار"
+  },
   "footer": {
     "tagline": "موثوقية معتمدة. استثمارات آمنة. منصة السمعة للعقارات على المخطط.",
     "platform": "المنصة",
