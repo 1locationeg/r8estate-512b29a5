@@ -379,6 +379,9 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           <p className="text-sm text-muted-foreground mt-1">{item.subtitle}</p>
         )}
 
+        {/* Quick Business Stats Bar */}
+        {renderQuickStats(item)}
+
         {/* Action Buttons (Trustpilot style) */}
         <div className="flex flex-wrap gap-2 mt-4">
           <Button size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
