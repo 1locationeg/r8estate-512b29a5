@@ -70,6 +70,10 @@ export const developers: Developer[] = [
     specialties: ["Luxury Villas", "High-Rise", "Golf Communities"],
     sentimentScore: 7.9,
     isClaimed: false,
+    yearEstablished: 2008,
+    employees: 3500,
+    registeredUsers: 62000,
+    capital: "EGP 18B",
   },
   {
     id: "sodic",
