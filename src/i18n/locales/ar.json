@@ -247,11 +247,21 @@
     "summary": "ملخص المقارنة",
     "winnerMessage": "{{winner}} يتصدر بدرجة ثقة {{score}} مقارنة بـ {{loser}} بدرجة {{loserScore}}.",
     "tieMessage": "{{scoreA}} و {{scoreB}} لديهما درجات ثقة متساوية — تطابق قريب!",
+    "multiWinnerMessage": "{{winner}} يتصدر بدرجة ثقة {{score}} من بين {{count}} عناصر مقارنة.",
     "changeSelection": "تغيير الاختيار",
     "recentReviews": "المراجعات الأخيرة",
     "noReviews": "لا توجد مراجعات متاحة",
     "downloadReport": "تحميل تقرير المقارنة",
-    "verifiedBuyer": "موثق"
+    "verifiedBuyer": "موثق",
+    "items": "عناصر",
+    "addMore": "أضف للمقارنة...",
+    "addItem": "إضافة عنصر",
+    "filterMetrics": "تصفية المعايير",
+    "selectPriorities": "اختر المعايير الأهم بالنسبة لك:",
+    "clearFilters": "مسح الكل",
+    "bestByPriorities": "يتصدر بناءً على أولوياتك المختارة.",
+    "leader": "المتصدر",
+    "metric": "المعيار"
   },
   "footer": {
     "tagline": "موثوقية معتمدة. استثمارات آمنة. منصة السمعة للعقارات على المخطط.",
