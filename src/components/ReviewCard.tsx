@@ -4,6 +4,7 @@ import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { ShareMenu } from "@/components/ShareMenu";
 import { getStarColorClass } from "@/lib/ratingColors";
 
 interface ReviewCardProps {
