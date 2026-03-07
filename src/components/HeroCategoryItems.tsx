@@ -452,19 +452,10 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       {!selectedItem && activeCategory && activeCategoryData && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
-            {/* Category Header with Back */}
-            <div className="flex items-center gap-3 mb-4">
-              <button
-                onClick={() => setActiveCategory(null)}
-                className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
-              >
-                <ChevronLeft className={cn("w-5 h-5 text-muted-foreground", isRTL && "rotate-180")} />
-              </button>
-              <div className="flex items-center gap-2">
-                {activeCategoryData.icon}
-                <h3 className="text-lg font-bold text-foreground">{t(activeCategoryData.labelKey)}</h3>
-                <span className="text-sm text-muted-foreground">({activeCategoryData.items.length})</span>
-              </div>
+            <div className="flex items-center gap-2 mb-4">
+              {activeCategoryData.icon}
+              <h3 className="text-lg font-bold text-foreground">{t(activeCategoryData.labelKey)}</h3>
+              <span className="text-sm text-muted-foreground">({activeCategoryData.items.length})</span>
             </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
               {activeCategoryData.items.map((item) => (
