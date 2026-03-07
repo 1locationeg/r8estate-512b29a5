@@ -52,6 +52,10 @@ export const developers: Developer[] = [
     specialties: ["Luxury Residential", "Mixed-Use", "Commercial"],
     sentimentScore: 8.7,
     isClaimed: false,
+    yearEstablished: 2005,
+    employees: 2800,
+    registeredUsers: 45000,
+    capital: "EGP 12B",
   },
   {
     id: "emaar-misr",
