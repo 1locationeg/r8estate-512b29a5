@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, UserCircle } from 'lucide-react';
+import logoIcon from '@/assets/logo-icon.png';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
