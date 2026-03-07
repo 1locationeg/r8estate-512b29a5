@@ -271,11 +271,9 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
     ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
     : null;
 
-  const activeCategoryData = activeCategory ? categories.find(c => c.labelKey === activeCategory) : null;
-
   return (
     <div className="relative bg-card border-t border-border">
-      {/* Category Tabs - always visible */}
+      {/* Category Tabs */}
       <div className="relative flex items-center">
         {/* Left Arrow */}
         <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
@@ -285,46 +283,14 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
         {/* Scrollable Categories */}
         <div className="flex-1 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
-            {/* Special View Buttons */}
-            <button
-              onClick={() => handleSpecialClick('bestOf')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showBestOf2025
-                  ? "bg-accent text-accent-foreground"
-                  : "bg-secondary text-foreground hover:bg-secondary/80"
-              )}
-            >
-              <Trophy className="w-4 h-4" />
-              <span>{isRTL ? "الأفضل 2025" : "Best of 2025"}</span>
-            </button>
-            <button
-              onClick={() => handleSpecialClick('trending')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showTrending
-                  ? "bg-primary text-primary-foreground"
-                  : "bg-secondary text-foreground hover:bg-secondary/80"
-              )}
-            >
-              <TrendingUp className="w-4 h-4" />
-              <span>{isRTL ? "الرائجة" : "Trending"}</span>
-            </button>
-            <button
-              onClick={() => handleSpecialClick('newLaunches')}
-              className={cn(
-                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                showNewLaunches
-                  ? "bg-destructive text-destructive-foreground"
-                  : "bg-secondary text-foreground hover:bg-secondary/80"
-              )}
-            >
-              <Rocket className="w-4 h-4" />
-              <span>{isRTL ? "إطلاقات جديدة" : "New Launches"}</span>
-            </button>
 
-            {/* Divider */}
-            <div className="w-px h-6 bg-border mx-1" />
+
+
+
+
+
+
+
 
             {/* Category Buttons */}
             {categories.map((cat) => (
@@ -449,16 +415,13 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       )}
 
       {/* Category Items Dropdown */}
-      {!selectedItem && activeCategory && activeCategoryData && (
+      {!selectedItem && activeCategory && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
-            <div className="flex items-center gap-2 mb-4">
-              {activeCategoryData.icon}
-              <h3 className="text-lg font-bold text-foreground">{t(activeCategoryData.labelKey)}</h3>
-              <span className="text-sm text-muted-foreground">({activeCategoryData.items.length})</span>
-            </div>
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-              {activeCategoryData.items.map((item) => (
+              {categories
+                .find((c) => c.labelKey === activeCategory)
+                ?.items.map((item) => (
                   <button
                     key={item.id}
                     onClick={() => handleItemClick(item, activeCategory || undefined)}
@@ -483,6 +446,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
                           ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
                         </span>
                       </div>
+                      
+                      {/* Engagement Stats for regular items too */}
                       <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
                         <div className="flex items-center gap-0.5">
                           <Heart className="w-2.5 h-2.5" />
