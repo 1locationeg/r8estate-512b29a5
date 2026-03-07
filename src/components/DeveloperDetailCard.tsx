@@ -33,6 +33,18 @@ export const DeveloperDetailCard = ({
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  const developerAsSearchItem: SearchItem = useMemo(() => ({
+    id: developer.id,
+    name: developer.name,
+    category: 'developers' as const,
+    subtitle: developer.location,
+    image: developer.logo,
+    rating: developer.rating,
+    reviewCount: developer.reviewCount,
+    meta: { trustScore: developer.trustScore, verified: developer.verified }
+  }), [developer]);
 
   // Get trust score color based on percentage
   const getTrustScoreColor = (score: number) => {
