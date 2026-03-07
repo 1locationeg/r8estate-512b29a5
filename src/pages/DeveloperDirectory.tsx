@@ -23,10 +23,15 @@ const DeveloperDirectory = () => {
             <button 
               onClick={() => navigate('/')}
               className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              aria-label="Return to home"
             >
               <ArrowLeft className="w-5 h-5 text-muted-foreground" />
             </button>
-            <div className="flex items-center gap-2">
+            <button
+              onClick={() => navigate('/')}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+              aria-label="Return to home"
+            >
               <img
                 src={logoIcon}
                 alt="R8ESTATE"
@@ -36,7 +41,7 @@ const DeveloperDirectory = () => {
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
               </h1>
-            </div>
+            </button>
           </div>
           <LanguageSwitcher />
         </div>
