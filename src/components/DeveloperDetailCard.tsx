@@ -1,4 +1,5 @@
 import { Star, Share2, Mic, Download, GitCompare } from "lucide-react";
+import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
 import { Developer, reviews } from "@/data/mockData";
 import { TrustCategoryBar } from "./TrustCategoryBar";
