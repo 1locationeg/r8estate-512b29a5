@@ -91,6 +91,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
 
   // Generate deterministic scores based on item id
   const { trustScore, rating, categoryScores, reviews, metricKeys } = useMemo(() => {
