@@ -122,6 +122,12 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
   };
 
   // Find winner for a metric across all items
+  const toggleMetric = (key: string) => {
+    setActiveMetrics(prev =>
+      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
+    );
+  };
+
   const getMetricWinner = (key: string): string | null => {
     let best = -1;
     let winnerId: string | null = null;
