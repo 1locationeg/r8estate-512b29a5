@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ItemDetailSection } from "./ItemDetailSection";
-import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 
 interface CategoryItem {
   id: string;
