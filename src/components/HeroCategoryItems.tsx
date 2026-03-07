@@ -317,6 +317,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
           <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
         </button>
       </div>
+      )}
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
       {!selectedItem && activeSpecialItems && activeSpecialLabel && (
