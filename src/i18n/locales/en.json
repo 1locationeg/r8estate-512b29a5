@@ -247,11 +247,21 @@
     "summary": "Comparison Summary",
     "winnerMessage": "{{winner}} leads with a trust score of {{score}} compared to {{loser}} at {{loserScore}}.",
     "tieMessage": "{{scoreA}} and {{scoreB}} have equal trust scores — a close match!",
+    "multiWinnerMessage": "{{winner}} leads with a trust score of {{score}} across {{count}} compared items.",
     "changeSelection": "Change Selection",
     "recentReviews": "Recent Reviews",
     "noReviews": "No reviews available",
     "downloadReport": "Download Comparison Report",
-    "verifiedBuyer": "Verified"
+    "verifiedBuyer": "Verified",
+    "items": "items",
+    "addMore": "Add to compare...",
+    "addItem": "Add item",
+    "filterMetrics": "Filter Metrics",
+    "selectPriorities": "Select the metrics that matter most to you:",
+    "clearFilters": "Clear all",
+    "bestByPriorities": "leads based on your selected priorities.",
+    "leader": "Leader",
+    "metric": "Metric"
   },
   "footer": {
     "tagline": "Trust verified. Investments secured. The reputation platform for off-plan real estate.",
