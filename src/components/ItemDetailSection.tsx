@@ -29,6 +29,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
+import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
 
