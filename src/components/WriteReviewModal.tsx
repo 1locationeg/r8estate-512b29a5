@@ -96,6 +96,10 @@ export const WriteReviewModal = ({
   const [verificationFiles, setVerificationFiles] = useState<File[]>([]);
   const verificationInputRef = useRef<HTMLInputElement>(null);
 
+  // Receipt camera state
+  const receiptCameraRef = useRef<HTMLInputElement>(null);
+  const [isReceiptUploading, setIsReceiptUploading] = useState(false);
+
   const resetForm = () => {
     setRating(0);
     setTitle("");
