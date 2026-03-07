@@ -459,6 +459,16 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
           </div>
         </div>
       )}
+
+      {/* Item Detail Section (Trustpilot-style) */}
+      {selectedItem && (
+        <div className="border-t border-border">
+          <ItemDetailSection
+            item={selectedItem}
+            onClose={() => setSelectedItem(null)}
+          />
+        </div>
+      )}
     </div>
   );
 };
