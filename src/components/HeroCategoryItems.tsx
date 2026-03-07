@@ -324,7 +324,8 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
               {activeSpecialItems.map((item, index) => (
                 <button
                   key={item.id}
-                  className="relative flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-accent/50 hover:shadow-lg transition-all group"
+                  onClick={() => handleItemClick(item, item.categoryKey)}
+                  className="relative flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-accent/50 hover:shadow-lg transition-all group cursor-pointer"
                 >
                   {/* Rank Badge */}
                   <div className={cn(
