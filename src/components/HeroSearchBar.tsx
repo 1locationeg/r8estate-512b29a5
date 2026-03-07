@@ -187,10 +187,15 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           onClose={handleCloseDetail} 
         />
       )}
+      {/* Compare Modal */}
+      <CompareModal
+        item={compareItem}
+        open={!!compareItem}
+        onClose={() => setCompareItem(null)}
+      />
     </div>
   );
 };
-
 interface CategoryLink {
   icon: string;
   label: string;
