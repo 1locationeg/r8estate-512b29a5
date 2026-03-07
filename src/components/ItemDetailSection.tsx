@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
+import { CompareModal } from "./CompareModal";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -90,6 +91,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const { t, i18n } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
 
   // Generate deterministic scores based on item id
   const { trustScore, rating, categoryScores, reviews, metricKeys } = useMemo(() => {
@@ -291,7 +293,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             <FileDown className="w-4 h-4" />
             {t("itemDetail.downloadReport")}
           </Button>
-          <Button variant="outline" size="sm" className="gap-2">
+          <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsCompareOpen(true)}>
             <GitCompare className="w-4 h-4" />
             {t("itemDetail.compareItem")}
           </Button>
@@ -391,6 +393,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         onOpenChange={setIsReviewModalOpen}
         developerName={item?.name || ""}
         developerId={item?.id || ""}
+      />
+      <CompareModal
+        item={item}
+        open={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
       />
     </div>
   );

@@ -14,6 +14,7 @@ interface SearchSuggestionsProps {
   onSelect: (item: SearchItem) => void;
   onCorrection: (corrected: string) => void;
   onWriteReview?: (item: SearchItem) => void;
+  onCompare?: (item: SearchItem) => void;
   selectedIndex: number;
   className?: string;
 }
@@ -38,6 +39,7 @@ export const SearchSuggestions = ({
   onSelect,
   onCorrection,
   onWriteReview,
+  onCompare,
   selectedIndex,
   className
 }: SearchSuggestionsProps) => {
@@ -128,6 +130,8 @@ export const SearchSuggestions = ({
       onWriteReview(item);
     } else if (action === 'download-report') {
       downloadTrustReport(item);
+    } else if (action === 'compare' && onCompare) {
+      onCompare(item);
     } else {
       console.log(`Action: ${action} for item:`, item);
     }

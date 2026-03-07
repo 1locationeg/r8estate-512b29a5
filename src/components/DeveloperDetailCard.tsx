@@ -6,8 +6,10 @@ import { TrustCategoryBar } from "./TrustCategoryBar";
 import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
+import { CompareModal } from "./CompareModal";
 import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { type SearchItem } from "@/data/searchIndex";
 import {
   Select,
   SelectContent,
@@ -31,6 +33,18 @@ export const DeveloperDetailCard = ({
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  const developerAsSearchItem: SearchItem = useMemo(() => ({
+    id: developer.id,
+    name: developer.name,
+    category: 'developers' as const,
+    subtitle: developer.location,
+    image: developer.logo,
+    rating: developer.rating,
+    reviewCount: developer.reviewCount,
+    meta: { trustScore: developer.trustScore, verified: developer.verified }
+  }), [developer]);
 
   // Get trust score color based on percentage
   const getTrustScoreColor = (score: number) => {
@@ -109,6 +123,7 @@ export const DeveloperDetailCard = ({
   ];
 
   return (
+    <>
     <div className="bg-card border border-border rounded-2xl overflow-hidden">
       {/* Header with Developer Info */}
       <div className="p-4 md:p-6 text-center">
@@ -192,14 +207,14 @@ export const DeveloperDetailCard = ({
         {/* Secondary Actions */}
         <div className="flex flex-wrap items-center justify-center gap-2">
           <button
-            onClick={() => downloadTrustReport({ id: developer.id, name: developer.name, category: 'developers', subtitle: developer.location, image: developer.logo, rating: developer.rating, reviewCount: developer.reviewCount, meta: { trustScore: developer.trustScore, verified: developer.verified } })}
+            onClick={() => downloadTrustReport(developerAsSearchItem)}
             className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors"
           >
             <Download className="w-4 h-4" />
             {t("actions.downloadReport")}
           </button>
           <button
-            onClick={onCompare}
+            onClick={() => setIsCompareOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors"
           >
             <GitCompare className="w-4 h-4" />
@@ -265,5 +280,11 @@ export const DeveloperDetailCard = ({
         developerId={developer.id}
       />
     </div>
+    <CompareModal
+      item={developerAsSearchItem}
+      open={isCompareOpen}
+      onClose={() => setIsCompareOpen(false)}
+    />
+    </>
   );
 };

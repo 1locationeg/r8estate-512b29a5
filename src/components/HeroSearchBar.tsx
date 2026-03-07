@@ -6,6 +6,7 @@ import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
+import { CompareModal } from "@/components/CompareModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
@@ -20,6 +21,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
+  const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<NodeJS.Timeout>();
 
@@ -46,6 +48,11 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
 
   const handleWriteReview = useCallback((item: SearchItem) => {
     setReviewItem(item);
+    setIsFocused(false);
+  }, []);
+
+  const handleCompare = useCallback((item: SearchItem) => {
+    setCompareItem(item);
     setIsFocused(false);
   }, []);
 
@@ -158,6 +165,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         onSelect={handleSelect}
         onCorrection={handleCorrection}
         onWriteReview={handleWriteReview}
+        onCompare={handleCompare}
         selectedIndex={selectedIndex}
       />
 
@@ -179,10 +187,15 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           onClose={handleCloseDetail} 
         />
       )}
+      {/* Compare Modal */}
+      <CompareModal
+        item={compareItem}
+        open={!!compareItem}
+        onClose={() => setCompareItem(null)}
+      />
     </div>
   );
 };
-
 interface CategoryLink {
   icon: string;
   label: string;
