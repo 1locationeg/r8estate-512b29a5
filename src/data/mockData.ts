@@ -11,6 +11,10 @@ export interface Developer {
   specialties: string[];
   sentimentScore: number;
   isClaimed: boolean;
+  yearEstablished: number;
+  employees: number;
+  registeredUsers: number;
+  capital: string;
 }
 
 export type ReviewerTier = "gold" | "silver" | "bronze";
@@ -48,6 +52,10 @@ export const developers: Developer[] = [
     specialties: ["Luxury Residential", "Mixed-Use", "Commercial"],
     sentimentScore: 8.7,
     isClaimed: false,
+    yearEstablished: 2005,
+    employees: 2800,
+    registeredUsers: 45000,
+    capital: "EGP 12B",
   },
   {
     id: "emaar-misr",
@@ -62,6 +70,10 @@ export const developers: Developer[] = [
     specialties: ["Luxury Villas", "High-Rise", "Golf Communities"],
     sentimentScore: 7.9,
     isClaimed: false,
+    yearEstablished: 2008,
+    employees: 3500,
+    registeredUsers: 62000,
+    capital: "EGP 18B",
   },
   {
     id: "sodic",
@@ -76,6 +88,10 @@ export const developers: Developer[] = [
     specialties: ["Waterfront", "Lifestyle", "Entertainment"],
     sentimentScore: 8.3,
     isClaimed: false,
+    yearEstablished: 1996,
+    employees: 1800,
+    registeredUsers: 38000,
+    capital: "EGP 8.5B",
   },
   {
     id: "ora-developers",
@@ -90,6 +106,10 @@ export const developers: Developer[] = [
     specialties: ["Residential", "Community Development", "Retail"],
     sentimentScore: 7.5,
     isClaimed: false,
+    yearEstablished: 2011,
+    employees: 1200,
+    registeredUsers: 28000,
+    capital: "EGP 6B",
   },
   {
     id: "tatweer-misr",
@@ -104,6 +124,10 @@ export const developers: Developer[] = [
     specialties: ["Iconic Projects", "Master Communities", "Commercial"],
     sentimentScore: 7.2,
     isClaimed: false,
+    yearEstablished: 2014,
+    employees: 950,
+    registeredUsers: 22000,
+    capital: "EGP 4.5B",
   },
   {
     id: "mountain-view",
@@ -118,6 +142,10 @@ export const developers: Developer[] = [
     specialties: ["Premium Residential", "Luxury Apartments", "Quality Craftsmanship"],
     sentimentScore: 8.1,
     isClaimed: false,
+    yearEstablished: 2006,
+    employees: 1500,
+    registeredUsers: 35000,
+    capital: "EGP 7B",
   },
   {
     id: "hyde-park",
@@ -132,6 +160,10 @@ export const developers: Developer[] = [
     specialties: ["Mixed-Use", "Residential Communities", "Commercial"],
     sentimentScore: 7.8,
     isClaimed: false,
+    yearEstablished: 2007,
+    employees: 2100,
+    registeredUsers: 41000,
+    capital: "EGP 9B",
   },
 ];
 
