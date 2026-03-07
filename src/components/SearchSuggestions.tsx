@@ -14,6 +14,7 @@ interface SearchSuggestionsProps {
   onSelect: (item: SearchItem) => void;
   onCorrection: (corrected: string) => void;
   onWriteReview?: (item: SearchItem) => void;
+  onCompare?: (item: SearchItem) => void;
   selectedIndex: number;
   className?: string;
 }
