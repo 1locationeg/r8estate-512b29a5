@@ -86,7 +86,15 @@ function buildSearchIndex(): SearchItem[] {
       category: 'brokers',
       subtitle: broker.specialty,
       image: broker.logo,
-      meta: { agentCount: broker.agentCount }
+      meta: { 
+        agentCount: broker.agentCount,
+        yearFounded: broker.yearFounded,
+        location: broker.location,
+        dealsCompleted: broker.dealsCompleted,
+        activeListings: broker.activeListings,
+        languages: broker.languages,
+        specialty: broker.specialty,
+      }
     });
   }
   
