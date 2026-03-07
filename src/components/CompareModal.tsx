@@ -121,42 +121,6 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
     setCompareItems(prev => prev.filter(i => i.id !== id));
   };
 
-  const toggleMetric = (key: string) => {
-    setActiveMetrics(prev =>
-      prev.includes(key) ? prev.filter(k => k !== key) : [...prev, key]
-    );
-  };
-
-  if (!item) return null;
-
-  const getGaugeColor = (score: number) => {
-    if (score >= 66) return 'text-trust-excellent';
-    if (score >= 50) return 'text-trust-good';
-    return 'text-trust-fair';
-  };
-
-  const renderMiniGauge = (score: number, size: number = 70) => (
-    <div className="relative mx-auto" style={{ width: size, height: size }}>
-      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-        <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
-        <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
-          strokeDasharray={`${score * 2.64} 264`} className={getGaugeColor(score)} />
-      </svg>
-      <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className={cn("text-base font-bold", getGaugeColor(score))}>{score}</span>
-      </div>
-    </div>
-  );
-
-  const renderStars = (rating: number) => (
-    <div className="flex items-center gap-0.5 justify-center">
-      {[1, 2, 3, 4, 5].map((s) => (
-        <Star key={s} className={cn("w-3 h-3", s <= Math.round(rating) ? `fill-current ${getRatingColorClass(rating)}` : "text-secondary")} />
-      ))}
-      <span className={cn("text-xs font-bold ms-1", getRatingColorClass(rating))}>{rating.toFixed(1)}</span>
-    </div>
-  );
-
   // Find winner for a metric across all items
   const getMetricWinner = (key: string): string | null => {
     let best = -1;
@@ -195,9 +159,37 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
   }, [allItems, allScores, visibleMetrics]);
 
   const gridCols = allItems.length <= 2 ? 'grid-cols-2' : allItems.length === 3 ? 'grid-cols-3' : allItems.length === 4 ? 'grid-cols-4' : 'grid-cols-5';
-
-  // Selection / add step (no compare items yet, or adding more)
   const showAddPanel = compareItems.length === 0;
+
+  if (!item) return null;
+
+  const getGaugeColor = (score: number) => {
+    if (score >= 66) return 'text-trust-excellent';
+    if (score >= 50) return 'text-trust-good';
+    return 'text-trust-fair';
+  };
+
+  const renderMiniGauge = (score: number, size: number = 70) => (
+    <div className="relative mx-auto" style={{ width: size, height: size }}>
+      <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
+        <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
+          strokeDasharray={`${score * 2.64} 264`} className={getGaugeColor(score)} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className={cn("text-base font-bold", getGaugeColor(score))}>{score}</span>
+      </div>
+    </div>
+  );
+
+  const renderStars = (rating: number) => (
+    <div className="flex items-center gap-0.5 justify-center">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <Star key={s} className={cn("w-3 h-3", s <= Math.round(rating) ? `fill-current ${getRatingColorClass(rating)}` : "text-secondary")} />
+      ))}
+      <span className={cn("text-xs font-bold ms-1", getRatingColorClass(rating))}>{rating.toFixed(1)}</span>
+    </div>
+  );
 
   if (showAddPanel) {
     return (
