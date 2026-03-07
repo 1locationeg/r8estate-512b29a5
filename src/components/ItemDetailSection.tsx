@@ -288,6 +288,58 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     return null;
   };
 
+  const renderQuickStats = (currentItem: SearchItem) => {
+    const m = currentItem.meta || {};
+    type StatItem = { icon: React.ReactNode; label: string; value: string };
+    const stats: StatItem[] = [];
+
+    if (currentItem.category === 'developers') {
+      if (m.yearEstablished) {
+        const years = new Date().getFullYear() - (m.yearEstablished as number);
+        stats.push({ icon: <CalendarDays className="w-3.5 h-3.5" />, label: t("developers.established", "Est."), value: `${m.yearEstablished} (${years} ${t("developers.years", "yrs")})` });
+      }
+      if (m.employees) stats.push({ icon: <Briefcase className="w-3.5 h-3.5" />, label: t("developers.employeesLabel", "Employees"), value: `${(m.employees as number).toLocaleString()}+` });
+      if (m.capital) stats.push({ icon: <Banknote className="w-3.5 h-3.5" />, label: t("developers.capital", "Capital"), value: m.capital as string });
+      if (m.projectsCompleted) stats.push({ icon: <FolderKanban className="w-3.5 h-3.5" />, label: t("developers.projectsLabel", "Projects"), value: String(m.projectsCompleted) });
+      if (m.registeredUsers) stats.push({ icon: <Users className="w-3.5 h-3.5" />, label: t("developers.registeredUsers", "Users"), value: (m.registeredUsers as number).toLocaleString() });
+    } else if (currentItem.category === 'projects') {
+      if (m.developerName) stats.push({ icon: <Building2 className="w-3.5 h-3.5" />, label: t("projects.developer", "Developer"), value: m.developerName as string });
+      if (m.status) stats.push({ icon: <ListChecks className="w-3.5 h-3.5" />, label: t("projects.status", "Status"), value: m.status as string });
+      if (m.totalUnits) stats.push({ icon: <Layers className="w-3.5 h-3.5" />, label: t("projects.totalUnits", "Units"), value: (m.totalUnits as number).toLocaleString() });
+      if (m.priceRange) stats.push({ icon: <Banknote className="w-3.5 h-3.5" />, label: t("projects.priceRange", "Price"), value: m.priceRange as string });
+      if (m.paymentPlan) stats.push({ icon: <CreditCard className="w-3.5 h-3.5" />, label: t("projects.paymentPlan", "Plan"), value: m.paymentPlan as string });
+    } else if (currentItem.category === 'brokers') {
+      if (m.yearFounded) stats.push({ icon: <CalendarDays className="w-3.5 h-3.5" />, label: t("brokers.yearFounded", "Founded"), value: String(m.yearFounded) });
+      if (m.agentCount) stats.push({ icon: <Users className="w-3.5 h-3.5" />, label: t("brokers.agents", "Agents"), value: `${(m.agentCount as number).toLocaleString()}+` });
+      if (m.dealsCompleted) stats.push({ icon: <FileText className="w-3.5 h-3.5" />, label: t("brokers.dealsCompleted", "Deals"), value: (m.dealsCompleted as number).toLocaleString() });
+      if (m.activeListings) stats.push({ icon: <FolderKanban className="w-3.5 h-3.5" />, label: t("brokers.activeListings", "Listings"), value: (m.activeListings as number).toLocaleString() });
+    } else if (currentItem.category === 'apps') {
+      if (m.launchYear) stats.push({ icon: <CalendarDays className="w-3.5 h-3.5" />, label: t("apps.launchYear", "Launched"), value: String(m.launchYear) });
+      if (m.downloads) stats.push({ icon: <Download className="w-3.5 h-3.5" />, label: t("apps.downloads", "Downloads"), value: m.downloads as string });
+      if (m.monthlyActiveUsers) stats.push({ icon: <Users className="w-3.5 h-3.5" />, label: t("apps.mau", "MAU"), value: m.monthlyActiveUsers as string });
+      if (m.featuredListings) stats.push({ icon: <FolderKanban className="w-3.5 h-3.5" />, label: t("apps.featuredListings", "Listings"), value: (m.featuredListings as number).toLocaleString() });
+    } else if (currentItem.category === 'locations') {
+      if (m.projectCount) stats.push({ icon: <FolderKanban className="w-3.5 h-3.5" />, label: t("locations.projects", "Projects"), value: String(m.projectCount) });
+    } else if (currentItem.category === 'units') {
+      if (m.averagePrice) stats.push({ icon: <Banknote className="w-3.5 h-3.5" />, label: t("units.avgPrice", "Avg Price"), value: m.averagePrice as string });
+      if (m.propertyType) stats.push({ icon: <Building className="w-3.5 h-3.5" />, label: t("units.type", "Type"), value: m.propertyType as string });
+    }
+
+    if (stats.length === 0) return null;
+
+    return (
+      <div className="flex flex-wrap gap-x-4 gap-y-2 mt-3 py-3 border-t border-b border-border">
+        {stats.map((stat, idx) => (
+          <div key={idx} className="flex items-center gap-1.5 text-sm">
+            <span className="text-primary">{stat.icon}</span>
+            <span className="text-muted-foreground">{stat.label}:</span>
+            <span className="font-semibold text-foreground">{stat.value}</span>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
   // Star bar colors matching Trustpilot's green gradient
   const starBarColors = [
     'bg-destructive', // 1 star - red
@@ -378,6 +430,9 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         {item.subtitle && (
           <p className="text-sm text-muted-foreground mt-1">{item.subtitle}</p>
         )}
+
+        {/* Quick Business Stats Bar */}
+        {renderQuickStats(item)}
 
         {/* Action Buttons (Trustpilot style) */}
         <div className="flex flex-wrap gap-2 mt-4">
