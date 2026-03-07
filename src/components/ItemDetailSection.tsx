@@ -222,6 +222,8 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       </div>
 
       <div className="space-y-6">
+        {/* Entity-Specific Detail Card */}
+        {renderEntityDetails(item)}
         {/* Trust Score Gauge */}
         <div className="flex items-center justify-center gap-8 flex-wrap">
           {/* Circular Gauge */}
