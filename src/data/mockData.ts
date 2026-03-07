@@ -160,6 +160,10 @@ export const developers: Developer[] = [
     specialties: ["Mixed-Use", "Residential Communities", "Commercial"],
     sentimentScore: 7.8,
     isClaimed: false,
+    yearEstablished: 2007,
+    employees: 2100,
+    registeredUsers: 41000,
+    capital: "EGP 9B",
   },
 ];
 
