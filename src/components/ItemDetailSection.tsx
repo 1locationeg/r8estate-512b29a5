@@ -25,7 +25,23 @@ import {
   LayoutGrid,
   Building,
   FolderOpen,
-  X
+  X,
+  CalendarDays,
+  Briefcase,
+  Banknote,
+  FolderKanban,
+  Layers,
+  Ruler,
+  CreditCard,
+  Clock,
+  TreePine,
+  Download,
+  Globe,
+  Monitor,
+  ListChecks,
+  Handshake,
+  Languages,
+  FileText,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
