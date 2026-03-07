@@ -308,7 +308,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       </div>
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
-      {activeSpecialItems && activeSpecialLabel && (
+      {!selectedItem && activeSpecialItems && activeSpecialLabel && (
         <div className="border-t border-border bg-gradient-to-b from-accent/5 to-background">
           <div className="p-4 md:p-6">
             <div className="flex items-center gap-2 mb-4">
@@ -405,7 +405,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       )}
 
       {/* Category Items Dropdown */}
-      {activeCategory && (
+      {!selectedItem && activeCategory && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
