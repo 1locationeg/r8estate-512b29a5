@@ -107,7 +107,15 @@ function buildSearchIndex(): SearchItem[] {
       subtitle: app.type,
       image: app.icon,
       rating: app.rating,
-      meta: { downloads: app.downloads }
+      meta: { 
+        downloads: app.downloads,
+        launchYear: app.launchYear,
+        platform: app.platform,
+        monthlyActiveUsers: app.monthlyActiveUsers,
+        featuredListings: app.featuredListings,
+        supportedRegions: app.supportedRegions,
+        type: app.type,
+      }
     });
   }
   
