@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
