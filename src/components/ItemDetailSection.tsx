@@ -394,6 +394,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         developerName={item?.name || ""}
         developerId={item?.id || ""}
       />
+      <CompareModal
+        item={item}
+        open={isCompareOpen}
+        onClose={() => setIsCompareOpen(false)}
+      />
     </div>
   );
 };
