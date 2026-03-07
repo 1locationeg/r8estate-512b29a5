@@ -88,6 +88,10 @@ export const developers: Developer[] = [
     specialties: ["Waterfront", "Lifestyle", "Entertainment"],
     sentimentScore: 8.3,
     isClaimed: false,
+    yearEstablished: 1996,
+    employees: 1800,
+    registeredUsers: 38000,
+    capital: "EGP 8.5B",
   },
   {
     id: "ora-developers",
