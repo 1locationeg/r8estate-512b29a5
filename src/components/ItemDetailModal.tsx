@@ -313,7 +313,7 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
               <FileDown className="w-4 h-4" />
               {t("itemDetail.downloadReport")}
             </Button>
-            <Button variant="outline" size="sm" className="gap-2">
+            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsCompareOpen(true)}>
               <GitCompare className="w-4 h-4" />
               {t("itemDetail.compareItem")}
             </Button>
