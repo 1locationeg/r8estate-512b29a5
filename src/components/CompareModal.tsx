@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Search, ArrowLeftRight, Building2, Home, MapPin, Users, Smartphone, LayoutGrid, Building, FolderOpen, Download, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
+import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { performSearch, getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { reviews as allReviews } from "@/data/mockData";
@@ -336,29 +337,38 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
           )}
         </div>
 
-        <div className="flex justify-between">
+        <div className="flex justify-between items-center">
           <Button variant="outline" onClick={() => setCompareItem(null)}>{t("compare.changeSelection")}</Button>
-          <Button
-            onClick={() => {
-              if (itemScores && compareScores) {
-                const metricLabels: Record<string, string> = {};
-                metricKeys.forEach(key => {
-                  metricLabels[key] = t(`categoryMetrics.${metricsCategory}.${key}`);
-                });
-                downloadComparisonReport({
-                  itemA: item,
-                  itemB: compareItem,
-                  scoresA: itemScores,
-                  scoresB: compareScores,
-                  metricLabels,
-                });
-              }
-            }}
-            className="gap-2"
-          >
-            <Download className="w-4 h-4" />
-            {t("compare.downloadReport")}
-          </Button>
+          <div className="flex items-center gap-2">
+            <ShareMenu
+              title={t("share.shareComparison", { itemA: item.name, itemB: compareItem.name })}
+              description={`Trust Score: ${itemScores?.trustScore} vs ${compareScores?.trustScore}`}
+              variant="outline"
+              size="sm"
+              iconOnly={false}
+            />
+            <Button
+              onClick={() => {
+                if (itemScores && compareScores) {
+                  const metricLabels: Record<string, string> = {};
+                  metricKeys.forEach(key => {
+                    metricLabels[key] = t(`categoryMetrics.${metricsCategory}.${key}`);
+                  });
+                  downloadComparisonReport({
+                    itemA: item,
+                    itemB: compareItem,
+                    scoresA: itemScores,
+                    scoresB: compareScores,
+                    metricLabels,
+                  });
+                }
+              }}
+              className="gap-2"
+            >
+              <Download className="w-4 h-4" />
+              {t("compare.downloadReport")}
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

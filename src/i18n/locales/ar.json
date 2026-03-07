@@ -272,6 +272,17 @@
     "majorDevelopers": "كبار مطوري العقارات",
     "exploreDescription": "اكتشف بيانات الرأي العام والسمعة لأبرز المطورين في المنطقة"
   },
+  "share": {
+    "share": "مشاركة",
+    "copyLink": "نسخ الرابط",
+    "copied": "تم النسخ!",
+    "linkCopied": "تم نسخ الرابط",
+    "whatsapp": "واتساب",
+    "moreOptions": "خيارات أخرى",
+    "shareComparison": "مقارنة R8ESTATE: {{itemA}} مقابل {{itemB}}",
+    "shareReview": "تقييم على R8ESTATE: {{item}}",
+    "shareDeveloper": "{{name}} على R8ESTATE — نقاط الثقة: {{score}}"
+  },
   "trustInsights": {
     "title": "رؤى الثقة الذكية",
     "subtitle": "مدعوم بذكاء R8ESTATE",

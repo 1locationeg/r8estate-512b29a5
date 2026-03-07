@@ -1,4 +1,5 @@
-import { Star, Share2, Mic, Download, GitCompare } from "lucide-react";
+import { Star, Mic, Download, GitCompare } from "lucide-react";
+import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
 import { Developer, reviews } from "@/data/mockData";
@@ -132,9 +133,10 @@ export const DeveloperDetailCard = ({
           <h2 className="text-lg md:text-xl font-bold text-foreground">
             {developer.name}
           </h2>
-          <button className="p-2 hover:bg-secondary rounded-lg transition-colors">
-            <Share2 className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
-          </button>
+          <ShareMenu
+            title={t("share.shareDeveloper", { name: developer.name, score: developer.trustScore })}
+            description={`${developer.rating}★ • ${developer.reviewCount} reviews`}
+          />
         </div>
 
         {/* Large Trust Score Gauge */}

@@ -272,6 +272,17 @@
     "majorDevelopers": "Major Real Estate Developers",
     "exploreDescription": "Explore public sentiment and reputation data for leading developers in the region"
   },
+  "share": {
+    "share": "Share",
+    "copyLink": "Copy link",
+    "copied": "Copied!",
+    "linkCopied": "Link copied to clipboard",
+    "whatsapp": "WhatsApp",
+    "moreOptions": "More options",
+    "shareComparison": "R8ESTATE Comparison: {{itemA}} vs {{itemB}}",
+    "shareReview": "Review on R8ESTATE: {{item}}",
+    "shareDeveloper": "{{name}} on R8ESTATE — Trust Score: {{score}}"
+  },
   "trustInsights": {
     "title": "AI Trust Insights",
     "subtitle": "Powered by R8ESTATE Intelligence",
