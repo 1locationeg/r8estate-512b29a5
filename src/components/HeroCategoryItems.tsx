@@ -308,7 +308,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
       </div>
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
-      {activeSpecialItems && activeSpecialLabel && (
+      {!selectedItem && activeSpecialItems && activeSpecialLabel && (
         <div className="border-t border-border bg-gradient-to-b from-accent/5 to-background">
           <div className="p-4 md:p-6">
             <div className="flex items-center gap-2 mb-4">
