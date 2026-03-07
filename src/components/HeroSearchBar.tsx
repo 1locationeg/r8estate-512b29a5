@@ -51,6 +51,11 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
     setIsFocused(false);
   }, []);
 
+  const handleCompare = useCallback((item: SearchItem) => {
+    setCompareItem(item);
+    setIsFocused(false);
+  }, []);
+
   const handleValidateDecision = useCallback(() => {
     // If there's a query with results, open the first result
     // Otherwise, show a prompt to search first
