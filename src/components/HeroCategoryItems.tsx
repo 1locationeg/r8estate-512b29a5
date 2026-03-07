@@ -275,8 +275,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
 
   return (
     <div className="relative bg-card border-t border-border">
-      {/* Category Tabs - hidden when a category or item is selected */}
-      {!activeCategory && !selectedItem && (
+      {/* Category Tabs - always visible */}
       <div className="relative flex items-center">
         {/* Left Arrow */}
         <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
@@ -286,12 +285,46 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
         {/* Scrollable Categories */}
         <div className="flex-1 overflow-x-auto scrollbar-hide">
           <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
+            {/* Special View Buttons */}
+            <button
+              onClick={() => handleSpecialClick('bestOf')}
+              className={cn(
+                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
+                showBestOf2025
+                  ? "bg-accent text-accent-foreground"
+                  : "bg-secondary text-foreground hover:bg-secondary/80"
+              )}
+            >
+              <Trophy className="w-4 h-4" />
+              <span>{isRTL ? "الأفضل 2025" : "Best of 2025"}</span>
+            </button>
+            <button
+              onClick={() => handleSpecialClick('trending')}
+              className={cn(
+                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
+                showTrending
+                  ? "bg-primary text-primary-foreground"
+                  : "bg-secondary text-foreground hover:bg-secondary/80"
+              )}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>{isRTL ? "الرائجة" : "Trending"}</span>
+            </button>
+            <button
+              onClick={() => handleSpecialClick('newLaunches')}
+              className={cn(
+                "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
+                showNewLaunches
+                  ? "bg-destructive text-destructive-foreground"
+                  : "bg-secondary text-foreground hover:bg-secondary/80"
+              )}
+            >
+              <Rocket className="w-4 h-4" />
+              <span>{isRTL ? "إطلاقات جديدة" : "New Launches"}</span>
+            </button>
 
-
-
-
-
-
+            {/* Divider */}
+            <div className="w-px h-6 bg-border mx-1" />
 
             {/* Category Buttons */}
             {categories.map((cat) => (
@@ -317,7 +350,6 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
           <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
         </button>
       </div>
-      )}
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
       {!selectedItem && activeSpecialItems && activeSpecialLabel && (
