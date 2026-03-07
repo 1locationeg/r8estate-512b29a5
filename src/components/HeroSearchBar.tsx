@@ -6,6 +6,7 @@ import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
+import { CompareModal } from "@/components/CompareModal";
 import { type SearchItem } from "@/data/searchIndex";
 
 interface HeroSearchBarProps {
