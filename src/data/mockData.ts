@@ -124,6 +124,10 @@ export const developers: Developer[] = [
     specialties: ["Iconic Projects", "Master Communities", "Commercial"],
     sentimentScore: 7.2,
     isClaimed: false,
+    yearEstablished: 2014,
+    employees: 950,
+    registeredUsers: 22000,
+    capital: "EGP 4.5B",
   },
   {
     id: "mountain-view",
