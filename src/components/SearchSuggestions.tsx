@@ -126,6 +126,8 @@ export const SearchSuggestions = ({
     e.stopPropagation();
     if (action === 'write-review' && onWriteReview) {
       onWriteReview(item);
+    } else if (action === 'download-report') {
+      downloadTrustReport(item);
     } else {
       console.log(`Action: ${action} for item:`, item);
     }
