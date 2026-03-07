@@ -40,11 +40,18 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           {/* Header */}
           <div className="p-4 border-b border-border">
             <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold inline-flex items-center gap-2">
+              <button
+                onClick={() => {
+                  navigate('/');
+                  setOpen(false);
+                }}
+                className="text-2xl font-bold inline-flex items-center gap-2 hover:opacity-80 transition-opacity"
+                aria-label="Return to home"
+              >
                 <img src={logoIcon} alt="R8ESTATE" className="h-[1.4em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
                 <span className="text-brand-red">R8</span>
                 <span className="text-primary">ESTATE</span>
-              </span>
+              </button>
               <LanguageSwitcher />
             </div>
           </div>
