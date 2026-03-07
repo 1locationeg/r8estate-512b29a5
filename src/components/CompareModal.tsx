@@ -15,6 +15,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Star, Search, ArrowLeftRight, Building2, Home, MapPin, Users, Smartphone, LayoutGrid, Building, FolderOpen, Download, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
+import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { performSearch, getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { reviews as allReviews } from "@/data/mockData";
