@@ -53,7 +53,16 @@ function buildSearchIndex(): SearchItem[] {
       meta: { 
         location: project.location, 
         status: project.status,
-        developerId: project.developerId 
+        developerId: project.developerId,
+        developerName: developer?.name,
+        unitTypes: project.unitTypes,
+        priceRange: project.priceRange,
+        totalUnits: project.totalUnits,
+        builtUpArea: project.builtUpArea,
+        launchDate: project.launchDate,
+        expectedCompletion: project.expectedCompletion,
+        paymentPlan: project.paymentPlan,
+        amenities: project.amenities,
       }
     });
   }
