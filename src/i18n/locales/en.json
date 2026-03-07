@@ -247,7 +247,11 @@
     "summary": "Comparison Summary",
     "winnerMessage": "{{winner}} leads with a trust score of {{score}} compared to {{loser}} at {{loserScore}}.",
     "tieMessage": "{{scoreA}} and {{scoreB}} have equal trust scores — a close match!",
-    "changeSelection": "Change Selection"
+    "changeSelection": "Change Selection",
+    "recentReviews": "Recent Reviews",
+    "noReviews": "No reviews available",
+    "downloadReport": "Download Comparison Report",
+    "verifiedBuyer": "Verified"
   },
   "footer": {
     "tagline": "Trust verified. Investments secured. The reputation platform for off-plan real estate.",

@@ -11,11 +11,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { Star, Search, ArrowLeftRight, Building2, Home, MapPin, Users, Smartphone, LayoutGrid, Building, FolderOpen } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Star, Search, ArrowLeftRight, Building2, Home, MapPin, Users, Smartphone, LayoutGrid, Building, FolderOpen, Download, CheckCircle2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { performSearch, getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { reviews as allReviews } from "@/data/mockData";
+import { downloadComparisonReport } from "@/lib/generateComparisonReport";
 
 interface CompareModalProps {
   item: SearchItem | null;
@@ -274,6 +277,51 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
 
         <Separator />
 
+        {/* Reviews Section */}
+        <div className="space-y-4">
+          <h3 className="font-semibold text-foreground">{t("compare.recentReviews")}</h3>
+          <div className="grid grid-cols-2 gap-4">
+            {[item, compareItem].map((it) => {
+              const itemReviews = allReviews.filter(r => r.developerId === it.id).slice(0, 3);
+              return (
+                <div key={it.id} className="space-y-3">
+                  <p className="text-sm font-semibold text-foreground truncate">{it.name}</p>
+                  {itemReviews.length === 0 ? (
+                    <p className="text-xs text-muted-foreground italic">{t("compare.noReviews")}</p>
+                  ) : (
+                    itemReviews.map((rev) => (
+                      <div key={rev.id} className="bg-secondary/20 rounded-lg p-3 space-y-1.5">
+                        <div className="flex items-center gap-2">
+                          <Avatar className="w-6 h-6">
+                            <AvatarImage src={rev.avatar} />
+                            <AvatarFallback className="text-[10px]">{rev.author.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                          </Avatar>
+                          <span className="text-xs font-medium truncate">{rev.author}</span>
+                          {rev.verified && (
+                            <Badge variant="outline" className="text-[10px] px-1 py-0 gap-0.5 flex-shrink-0">
+                              <CheckCircle2 className="w-2.5 h-2.5" />
+                              {t("compare.verifiedBuyer")}
+                            </Badge>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star key={s} className={cn("w-3 h-3", s <= rev.rating ? `fill-current ${getRatingColorClass(rev.rating)}` : "text-secondary")} />
+                          ))}
+                        </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{rev.comment}</p>
+                        <p className="text-[10px] text-muted-foreground/60">{rev.project} • {new Date(rev.date).toLocaleDateString()}</p>
+                      </div>
+                    ))
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        <Separator />
+
         {/* Summary */}
         <div className="bg-secondary/20 rounded-xl p-4 text-center space-y-2">
           <p className="text-sm font-semibold text-foreground">{t("compare.summary")}</p>
@@ -288,8 +336,29 @@ export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
           )}
         </div>
 
-        <div className="flex justify-end">
+        <div className="flex justify-between">
           <Button variant="outline" onClick={() => setCompareItem(null)}>{t("compare.changeSelection")}</Button>
+          <Button
+            onClick={() => {
+              if (itemScores && compareScores) {
+                const metricLabels: Record<string, string> = {};
+                metricKeys.forEach(key => {
+                  metricLabels[key] = t(`categoryMetrics.${metricsCategory}.${key}`);
+                });
+                downloadComparisonReport({
+                  itemA: item,
+                  itemB: compareItem,
+                  scoresA: itemScores,
+                  scoresB: compareScores,
+                  metricLabels,
+                });
+              }
+            }}
+            className="gap-2"
+          >
+            <Download className="w-4 h-4" />
+            {t("compare.downloadReport")}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

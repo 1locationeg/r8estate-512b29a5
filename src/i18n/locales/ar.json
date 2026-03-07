@@ -247,7 +247,11 @@
     "summary": "ملخص المقارنة",
     "winnerMessage": "{{winner}} يتصدر بدرجة ثقة {{score}} مقارنة بـ {{loser}} بدرجة {{loserScore}}.",
     "tieMessage": "{{scoreA}} و {{scoreB}} لديهما درجات ثقة متساوية — تطابق قريب!",
-    "changeSelection": "تغيير الاختيار"
+    "changeSelection": "تغيير الاختيار",
+    "recentReviews": "المراجعات الأخيرة",
+    "noReviews": "لا توجد مراجعات متاحة",
+    "downloadReport": "تحميل تقرير المقارنة",
+    "verifiedBuyer": "موثق"
   },
   "footer": {
     "tagline": "موثوقية معتمدة. استثمارات آمنة. منصة السمعة للعقارات على المخطط.",
