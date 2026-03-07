@@ -123,7 +123,7 @@ export const DeveloperDetailCard = ({
   ];
 
   return (
-    <div className="bg-card border border-border rounded-2xl overflow-hidden">
+    <>
       {/* Header with Developer Info */}
       <div className="p-4 md:p-6 text-center">
         <div className="flex items-center justify-between mb-4">
