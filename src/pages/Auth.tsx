@@ -9,6 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, UserCircle } from 'lucide-react';
+import logoIcon from '@/assets/logo-icon.png';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -180,12 +181,17 @@ const Auth = () => {
         {/* Auth card */}
         <div className="bg-card border border-border rounded-2xl p-8 shadow-xl">
           {/* Logo */}
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="w-16 h-16 bg-gradient-to-br from-primary to-primary/70 rounded-2xl flex items-center justify-center text-primary-foreground font-bold text-3xl">
-              R8
-            </div>
-            <span className="text-3xl font-bold text-foreground">R8ESTATE</span>
-          </div>
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center justify-center gap-3 mb-8 mx-auto hover:opacity-80 transition-opacity"
+            aria-label="Return to home"
+          >
+            <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto object-contain" />
+            <span className="text-3xl font-bold">
+              <span className="text-brand-red">R8</span>
+              <span className="text-foreground">ESTATE</span>
+            </span>
+          </button>
 
           {/* Title */}
           <div className="text-center mb-6">
