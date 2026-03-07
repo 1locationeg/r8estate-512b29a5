@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
+import { useAuth } from "@/contexts/AuthContext";
 import {
   Dialog,
   DialogContent,
@@ -23,6 +25,8 @@ import {
   Bot,
   User,
   X,
+  LogIn,
+  UserPlus,
 } from "lucide-react";
 
 interface Message {
@@ -47,6 +51,8 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trust-insigh
 
 export const TrustInsightsModal = ({ open, onOpenChange }: TrustInsightsModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { signInWithGoogle } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -379,11 +385,39 @@ export const TrustInsightsModal = ({ open, onOpenChange }: TrustInsightsModalPro
 
         {/* Error Message */}
         {error && (
-          <div className="px-4 py-2 bg-destructive/10 border-t border-destructive/20">
+          <div className="px-4 py-3 bg-destructive/10 border-t border-destructive/20">
             <p className="text-sm text-destructive flex items-center gap-2">
               <AlertTriangle className="w-4 h-4" />
               {error}
             </p>
+            {error.toLowerCase().includes("authentication") && (
+              <div className="flex items-center gap-2 mt-3">
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="gap-1.5"
+                  onClick={async () => {
+                    setError(null);
+                    await signInWithGoogle();
+                  }}
+                >
+                  <LogIn className="w-3.5 h-3.5" />
+                  Sign in with Google
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="gap-1.5"
+                  onClick={() => {
+                    onOpenChange(false);
+                    navigate("/auth");
+                  }}
+                >
+                  <UserPlus className="w-3.5 h-3.5" />
+                  Sign Up
+                </Button>
+              </div>
+            )}
           </div>
         )}
 
