@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ItemDetailSection } from "./ItemDetailSection";
-import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 
 interface CategoryItem {
   id: string;
@@ -170,16 +170,26 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   };
 
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
-    const searchItem: SearchItem = {
-      id: item.id,
-      name: isRTL ? item.nameAr : item.nameEn,
-      category: categoryToSearchCategory(catKey || ''),
-      subtitle: catKey ? t(catKey) : undefined,
-      image: item.avatar,
-      rating: item.rating,
-      reviewCount: item.reviewCount,
-    };
-    setSelectedItem(searchItem);
+    const category = categoryToSearchCategory(catKey || '');
+    // Look up the full item from the search index to get meta data
+    const searchIndex = getSearchIndex();
+    const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
+      || searchIndex.find(si => si.id === item.id)
+      || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
+    if (indexItem) {
+      setSelectedItem(indexItem);
+    } else {
+      const searchItem: SearchItem = {
+        id: item.id,
+        name: isRTL ? item.nameAr : item.nameEn,
+        category,
+        subtitle: catKey ? t(catKey) : undefined,
+        image: item.avatar,
+        rating: item.rating,
+        reviewCount: item.reviewCount,
+      };
+      setSelectedItem(searchItem);
+    }
   };
 
   // Sync with external initialView prop
