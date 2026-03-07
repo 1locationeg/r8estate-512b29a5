@@ -165,6 +165,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         onSelect={handleSelect}
         onCorrection={handleCorrection}
         onWriteReview={handleWriteReview}
+        onCompare={handleCompare}
         selectedIndex={selectedIndex}
       />
 
