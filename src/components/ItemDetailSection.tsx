@@ -181,6 +181,153 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     ? reviews.filter(r => r.rating === activeFilter)
     : reviews;
 
+  const DetailRow = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) => (
+    <div className="flex items-center gap-3">
+      <div className="w-9 h-9 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+        {icon}
+      </div>
+      <div>
+        <p className="text-xs text-muted-foreground">{label}</p>
+        <p className="text-sm font-semibold text-foreground">{value}</p>
+      </div>
+    </div>
+  );
+
+  const renderEntityDetails = (currentItem: SearchItem) => {
+    const m = currentItem.meta || {};
+
+    if (currentItem.category === 'developers') {
+      const yearsInBusiness = m.yearEstablished ? new Date().getFullYear() - (m.yearEstablished as number) : null;
+      return (
+        <div className="bg-secondary/50 border border-border rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Building2 className="w-5 h-5 text-primary" />
+            <h4 className="font-semibold text-foreground">{t("developers.businessDetails", "Business Details")}</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {m.yearEstablished && <DetailRow icon={<CalendarDays className="w-4 h-4 text-primary" />} label={t("developers.established", "Established")} value={`${m.yearEstablished} (${yearsInBusiness} ${t("developers.years", "yrs")})`} />}
+            {m.location && <DetailRow icon={<MapPin className="w-4 h-4 text-primary" />} label={t("developers.headquarters", "Headquarters")} value={m.location as string} />}
+            {m.employees && <DetailRow icon={<Briefcase className="w-4 h-4 text-primary" />} label={t("developers.employeesLabel", "Employees")} value={`${(m.employees as number).toLocaleString()}+`} />}
+            {m.projectsCompleted && <DetailRow icon={<FolderKanban className="w-4 h-4 text-primary" />} label={t("developers.projectsLabel", "Projects")} value={String(m.projectsCompleted)} />}
+            {m.registeredUsers && <DetailRow icon={<Users className="w-4 h-4 text-primary" />} label={t("developers.registeredUsers", "Registered Users")} value={(m.registeredUsers as number).toLocaleString()} />}
+            {m.capital && <DetailRow icon={<Banknote className="w-4 h-4 text-primary" />} label={t("developers.capital", "Capital")} value={m.capital as string} />}
+          </div>
+          {m.specialties && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(m.specialties as string[]).map((s) => (
+                <span key={s} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">{s}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (currentItem.category === 'projects') {
+      return (
+        <div className="bg-secondary/50 border border-border rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Home className="w-5 h-5 text-primary" />
+            <h4 className="font-semibold text-foreground">{t("projects.details", "Project Details")}</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {m.developerName && <DetailRow icon={<Building2 className="w-4 h-4 text-primary" />} label={t("projects.developer", "Developer")} value={m.developerName as string} />}
+            {m.location && <DetailRow icon={<MapPin className="w-4 h-4 text-primary" />} label={t("projects.location", "Location")} value={m.location as string} />}
+            {m.status && <DetailRow icon={<ListChecks className="w-4 h-4 text-primary" />} label={t("projects.status", "Status")} value={m.status as string} />}
+            {m.totalUnits && <DetailRow icon={<Layers className="w-4 h-4 text-primary" />} label={t("projects.totalUnits", "Total Units")} value={(m.totalUnits as number).toLocaleString()} />}
+            {m.builtUpArea && <DetailRow icon={<Ruler className="w-4 h-4 text-primary" />} label={t("projects.builtUpArea", "Built-up Area")} value={m.builtUpArea as string} />}
+            {m.priceRange && <DetailRow icon={<Banknote className="w-4 h-4 text-primary" />} label={t("projects.priceRange", "Price Range")} value={m.priceRange as string} />}
+            {m.paymentPlan && <DetailRow icon={<CreditCard className="w-4 h-4 text-primary" />} label={t("projects.paymentPlan", "Payment Plan")} value={m.paymentPlan as string} />}
+            {m.launchDate && <DetailRow icon={<CalendarDays className="w-4 h-4 text-primary" />} label={t("projects.launchDate", "Launch Date")} value={m.launchDate as string} />}
+            {m.expectedCompletion && <DetailRow icon={<Clock className="w-4 h-4 text-primary" />} label={t("projects.expectedCompletion", "Expected Completion")} value={m.expectedCompletion as string} />}
+          </div>
+          {m.unitTypes && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(m.unitTypes as string[]).map((u) => (
+                <span key={u} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">{u}</span>
+              ))}
+            </div>
+          )}
+          {m.amenities && (
+            <div className="mt-3">
+              <p className="text-xs text-muted-foreground mb-2">{t("projects.amenities", "Amenities")}</p>
+              <div className="flex flex-wrap gap-2">
+                {(m.amenities as string[]).map((a) => (
+                  <span key={a} className="px-2 py-0.5 text-xs rounded bg-accent/10 text-accent-foreground border border-border">{a}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (currentItem.category === 'brokers') {
+      return (
+        <div className="bg-secondary/50 border border-border rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Handshake className="w-5 h-5 text-primary" />
+            <h4 className="font-semibold text-foreground">{t("brokers.details", "Brokerage Details")}</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {m.specialty && <DetailRow icon={<Award className="w-4 h-4 text-primary" />} label={t("brokers.specialty", "Specialty")} value={m.specialty as string} />}
+            {m.location && <DetailRow icon={<MapPin className="w-4 h-4 text-primary" />} label={t("brokers.location", "Location")} value={m.location as string} />}
+            {m.yearFounded && <DetailRow icon={<CalendarDays className="w-4 h-4 text-primary" />} label={t("brokers.yearFounded", "Year Founded")} value={String(m.yearFounded)} />}
+            {m.agentCount && <DetailRow icon={<Users className="w-4 h-4 text-primary" />} label={t("brokers.agents", "Agents")} value={`${(m.agentCount as number).toLocaleString()}+`} />}
+            {m.dealsCompleted && <DetailRow icon={<FileText className="w-4 h-4 text-primary" />} label={t("brokers.dealsCompleted", "Deals Completed")} value={(m.dealsCompleted as number).toLocaleString()} />}
+            {m.activeListings && <DetailRow icon={<FolderKanban className="w-4 h-4 text-primary" />} label={t("brokers.activeListings", "Active Listings")} value={(m.activeListings as number).toLocaleString()} />}
+          </div>
+          {m.languages && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(m.languages as string[]).map((l) => (
+                <span key={l} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">{l}</span>
+              ))}
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    if (currentItem.category === 'apps') {
+      return (
+        <div className="bg-secondary/50 border border-border rounded-lg p-5">
+          <div className="flex items-center gap-2 mb-4">
+            <Smartphone className="w-5 h-5 text-primary" />
+            <h4 className="font-semibold text-foreground">{t("apps.details", "App Details")}</h4>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            {m.type && <DetailRow icon={<Globe className="w-4 h-4 text-primary" />} label={t("apps.type", "Type")} value={m.type as string} />}
+            {m.launchYear && <DetailRow icon={<CalendarDays className="w-4 h-4 text-primary" />} label={t("apps.launchYear", "Launch Year")} value={String(m.launchYear)} />}
+            {m.downloads && <DetailRow icon={<Download className="w-4 h-4 text-primary" />} label={t("apps.downloads", "Downloads")} value={m.downloads as string} />}
+            {m.monthlyActiveUsers && <DetailRow icon={<Users className="w-4 h-4 text-primary" />} label={t("apps.mau", "Monthly Active Users")} value={m.monthlyActiveUsers as string} />}
+            {m.featuredListings && <DetailRow icon={<FolderKanban className="w-4 h-4 text-primary" />} label={t("apps.featuredListings", "Featured Listings")} value={(m.featuredListings as number).toLocaleString()} />}
+          </div>
+          {m.platform && (
+            <div className="flex flex-wrap gap-2 mt-4">
+              {(m.platform as string[]).map((p) => (
+                <span key={p} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
+                  <Monitor className="w-3 h-3 inline mr-1" />{p}
+                </span>
+              ))}
+            </div>
+          )}
+          {m.supportedRegions && (
+            <div className="mt-3">
+              <p className="text-xs text-muted-foreground mb-2">{t("apps.supportedRegions", "Supported Regions")}</p>
+              <div className="flex flex-wrap gap-2">
+                {(m.supportedRegions as string[]).map((r) => (
+                  <span key={r} className="px-2 py-0.5 text-xs rounded bg-accent/10 text-accent-foreground border border-border">{r}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    return null;
+  };
+
   return (
     <div className="w-full max-w-3xl mx-auto mt-6 bg-card border border-border rounded-xl p-4 md:p-6 animate-in slide-in-from-top-4 duration-300">
       {/* Header */}
