@@ -124,6 +124,7 @@ export const DeveloperDetailCard = ({
 
   return (
     <>
+    <div className="bg-card border border-border rounded-2xl overflow-hidden">
       {/* Header with Developer Info */}
       <div className="p-4 md:p-6 text-center">
         <div className="flex items-center justify-between mb-4">
@@ -206,7 +207,7 @@ export const DeveloperDetailCard = ({
         {/* Secondary Actions */}
         <div className="flex flex-wrap items-center justify-center gap-2">
           <button
-            onClick={() => downloadTrustReport({ id: developer.id, name: developer.name, category: 'developers', subtitle: developer.location, image: developer.logo, rating: developer.rating, reviewCount: developer.reviewCount, meta: { trustScore: developer.trustScore, verified: developer.verified } })}
+            onClick={() => downloadTrustReport(developerAsSearchItem)}
             className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors"
           >
             <Download className="w-4 h-4" />
@@ -278,10 +279,12 @@ export const DeveloperDetailCard = ({
         developerName={developer.name}
         developerId={developer.id}
       />
-      <CompareModal
-        item={developerAsSearchItem}
-        open={isCompareOpen}
-        onClose={() => setIsCompareOpen(false)}
-      />
+    </div>
+    <CompareModal
+      item={developerAsSearchItem}
+      open={isCompareOpen}
+      onClose={() => setIsCompareOpen(false)}
+    />
+    </>
   );
 };
