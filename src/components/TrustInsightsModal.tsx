@@ -51,6 +51,8 @@ const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trust-insigh
 
 export const TrustInsightsModal = ({ open, onOpenChange }: TrustInsightsModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { signInWithGoogle } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
