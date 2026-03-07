@@ -172,7 +172,10 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
     const category = categoryToSearchCategory(catKey || '');
     // Look up the full item from the search index to get meta data
-    const indexItem = getSearchIndex().find(si => si.id === item.id && si.category === category);
+    const searchIndex = getSearchIndex();
+    const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
+      || searchIndex.find(si => si.id === item.id)
+      || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
     if (indexItem) {
       setSelectedItem(indexItem);
     } else {
