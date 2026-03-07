@@ -106,6 +106,10 @@ export const developers: Developer[] = [
     specialties: ["Residential", "Community Development", "Retail"],
     sentimentScore: 7.5,
     isClaimed: false,
+    yearEstablished: 2011,
+    employees: 1200,
+    registeredUsers: 28000,
+    capital: "EGP 6B",
   },
   {
     id: "tatweer-misr",
