@@ -245,6 +245,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
     const isActive = view === 'bestOf' ? showBestOf2025 : view === 'trending' ? showTrending : showNewLaunches;
     clearSpecialViews();
     setActiveCategory(null);
+    setSelectedItem(null);
     if (!isActive) {
       if (view === 'bestOf') setShowBestOf2025(true);
       if (view === 'trending') setShowTrending(true);
@@ -255,6 +256,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   const handleCategoryClick = (labelKey: string) => {
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
     clearSpecialViews();
+    setSelectedItem(null);
   };
 
   const formatNumber = (num: number) => {
