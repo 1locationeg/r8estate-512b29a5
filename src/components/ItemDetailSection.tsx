@@ -121,25 +121,43 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
     if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
 
+    // Dynamic hash for deterministic variance
     let hash = 0;
     for (let i = 0; i < item.id.length; i++) {
       hash = ((hash << 5) - hash) + item.id.charCodeAt(i);
       hash = hash & hash;
     }
     
-    const baseScore = 55 + Math.abs(hash % 40);
-    const baseRating = 3 + Math.abs(hash % 20) / 10;
+    // --- Dynamic inputs ---
+    const reviewCount = item.reviewCount || 0;
+    const baseRating = item.rating || (3 + Math.abs(hash % 20) / 10);
+    const likes = (item.meta?.likes as number) || Math.abs(hash % 200);
+    const shares = (item.meta?.shares as number) || Math.abs((hash >> 3) % 80);
+    const replies = (item.meta?.replies as number) || Math.abs((hash >> 5) % 60);
+
+    // --- Trust Score Formula ---
+    // Rating component (0-40): rating out of 5 scaled to 40
+    const ratingScore = (baseRating / 5) * 40;
+
+    // Review volume component (0-30): logarithmic scale, caps at ~500 reviews
+    const reviewScore = Math.min(30, (Math.log10(Math.max(1, reviewCount)) / Math.log10(500)) * 30);
+
+    // Engagement component (0-30): weighted engagement normalized
+    const engagementRaw = (likes * 1) + (shares * 3) + (replies * 2);
+    const engagementScore = Math.min(30, (Math.log10(Math.max(1, engagementRaw)) / Math.log10(5000)) * 30);
+
+    // Final trust score (0-100)
+    const computedScore = Math.round(Math.min(100, Math.max(0, ratingScore + reviewScore + engagementScore)));
     
     const keys = getCategoryMetricKeys(item.category);
     const scores: Record<string, number> = {};
     keys.forEach((key, idx) => {
       const variance = ((hash >> (idx * 4)) % 30) - 15;
-      scores[key] = Math.max(30, Math.min(95, baseScore + variance));
+      scores[key] = Math.max(30, Math.min(95, computedScore + variance));
     });
     
-    // Generate star distribution (percentage for each star level)
-    const total = item.reviewCount || 100;
-    const dist5 = Math.round(baseScore * 0.8 + Math.abs(hash % 10));
+    // Generate star distribution
+    const dist5 = Math.round(computedScore * 0.8 + Math.abs(hash % 10));
     const dist4 = Math.round((100 - dist5) * 0.5);
     const dist3 = Math.round((100 - dist5 - dist4) * 0.5);
     const dist2 = Math.round((100 - dist5 - dist4 - dist3) * 0.6);
@@ -153,7 +171,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     }));
     
     return {
-      trustScore: baseScore,
+      trustScore: computedScore,
       rating: baseRating,
       categoryScores: scores,
       reviews: reviewsList,
