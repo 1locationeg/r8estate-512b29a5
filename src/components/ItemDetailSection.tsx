@@ -508,9 +508,6 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
               </div>
             </div>
           </div>
-              </div>
-            </div>
-          </div>
 
           {/* Stars + Rating + Review count */}
           <div className="flex items-center justify-center gap-2 flex-wrap">
