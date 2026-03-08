@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
+import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";

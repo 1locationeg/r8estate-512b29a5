@@ -276,11 +276,10 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem }: He
       const fallback: SearchItem = {
         id: item.id,
         name: isRTL ? item.nameAr : item.nameEn,
-        
         category: category,
+        image: item.avatar,
         rating: item.rating,
         reviewCount: item.reviewCount,
-        avatar: item.avatar,
         meta: { likes: item.likes || 0, shares: item.shares || 0, replies: item.replies || 0 },
       };
       onSelectItem?.(fallback);
