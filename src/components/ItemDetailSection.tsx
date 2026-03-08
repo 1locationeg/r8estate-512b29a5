@@ -406,30 +406,79 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
 
         {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
         <div className="flex flex-col items-center gap-3 mt-4 w-full">
-          {/* Large Trust Gauge */}
+          {/* Speedometer-style Trust Gauge */}
           <div className="flex flex-col items-center">
-            <div className="relative w-24 h-24 flex-shrink-0">
-              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                {/* Background circle */}
-                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/20" />
-                
-                {/* Gradient defs */}
+            <div className="relative w-36 h-[78px] flex-shrink-0">
+              <svg className="w-36 h-[78px]" viewBox="0 0 200 110" overflow="visible">
                 <defs>
-                  <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="hsl(350 85% 52%)" /> {/* Red */}
-                    <stop offset="50%" stopColor="hsl(45 96% 54%)" /> {/* Gold/Yellow */}
-                    <stop offset="100%" stopColor="hsl(142 76% 36%)" /> {/* Green */}
+                  <linearGradient id={`trustArcGradient-${item?.id}`} gradientUnits="userSpaceOnUse" x1="20" y1="100" x2="180" y2="100">
+                    <stop offset="0%" stopColor="hsl(0 85% 50%)" />
+                    <stop offset="25%" stopColor="hsl(30 95% 52%)" />
+                    <stop offset="50%" stopColor="hsl(45 96% 54%)" />
+                    <stop offset="75%" stopColor="hsl(80 70% 45%)" />
+                    <stop offset="100%" stopColor="hsl(142 76% 36%)" />
                   </linearGradient>
                 </defs>
                 
-                {/* Gradient progress circle */}
-                <circle cx="50" cy="50" r="42" fill="none" stroke="url(#trustGradient)" strokeWidth="8" strokeLinecap="round"
-                  strokeDasharray={`${trustScore * 2.64} 264`}
+                {/* Background arc */}
+                <path
+                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="14"
+                  className="text-muted/15"
+                  strokeLinecap="round"
                 />
+                
+                {/* Gradient arc */}
+                <path
+                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  fill="none"
+                  stroke={`url(#trustArcGradient-${item?.id})`}
+                  strokeWidth="14"
+                  strokeLinecap="round"
+                  strokeDasharray={`${(trustScore / 100) * 251.3} 251.3`}
+                />
+
+                {/* Outer tick marks */}
+                {Array.from({ length: 31 }).map((_, i) => {
+                  const angle = Math.PI + (i / 30) * Math.PI;
+                  const isMajor = i % 5 === 0;
+                  const innerR = isMajor ? 90 : 92;
+                  const outerR = 97;
+                  const x1 = 100 + innerR * Math.cos(angle);
+                  const y1 = 100 + innerR * Math.sin(angle);
+                  const x2 = 100 + outerR * Math.cos(angle);
+                  const y2 = 100 + outerR * Math.sin(angle);
+                  return (
+                    <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
+                      stroke="currentColor" strokeWidth={isMajor ? 1.5 : 0.7}
+                      className="text-muted-foreground/40" />
+                  );
+                })}
+
+                {/* Needle */}
+                {(() => {
+                  const needleAngle = Math.PI + (trustScore / 100) * Math.PI;
+                  const needleLen = 62;
+                  const nx = 100 + needleLen * Math.cos(needleAngle);
+                  const ny = 100 + needleLen * Math.sin(needleAngle);
+                  return (
+                    <>
+                      <line x1="100" y1="100" x2={nx} y2={ny}
+                        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
+                        className="text-foreground" />
+                      <circle cx="100" cy="100" r="4" fill="currentColor" className="text-foreground" />
+                      <circle cx="100" cy="100" r="2" fill="currentColor" className="text-background" />
+                    </>
+                  );
+                })()}
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
-                <span className="text-3xl font-bold text-foreground">{trustScore}</span>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Trust Score</span>
+              
+              {/* Score + Label below gauge */}
+              <div className="absolute bottom-[-18px] left-1/2 -translate-x-1/2 flex flex-col items-center">
+                <span className="text-2xl font-extrabold text-foreground leading-none">{trustScore}</span>
+                <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground mt-0.5">Trust Score</span>
               </div>
             </div>
           </div>
