@@ -187,7 +187,17 @@
     "brokers": "الوسطاء",
     "exhibitions": "المعارض",
     "channels": "القنوات",
-    "lawFirms": "مكاتب المحاماة"
+    "lawFirms": "مكاتب المحاماة",
+    "valuation": "التقييم",
+    "training": "التدريب",
+    "auctions": "المزادات",
+    "mortgage": "التمويل العقاري",
+    "research": "الأبحاث",
+    "tax": "الضرائب",
+    "management": "إدارة العقارات",
+    "leasing": "التأجير",
+    "blockchain": "بلوكتشين",
+    "lands": "الأراضي"
   },
   "stats": {
     "verifiedReviews": "تقييمات موثقة",

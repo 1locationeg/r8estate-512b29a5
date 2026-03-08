@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale } from "lucide-react";
+import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -114,6 +114,96 @@ const categories: Category[] = [
       { id: "mashoralaw", nameEn: "Mashoralaw", nameAr: "مشورة للمحاماة", avatar: "https://randomuser.me/api/portraits/men/60.jpg", rating: 4.4, reviewCount: 654, likes: 1876, shares: 432, replies: 189, launchDate: "2024-01-15", trendScore: 75 },
       { id: "partners-law", nameEn: "Partners Law", nameAr: "بارتنرز لو", avatar: "https://randomuser.me/api/portraits/men/48.jpg", rating: 4.5, reviewCount: 543, likes: 1567, shares: 389, replies: 156, launchDate: "2024-05-20", trendScore: 72 },
       { id: "adsero", nameEn: "ADSERO", nameAr: "أدسيرو", avatar: "https://randomuser.me/api/portraits/men/38.jpg", rating: 4.7, reviewCount: 987, likes: 2876, shares: 678, replies: 312, launchDate: "2023-09-10", trendScore: 86 },
+    ],
+  },
+  {
+    icon: <DollarSign className="w-4 h-4 text-brand-red" />,
+    labelKey: "categories.valuation",
+    items: [
+      { id: "jll-val", nameEn: "JLL Valuation", nameAr: "جيه إل إل للتقييم", avatar: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-06-01", trendScore: 82 },
+      { id: "cbre-val", nameEn: "CBRE Valuation", nameAr: "سي بي آر إي للتقييم", avatar: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 654, likes: 1876, shares: 432, replies: 189, launchDate: "2024-01-15", trendScore: 75 },
+      { id: "savills-val", nameEn: "Savills", nameAr: "سافيلز", avatar: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 543, likes: 1567, shares: 389, replies: 156, launchDate: "2024-05-20", trendScore: 70 },
+    ],
+  },
+  {
+    icon: <GraduationCap className="w-4 h-4 text-primary" />,
+    labelKey: "categories.training",
+    items: [
+      { id: "reidin-academy", nameEn: "REIDIN Academy", nameAr: "أكاديمية ريدن", avatar: "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=100&h=100&fit=crop", rating: 4.7, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-09-10", trendScore: 88 },
+      { id: "mim-academy", nameEn: "MIM Academy", nameAr: "أكاديمية ميم", avatar: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2024-03-01", trendScore: 80 },
+      { id: "proptech-school", nameEn: "PropTech School", nameAr: "مدرسة بروبتك", avatar: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=100&h=100&fit=crop", rating: 4.3, reviewCount: 456, likes: 1234, shares: 345, replies: 167, launchDate: "2024-08-15", trendScore: 72 },
+    ],
+  },
+  {
+    icon: <Gavel className="w-4 h-4 text-accent" />,
+    labelKey: "categories.auctions",
+    items: [
+      { id: "auction-house", nameEn: "Auction House Egypt", nameAr: "دار المزادات مصر", avatar: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 567, likes: 1567, shares: 389, replies: 156, launchDate: "2024-01-20", trendScore: 76 },
+      { id: "emirates-auction", nameEn: "Emirates Auction", nameAr: "مزادات الإمارات", avatar: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 987, likes: 2876, shares: 678, replies: 312, launchDate: "2023-05-10", trendScore: 84 },
+      { id: "al-mal-auction", nameEn: "Al Mal Auctions", nameAr: "المال للمزادات", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", rating: 4.2, reviewCount: 345, likes: 876, shares: 234, replies: 123, launchDate: "2024-07-01", trendScore: 65 },
+    ],
+  },
+  {
+    icon: <Landmark className="w-4 h-4 text-brand-red" />,
+    labelKey: "categories.mortgage",
+    items: [
+      { id: "nbe-mortgage", nameEn: "NBE Mortgage", nameAr: "تمويل البنك الأهلي", avatar: "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop", rating: 4.3, reviewCount: 2345, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-01-01", trendScore: 79 },
+      { id: "cib-mortgage", nameEn: "CIB Home Loans", nameAr: "تمويل سي آي بي", avatar: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 1876, likes: 4567, shares: 987, replies: 456, launchDate: "2022-06-15", trendScore: 85 },
+      { id: "arab-bank-mortgage", nameEn: "Arab Bank Mortgage", nameAr: "تمويل البنك العربي", avatar: "https://images.unsplash.com/photo-1541354329998-f4d9a9f9297f?w=100&h=100&fit=crop", rating: 4.1, reviewCount: 987, likes: 2345, shares: 567, replies: 234, launchDate: "2023-03-20", trendScore: 68 },
+    ],
+  },
+  {
+    icon: <FlaskConical className="w-4 h-4 text-primary" />,
+    labelKey: "categories.research",
+    items: [
+      { id: "jll-research", nameEn: "JLL Research", nameAr: "أبحاث جيه إل إل", avatar: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=100&h=100&fit=crop", rating: 4.7, reviewCount: 1567, likes: 4321, shares: 987, replies: 456, launchDate: "2023-01-01", trendScore: 90 },
+      { id: "knight-frank", nameEn: "Knight Frank", nameAr: "نايت فرانك", avatar: "https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-04-15", trendScore: 83 },
+      { id: "cushman", nameEn: "Cushman & Wakefield", nameAr: "كوشمان آند ويكفيلد", avatar: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2024-02-01", trendScore: 77 },
+    ],
+  },
+  {
+    icon: <Receipt className="w-4 h-4 text-accent" />,
+    labelKey: "categories.tax",
+    items: [
+      { id: "pwc-tax", nameEn: "PwC Tax Advisory", nameAr: "بي دبليو سي للضرائب", avatar: "https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 987, likes: 2876, shares: 678, replies: 312, launchDate: "2023-01-10", trendScore: 81 },
+      { id: "kpmg-tax", nameEn: "KPMG Tax", nameAr: "كي بي إم جي للضرائب", avatar: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 765, likes: 2134, shares: 543, replies: 234, launchDate: "2023-06-20", trendScore: 74 },
+      { id: "ey-tax", nameEn: "EY Tax Services", nameAr: "إي واي للضرائب", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 654, likes: 1876, shares: 432, replies: 189, launchDate: "2024-01-05", trendScore: 70 },
+    ],
+  },
+  {
+    icon: <Building2 className="w-4 h-4 text-brand-red" />,
+    labelKey: "categories.management",
+    items: [
+      { id: "cbre-mgmt", nameEn: "CBRE Management", nameAr: "سي بي آر إي للإدارة", avatar: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-03-01", trendScore: 84 },
+      { id: "hill-intl", nameEn: "Hill International", nameAr: "هيل إنترناشيونال", avatar: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop", rating: 4.3, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-08-15", trendScore: 76 },
+      { id: "emaar-fm", nameEn: "Emaar FM", nameAr: "إعمار لإدارة المرافق", avatar: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 1567, likes: 4567, shares: 987, replies: 456, launchDate: "2022-11-01", trendScore: 87 },
+    ],
+  },
+  {
+    icon: <Key className="w-4 h-4 text-primary" />,
+    labelKey: "categories.leasing",
+    items: [
+      { id: "better-home", nameEn: "Better Home", nameAr: "بيتر هوم", avatar: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 2340, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-05-01", trendScore: 82 },
+      { id: "allsopp", nameEn: "Allsopp & Allsopp", nameAr: "ألسوب آند ألسوب", avatar: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=100&h=100&fit=crop", rating: 4.6, reviewCount: 1876, likes: 4567, shares: 987, replies: 456, launchDate: "2021-09-15", trendScore: 86 },
+      { id: "cluttons", nameEn: "Cluttons", nameAr: "كلاتونز", avatar: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=100&h=100&fit=crop", rating: 4.2, reviewCount: 987, likes: 2345, shares: 567, replies: 234, launchDate: "2023-07-01", trendScore: 71 },
+    ],
+  },
+  {
+    icon: <Link className="w-4 h-4 text-accent" />,
+    labelKey: "categories.blockchain",
+    items: [
+      { id: "propy", nameEn: "Propy", nameAr: "بروبي", avatar: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?w=100&h=100&fit=crop", rating: 4.3, reviewCount: 567, likes: 1567, shares: 389, replies: 156, launchDate: "2024-02-10", trendScore: 91 },
+      { id: "realtoken", nameEn: "RealToken", nameAr: "ريل توكن", avatar: "https://images.unsplash.com/photo-1622630998477-20aa696ecb05?w=100&h=100&fit=crop", rating: 4.1, reviewCount: 345, likes: 987, shares: 234, replies: 123, launchDate: "2024-06-01", trendScore: 88 },
+      { id: "brickblock", nameEn: "Brickblock", nameAr: "بريك بلوك", avatar: "https://images.unsplash.com/photo-1621761191319-c6fb62004040?w=100&h=100&fit=crop", rating: 4.0, reviewCount: 234, likes: 654, shares: 167, replies: 89, launchDate: "2024-09-15", trendScore: 79 },
+    ],
+  },
+  {
+    icon: <MapPin className="w-4 h-4 text-brand-red" />,
+    labelKey: "categories.lands",
+    items: [
+      { id: "nuca", nameEn: "NUCA", nameAr: "هيئة المجتمعات العمرانية", avatar: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=100&h=100&fit=crop", rating: 4.2, reviewCount: 3456, likes: 8901, shares: 2345, replies: 1234, launchDate: "2022-01-01", trendScore: 80 },
+      { id: "nakheel-lands", nameEn: "Nakheel Lands", nameAr: "نخيل للأراضي", avatar: "https://images.unsplash.com/photo-1628624747186-a941c476b7ef?w=100&h=100&fit=crop", rating: 4.5, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-04-01", trendScore: 77 },
+      { id: "aldar-lands", nameEn: "Aldar Lands", nameAr: "الدار للأراضي", avatar: "https://images.unsplash.com/photo-1625244724120-1fd1d34d00f6?w=100&h=100&fit=crop", rating: 4.4, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2024-01-10", trendScore: 73 },
     ],
   },
 ];
