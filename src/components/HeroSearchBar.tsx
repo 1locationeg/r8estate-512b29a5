@@ -319,28 +319,57 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
         ))}
       </div>
 
-      {/* Featured Categories */}
+      {/* Featured Identity */}
       {!activeView && (
         <div className="mt-6 w-full">
           <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
-            {isRTL ? "الفئات المميزة" : "Featured Categories"}
+            {isRTL ? "الهويات المميزة" : "Featured Identity"}
           </h3>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2 md:gap-3">
-            {categories.slice(0, 9).map((cat) => (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
+            {allItemsWithMeta
+              .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
+              .slice(0, 6)
+              .map((item) => (
               <button
-                key={cat.labelKey}
-                onClick={() => onCategorySelect?.(cat.labelKey)}
-                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
+                key={item.id}
+                onClick={() => handleItemClick(item)}
+                className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all group cursor-pointer"
               >
-                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                  {cat.icon}
+                <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-accent/30 group-hover:ring-accent transition-all">
+                  <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
+                  <AvatarFallback className="bg-secondary text-xs">
+                    {(isRTL ? item.nameAr : item.nameEn).substring(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="text-center w-full">
+                  <p className="text-xs md:text-sm font-medium text-foreground line-clamp-1">
+                    {isRTL ? item.nameAr : item.nameEn}
+                  </p>
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <Star className={cn("w-3 h-3 fill-current", getRatingColor(item.rating))} />
+                    <span className={cn("text-xs font-semibold", getRatingColor(item.rating))}>
+                      {item.rating.toFixed(1)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
+                    <div className="flex items-center gap-0.5">
+                      <Heart className="w-2.5 h-2.5" />
+                      <span className="text-[10px]">{formatNumber(item.likes || 0)}</span>
+                    </div>
+                    <div className="flex items-center gap-0.5">
+                      <Share2 className="w-2.5 h-2.5" />
+                      <span className="text-[10px]">{formatNumber(item.shares || 0)}</span>
+                    </div>
+                  </div>
+                  {/* Category badge */}
+                  <div className="mt-1.5 flex items-center justify-center gap-1">
+                    {item.categoryIcon}
+                    <span className="text-[9px] text-muted-foreground">{t(item.categoryKey || '')}</span>
+                  </div>
                 </div>
-                <span className="text-[10px] md:text-xs font-medium text-foreground text-center line-clamp-1">
-                  {t(cat.labelKey)}
-                </span>
-                <span className="text-[9px] text-muted-foreground">
-                  {cat.items.length} {isRTL ? "عناصر" : "items"}
-                </span>
               </button>
             ))}
           </div>
