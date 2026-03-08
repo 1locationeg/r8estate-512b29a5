@@ -261,6 +261,7 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
   };
 
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
+    onInteraction?.();
     const category = categoryToSearchCategory(catKey || '');
     // Look up the full item from the search index to get meta data
     const searchIndex = getSearchIndex();
