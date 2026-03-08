@@ -131,9 +131,9 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     // --- Dynamic inputs ---
     const reviewCount = item.reviewCount || 0;
     const baseRating = item.rating || (3 + Math.abs(hash % 20) / 10);
-    const likes = item.likes || Math.abs(hash % 200);
-    const shares = item.shares || Math.abs((hash >> 3) % 80);
-    const replies = item.replies || Math.abs((hash >> 5) % 60);
+    const likes = (item.meta?.likes as number) || Math.abs(hash % 200);
+    const shares = (item.meta?.shares as number) || Math.abs((hash >> 3) % 80);
+    const replies = (item.meta?.replies as number) || Math.abs((hash >> 5) % 60);
 
     // --- Trust Score Formula ---
     // Rating component (0-40): rating out of 5 scaled to 40
