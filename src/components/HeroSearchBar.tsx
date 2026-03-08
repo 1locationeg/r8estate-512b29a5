@@ -207,9 +207,10 @@ interface HeroCategoryLinksProps {
   onViewSelect?: (view: 'bestOf' | 'trending' | 'newLaunches') => void;
   activeView?: 'bestOf' | 'trending' | 'newLaunches' | null;
   onSelectItem?: (item: SearchItem) => void;
+  onCategorySelect?: (categoryKey: string) => void;
 }
 
-export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem }: HeroCategoryLinksProps) => {
+export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCategorySelect }: HeroCategoryLinksProps) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
