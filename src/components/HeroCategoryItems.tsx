@@ -330,7 +330,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCateg
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg">
+    <div className="w-full bg-card border-t border-border shadow-lg">
       {/* Category Tabs */}
       <div className="relative flex items-center">
         {/* Left Arrow */}
