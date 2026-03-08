@@ -187,7 +187,17 @@
     "brokers": "Brokers",
     "exhibitions": "Exhibitions",
     "channels": "Channels",
-    "lawFirms": "Law Firms"
+    "lawFirms": "Law Firms",
+    "valuation": "Valuation",
+    "training": "Training",
+    "auctions": "Auctions",
+    "mortgage": "Mortgage",
+    "research": "Research",
+    "tax": "Tax",
+    "management": "Management",
+    "leasing": "Leasing",
+    "blockchain": "Blockchain",
+    "lands": "Lands"
   },
   "stats": {
     "verifiedReviews": "Verified Reviews",
