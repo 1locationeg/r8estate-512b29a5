@@ -404,40 +404,44 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           {item.name}
         </h2>
 
-        {/* Reviews count + Stars + Rating */}
-        <div className="flex items-center gap-3 mt-2 flex-wrap">
-          <span className="text-sm text-muted-foreground">
-            {t("reviews.title", "Reviews")} <span className="font-semibold text-foreground">{(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()}</span>
-          </span>
-          <span className="text-muted-foreground">•</span>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={cn(
-                  "w-5 h-5",
-                  star <= Math.round(rating)
-                    ? "fill-primary text-primary"
-                    : "text-secondary fill-secondary"
-                )}
-              />
-            ))}
-          </div>
-          <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
-          <div className="flex items-center gap-2 ml-3 px-3 py-1 rounded-full bg-muted/50">
-            <div className="relative w-10 h-10 flex-shrink-0">
-              <svg className="w-10 h-10 transform -rotate-90">
-                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="3" fill="none" className="text-muted/50" />
-                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="3" fill="none"
-                  strokeDasharray={`${(trustScore / 100) * 100} 100`} strokeLinecap="round"
+        {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
+        <div className="flex flex-col items-start gap-3 mt-4">
+          {/* Large Trust Gauge */}
+          <div className="flex flex-col items-center">
+            <div className="relative w-24 h-24 flex-shrink-0">
+              <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/30" />
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
+                  strokeDasharray={`${trustScore * 2.64} 264`}
                   className={trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair'}
                 />
               </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <span className={cn("text-xs font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>{trustScore}</span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className={cn("text-2xl font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>{trustScore}</span>
+                <span className="text-[8px] font-semibold uppercase tracking-wider text-trust-excellent">Trust Score</span>
               </div>
             </div>
-            <span className="text-xs font-medium text-muted-foreground">Trust</span>
+          </div>
+
+          {/* Stars + Rating + Review count */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex items-center gap-0.5">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={cn(
+                    "w-5 h-5",
+                    star <= Math.round(rating)
+                      ? "fill-accent text-accent"
+                      : "text-secondary fill-secondary"
+                  )}
+                />
+              ))}
+            </div>
+            <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
+            <span className="text-sm text-muted-foreground">
+              ({(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()} {t("reviews.title", "reviews")})
+            </span>
           </div>
         </div>
 
