@@ -10,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, UserCircle } from 'lucide-react';
 import logoIcon from '@/assets/logo-icon.png';
+import { Footer } from '@/components/Footer';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -167,7 +168,8 @@ const Auth = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-primary/10 via-background to-primary/5 flex flex-col">
+      <div className="flex-1 flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Back button */}
         <button
@@ -400,6 +402,8 @@ const Auth = () => {
           </p>
         </div>
       </div>
+      </div>
+      <Footer />
     </div>
   );
 };

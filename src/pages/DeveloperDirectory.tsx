@@ -5,6 +5,7 @@ import { developers } from "@/data/mockData";
 import { DeveloperDirectoryCard } from "@/components/DeveloperDirectoryCard";
 import { DeveloperDetailModal } from "@/components/DeveloperDetailModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { Footer } from "@/components/Footer";
 import { Developer } from "@/data/mockData";
 import logoIcon from "@/assets/logo-icon.png";
 import { ArrowLeft } from "lucide-react";
@@ -69,6 +70,8 @@ const DeveloperDirectory = () => {
           ))}
         </div>
       </main>
+
+      <Footer />
 
       {/* Modal */}
       <DeveloperDetailModal

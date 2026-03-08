@@ -10,6 +10,7 @@ import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
+import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -209,23 +210,7 @@ const Index = () => {
         <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
       </section>
 
-      {/* Footer */}
-      <footer className="bg-card border-t border-border py-6 md:py-8 safe-bottom">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <span className="text-xl md:text-2xl font-bold inline-flex items-center gap-2">
-                <img src={logoIcon} alt="R8ESTATE" className="h-[1.4em] w-auto object-contain transition-transform duration-200 hover:scale-110" />
-                <span className="text-brand-red">R8</span>
-                <span className="text-primary">ESTATE</span>
-              </span>
-            </div>
-            <p className="text-xs md:text-sm text-muted-foreground text-center">
-              {t("footer.copyright")}
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
 
       {/* PWA Install Banner */}
       <PWAInstallBanner />
