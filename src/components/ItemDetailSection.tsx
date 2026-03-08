@@ -408,10 +408,10 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         <div className="flex flex-col items-center gap-4 mt-4 w-full">
           {/* Modern AI-themed Trust Meter */}
           <div className="flex flex-col items-center gap-2">
-            <div className="relative w-44 h-[100px] flex-shrink-0">
-              <svg className="w-44 h-[100px]" viewBox="0 0 220 120" overflow="visible">
+            <div className="relative w-48 h-28 flex-shrink-0">
+              <svg className="w-48 h-28" viewBox="0 0 200 115" overflow="visible">
                 <defs>
-                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="18" y1="105" x2="202" y2="105">
+                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="10" y1="100" x2="190" y2="100">
                     <stop offset="0%" stopColor="hsl(0 85% 55%)" />
                     <stop offset="20%" stopColor="hsl(25 95% 55%)" />
                     <stop offset="40%" stopColor="hsl(40 96% 54%)" />
@@ -435,46 +435,43 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                   </filter>
                 </defs>
 
-                {/* Subtle outer track */}
+                {/* Background arc - perfect semicircle: center(100,100) r=90 */}
                 <path
-                  d="M 22 105 A 88 88 0 0 1 198 105"
+                  d="M 10 100 A 90 90 0 0 1 190 100"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="4"
-                  className="text-muted/10"
-                />
-
-                {/* Main arc background */}
-                <path
-                  d="M 22 105 A 88 88 0 0 1 198 105"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="12"
-                  className="text-muted/10"
+                  strokeWidth="14"
+                  className="text-muted/12"
                   strokeLinecap="round"
                 />
 
-                {/* Gradient progress arc with glow */}
-                <path
-                  d="M 22 105 A 88 88 0 0 1 198 105"
-                  fill="none"
-                  stroke={`url(#trustArcGrad-${item?.id})`}
-                  strokeWidth="12"
-                  strokeLinecap="round"
-                  strokeDasharray={`${(trustScore / 100) * 276.5} 276.5`}
-                  filter={`url(#glow-${item?.id})`}
-                />
+                {/* Gradient progress arc */}
+                {(() => {
+                  // Arc length of semicircle r=90: π * 90 ≈ 282.74
+                  const arcLen = Math.PI * 90;
+                  return (
+                    <path
+                      d="M 10 100 A 90 90 0 0 1 190 100"
+                      fill="none"
+                      stroke={`url(#trustArcGrad-${item?.id})`}
+                      strokeWidth="14"
+                      strokeLinecap="round"
+                      strokeDasharray={`${(trustScore / 100) * arcLen} ${arcLen}`}
+                      filter={`url(#glow-${item?.id})`}
+                    />
+                  );
+                })()}
 
                 {/* Fine tick marks */}
                 {Array.from({ length: 51 }).map((_, i) => {
                   const angle = Math.PI + (i / 50) * Math.PI;
                   const isMajor = i % 10 === 0;
-                  const innerR = isMajor ? 99 : 101;
-                  const outerR = isMajor ? 106 : 104;
-                  const x1 = 110 + innerR * Math.cos(angle);
-                  const y1 = 105 + innerR * Math.sin(angle);
-                  const x2 = 110 + outerR * Math.cos(angle);
-                  const y2 = 105 + outerR * Math.sin(angle);
+                  const innerR = isMajor ? 96 : 98;
+                  const outerR = isMajor ? 104 : 102;
+                  const x1 = 100 + innerR * Math.cos(angle);
+                  const y1 = 100 + innerR * Math.sin(angle);
+                  const x2 = 100 + outerR * Math.cos(angle);
+                  const y2 = 100 + outerR * Math.sin(angle);
                   return (
                     <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
                       stroke="currentColor" strokeWidth={isMajor ? 1.2 : 0.4}
@@ -482,21 +479,21 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                   );
                 })}
 
-                {/* Small arrow marker on the arc */}
+                {/* Small arrow marker on the arc at score position */}
                 {(() => {
                   const angle = Math.PI + (trustScore / 100) * Math.PI;
-                  const markerR = 88;
-                  const mx = 110 + markerR * Math.cos(angle);
-                  const my = 105 + markerR * Math.sin(angle);
+                  const mx = 100 + 90 * Math.cos(angle);
+                  const my = 100 + 90 * Math.sin(angle);
+                  // Arrow points inward toward center
                   const rotDeg = (trustScore / 100) * 180 - 90;
                   return (
                     <g filter={`url(#markerGlow-${item?.id})`}>
                       <polygon
-                        points="-4,3 4,3 0,-6"
+                        points="-5,4 5,4 0,-7"
                         fill="white"
                         stroke="currentColor"
-                        strokeWidth="0.5"
-                        className="text-foreground/80"
+                        strokeWidth="0.6"
+                        className="text-foreground/70"
                         transform={`translate(${mx},${my}) rotate(${rotDeg})`}
                       />
                     </g>
@@ -504,10 +501,10 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                 })()}
               </svg>
 
-              {/* Score + TRUST METER inside the arc */}
-              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
-                <span className="text-3xl font-black text-foreground leading-none tracking-tight">{trustScore}</span>
-                <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-primary mt-1">Trust Meter</span>
+              {/* Score + TRUST METER centered inside the semicircle */}
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-2 pointer-events-none">
+                <span className="text-4xl font-black text-foreground leading-none tracking-tight">{trustScore}</span>
+                <span className="text-base font-extrabold uppercase tracking-[0.2em] text-primary mt-1.5">Trust Meter</span>
               </div>
             </div>
           </div>
