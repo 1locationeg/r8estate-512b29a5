@@ -402,6 +402,7 @@ const Auth = () => {
           </p>
         </div>
       </div>
+      </div>
       <Footer />
     </div>
   );
