@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Star, Download, GitCompare, Shield, MessageSquare, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -6,9 +6,7 @@ import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
-
-// Configurable: change this developer ID to feature a different identity as an ad
-const FEATURED_DEVELOPER_ID = "1";
+import { supabase } from "@/integrations/supabase/client";
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
