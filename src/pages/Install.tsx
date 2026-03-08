@@ -83,6 +83,7 @@ const Install = () => {
           </div>
         )}
       </div>
+      <Footer />
     </div>
   );
 };
