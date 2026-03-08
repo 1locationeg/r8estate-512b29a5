@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ItemDetailSection } from "./ItemDetailSection";
 import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 
-interface CategoryItem {
+export interface CategoryItem {
   id: string;
   nameEn: string;
   nameAr: string;
