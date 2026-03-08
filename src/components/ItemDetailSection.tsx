@@ -405,80 +405,109 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         </h2>
 
         {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
-        <div className="flex flex-col items-center gap-3 mt-4 w-full">
-          {/* Speedometer-style Trust Gauge */}
-          <div className="flex flex-col items-center">
-            <div className="relative w-36 h-[78px] flex-shrink-0">
-              <svg className="w-36 h-[78px]" viewBox="0 0 200 110" overflow="visible">
+        <div className="flex flex-col items-center gap-4 mt-4 w-full">
+          {/* Modern AI-themed Trust Meter */}
+          <div className="flex flex-col items-center gap-2">
+            <div className="relative w-44 h-[100px] flex-shrink-0">
+              <svg className="w-44 h-[100px]" viewBox="0 0 220 120" overflow="visible">
                 <defs>
-                  <linearGradient id={`trustArcGradient-${item?.id}`} gradientUnits="userSpaceOnUse" x1="20" y1="100" x2="180" y2="100">
-                    <stop offset="0%" stopColor="hsl(0 85% 50%)" />
-                    <stop offset="25%" stopColor="hsl(30 95% 52%)" />
-                    <stop offset="50%" stopColor="hsl(45 96% 54%)" />
-                    <stop offset="75%" stopColor="hsl(80 70% 45%)" />
-                    <stop offset="100%" stopColor="hsl(142 76% 36%)" />
+                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="18" y1="105" x2="202" y2="105">
+                    <stop offset="0%" stopColor="hsl(0 85% 55%)" />
+                    <stop offset="20%" stopColor="hsl(25 95% 55%)" />
+                    <stop offset="40%" stopColor="hsl(40 96% 54%)" />
+                    <stop offset="60%" stopColor="hsl(55 90% 50%)" />
+                    <stop offset="80%" stopColor="hsl(100 65% 45%)" />
+                    <stop offset="100%" stopColor="hsl(142 76% 40%)" />
                   </linearGradient>
+                  <filter id={`glow-${item?.id}`} x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur stdDeviation="3" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
+                  <filter id={`markerGlow-${item?.id}`} x="-100%" y="-100%" width="300%" height="300%">
+                    <feGaussianBlur stdDeviation="2.5" result="blur" />
+                    <feMerge>
+                      <feMergeNode in="blur" />
+                      <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                  </filter>
                 </defs>
-                
-                {/* Background arc */}
+
+                {/* Subtle outer track */}
                 <path
-                  d="M 20 100 A 80 80 0 0 1 180 100"
+                  d="M 22 105 A 88 88 0 0 1 198 105"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="14"
-                  className="text-muted/15"
-                  strokeLinecap="round"
-                />
-                
-                {/* Gradient arc */}
-                <path
-                  d="M 20 100 A 80 80 0 0 1 180 100"
-                  fill="none"
-                  stroke={`url(#trustArcGradient-${item?.id})`}
-                  strokeWidth="14"
-                  strokeLinecap="round"
-                  strokeDasharray={`${(trustScore / 100) * 251.3} 251.3`}
+                  strokeWidth="4"
+                  className="text-muted/10"
                 />
 
-                {/* Outer tick marks */}
-                {Array.from({ length: 31 }).map((_, i) => {
-                  const angle = Math.PI + (i / 30) * Math.PI;
-                  const isMajor = i % 5 === 0;
-                  const innerR = isMajor ? 90 : 92;
-                  const outerR = 97;
-                  const x1 = 100 + innerR * Math.cos(angle);
-                  const y1 = 100 + innerR * Math.sin(angle);
-                  const x2 = 100 + outerR * Math.cos(angle);
-                  const y2 = 100 + outerR * Math.sin(angle);
+                {/* Main arc background */}
+                <path
+                  d="M 22 105 A 88 88 0 0 1 198 105"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="12"
+                  className="text-muted/10"
+                  strokeLinecap="round"
+                />
+
+                {/* Gradient progress arc with glow */}
+                <path
+                  d="M 22 105 A 88 88 0 0 1 198 105"
+                  fill="none"
+                  stroke={`url(#trustArcGrad-${item?.id})`}
+                  strokeWidth="12"
+                  strokeLinecap="round"
+                  strokeDasharray={`${(trustScore / 100) * 276.5} 276.5`}
+                  filter={`url(#glow-${item?.id})`}
+                />
+
+                {/* Fine tick marks */}
+                {Array.from({ length: 51 }).map((_, i) => {
+                  const angle = Math.PI + (i / 50) * Math.PI;
+                  const isMajor = i % 10 === 0;
+                  const innerR = isMajor ? 99 : 101;
+                  const outerR = isMajor ? 106 : 104;
+                  const x1 = 110 + innerR * Math.cos(angle);
+                  const y1 = 105 + innerR * Math.sin(angle);
+                  const x2 = 110 + outerR * Math.cos(angle);
+                  const y2 = 105 + outerR * Math.sin(angle);
                   return (
                     <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-                      stroke="currentColor" strokeWidth={isMajor ? 1.5 : 0.7}
-                      className="text-muted-foreground/40" />
+                      stroke="currentColor" strokeWidth={isMajor ? 1.2 : 0.4}
+                      className="text-muted-foreground/25" />
                   );
                 })}
 
-                {/* Needle */}
+                {/* Small arrow marker on the arc */}
                 {(() => {
-                  const needleAngle = Math.PI + (trustScore / 100) * Math.PI;
-                  const needleLen = 62;
-                  const nx = 100 + needleLen * Math.cos(needleAngle);
-                  const ny = 100 + needleLen * Math.sin(needleAngle);
+                  const angle = Math.PI + (trustScore / 100) * Math.PI;
+                  const markerR = 88;
+                  const mx = 110 + markerR * Math.cos(angle);
+                  const my = 105 + markerR * Math.sin(angle);
+                  const rotDeg = (trustScore / 100) * 180 - 90;
                   return (
-                    <>
-                      <line x1="100" y1="100" x2={nx} y2={ny}
-                        stroke="currentColor" strokeWidth="2.5" strokeLinecap="round"
-                        className="text-foreground" />
-                      <circle cx="100" cy="100" r="4" fill="currentColor" className="text-foreground" />
-                      <circle cx="100" cy="100" r="2" fill="currentColor" className="text-background" />
-                    </>
+                    <g filter={`url(#markerGlow-${item?.id})`}>
+                      <polygon
+                        points="-4,3 4,3 0,-6"
+                        fill="white"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        className="text-foreground/80"
+                        transform={`translate(${mx},${my}) rotate(${rotDeg})`}
+                      />
+                    </g>
                   );
                 })()}
               </svg>
-              
-              {/* Score + Label below gauge */}
-              <div className="absolute bottom-[-18px] left-1/2 -translate-x-1/2 flex flex-col items-center">
-                <span className="text-2xl font-extrabold text-foreground leading-none">{trustScore}</span>
-                <span className="text-[9px] font-bold uppercase tracking-[0.15em] text-muted-foreground mt-0.5">Trust Score</span>
+
+              {/* Score + TRUST METER inside the arc */}
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
+                <span className="text-3xl font-black text-foreground leading-none tracking-tight">{trustScore}</span>
+                <span className="text-sm font-extrabold uppercase tracking-[0.2em] text-primary mt-1">Trust Meter</span>
               </div>
             </div>
           </div>
