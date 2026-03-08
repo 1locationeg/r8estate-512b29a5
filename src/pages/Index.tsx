@@ -151,11 +151,33 @@ const Index = () => {
             <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
           </div>
 
-          {/* Category Links */}
-          <HeroCategoryLinks onViewSelect={setActiveView} />
+          {/* Category Links + Special View Grid */}
+          <HeroCategoryLinks 
+            activeView={activeView}
+            onViewSelect={(view) => {
+              setActiveView(prev => prev === view ? null : view);
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+            }}
+            onSelectItem={(item) => {
+              setSpecialViewItem(item);
+              setActiveView(null);
+              setSelectedDeveloperId(null);
+            }}
+          />
+
+          {/* Special View Item Detail */}
+          {specialViewItem && (
+            <div className="w-full max-w-5xl px-4 mt-8">
+              <ItemDetailSection
+                item={specialViewItem}
+                onClose={() => setSpecialViewItem(null)}
+              />
+            </div>
+          )}
 
           {/* Developer Detail Card (appears when developer is selected) */}
-          {selectedDeveloper && (
+          {selectedDeveloper && !specialViewItem && (
             <div className="w-full max-w-3xl px-4 mt-8">
               <DeveloperDetailCard
                 developer={selectedDeveloper}
@@ -165,8 +187,8 @@ const Index = () => {
           )}
         </div>
 
-        {/* Bottom Category Bar */}
-        <HeroCategoryItems initialView={activeView} onInteraction={() => setSelectedDeveloperId(null)} />
+        {/* Floating Category Bar */}
+        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); }} />
       </section>
 
       {/* Footer */}
