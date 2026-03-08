@@ -30,7 +30,7 @@ interface Category {
 
 // (duplicate interface removed)
 
-const categories: Category[] = [
+export const categories: Category[] = [
   {
     icon: <LayoutGrid className="w-4 h-4 text-primary" />,
     labelKey: "categories.units",
