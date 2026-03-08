@@ -24,12 +24,12 @@ export const FeaturedIdentitySpotlight = () => {
 
   useEffect(() => {
     const fetchFeatured = async () => {
-      const { data } = await supabase
-        .from('platform_settings')
+      const { data } = await (supabase
+        .from('platform_settings' as any)
         .select('value')
         .eq('key', 'featured_developer_id')
-        .single();
-      if (data?.value) setFeaturedId(data.value);
+        .single());
+      if (data?.value) setFeaturedId((data as any).value);
     };
     fetchFeatured();
   }, []);
