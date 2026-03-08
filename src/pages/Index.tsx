@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
+import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
