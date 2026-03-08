@@ -368,7 +368,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   ];
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-6 bg-card border border-border rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="w-full max-w-3xl mx-auto mt-6 bg-card border border-border rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300 overflow-x-hidden">
       
       {/* ===== TRUSTPILOT-STYLE BANNER ===== */}
       <div className={cn("relative h-24 md:h-32 bg-gradient-to-r overflow-hidden", getCategoryBannerStyle(item.category))}>
