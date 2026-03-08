@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare } from 'lucide-react';
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { developers, reviews, projects } from '@/data/mockData';
