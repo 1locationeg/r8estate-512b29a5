@@ -75,13 +75,7 @@ export const FeaturedIdentitySpotlight = () => {
         {/* Header */}
         <div className="p-5 md:p-6 text-center border-b border-border">
           <div className="flex items-center justify-end mb-2">
-            <ShareMenu
-              item={{
-                id: developer.id,
-                name: developer.name,
-                category: "developers",
-              }}
-            />
+            <ShareMenu title={developer.name} iconOnly />
           </div>
 
           <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
