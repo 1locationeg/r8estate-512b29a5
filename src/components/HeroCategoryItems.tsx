@@ -233,9 +233,10 @@ const calculateEngagementScore = (item: CategoryItem) => {
 
 interface HeroCategoryItemsProps {
   initialView?: 'bestOf' | 'trending' | 'newLaunches' | null;
+  onInteraction?: () => void;
 }
 
-export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
