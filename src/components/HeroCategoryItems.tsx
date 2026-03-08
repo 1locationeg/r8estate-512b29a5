@@ -215,7 +215,7 @@ const getRatingColor = (rating: number) => {
 };
 
 // Calculate engagement score for ranking
-const calculateEngagementScore = (item: CategoryItem) => {
+export const calculateEngagementScore = (item: CategoryItem) => {
   const reviewWeight = 2;
   const ratingWeight = 1000;
   const likeWeight = 1;
