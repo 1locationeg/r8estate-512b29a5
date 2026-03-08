@@ -231,8 +231,12 @@ const BuyerDashboard = () => {
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/buyer' },
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
     { icon: <Heart className="w-4 h-4" />, label: 'Saved Projects', path: '/buyer/saved' },
+    { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/buyer/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/buyer/settings' },
   ];
+
+  // Lazy import to avoid circular deps
+  const { NotificationsPage } = require('@/components/NotificationsPage');
 
   return (
     <DashboardLayout
@@ -244,6 +248,7 @@ const BuyerDashboard = () => {
         <Route index element={<BuyerOverview />} />
         <Route path="reviews" element={<BuyerReviews />} />
         <Route path="saved" element={<BuyerSaved />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         <Route path="settings" element={<BuyerSettings />} />
       </Routes>
     </DashboardLayout>
