@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Download, Smartphone, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import logoIcon from "@/assets/logo-icon.png";
+import { Footer } from "@/components/Footer";
 
 interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
