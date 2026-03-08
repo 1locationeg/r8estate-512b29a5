@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Star, Download, GitCompare, Shield, MessageSquare, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -6,9 +6,7 @@ import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
-
-// Configurable: change this developer ID to feature a different identity as an ad
-const FEATURED_DEVELOPER_ID = "1";
+import { supabase } from "@/integrations/supabase/client";
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
@@ -22,8 +20,21 @@ const trustCategories = [
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [featuredId, setFeaturedId] = useState("1");
 
-  const developer = developers.find((d) => d.id === FEATURED_DEVELOPER_ID);
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('value')
+        .eq('key', 'featured_developer_id')
+        .single();
+      if (data?.value) setFeaturedId(data.value);
+    };
+    fetchFeatured();
+  }, []);
+
+  const developer = developers.find((d) => d.id === featuredId);
   if (!developer) return null;
 
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
