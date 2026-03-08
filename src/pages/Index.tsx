@@ -131,8 +131,8 @@ const Index = () => {
                  <span className="text-primary">ESTATE</span>
                </span>
              </button>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
-              {t("hero.trustMeter")}
+            <p className="text-[clamp(1.25rem,5vw,2rem)] sm:text-3xl md:text-4xl font-bold text-accent">
+               {t("hero.trustMeter")}
             </p>
 
             {/* Hero Trust Meter Gauge - Live Animated */}
