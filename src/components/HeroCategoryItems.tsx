@@ -280,71 +280,9 @@ export const HeroCategoryItems = ({ onInteraction }: HeroCategoryItemsProps) => 
     }
   };
 
-  // Sync with external initialView prop
-  useEffect(() => {
-    if (initialView) {
-      setActiveCategory(null);
-      setShowBestOf2025(initialView === 'bestOf');
-      setShowTrending(initialView === 'trending');
-      setShowNewLaunches(initialView === 'newLaunches');
-    }
-  }, [initialView]);
-
-  const allItemsWithMeta = useMemo(() => {
-    const allItems: CategoryItem[] = [];
-    categories.forEach(cat => {
-      cat.items.forEach(item => {
-        allItems.push({ ...item, categoryKey: cat.labelKey, categoryIcon: cat.icon });
-      });
-    });
-    return allItems;
-  }, []);
-
-  // Best of 2025: sorted by engagement score
-  const bestOf2025Items = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  // Trending: sorted by trendScore (recent momentum)
-  const trendingItems = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => (b.trendScore || 0) - (a.trendScore || 0))
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  // New Launches: sorted by launch date (newest first)
-  const newLaunchItems = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => new Date(b.launchDate || "2020-01-01").getTime() - new Date(a.launchDate || "2020-01-01").getTime())
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  type SpecialView = 'bestOf' | 'trending' | 'newLaunches';
-
-  const clearSpecialViews = () => {
-    setShowBestOf2025(false);
-    setShowTrending(false);
-    setShowNewLaunches(false);
-  };
-
-  const handleSpecialClick = (view: SpecialView) => {
-    const isActive = view === 'bestOf' ? showBestOf2025 : view === 'trending' ? showTrending : showNewLaunches;
-    clearSpecialViews();
-    setActiveCategory(null);
-    setSelectedItem(null);
-    if (!isActive) {
-      if (view === 'bestOf') setShowBestOf2025(true);
-      if (view === 'trending') setShowTrending(true);
-      if (view === 'newLaunches') setShowNewLaunches(true);
-    }
-  };
-
   const handleCategoryClick = (labelKey: string) => {
     onInteraction?.();
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
-    clearSpecialViews();
     setSelectedItem(null);
   };
 
@@ -352,15 +290,6 @@ export const HeroCategoryItems = ({ onInteraction }: HeroCategoryItemsProps) => 
     if (num >= 1000) return (num / 1000).toFixed(1) + "K";
     return num.toString();
   };
-
-  const activeSpecialItems = showBestOf2025 ? bestOf2025Items : showTrending ? trendingItems : showNewLaunches ? newLaunchItems : null;
-  const activeSpecialLabel = showBestOf2025
-    ? { icon: <Trophy className="w-5 h-5 text-accent" />, titleEn: "Best of 2025", titleAr: "الأفضل لعام 2025", subtitleEn: "Most Engaged & Top Rated", subtitleAr: "الأكثر تفاعلاً وتقييماً" }
-    : showTrending
-    ? { icon: <TrendingUp className="w-5 h-5 text-primary" />, titleEn: "Trending Projects", titleAr: "المشاريع الرائجة", subtitleEn: "Gaining Momentum Now", subtitleAr: "الأكثر رواجاً حالياً" }
-    : showNewLaunches
-    ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
-    : null;
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
