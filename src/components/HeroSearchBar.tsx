@@ -329,12 +329,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             {categories.slice(0, 9).map((cat) => (
               <button
                 key={cat.labelKey}
-                onClick={() => {
-                  onViewSelect?.('bestOf' as any);
-                  // Trigger the category in the floating bar via a custom event
-                  window.dispatchEvent(new CustomEvent('select-category', { detail: cat.labelKey }));
-                  onViewSelect?.(null as any);
-                }}
+                onClick={() => onCategorySelect?.(cat.labelKey)}
                 className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
               >
                 <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary/10 transition-colors">
