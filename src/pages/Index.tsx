@@ -118,7 +118,7 @@ const Index = () => {
            <div className="text-center mb-6 md:mb-8">
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center gap-2 md:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-2 hover:opacity-80 transition-opacity"
+                className="inline-flex items-center justify-center gap-2 md:gap-3 text-[clamp(2rem,8vw,3rem)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-2 hover:opacity-80 transition-opacity"
                 aria-label="Return to home"
               >
                <img
