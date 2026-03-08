@@ -260,6 +260,86 @@ const AdminAnalytics = () => (
   </div>
 );
 
+const AdminSpotlight = () => {
+  const [featuredId, setFeaturedId] = useState('');
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    const fetch = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('value')
+        .eq('key', 'featured_developer_id')
+        .single();
+      if (data?.value) setFeaturedId(data.value);
+    };
+    fetch();
+  }, []);
+
+  const handleSave = async (devId: string) => {
+    setSaving(true);
+    const { error } = await supabase
+      .from('platform_settings')
+      .update({ value: devId, updated_at: new Date().toISOString() })
+      .eq('key', 'featured_developer_id');
+    setSaving(false);
+    if (error) {
+      toast.error('Failed to update spotlight');
+    } else {
+      setFeaturedId(devId);
+      toast.success('Spotlight updated successfully');
+    }
+  };
+
+  const currentDev = developers.find(d => d.id === featuredId);
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-1">Spotlight Identity</h2>
+      <p className="text-sm text-muted-foreground mb-6">Choose which developer is featured as the Spotlight Identity ad on the homepage.</p>
+
+      {currentDev && (
+        <div className="bg-accent/10 border border-accent/30 rounded-xl p-4 mb-6 flex items-center gap-4">
+          <div className="w-12 h-12 rounded-lg bg-secondary overflow-hidden shrink-0">
+            <img src={currentDev.logo} alt={currentDev.name} className="w-full h-full object-cover" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Currently Featured</p>
+            <p className="text-lg font-bold text-foreground truncate">{currentDev.name}</p>
+          </div>
+          <Sparkles className="w-5 h-5 text-accent shrink-0" />
+        </div>
+      )}
+
+      <div className="space-y-3">
+        {developers.map((d) => {
+          const isActive = d.id === featuredId;
+          return (
+            <div key={d.id} className={`bg-card border rounded-xl p-4 flex items-center justify-between transition-all ${isActive ? 'border-accent ring-1 ring-accent/30' : 'border-border'}`}>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-secondary overflow-hidden">
+                  <img src={d.logo} alt={d.name} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <p className="font-semibold text-foreground text-sm">{d.name}</p>
+                  <p className="text-xs text-muted-foreground">{d.location} · Rating: {d.rating}</p>
+                </div>
+              </div>
+              {isActive ? (
+                <span className="text-xs px-3 py-1 rounded-full bg-accent/20 text-accent-foreground font-medium">Active</span>
+              ) : (
+                <Button size="sm" variant="outline" disabled={saving} onClick={() => handleSave(d.id)}>
+                  Set as Spotlight
+                </Button>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
