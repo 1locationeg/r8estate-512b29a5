@@ -71,6 +71,8 @@ const DeveloperDirectory = () => {
         </div>
       </main>
 
+      <Footer />
+
       {/* Modal */}
       <DeveloperDetailModal
         developer={selectedDeveloper}
