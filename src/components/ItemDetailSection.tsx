@@ -424,7 +424,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           </div>
 
           {/* Stars + Rating + Review count */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center justify-center gap-2 flex-wrap">
             <div className="flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
