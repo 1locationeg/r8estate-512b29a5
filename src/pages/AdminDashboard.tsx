@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -7,10 +7,12 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
-  Ban, Eye, TrendingUp, Star
+  Ban, Eye, TrendingUp, Star, Sparkles
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const AdminOverview = () => {
   const stats = [
