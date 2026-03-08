@@ -212,8 +212,6 @@ const Index = () => {
 
       <Footer />
 
-      {/* PWA Install Banner */}
-      <PWAInstallBanner />
     </div>
   );
 };
