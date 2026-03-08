@@ -363,23 +363,87 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
     ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
     : null;
 
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+
+  const updateScrollState = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const tolerance = 2;
+    setCanScrollLeft(el.scrollLeft > tolerance);
+    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - tolerance);
+  }, []);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    updateScrollState();
+    el.addEventListener('scroll', updateScrollState, { passive: true });
+    const ro = new ResizeObserver(updateScrollState);
+    ro.observe(el);
+    return () => { el.removeEventListener('scroll', updateScrollState); ro.disconnect(); };
+  }, [updateScrollState]);
+
+  const scroll = (direction: 'left' | 'right') => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const amount = el.clientWidth * 0.6;
+    el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+  };
+
   return (
     <div className="relative bg-card border-t border-border">
       {/* Category Tabs */}
       <div className="relative flex items-center">
         {/* Left Arrow */}
-        <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-e border-border">
-          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
+        <button
+          onClick={() => scroll('left')}
+          disabled={!canScrollLeft}
+          className={cn(
+            "p-2 md:p-3 transition-colors border-e border-border shrink-0",
+            canScrollLeft ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
+          )}
+          aria-label="Scroll left"
+        >
+          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
         </button>
 
         {/* Scrollable Categories */}
-        <div className="flex-1 overflow-x-auto scrollbar-hide">
-          <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3">
+        <div ref={scrollRef} className="flex-1 overflow-x-auto scrollbar-hide">
+          <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3 w-max">
+            {/* Category Buttons */}
+            {categories.map((cat) => (
+              <button
+                key={cat.labelKey}
+                onClick={() => handleCategoryClick(cat.labelKey)}
+                className={cn(
+                  "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
+                  activeCategory === cat.labelKey
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-secondary text-foreground hover:bg-secondary/80"
+                )}
+              >
+                <span>{cat.icon}</span>
+                <span>{t(cat.labelKey)}</span>
+              </button>
+            ))}
+          </div>
+        </div>
 
-
-
-
-
+        {/* Right Arrow */}
+        <button
+          onClick={() => scroll('right')}
+          disabled={!canScrollRight}
+          className={cn(
+            "p-2 md:p-3 transition-colors border-s border-border shrink-0",
+            canScrollRight ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
+          )}
+          aria-label="Scroll right"
+        >
+          <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
+      </div>
 
 
 
