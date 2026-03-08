@@ -275,7 +275,6 @@ const AdminSpotlight = () => {
     };
     fetchSetting();
   }, []);
-  }, []);
 
   const handleSave = async (devId: string) => {
     setSaving(true);
