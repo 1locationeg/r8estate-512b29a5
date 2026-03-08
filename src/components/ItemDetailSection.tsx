@@ -410,17 +410,16 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
            <div className="flex flex-col items-center">
             <div className="relative w-48 h-28 flex-shrink-0">
               <svg className="w-48 h-28" viewBox="0 0 200 110" overflow="visible">
-                {/* Background semicircle arc */}
+                {/* Grey remaining arc (full semicircle) */}
                 <path
                   d="M 10 100 A 90 90 0 0 1 190 100"
                   fill="none"
-                  stroke="currentColor"
+                  stroke="hsl(0 0% 88%)"
                   strokeWidth="12"
-                  className="text-muted/20"
                   strokeLinecap="round"
                 />
 
-                {/* Score arc — color based on score, 100% = full semicircle */}
+                {/* Score arc + arrow marker */}
                 {(() => {
                   const arcLen = Math.PI * 90;
                   const filled = (trustScore / 100) * arcLen;
@@ -429,15 +428,30 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                     if (s >= 50) return "hsl(48 100% 50%)";
                     return "hsl(0 80% 50%)";
                   };
+                  const color = getArcColor(trustScore);
+                  // Arrow position on the arc
+                  const angle = Math.PI + (trustScore / 100) * Math.PI;
+                  const mx = 100 + 90 * Math.cos(angle);
+                  const my = 100 + 90 * Math.sin(angle);
+                  const rotDeg = (trustScore / 100) * 180 - 90;
                   return (
-                    <path
-                      d="M 10 100 A 90 90 0 0 1 190 100"
-                      fill="none"
-                      stroke={getArcColor(trustScore)}
-                      strokeWidth="12"
-                      strokeLinecap="round"
-                      strokeDasharray={`${filled} ${arcLen}`}
-                    />
+                    <>
+                      <path
+                        d="M 10 100 A 90 90 0 0 1 190 100"
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="12"
+                        strokeLinecap="round"
+                        strokeDasharray={`${filled} ${arcLen}`}
+                      />
+                      {/* Arrow marker on arc */}
+                      <circle cx={mx} cy={my} r="7" fill="white" stroke={color} strokeWidth="2" />
+                      <polygon
+                        points="-4,4 4,4 0,-5"
+                        fill={color}
+                        transform={`translate(${mx},${my}) rotate(${rotDeg})`}
+                      />
+                    </>
                   );
                 })()}
               </svg>
