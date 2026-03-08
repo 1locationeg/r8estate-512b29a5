@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
+import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
@@ -27,6 +28,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
+  const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -50,7 +52,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-[100vw]">
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-[100vw] pb-14">
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 safe-top">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -150,11 +152,33 @@ const Index = () => {
             <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
           </div>
 
-          {/* Category Links */}
-          <HeroCategoryLinks onViewSelect={setActiveView} />
+          {/* Category Links + Special View Grid */}
+          <HeroCategoryLinks 
+            activeView={activeView}
+            onViewSelect={(view) => {
+              setActiveView(prev => prev === view ? null : view);
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+            }}
+            onSelectItem={(item) => {
+              setSpecialViewItem(item);
+              setActiveView(null);
+              setSelectedDeveloperId(null);
+            }}
+          />
+
+          {/* Special View Item Detail */}
+          {specialViewItem && (
+            <div className="w-full max-w-5xl px-4 mt-8">
+              <ItemDetailSection
+                item={specialViewItem}
+                onClose={() => setSpecialViewItem(null)}
+              />
+            </div>
+          )}
 
           {/* Developer Detail Card (appears when developer is selected) */}
-          {selectedDeveloper && (
+          {selectedDeveloper && !specialViewItem && (
             <div className="w-full max-w-3xl px-4 mt-8">
               <DeveloperDetailCard
                 developer={selectedDeveloper}
@@ -164,8 +188,8 @@ const Index = () => {
           )}
         </div>
 
-        {/* Bottom Category Bar */}
-        <HeroCategoryItems initialView={activeView} onInteraction={() => setSelectedDeveloperId(null)} />
+        {/* Floating Category Bar */}
+        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); }} />
       </section>
 
       {/* Footer */}

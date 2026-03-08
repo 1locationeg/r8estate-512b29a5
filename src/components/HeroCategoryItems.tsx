@@ -6,7 +6,7 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ItemDetailSection } from "./ItemDetailSection";
 import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 
-interface CategoryItem {
+export interface CategoryItem {
   id: string;
   nameEn: string;
   nameAr: string;
@@ -30,7 +30,7 @@ interface Category {
 
 // (duplicate interface removed)
 
-const categories: Category[] = [
+export const categories: Category[] = [
   {
     icon: <LayoutGrid className="w-4 h-4 text-primary" />,
     labelKey: "categories.units",
@@ -215,7 +215,7 @@ const getRatingColor = (rating: number) => {
 };
 
 // Calculate engagement score for ranking
-const calculateEngagementScore = (item: CategoryItem) => {
+export const calculateEngagementScore = (item: CategoryItem) => {
   const reviewWeight = 2;
   const ratingWeight = 1000;
   const likeWeight = 1;
@@ -232,16 +232,12 @@ const calculateEngagementScore = (item: CategoryItem) => {
 };
 
 interface HeroCategoryItemsProps {
-  initialView?: 'bestOf' | 'trending' | 'newLaunches' | null;
   onInteraction?: () => void;
 }
 
-export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ onInteraction }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
-  const [showTrending, setShowTrending] = useState(initialView === 'trending');
-  const [showNewLaunches, setShowNewLaunches] = useState(initialView === 'newLaunches');
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
 
@@ -284,71 +280,9 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
     }
   };
 
-  // Sync with external initialView prop
-  useEffect(() => {
-    if (initialView) {
-      setActiveCategory(null);
-      setShowBestOf2025(initialView === 'bestOf');
-      setShowTrending(initialView === 'trending');
-      setShowNewLaunches(initialView === 'newLaunches');
-    }
-  }, [initialView]);
-
-  const allItemsWithMeta = useMemo(() => {
-    const allItems: CategoryItem[] = [];
-    categories.forEach(cat => {
-      cat.items.forEach(item => {
-        allItems.push({ ...item, categoryKey: cat.labelKey, categoryIcon: cat.icon });
-      });
-    });
-    return allItems;
-  }, []);
-
-  // Best of 2025: sorted by engagement score
-  const bestOf2025Items = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  // Trending: sorted by trendScore (recent momentum)
-  const trendingItems = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => (b.trendScore || 0) - (a.trendScore || 0))
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  // New Launches: sorted by launch date (newest first)
-  const newLaunchItems = useMemo(() => {
-    return [...allItemsWithMeta]
-      .sort((a, b) => new Date(b.launchDate || "2020-01-01").getTime() - new Date(a.launchDate || "2020-01-01").getTime())
-      .slice(0, 12);
-  }, [allItemsWithMeta]);
-
-  type SpecialView = 'bestOf' | 'trending' | 'newLaunches';
-
-  const clearSpecialViews = () => {
-    setShowBestOf2025(false);
-    setShowTrending(false);
-    setShowNewLaunches(false);
-  };
-
-  const handleSpecialClick = (view: SpecialView) => {
-    const isActive = view === 'bestOf' ? showBestOf2025 : view === 'trending' ? showTrending : showNewLaunches;
-    clearSpecialViews();
-    setActiveCategory(null);
-    setSelectedItem(null);
-    if (!isActive) {
-      if (view === 'bestOf') setShowBestOf2025(true);
-      if (view === 'trending') setShowTrending(true);
-      if (view === 'newLaunches') setShowNewLaunches(true);
-    }
-  };
-
   const handleCategoryClick = (labelKey: string) => {
     onInteraction?.();
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
-    clearSpecialViews();
     setSelectedItem(null);
   };
 
@@ -356,15 +290,6 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
     if (num >= 1000) return (num / 1000).toFixed(1) + "K";
     return num.toString();
   };
-
-  const activeSpecialItems = showBestOf2025 ? bestOf2025Items : showTrending ? trendingItems : showNewLaunches ? newLaunchItems : null;
-  const activeSpecialLabel = showBestOf2025
-    ? { icon: <Trophy className="w-5 h-5 text-accent" />, titleEn: "Best of 2025", titleAr: "الأفضل لعام 2025", subtitleEn: "Most Engaged & Top Rated", subtitleAr: "الأكثر تفاعلاً وتقييماً" }
-    : showTrending
-    ? { icon: <TrendingUp className="w-5 h-5 text-primary" />, titleEn: "Trending Projects", titleAr: "المشاريع الرائجة", subtitleEn: "Gaining Momentum Now", subtitleAr: "الأكثر رواجاً حالياً" }
-    : showNewLaunches
-    ? { icon: <Rocket className="w-5 h-5 text-destructive" />, titleEn: "New Launches", titleAr: "إطلاقات جديدة", subtitleEn: "Recently Launched", subtitleAr: "تم إطلاقها مؤخراً" }
-    : null;
 
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
@@ -396,7 +321,7 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
   };
 
   return (
-    <div className="relative bg-card border-t border-border">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-card border-t border-border shadow-lg">
       {/* Category Tabs */}
       <div className="relative flex items-center">
         {/* Left Arrow */}
@@ -447,107 +372,6 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
           <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
         </button>
       </div>
-
-
-
-
-
-      {/* Special View Items (Best of 2025 / Trending / New Launches) */}
-      {!selectedItem && activeSpecialItems && activeSpecialLabel && (
-        <div className="border-t border-border bg-gradient-to-b from-accent/5 to-background">
-          <div className="p-4 md:p-6">
-            <div className="flex items-center gap-2 mb-4">
-              {activeSpecialLabel.icon}
-              <h3 className="text-lg font-bold text-foreground">
-                {isRTL ? activeSpecialLabel.titleAr : activeSpecialLabel.titleEn}
-              </h3>
-              <span className="text-sm text-muted-foreground">
-                - {isRTL ? activeSpecialLabel.subtitleAr : activeSpecialLabel.subtitleEn}
-              </span>
-            </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-              {activeSpecialItems.map((item, index) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleItemClick(item, item.categoryKey)}
-                  className="relative flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-accent/50 hover:shadow-lg transition-all group cursor-pointer"
-                >
-                  {/* Rank Badge */}
-                  <div className={cn(
-                    "absolute -top-2 -start-2 w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold",
-                    index === 0 ? "bg-accent text-accent-foreground" :
-                    index === 1 ? "bg-muted-foreground text-background" :
-                    index === 2 ? "bg-destructive/80 text-destructive-foreground" :
-                    "bg-muted text-muted-foreground"
-                  )}>
-                    {index + 1}
-                  </div>
-                  
-                  {/* Category Badge */}
-                  <div className="absolute -top-2 -end-2 text-sm">
-                    {item.categoryIcon}
-                  </div>
-
-                  <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-accent/30 group-hover:ring-accent transition-all">
-                    <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
-                    <AvatarFallback className="bg-secondary text-xs">
-                      {(isRTL ? item.nameAr : item.nameEn).substring(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  
-                  <div className="text-center w-full">
-                    <p className="text-xs md:text-sm font-medium text-foreground line-clamp-1">
-                      {isRTL ? item.nameAr : item.nameEn}
-                    </p>
-                    
-                    {/* Rating */}
-                    <div className="flex items-center justify-center gap-1 mt-1">
-                      <Star className={cn("w-3 h-3 fill-current", getRatingColor(item.rating))} />
-                      <span className={cn("text-xs font-semibold", getRatingColor(item.rating))}>
-                        {item.rating.toFixed(1)}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
-                      </span>
-                    </div>
-
-                    {/* Engagement Stats */}
-                    <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
-                      <div className="flex items-center gap-0.5" title={isRTL ? "إعجابات" : "Likes"}>
-                        <Heart className="w-2.5 h-2.5" />
-                        <span className="text-[10px]">{formatNumber(item.likes || 0)}</span>
-                      </div>
-                      <div className="flex items-center gap-0.5" title={isRTL ? "مشاركات" : "Shares"}>
-                        <Share2 className="w-2.5 h-2.5" />
-                        <span className="text-[10px]">{formatNumber(item.shares || 0)}</span>
-                      </div>
-                      <div className="flex items-center gap-0.5" title={isRTL ? "ردود" : "Replies"}>
-                        <MessageCircle className="w-2.5 h-2.5" />
-                        <span className="text-[10px]">{formatNumber(item.replies || 0)}</span>
-                      </div>
-                    </div>
-
-                    {/* New Launch Date indicator */}
-                    {showNewLaunches && item.launchDate && (
-                      <p className="text-[10px] text-muted-foreground mt-1">
-                        {new Date(item.launchDate).toLocaleDateString(isRTL ? "ar-EG" : "en-US", { month: "short", year: "numeric" })}
-                      </p>
-                    )}
-
-                    {/* Trend Score indicator */}
-                    {showTrending && item.trendScore && (
-                      <div className="flex items-center justify-center gap-0.5 mt-1">
-                        <TrendingUp className="w-2.5 h-2.5 text-primary" />
-                        <span className="text-[10px] text-primary font-semibold">{item.trendScore}%</span>
-                      </div>
-                    )}
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Category Items Dropdown */}
       {!selectedItem && activeCategory && (
