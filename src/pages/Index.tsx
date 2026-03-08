@@ -166,6 +166,14 @@ const Index = () => {
               setActiveView(null);
               setSelectedDeveloperId(null);
             }}
+            onCategorySelect={(catKey) => {
+              setExternalCategory(catKey);
+              setActiveView(null);
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+              // Reset after triggering so it can be re-selected
+              setTimeout(() => setExternalCategory(null), 100);
+            }}
           />
 
           {/* Special View Item Detail */}
