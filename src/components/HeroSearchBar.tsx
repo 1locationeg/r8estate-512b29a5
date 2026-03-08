@@ -1,5 +1,5 @@
-import { useState, useCallback, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap } from "lucide-react";
+import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
@@ -7,7 +7,9 @@ import { SearchSuggestions } from "@/components/SearchSuggestions";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { CompareModal } from "@/components/CompareModal";
-import { type SearchItem } from "@/data/searchIndex";
+import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { categories, calculateEngagementScore, type CategoryItem } from "@/components/HeroCategoryItems";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
