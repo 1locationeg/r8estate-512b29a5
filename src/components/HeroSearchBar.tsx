@@ -319,62 +319,59 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
         ))}
       </div>
 
-      {/* Featured Identity */}
-      {!activeView && (
-        <div className="mt-6 w-full">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
-            {isRTL ? "الهويات المميزة" : "Featured Identity"}
-          </h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 md:gap-4">
-            {allItemsWithMeta
-              .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
-              .slice(0, 6)
-              .map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleItemClick(item)}
-                className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all group cursor-pointer"
+      {/* Featured Identity - Infinite scrolling marquee */}
+      {!activeView && (() => {
+        const featuredItems = [...allItemsWithMeta]
+          .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
+          .slice(0, 12);
+        // Duplicate for seamless loop
+        const loopItems = [...featuredItems, ...featuredItems];
+        return (
+          <div className="mt-6 w-full overflow-hidden">
+            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
+              {isRTL ? "الهويات المميزة" : "Featured Identity"}
+            </h3>
+            <div className="relative">
+              <div
+                className="flex gap-3 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused] w-max"
               >
-                <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-accent/30 group-hover:ring-accent transition-all">
-                  <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
-                  <AvatarFallback className="bg-secondary text-xs">
-                    {(isRTL ? item.nameAr : item.nameEn).substring(0, 2)}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="text-center w-full">
-                  <p className="text-xs md:text-sm font-medium text-foreground line-clamp-1">
-                    {isRTL ? item.nameAr : item.nameEn}
-                  </p>
-                  <div className="flex items-center justify-center gap-1 mt-1">
-                    <Star className={cn("w-3 h-3 fill-current", getRatingColor(item.rating))} />
-                    <span className={cn("text-xs font-semibold", getRatingColor(item.rating))}>
-                      {item.rating.toFixed(1)}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
-                    <div className="flex items-center gap-0.5">
-                      <Heart className="w-2.5 h-2.5" />
-                      <span className="text-[10px]">{formatNumber(item.likes || 0)}</span>
+                {loopItems.map((item, idx) => (
+                  <button
+                    key={`${item.id}-${idx}`}
+                    onClick={() => handleItemClick(item)}
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all group cursor-pointer shrink-0 min-w-[200px]"
+                  >
+                    <Avatar className="w-10 h-10 ring-2 ring-accent/30 group-hover:ring-accent transition-all shrink-0">
+                      <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
+                      <AvatarFallback className="bg-secondary text-[10px]">
+                        {(isRTL ? item.nameAr : item.nameEn).substring(0, 2)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="text-start min-w-0">
+                      <p className="text-xs font-medium text-foreground truncate">
+                        {isRTL ? item.nameAr : item.nameEn}
+                      </p>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        <Star className={cn("w-3 h-3 fill-current", getRatingColor(item.rating))} />
+                        <span className={cn("text-[10px] font-semibold", getRatingColor(item.rating))}>
+                          {item.rating.toFixed(1)}
+                        </span>
+                        <span className="text-[10px] text-muted-foreground">
+                          ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1 mt-0.5">
+                        {item.categoryIcon}
+                        <span className="text-[9px] text-muted-foreground">{t(item.categoryKey || '')}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-0.5">
-                      <Share2 className="w-2.5 h-2.5" />
-                      <span className="text-[10px]">{formatNumber(item.shares || 0)}</span>
-                    </div>
-                  </div>
-                  {/* Category badge */}
-                  <div className="mt-1.5 flex items-center justify-center gap-1">
-                    {item.categoryIcon}
-                    <span className="text-[9px] text-muted-foreground">{t(item.categoryKey || '')}</span>
-                  </div>
-                </div>
-              </button>
-            ))}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {activeSpecialItems && activeSpecialLabel && (
         <div className="mt-6 bg-gradient-to-b from-accent/5 to-background rounded-xl border border-border p-4 md:p-6">
