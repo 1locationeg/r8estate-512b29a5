@@ -683,35 +683,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </div>
           </div>
 
-          {/* Trust Score Card */}
-          <div className="bg-secondary/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldCheck className="w-5 h-5 text-primary" />
-              <h4 className="text-sm font-semibold text-foreground">{t("trustScore.label", "Trust Score")}</h4>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative w-16 h-16">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
-                  <circle
-                    cx="50" cy="50" r="42"
-                    fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
-                    strokeDasharray={`${trustScore * 2.64} 264`}
-                    className={trustScore >= 66 ? 'text-primary' : trustScore >= 50 ? 'text-accent' : 'text-destructive'}
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className={cn("text-lg font-bold", trustScore >= 66 ? 'text-primary' : trustScore >= 50 ? 'text-accent' : 'text-destructive')}>
-                    {trustScore}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">{t("trustScore.outOf", "out of 100")}</p>
-                <p className="text-sm font-medium text-foreground">{getRatingLabel(trustScore / 20)}</p>
-              </div>
-            </div>
-          </div>
+
 
           {/* Response Rate Card */}
           <div className="bg-secondary/50 border border-border rounded-lg p-4">
