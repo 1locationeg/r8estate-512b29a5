@@ -131,6 +131,53 @@ const Index = () => {
             <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
               {t("hero.trustMeter")}
             </p>
+
+            {/* Hero Trust Meter Gauge */}
+            <div className="relative w-36 h-20 md:w-44 md:h-24 mt-3">
+              <svg viewBox="0 0 200 110" className="w-full h-full">
+                <defs>
+                  <linearGradient id="heroGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(0, 72%, 51%)" />
+                    <stop offset="20%" stopColor="hsl(20, 80%, 50%)" />
+                    <stop offset="40%" stopColor="hsl(40, 90%, 50%)" />
+                    <stop offset="60%" stopColor="hsl(48, 96%, 53%)" />
+                    <stop offset="80%" stopColor="hsl(80, 60%, 45%)" />
+                    <stop offset="100%" stopColor="hsl(142, 71%, 45%)" />
+                  </linearGradient>
+                </defs>
+                {/* Grey background arc */}
+                <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="hsl(var(--border))" strokeWidth="14" fill="none" strokeLinecap="round" />
+                {/* Gradient arc - filled to ~75% to show a healthy score */}
+                <path 
+                  d="M 10 100 A 90 90 0 0 1 190 100" 
+                  stroke="url(#heroGaugeGradient)" 
+                  strokeWidth="14" 
+                  fill="none" 
+                  strokeLinecap="round"
+                  strokeDasharray={`${0.75 * Math.PI * 90} ${Math.PI * 90}`} 
+                />
+                {/* Arrow marker at 75% position */}
+                {(() => {
+                  const angle = Math.PI + (0.75) * Math.PI;
+                  const mx = 100 + 90 * Math.cos(angle);
+                  const my = 100 + 90 * Math.sin(angle);
+                  const rotDeg = (0.75) * 180 - 90;
+                  return (
+                    <>
+                      <circle cx={mx} cy={my} r="8" fill="hsl(var(--background))" stroke="hsl(142, 71%, 45%)" strokeWidth="2.5" />
+                      <polygon points="-4,5 4,5 0,-6" fill="hsl(142, 71%, 45%)" transform={`translate(${mx},${my}) rotate(${rotDeg})`} />
+                    </>
+                  );
+                })()}
+                {/* Score labels */}
+                <text x="15" y="108" fontSize="10" fill="hsl(0, 72%, 51%)" fontWeight="bold">0</text>
+                <text x="175" y="108" fontSize="10" fill="hsl(142, 71%, 45%)" fontWeight="bold">100</text>
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-0.5">
+                <span className="text-2xl md:text-3xl font-black text-foreground">75</span>
+                <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Trust Score</span>
+              </div>
+            </div>
           </div>
 
           {/* Tagline */}
