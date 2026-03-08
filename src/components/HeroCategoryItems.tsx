@@ -448,30 +448,6 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
 
 
 
-            {/* Category Buttons */}
-            {categories.map((cat) => (
-              <button
-                key={cat.labelKey}
-                onClick={() => handleCategoryClick(cat.labelKey)}
-                className={cn(
-                  "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                  activeCategory === cat.labelKey
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-foreground hover:bg-secondary/80"
-                )}
-              >
-                <span>{cat.icon}</span>
-                <span>{t(cat.labelKey)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Arrow */}
-        <button className="p-2 md:p-3 hover:bg-secondary/50 transition-colors border-s border-border">
-          <ChevronRight className="w-4 h-4 md:w-5 md:h-5 text-muted-foreground" />
-        </button>
-      </div>
 
       {/* Special View Items (Best of 2025 / Trending / New Launches) */}
       {!selectedItem && activeSpecialItems && activeSpecialLabel && (
