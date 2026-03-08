@@ -346,6 +346,7 @@ export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCat
   };
 
   const handleCategoryClick = (labelKey: string) => {
+    onInteraction?.();
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
     clearSpecialViews();
     setSelectedItem(null);

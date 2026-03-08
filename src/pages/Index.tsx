@@ -165,7 +165,7 @@ const Index = () => {
         </div>
 
         {/* Bottom Category Bar */}
-        <HeroCategoryItems initialView={activeView} />
+        <HeroCategoryItems initialView={activeView} onInteraction={() => setSelectedDeveloperId(null)} />
       </section>
 
       {/* Footer */}
