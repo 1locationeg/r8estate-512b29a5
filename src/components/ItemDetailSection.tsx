@@ -424,20 +424,20 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             ))}
           </div>
           <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
-          <div className="flex items-center gap-1.5 ml-2 px-2 py-0.5 rounded-full bg-muted/50">
-            <div className="relative w-7 h-7 flex-shrink-0">
-              <svg className="w-7 h-7 transform -rotate-90">
-                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="2.5" fill="none" className="text-muted/50" />
-                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="2.5" fill="none"
+          <div className="flex items-center gap-2 ml-3 px-3 py-1 rounded-full bg-muted/50">
+            <div className="relative w-10 h-10 flex-shrink-0">
+              <svg className="w-10 h-10 transform -rotate-90">
+                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="3" fill="none" className="text-muted/50" />
+                <circle cx="50%" cy="50%" r="40%" stroke="currentColor" strokeWidth="3" fill="none"
                   strokeDasharray={`${(trustScore / 100) * 100} 100`} strokeLinecap="round"
                   className={trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair'}
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={cn("text-[9px] font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>{trustScore}</span>
+                <span className={cn("text-xs font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>{trustScore}</span>
               </div>
             </div>
-            <span className="text-[10px] font-medium text-muted-foreground">Trust</span>
+            <span className="text-xs font-medium text-muted-foreground">Trust</span>
           </div>
         </div>
 
