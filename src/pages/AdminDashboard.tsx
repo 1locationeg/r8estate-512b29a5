@@ -265,15 +265,16 @@ const AdminSpotlight = () => {
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    const fetch = async () => {
+    const fetchSetting = async () => {
       const { data } = await supabase
-        .from('platform_settings')
+        .from('platform_settings' as any)
         .select('value')
         .eq('key', 'featured_developer_id')
-        .single();
+        .single() as { data: { value: string } | null };
       if (data?.value) setFeaturedId(data.value);
     };
-    fetch();
+    fetchSetting();
+  }, []);
   }, []);
 
   const handleSave = async (devId: string) => {
