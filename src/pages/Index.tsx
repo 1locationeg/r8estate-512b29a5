@@ -185,6 +185,9 @@ const Index = () => {
           {/* Featured Identity Spotlight Ad */}
           <FeaturedIdentitySpotlight />
 
+          {/* Category Bar - below Featured Identity */}
+          <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
+
           {/* Special View Item Detail */}
           {specialViewItem && (
             <div className="w-full max-w-5xl px-4 mt-8">
@@ -205,9 +208,6 @@ const Index = () => {
             </div>
           )}
         </div>
-
-        {/* Floating Category Bar */}
-        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
       </section>
 
       <Footer />
