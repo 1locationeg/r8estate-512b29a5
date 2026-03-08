@@ -407,73 +407,49 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
         <div className="flex flex-col items-center gap-4 mt-4 w-full">
           {/* Modern AI-themed Trust Meter */}
-           <div className="flex flex-col items-center gap-1">
-            <div className="relative w-52 h-32 flex-shrink-0">
-              <svg className="w-52 h-32" viewBox="0 0 220 130" overflow="visible">
-                <defs>
-                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="15" y1="110" x2="205" y2="110">
-                    <stop offset="0%" stopColor="hsl(0 80% 50%)" />
-                    <stop offset="25%" stopColor="hsl(30 95% 55%)" />
-                    <stop offset="50%" stopColor="hsl(48 100% 50%)" />
-                    <stop offset="75%" stopColor="hsl(80 70% 45%)" />
-                    <stop offset="100%" stopColor="hsl(130 70% 42%)" />
-                  </linearGradient>
-                  <filter id={`arcShadow-${item?.id}`} x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="hsl(0 0% 0%)" floodOpacity="0.1" />
-                  </filter>
-                </defs>
-
-                {/* Background arc - thick rounded semicircle: center(110,110) r=90 */}
-                <path
-                  d="M 20 110 A 90 90 0 0 1 200 110"
+           <div className="flex flex-col items-center">
+            <div className="relative w-40 h-40 flex-shrink-0">
+              <svg className="w-40 h-40" viewBox="0 0 160 160">
+                {/* Background track */}
+                <circle
+                  cx="80" cy="80" r="68"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="28"
-                  className="text-muted/15"
+                  strokeWidth="10"
+                  className="text-muted/20"
                   strokeLinecap="round"
+                  transform="rotate(135 80 80)"
+                  strokeDasharray={`${0.75 * 2 * Math.PI * 68} ${2 * Math.PI * 68}`}
                 />
 
-                {/* Colorful gradient arc */}
+                {/* Score arc — green, proportional to trustScore */}
                 {(() => {
-                  const arcLen = Math.PI * 90;
+                  const circumference = 2 * Math.PI * 68;
+                  const arcSpan = 0.75 * circumference; // 270° arc
+                  const filled = (trustScore / 100) * arcSpan;
+                  const getArcColor = (s: number) => {
+                    if (s >= 66) return "hsl(152 69% 40%)";
+                    if (s >= 50) return "hsl(48 100% 50%)";
+                    return "hsl(0 80% 50%)";
+                  };
                   return (
-                    <path
-                      d="M 20 110 A 90 90 0 0 1 200 110"
+                    <circle
+                      cx="80" cy="80" r="68"
                       fill="none"
-                      stroke={`url(#trustArcGrad-${item?.id})`}
-                      strokeWidth="28"
+                      stroke={getArcColor(trustScore)}
+                      strokeWidth="10"
                       strokeLinecap="round"
-                      strokeDasharray={`${(trustScore / 100) * arcLen} ${arcLen}`}
-                      filter={`url(#arcShadow-${item?.id})`}
+                      transform="rotate(135 80 80)"
+                      strokeDasharray={`${filled} ${circumference}`}
                     />
-                  );
-                })()}
-
-                {/* Small triangle marker sitting on the arc */}
-                {(() => {
-                  const angle = Math.PI + (trustScore / 100) * Math.PI;
-                  const mx = 110 + 90 * Math.cos(angle);
-                  const my = 110 + 90 * Math.sin(angle);
-                  const rotDeg = (trustScore / 100) * 180 - 90;
-                  return (
-                    <g>
-                      {/* White circle dot behind triangle */}
-                      <circle cx={mx} cy={my} r="8" fill="white" stroke="hsl(0 0% 85%)" strokeWidth="1" />
-                      {/* Triangle arrow */}
-                      <polygon
-                        points="-5,5 5,5 0,-6"
-                        fill="hsl(220 15% 25%)"
-                        transform={`translate(${mx},${my}) rotate(${rotDeg})`}
-                      />
-                    </g>
                   );
                 })()}
               </svg>
 
-              {/* Score + TRUST METER centered inside the semicircle */}
-              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1 pointer-events-none">
-                <span className="text-4xl font-black text-foreground leading-none tracking-tight">{trustScore}</span>
-                <span className="text-lg font-extrabold uppercase tracking-[0.25em] text-primary mt-1">Trust Meter</span>
+              {/* Score + TRUST SCORE centered */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-5xl font-black text-trust-excellent leading-none">{trustScore}</span>
+                <span className="text-sm font-bold uppercase tracking-[0.15em] text-muted-foreground mt-1.5">Trust Score</span>
               </div>
             </div>
           </div>
