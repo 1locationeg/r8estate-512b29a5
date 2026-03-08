@@ -466,6 +466,7 @@ const AdminDashboard = () => {
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="spotlight" element={<AdminSpotlight />} />
+        <Route path="notifications" element={<AdminNotifications />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
