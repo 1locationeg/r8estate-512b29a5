@@ -194,7 +194,7 @@ export const FeaturedIdentitySpotlight = () => {
                         )}
                       </div>
                       <p className="text-[11px] text-muted-foreground truncate">
-                        {review.project} • {review.developer}
+                        {review.project} • {review.developerId}
                       </p>
                     </div>
                   </div>
