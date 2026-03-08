@@ -547,21 +547,8 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </p>
           </div>
 
-          <Separator />
 
-          {/* Category Insights */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-foreground">{t("trustInsights.categoryBreakdown")}</h3>
-            <div className="space-y-3">
-              {metricKeys.map((key) => (
-                <TrustCategoryBar
-                  key={key}
-                  label={t(`categoryMetrics.${metricsCategory}.${key}`)}
-                  percentage={categoryScores[key] || 50}
-                />
-              ))}
-            </div>
-          </div>
+
 
           <Separator />
 
