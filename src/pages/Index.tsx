@@ -56,7 +56,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-[100vw] pb-14">
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-[100vw]">
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 safe-top">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
