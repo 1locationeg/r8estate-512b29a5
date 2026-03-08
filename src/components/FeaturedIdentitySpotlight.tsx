@@ -20,8 +20,21 @@ const trustCategories = [
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
+  const [featuredId, setFeaturedId] = useState("1");
 
-  const developer = developers.find((d) => d.id === FEATURED_DEVELOPER_ID);
+  useEffect(() => {
+    const fetchFeatured = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('value')
+        .eq('key', 'featured_developer_id')
+        .single();
+      if (data?.value) setFeaturedId(data.value);
+    };
+    fetchFeatured();
+  }, []);
+
+  const developer = developers.find((d) => d.id === featuredId);
   if (!developer) return null;
 
   const devReviews = reviews.filter((r) => r.developerId === developer.id);

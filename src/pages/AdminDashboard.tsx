@@ -403,6 +403,7 @@ const AdminDashboard = () => {
         <Route path="users" element={<AdminUsers />} />
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="reviews" element={<AdminReviewMod />} />
+        <Route path="spotlight" element={<AdminSpotlight />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
