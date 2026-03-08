@@ -280,8 +280,8 @@ const AdminSpotlight = () => {
   const handleSave = async (devId: string) => {
     setSaving(true);
     const { error } = await supabase
-      .from('platform_settings')
-      .update({ value: devId, updated_at: new Date().toISOString() })
+      .from('platform_settings' as any)
+      .update({ value: devId, updated_at: new Date().toISOString() } as any)
       .eq('key', 'featured_developer_id');
     setSaving(false);
     if (error) {
