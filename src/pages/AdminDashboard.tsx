@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
-  Ban, Eye, TrendingUp, Star, Sparkles
+  Ban, Eye, TrendingUp, Star, Sparkles, Megaphone
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -340,6 +340,67 @@ const AdminSpotlight = () => {
   );
 };
 
+const AdminNotifications = () => {
+  const [title, setTitle] = useState('');
+  const [message, setMessage] = useState('');
+  const [sending, setSending] = useState(false);
+
+  const handleBroadcast = async () => {
+    if (!title.trim() || !message.trim()) {
+      toast.error('Please fill in both title and message');
+      return;
+    }
+    setSending(true);
+    const { error } = await supabase.rpc('broadcast_notification' as any, {
+      _type: 'announcement',
+      _title: title.trim(),
+      _message: message.trim(),
+      _metadata: {},
+    });
+    setSending(false);
+    if (error) {
+      toast.error('Failed to send notification');
+    } else {
+      toast.success('Notification sent to all users!');
+      setTitle('');
+      setMessage('');
+    }
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-1">Send Notification</h2>
+      <p className="text-sm text-muted-foreground mb-6">Broadcast an announcement to all platform users.</p>
+
+      <div className="max-w-lg space-y-4">
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Title</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            placeholder="e.g. New Feature Available!"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Message</label>
+          <textarea
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            rows={4}
+            placeholder="Write your notification message..."
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+          />
+        </div>
+        <Button onClick={handleBroadcast} disabled={sending || !title.trim() || !message.trim()}>
+          {sending ? 'Sending...' : 'Send to All Users'}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
@@ -385,6 +446,7 @@ const AdminDashboard = () => {
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
     { icon: <Sparkles className="w-4 h-4" />, label: 'Spotlight', path: '/admin/spotlight' },
+    { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
@@ -404,6 +466,7 @@ const AdminDashboard = () => {
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="spotlight" element={<AdminSpotlight />} />
+        <Route path="notifications" element={<AdminNotifications />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
