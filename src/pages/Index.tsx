@@ -181,6 +181,9 @@ const Index = () => {
             }}
           />
 
+          {/* Featured Identity Spotlight Ad */}
+          <FeaturedIdentitySpotlight />
+
           {/* Special View Item Detail */}
           {specialViewItem && (
             <div className="w-full max-w-5xl px-4 mt-8">
