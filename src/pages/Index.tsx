@@ -56,7 +56,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-[100vw]">
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full">
       {/* Header */}
       <header className="absolute top-0 left-0 right-0 z-50 safe-top">
         <div className="container mx-auto px-4 py-4 flex items-center justify-between">
@@ -118,7 +118,7 @@ const Index = () => {
            <div className="text-center mb-6 md:mb-8">
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center gap-2 md:gap-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-2 hover:opacity-80 transition-opacity"
+                className="inline-flex items-center justify-center gap-2 md:gap-3 text-[clamp(2rem,8vw,3rem)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-2 hover:opacity-80 transition-opacity"
                 aria-label="Return to home"
               >
                <img
@@ -131,8 +131,8 @@ const Index = () => {
                  <span className="text-primary">ESTATE</span>
                </span>
              </button>
-            <p className="text-2xl sm:text-3xl md:text-4xl font-bold text-accent">
-              {t("hero.trustMeter")}
+            <p className="text-[clamp(1.25rem,5vw,2rem)] sm:text-3xl md:text-4xl font-bold text-accent">
+               {t("hero.trustMeter")}
             </p>
 
             {/* Hero Trust Meter Gauge - Live Animated */}

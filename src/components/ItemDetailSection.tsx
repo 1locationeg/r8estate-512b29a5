@@ -368,12 +368,12 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   ];
 
   return (
-    <div className="w-full max-w-3xl mx-auto mt-6 bg-card border border-border rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300">
+    <div className="w-full max-w-3xl mx-auto mt-6 bg-card border border-border rounded-xl overflow-hidden animate-in slide-in-from-top-4 duration-300 overflow-x-hidden">
       
       {/* ===== TRUSTPILOT-STYLE BANNER ===== */}
-      <div className={cn("relative h-24 md:h-32 bg-gradient-to-r", getCategoryBannerStyle(item.category))}>
-        <div className="absolute inset-0 flex items-center justify-center opacity-10">
-          <div className="text-[80px] md:text-[120px] font-black text-foreground tracking-widest uppercase">
+      <div className={cn("relative h-24 md:h-32 bg-gradient-to-r overflow-hidden", getCategoryBannerStyle(item.category))}>
+        <div className="absolute inset-0 flex items-center justify-center opacity-10 overflow-hidden">
+          <div className="text-[clamp(40px,15vw,120px)] font-black text-foreground tracking-widest uppercase truncate max-w-full px-4">
             {item.name.substring(0, 8)}
           </div>
         </div>
