@@ -407,93 +407,62 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
         <div className="flex flex-col items-center gap-4 mt-4 w-full">
           {/* Modern AI-themed Trust Meter */}
-          <div className="flex flex-col items-center gap-2">
-            <div className="relative w-48 h-28 flex-shrink-0">
-              <svg className="w-48 h-28" viewBox="0 0 200 115" overflow="visible">
+           <div className="flex flex-col items-center gap-1">
+            <div className="relative w-52 h-32 flex-shrink-0">
+              <svg className="w-52 h-32" viewBox="0 0 220 130" overflow="visible">
                 <defs>
-                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="10" y1="100" x2="190" y2="100">
-                    <stop offset="0%" stopColor="hsl(0 85% 55%)" />
-                    <stop offset="20%" stopColor="hsl(25 95% 55%)" />
-                    <stop offset="40%" stopColor="hsl(40 96% 54%)" />
-                    <stop offset="60%" stopColor="hsl(55 90% 50%)" />
-                    <stop offset="80%" stopColor="hsl(100 65% 45%)" />
-                    <stop offset="100%" stopColor="hsl(142 76% 40%)" />
+                  <linearGradient id={`trustArcGrad-${item?.id}`} gradientUnits="userSpaceOnUse" x1="15" y1="110" x2="205" y2="110">
+                    <stop offset="0%" stopColor="hsl(0 80% 50%)" />
+                    <stop offset="25%" stopColor="hsl(30 95% 55%)" />
+                    <stop offset="50%" stopColor="hsl(48 100% 50%)" />
+                    <stop offset="75%" stopColor="hsl(80 70% 45%)" />
+                    <stop offset="100%" stopColor="hsl(130 70% 42%)" />
                   </linearGradient>
-                  <filter id={`glow-${item?.id}`} x="-50%" y="-50%" width="200%" height="200%">
-                    <feGaussianBlur stdDeviation="3" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
-                  </filter>
-                  <filter id={`markerGlow-${item?.id}`} x="-100%" y="-100%" width="300%" height="300%">
-                    <feGaussianBlur stdDeviation="2.5" result="blur" />
-                    <feMerge>
-                      <feMergeNode in="blur" />
-                      <feMergeNode in="SourceGraphic" />
-                    </feMerge>
+                  <filter id={`arcShadow-${item?.id}`} x="-20%" y="-20%" width="140%" height="140%">
+                    <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="hsl(0 0% 0%)" floodOpacity="0.1" />
                   </filter>
                 </defs>
 
-                {/* Background arc - perfect semicircle: center(100,100) r=90 */}
+                {/* Background arc - thick rounded semicircle: center(110,110) r=90 */}
                 <path
-                  d="M 10 100 A 90 90 0 0 1 190 100"
+                  d="M 20 110 A 90 90 0 0 1 200 110"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="14"
-                  className="text-muted/12"
+                  strokeWidth="28"
+                  className="text-muted/15"
                   strokeLinecap="round"
                 />
 
-                {/* Gradient progress arc */}
+                {/* Colorful gradient arc */}
                 {(() => {
-                  // Arc length of semicircle r=90: π * 90 ≈ 282.74
                   const arcLen = Math.PI * 90;
                   return (
                     <path
-                      d="M 10 100 A 90 90 0 0 1 190 100"
+                      d="M 20 110 A 90 90 0 0 1 200 110"
                       fill="none"
                       stroke={`url(#trustArcGrad-${item?.id})`}
-                      strokeWidth="14"
+                      strokeWidth="28"
                       strokeLinecap="round"
                       strokeDasharray={`${(trustScore / 100) * arcLen} ${arcLen}`}
-                      filter={`url(#glow-${item?.id})`}
+                      filter={`url(#arcShadow-${item?.id})`}
                     />
                   );
                 })()}
 
-                {/* Fine tick marks */}
-                {Array.from({ length: 51 }).map((_, i) => {
-                  const angle = Math.PI + (i / 50) * Math.PI;
-                  const isMajor = i % 10 === 0;
-                  const innerR = isMajor ? 96 : 98;
-                  const outerR = isMajor ? 104 : 102;
-                  const x1 = 100 + innerR * Math.cos(angle);
-                  const y1 = 100 + innerR * Math.sin(angle);
-                  const x2 = 100 + outerR * Math.cos(angle);
-                  const y2 = 100 + outerR * Math.sin(angle);
-                  return (
-                    <line key={i} x1={x1} y1={y1} x2={x2} y2={y2}
-                      stroke="currentColor" strokeWidth={isMajor ? 1.2 : 0.4}
-                      className="text-muted-foreground/25" />
-                  );
-                })}
-
-                {/* Small arrow marker on the arc at score position */}
+                {/* Small triangle marker sitting on the arc */}
                 {(() => {
                   const angle = Math.PI + (trustScore / 100) * Math.PI;
-                  const mx = 100 + 90 * Math.cos(angle);
-                  const my = 100 + 90 * Math.sin(angle);
-                  // Arrow points inward toward center
+                  const mx = 110 + 90 * Math.cos(angle);
+                  const my = 110 + 90 * Math.sin(angle);
                   const rotDeg = (trustScore / 100) * 180 - 90;
                   return (
-                    <g filter={`url(#markerGlow-${item?.id})`}>
+                    <g>
+                      {/* White circle dot behind triangle */}
+                      <circle cx={mx} cy={my} r="8" fill="white" stroke="hsl(0 0% 85%)" strokeWidth="1" />
+                      {/* Triangle arrow */}
                       <polygon
-                        points="-5,4 5,4 0,-7"
-                        fill="white"
-                        stroke="currentColor"
-                        strokeWidth="0.6"
-                        className="text-foreground/70"
+                        points="-5,5 5,5 0,-6"
+                        fill="hsl(220 15% 25%)"
                         transform={`translate(${mx},${my}) rotate(${rotDeg})`}
                       />
                     </g>
@@ -502,9 +471,9 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
               </svg>
 
               {/* Score + TRUST METER centered inside the semicircle */}
-              <div className="absolute inset-0 flex flex-col items-center justify-end pb-2 pointer-events-none">
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1 pointer-events-none">
                 <span className="text-4xl font-black text-foreground leading-none tracking-tight">{trustScore}</span>
-                <span className="text-base font-extrabold uppercase tracking-[0.2em] text-primary mt-1.5">Trust Meter</span>
+                <span className="text-lg font-extrabold uppercase tracking-[0.25em] text-primary mt-1">Trust Meter</span>
               </div>
             </div>
           </div>
