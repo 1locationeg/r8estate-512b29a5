@@ -276,7 +276,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem }: He
       const fallback: SearchItem = {
         id: item.id,
         name: isRTL ? item.nameAr : item.nameEn,
-        nameAr: item.nameAr,
+        
         category: category,
         rating: item.rating,
         reviewCount: item.reviewCount,

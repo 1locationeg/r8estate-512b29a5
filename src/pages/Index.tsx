@@ -27,6 +27,7 @@ const Index = () => {
   const navigate = useNavigate();
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
+  const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
