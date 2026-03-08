@@ -405,7 +405,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         </h2>
 
         {/* Trust Score Gauge + Stars + Rating (Trustpilot style) */}
-        <div className="flex flex-col items-start gap-3 mt-4">
+        <div className="flex flex-col items-center gap-3 mt-4 w-full">
           {/* Large Trust Gauge */}
           <div className="flex flex-col items-center">
             <div className="relative w-24 h-24 flex-shrink-0">
@@ -424,7 +424,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           </div>
 
           {/* Stars + Rating + Review count */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center justify-center gap-2 flex-wrap">
             <div className="flex items-center gap-0.5">
               {[1, 2, 3, 4, 5].map((star) => (
                 <Star
