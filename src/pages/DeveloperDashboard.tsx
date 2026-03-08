@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug
+  Tag, Plug, Bell
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -318,8 +318,11 @@ const DeveloperDashboard = () => {
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/developer/categories' },
     { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/developer/integration' },
+    { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/developer/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
+
+  const { NotificationsPage } = require('@/components/NotificationsPage');
 
   return (
     <DashboardLayout
@@ -346,6 +349,7 @@ const DeveloperDashboard = () => {
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
         <Route path="integration" element={<DevIntegration />} />
+        <Route path="notifications" element={<NotificationsPage />} />
         <Route path="settings" element={<DevSettings />} />
       </Routes>
     </DashboardLayout>
