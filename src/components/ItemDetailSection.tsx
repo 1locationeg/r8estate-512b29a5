@@ -404,32 +404,74 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           {item.name}
         </h2>
 
-        {/* Reviews count + Stars + Rating */}
-        <div className="flex items-center gap-3 mt-2 flex-wrap">
-          <span className="text-sm text-muted-foreground">
-            {t("reviews.title", "Reviews")} <span className="font-semibold text-foreground">{(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()}</span>
-          </span>
-          <span className="text-muted-foreground">•</span>
-          <div className="flex items-center gap-1">
-            {[1, 2, 3, 4, 5].map((star) => (
-              <Star
-                key={star}
-                className={cn(
-                  "w-5 h-5",
-                  star <= Math.round(rating)
-                    ? "fill-primary text-primary"
-                    : "text-secondary fill-secondary"
-                )}
-              />
-            ))}
+        {/* Trust Score Gauge + Rating Row */}
+        <div className="flex items-center gap-5 mt-3 flex-wrap">
+          {/* Trust Gauge */}
+          <div className="flex items-center gap-3">
+            <div className="relative w-20 h-20 md:w-24 md:h-24 flex-shrink-0">
+              <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="7" className="text-secondary" />
+                <circle
+                  cx="50" cy="50" r="42"
+                  fill="none" stroke="currentColor" strokeWidth="7" strokeLinecap="round"
+                  strokeDasharray={`${trustScore * 2.64} 264`}
+                  className={trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair'}
+                />
+              </svg>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className={cn("text-2xl md:text-3xl font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>
+                  {trustScore}
+                </span>
+                <span className="text-[8px] md:text-[9px] font-semibold uppercase tracking-wider text-muted-foreground">
+                  {t("trustScore.label", "Trust Score")}
+                </span>
+              </div>
+            </div>
           </div>
-          <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
+
+          {/* Rating + Reviews */}
+          <div className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <Star
+                  key={star}
+                  className={cn(
+                    "w-5 h-5 md:w-6 md:h-6",
+                    star <= Math.round(rating)
+                      ? getRatingColorClass(rating)
+                      : "text-secondary fill-secondary"
+                  )}
+                />
+              ))}
+              <span className="text-xl md:text-2xl font-bold text-foreground ml-2">{rating.toFixed(1)}</span>
+            </div>
+            <span className="text-sm text-muted-foreground">
+              {(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()} {t("reviews.title", "reviews")}
+            </span>
+          </div>
         </div>
 
         {/* Subtitle / Category */}
         {item.subtitle && (
-          <p className="text-sm text-muted-foreground mt-1">{item.subtitle}</p>
+          <p className="text-sm text-muted-foreground mt-2">{item.subtitle}</p>
         )}
+
+        {/* Trust Category Bars - Core Platform Feature */}
+        <div className="mt-4 bg-secondary/50 border border-border rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <ShieldCheck className="w-4 h-4 text-primary" />
+            <h4 className="text-sm font-semibold text-foreground">{t("trustInsights.categoryBreakdown")}</h4>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+            {metricKeys.map((key) => (
+              <TrustCategoryBar
+                key={key}
+                label={t(`categoryMetrics.${metricsCategory}.${key}`)}
+                percentage={categoryScores[key] || 50}
+              />
+            ))}
+          </div>
+        </div>
 
         {/* Quick Business Stats Bar */}
         {renderQuickStats(item)}
@@ -505,21 +547,8 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </p>
           </div>
 
-          <Separator />
 
-          {/* Category Insights */}
-          <div className="space-y-3">
-            <h3 className="font-semibold text-foreground">{t("trustInsights.categoryBreakdown")}</h3>
-            <div className="space-y-3">
-              {metricKeys.map((key) => (
-                <TrustCategoryBar
-                  key={key}
-                  label={t(`categoryMetrics.${metricsCategory}.${key}`)}
-                  percentage={categoryScores[key] || 50}
-                />
-              ))}
-            </div>
-          </div>
+
 
           <Separator />
 
@@ -654,35 +683,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </div>
           </div>
 
-          {/* Trust Score Card */}
-          <div className="bg-secondary/50 border border-border rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <ShieldCheck className="w-5 h-5 text-primary" />
-              <h4 className="text-sm font-semibold text-foreground">{t("trustScore.label", "Trust Score")}</h4>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="relative w-16 h-16">
-                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                  <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-secondary" />
-                  <circle
-                    cx="50" cy="50" r="42"
-                    fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
-                    strokeDasharray={`${trustScore * 2.64} 264`}
-                    className={trustScore >= 66 ? 'text-primary' : trustScore >= 50 ? 'text-accent' : 'text-destructive'}
-                  />
-                </svg>
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <span className={cn("text-lg font-bold", trustScore >= 66 ? 'text-primary' : trustScore >= 50 ? 'text-accent' : 'text-destructive')}>
-                    {trustScore}
-                  </span>
-                </div>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground">{t("trustScore.outOf", "out of 100")}</p>
-                <p className="text-sm font-medium text-foreground">{getRatingLabel(trustScore / 20)}</p>
-              </div>
-            </div>
-          </div>
+
 
           {/* Response Rate Card */}
           <div className="bg-secondary/50 border border-border rounded-lg p-4">
