@@ -233,9 +233,10 @@ const calculateEngagementScore = (item: CategoryItem) => {
 
 interface HeroCategoryItemsProps {
   initialView?: 'bestOf' | 'trending' | 'newLaunches' | null;
+  onInteraction?: () => void;
 }
 
-export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ initialView = null, onInteraction }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
@@ -260,6 +261,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   };
 
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
+    onInteraction?.();
     const category = categoryToSearchCategory(catKey || '');
     // Look up the full item from the search index to get meta data
     const searchIndex = getSearchIndex();
@@ -344,6 +346,7 @@ export const HeroCategoryItems = ({ initialView = null }: HeroCategoryItemsProps
   };
 
   const handleCategoryClick = (labelKey: string) => {
+    onInteraction?.();
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
     clearSpecialViews();
     setSelectedItem(null);
