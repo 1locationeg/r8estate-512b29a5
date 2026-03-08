@@ -207,9 +207,10 @@ interface HeroCategoryLinksProps {
   onViewSelect?: (view: 'bestOf' | 'trending' | 'newLaunches') => void;
   activeView?: 'bestOf' | 'trending' | 'newLaunches' | null;
   onSelectItem?: (item: SearchItem) => void;
+  onCategorySelect?: (categoryKey: string) => void;
 }
 
-export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem }: HeroCategoryLinksProps) => {
+export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCategorySelect }: HeroCategoryLinksProps) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
 
@@ -318,7 +319,34 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem }: He
         ))}
       </div>
 
-      {/* Special View Grid (inline below buttons) */}
+      {/* Featured Categories */}
+      {!activeView && (
+        <div className="mt-6 w-full">
+          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
+            {isRTL ? "الفئات المميزة" : "Featured Categories"}
+          </h3>
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2 md:gap-3">
+            {categories.slice(0, 9).map((cat) => (
+              <button
+                key={cat.labelKey}
+                onClick={() => onCategorySelect?.(cat.labelKey)}
+                className="flex flex-col items-center gap-1.5 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
+              >
+                <div className="w-10 h-10 md:w-12 md:h-12 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary/10 transition-colors">
+                  {cat.icon}
+                </div>
+                <span className="text-[10px] md:text-xs font-medium text-foreground text-center line-clamp-1">
+                  {t(cat.labelKey)}
+                </span>
+                <span className="text-[9px] text-muted-foreground">
+                  {cat.items.length} {isRTL ? "عناصر" : "items"}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {activeSpecialItems && activeSpecialLabel && (
         <div className="mt-6 bg-gradient-to-b from-accent/5 to-background rounded-xl border border-border p-4 md:p-6">
           <div className="flex items-center gap-2 mb-4">

@@ -233,13 +233,22 @@ export const calculateEngagementScore = (item: CategoryItem) => {
 
 interface HeroCategoryItemsProps {
   onInteraction?: () => void;
+  externalCategory?: string | null;
 }
 
-export const HeroCategoryItems = ({ onInteraction }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
+
+  // Sync with external category selection
+  useEffect(() => {
+    if (externalCategory) {
+      setActiveCategory(externalCategory);
+      setSelectedItem(null);
+    }
+  }, [externalCategory]);
 
   // Convert CategoryItem to SearchItem for detail view
   const categoryToSearchCategory = (labelKey: string): SearchCategory => {

@@ -29,6 +29,7 @@ const Index = () => {
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
+  const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -165,6 +166,14 @@ const Index = () => {
               setActiveView(null);
               setSelectedDeveloperId(null);
             }}
+            onCategorySelect={(catKey) => {
+              setExternalCategory(catKey);
+              setActiveView(null);
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+              // Reset after triggering so it can be re-selected
+              setTimeout(() => setExternalCategory(null), 100);
+            }}
           />
 
           {/* Special View Item Detail */}
@@ -189,7 +198,7 @@ const Index = () => {
         </div>
 
         {/* Floating Category Bar */}
-        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} />
+        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
       </section>
 
       {/* Footer */}
