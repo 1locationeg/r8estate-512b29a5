@@ -67,6 +67,7 @@ const Index = () => {
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
+            <NotificationBell />
             {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
