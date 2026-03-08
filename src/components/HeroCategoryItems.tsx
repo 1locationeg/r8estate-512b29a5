@@ -238,9 +238,6 @@ interface HeroCategoryItemsProps {
 export const HeroCategoryItems = ({ onInteraction }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [showBestOf2025, setShowBestOf2025] = useState(initialView === 'bestOf');
-  const [showTrending, setShowTrending] = useState(initialView === 'trending');
-  const [showNewLaunches, setShowNewLaunches] = useState(initialView === 'newLaunches');
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
 
