@@ -20,7 +20,7 @@ const trustCategories = [
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [featuredId, setFeaturedId] = useState("1");
+  const [featuredId, setFeaturedId] = useState("palm-hills");
 
   useEffect(() => {
     const fetchFeatured = async () => {
