@@ -198,7 +198,7 @@ const Index = () => {
         </div>
 
         {/* Floating Category Bar */}
-        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} />
+        <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
       </section>
 
       {/* Footer */}
