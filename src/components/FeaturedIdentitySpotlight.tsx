@@ -160,7 +160,7 @@ export const FeaturedIdentitySpotlight = () => {
                 <TrustCategoryBar
                   key={cat.key}
                   label={cat.label}
-                  score={score}
+                  percentage={score}
                 />
               );
             })}
