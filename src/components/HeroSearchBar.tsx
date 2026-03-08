@@ -327,7 +327,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
         // Duplicate for seamless loop
         const loopItems = [...featuredItems, ...featuredItems];
         return (
-          <div className="mt-6 w-full overflow-hidden">
+          <div className="mt-6 w-full overflow-hidden overflow-x-hidden">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
               {isRTL ? "الهويات المميزة" : "Featured Identity"}
             </h3>
