@@ -1,7 +1,8 @@
-import { Bell, Menu } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
+import { NotificationBell } from '@/components/NotificationBell';
 import logoIcon from '@/assets/logo-icon.png';
 
 interface DashboardHeaderProps {
@@ -37,10 +38,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
       </div>
       <div className="flex items-center gap-3">
         <LanguageSwitcher />
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 end-1.5 w-2 h-2 bg-destructive rounded-full" />
-        </Button>
+        <NotificationBell />
       </div>
     </header>
   );
