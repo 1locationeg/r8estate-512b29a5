@@ -410,15 +410,26 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           <div className="flex flex-col items-center">
             <div className="relative w-24 h-24 flex-shrink-0">
               <svg className="w-24 h-24 transform -rotate-90" viewBox="0 0 100 100">
-                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/30" />
-                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round"
+                {/* Background circle */}
+                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/20" />
+                
+                {/* Gradient defs */}
+                <defs>
+                  <linearGradient id="trustGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="hsl(350 85% 52%)" /> {/* Red */}
+                    <stop offset="50%" stopColor="hsl(45 96% 54%)" /> {/* Gold/Yellow */}
+                    <stop offset="100%" stopColor="hsl(142 76% 36%)" /> {/* Green */}
+                  </linearGradient>
+                </defs>
+                
+                {/* Gradient progress circle */}
+                <circle cx="50" cy="50" r="42" fill="none" stroke="url(#trustGradient)" strokeWidth="8" strokeLinecap="round"
                   strokeDasharray={`${trustScore * 2.64} 264`}
-                  className={trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair'}
                 />
               </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className={cn("text-2xl font-bold", trustScore >= 66 ? 'text-trust-excellent' : trustScore >= 50 ? 'text-trust-good' : 'text-trust-fair')}>{trustScore}</span>
-                <span className="text-[8px] font-semibold uppercase tracking-wider text-trust-excellent">Trust Score</span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-1">
+                <span className="text-3xl font-bold text-foreground">{trustScore}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">Trust Score</span>
               </div>
             </div>
           </div>
