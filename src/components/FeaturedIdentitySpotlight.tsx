@@ -20,15 +20,15 @@ const trustCategories = [
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [featuredId, setFeaturedId] = useState("1");
+  const [featuredId, setFeaturedId] = useState("palm-hills");
 
   useEffect(() => {
     const fetchFeatured = async () => {
       const { data } = await supabase
-        .from('platform_settings')
+        .from('platform_settings' as any)
         .select('value')
         .eq('key', 'featured_developer_id')
-        .single();
+        .single() as { data: { value: string } | null };
       if (data?.value) setFeaturedId(data.value);
     };
     fetchFeatured();
