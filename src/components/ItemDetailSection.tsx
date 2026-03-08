@@ -408,48 +408,44 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         <div className="flex flex-col items-center gap-4 mt-4 w-full">
           {/* Modern AI-themed Trust Meter */}
            <div className="flex flex-col items-center">
-            <div className="relative w-40 h-40 flex-shrink-0">
-              <svg className="w-40 h-40" viewBox="0 0 160 160">
-                {/* Background track */}
-                <circle
-                  cx="80" cy="80" r="68"
+            <div className="relative w-48 h-28 flex-shrink-0">
+              <svg className="w-48 h-28" viewBox="0 0 200 110" overflow="visible">
+                {/* Background semicircle arc */}
+                <path
+                  d="M 10 100 A 90 90 0 0 1 190 100"
                   fill="none"
                   stroke="currentColor"
-                  strokeWidth="10"
+                  strokeWidth="12"
                   className="text-muted/20"
                   strokeLinecap="round"
-                  transform="rotate(135 80 80)"
-                  strokeDasharray={`${0.75 * 2 * Math.PI * 68} ${2 * Math.PI * 68}`}
                 />
 
-                {/* Score arc — green, proportional to trustScore */}
+                {/* Score arc — color based on score, 100% = full semicircle */}
                 {(() => {
-                  const circumference = 2 * Math.PI * 68;
-                  const arcSpan = 0.75 * circumference; // 270° arc
-                  const filled = (trustScore / 100) * arcSpan;
+                  const arcLen = Math.PI * 90;
+                  const filled = (trustScore / 100) * arcLen;
                   const getArcColor = (s: number) => {
                     if (s >= 66) return "hsl(152 69% 40%)";
                     if (s >= 50) return "hsl(48 100% 50%)";
                     return "hsl(0 80% 50%)";
                   };
                   return (
-                    <circle
-                      cx="80" cy="80" r="68"
+                    <path
+                      d="M 10 100 A 90 90 0 0 1 190 100"
                       fill="none"
                       stroke={getArcColor(trustScore)}
-                      strokeWidth="10"
+                      strokeWidth="12"
                       strokeLinecap="round"
-                      transform="rotate(135 80 80)"
-                      strokeDasharray={`${filled} ${circumference}`}
+                      strokeDasharray={`${filled} ${arcLen}`}
                     />
                   );
                 })()}
               </svg>
 
-              {/* Score + TRUST SCORE centered */}
-              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                <span className="text-5xl font-black text-trust-excellent leading-none">{trustScore}</span>
-                <span className="text-sm font-bold uppercase tracking-[0.15em] text-muted-foreground mt-1.5">Trust Score</span>
+              {/* Score + TRUST SCORE centered in the middle of the semicircle */}
+              <div className="absolute inset-0 flex flex-col items-center justify-end pb-1 pointer-events-none">
+                <span className="text-4xl font-black text-foreground leading-none">{trustScore}</span>
+                <span className="text-base font-bold uppercase tracking-[0.2em] text-muted-foreground mt-1">Trust Score</span>
               </div>
             </div>
           </div>
