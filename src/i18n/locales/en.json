@@ -303,6 +303,28 @@
     "shareReview": "Review on R8ESTATE: {{item}}",
     "shareDeveloper": "{{name}} on R8ESTATE — Trust Score: {{score}}"
   },
+  "whatsapp": {
+    "chatTitle": "WhatsApp Chat",
+    "replyTime": "We typically reply within minutes",
+    "nameLabel": "Your Name *",
+    "namePlaceholder": "Enter your name",
+    "phoneLabel": "Phone Number *",
+    "phonePlaceholder": "+20 1XX XXX XXXX",
+    "howCanWeHelp": "How can we help?",
+    "startChat": "Start WhatsApp Chat",
+    "namePhoneRequired": "Please enter your name and phone number",
+    "invalidPhone": "Please enter a valid phone number",
+    "error": "Something went wrong, please try again",
+    "redirecting": "Redirecting to WhatsApp...",
+    "quickReplies": [
+      "I want to inquire about a real estate project",
+      "I need help choosing a trusted developer",
+      "I want to learn more about trust scores",
+      "I have a complaint or feedback",
+      "I want to verify a real estate deal",
+      "General inquiry"
+    ]
+  },
   "trustInsights": {
     "title": "AI Trust Insights",
     "subtitle": "Powered by R8ESTATE Intelligence",

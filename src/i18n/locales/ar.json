@@ -303,6 +303,28 @@
     "shareReview": "تقييم على R8ESTATE: {{item}}",
     "shareDeveloper": "{{name}} على R8ESTATE — نقاط الثقة: {{score}}"
   },
+  "whatsapp": {
+    "chatTitle": "محادثة واتساب",
+    "replyTime": "نرد عادةً خلال دقائق",
+    "nameLabel": "اسمك *",
+    "namePlaceholder": "أدخل اسمك",
+    "phoneLabel": "رقم الهاتف *",
+    "phonePlaceholder": "+20 1XX XXX XXXX",
+    "howCanWeHelp": "كيف يمكننا مساعدتك؟",
+    "startChat": "بدء محادثة واتساب",
+    "namePhoneRequired": "يرجى إدخال اسمك ورقم هاتفك",
+    "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
+    "error": "حدث خطأ، يرجى المحاولة مرة أخرى",
+    "redirecting": "جاري التحويل إلى واتساب...",
+    "quickReplies": [
+      "أريد الاستفسار عن مشروع عقاري",
+      "أحتاج مساعدة في اختيار مطور موثوق",
+      "أريد معرفة المزيد عن نقاط الثقة",
+      "لدي شكوى أو ملاحظة",
+      "أريد التحقق من صحة صفقة عقارية",
+      "تواصل عام"
+    ]
+  },
   "trustInsights": {
     "title": "رؤى الثقة الذكية",
     "subtitle": "مدعوم بذكاء R8ESTATE",
