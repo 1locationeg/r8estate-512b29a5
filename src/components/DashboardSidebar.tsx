@@ -2,9 +2,12 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import logoIcon from '@/assets/logo-icon.png';
-import { LogOut } from 'lucide-react';
+import { LogOut, Menu } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useIsMobile } from '@/hooks/use-mobile';
+import { useState } from 'react';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -27,7 +30,7 @@ interface DashboardSidebarProps {
   };
 }
 
-export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-primary', companyInfo, bottomAction }: DashboardSidebarProps) => {
+const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
@@ -37,12 +40,17 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
     navigate('/');
   };
 
+  const handleNav = (path: string) => {
+    navigate(path);
+    onNavigate?.();
+  };
+
   return (
-    <aside className="w-64 min-h-screen bg-card text-foreground flex flex-col fixed left-0 top-0 z-40 border-e border-border shadow-sm">
+    <div className="h-full flex flex-col bg-card text-foreground border-e border-border">
       {/* Brand */}
       <div className="p-4 border-b border-border">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <img src={logoIcon} alt="R8ESTATE" className="h-12 w-auto" />
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}>
+          <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto" />
           <div>
             <h1 className="text-lg font-bold leading-tight">
               <span className="text-brand-red">R8</span>
@@ -53,7 +61,7 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
         </div>
       </div>
 
-      {/* Profile Card - Centered like reference */}
+      {/* Profile Card */}
       <div className="px-4 py-5 border-b border-border">
         {companyInfo ? (
           <div className="flex items-center gap-3">
@@ -89,7 +97,7 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
           return (
             <button
               key={item.label}
-              onClick={() => navigate(item.path)}
+              onClick={() => handleNav(item.path)}
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 isActive
@@ -113,7 +121,7 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
       <div className="p-3 space-y-2 border-t border-border">
         {bottomAction && (
           <Button
-            onClick={bottomAction.onClick}
+            onClick={() => { bottomAction.onClick(); onNavigate?.(); }}
             className="w-full bg-brand-red text-white hover:bg-brand-red/90 font-semibold"
           >
             {bottomAction.icon}
@@ -128,6 +136,32 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
           Sign Out
         </button>
       </div>
+    </div>
+  );
+};
+
+export const DashboardSidebar = (props: DashboardSidebarProps) => {
+  const isMobile = useIsMobile();
+  const [open, setOpen] = useState(false);
+
+  if (isMobile) {
+    return (
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
+          <Button variant="ghost" size="icon" className="fixed top-3 left-3 z-50 lg:hidden bg-card/80 backdrop-blur-sm shadow-sm border border-border">
+            <Menu className="w-5 h-5" />
+          </Button>
+        </SheetTrigger>
+        <SheetContent side="left" className="p-0 w-[280px]">
+          <SidebarContent {...props} onNavigate={() => setOpen(false)} />
+        </SheetContent>
+      </Sheet>
+    );
+  }
+
+  return (
+    <aside className="w-64 min-h-screen fixed left-0 top-0 z-40 shadow-sm hidden lg:block">
+      <SidebarContent {...props} />
     </aside>
   );
 };
