@@ -7,7 +7,8 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
-  Ban, Eye, TrendingUp, Star, Sparkles, Megaphone
+  Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
+  Plus, Trash2, TestTube, ExternalLink
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -401,6 +402,179 @@ const AdminNotifications = () => {
   );
 };
 
+const AdminWhatsApp = () => {
+  const [whatsappNumber, setWhatsappNumber] = useState('');
+  const [quickReplies, setQuickReplies] = useState<string[]>([]);
+  const [newReply, setNewReply] = useState('');
+  const [leads, setLeads] = useState<any[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [loadingLeads, setLoadingLeads] = useState(true);
+
+  useEffect(() => {
+    const fetchAll = async () => {
+      const { data: settings } = await supabase
+        .from('platform_settings')
+        .select('key, value')
+        .in('key', ['whatsapp_number', 'whatsapp_quick_replies']);
+      if (settings) {
+        for (const row of settings) {
+          if (row.key === 'whatsapp_number') setWhatsappNumber(row.value);
+          if (row.key === 'whatsapp_quick_replies') {
+            try { setQuickReplies(JSON.parse(row.value)); } catch {}
+          }
+        }
+      }
+      const { data: leadsData } = await supabase
+        .from('whatsapp_leads' as any)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(50) as { data: any[] | null };
+      setLeads(leadsData || []);
+      setLoadingLeads(false);
+    };
+    fetchAll();
+  }, []);
+
+  const saveNumber = async () => {
+    setSaving(true);
+    const { error } = await supabase
+      .from('platform_settings')
+      .update({ value: whatsappNumber.trim(), updated_at: new Date().toISOString() } as any)
+      .eq('key', 'whatsapp_number');
+    setSaving(false);
+    if (error) toast.error('Failed to save'); else toast.success('WhatsApp number updated');
+  };
+
+  const saveReplies = async (replies: string[]) => {
+    const { error } = await supabase
+      .from('platform_settings')
+      .update({ value: JSON.stringify(replies), updated_at: new Date().toISOString() } as any)
+      .eq('key', 'whatsapp_quick_replies');
+    if (error) toast.error('Failed to save replies'); else toast.success('Quick replies updated');
+  };
+
+  const addReply = () => {
+    if (!newReply.trim()) return;
+    const updated = [...quickReplies, newReply.trim()];
+    setQuickReplies(updated);
+    setNewReply('');
+    saveReplies(updated);
+  };
+
+  const removeReply = (index: number) => {
+    const updated = quickReplies.filter((_, i) => i !== index);
+    setQuickReplies(updated);
+    saveReplies(updated);
+  };
+
+  const testWhatsApp = () => {
+    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, '');
+    window.open(`https://wa.me/${cleanNumber}?text=${encodeURIComponent('Test message from R8Estate admin')}`, '_blank');
+  };
+
+  return (
+    <div className="space-y-8">
+      <div>
+        <h2 className="text-2xl font-bold text-foreground mb-1">WhatsApp Settings</h2>
+        <p className="text-sm text-muted-foreground mb-6">Configure the WhatsApp chat widget and view collected leads.</p>
+      </div>
+
+      {/* WhatsApp Number */}
+      <div className="max-w-lg">
+        <h3 className="text-sm font-semibold text-foreground mb-3">WhatsApp Number</h3>
+        <div className="flex gap-2">
+          <input
+            type="tel"
+            value={whatsappNumber}
+            onChange={(e) => setWhatsappNumber(e.target.value)}
+            placeholder="+201XXXXXXXXX"
+            className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <Button onClick={saveNumber} disabled={saving} size="sm">
+            {saving ? 'Saving...' : 'Save'}
+          </Button>
+          <Button onClick={testWhatsApp} variant="outline" size="sm">
+            <TestTube className="w-3.5 h-3.5 me-1" /> Test
+          </Button>
+        </div>
+      </div>
+
+      {/* Quick Replies */}
+      <div className="max-w-lg">
+        <h3 className="text-sm font-semibold text-foreground mb-3">Quick Replies</h3>
+        <div className="space-y-2 mb-3">
+          {quickReplies.map((reply, i) => (
+            <div key={i} className="flex items-center gap-2 bg-card border border-border rounded-lg px-3 py-2">
+              <span className="text-sm text-foreground flex-1">{reply}</span>
+              <button onClick={() => removeReply(i)} className="text-muted-foreground hover:text-brand-red transition-colors">
+                <Trash2 className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ))}
+        </div>
+        <div className="flex gap-2">
+          <input
+            value={newReply}
+            onChange={(e) => setNewReply(e.target.value)}
+            placeholder="Add a quick reply..."
+            className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+            onKeyDown={(e) => e.key === 'Enter' && addReply()}
+            maxLength={200}
+          />
+          <Button onClick={addReply} size="sm" variant="outline">
+            <Plus className="w-3.5 h-3.5 me-1" /> Add
+          </Button>
+        </div>
+      </div>
+
+      {/* Leads */}
+      <div>
+        <h3 className="text-sm font-semibold text-foreground mb-3">Collected Leads ({leads.length})</h3>
+        {loadingLeads ? (
+          <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin" /> Loading...</div>
+        ) : leads.length === 0 ? (
+          <p className="text-sm text-muted-foreground">No leads collected yet.</p>
+        ) : (
+          <div className="bg-card border border-border rounded-xl overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-border bg-secondary/50">
+                    <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Name</th>
+                    <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Phone</th>
+                    <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Message</th>
+                    <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Date</th>
+                    <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-border">
+                  {leads.map((lead: any) => (
+                    <tr key={lead.id} className="hover:bg-secondary/30 transition-colors">
+                      <td className="px-4 py-3 text-sm font-medium text-foreground">{lead.name}</td>
+                      <td className="px-4 py-3 text-sm text-foreground">{lead.phone}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground max-w-[200px] truncate">{lead.message || '-'}</td>
+                      <td className="px-4 py-3 text-xs text-muted-foreground">{new Date(lead.created_at).toLocaleDateString()}</td>
+                      <td className="px-4 py-3 text-end">
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => window.open(`https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}`, '_blank')}
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                        </Button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
@@ -447,6 +621,7 @@ const AdminDashboard = () => {
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
     { icon: <Sparkles className="w-4 h-4" />, label: 'Spotlight', path: '/admin/spotlight' },
     { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
+    { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
@@ -467,6 +642,7 @@ const AdminDashboard = () => {
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="spotlight" element={<AdminSpotlight />} />
         <Route path="notifications" element={<AdminNotifications />} />
+        <Route path="whatsapp" element={<AdminWhatsApp />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>

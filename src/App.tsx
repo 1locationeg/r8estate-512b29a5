@@ -16,6 +16,7 @@ import AdminDashboard from "./pages/AdminDashboard";
 import DeveloperDirectory from "./pages/DeveloperDirectory";
 import NotFound from "./pages/NotFound";
 import Install from "./pages/Install";
+import { FloatingChatFAB } from "./components/FloatingChatFAB";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +42,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             <PWAInstallBanner />
+            <FloatingChatFAB />
           </BrowserRouter>
         </GuestTimerProvider>
       </AuthProvider>
