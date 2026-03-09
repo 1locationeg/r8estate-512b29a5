@@ -28,6 +28,9 @@ interface DashboardSidebarProps {
     label: string;
     onClick: () => void;
   };
+  /** Optional controlled mobile drawer state (recommended) */
+  mobileOpen?: boolean;
+  onMobileOpenChange?: (open: boolean) => void;
 }
 
 const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
@@ -49,7 +52,10 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
     <div className="h-full flex flex-col bg-card text-foreground border-e border-border">
       {/* Brand */}
       <div className="p-4 border-b border-border">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}>
+        <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}
+          role="button" tabIndex={0}
+          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
+        >
           <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto" />
           <div>
             <h1 className="text-lg font-bold leading-tight">
@@ -81,9 +87,12 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            <p className="text-sm font-bold text-foreground">{profile?.full_name || 'User'}</p>
+            <p className="text-sm font-bold text-foreground truncate max-w-full">{profile?.full_name || 'User'}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">
-              Member since {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently'}
+              Member since{' '}
+              {profile?.created_at
+                ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+                : 'Recently'}
               <span className="inline-block ms-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
             </p>
           </div>
@@ -99,29 +108,29 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
               key={item.label}
               onClick={() => handleNav(item.path)}
               className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
+                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all',
                 isActive
                   ? 'bg-brand-red/10 text-brand-red'
                   : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
               )}
             >
-              <span className={cn(
-                'flex-shrink-0',
-                isActive ? 'text-brand-red' : 'text-muted-foreground'
-              )}>
+              <span className={cn('flex-shrink-0', isActive ? 'text-brand-red' : 'text-muted-foreground')}>
                 {item.icon}
               </span>
-              {item.label}
+              <span className="truncate">{item.label}</span>
             </button>
           );
         })}
       </nav>
 
       {/* Bottom */}
-      <div className="p-3 space-y-2 border-t border-border">
+      <div className="p-3 space-y-2 border-t border-border safe-bottom">
         {bottomAction && (
           <Button
-            onClick={() => { bottomAction.onClick(); onNavigate?.(); }}
+            onClick={() => {
+              bottomAction.onClick();
+              onNavigate?.();
+            }}
             className="w-full bg-brand-red text-white hover:bg-brand-red/90 font-semibold"
           >
             {bottomAction.icon}
@@ -142,25 +151,37 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
 export const DashboardSidebar = (props: DashboardSidebarProps) => {
   const isMobile = useIsMobile();
-  const [open, setOpen] = useState(false);
+  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+
+  const isControlled = typeof props.mobileOpen === 'boolean' && typeof props.onMobileOpenChange === 'function';
+  const sheetOpen = isControlled ? props.mobileOpen : uncontrolledOpen;
+  const setSheetOpen = isControlled ? props.onMobileOpenChange! : setUncontrolledOpen;
 
   if (isMobile) {
     return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          <Button variant="ghost" size="icon" className="fixed top-3 left-3 z-50 lg:hidden bg-card/80 backdrop-blur-sm shadow-sm border border-border">
-            <Menu className="w-5 h-5" />
-          </Button>
-        </SheetTrigger>
-        <SheetContent side="left" className="p-0 w-[280px]">
-          <SidebarContent {...props} onNavigate={() => setOpen(false)} />
+      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
+        {!isControlled && (
+          <SheetTrigger asChild>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="fixed left-3 z-50 lg:hidden bg-card/80 backdrop-blur-sm shadow-sm border border-border touch-target"
+              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
+              aria-label="Open menu"
+            >
+              <Menu className="w-5 h-5" />
+            </Button>
+          </SheetTrigger>
+        )}
+        <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
+          <SidebarContent {...props} onNavigate={() => setSheetOpen(false)} />
         </SheetContent>
       </Sheet>
     );
   }
 
   return (
-    <aside className="w-64 min-h-screen fixed left-0 top-0 z-40 shadow-sm hidden lg:block">
+    <aside className="w-64 min-h-screen fixed left-0 top-0 z-40 shadow-sm">
       <SidebarContent {...props} />
     </aside>
   );
