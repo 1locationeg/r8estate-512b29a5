@@ -6,7 +6,7 @@ import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
-import { supabase } from "@/integrations/supabase/client";
+
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
