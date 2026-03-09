@@ -344,8 +344,23 @@ const BuyerProfile = () => {
                   </AvatarFallback>
                 </Avatar>
               </div>
-              <button className="absolute bottom-1 right-1 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent/90 transition-colors">
-                <Camera className="w-4 h-4 text-accent-foreground" />
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={handleAvatarUpload}
+              />
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                disabled={uploadingAvatar}
+                className="absolute bottom-1 right-1 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
+              >
+                {uploadingAvatar ? (
+                  <Loader2 className="w-4 h-4 text-accent-foreground animate-spin" />
+                ) : (
+                  <Camera className="w-4 h-4 text-accent-foreground" />
+                )}
               </button>
             </div>
 
