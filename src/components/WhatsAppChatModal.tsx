@@ -3,18 +3,23 @@ import { Phone, Send, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 interface WhatsAppChatModalProps {
   onClose: () => void;
 }
 
 export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
+  const { t, i18n } = useTranslation();
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [selectedReply, setSelectedReply] = useState("");
-  const [quickReplies, setQuickReplies] = useState<string[]>([]);
+  const [dbQuickReplies, setDbQuickReplies] = useState<string[] | null>(null);
   const [whatsappNumber, setWhatsappNumber] = useState("");
   const [sending, setSending] = useState(false);
+
+  // Get quick replies: prefer DB values, fallback to i18n translations
+  const quickReplies = dbQuickReplies ?? (t("whatsapp.quickReplies", { returnObjects: true }) as string[]);
 
   useEffect(() => {
     const fetchSettings = async () => {
@@ -26,7 +31,7 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
         for (const row of data) {
           if (row.key === "whatsapp_number") setWhatsappNumber(row.value);
           if (row.key === "whatsapp_quick_replies") {
-            try { setQuickReplies(JSON.parse(row.value)); } catch { /* ignore */ }
+            try { setDbQuickReplies(JSON.parse(row.value)); } catch { /* ignore */ }
           }
         }
       }
@@ -36,18 +41,17 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
 
   const handleSubmit = async () => {
     if (!name.trim() || !phone.trim()) {
-      toast.error("Please enter your name and phone number");
+      toast.error(t("whatsapp.namePhoneRequired"));
       return;
     }
     if (phone.trim().length < 8) {
-      toast.error("Please enter a valid phone number");
+      toast.error(t("whatsapp.invalidPhone"));
       return;
     }
 
     setSending(true);
     const message = selectedReply || "Hello, I'd like to inquire";
 
-    // Save lead to database
     const { error } = await supabase
       .from("whatsapp_leads" as any)
       .insert({ name: name.trim(), phone: phone.trim(), message } as any);
@@ -55,17 +59,16 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
     setSending(false);
 
     if (error) {
-      toast.error("Something went wrong, please try again");
+      toast.error(t("whatsapp.error"));
       return;
     }
 
-    // Open WhatsApp
     const cleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
     const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(
-      `Hi, my name is ${name.trim()}. ${message}`
+      `${i18n.language === "ar" ? "مرحبًا، اسمي" : "Hi, my name is"} ${name.trim()}. ${message}`
     )}`;
     window.open(whatsappUrl, "_blank");
-    toast.success("Redirecting to WhatsApp...");
+    toast.success(t("whatsapp.redirecting"));
     onClose();
   };
 
@@ -75,20 +78,20 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
       <div className="bg-[#25D366] px-4 py-3 flex items-center gap-3">
         <Phone className="w-5 h-5 text-white" />
         <div>
-          <p className="text-sm font-bold text-white">WhatsApp Chat</p>
-          <p className="text-[10px] text-white/80">We typically reply within minutes</p>
+          <p className="text-sm font-bold text-white">{t("whatsapp.chatTitle")}</p>
+          <p className="text-[10px] text-white/80">{t("whatsapp.replyTime")}</p>
         </div>
       </div>
 
       <div className="p-4 space-y-3">
         {/* Name */}
         <div>
-          <label className="block text-xs font-medium text-foreground mb-1">Your Name *</label>
+          <label className="block text-xs font-medium text-foreground mb-1">{t("whatsapp.nameLabel")}</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
+            placeholder={t("whatsapp.namePlaceholder")}
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#25D366]/30"
             maxLength={100}
           />
@@ -96,21 +99,21 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
 
         {/* Phone */}
         <div>
-          <label className="block text-xs font-medium text-foreground mb-1">Phone Number *</label>
+          <label className="block text-xs font-medium text-foreground mb-1">{t("whatsapp.phoneLabel")}</label>
           <input
             type="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
-            placeholder="+20 1XX XXX XXXX"
+            placeholder={t("whatsapp.phonePlaceholder")}
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#25D366]/30"
             maxLength={20}
           />
         </div>
 
         {/* Quick replies */}
-        {quickReplies.length > 0 && (
+        {Array.isArray(quickReplies) && quickReplies.length > 0 && (
           <div>
-            <label className="block text-xs font-medium text-foreground mb-1.5">How can we help?</label>
+            <label className="block text-xs font-medium text-foreground mb-1.5">{t("whatsapp.howCanWeHelp")}</label>
             <div className="flex flex-wrap gap-1.5">
               {quickReplies.map((reply) => (
                 <button
@@ -139,7 +142,7 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
           ) : (
             <Send className="w-4 h-4 me-2" />
           )}
-          Start WhatsApp Chat
+          {t("whatsapp.startChat")}
         </Button>
       </div>
     </div>
