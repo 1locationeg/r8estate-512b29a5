@@ -20,6 +20,7 @@ import { FloatingChatFAB } from "./components/FloatingChatFAB";
 
 const queryClient = new QueryClient();
 
+// Main App component with proper provider hierarchy
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
