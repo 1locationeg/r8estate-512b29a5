@@ -738,6 +738,7 @@ const AdminDashboard = () => {
     { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
     { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
+    { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
