@@ -42,6 +42,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
             <PWAInstallBanner />
+            <FloatingChatFAB />
           </BrowserRouter>
         </GuestTimerProvider>
       </AuthProvider>
