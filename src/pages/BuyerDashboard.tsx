@@ -241,7 +241,7 @@ const BuyerProfile = () => {
 
   // Mock engagement data
   const engagementScore = 78;
-  const memberSince = 'Mar 2024';
+  const memberSince = profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Mar 2024';
   
   const activityStats = [
     { label: 'Reviews Written', value: 3, icon: Star, color: 'text-accent' },
