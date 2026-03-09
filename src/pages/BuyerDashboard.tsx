@@ -644,8 +644,6 @@ const BuyerDashboard = () => {
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/buyer/settings' },
   ];
 
-  // Lazy import to avoid circular deps
-  const { NotificationsPage } = require('@/components/NotificationsPage');
 
   return (
     <DashboardLayout
