@@ -659,7 +659,7 @@ const BuyerDashboard = () => {
         <Route path="reviews" element={<BuyerReviews />} />
         <Route path="saved" element={<BuyerSaved />} />
         <Route path="notifications" element={<NotificationsPage />} />
-        <Route path="settings" element={<BuyerSettings />} />
+        <Route path="settings" element={<BuyerProfile />} />
       </Routes>
     </DashboardLayout>
   );
