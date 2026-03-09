@@ -22,6 +22,7 @@ interface NavGroup {
 
 interface DashboardSidebarProps {
   navItems: NavItem[];
+  navGroups?: NavGroup[];
   portalLabel: string;
   portalColor?: string;
   companyInfo?: {
