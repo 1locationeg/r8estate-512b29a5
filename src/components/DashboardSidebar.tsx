@@ -3,8 +3,9 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import logoIcon from '@/assets/logo-icon.png';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut, Menu, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useState } from 'react';
@@ -15,8 +16,14 @@ interface NavItem {
   path: string;
 }
 
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
 interface DashboardSidebarProps {
   navItems: NavItem[];
+  navGroups?: NavGroup[];
   portalLabel: string;
   portalColor?: string;
   companyInfo?: {
@@ -33,7 +40,7 @@ interface DashboardSidebarProps {
   onMobileOpenChange?: (open: boolean) => void;
 }
 
-const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
+const SidebarContent = ({ navItems, navGroups, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
@@ -100,27 +107,63 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
-        {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
-          return (
-            <button
-              key={item.label}
-              onClick={() => handleNav(item.path)}
-              className={cn(
-                'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all',
-                isActive
-                  ? 'bg-brand-red/10 text-brand-red'
-                  : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
-              )}
-            >
-              <span className={cn('flex-shrink-0', isActive ? 'text-brand-red' : 'text-muted-foreground')}>
-                {item.icon}
-              </span>
-              <span className="truncate">{item.label}</span>
-            </button>
-          );
-        })}
+      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+        {navGroups && navGroups.length > 0 ? (
+          navGroups.map((group) => {
+            const groupHasActive = group.items.some((item) => location.pathname === item.path);
+            return (
+              <Collapsible key={group.title} defaultOpen={groupHasActive}>
+                <CollapsibleTrigger className="w-full flex items-center justify-between px-3 py-2 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors">
+                  {group.title}
+                  <ChevronDown className="w-3.5 h-3.5 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+                </CollapsibleTrigger>
+                <CollapsibleContent className="space-y-0.5">
+                  {group.items.map((item) => {
+                    const isActive = location.pathname === item.path;
+                    return (
+                      <button
+                        key={item.label}
+                        onClick={() => handleNav(item.path)}
+                        className={cn(
+                          'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
+                          isActive
+                            ? 'bg-brand-red/10 text-brand-red'
+                            : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
+                        )}
+                      >
+                        <span className={cn('flex-shrink-0', isActive ? 'text-brand-red' : 'text-muted-foreground')}>
+                          {item.icon}
+                        </span>
+                        <span className="truncate">{item.label}</span>
+                      </button>
+                    );
+                  })}
+                </CollapsibleContent>
+              </Collapsible>
+            );
+          })
+        ) : (
+          navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+            return (
+              <button
+                key={item.label}
+                onClick={() => handleNav(item.path)}
+                className={cn(
+                  'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-[13px] font-medium transition-all',
+                  isActive
+                    ? 'bg-brand-red/10 text-brand-red'
+                    : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
+                )}
+              >
+                <span className={cn('flex-shrink-0', isActive ? 'text-brand-red' : 'text-muted-foreground')}>
+                  {item.icon}
+                </span>
+                <span className="truncate">{item.label}</span>
+              </button>
+            );
+          })
+        )}
       </nav>
 
       {/* Bottom */}
