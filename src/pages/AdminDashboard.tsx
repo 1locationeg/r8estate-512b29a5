@@ -760,6 +760,7 @@ const AdminDashboard = () => {
         <Route path="notifications" element={<AdminNotifications />} />
         <Route path="whatsapp" element={<AdminWhatsApp />} />
         <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="seo" element={<AdminSEO />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>
