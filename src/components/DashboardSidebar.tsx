@@ -15,6 +15,11 @@ interface NavItem {
   path: string;
 }
 
+interface NavGroup {
+  title: string;
+  items: NavItem[];
+}
+
 interface DashboardSidebarProps {
   navItems: NavItem[];
   portalLabel: string;
