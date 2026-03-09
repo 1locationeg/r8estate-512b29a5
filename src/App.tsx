@@ -4,6 +4,9 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { GuestTimerProvider } from "@/contexts/GuestTimerContext";
+import { GuestTimerBanner } from "@/components/GuestTimerBanner";
+import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -20,22 +23,26 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/buyer/*" element={<BuyerDashboard />} />
-            <Route path="/developer/*" element={<DeveloperDashboard />} />
-            <Route path="/admin/*" element={<AdminDashboard />} />
-            <Route path="/directory" element={<DeveloperDirectory />} />
-            <Route path="/install" element={<Install />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <PWAInstallBanner />
-        </BrowserRouter>
+        <GuestTimerProvider>
+          <GuestTimerBanner />
+          <GuestTimerExpiredModal />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/buyer/*" element={<BuyerDashboard />} />
+              <Route path="/developer/*" element={<DeveloperDashboard />} />
+              <Route path="/admin/*" element={<AdminDashboard />} />
+              <Route path="/directory" element={<DeveloperDirectory />} />
+              <Route path="/install" element={<Install />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <PWAInstallBanner />
+          </BrowserRouter>
+        </GuestTimerProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
