@@ -23,7 +23,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
               variant="ghost"
               size="icon"
               onClick={onMenuToggle}
-              className="touch-target lg:hidden"
+              className="touch-target"
               aria-label="Open menu"
             >
               <Menu className="w-5 h-5" />
