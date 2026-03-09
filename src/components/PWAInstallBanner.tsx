@@ -69,7 +69,7 @@ export const PWAInstallBanner = () => {
   if (!showIOS && !deferredPrompt) return null;
 
   return (
-    <div className="fixed bottom-0 inset-x-0 z-50 safe-bottom animate-in slide-in-from-bottom duration-500">
+    <div className="fixed bottom-0 inset-x-0 z-50 safe-bottom safe-x animate-in slide-in-from-bottom duration-500">
       <div className="bg-primary text-primary-foreground px-4 py-4 shadow-2xl rounded-t-2xl mx-2 mb-0 md:mx-auto md:max-w-md">
         {/* Header row */}
         <div className="flex items-center gap-3 mb-2">
