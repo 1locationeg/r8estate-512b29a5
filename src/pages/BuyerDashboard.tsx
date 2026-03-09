@@ -11,7 +11,6 @@ import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -193,7 +192,6 @@ const BuyerSaved = () => {
 };
 
 const BuyerProfile = () => {
-  const { t } = useTranslation();
   const { user, profile, refreshProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
