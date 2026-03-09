@@ -29,6 +29,7 @@ const App = () => (
         <GuestTimerProvider>
           <Toaster />
           <Sonner />
+          <DynamicMeta />
           <BrowserRouter>
             <GuestTimerBanner />
             <GuestTimerExpiredModal />
