@@ -26,7 +26,8 @@ const Auth = () => {
   const { toast } = useToast();
   
   const initialType = searchParams.get('type') === 'business' ? 'business' : 'buyer';
-  const [mode, setMode] = useState<'signin' | 'signup'>('signin');
+  const initialMode = searchParams.get('mode') === 'signin' ? 'signin' : 'signup';
+  const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [accountType, setAccountType] = useState<AccountType>(initialType);
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState('');
