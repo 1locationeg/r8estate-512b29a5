@@ -24,11 +24,11 @@ const App = () => (
     <TooltipProvider>
       <AuthProvider>
         <GuestTimerProvider>
-          <GuestTimerBanner />
           <GuestTimerExpiredModal />
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <GuestTimerBanner />
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
