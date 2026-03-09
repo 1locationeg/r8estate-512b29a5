@@ -2,12 +2,10 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import logoIcon from '@/assets/logo-icon.png';
-import { LogOut, Menu } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useState } from 'react';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -28,7 +26,6 @@ interface DashboardSidebarProps {
     label: string;
     onClick: () => void;
   };
-  /** Optional controlled mobile drawer state (recommended) */
   mobileOpen?: boolean;
   onMobileOpenChange?: (open: boolean) => void;
 }
@@ -89,11 +86,11 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
             </Avatar>
             <p className="text-sm font-bold text-foreground truncate max-w-full">{profile?.full_name || 'User'}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">
+              <span className="inline-block me-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
               Member since{' '}
               {profile?.created_at
                 ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
                 : 'Recently'}
-              <span className="inline-block ms-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
             </p>
           </div>
         )}
@@ -150,39 +147,14 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 };
 
 export const DashboardSidebar = (props: DashboardSidebarProps) => {
-  const isMobile = useIsMobile();
-  const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
-
   const isControlled = typeof props.mobileOpen === 'boolean' && typeof props.onMobileOpenChange === 'function';
-  const sheetOpen = isControlled ? props.mobileOpen : uncontrolledOpen;
-  const setSheetOpen = isControlled ? props.onMobileOpenChange! : setUncontrolledOpen;
-
-  if (isMobile) {
-    return (
-      <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
-        {!isControlled && (
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="fixed left-3 z-50 lg:hidden bg-card/80 backdrop-blur-sm shadow-sm border border-border touch-target"
-              style={{ top: 'calc(env(safe-area-inset-top, 0px) + 12px)' }}
-              aria-label="Open menu"
-            >
-              <Menu className="w-5 h-5" />
-            </Button>
-          </SheetTrigger>
-        )}
-        <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
-          <SidebarContent {...props} onNavigate={() => setSheetOpen(false)} />
-        </SheetContent>
-      </Sheet>
-    );
-  }
+  if (!isControlled) return null;
 
   return (
-    <aside className="w-64 min-h-screen fixed left-0 top-0 z-40 shadow-sm">
-      <SidebarContent {...props} />
-    </aside>
+    <Sheet open={props.mobileOpen} onOpenChange={props.onMobileOpenChange}>
+      <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
+        <SidebarContent {...props} onNavigate={() => props.onMobileOpenChange!(false)} />
+      </SheetContent>
+    </Sheet>
   );
 };
