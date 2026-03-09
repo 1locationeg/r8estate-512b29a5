@@ -23,22 +23,26 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/buyer/*" element={<BuyerDashboard />} />
-            <Route path="/developer/*" element={<DeveloperDashboard />} />
-            <Route path="/admin/*" element={<AdminDashboard />} />
-            <Route path="/directory" element={<DeveloperDirectory />} />
-            <Route path="/install" element={<Install />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-          <PWAInstallBanner />
-        </BrowserRouter>
+        <GuestTimerProvider>
+          <GuestTimerBanner />
+          <GuestTimerExpiredModal />
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/buyer/*" element={<BuyerDashboard />} />
+              <Route path="/developer/*" element={<DeveloperDashboard />} />
+              <Route path="/admin/*" element={<AdminDashboard />} />
+              <Route path="/directory" element={<DeveloperDirectory />} />
+              <Route path="/install" element={<Install />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+            <PWAInstallBanner />
+          </BrowserRouter>
+        </GuestTimerProvider>
       </AuthProvider>
     </TooltipProvider>
   </QueryClientProvider>
