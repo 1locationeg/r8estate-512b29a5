@@ -192,28 +192,433 @@ const BuyerSaved = () => {
   );
 };
 
-const BuyerSettings = () => {
-  const { profile } = useAuth();
+const BuyerProfile = () => {
+  const { t } = useTranslation();
+  const { user, profile, refreshProfile } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [formData, setFormData] = useState({
+    full_name: profile?.full_name || '',
+    phone_number: profile?.phone_number || '',
+    buyer_type: profile?.buyer_type || '',
+    budget_range: profile?.budget_range || '',
+  });
+
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        full_name: profile.full_name || '',
+        phone_number: profile.phone_number || '',
+        buyer_type: profile.buyer_type || '',
+        budget_range: profile.budget_range || '',
+      });
+    }
+  }, [profile]);
+
+  const handleSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    const { error } = await supabase
+      .from('profiles')
+      .update({
+        full_name: formData.full_name,
+        phone_number: formData.phone_number,
+        buyer_type: formData.buyer_type,
+        budget_range: formData.budget_range,
+        updated_at: new Date().toISOString(),
+      })
+      .eq('user_id', user.id);
+    
+    setSaving(false);
+    if (error) {
+      toast.error('Failed to update profile');
+    } else {
+      toast.success('Profile updated successfully!');
+      setIsEditing(false);
+      refreshProfile();
+    }
+  };
+
+  // Mock engagement data
+  const engagementScore = 78;
+  const memberSince = profile?.created_at ? new Date(profile.created_at as any).toLocaleDateString('en-US', { month: 'short', year: 'numeric' }) : 'Jan 2024';
+  
+  const activityStats = [
+    { label: 'Reviews Written', value: 3, icon: Star, color: 'text-accent' },
+    { label: 'Developers Viewed', value: 24, icon: Eye, color: 'text-primary' },
+    { label: 'Reports Unlocked', value: 8, icon: FileText, color: 'text-trust-excellent' },
+    { label: 'Saved Projects', value: 12, icon: Heart, color: 'text-brand-red' },
+  ];
+
+  const engagementCategories = [
+    { label: 'Profile Completion', value: profile?.buyer_type ? 85 : 45 },
+    { label: 'Review Activity', value: 60 },
+    { label: 'Platform Engagement', value: 92 },
+    { label: 'Verification Status', value: 100 },
+  ];
+
+  const badges = [
+    { label: 'Verified Email', icon: Mail, earned: true },
+    { label: 'First Review', icon: Star, earned: true },
+    { label: 'Active Explorer', icon: Search, earned: true },
+    { label: 'Trusted Buyer', icon: Shield, earned: false },
+    { label: 'Power User', icon: Sparkles, earned: false },
+  ];
+
+  const buyerTypes = ['End User', 'Real Estate Agent', 'Investor', 'Construction Professional'];
+  const budgetRanges = ['Under 1M EGP', '1-3M EGP', '3-5M EGP', '5-10M EGP', '10M+ EGP'];
+
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-foreground mb-4">Settings</h2>
-      <div className="max-w-lg space-y-6">
-        <div className="bg-card border border-border rounded-xl p-5">
-          <h3 className="font-semibold text-foreground mb-4">Profile Information</h3>
-          <div className="space-y-3">
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Full Name</label>
-              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={profile?.full_name || ''} />
+    <div className="space-y-6">
+      {/* Hero Profile Card */}
+      <div className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/80 rounded-2xl overflow-hidden">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+        </div>
+        
+        <div className="relative p-6 md:p-8">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+            {/* Avatar with edit overlay */}
+            <div className="relative group">
+              <div className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-white/20 overflow-hidden bg-white/10 backdrop-blur-sm">
+                <Avatar className="w-full h-full">
+                  <AvatarImage src={profile?.avatar_url || ''} alt={profile?.full_name || 'User'} />
+                  <AvatarFallback className="text-3xl bg-accent text-accent-foreground font-bold">
+                    {profile?.full_name?.split(' ').map(n => n[0]).join('').toUpperCase() || 'U'}
+                  </AvatarFallback>
+                </Avatar>
+              </div>
+              <button className="absolute bottom-1 right-1 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent/90 transition-colors">
+                <Camera className="w-4 h-4 text-accent-foreground" />
+              </button>
             </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Phone Number</label>
-              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={profile?.phone_number || ''} />
+
+            {/* User Info */}
+            <div className="flex-1 text-center md:text-start">
+              <div className="flex items-center justify-center md:justify-start gap-2 mb-1">
+                <h1 className="text-2xl md:text-3xl font-bold text-white">
+                  {profile?.full_name || 'Anonymous User'}
+                </h1>
+                <BadgeCheck className="w-6 h-6 text-accent" />
+              </div>
+              <p className="text-white/70 text-sm mb-3">{user?.email}</p>
+              
+              <div className="flex flex-wrap items-center justify-center md:justify-start gap-2 mb-4">
+                <Badge variant="secondary" className="bg-white/15 text-white border-0 backdrop-blur-sm">
+                  <Calendar className="w-3 h-3 me-1" />
+                  Member since {memberSince}
+                </Badge>
+                {profile?.buyer_type && (
+                  <Badge variant="secondary" className="bg-accent/20 text-accent border-0">
+                    <User className="w-3 h-3 me-1" />
+                    {profile.buyer_type}
+                  </Badge>
+                )}
+              </div>
+
+              {/* Quick stats row */}
+              <div className="flex items-center justify-center md:justify-start gap-4 text-white/80 text-sm">
+                <span className="flex items-center gap-1">
+                  <Star className="w-4 h-4 text-accent" />
+                  <strong className="text-white">3</strong> reviews
+                </span>
+                <span className="flex items-center gap-1">
+                  <Heart className="w-4 h-4 text-brand-red" />
+                  <strong className="text-white">12</strong> saved
+                </span>
+                <span className="flex items-center gap-1">
+                  <Activity className="w-4 h-4 text-trust-excellent" />
+                  <strong className="text-white">{engagementScore}%</strong> active
+                </span>
+              </div>
             </div>
-            <div>
-              <label className="text-xs font-medium text-muted-foreground">Budget Range</label>
-              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={profile?.budget_range || ''} />
+
+            {/* Engagement Score Ring */}
+            <div className="flex flex-col items-center">
+              <div className="relative w-24 h-24 md:w-28 md:h-28">
+                <svg className="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle
+                    cx="50" cy="50" r="42"
+                    fill="none"
+                    stroke="rgba(255,255,255,0.1)"
+                    strokeWidth="8"
+                  />
+                  <circle
+                    cx="50" cy="50" r="42"
+                    fill="none"
+                    stroke="hsl(var(--accent))"
+                    strokeWidth="8"
+                    strokeLinecap="round"
+                    strokeDasharray={`${engagementScore * 2.64} 264`}
+                  />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-2xl md:text-3xl font-bold text-white">{engagementScore}</span>
+                  <span className="text-[10px] text-white/60 uppercase tracking-wide">Score</span>
+                </div>
+              </div>
+              <span className="text-xs text-white/70 mt-2">Engagement</span>
             </div>
-            <Button className="mt-2">Save Changes</Button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Left Column - Stats & Badges */}
+        <div className="space-y-6">
+          {/* Activity Stats */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Activity className="w-4 h-4 text-primary" />
+              Activity Overview
+            </h3>
+            <div className="grid grid-cols-2 gap-3">
+              {activityStats.map((stat) => (
+                <div key={stat.label} className="bg-secondary/50 rounded-lg p-3 text-center">
+                  <stat.icon className={`w-5 h-5 mx-auto mb-1 ${stat.color}`} />
+                  <div className="text-xl font-bold text-foreground">{stat.value}</div>
+                  <div className="text-[10px] text-muted-foreground">{stat.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Engagement Categories */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              Engagement Metrics
+            </h3>
+            <div className="space-y-4">
+              {engagementCategories.map((cat) => (
+                <div key={cat.label}>
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-sm text-foreground">{cat.label}</span>
+                    <span className={`text-sm font-semibold ${
+                      cat.value >= 80 ? 'text-trust-excellent' : 
+                      cat.value >= 50 ? 'text-accent' : 'text-brand-red'
+                    }`}>{cat.value}%</span>
+                  </div>
+                  <Progress 
+                    value={cat.value} 
+                    className="h-2"
+                  />
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Badges */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Award className="w-4 h-4 text-accent" />
+              Badges & Achievements
+            </h3>
+            <div className="space-y-2">
+              {badges.map((badge) => (
+                <div 
+                  key={badge.label} 
+                  className={`flex items-center gap-3 p-2.5 rounded-lg transition-colors ${
+                    badge.earned 
+                      ? 'bg-trust-excellent/10' 
+                      : 'bg-secondary/50 opacity-50'
+                  }`}
+                >
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    badge.earned ? 'bg-trust-excellent/20' : 'bg-muted'
+                  }`}>
+                    <badge.icon className={`w-4 h-4 ${badge.earned ? 'text-trust-excellent' : 'text-muted-foreground'}`} />
+                  </div>
+                  <span className={`text-sm font-medium ${badge.earned ? 'text-foreground' : 'text-muted-foreground'}`}>
+                    {badge.label}
+                  </span>
+                  {badge.earned && (
+                    <CheckCircle2 className="w-4 h-4 text-trust-excellent ms-auto" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column - Profile Form */}
+        <div className="lg:col-span-2 space-y-6">
+          {/* Profile Information */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <div className="flex items-center justify-between mb-5">
+              <h3 className="font-semibold text-foreground flex items-center gap-2">
+                <User className="w-4 h-4 text-primary" />
+                Profile Information
+              </h3>
+              <Button
+                variant={isEditing ? "default" : "outline"}
+                size="sm"
+                onClick={() => isEditing ? handleSave() : setIsEditing(true)}
+                disabled={saving}
+              >
+                {saving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isEditing ? (
+                  <>
+                    <Save className="w-4 h-4 me-1" />
+                    Save
+                  </>
+                ) : (
+                  <>
+                    <Edit3 className="w-4 h-4 me-1" />
+                    Edit
+                  </>
+                )}
+              </Button>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-4">
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <User className="w-3 h-3" /> Full Name
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.full_name}
+                  onChange={(e) => setFormData({ ...formData, full_name: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="Your full name"
+                />
+              </div>
+              
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <Mail className="w-3 h-3" /> Email Address
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary/50 rounded-lg text-sm text-muted-foreground border border-border cursor-not-allowed"
+                  value={user?.email || ''}
+                  disabled
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <Phone className="w-3 h-3" /> Phone Number
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.phone_number}
+                  onChange={(e) => setFormData({ ...formData, phone_number: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="+20 xxx xxx xxxx"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <User className="w-3 h-3" /> Buyer Type
+                </label>
+                <select
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.buyer_type}
+                  onChange={(e) => setFormData({ ...formData, buyer_type: e.target.value })}
+                  disabled={!isEditing}
+                >
+                  <option value="">Select type...</option>
+                  {buyerTypes.map((type) => (
+                    <option key={type} value={type}>{type}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="md:col-span-2">
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <Wallet className="w-3 h-3" /> Budget Range
+                </label>
+                <select
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.budget_range}
+                  onChange={(e) => setFormData({ ...formData, budget_range: e.target.value })}
+                  disabled={!isEditing}
+                >
+                  <option value="">Select budget range...</option>
+                  {budgetRanges.map((range) => (
+                    <option key={range} value={range}>{range}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {isEditing && (
+              <div className="mt-4 pt-4 border-t border-border flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setIsEditing(false)}>Cancel</Button>
+                <Button onClick={handleSave} disabled={saving}>
+                  {saving ? <Loader2 className="w-4 h-4 animate-spin me-1" /> : null}
+                  Save Changes
+                </Button>
+              </div>
+            )}
+          </div>
+
+          {/* Recent Activity */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <MessageSquare className="w-4 h-4 text-primary" />
+              Recent Activity
+            </h3>
+            <div className="space-y-3">
+              {reviews.slice(0, 3).map((r, i) => (
+                <div key={r.id} className="flex items-start gap-3 p-3 bg-secondary/30 rounded-lg">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                    i === 0 ? 'bg-accent/20' : 'bg-primary/10'
+                  }`}>
+                    <Star className={`w-4 h-4 ${i === 0 ? 'text-accent' : 'text-primary'}`} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground">
+                      {i === 0 ? 'Left a review' : i === 1 ? 'Saved a project' : 'Viewed developer'}
+                    </p>
+                    <p className="text-xs text-muted-foreground truncate">{r.project}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5">{r.date}</p>
+                  </div>
+                  {i === 0 && (
+                    <div className="flex items-center gap-0.5">
+                      {[...Array(5)].map((_, j) => (
+                        <Star key={j} className={`w-3 h-3 ${j < r.rating ? 'text-accent fill-accent' : 'text-muted'}`} />
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Account Security */}
+          <div className="bg-card border border-border rounded-xl p-5">
+            <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Shield className="w-4 h-4 text-primary" />
+              Account Security
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between p-3 bg-trust-excellent/5 border border-trust-excellent/20 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <CheckCircle2 className="w-5 h-5 text-trust-excellent" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Email Verified</p>
+                    <p className="text-xs text-muted-foreground">{user?.email}</p>
+                  </div>
+                </div>
+                <Badge variant="secondary" className="bg-trust-excellent/10 text-trust-excellent border-0">Active</Badge>
+              </div>
+              <div className="flex items-center justify-between p-3 bg-secondary/30 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <Shield className="w-5 h-5 text-muted-foreground" />
+                  <div>
+                    <p className="text-sm font-medium text-foreground">Two-Factor Auth</p>
+                    <p className="text-xs text-muted-foreground">Add extra security to your account</p>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm">Enable</Button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
