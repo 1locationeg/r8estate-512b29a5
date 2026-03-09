@@ -40,7 +40,7 @@ interface DashboardSidebarProps {
   onMobileOpenChange?: (open: boolean) => void;
 }
 
-const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
+const SidebarContent = ({ navItems, navGroups, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
