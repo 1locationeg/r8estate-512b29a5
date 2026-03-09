@@ -35,7 +35,7 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[350px] p-0">
+      <SheetContent side="right" className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-4 border-b border-border">

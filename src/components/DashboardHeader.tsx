@@ -15,7 +15,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
   const navigate = useNavigate();
 
   return (
-    <header className="h-16 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-30">
+    <header className="h-16 border-b border-border bg-card/80 backdrop-blur-sm flex items-center justify-between px-6 sticky top-0 z-30 safe-top">
       <div className="flex items-center gap-4">
         {onMenuToggle && (
           <Button variant="ghost" size="icon" onClick={onMenuToggle} className="lg:hidden">
