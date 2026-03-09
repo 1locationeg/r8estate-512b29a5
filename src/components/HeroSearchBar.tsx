@@ -324,8 +324,12 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
         const featuredItems = [...allItemsWithMeta]
           .sort((a, b) => calculateEngagementScore(b) - calculateEngagementScore(a))
           .slice(0, 12);
-        // Duplicate for seamless loop
-        const loopItems = [...featuredItems, ...featuredItems];
+
+        if (!featuredItems.length) return null;
+
+        // Triple-copy for seamless infinite marquee without visual gaps
+        const loopItems = [...featuredItems, ...featuredItems, ...featuredItems];
+
         return (
           <div className="mt-6 w-full overflow-hidden overflow-x-hidden">
             <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 text-center">
@@ -333,7 +337,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             </h3>
             <div className="relative">
               <div
-                className="flex gap-3 animate-[marquee_30s_linear_infinite] hover:[animation-play-state:paused] w-max"
+                className="flex gap-3 animate-[marquee_45s_linear_infinite] w-max"
               >
                 {loopItems.map((item, idx) => (
                   <button
