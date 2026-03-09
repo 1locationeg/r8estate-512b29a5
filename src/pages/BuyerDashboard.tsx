@@ -11,6 +11,7 @@ import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import { NotificationsPage } from '@/components/NotificationsPage';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -643,8 +644,6 @@ const BuyerDashboard = () => {
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/buyer/settings' },
   ];
 
-  // Lazy import to avoid circular deps
-  const { NotificationsPage } = require('@/components/NotificationsPage');
 
   return (
     <DashboardLayout
