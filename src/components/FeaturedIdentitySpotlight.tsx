@@ -6,7 +6,7 @@ import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
-import { supabase } from "@/integrations/supabase/client";
+
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
@@ -20,22 +20,17 @@ const trustCategories = [
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
-  const [featuredId, setFeaturedId] = useState("palm-hills");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   useEffect(() => {
-    const fetchFeatured = async () => {
-      const { data } = await supabase
-        .from('platform_settings' as any)
-        .select('value')
-        .eq('key', 'featured_developer_id')
-        .single() as { data: { value: string } | null };
-      if (data?.value) setFeaturedId(data.value);
-    };
-    fetchFeatured();
+    const interval = setInterval(() => {
+      setCurrentIndex((prev) => (prev + 1) % developers.length);
+      setShowAllReviews(false);
+    }, 8000);
+    return () => clearInterval(interval);
   }, []);
 
-  const developer = developers.find((d) => d.id === featuredId);
-  if (!developer) return null;
+  const developer = developers[currentIndex];
 
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
   const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
