@@ -14,6 +14,7 @@ interface Profile {
   interests: string[] | null;
   budget_range: string | null;
   avatar_url: string | null;
+  created_at: string | null;
 }
 
 interface AuthContextType {
