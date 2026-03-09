@@ -36,10 +36,12 @@ const Auth = () => {
   const [companyName, setCompanyName] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
 
-  // Sync accountType if query param changes
+  // Sync parameters if query params change
   useEffect(() => {
     const type = searchParams.get('type');
+    const mode = searchParams.get('mode');
     if (type === 'business') setAccountType('business');
+    if (mode === 'signin') setMode('signin');
   }, [searchParams]);
 
   // Redirect if already logged in
