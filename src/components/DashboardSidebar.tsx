@@ -38,23 +38,23 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
   };
 
   return (
-    <aside className="w-64 min-h-screen bg-primary text-primary-foreground flex flex-col fixed left-0 top-0 z-40">
+    <aside className="w-64 min-h-screen bg-card text-foreground flex flex-col fixed left-0 top-0 z-40 border-e border-border shadow-sm">
       {/* Brand */}
-      <div className="p-4 border-b border-primary-foreground/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/')}>
-          <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto" />
+          <img src={logoIcon} alt="R8ESTATE" className="h-12 w-auto" />
           <div>
             <h1 className="text-lg font-bold leading-tight">
               <span className="text-brand-red">R8</span>
-              <span className="text-primary-foreground">ESTATE</span>
+              <span className="text-primary">ESTATE</span>
             </h1>
-            <span className="text-[10px] text-primary-foreground/60 font-medium uppercase tracking-wider">{portalLabel}</span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{portalLabel}</span>
           </div>
         </div>
       </div>
 
-      {/* Profile Card */}
-      <div className="p-4 border-b border-primary-foreground/10">
+      {/* Profile Card - Centered like reference */}
+      <div className="px-4 py-5 border-b border-border">
         {companyInfo ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
@@ -62,43 +62,47 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold truncate">{companyInfo.name}</p>
-              <p className="text-[11px] text-primary-foreground/50 truncate">{companyInfo.subtitle}</p>
+              <p className="text-[11px] text-muted-foreground truncate">{companyInfo.subtitle}</p>
             </div>
-            <ChevronDown className="w-4 h-4 text-primary-foreground/40" />
           </div>
         ) : (
-          <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10 ring-2 ring-accent/30">
+          <div className="flex flex-col items-center text-center">
+            <Avatar className="h-16 w-16 ring-3 ring-brand-red/20 mb-2">
               <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-accent text-accent-foreground text-sm font-bold">
+              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
                 {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">{profile?.full_name || 'User'}</p>
-              <p className="text-[11px] text-primary-foreground/50 truncate">{user?.email}</p>
-            </div>
-            <ChevronDown className="w-4 h-4 text-primary-foreground/40" />
+            <p className="text-sm font-bold text-foreground">{profile?.full_name || 'User'}</p>
+            <p className="text-[11px] text-muted-foreground mt-0.5">
+              Member since {profile?.created_at ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }) : 'Recently'}
+              <span className="inline-block ms-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
+            </p>
           </div>
         )}
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1">
+      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
         {navItems.map((item) => {
           const isActive = location.pathname === item.path;
           return (
             <button
-              key={item.path}
+              key={item.label}
               onClick={() => navigate(item.path)}
               className={cn(
                 'w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all',
                 isActive
-                  ? 'bg-accent text-accent-foreground'
-                  : 'text-primary-foreground/70 hover:bg-primary-foreground/10 hover:text-primary-foreground'
+                  ? 'bg-brand-red/10 text-brand-red'
+                  : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
               )}
             >
-              {item.icon}
+              <span className={cn(
+                'flex-shrink-0',
+                isActive ? 'text-brand-red' : 'text-muted-foreground'
+              )}>
+                {item.icon}
+              </span>
               {item.label}
             </button>
           );
@@ -106,11 +110,11 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
       </nav>
 
       {/* Bottom */}
-      <div className="p-3 space-y-2 border-t border-primary-foreground/10">
+      <div className="p-3 space-y-2 border-t border-border">
         {bottomAction && (
           <Button
             onClick={bottomAction.onClick}
-            className="w-full bg-accent text-accent-foreground hover:bg-accent/90 font-semibold"
+            className="w-full bg-brand-red text-white hover:bg-brand-red/90 font-semibold"
           >
             {bottomAction.icon}
             <span className="ms-2">{bottomAction.label}</span>
@@ -118,7 +122,7 @@ export const DashboardSidebar = ({ navItems, portalLabel, portalColor = 'bg-prim
         )}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-primary-foreground/50 hover:text-primary-foreground hover:bg-primary-foreground/10 transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
         >
           <LogOut className="w-4 h-4" />
           Sign Out
