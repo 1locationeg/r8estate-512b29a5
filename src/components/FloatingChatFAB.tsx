@@ -2,8 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { MessageCircle, X, Bot, Phone } from "lucide-react";
 import { WhatsAppChatModal } from "./WhatsAppChatModal";
 import { AIChatWidget } from "./AIChatWidget";
+import { useTranslation } from "react-i18next";
 
 export const FloatingChatFAB = () => {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeChat, setActiveChat] = useState<"ai" | "whatsapp" | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
