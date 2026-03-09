@@ -193,7 +193,6 @@ const BuyerSaved = () => {
 };
 
 const BuyerProfile = () => {
-  const { t } = useTranslation();
   const { user, profile, refreshProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
