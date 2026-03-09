@@ -575,6 +575,121 @@ const AdminWhatsApp = () => {
   );
 };
 
+const AdminSEO = () => {
+  const [ogTitle, setOgTitle] = useState('');
+  const [ogDescription, setOgDescription] = useState('');
+  const [ogImage, setOgImage] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchMeta = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('key, value')
+        .in('key', ['og_title', 'og_description', 'og_image']);
+      if (data) {
+        for (const row of data) {
+          if (row.key === 'og_title') setOgTitle(row.value);
+          if (row.key === 'og_description') setOgDescription(row.value);
+          if (row.key === 'og_image') setOgImage(row.value);
+        }
+      }
+      setLoading(false);
+    };
+    fetchMeta();
+  }, []);
+
+  const handleSave = async () => {
+    setSaving(true);
+    const updates = [
+      { key: 'og_title', value: ogTitle.trim() },
+      { key: 'og_description', value: ogDescription.trim() },
+      { key: 'og_image', value: ogImage.trim() },
+    ];
+    let hasError = false;
+    for (const u of updates) {
+      const { error } = await supabase
+        .from('platform_settings')
+        .update({ value: u.value, updated_at: new Date().toISOString() } as any)
+        .eq('key', u.key);
+      if (error) hasError = true;
+    }
+    setSaving(false);
+    if (hasError) toast.error('Failed to save some settings');
+    else toast.success('SEO & sharing settings updated! Changes will apply on next page load.');
+  };
+
+  if (loading) return <div className="flex items-center gap-2 text-muted-foreground"><Loader2 className="w-4 h-4 animate-spin" /> Loading...</div>;
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-1">SEO & Link Preview</h2>
+      <p className="text-sm text-muted-foreground mb-6">Control how your site appears when shared on WhatsApp, social media, and search engines.</p>
+
+      <div className="max-w-lg space-y-5">
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Title</label>
+          <input
+            type="text"
+            value={ogTitle}
+            onChange={(e) => setOgTitle(e.target.value)}
+            placeholder="R8ESTATE - Reviews Always Right"
+            maxLength={60}
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <p className="text-xs text-muted-foreground mt-1">{ogTitle.length}/60 characters</p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Description</label>
+          <textarea
+            value={ogDescription}
+            onChange={(e) => setOgDescription(e.target.value)}
+            rows={3}
+            maxLength={160}
+            placeholder="The reputation platform for off-plan real estate..."
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+          />
+          <p className="text-xs text-muted-foreground mt-1">{ogDescription.length}/160 characters</p>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Preview Image URL</label>
+          <input
+            type="url"
+            value={ogImage}
+            onChange={(e) => setOgImage(e.target.value)}
+            placeholder="https://example.com/image.png"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Recommended: 1200×630px for best results</p>
+          {ogImage && (
+            <div className="mt-3 border border-border rounded-lg overflow-hidden bg-secondary">
+              <img src={ogImage} alt="OG Preview" className="w-full h-auto max-h-48 object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />
+            </div>
+          )}
+        </div>
+
+        {/* Live Preview Card */}
+        <div className="border border-border rounded-xl overflow-hidden bg-card">
+          <p className="text-xs font-semibold text-muted-foreground px-4 pt-3 pb-1">Link Preview</p>
+          {ogImage && <img src={ogImage} alt="" className="w-full h-32 object-cover" onError={(e) => (e.currentTarget.style.display = 'none')} />}
+          <div className="px-4 py-3">
+            <p className="text-sm font-bold text-primary truncate">{ogTitle || 'R8ESTATE'}</p>
+            <p className="text-xs text-muted-foreground line-clamp-2">{ogDescription || 'No description set'}</p>
+            <p className="text-xs text-muted-foreground/60 mt-1">meter.r8estate.com</p>
+          </div>
+        </div>
+
+        <Button onClick={handleSave} disabled={saving}>
+          {saving ? 'Saving...' : 'Save Changes'}
+        </Button>
+      </div>
+    </div>
+  );
+};
+
 const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
