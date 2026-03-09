@@ -50,6 +50,10 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
     }
 
     setSending(true);
+
+    // Pre-open a tab/window synchronously (mobile browsers often block window.open after awaits)
+    const preOpened = window.open("", "_blank");
+
     const message = selectedReply || "Hello, I'd like to inquire";
 
     const { error } = await supabase
@@ -59,15 +63,42 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
     setSending(false);
 
     if (error) {
+      try {
+        preOpened?.close();
+      } catch {
+        // ignore
+      }
       toast.error(t("whatsapp.error"));
       return;
     }
 
-    const cleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
+    const cleanNumber = (whatsappNumber || "").replace(/[^0-9]/g, "");
+    if (!cleanNumber) {
+      try {
+        preOpened?.close();
+      } catch {
+        // ignore
+      }
+      toast.error(t("whatsapp.error"));
+      return;
+    }
+
     const whatsappUrl = `https://wa.me/${cleanNumber}?text=${encodeURIComponent(
       `${i18n.language === "ar" ? "مرحبًا، اسمي" : "Hi, my name is"} ${name.trim()}. ${message}`
     )}`;
-    window.open(whatsappUrl, "_blank");
+
+    // Prefer the pre-opened tab; fallback to same-tab navigation if popups are blocked.
+    if (preOpened) {
+      try {
+        preOpened.location.href = whatsappUrl;
+        preOpened.focus();
+      } catch {
+        window.location.href = whatsappUrl;
+      }
+    } else {
+      window.location.href = whatsappUrl;
+    }
+
     toast.success(t("whatsapp.redirecting"));
     onClose();
   };
