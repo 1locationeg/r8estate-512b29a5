@@ -38,7 +38,7 @@ export const FloatingChatFAB = () => {
               className="flex items-center gap-3 bg-card border border-border shadow-lg rounded-full px-4 py-2.5 hover:bg-secondary transition-colors"
             >
               <Phone className="w-5 h-5 text-trust-excellent" />
-              <span className="text-sm font-medium text-foreground">WhatsApp</span>
+              <span className="text-sm font-medium text-foreground">{t("whatsapp.fabWhatsApp")}</span>
             </button>
           </div>
         )}

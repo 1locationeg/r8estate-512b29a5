@@ -323,7 +323,9 @@
       "I have a complaint or feedback",
       "I want to verify a real estate deal",
       "General inquiry"
-    ]
+    ],
+    "fabAI": "AI Assistant",
+    "fabWhatsApp": "WhatsApp"
   },
   "trustInsights": {
     "title": "AI Trust Insights",
