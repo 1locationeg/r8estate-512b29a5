@@ -25,7 +25,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
   const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const blurTimeoutRef = useRef<NodeJS.Timeout>();
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   // Reset selected index when query changes
   useEffect(() => {
