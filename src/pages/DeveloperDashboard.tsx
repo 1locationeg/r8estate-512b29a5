@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, lazy } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -12,6 +12,7 @@ import {
 import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { NotificationsPage } from '@/components/NotificationsPage';
 
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -322,7 +323,7 @@ const DeveloperDashboard = () => {
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
 
-  const { NotificationsPage } = require('@/components/NotificationsPage');
+  // NotificationsPage is imported at the top of the file
 
   return (
     <DashboardLayout
