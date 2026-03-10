@@ -322,7 +322,7 @@ const DeveloperDashboard = () => {
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
 
-  const NotificationsPage = (await import('@/components/NotificationsPage')).NotificationsPage;
+  // NotificationsPage is imported at the top of the file
 
   return (
     <DashboardLayout
