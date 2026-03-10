@@ -12,6 +12,7 @@ import {
 import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { NotificationsPage } from '@/components/NotificationsPage';
 
 // Use first developer as "my business"
 const myDev = developers[0];
