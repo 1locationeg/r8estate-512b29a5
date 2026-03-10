@@ -1,0 +1,1 @@
+UPDATE public.platform_settings SET value = 'https://r8estate.lovable.app/images/og-preview.png', updated_at = now() WHERE key = 'og_image';
