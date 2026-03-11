@@ -219,7 +219,15 @@ const Index = () => {
           )}
 
           {/* Category Bar - below Featured Identity */}
-          <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
+          <HeroCategoryItems 
+            onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} 
+            externalCategory={externalCategory}
+            onSelectItem={(item) => {
+              setSpecialViewItem(item);
+              setActiveView(null);
+              setSelectedDeveloperId(null);
+            }}
+          />
         </div>
       </section>
 
