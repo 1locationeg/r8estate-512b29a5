@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
@@ -41,6 +41,15 @@ const Index = () => {
     if (!selectedDeveloperId) return null;
     return developers.find((d) => d.id === selectedDeveloperId) || null;
   }, [selectedDeveloperId]);
+
+  // Auto-scroll to detail section when item is selected
+  useEffect(() => {
+    if (specialViewItem || selectedDeveloper) {
+      setTimeout(() => {
+        document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [specialViewItem, selectedDeveloper]);
 
   const handleSignOut = async () => {
     await signOut();
@@ -184,15 +193,9 @@ const Index = () => {
             }}
           />
 
-          {/* Featured Identity Spotlight Ad */}
-          <FeaturedIdentitySpotlight />
-
-          {/* Category Bar - below Featured Identity */}
-          <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
-
-          {/* Special View Item Detail */}
+          {/* Special View Item Detail - above Spotlight for visibility */}
           {specialViewItem && (
-            <div className="w-full max-w-5xl px-4 mt-8">
+            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
               <ItemDetailSection
                 item={specialViewItem}
                 onClose={() => setSpecialViewItem(null)}
@@ -200,15 +203,23 @@ const Index = () => {
             </div>
           )}
 
-          {/* Developer Detail Card (appears when developer is selected) */}
+          {/* Developer Detail Card - above Spotlight for visibility */}
           {selectedDeveloper && !specialViewItem && (
-            <div className="w-full max-w-3xl px-4 mt-8">
+            <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
               <DeveloperDetailCard
                 developer={selectedDeveloper}
                 onClose={() => setSelectedDeveloperId(null)}
               />
             </div>
           )}
+
+          {/* Featured Identity Spotlight - hidden when detail is active */}
+          {!specialViewItem && !selectedDeveloper && (
+            <FeaturedIdentitySpotlight />
+          )}
+
+          {/* Category Bar - below Featured Identity */}
+          <HeroCategoryItems onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} externalCategory={externalCategory} />
         </div>
       </section>
 
