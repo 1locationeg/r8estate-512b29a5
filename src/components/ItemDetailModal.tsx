@@ -355,9 +355,41 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
               </div>
             </div>
 
-            {/* Review Cards */}
+            {/* User-Submitted Reviews */}
+            {dbReviews.filter(r => !activeFilter || r.rating === activeFilter).length > 0 && (
+              <div className="space-y-3 mb-3">
+                {dbReviews
+                  .filter(r => !activeFilter || r.rating === activeFilter)
+                  .map((review) => (
+                  <div key={review.id} className="bg-primary/5 rounded-lg p-4 space-y-2 border border-primary/20">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="w-9 h-9">
+                        <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                          {review.author.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div className="flex-1 min-w-0">
+                        <span className="font-medium text-sm truncate">{review.author}</span>
+                        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-0.5">
+                            {[1, 2, 3, 4, 5].map((s) => (
+                              <Star key={s} className={cn("w-3 h-3", s <= review.rating ? "fill-primary text-primary" : "text-secondary")} />
+                            ))}
+                          </div>
+                          <span>•</span>
+                          <span>{new Date(review.date).toLocaleDateString()}</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">{review.comment}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {/* Mock Review Cards */}
             <div className="space-y-3">
-              {filteredReviews.length === 0 ? (
+              {filteredReviews.length === 0 && dbReviews.filter(r => !activeFilter || r.rating === activeFilter).length === 0 ? (
                 <p className="text-center text-muted-foreground text-sm py-4">
                   {t("reviews.noReviewsFilter")}
                 </p>
