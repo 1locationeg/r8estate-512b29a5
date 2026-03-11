@@ -304,13 +304,13 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
   return (
     <div className="w-full max-w-5xl px-4">
       {/* View Buttons */}
-      <div className="flex flex-wrap items-center justify-center gap-3 md:gap-6">
+      <div className="flex items-center justify-center gap-2 md:gap-6 flex-nowrap">
         {viewCategories.map((cat) => (
           <button
             key={cat.view}
             onClick={() => onViewSelect?.(cat.view)}
             className={cn(
-              "flex items-center gap-1.5 text-xs md:text-sm transition-colors group px-3 py-1.5 rounded-full",
+              "flex items-center gap-1 text-[11px] md:text-sm transition-colors group px-2.5 py-1 md:px-3 md:py-1.5 rounded-full whitespace-nowrap",
               activeView === cat.view
                 ? "bg-primary text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"
