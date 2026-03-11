@@ -234,9 +234,10 @@ export const calculateEngagementScore = (item: CategoryItem) => {
 interface HeroCategoryItemsProps {
   onInteraction?: () => void;
   externalCategory?: string | null;
+  onSelectItem?: (item: SearchItem) => void;
 }
 
-export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectItem }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
@@ -268,24 +269,24 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCateg
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
     onInteraction?.();
     const category = categoryToSearchCategory(catKey || '');
-    // Look up the full item from the search index to get meta data
     const searchIndex = getSearchIndex();
     const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
       || searchIndex.find(si => si.id === item.id)
       || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
-    if (indexItem) {
-      setSelectedItem(indexItem);
+    const resolvedItem = indexItem || {
+      id: item.id,
+      name: isRTL ? item.nameAr : item.nameEn,
+      category,
+      subtitle: catKey ? t(catKey) : undefined,
+      image: item.avatar,
+      rating: item.rating,
+      reviewCount: item.reviewCount,
+    } as SearchItem;
+    
+    if (onSelectItem) {
+      onSelectItem(resolvedItem);
     } else {
-      const searchItem: SearchItem = {
-        id: item.id,
-        name: isRTL ? item.nameAr : item.nameEn,
-        category,
-        subtitle: catKey ? t(catKey) : undefined,
-        image: item.avatar,
-        rating: item.rating,
-        reviewCount: item.reviewCount,
-      };
-      setSelectedItem(searchItem);
+      setSelectedItem(resolvedItem);
     }
   };
 
@@ -383,7 +384,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCateg
       </div>
 
       {/* Category Items Dropdown */}
-      {!selectedItem && activeCategory && (
+      {activeCategory && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
@@ -438,8 +439,8 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCateg
         </div>
       )}
 
-      {/* Item Detail Section (Trustpilot-style) */}
-      {selectedItem && (
+      {/* Item Detail Section - only used as fallback when no parent handler */}
+      {selectedItem && !onSelectItem && (
         <div className="border-t border-border">
           <ItemDetailSection
             item={selectedItem}
