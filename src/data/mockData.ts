@@ -357,7 +357,7 @@ export const brokerages: Brokerage[] = [
   { id: "aqarmap", name: "Aqarmap", specialty: "Property Portal", agentCount: 80, yearFounded: 2011, location: "Smart Village, Egypt", dealsCompleted: 5200, activeListings: 15000, languages: ["Arabic", "English"] },
   { id: "nawy", name: "Nawy", specialty: "Off-Plan Specialists", agentCount: 120, yearFounded: 2016, location: "New Cairo, Egypt", dealsCompleted: 6800, activeListings: 3200, languages: ["Arabic", "English"] },
   { id: "the-address", name: "The Address Real Estate", specialty: "Egypt Property Experts", agentCount: 95, yearFounded: 2009, location: "6th of October, Egypt", dealsCompleted: 4300, activeListings: 280, languages: ["Arabic", "English", "German"] },
-  { id: "1-location", name: "1 LOCATION", logo: "https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=100&h=100&fit=crop", specialty: "Premium Brokerage & Advisory", agentCount: 180, yearFounded: 2015, location: "New Cairo, Egypt", dealsCompleted: 9200, activeListings: 520, languages: ["Arabic", "English", "French"] }
+  { id: "1-location", name: "1 LOCATION", logo: "/images/1-location-logo.png", specialty: "Premium Brokerage & Advisory", agentCount: 180, yearFounded: 2015, location: "New Cairo, Egypt", dealsCompleted: 9200, activeListings: 520, languages: ["Arabic", "English", "French"] }
 ];
 
 // Apps/Platforms data
