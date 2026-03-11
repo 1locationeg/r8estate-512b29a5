@@ -340,7 +340,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             </h3>
             <div className="relative">
               <div
-                className="flex gap-3 animate-[marquee_45s_linear_infinite] w-max"
+                className="flex animate-marquee w-max"
               >
                 {loopItems.map((item, idx) => (
                   <button
