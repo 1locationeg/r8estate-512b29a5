@@ -1,5 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
@@ -160,7 +160,30 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         </button>
       </div>
 
-      {/* Search Suggestions Dropdown */}
+      {/* Platform Traction Stats */}
+      <div className="flex items-center justify-center gap-3 md:gap-6 mt-3 text-xs md:text-sm flex-wrap">
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <MessageSquare className="w-3.5 h-3.5 text-primary" />
+          <span className="font-bold text-foreground">50K+</span>
+          <span>{t("stats.verifiedReviews", "Verified Reviews")}</span>
+        </div>
+        <div className="hidden sm:flex items-center gap-1.5 text-muted-foreground">
+          <Building2 className="w-3.5 h-3.5 text-primary" />
+          <span className="font-bold text-foreground">1,200+</span>
+          <span>{t("stats.trustedCompanies", "Trusted Companies")}</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Users className="w-3.5 h-3.5 text-primary" />
+          <span className="font-bold text-foreground">100K+</span>
+          <span>{t("stats.activeUsers", "Active Users")}</span>
+        </div>
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <CheckCircle className="w-3.5 h-3.5 text-primary" />
+          <span className="font-bold text-foreground">96%</span>
+          <span>{t("stats.successRate", "Success Rate")}</span>
+        </div>
+      </div>
+
       <SearchSuggestions
         query={query}
         isOpen={isFocused}
