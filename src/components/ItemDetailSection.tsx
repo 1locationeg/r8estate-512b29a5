@@ -54,6 +54,7 @@ import { TrustCategoryBar } from "./TrustCategoryBar";
 import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { useReviews } from "@/hooks/useReviews";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
