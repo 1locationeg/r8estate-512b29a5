@@ -269,24 +269,24 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   const handleItemClick = (item: CategoryItem, catKey?: string) => {
     onInteraction?.();
     const category = categoryToSearchCategory(catKey || '');
-    // Look up the full item from the search index to get meta data
     const searchIndex = getSearchIndex();
     const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
       || searchIndex.find(si => si.id === item.id)
       || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
-    if (indexItem) {
-      setSelectedItem(indexItem);
+    const resolvedItem = indexItem || {
+      id: item.id,
+      name: isRTL ? item.nameAr : item.nameEn,
+      category,
+      subtitle: catKey ? t(catKey) : undefined,
+      image: item.avatar,
+      rating: item.rating,
+      reviewCount: item.reviewCount,
+    } as SearchItem;
+    
+    if (onSelectItem) {
+      onSelectItem(resolvedItem);
     } else {
-      const searchItem: SearchItem = {
-        id: item.id,
-        name: isRTL ? item.nameAr : item.nameEn,
-        category,
-        subtitle: catKey ? t(catKey) : undefined,
-        image: item.avatar,
-        rating: item.rating,
-        reviewCount: item.reviewCount,
-      };
-      setSelectedItem(searchItem);
+      setSelectedItem(resolvedItem);
     }
   };
 
