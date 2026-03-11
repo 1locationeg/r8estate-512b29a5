@@ -28,10 +28,10 @@ function formatNum(n: number, suffix: string) {
 }
 
 const stats = [
-  { target: 50000, icon: MessageSquare, colorClass: "text-primary", suffix: "K+", labelKey: "stats.verifiedReviews", descKey: "stats.verifiedReviewsDesc" },
+  { target: 50000, icon: MessageSquare, colorClass: "text-accent", suffix: "K+", labelKey: "stats.verifiedReviews", descKey: "stats.verifiedReviewsDesc" },
   { target: 1200, icon: Building2, colorClass: "text-accent", suffix: "+", labelKey: "stats.trustedCompanies", descKey: "stats.trustedCompaniesDesc", hideMobile: true },
-  { target: 100000, icon: Users, colorClass: "text-verified", suffix: "K+", labelKey: "stats.activeUsers", descKey: "stats.activeUsersDesc" },
-  { target: 96, icon: CheckCircle, colorClass: "text-trust-high", suffix: "%", labelKey: "stats.successRate", descKey: "stats.successRateDesc" },
+  { target: 100000, icon: Users, colorClass: "text-accent", suffix: "K+", labelKey: "stats.activeUsers", descKey: "stats.activeUsersDesc" },
+  { target: 96, icon: CheckCircle, colorClass: "text-accent", suffix: "%", labelKey: "stats.successRate", descKey: "stats.successRateDesc" },
 ];
 
 export function TractionStats() {
