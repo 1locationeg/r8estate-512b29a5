@@ -237,7 +237,7 @@ interface HeroCategoryItemsProps {
   onSelectItem?: (item: SearchItem) => void;
 }
 
-export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCategoryItemsProps) => {
+export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectItem }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
