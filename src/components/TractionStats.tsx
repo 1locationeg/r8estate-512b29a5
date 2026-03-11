@@ -57,7 +57,7 @@ export function TractionStats() {
   const values = [v1, v2, v3, v4];
 
   return (
-    <div ref={ref} className="flex items-start justify-center gap-4 md:gap-8 mt-4 flex-wrap">
+    <div ref={ref} className="flex items-start justify-center gap-4 md:gap-8 mt-2 mb-1 flex-wrap">
       {stats.map((s, i) => {
         const Icon = s.icon;
         const displayVal = s.suffix === "K+" ? `${values[i]}K+` : s.suffix === "%" ? `${values[i]}%` : `${values[i].toLocaleString()}+`;
