@@ -340,13 +340,13 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             </h3>
             <div className="relative">
               <div
-                className="flex gap-3 animate-[marquee_45s_linear_infinite] w-max"
+                className="flex animate-marquee w-max"
               >
                 {loopItems.map((item, idx) => (
                   <button
                     key={`${item.id}-${idx}`}
                     onClick={() => handleItemClick(item)}
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all group cursor-pointer shrink-0 min-w-[180px] max-w-[220px]"
+                    className="flex items-center gap-3 px-4 py-2.5 mx-1.5 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-lg transition-all group cursor-pointer shrink-0 min-w-[180px] max-w-[220px]"
                   >
                     <Avatar className="w-10 h-10 ring-2 ring-accent/30 group-hover:ring-accent transition-all shrink-0">
                       <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
