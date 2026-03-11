@@ -340,7 +340,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             </h3>
             <div className="relative">
               <div
-                className="flex animate-marquee w-max"
+                className={cn("flex w-max", isRTL ? "animate-marquee-rtl" : "animate-marquee")}
               >
                 {loopItems.map((item, idx) => (
                   <button
