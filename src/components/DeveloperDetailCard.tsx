@@ -2,7 +2,8 @@ import { Star, Mic, Download, GitCompare } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
-import { Developer, reviews } from "@/data/mockData";
+import { Developer } from "@/data/mockData";
+import { useReviews } from "@/hooks/useReviews";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
@@ -60,9 +61,11 @@ export const DeveloperDetailCard = ({
     return "stroke-trust-fair";
   };
 
+  const { reviews } = useReviews(developer.id);
+
   // Filter reviews for this developer
   const developerReviews = useMemo(() => {
-    let filtered = reviews.filter((r) => r.developerId === developer.id);
+    let filtered = [...reviews];
     if (reviewFilter !== "all") {
       const ratingFilter = parseInt(reviewFilter);
       filtered = filtered.filter((r) => r.rating === ratingFilter);
@@ -82,7 +85,7 @@ export const DeveloperDetailCard = ({
       filtered.sort((a, b) => a.rating - b.rating);
     }
     return filtered;
-  }, [developer.id, reviewFilter, sortOrder]);
+  }, [reviews, reviewFilter, sortOrder]);
 
   // Star rating display
   const renderStars = (rating: number) => {

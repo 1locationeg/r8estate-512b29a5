@@ -143,6 +143,57 @@ export type Database = {
         }
         Relationships: []
       }
+      reviews: {
+        Row: {
+          attachment_urls: string[] | null
+          author_name: string
+          comment: string
+          created_at: string
+          developer_id: string
+          developer_name: string | null
+          experience_type: string | null
+          id: string
+          is_anonymous: boolean
+          is_verified: boolean
+          rating: number
+          title: string | null
+          unit_type: string | null
+          user_id: string
+        }
+        Insert: {
+          attachment_urls?: string[] | null
+          author_name: string
+          comment: string
+          created_at?: string
+          developer_id: string
+          developer_name?: string | null
+          experience_type?: string | null
+          id?: string
+          is_anonymous?: boolean
+          is_verified?: boolean
+          rating: number
+          title?: string | null
+          unit_type?: string | null
+          user_id: string
+        }
+        Update: {
+          attachment_urls?: string[] | null
+          author_name?: string
+          comment?: string
+          created_at?: string
+          developer_id?: string
+          developer_name?: string | null
+          experience_type?: string | null
+          id?: string
+          is_anonymous?: boolean
+          is_verified?: boolean
+          rating?: number
+          title?: string | null
+          unit_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
