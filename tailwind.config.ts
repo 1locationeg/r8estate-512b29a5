@@ -95,6 +95,10 @@ export default {
           "0%": { transform: "translateX(0)" },
           "100%": { transform: "translateX(-33.3333%)" },
         },
+        "marquee-rtl": {
+          "0%": { transform: "translateX(0)" },
+          "100%": { transform: "translateX(33.3333%)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
