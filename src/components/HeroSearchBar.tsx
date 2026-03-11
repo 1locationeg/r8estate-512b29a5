@@ -10,6 +10,7 @@ import { CompareModal } from "@/components/CompareModal";
 import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { categories, calculateEngagementScore, type CategoryItem } from "@/components/HeroCategoryItems";
+import { TractionStats } from "@/components/TractionStats";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
