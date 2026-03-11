@@ -37,6 +37,7 @@ import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
+import { useReviews } from "@/hooks/useReviews";
 
 interface ItemDetailModalProps {
   item: SearchItem | null;
