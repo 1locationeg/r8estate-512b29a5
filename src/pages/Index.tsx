@@ -124,7 +124,7 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-20 pb-8 sm:py-16 md:py-20">
+        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-[env(safe-area-inset-top)] pb-8 sm:py-16 md:py-20">
            {/* Brand Title */}
            <div className="text-center mb-6 md:mb-8">
               <button
