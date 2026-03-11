@@ -135,23 +135,8 @@ const Index = () => {
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-2 sm:py-10 md:py-14">
-           {/* Brand Title */}
-           <div className="text-center mb-1 md:mb-4">
-              <button
-                onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center gap-2 md:gap-3 text-[clamp(1.8rem,7vw,3rem)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-0.5 hover:opacity-80 transition-opacity"
-                aria-label="Return to home"
-              >
-               <img
-                 src={logoIcon}
-                 alt="R8ESTATE"
-                 className="h-[1.4em] w-auto object-contain"
-               />
-               <span className="inline-flex">
-                 <span className="text-brand-red">R8</span>
-                 <span className="text-primary">ESTATE</span>
-               </span>
-             </button>
+            {/* Trust Meter Title + Gauge */}
+            <div className="text-center mb-1 md:mb-4">
             <p className="text-[clamp(1.1rem,4vw,1.75rem)] sm:text-3xl md:text-4xl font-bold text-accent">
                {t("hero.trustMeter")}
             </p>
