@@ -28,10 +28,10 @@ function formatNum(n: number, suffix: string) {
 }
 
 const stats = [
-  { target: 50000, icon: MessageSquare, colorClass: "text-brand-red", suffix: "K+", labelKey: "stats.verifiedReviews", descKey: "stats.verifiedReviewsDesc" },
-  { target: 1200, icon: Building2, colorClass: "text-brand-red", suffix: "+", labelKey: "stats.trustedCompanies", descKey: "stats.trustedCompaniesDesc", hideMobile: true },
-  { target: 100000, icon: Users, colorClass: "text-brand-red", suffix: "K+", labelKey: "stats.activeUsers", descKey: "stats.activeUsersDesc" },
-  { target: 96, icon: CheckCircle, colorClass: "text-brand-red", suffix: "%", labelKey: "stats.successRate", descKey: "stats.successRateDesc" },
+  { target: 50000, icon: MessageSquare, colorClass: "text-accent", suffix: "K+", labelKey: "stats.verifiedReviews", descKey: "stats.verifiedReviewsDesc" },
+  { target: 1200, icon: Building2, colorClass: "text-accent", suffix: "+", labelKey: "stats.trustedCompanies", descKey: "stats.trustedCompaniesDesc", hideMobile: true },
+  { target: 100000, icon: Users, colorClass: "text-accent", suffix: "K+", labelKey: "stats.activeUsers", descKey: "stats.activeUsersDesc" },
+  { target: 96, icon: CheckCircle, colorClass: "text-accent", suffix: "%", labelKey: "stats.successRate", descKey: "stats.successRateDesc" },
 ];
 
 export function TractionStats() {
@@ -67,7 +67,7 @@ export function TractionStats() {
             className={`flex flex-col items-center gap-0.5 ${s.hideMobile ? "hidden sm:flex" : "flex"}`}
           >
             <Icon className={`w-4 h-4 md:w-5 md:h-5 ${s.colorClass} mb-0.5`} />
-            <span className={`text-lg md:text-2xl font-extrabold ${s.colorClass} tabular-nums`}>
+            <span className={`text-base md:text-xl font-extrabold ${s.colorClass} tabular-nums`}>
               {displayVal}
             </span>
             <span className="text-[11px] md:text-xs font-semibold text-foreground">
