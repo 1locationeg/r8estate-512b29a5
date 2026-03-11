@@ -206,6 +206,9 @@
   "stats": {
     "verifiedReviews": "تقييمات موثقة",
     "verifiedDevelopers": "مطورين موثقين",
+    "trustedCompanies": "شركات موثوقة",
+    "activeUsers": "مستخدمين نشطين",
+    "successRate": "نسبة النجاح",
     "projectsRated": "مشاريع مُقيّمة",
     "trustScoreAvg": "متوسط نقاط الثقة"
   },

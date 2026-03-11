@@ -206,6 +206,9 @@
   "stats": {
     "verifiedReviews": "Verified Reviews",
     "verifiedDevelopers": "Verified Developers",
+    "trustedCompanies": "Trusted Companies",
+    "activeUsers": "Active Users",
+    "successRate": "Success Rate",
     "projectsRated": "Projects Rated",
     "trustScoreAvg": "Trust Score Avg"
   },
