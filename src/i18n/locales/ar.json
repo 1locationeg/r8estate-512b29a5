@@ -205,10 +205,14 @@
   },
   "stats": {
     "verifiedReviews": "تقييمات موثقة",
+    "verifiedReviewsDesc": "تجارب مشترين حقيقية",
     "verifiedDevelopers": "مطورين موثقين",
     "trustedCompanies": "شركات موثوقة",
+    "trustedCompaniesDesc": "تم التحقق والمصادقة",
     "activeUsers": "مستخدمين نشطين",
+    "activeUsersDesc": "مجتمع متنامي",
     "successRate": "نسبة النجاح",
+    "successRateDesc": "معاملات ناجحة",
     "projectsRated": "مشاريع مُقيّمة",
     "trustScoreAvg": "متوسط نقاط الثقة"
   },
