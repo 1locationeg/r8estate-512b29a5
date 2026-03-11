@@ -384,10 +384,6 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
       </div>
 
       {/* Category Items Dropdown */}
-      {!selectedItem && !onSelectItem && activeCategory && (
-        <div className="border-t border-border bg-background/95 backdrop-blur-sm">
-          <div className="p-4 md:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
       {activeCategory && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6">
@@ -443,8 +439,8 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
         </div>
       )}
 
-      {/* Item Detail Section (Trustpilot-style) */}
-      {selectedItem && (
+      {/* Item Detail Section - only used as fallback when no parent handler */}
+      {selectedItem && !onSelectItem && (
         <div className="border-t border-border">
           <ItemDetailSection
             item={selectedItem}
