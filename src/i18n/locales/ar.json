@@ -154,7 +154,11 @@
     "developers": "المطورين",
     "projects": "المشاريع",
     "reviews": "التقييمات",
-    "about": "من نحن"
+    "about": "من نحن",
+    "home": "الرئيسية",
+    "categories": "الفئات",
+    "portfolio": "المحفظة",
+    "more": "المزيد"
   },
   "hero": {
     "trustMeter": "مقياس الثقة",

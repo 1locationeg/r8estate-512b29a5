@@ -17,6 +17,7 @@ import DeveloperDirectory from "./pages/DeveloperDirectory";
 import NotFound from "./pages/NotFound";
 import Install from "./pages/Install";
 import { FloatingChatFAB } from "./components/FloatingChatFAB";
+import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "./components/DynamicMeta";
 
 const queryClient = new QueryClient();
@@ -44,6 +45,7 @@ const App = () => (
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
+            <BottomNav />
             <PWAInstallBanner />
             <FloatingChatFAB />
           </BrowserRouter>

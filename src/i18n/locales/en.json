@@ -154,7 +154,11 @@
     "developers": "Developers",
     "projects": "Projects",
     "reviews": "Reviews",
-    "about": "About"
+    "about": "About",
+    "home": "Home",
+    "categories": "Categories",
+    "portfolio": "Portfolio",
+    "more": "More"
   },
   "hero": {
     "trustMeter": "Trust Meter",
