@@ -205,10 +205,14 @@
   },
   "stats": {
     "verifiedReviews": "Verified Reviews",
+    "verifiedReviewsDesc": "Real buyer experiences",
     "verifiedDevelopers": "Verified Developers",
     "trustedCompanies": "Trusted Companies",
+    "trustedCompaniesDesc": "Vetted & authenticated",
     "activeUsers": "Active Users",
+    "activeUsersDesc": "Growing community",
     "successRate": "Success Rate",
+    "successRateDesc": "Satisfied transactions",
     "projectsRated": "Projects Rated",
     "trustScoreAvg": "Trust Score Avg"
   },

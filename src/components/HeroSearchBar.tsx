@@ -10,6 +10,7 @@ import { CompareModal } from "@/components/CompareModal";
 import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { categories, calculateEngagementScore, type CategoryItem } from "@/components/HeroCategoryItems";
+import { TractionStats } from "@/components/TractionStats";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
@@ -161,28 +162,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
       </div>
 
       {/* Platform Traction Stats */}
-      <div className="flex items-center justify-center gap-3 md:gap-6 mt-3 text-xs md:text-sm flex-wrap">
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <MessageSquare className="w-3.5 h-3.5 text-primary" />
-          <span className="font-bold text-foreground">50K+</span>
-          <span>{t("stats.verifiedReviews", "Verified Reviews")}</span>
-        </div>
-        <div className="hidden sm:flex items-center gap-1.5 text-muted-foreground">
-          <Building2 className="w-3.5 h-3.5 text-primary" />
-          <span className="font-bold text-foreground">1,200+</span>
-          <span>{t("stats.trustedCompanies", "Trusted Companies")}</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <Users className="w-3.5 h-3.5 text-primary" />
-          <span className="font-bold text-foreground">100K+</span>
-          <span>{t("stats.activeUsers", "Active Users")}</span>
-        </div>
-        <div className="flex items-center gap-1.5 text-muted-foreground">
-          <CheckCircle className="w-3.5 h-3.5 text-primary" />
-          <span className="font-bold text-foreground">96%</span>
-          <span>{t("stats.successRate", "Success Rate")}</span>
-        </div>
-      </div>
+      <TractionStats />
 
       <SearchSuggestions
         query={query}
