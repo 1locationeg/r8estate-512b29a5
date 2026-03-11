@@ -66,7 +66,7 @@ export function TractionStats() {
             key={s.labelKey}
             className={`flex flex-col items-center gap-0.5 ${s.hideMobile ? "hidden sm:flex" : "flex"}`}
           >
-            <Icon className={`w-4 h-4 md:w-5 md:h-5 ${s.colorClass} mb-0.5`} />
+            <Icon className="w-4 h-4 md:w-5 md:h-5 text-brand-red mb-0.5" />
             <span className={`text-lg md:text-2xl font-extrabold ${s.colorClass} tabular-nums`}>
               {displayVal}
             </span>
