@@ -234,6 +234,7 @@ export const calculateEngagementScore = (item: CategoryItem) => {
 interface HeroCategoryItemsProps {
   onInteraction?: () => void;
   externalCategory?: string | null;
+  onSelectItem?: (item: SearchItem) => void;
 }
 
 export const HeroCategoryItems = ({ onInteraction, externalCategory }: HeroCategoryItemsProps) => {
