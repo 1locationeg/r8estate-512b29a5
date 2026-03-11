@@ -1,0 +1,1 @@
+UPDATE public.platform_settings SET value = 'https://mcekdnvxeblikixmfyni.supabase.co/storage/v1/object/public/og-assets/og-preview.png', updated_at = now() WHERE key = 'og_image';
