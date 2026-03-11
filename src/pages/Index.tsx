@@ -42,6 +42,15 @@ const Index = () => {
     return developers.find((d) => d.id === selectedDeveloperId) || null;
   }, [selectedDeveloperId]);
 
+  // Auto-scroll to detail section when item is selected
+  useEffect(() => {
+    if (specialViewItem || selectedDeveloper) {
+      setTimeout(() => {
+        document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, 100);
+    }
+  }, [specialViewItem, selectedDeveloper]);
+
   const handleSignOut = async () => {
     await signOut();
     toast({
