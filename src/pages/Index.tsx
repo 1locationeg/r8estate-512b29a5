@@ -124,12 +124,12 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-12 pb-4 sm:py-12 md:py-16">
+       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-2 sm:py-10 md:py-14">
            {/* Brand Title */}
-           <div className="text-center mb-3 md:mb-6">
+           <div className="text-center mb-1 md:mb-4">
               <button
                 onClick={() => navigate('/')}
-                className="inline-flex items-center justify-center gap-2 md:gap-3 text-[clamp(2rem,8vw,3rem)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-1 hover:opacity-80 transition-opacity"
+                className="inline-flex items-center justify-center gap-2 md:gap-3 text-[clamp(1.8rem,7vw,3rem)] sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-extrabold mb-0.5 hover:opacity-80 transition-opacity"
                 aria-label="Return to home"
               >
                <img
@@ -142,31 +142,31 @@ const Index = () => {
                  <span className="text-primary">ESTATE</span>
                </span>
              </button>
-            <p className="text-[clamp(1.25rem,5vw,2rem)] sm:text-3xl md:text-4xl font-bold text-accent">
+            <p className="text-[clamp(1.1rem,4vw,1.75rem)] sm:text-3xl md:text-4xl font-bold text-accent">
                {t("hero.trustMeter")}
             </p>
 
-            {/* Hero Trust Meter Gauge - Live Animated */}
-            <HeroTrustGauge />
+             {/* Hero Trust Meter Gauge - Live Animated */}
+             <HeroTrustGauge />
           </div>
 
           {/* Tagline */}
-          <div className="text-center mb-2 md:mb-4 max-w-3xl">
-            <p className="text-base sm:text-lg md:text-xl text-foreground">
+          <div className="text-center mb-1 md:mb-3 max-w-3xl">
+            <p className="text-sm sm:text-lg md:text-xl text-foreground">
               {t("hero.tagline")}
             </p>
-            <p className="text-base sm:text-lg md:text-xl text-accent font-semibold mt-0.5">
+            <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold mt-0">
               {t("hero.taglineHighlight")}
             </p>
           </div>
 
           {/* Description */}
-          <p className="text-sm md:text-base text-muted-foreground text-center max-w-2xl mb-4 md:mb-6 px-4">
+          <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
             {t("hero.description")}
           </p>
 
           {/* Search Bar */}
-          <div className="w-full max-w-3xl px-4 mb-3 md:mb-6">
+          <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
             <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
           </div>
 
