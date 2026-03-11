@@ -355,6 +355,24 @@ export const WriteReviewModal = ({
         }
       }
 
+      // Save review to database
+      const authorName = isAnonymous ? "Anonymous" : (user.user_metadata?.full_name || user.user_metadata?.name || user.email || "Anonymous");
+      const { error: insertError } = await supabase.from("reviews").insert({
+        user_id: user.id,
+        developer_id: developerId,
+        developer_name: developerName,
+        author_name: authorName,
+        rating,
+        title,
+        comment: content,
+        experience_type: experienceType || null,
+        unit_type: unitType || null,
+        is_anonymous: isAnonymous,
+        attachment_urls: uploadedUrls,
+      });
+
+      if (insertError) throw insertError;
+
       toast({
         title: "✅ Review submitted!",
         description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
@@ -363,6 +381,7 @@ export const WriteReviewModal = ({
       resetForm();
       onOpenChange(false);
     } catch (e) {
+      console.error("Review submission error:", e);
       toast({ title: "Submission error", description: "Could not submit review. Please try again.", variant: "destructive" });
     } finally {
       setIsUploading(false);
