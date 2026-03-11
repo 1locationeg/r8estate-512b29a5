@@ -73,9 +73,6 @@ export function TractionStats() {
             <span className="text-[11px] md:text-xs font-semibold text-foreground">
               {t(s.labelKey)}
             </span>
-            <span className="text-[10px] md:text-[11px] text-muted-foreground text-center max-w-[100px]">
-              {t(s.descKey)}
-            </span>
           </div>
         );
       })}
