@@ -118,6 +118,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { dbReviews } = useReviews(item?.id);
 
   const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
     if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
