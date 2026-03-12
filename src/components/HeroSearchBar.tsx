@@ -311,14 +311,16 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
             key={cat.view}
             onClick={() => onViewSelect?.(cat.view)}
             className={cn(
-              "flex items-center gap-1 text-[11px] md:text-sm transition-colors group px-2.5 py-1 md:px-3 md:py-1.5 rounded-full whitespace-nowrap",
+              "relative flex items-center gap-1 text-[11px] md:text-sm transition-all group px-2.5 py-1 md:px-3 md:py-1.5 rounded-full whitespace-nowrap border overflow-hidden",
               activeView === cat.view
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground"
+                ? "bg-primary text-primary-foreground border-primary shadow-[0_0_8px_hsl(var(--primary)/0.3)]"
+                : "text-muted-foreground hover:text-foreground border-border/40 hover:border-border/70 hover:shadow-[0_0_6px_hsl(var(--primary)/0.1)]"
             )}
           >
-            <span className="group-hover:scale-110 transition-transform">{cat.icon}</span>
-            <span>{cat.label}</span>
+            {/* Subtle shimmer effect */}
+            <span className="absolute inset-0 -translate-x-full animate-[shimmer_3s_ease-in-out_infinite] bg-gradient-to-r from-transparent via-primary/[0.04] to-transparent pointer-events-none" />
+            <span className="group-hover:scale-110 transition-transform relative">{cat.icon}</span>
+            <span className="relative">{cat.label}</span>
           </button>
         ))}
       </div>
