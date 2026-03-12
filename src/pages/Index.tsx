@@ -338,7 +338,26 @@ const Index = () => {
                   Browse Categories   
                 </button>
               </div>
-            </div>)
+            </div>
+
+            {showIndustryCategories && (
+              <div id="industry-categories-section" className="w-full scroll-mt-24">
+                <HeroCategoryItems
+                  onInteraction={() => { setSpecialViewItem(null); }}
+                  externalCategory={externalCategory}
+                  onSelectItem={(item) => {
+                    setSpecialViewItem(item);
+                  }} />
+              </div>
+            )}
+
+            {specialViewItem && showIndustryCategories && (
+              <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+                <ItemDetailSection
+                  item={specialViewItem}
+                  onClose={() => setSpecialViewItem(null)} />
+              </div>
+            )}
           }
         </div>
       </section>
