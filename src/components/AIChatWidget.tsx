@@ -106,12 +106,17 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="fixed bottom-24 end-6 z-50 w-[380px] max-w-[calc(100vw-3rem)] h-[500px] max-h-[calc(100vh-8rem)] bg-card border border-border rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200">
       {/* Header */}
-      <div className="bg-primary px-4 py-3 flex items-center gap-3 shrink-0">
-        <Bot className="w-5 h-5 text-primary-foreground" />
-        <div>
-          <p className="text-sm font-bold text-primary-foreground">AI Assistant</p>
-          <p className="text-[10px] text-primary-foreground/70">Platform help & real estate advisory</p>
+      <div className="bg-primary px-4 py-3 flex items-center justify-between shrink-0">
+        <div className="flex items-center gap-3">
+          <Bot className="w-5 h-5 text-primary-foreground" />
+          <div>
+            <p className="text-sm font-bold text-primary-foreground">Trust Chat</p>
+            <p className="text-[10px] text-primary-foreground/70">Platform help & real estate advisory</p>
+          </div>
         </div>
+        <button onClick={onClose} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Messages */}
