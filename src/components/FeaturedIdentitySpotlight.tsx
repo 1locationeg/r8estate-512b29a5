@@ -67,9 +67,9 @@ export const FeaturedIdentitySpotlight = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto px-4 mt-10 mb-6">
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg md:text-xl font-bold text-foreground">
+    <section className="w-full max-w-3xl mx-auto px-4 mt-4 mb-3">
+      <div className="flex items-center justify-between mb-2">
+        <h2 className="text-base md:text-lg font-bold text-foreground">
           Spotlight Identity
         </h2>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
@@ -79,17 +79,17 @@ export const FeaturedIdentitySpotlight = () => {
 
       <Card className="overflow-hidden border-primary/20 bg-card">
         {/* Header */}
-        <div className="p-5 md:p-6 text-center border-b border-border">
-          <div className="flex items-center justify-end mb-2">
+        <div className="px-4 pt-3 pb-2 text-center border-b border-border">
+          <div className="flex items-center justify-end">
             <ShareMenu title={developer.name} iconOnly />
           </div>
 
-          <h3 className="text-xl md:text-2xl font-bold text-foreground mb-4">
+          <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">
             {developer.name}
           </h3>
 
           {/* Trust Gauge */}
-          <div className="relative w-44 h-24 md:w-52 md:h-28 mx-auto mb-2">
+          <div className="relative w-36 h-20 md:w-44 md:h-24 mx-auto mb-1">
             <svg viewBox="0 0 200 110" className="w-full h-full">
               <defs>
                 <linearGradient id="spotlightGaugeGrad" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -98,7 +98,6 @@ export const FeaturedIdentitySpotlight = () => {
                   <stop offset="100%" stopColor="hsl(142,71%,45%)" />
                 </linearGradient>
               </defs>
-              {/* Background arc */}
               <path
                 d="M 20 100 A 80 80 0 0 1 180 100"
                 fill="none"
@@ -106,7 +105,6 @@ export const FeaturedIdentitySpotlight = () => {
                 strokeWidth="12"
                 strokeLinecap="round"
               />
-              {/* Score arc */}
               <path
                 d="M 20 100 A 80 80 0 0 1 180 100"
                 fill="none"
@@ -115,7 +113,6 @@ export const FeaturedIdentitySpotlight = () => {
                 strokeLinecap="round"
                 strokeDasharray={`${(developer.trustScore / 100) * Math.PI * 80} ${Math.PI * 80}`}
               />
-              {/* Pointer */}
               <circle
                 cx={mx}
                 cy={my}
@@ -125,41 +122,41 @@ export const FeaturedIdentitySpotlight = () => {
                 strokeWidth="3"
               />
             </svg>
-            <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
+            <div className="absolute inset-0 flex flex-col items-center justify-end pb-0.5">
               <span
-                className="text-3xl md:text-4xl font-black"
+                className="text-2xl md:text-3xl font-black"
                 style={{ color: getScoreColor(developer.trustScore) }}
               >
                 {developer.trustScore}
               </span>
-              <span className="text-[10px] text-muted-foreground uppercase tracking-wider">
+              <span className="text-[9px] text-muted-foreground uppercase tracking-wider">
                 Trust Score
               </span>
             </div>
           </div>
 
           {/* Rating row */}
-          <div className="flex items-center justify-center gap-2 mb-3">
+          <div className="flex items-center justify-center gap-1.5 mb-1.5">
             <div className="flex">{renderStars(developer.rating)}</div>
-            <span className="text-lg font-bold text-foreground">{developer.rating}</span>
-            <span className="text-sm text-muted-foreground">
+            <span className="text-base font-bold text-foreground">{developer.rating}</span>
+            <span className="text-xs text-muted-foreground">
               ({developer.reviewCount} reviews)
             </span>
           </div>
 
           {/* Verified badge */}
           {developer.verified && (
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-primary/10 rounded-full text-xs font-semibold text-primary">
-              <Shield className="w-3.5 h-3.5" />
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-primary/10 rounded-full text-[11px] font-semibold text-primary mb-1">
+              <Shield className="w-3 h-3" />
               Verified Identity
             </div>
           )}
         </div>
 
         {/* Trust Categories */}
-        <div className="p-5 md:p-6 border-b border-border">
-          <h4 className="text-sm font-semibold text-foreground mb-3">Trust Categories</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2.5">
+        <div className="px-4 py-2.5 border-b border-border">
+          <h4 className="text-xs font-semibold text-foreground mb-1.5">Trust Categories</h4>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             {trustCategories.map((cat) => {
               const score = getCategoryScore(cat.key);
               return (
