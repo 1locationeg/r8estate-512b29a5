@@ -355,8 +355,17 @@ export const WriteReviewModal = ({
         }
       }
 
-      // Save review to database
-      const authorName = isAnonymous ? "Anonymous" : (user.user_metadata?.full_name || user.user_metadata?.name || user.email || "Anonymous");
+      // Fetch display name from profile
+      let displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || "Anonymous";
+      if (!isAnonymous) {
+        const { data: profile } = await supabase
+          .from("profiles")
+          .select("full_name")
+          .eq("user_id", user.id)
+          .single();
+        if (profile?.full_name) displayName = profile.full_name;
+      }
+      const authorName = isAnonymous ? "Anonymous" : displayName;
       const { error: insertError } = await supabase.from("reviews").insert({
         user_id: user.id,
         developer_id: developerId,
