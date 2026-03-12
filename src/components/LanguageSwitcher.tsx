@@ -20,9 +20,8 @@ export const LanguageSwitcher = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary transition-colors focus:outline-none">
-        <Globe className="w-5 h-5 text-muted-foreground" />
-        <span className="text-sm font-medium text-foreground">
-          {i18n.language === 'ar' ? 'العربية' : 'EN'}
+        <span className="text-sm font-semibold text-foreground">
+          {i18n.language === 'ar' ? 'ع' : 'EN'}
         </span>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
