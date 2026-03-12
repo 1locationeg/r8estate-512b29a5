@@ -35,7 +35,7 @@ export const LanguageSwitcher = () => {
           onClick={() => changeLanguage('ar')}
           className={`cursor-pointer ${i18n.language === 'ar' ? 'bg-primary/10' : ''}`}
         >
-          🇦🇪 العربية
+          ع
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
