@@ -362,7 +362,7 @@ const DevBusinessProfile = () => (
             </div>
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Year Established</Label>
-              <Input className="mt-1" type="number" defaultValue={myDev.established} />
+              <Input className="mt-1" type="number" defaultValue={myDev.yearEstablished} />
             </div>
           </div>
 
