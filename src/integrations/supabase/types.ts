@@ -331,6 +331,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      set_my_account_type: {
+        Args: { _account_type: string }
+        Returns: Database["public"]["Enums"]["app_role"]
+      }
     }
     Enums: {
       app_role: "user" | "buyer" | "developer" | "admin"

@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
 
 type AppRole = 'user' | 'buyer' | 'developer' | 'admin';
+type AccountTypeIntent = 'buyer' | 'business';
 
 interface Profile {
   id: string;
@@ -25,7 +26,7 @@ interface AuthContextType {
   isLoading: boolean;
   signUp: (email: string, password: string, fullName?: string, accountType?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
-  signInWithGoogle: () => Promise<{ error: Error | null }>;
+  signInWithGoogle: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -164,9 +165,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: error as Error | null };
   };
 
-  const signInWithGoogle = async () => {
+  const signInWithGoogle = async (accountType: AccountTypeIntent = 'buyer') => {
+    const redirectUrl = new URL(`${window.location.origin}/auth`);
+    redirectUrl.searchParams.set('mode', 'signin');
+    redirectUrl.searchParams.set('oauth', 'google');
+    redirectUrl.searchParams.set('type', accountType);
+
     const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: `${window.location.origin}/`,
+      redirect_uri: redirectUrl.toString(),
+      extraParams: {
+        prompt: 'select_account',
+      },
     });
     
     if (result.error) {

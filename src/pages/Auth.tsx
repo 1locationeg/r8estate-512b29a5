@@ -22,7 +22,7 @@ const Auth = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user, role, signIn, signUp, signInWithGoogle, isLoading: authLoading } = useAuth();
+  const { user, role, signIn, signUp, signInWithGoogle, refreshProfile, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
   
   const initialType = searchParams.get('type') === 'business' ? 'business' : 'buyer';
@@ -30,11 +30,13 @@ const Auth = () => {
   const [mode, setMode] = useState<'signin' | 'signup'>(initialMode);
   const [accountType, setAccountType] = useState<AccountType>(initialType);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSyncingBusinessRole, setIsSyncingBusinessRole] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const isBusinessGoogleCallback = searchParams.get('oauth') === 'google' && searchParams.get('type') === 'business';
 
   // Sync parameters if query params change
   useEffect(() => {
@@ -45,14 +47,46 @@ const Auth = () => {
     if (qMode === 'signup') setMode('signup');
   }, [searchParams]);
 
+  // Ensure Google business auth callbacks are promoted to developer role
+  useEffect(() => {
+    if (authLoading || !user || !isBusinessGoogleCallback || role === 'developer' || role === 'admin') return;
+
+    let isMounted = true;
+
+    const syncBusinessRole = async () => {
+      setIsSyncingBusinessRole(true);
+      const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
+
+      if (error) {
+        toast({
+          title: 'Business activation failed',
+          description: 'We signed you in, but could not switch your account to Business. Please try again.',
+          variant: 'destructive',
+        });
+      } else {
+        await refreshProfile();
+      }
+
+      if (isMounted) {
+        setIsSyncingBusinessRole(false);
+      }
+    };
+
+    void syncBusinessRole();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [authLoading, user, isBusinessGoogleCallback, role, refreshProfile, toast]);
+
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && user) {
+    if (!authLoading && !isSyncingBusinessRole && user) {
       if (role === 'admin') navigate('/admin');
       else if (role === 'developer') navigate('/developer');
       else navigate('/buyer');
     }
-  }, [user, role, authLoading, navigate]);
+  }, [user, role, authLoading, isSyncingBusinessRole, navigate]);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -126,14 +160,10 @@ const Auth = () => {
           return;
         }
 
-        // If business account, assign developer role after signup
         if (accountType === 'business') {
-          // The role will be assigned by a trigger or we update it here
-          // We need to wait for the user to be created first
-          // For now, show a message that admin will verify
           toast({
-            title: 'Business account requested!',
-            description: 'Please check your email to verify your account. Your business account will be activated shortly.',
+            title: 'Business account created!',
+            description: 'Please check your email to verify your account, then sign in to access the business dashboard.',
           });
         } else {
           toast({
@@ -150,7 +180,7 @@ const Auth = () => {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
-      const { error } = await signInWithGoogle();
+      const { error } = await signInWithGoogle(accountType);
       if (error) {
         toast({
           title: 'Google sign in failed',
