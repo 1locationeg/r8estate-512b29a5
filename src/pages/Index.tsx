@@ -358,6 +358,7 @@ const Index = () => {
                   onClose={() => setSpecialViewItem(null)} />
               </div>
             )}
+          </>)
           }
         </div>
       </section>
