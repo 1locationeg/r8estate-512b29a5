@@ -5,6 +5,7 @@ import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
+import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
