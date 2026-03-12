@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Phone, Send, Loader2 } from "lucide-react";
+import { Phone, Send, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
