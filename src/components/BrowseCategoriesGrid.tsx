@@ -37,7 +37,7 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseC
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-6">
       <h2 className="text-xl md:text-2xl font-bold text-foreground mb-6">
-        {isRTL ? "استكشف الشركات حسب الفئة" : "Explore companies by category"}
+        {isRTL ? "استكشف حسب الفئة" : "Explore by category"}
       </h2>
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
