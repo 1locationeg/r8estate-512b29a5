@@ -327,7 +327,12 @@ const Index = () => {
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
-                onClick={() => navigate('/directory')}
+                onClick={() => {
+                  setShowIndustryCategories(prev => !prev);
+                  setTimeout(() => {
+                    document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
                 
                   Browse Categories   
