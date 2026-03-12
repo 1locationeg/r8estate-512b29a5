@@ -83,6 +83,15 @@ const Index = () => {
             </span>
           </button>
 
+          {/* Buyer / Business Toggle */}
+          <ViewToggle
+            onViewChange={(view) => {
+              if (view === "industry") {
+                navigate('/auth?type=business');
+              }
+            }}
+          />
+
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1">
             <button
