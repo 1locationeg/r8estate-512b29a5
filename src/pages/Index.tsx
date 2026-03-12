@@ -24,8 +24,8 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+  DropdownMenuTrigger } from
+"@/components/ui/dropdown-menu";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -56,7 +56,7 @@ const Index = () => {
     await signOut();
     toast({
       title: t("common.signedOut"),
-      description: t("common.signedOutSuccess"),
+      description: t("common.signedOutSuccess")
     });
   };
 
@@ -75,8 +75,8 @@ const Index = () => {
           <button
             onClick={() => navigate('/')}
             className="inline-flex items-center gap-0.5 hover:opacity-80 transition-opacity"
-            aria-label="Return to home"
-          >
+            aria-label="Return to home">
+            
             <img src={logoIcon} alt="R8ESTATE" className="h-7 w-7 md:h-10 md:w-10 object-contain" />
             <span className="inline-flex text-lg md:text-xl font-extrabold leading-none">
               <span className="text-brand-red">R8</span>
@@ -92,19 +92,19 @@ const Index = () => {
               setSelectedDeveloperId(null);
               setSpecialViewItem(null);
               setActiveView(null);
-            }}
-          />
+            }} />
+          
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1">
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+                if (searchInput) {searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });searchInput.focus();}
               }}
               className="p-2 rounded-lg hover:bg-secondary transition-colors"
-              aria-label="Search"
-            >
+              aria-label="Search">
+              
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
             <LanguageSwitcher />
@@ -115,8 +115,8 @@ const Index = () => {
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
             <NotificationBell />
-            {user ? (
-              <DropdownMenu>
+            {user ?
+            <DropdownMenu>
                 <DropdownMenuTrigger className="focus:outline-none">
                   <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
                     <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.full_name || "User"} />
@@ -143,16 +143,16 @@ const Index = () => {
                     {t("common.signOut")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <button 
-                onClick={() => navigate('/auth')}
-                disabled={isLoading}
-                className="px-4 lg:px-6 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
-              >
+              </DropdownMenu> :
+
+            <button
+              onClick={() => navigate('/auth')}
+              disabled={isLoading}
+              className="px-4 lg:px-6 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm">
+              
                 {isLoading ? t("common.signingIn") : t("common.signIn")}
               </button>
-            )}
+            }
           </div>
 
 
@@ -176,17 +176,17 @@ const Index = () => {
 
            {/* Mode-specific Tagline */}
            <div className="text-center mb-0 max-w-3xl">
-             {userMode === "buyers" ? (
-               <>
+             {userMode === "buyers" ?
+            <>
                  <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
                    {t("hero.tagline")}
                  </p>
                  <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
                    {t("hero.taglineHighlight")}
                  </p>
-               </>
-             ) : (
-               <>
+               </> :
+
+            <>
                  <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
                    {t("hero.industryTitle1")}
                  </p>
@@ -194,7 +194,7 @@ const Index = () => {
                    {t("hero.industryTitle2")}
                  </p>
                </>
-             )}
+            }
            </div>
 
           {/* Mode-specific Description */}
@@ -202,74 +202,74 @@ const Index = () => {
             {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
           </p>
 
-          {userMode === "buyers" ? (
-            <>
+          {userMode === "buyers" ?
+          <>
               {/* Search Bar */}
               <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
                 <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
               </div>
 
               {/* Category Links + Special View Grid */}
-              <HeroCategoryLinks 
-                activeView={activeView}
-                onViewSelect={(view) => {
-                  setActiveView(prev => prev === view ? null : view);
-                  setSelectedDeveloperId(null);
-                  setSpecialViewItem(null);
-                }}
-                onSelectItem={(item) => {
-                  setSpecialViewItem(item);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                }}
-                onCategorySelect={(catKey) => {
-                  setExternalCategory(catKey);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                  setSpecialViewItem(null);
-                  setTimeout(() => setExternalCategory(null), 100);
-                }}
-              />
+              <HeroCategoryLinks
+              activeView={activeView}
+              onViewSelect={(view) => {
+                setActiveView((prev) => prev === view ? null : view);
+                setSelectedDeveloperId(null);
+                setSpecialViewItem(null);
+              }}
+              onSelectItem={(item) => {
+                setSpecialViewItem(item);
+                setActiveView(null);
+                setSelectedDeveloperId(null);
+              }}
+              onCategorySelect={(catKey) => {
+                setExternalCategory(catKey);
+                setActiveView(null);
+                setSelectedDeveloperId(null);
+                setSpecialViewItem(null);
+                setTimeout(() => setExternalCategory(null), 100);
+              }} />
+            
 
               {/* Special View Item Detail */}
-              {specialViewItem && (
-                <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+              {specialViewItem &&
+            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
                   <ItemDetailSection
-                    item={specialViewItem}
-                    onClose={() => setSpecialViewItem(null)}
-                  />
+                item={specialViewItem}
+                onClose={() => setSpecialViewItem(null)} />
+              
                 </div>
-              )}
+            }
 
               {/* Developer Detail Card */}
-              {selectedDeveloper && !specialViewItem && (
-                <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+              {selectedDeveloper && !specialViewItem &&
+            <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
                   <DeveloperDetailCard
-                    developer={selectedDeveloper}
-                    onClose={() => setSelectedDeveloperId(null)}
-                  />
+                developer={selectedDeveloper}
+                onClose={() => setSelectedDeveloperId(null)} />
+              
                 </div>
-              )}
+            }
 
               {/* Featured Identity Spotlight */}
-              {!specialViewItem && !selectedDeveloper && (
-                <FeaturedIdentitySpotlight />
-              )}
+              {!specialViewItem && !selectedDeveloper &&
+            <FeaturedIdentitySpotlight />
+            }
 
               {/* Category Bar */}
-              <HeroCategoryItems 
-                onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} 
-                externalCategory={externalCategory}
-                onSelectItem={(item) => {
-                  setSpecialViewItem(item);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                }}
-              />
-            </>
-          ) : (
-            /* ── Business / Industry View ── */
-            <div className="w-full max-w-3xl px-4 mb-4">
+              <HeroCategoryItems
+              onInteraction={() => {setSelectedDeveloperId(null);setSpecialViewItem(null);setActiveView(null);}}
+              externalCategory={externalCategory}
+              onSelectItem={(item) => {
+                setSpecialViewItem(item);
+                setActiveView(null);
+                setSelectedDeveloperId(null);
+              }} />
+            
+            </> : (
+
+          /* ── Business / Industry View ── */
+          <div className="w-full max-w-3xl px-4 mb-4">
               {/* Business Feature Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                 <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
@@ -319,28 +319,28 @@ const Index = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm"
-                >
+                onClick={() => navigate('/auth?type=business')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                
                   Claim Your Business Profile
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
-                  onClick={() => navigate('/directory')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
-                >
-                  Browse Developer Directory
+                onClick={() => navigate('/directory')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
+                
+                  Browse Categories   
                 </button>
               </div>
-            </div>
-          )}
+            </div>)
+          }
         </div>
       </section>
 
       <Footer />
 
-    </div>
-  );
+    </div>);
+
 };
 
 export default Index;
