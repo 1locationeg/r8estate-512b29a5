@@ -87,9 +87,11 @@ const Index = () => {
           {/* Buyer / Business Toggle */}
           <ViewToggle
             onViewChange={(view) => {
-              if (view === "industry") {
-                navigate('/auth?type=business');
-              }
+              setUserMode(view);
+              // Reset selections when switching modes
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+              setActiveView(null);
             }}
           />
 
