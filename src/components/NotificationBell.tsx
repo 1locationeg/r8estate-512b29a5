@@ -70,10 +70,17 @@ export const NotificationBell = () => {
     useNotifications();
   const [open, setOpen] = useState(false);
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (isOpen && unreadCount > 0) {
+      markAllAsRead();
+    }
+  };
+
   if (!user) return null;
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover open={open} onOpenChange={handleOpenChange}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
