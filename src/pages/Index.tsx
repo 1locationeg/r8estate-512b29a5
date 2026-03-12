@@ -69,15 +69,15 @@ const Index = () => {
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full" style={{ paddingTop: 'max(50px, env(safe-area-inset-top, 0px))' }}>
       {/* Header */}
       <header className="bg-background shadow-sm border-b border-border">
-        <div className="container mx-auto px-3 py-2 flex items-center justify-between">
+        <div className="container mx-auto px-3 py-0.5 flex items-center justify-between">
           {/* Logo + Brand in header */}
           <button
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"
+            className="inline-flex items-center gap-0.5 hover:opacity-80 transition-opacity"
             aria-label="Return to home"
           >
-            <img src={logoIcon} alt="R8ESTATE" className="h-8 w-8 md:h-12 md:w-12 object-contain" />
-            <span className="inline-flex text-xl font-extrabold leading-none">
+            <img src={logoIcon} alt="R8ESTATE" className="h-7 w-7 md:h-10 md:w-10 object-contain" />
+            <span className="inline-flex text-lg md:text-xl font-extrabold leading-none">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
             </span>
