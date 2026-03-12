@@ -184,7 +184,7 @@ const Auth = () => {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
-      const { error } = await signInWithGoogle();
+      const { error } = await signInWithGoogle(accountType);
       if (error) {
         toast({
           title: 'Google sign in failed',
