@@ -1,18 +1,11 @@
 import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
-import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
-import { HeroCategoryItems } from "@/components/HeroCategoryItems";
-import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
-import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
-import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
-import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, Building2 } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -30,27 +23,8 @@ import {
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [userMode, setUserMode] = useState<"buyers" | "industry">("buyers");
-  const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
-  const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
-  const [specialViewItem, setSpecialViewItem] = useState<any>(null);
-  const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
-
-  const selectedDeveloper = useMemo(() => {
-    if (!selectedDeveloperId) return null;
-    return developers.find((d) => d.id === selectedDeveloperId) || null;
-  }, [selectedDeveloperId]);
-
-  // Auto-scroll to detail section when item is selected
-  useEffect(() => {
-    if (specialViewItem || selectedDeveloper) {
-      setTimeout(() => {
-        document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
-    }
-  }, [specialViewItem, selectedDeveloper]);
 
   const handleSignOut = async () => {
     await signOut();
