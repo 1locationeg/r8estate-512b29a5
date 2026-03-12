@@ -137,6 +137,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         {/* Search Input */}
         <div className="flex-1 relative">
           <input
+            data-hero-search
             ref={inputRef}
             type="text"
             value={query}

@@ -12,7 +12,7 @@ import { MobileNav } from "@/components/MobileNav";
 
 import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard } from "lucide-react";
+import { LogOut, LayoutDashboard, Search } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -83,6 +83,22 @@ const Index = () => {
             </span>
           </button>
 
+          {/* Mobile compact actions */}
+          <div className="flex md:hidden items-center gap-1">
+            <button
+              onClick={() => {
+                const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+              }}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <LanguageSwitcher />
+            <NotificationBell />
+          </div>
+
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
@@ -127,17 +143,19 @@ const Index = () => {
             )}
           </div>
 
-          {/* Mobile Menu */}
-          <MobileNav onSignOut={handleSignOut} getDashboardRoute={getDashboardRoute} />
+          {/* Mobile Menu (hamburger only) */}
+          <div className="md:hidden">
+            <MobileNav onSignOut={handleSignOut} getDashboardRoute={getDashboardRoute} />
+          </div>
         </div>
       </header>
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-2 sm:py-10 md:py-14">
+       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:py-10 md:py-14">
             {/* Trust Meter Title + Gauge */}
-            <div className="text-center mb-1 md:mb-4">
-            <p className="text-[clamp(1.1rem,4vw,1.75rem)] sm:text-3xl md:text-4xl font-bold text-accent">
+            <div className="text-center mb-0 md:mb-4">
+            <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-tight">
                {t("hero.trustMeter")}
             </p>
 

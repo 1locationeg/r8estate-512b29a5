@@ -26,10 +26,10 @@ export const BottomNav = () => {
   return (
     <>
       {/* Spacer to prevent content from being hidden behind the fixed nav */}
-      <div className="h-16 md:hidden" />
+      <div className="h-12 md:hidden" />
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border safe-bottom">
-        <div className="flex items-center justify-around h-16 px-2 max-w-md mx-auto">
+        <div className="flex items-center justify-around h-12 px-2 max-w-md mx-auto">
           {/* Home */}
           <button
             onClick={() => navigate("/")}
@@ -58,10 +58,10 @@ export const BottomNav = () => {
               window.scrollTo({ top: 0, behavior: "smooth" });
               navigate("/");
             }}
-            className="flex items-center justify-center -mt-5 relative"
+            className="flex items-center justify-center -mt-4 relative"
           >
-            <div className="h-14 w-14 rounded-full bg-white shadow-lg flex items-center justify-center ring-4 ring-background overflow-hidden">
-              <img src={logoIcon} alt="R8ESTATE" className="h-13 w-13 object-contain scale-125" />
+            <div className="h-11 w-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-3 ring-background overflow-hidden">
+              <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain scale-125" />
             </div>
           </button>
 
