@@ -68,7 +68,7 @@ const Index = () => {
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full pt-[50px] safe-top">
       {/* Header */}
-      <header className="bg-primary border-b-4 border-destructive py-3">
+      <header className="bg-background border-b border-border">
         <div className="container mx-auto px-3 py-2 flex items-center justify-between">
           {/* Logo + Brand in header */}
           <button
