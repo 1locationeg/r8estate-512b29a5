@@ -93,7 +93,7 @@ export const BusinessProfileHeader = ({
               {/* Trust + Rating */}
               <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <TrustGaugeMini score={company.trustScore} size={64} />
+                  <TrustGaugeMini score={company.trustScore} size="sm" />
                 </div>
                 <div className="text-center">
                   <div className="flex items-center gap-1 mb-0.5">
