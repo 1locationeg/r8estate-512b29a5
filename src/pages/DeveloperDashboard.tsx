@@ -14,6 +14,7 @@ import {
   Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
+import { useBusinessProfile } from '@/hooks/useBusinessProfile';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
