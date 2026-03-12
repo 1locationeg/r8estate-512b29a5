@@ -30,6 +30,7 @@ import {
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [userMode, setUserMode] = useState<"buyers" | "industry">("buyers");
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
