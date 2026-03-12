@@ -37,6 +37,31 @@ const BuyerOverview = () => {
         <p className="text-muted-foreground text-sm">Continue your search for the perfect developer</p>
       </div>
 
+      {/* Register Your Business CTA */}
+      <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/10">
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary rounded-full blur-3xl" />
+        </div>
+        <div className="relative flex flex-col sm:flex-row items-center gap-4 p-5 sm:p-6">
+          <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
+            <Building2 className="w-6 h-6 text-primary" />
+          </div>
+          <div className="flex-1 text-center sm:text-start">
+            <h3 className="font-bold text-foreground text-base">Are you a developer or business?</h3>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              Register your business to manage your profile, respond to reviews, and build trust with buyers.
+            </p>
+          </div>
+          <Button
+            onClick={() => navigate('/auth?type=business&mode=signup')}
+            className="flex-shrink-0 gap-2"
+          >
+            <Building2 className="w-4 h-4" />
+            Register Your Business
+          </Button>
+        </div>
+      </div>
+
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {stats.map((s) => (
