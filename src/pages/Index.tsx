@@ -136,10 +136,10 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-6 pb-2 sm:py-10 md:py-14">
+       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:py-10 md:py-14">
             {/* Trust Meter Title + Gauge */}
-            <div className="text-center mb-1 md:mb-4">
-            <p className="text-[clamp(1.1rem,4vw,1.75rem)] sm:text-3xl md:text-4xl font-bold text-accent">
+            <div className="text-center mb-0 md:mb-4">
+            <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-tight">
                {t("hero.trustMeter")}
             </p>
 
