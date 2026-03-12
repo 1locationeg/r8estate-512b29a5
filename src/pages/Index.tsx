@@ -89,10 +89,10 @@ const Index = () => {
           <ViewToggle
             onViewChange={(view) => {
               setUserMode(view);
-              // Reset selections when switching modes
               setSelectedDeveloperId(null);
               setSpecialViewItem(null);
               setActiveView(null);
+              setShowIndustryCategories(false);
             }} />
           
 
