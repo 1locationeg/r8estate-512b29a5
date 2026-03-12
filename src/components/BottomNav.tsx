@@ -26,10 +26,10 @@ export const BottomNav = () => {
   return (
     <>
       {/* Spacer to prevent content from being hidden behind the fixed nav */}
-      <div className="h-16 md:hidden" />
+      <div className="h-12 md:hidden" />
 
       <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border safe-bottom">
-        <div className="flex items-center justify-around h-16 px-2 max-w-md mx-auto">
+        <div className="flex items-center justify-around h-12 px-2 max-w-md mx-auto">
           {/* Home */}
           <button
             onClick={() => navigate("/")}
