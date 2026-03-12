@@ -50,7 +50,7 @@ const companyData = {
   name: myDev.name,
   logo: myDev.logo,
   location: myDev.location,
-  established: myDev.established,
+  established: myDev.yearEstablished,
   employees: myDev.employees,
   specialties: myDev.specialties,
   rating: myDev.rating,
