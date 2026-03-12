@@ -5,6 +5,7 @@ import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
+import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -343,12 +344,21 @@ const Index = () => {
 
             {showIndustryCategories && (
               <div id="industry-categories-section" className="w-full scroll-mt-24">
-                <HeroCategoryItems
-                  onInteraction={() => { setSpecialViewItem(null); }}
-                  externalCategory={externalCategory}
+                <BrowseCategoriesGrid
+                  onSelectCategory={(index) => {
+                    setShowIndustryCategories(false);
+                    setExternalCategory?.(undefined);
+                    setTimeout(() => {
+                      setShowIndustryCategories(false);
+                    }, 0);
+                  }}
                   onSelectItem={(item) => {
-                    setSpecialViewItem(item);
-                  }} />
+                    setSpecialViewItem(item as any);
+                    setTimeout(() => {
+                      document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }}
+                />
               </div>
             )}
 
