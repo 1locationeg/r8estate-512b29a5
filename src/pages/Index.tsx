@@ -12,7 +12,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
