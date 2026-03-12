@@ -212,7 +212,7 @@ const Index = () => {
       </section>
 
       <Footer />
-      <MobileNav />
+      <MobileNav onSignOut={handleSignOut} getDashboardRoute={getDashboardRoute} />
     </div>
   );
 };
