@@ -58,29 +58,14 @@ const Index = () => {
             </span>
           </button>
 
-          {/* Buyer / Business Toggle */}
-          <ViewToggle
-            onViewChange={(view) => {
-              setUserMode(view);
-              // Reset selections when switching modes
-              setSelectedDeveloperId(null);
-              setSpecialViewItem(null);
-              setActiveView(null);
-            }}
-          />
+          {/* Business Badge */}
+          <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary rounded-full text-sm font-semibold">
+            <Building2 className="w-4 h-4" />
+            <span>Business</span>
+          </div>
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1">
-            <button
-              onClick={() => {
-                const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
-              }}
-              className="p-2 rounded-lg hover:bg-secondary transition-colors"
-              aria-label="Search"
-            >
-              <Search className="w-5 h-5 text-muted-foreground" />
-            </button>
             <LanguageSwitcher />
             <NotificationBell />
           </div>
@@ -104,7 +89,7 @@ const Index = () => {
                     <div className="flex flex-col">
                       <span className="font-medium">{profile?.full_name || 'User'}</span>
                       <span className="text-xs text-muted-foreground">{user.email}</span>
-                      <span className="text-xs text-primary mt-1 capitalize">{role || 'Buyer'}</span>
+                      <span className="text-xs text-primary mt-1 capitalize">{role || 'Business'}</span>
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -120,7 +105,7 @@ const Index = () => {
               </DropdownMenu>
             ) : (
               <button 
-                onClick={() => navigate('/auth')}
+                onClick={() => navigate('/auth?type=business')}
                 disabled={isLoading}
                 className="px-4 lg:px-6 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm"
               >
@@ -128,191 +113,106 @@ const Index = () => {
               </button>
             )}
           </div>
-
-
         </div>
       </header>
 
-      {/* Hero Section */}
+      {/* Hero Section - Business Only */}
       <section className="flex-1 flex flex-col bg-background">
-       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
-             {/* Trust Meter Title + Gauge */}
-             <div className="text-center">
-             <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-none mb-0">
-                {t("hero.trustMeter")}
-             </p>
+        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
+          {/* Trust Meter Title + Gauge */}
+          <div className="text-center">
+            <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-none mb-0">
+              {t("hero.trustMeter")}
+            </p>
+            <div className="mt-0">
+              <HeroTrustGauge />
+            </div>
+          </div>
 
-              {/* Hero Trust Meter Gauge - Live Animated */}
-              <div className="mt-0">
-                <HeroTrustGauge />
-              </div>
-           </div>
+          {/* Business Tagline */}
+          <div className="text-center mb-0 max-w-3xl">
+            <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+              {t("hero.industryTitle1")}
+            </p>
+            <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+              {t("hero.industryTitle2")}
+            </p>
+          </div>
 
-           {/* Mode-specific Tagline */}
-           <div className="text-center mb-0 max-w-3xl">
-             {userMode === "buyers" ? (
-               <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.tagline")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.taglineHighlight")}
-                 </p>
-               </>
-             ) : (
-               <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.industryTitle1")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.industryTitle2")}
-                 </p>
-               </>
-             )}
-           </div>
-
-          {/* Mode-specific Description */}
+          {/* Business Description */}
           <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
-            {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
+            {t("hero.industryDescription")}
           </p>
 
-          {userMode === "buyers" ? (
-            <>
-              {/* Search Bar */}
-              <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
-                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+          {/* Business Feature Cards */}
+          <div className="w-full max-w-3xl px-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+              <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <BarChart3 className="w-5 h-5 text-primary" />
+                </div>
+                <h3 className="text-sm font-bold text-foreground">Reputation Analytics</h3>
+                <p className="text-xs text-muted-foreground leading-snug">Track your trust score, review trends, and buyer sentiment in real time.</p>
               </div>
-
-              {/* Category Links + Special View Grid */}
-              <HeroCategoryLinks 
-                activeView={activeView}
-                onViewSelect={(view) => {
-                  setActiveView(prev => prev === view ? null : view);
-                  setSelectedDeveloperId(null);
-                  setSpecialViewItem(null);
-                }}
-                onSelectItem={(item) => {
-                  setSpecialViewItem(item);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                }}
-                onCategorySelect={(catKey) => {
-                  setExternalCategory(catKey);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                  setSpecialViewItem(null);
-                  setTimeout(() => setExternalCategory(null), 100);
-                }}
-              />
-
-              {/* Special View Item Detail */}
-              {specialViewItem && (
-                <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
-                  <ItemDetailSection
-                    item={specialViewItem}
-                    onClose={() => setSpecialViewItem(null)}
-                  />
+              <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                  <Shield className="w-5 h-5 text-accent" />
                 </div>
-              )}
-
-              {/* Developer Detail Card */}
-              {selectedDeveloper && !specialViewItem && (
-                <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
-                  <DeveloperDetailCard
-                    developer={selectedDeveloper}
-                    onClose={() => setSelectedDeveloperId(null)}
-                  />
-                </div>
-              )}
-
-              {/* Featured Identity Spotlight */}
-              {!specialViewItem && !selectedDeveloper && (
-                <FeaturedIdentitySpotlight />
-              )}
-
-              {/* Category Bar */}
-              <HeroCategoryItems 
-                onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} 
-                externalCategory={externalCategory}
-                onSelectItem={(item) => {
-                  setSpecialViewItem(item);
-                  setActiveView(null);
-                  setSelectedDeveloperId(null);
-                }}
-              />
-            </>
-          ) : (
-            /* ── Business / Industry View ── */
-            <div className="w-full max-w-3xl px-4 mb-4">
-              {/* Business Feature Cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-bold text-foreground">Reputation Analytics</h3>
-                  <p className="text-xs text-muted-foreground leading-snug">Track your trust score, review trends, and buyer sentiment in real time.</p>
-                </div>
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-accent" />
-                  </div>
-                  <h3 className="text-sm font-bold text-foreground">Verified Profile</h3>
-                  <p className="text-xs text-muted-foreground leading-snug">Claim and verify your business identity to build buyer confidence.</p>
-                </div>
-                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                  </div>
-                  <h3 className="text-sm font-bold text-foreground">Lead Generation</h3>
-                  <p className="text-xs text-muted-foreground leading-snug">Convert trust into sales — high-intent buyers discover you organically.</p>
-                </div>
+                <h3 className="text-sm font-bold text-foreground">Verified Profile</h3>
+                <p className="text-xs text-muted-foreground leading-snug">Claim and verify your business identity to build buyer confidence.</p>
               </div>
-
-              {/* Business Stats */}
-              <div className="flex items-center justify-center gap-6 mb-6">
-                <div className="text-center">
-                  <p className="text-2xl md:text-3xl font-black text-primary">2,500+</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Active Buyers</p>
+              <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                  <TrendingUp className="w-5 h-5 text-primary" />
                 </div>
-                <div className="w-px h-10 bg-border" />
-                <div className="text-center">
-                  <p className="text-2xl md:text-3xl font-black text-accent">92%</p>
-                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trust Conversion</p>
-                </div>
-                <div className="w-px h-10 bg-border" />
-                <div className="text-center">
-                  <p className="text-2xl md:text-3xl font-black text-primary">4.8</p>
-                  <div className="flex items-center justify-center gap-0.5">
-                    <Star className="w-3 h-3 text-accent fill-accent" />
-                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Rating</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* CTA Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm"
-                >
-                  Claim Your Business Profile
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => navigate('/directory')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
-                >
-                  Browse Developer Directory
-                </button>
+                <h3 className="text-sm font-bold text-foreground">Lead Generation</h3>
+                <p className="text-xs text-muted-foreground leading-snug">Convert trust into sales — high-intent buyers discover you organically.</p>
               </div>
             </div>
-          )}
+
+            {/* Business Stats */}
+            <div className="flex items-center justify-center gap-6 mb-6">
+              <div className="text-center">
+                <p className="text-2xl md:text-3xl font-black text-primary">2,500+</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Active Buyers</p>
+              </div>
+              <div className="w-px h-10 bg-border" />
+              <div className="text-center">
+                <p className="text-2xl md:text-3xl font-black text-accent">92%</p>
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trust Conversion</p>
+              </div>
+              <div className="w-px h-10 bg-border" />
+              <div className="text-center">
+                <p className="text-2xl md:text-3xl font-black text-primary">4.8</p>
+                <div className="flex items-center justify-center gap-0.5">
+                  <Star className="w-3 h-3 text-accent fill-accent" />
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Rating</p>
+                </div>
+              </div>
+            </div>
+
+            {/* CTA Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <button
+                onClick={() => navigate('/auth?type=business')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm"
+              >
+                Claim Your Business Profile
+                <ArrowRight className="w-4 h-4" />
+              </button>
+              <button
+                onClick={() => navigate('/directory')}
+                className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
+              >
+                Browse Developer Directory
+              </button>
+            </div>
+          </div>
         </div>
       </section>
 
       <Footer />
-
+      <MobileNav />
     </div>
   );
 };
