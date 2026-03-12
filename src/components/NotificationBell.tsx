@@ -70,6 +70,13 @@ export const NotificationBell = () => {
     useNotifications();
   const [open, setOpen] = useState(false);
 
+  const handleOpenChange = (isOpen: boolean) => {
+    setOpen(isOpen);
+    if (isOpen && unreadCount > 0) {
+      markAllAsRead();
+    }
+  };
+
   if (!user) return null;
 
   return (
