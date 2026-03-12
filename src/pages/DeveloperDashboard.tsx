@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -14,6 +14,7 @@ import {
   Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
+import { useBusinessProfile } from '@/hooks/useBusinessProfile';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
@@ -322,152 +323,213 @@ const DevSettings = () => (
 );
 
 // Business Profile Page
-const DevBusinessProfile = () => (
-  <div className="max-w-3xl">
-    <h2 className="text-2xl font-bold text-foreground mb-6">Business Profile</h2>
-    
-    <div className="space-y-6">
-      {/* Company Info */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Building2 className="w-4 h-4 text-muted-foreground" />
-          Company Information
-        </h3>
-        <div className="space-y-4">
-          {/* Logo Upload */}
-          <div>
-            <Label className="text-xs font-medium text-muted-foreground">Company Logo</Label>
-            <div className="mt-2 flex items-center gap-4">
-              <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center">
-                {myDev.logo ? (
-                  <img src={myDev.logo} alt={myDev.name} className="w-full h-full rounded-xl object-cover" />
-                ) : (
-                  <Upload className="w-6 h-6 text-muted-foreground" />
-                )}
+const DevBusinessProfile = () => {
+  const { profile: bp, isLoading: bpLoading, isSaving, saveProfile } = useBusinessProfile();
+  const navigate = useNavigate();
+
+  const [form, setForm] = useState({
+    company_name: '',
+    description: '',
+    location: '',
+    year_established: '' as string,
+    employees: '' as string,
+    specialties: '',
+    email: '',
+    phone: '',
+    website: '',
+  });
+
+  useEffect(() => {
+    if (bp) {
+      setForm({
+        company_name: bp.company_name || myDev.name,
+        description: bp.description || `${myDev.name} is a leading real estate developer in ${myDev.location}.`,
+        location: bp.location || myDev.location,
+        year_established: bp.year_established?.toString() || myDev.yearEstablished.toString(),
+        employees: bp.employees?.toString() || myDev.employees.toString(),
+        specialties: (bp.specialties.length ? bp.specialties : myDev.specialties).join(', '),
+        email: bp.email,
+        phone: bp.phone,
+        website: bp.website,
+      });
+    }
+  }, [bp]);
+
+  const handleChange = (field: string, value: string) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = () => {
+    saveProfile({
+      company_name: form.company_name,
+      description: form.description,
+      location: form.location,
+      year_established: form.year_established ? parseInt(form.year_established) : null,
+      employees: form.employees ? parseInt(form.employees) : null,
+      specialties: form.specialties.split(',').map((s) => s.trim()).filter(Boolean),
+      email: form.email,
+      phone: form.phone,
+      website: form.website,
+    });
+  };
+
+  if (bpLoading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-3xl">
+      <h2 className="text-2xl font-bold text-foreground mb-6">Business Profile</h2>
+
+      <div className="space-y-6">
+        {/* Company Info */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Building2 className="w-4 h-4 text-muted-foreground" />
+            Company Information
+          </h3>
+          <div className="space-y-4">
+            {/* Logo Upload */}
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Company Logo</Label>
+              <div className="mt-2 flex items-center gap-4">
+                <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center">
+                  {bp?.logo_url || myDev.logo ? (
+                    <img src={bp?.logo_url || myDev.logo} alt={form.company_name} className="w-full h-full rounded-xl object-cover" />
+                  ) : (
+                    <Upload className="w-6 h-6 text-muted-foreground" />
+                  )}
+                </div>
+                <div>
+                  <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+                    <Upload className="w-3.5 h-3.5" />
+                    Upload Logo
+                  </Button>
+                  <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground">Company Name</Label>
+                <Input className="mt-1" value={form.company_name} onChange={(e) => handleChange('company_name', e.target.value)} />
               </div>
               <div>
-                <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-                  <Upload className="w-3.5 h-3.5" />
-                  Upload Logo
-                </Button>
-                <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
+                <Label className="text-xs font-medium text-muted-foreground">Year Established</Label>
+                <Input className="mt-1" type="number" value={form.year_established} onChange={(e) => handleChange('year_established', e.target.value)} />
+              </div>
+            </div>
+
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Description / Bio</Label>
+              <Textarea className="mt-1 min-h-[100px]" placeholder="Tell buyers about your company..." value={form.description} onChange={(e) => handleChange('description', e.target.value)} />
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                  <MapPin className="w-3 h-3" /> Location
+                </Label>
+                <Input className="mt-1" value={form.location} onChange={(e) => handleChange('location', e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground">Specialties</Label>
+                <Input className="mt-1" value={form.specialties} onChange={(e) => handleChange('specialties', e.target.value)} placeholder="Comma separated" />
               </div>
             </div>
           </div>
+        </div>
 
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Company Name</Label>
-              <Input className="mt-1" defaultValue={myDev.name} />
+        {/* Contact Details */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Phone className="w-4 h-4 text-muted-foreground" />
+            Contact Details
+          </h3>
+          <div className="space-y-4">
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                  <Mail className="w-3 h-3" /> Email
+                </Label>
+                <Input className="mt-1" type="email" placeholder="business@example.com" value={form.email} onChange={(e) => handleChange('email', e.target.value)} />
+              </div>
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                  <Phone className="w-3 h-3" /> Phone
+                </Label>
+                <Input className="mt-1" type="tel" placeholder="+971 XX XXX XXXX" value={form.phone} onChange={(e) => handleChange('phone', e.target.value)} />
+              </div>
             </div>
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Year Established</Label>
-              <Input className="mt-1" type="number" defaultValue={myDev.yearEstablished} />
-            </div>
-          </div>
-
-          <div>
-            <Label className="text-xs font-medium text-muted-foreground">Description / Bio</Label>
-            <Textarea className="mt-1 min-h-[100px]" placeholder="Tell buyers about your company..." defaultValue={`${myDev.name} is a leading real estate developer in ${myDev.location}.`} />
-          </div>
-
-          <div className="grid sm:grid-cols-2 gap-4">
             <div>
               <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                <MapPin className="w-3 h-3" /> Location
+                <Globe className="w-3 h-3" /> Website
               </Label>
-              <Input className="mt-1" defaultValue={myDev.location} />
-            </div>
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground">Specialties</Label>
-              <Input className="mt-1" defaultValue={myDev.specialties.join(', ')} />
+              <Input className="mt-1" type="url" placeholder="https://www.yourcompany.com" value={form.website} onChange={(e) => handleChange('website', e.target.value)} />
             </div>
           </div>
         </div>
-      </div>
 
-      {/* Contact Details */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Phone className="w-4 h-4 text-muted-foreground" />
-          Contact Details
-        </h3>
-        <div className="space-y-4">
-          <div className="grid sm:grid-cols-2 gap-4">
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                <Mail className="w-3 h-3" /> Email
-              </Label>
-              <Input className="mt-1" type="email" placeholder="business@example.com" />
-            </div>
-            <div>
-              <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-                <Phone className="w-3 h-3" /> Phone
-              </Label>
-              <Input className="mt-1" type="tel" placeholder="+971 XX XXX XXXX" />
-            </div>
-          </div>
-          <div>
-            <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
-              <Globe className="w-3 h-3" /> Website
-            </Label>
-            <Input className="mt-1" type="url" placeholder="https://www.yourcompany.com" />
+        {/* Business Documents */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+            <FileText className="w-4 h-4 text-muted-foreground" />
+            Business Documents
+          </h3>
+          <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
+            <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+            <p className="text-sm font-medium text-foreground mb-1">Upload Business License</p>
+            <p className="text-xs text-muted-foreground mb-3">Trade license, registration certificate, etc.</p>
+            <Button size="sm" variant="outline" className="gap-1.5">
+              <Upload className="w-3.5 h-3.5" />
+              Choose File
+            </Button>
           </div>
         </div>
-      </div>
 
-      {/* Business Documents */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <FileText className="w-4 h-4 text-muted-foreground" />
-          Business Documents
-        </h3>
-        <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
-          <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-          <p className="text-sm font-medium text-foreground mb-1">Upload Business License</p>
-          <p className="text-xs text-muted-foreground mb-3">Trade license, registration certificate, etc.</p>
-          <Button size="sm" variant="outline" className="gap-1.5">
-            <Upload className="w-3.5 h-3.5" />
-            Choose File
+        {/* Public Profile Preview */}
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+            <Eye className="w-4 h-4 text-muted-foreground" />
+            Public Profile Preview
+          </h3>
+          <div className="bg-secondary/50 rounded-xl p-4">
+            <div className="flex items-center gap-3 mb-3">
+              <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+                {(form.company_name || myDev.name).charAt(0)}
+              </div>
+              <div>
+                <p className="font-semibold text-foreground text-sm">{form.company_name || myDev.name}</p>
+                <p className="text-xs text-muted-foreground flex items-center gap-1">
+                  <MapPin className="w-3 h-3" /> {form.location || myDev.location}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-accent fill-accent" /> {myDev.rating.toFixed(1)}
+              </span>
+              <span>{myDev.reviewCount} reviews</span>
+              <span>Est. {form.year_established || myDev.yearEstablished}</span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-3">
+          <Button className="bg-brand-red text-white hover:bg-brand-red/90" onClick={handleSave} disabled={isSaving}>
+            {isSaving ? <><Loader2 className="w-4 h-4 animate-spin me-1" /> Saving...</> : 'Save Profile'}
           </Button>
+          <Button variant="outline" onClick={() => navigate('/developer')}>Cancel</Button>
         </div>
-      </div>
-
-      {/* Public Profile Preview */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Eye className="w-4 h-4 text-muted-foreground" />
-          Public Profile Preview
-        </h3>
-        <div className="bg-secondary/50 rounded-xl p-4">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
-              {myDev.name.charAt(0)}
-            </div>
-            <div>
-              <p className="font-semibold text-foreground text-sm">{myDev.name}</p>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
-                <MapPin className="w-3 h-3" /> {myDev.location}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <Star className="w-3 h-3 text-accent fill-accent" /> {myDev.rating.toFixed(1)}
-            </span>
-            <span>{myDev.reviewCount} reviews</span>
-            <span>Est. {myDev.yearEstablished}</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex gap-3">
-        <Button className="bg-brand-red text-white hover:bg-brand-red/90">Save Profile</Button>
-        <Button variant="outline">Cancel</Button>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
