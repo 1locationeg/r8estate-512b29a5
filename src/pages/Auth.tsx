@@ -39,9 +39,10 @@ const Auth = () => {
   // Sync parameters if query params change
   useEffect(() => {
     const type = searchParams.get('type');
-    const mode = searchParams.get('mode');
+    const qMode = searchParams.get('mode');
     if (type === 'business') setAccountType('business');
-    if (mode === 'signin') setMode('signin');
+    if (qMode === 'signin') setMode('signin');
+    if (qMode === 'signup') setMode('signup');
   }, [searchParams]);
 
   // Redirect if already logged in
