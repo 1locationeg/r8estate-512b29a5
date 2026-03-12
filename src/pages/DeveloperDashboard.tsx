@@ -456,7 +456,7 @@ const DevBusinessProfile = () => (
               <Star className="w-3 h-3 text-accent fill-accent" /> {myDev.rating.toFixed(1)}
             </span>
             <span>{myDev.reviewCount} reviews</span>
-            <span>Est. {myDev.established}</span>
+            <span>Est. {myDev.yearEstablished}</span>
           </div>
         </div>
       </div>
