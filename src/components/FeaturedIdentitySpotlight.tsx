@@ -70,7 +70,7 @@ export const FeaturedIdentitySpotlight = () => {
     <section className="w-full max-w-3xl mx-auto px-4 mt-4 mb-3">
       <div className="flex items-center justify-between mb-2">
         <h2 className="text-base md:text-lg font-bold text-foreground">
-          Spot
+          Spotlight
         </h2>
         <span className="text-[10px] uppercase tracking-widest text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
           Featured
