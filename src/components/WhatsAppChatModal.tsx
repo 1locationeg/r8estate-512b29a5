@@ -106,12 +106,17 @@ export const WhatsAppChatModal = ({ onClose }: WhatsAppChatModalProps) => {
   return (
     <div className="fixed bottom-24 end-6 z-50 w-[340px] max-w-[calc(100vw-3rem)] bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in slide-in-from-bottom-4 duration-200">
       {/* Header */}
-      <div className="bg-[#25D366] px-4 py-3 flex items-center gap-3">
-        <Phone className="w-5 h-5 text-white" />
-        <div>
-          <p className="text-sm font-bold text-white">{t("whatsapp.chatTitle")}</p>
-          <p className="text-[10px] text-white/80">{t("whatsapp.replyTime")}</p>
+      <div className="bg-[#25D366] px-4 py-3 flex items-center justify-between">
+        <div className="flex items-center gap-3">
+          <Phone className="w-5 h-5 text-white" />
+          <div>
+            <p className="text-sm font-bold text-white">Trust Chat</p>
+            <p className="text-[10px] text-white/80">{t("whatsapp.replyTime")}</p>
+          </div>
         </div>
+        <button onClick={onClose} className="text-white/80 hover:text-white transition-colors">
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       <div className="p-4 space-y-3">
