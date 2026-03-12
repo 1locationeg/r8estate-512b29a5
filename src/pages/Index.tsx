@@ -76,7 +76,7 @@ const Index = () => {
             className="inline-flex items-center gap-1.5 hover:opacity-80 transition-opacity"
             aria-label="Return to home"
           >
-            <img src={logoIcon} alt="R8ESTATE" className="h-12 w-12 object-contain" />
+            <img src={logoIcon} alt="R8ESTATE" className="h-8 w-8 md:h-12 md:w-12 object-contain" />
             <span className="inline-flex text-xl font-extrabold leading-none">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
