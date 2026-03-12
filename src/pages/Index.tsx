@@ -35,6 +35,7 @@ const Index = () => {
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
+  const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
