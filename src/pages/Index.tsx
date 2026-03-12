@@ -12,7 +12,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -30,6 +30,7 @@ import {
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const [userMode, setUserMode] = useState<"buyers" | "industry">("buyers");
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
@@ -86,9 +87,11 @@ const Index = () => {
           {/* Buyer / Business Toggle */}
           <ViewToggle
             onViewChange={(view) => {
-              if (view === "industry") {
-                navigate('/auth?type=business');
-              }
+              setUserMode(view);
+              // Reset selections when switching modes
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+              setActiveView(null);
             }}
           />
 
@@ -171,84 +174,166 @@ const Index = () => {
               </div>
            </div>
 
-           {/* Tagline */}
+           {/* Mode-specific Tagline */}
            <div className="text-center mb-0 max-w-3xl">
-             <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-               {t("hero.tagline")}
-             </p>
-             <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-               {t("hero.taglineHighlight")}
-             </p>
+             {userMode === "buyers" ? (
+               <>
+                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                   {t("hero.tagline")}
+                 </p>
+                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+                   {t("hero.taglineHighlight")}
+                 </p>
+               </>
+             ) : (
+               <>
+                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                   {t("hero.industryTitle1")}
+                 </p>
+                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+                   {t("hero.industryTitle2")}
+                 </p>
+               </>
+             )}
            </div>
 
-          {/* Description */}
+          {/* Mode-specific Description */}
           <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
-            {t("hero.description")}
+            {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
           </p>
 
-          {/* Search Bar */}
-          <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
-            <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
-          </div>
+          {userMode === "buyers" ? (
+            <>
+              {/* Search Bar */}
+              <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
+                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+              </div>
 
-          {/* Category Links + Special View Grid */}
-          <HeroCategoryLinks 
-            activeView={activeView}
-            onViewSelect={(view) => {
-              setActiveView(prev => prev === view ? null : view);
-              setSelectedDeveloperId(null);
-              setSpecialViewItem(null);
-            }}
-            onSelectItem={(item) => {
-              setSpecialViewItem(item);
-              setActiveView(null);
-              setSelectedDeveloperId(null);
-            }}
-            onCategorySelect={(catKey) => {
-              setExternalCategory(catKey);
-              setActiveView(null);
-              setSelectedDeveloperId(null);
-              setSpecialViewItem(null);
-              // Reset after triggering so it can be re-selected
-              setTimeout(() => setExternalCategory(null), 100);
-            }}
-          />
-
-          {/* Special View Item Detail - above Spotlight for visibility */}
-          {specialViewItem && (
-            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
-              <ItemDetailSection
-                item={specialViewItem}
-                onClose={() => setSpecialViewItem(null)}
+              {/* Category Links + Special View Grid */}
+              <HeroCategoryLinks 
+                activeView={activeView}
+                onViewSelect={(view) => {
+                  setActiveView(prev => prev === view ? null : view);
+                  setSelectedDeveloperId(null);
+                  setSpecialViewItem(null);
+                }}
+                onSelectItem={(item) => {
+                  setSpecialViewItem(item);
+                  setActiveView(null);
+                  setSelectedDeveloperId(null);
+                }}
+                onCategorySelect={(catKey) => {
+                  setExternalCategory(catKey);
+                  setActiveView(null);
+                  setSelectedDeveloperId(null);
+                  setSpecialViewItem(null);
+                  setTimeout(() => setExternalCategory(null), 100);
+                }}
               />
+
+              {/* Special View Item Detail */}
+              {specialViewItem && (
+                <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+                  <ItemDetailSection
+                    item={specialViewItem}
+                    onClose={() => setSpecialViewItem(null)}
+                  />
+                </div>
+              )}
+
+              {/* Developer Detail Card */}
+              {selectedDeveloper && !specialViewItem && (
+                <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+                  <DeveloperDetailCard
+                    developer={selectedDeveloper}
+                    onClose={() => setSelectedDeveloperId(null)}
+                  />
+                </div>
+              )}
+
+              {/* Featured Identity Spotlight */}
+              {!specialViewItem && !selectedDeveloper && (
+                <FeaturedIdentitySpotlight />
+              )}
+
+              {/* Category Bar */}
+              <HeroCategoryItems 
+                onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} 
+                externalCategory={externalCategory}
+                onSelectItem={(item) => {
+                  setSpecialViewItem(item);
+                  setActiveView(null);
+                  setSelectedDeveloperId(null);
+                }}
+              />
+            </>
+          ) : (
+            /* ── Business / Industry View ── */
+            <div className="w-full max-w-3xl px-4 mb-4">
+              {/* Business Feature Cards */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <BarChart3 className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground">Reputation Analytics</h3>
+                  <p className="text-xs text-muted-foreground leading-snug">Track your trust score, review trends, and buyer sentiment in real time.</p>
+                </div>
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
+                    <Shield className="w-5 h-5 text-accent" />
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground">Verified Profile</h3>
+                  <p className="text-xs text-muted-foreground leading-snug">Claim and verify your business identity to build buyer confidence.</p>
+                </div>
+                <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                    <TrendingUp className="w-5 h-5 text-primary" />
+                  </div>
+                  <h3 className="text-sm font-bold text-foreground">Lead Generation</h3>
+                  <p className="text-xs text-muted-foreground leading-snug">Convert trust into sales — high-intent buyers discover you organically.</p>
+                </div>
+              </div>
+
+              {/* Business Stats */}
+              <div className="flex items-center justify-center gap-6 mb-6">
+                <div className="text-center">
+                  <p className="text-2xl md:text-3xl font-black text-primary">2,500+</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Active Buyers</p>
+                </div>
+                <div className="w-px h-10 bg-border" />
+                <div className="text-center">
+                  <p className="text-2xl md:text-3xl font-black text-accent">92%</p>
+                  <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Trust Conversion</p>
+                </div>
+                <div className="w-px h-10 bg-border" />
+                <div className="text-center">
+                  <p className="text-2xl md:text-3xl font-black text-primary">4.8</p>
+                  <div className="flex items-center justify-center gap-0.5">
+                    <Star className="w-3 h-3 text-accent fill-accent" />
+                    <p className="text-[10px] text-muted-foreground uppercase tracking-wider">Avg Rating</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <button
+                  onClick={() => navigate('/auth?type=business')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm"
+                >
+                  Claim Your Business Profile
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => navigate('/directory')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm"
+                >
+                  Browse Developer Directory
+                </button>
+              </div>
             </div>
           )}
-
-          {/* Developer Detail Card - above Spotlight for visibility */}
-          {selectedDeveloper && !specialViewItem && (
-            <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
-              <DeveloperDetailCard
-                developer={selectedDeveloper}
-                onClose={() => setSelectedDeveloperId(null)}
-              />
-            </div>
-          )}
-
-          {/* Featured Identity Spotlight - hidden when detail is active */}
-          {!specialViewItem && !selectedDeveloper && (
-            <FeaturedIdentitySpotlight />
-          )}
-
-          {/* Category Bar - below Featured Identity */}
-          <HeroCategoryItems 
-            onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }} 
-            externalCategory={externalCategory}
-            onSelectItem={(item) => {
-              setSpecialViewItem(item);
-              setActiveView(null);
-              setSelectedDeveloperId(null);
-            }}
-          />
         </div>
       </section>
 
