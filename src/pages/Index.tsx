@@ -35,6 +35,7 @@ const Index = () => {
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
+  const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -88,10 +89,10 @@ const Index = () => {
           <ViewToggle
             onViewChange={(view) => {
               setUserMode(view);
-              // Reset selections when switching modes
               setSelectedDeveloperId(null);
               setSpecialViewItem(null);
               setActiveView(null);
+              setShowIndustryCategories(false);
             }} />
           
 
@@ -266,9 +267,10 @@ const Index = () => {
                 setSelectedDeveloperId(null);
               }} />
             
-            </> : (
+            </> :
 
-          /* ── Business / Industry View ── */
+          <>
+          {/* ── Business / Industry View ── */}
           <div className="w-full max-w-3xl px-4 mb-4">
               {/* Business Feature Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
@@ -326,13 +328,38 @@ const Index = () => {
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
-                onClick={() => navigate('/directory')}
+                onClick={() => {
+                  setShowIndustryCategories(prev => !prev);
+                  setTimeout(() => {
+                    document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }}
                 className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
                 
                   Browse Categories   
                 </button>
               </div>
-            </div>)
+            </div>
+
+            {showIndustryCategories && (
+              <div id="industry-categories-section" className="w-full scroll-mt-24">
+                <HeroCategoryItems
+                  onInteraction={() => { setSpecialViewItem(null); }}
+                  externalCategory={externalCategory}
+                  onSelectItem={(item) => {
+                    setSpecialViewItem(item);
+                  }} />
+              </div>
+            )}
+
+            {specialViewItem && showIndustryCategories && (
+              <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+                <ItemDetailSection
+                  item={specialViewItem}
+                  onClose={() => setSpecialViewItem(null)} />
+              </div>
+            )}
+          </>
           }
         </div>
       </section>
