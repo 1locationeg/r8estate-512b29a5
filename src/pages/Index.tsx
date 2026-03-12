@@ -83,6 +83,22 @@ const Index = () => {
             </span>
           </button>
 
+          {/* Mobile compact actions */}
+          <div className="flex md:hidden items-center gap-1">
+            <button
+              onClick={() => {
+                const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+              }}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <LanguageSwitcher />
+            <NotificationBell />
+          </div>
+
           {/* Desktop Actions */}
           <div className="hidden md:flex items-center gap-4">
             <LanguageSwitcher />
