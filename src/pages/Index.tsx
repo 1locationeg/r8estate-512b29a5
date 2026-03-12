@@ -143,10 +143,7 @@ const Index = () => {
             )}
           </div>
 
-          {/* Mobile Menu (hamburger only) */}
-          <div className="md:hidden">
-            <MobileNav onSignOut={handleSignOut} getDashboardRoute={getDashboardRoute} />
-          </div>
+
         </div>
       </header>
 
