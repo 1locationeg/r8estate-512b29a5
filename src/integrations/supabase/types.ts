@@ -14,6 +14,63 @@ export type Database = {
   }
   public: {
     Tables: {
+      business_profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string
+          description: string | null
+          email: string | null
+          employees: number | null
+          id: string
+          license_url: string | null
+          location: string | null
+          logo_url: string | null
+          phone: string | null
+          social_links: Json | null
+          specialties: string[] | null
+          updated_at: string
+          user_id: string
+          website: string | null
+          year_established: number | null
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          employees?: number | null
+          id?: string
+          license_url?: string | null
+          location?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          social_links?: Json | null
+          specialties?: string[] | null
+          updated_at?: string
+          user_id: string
+          website?: string | null
+          year_established?: number | null
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string
+          description?: string | null
+          email?: string | null
+          employees?: number | null
+          id?: string
+          license_url?: string | null
+          location?: string | null
+          logo_url?: string | null
+          phone?: string | null
+          social_links?: Json | null
+          specialties?: string[] | null
+          updated_at?: string
+          user_id?: string
+          website?: string | null
+          year_established?: number | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
