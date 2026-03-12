@@ -171,59 +171,59 @@ export const FeaturedIdentitySpotlight = () => {
         </div>
 
         {/* Customer Reviews */}
-        <div className="p-5 md:p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h4 className="text-sm font-semibold text-foreground">Customer Reviews</h4>
-            <span className="text-xs text-muted-foreground">Newest</span>
+        <div className="px-4 py-2.5">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-xs font-semibold text-foreground">Customer Reviews</h4>
+            <span className="text-[10px] text-muted-foreground">Newest</span>
           </div>
 
-          <div className="space-y-4">
+          <div className="space-y-2.5">
             {displayedReviews.map((review) => (
-              <div key={review.id} className="space-y-2">
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-xs font-bold text-foreground flex-shrink-0">
+              <div key={review.id} className="space-y-1">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">
                       {review.author.charAt(0)}
                     </div>
                     <div className="min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-semibold text-foreground truncate">
+                      <div className="flex items-center gap-1">
+                        <span className="text-xs font-semibold text-foreground truncate">
                           {review.author}
                         </span>
                         {review.tier && (
-                          <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
+                          <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
                             {review.tier}
                           </span>
                         )}
                       </div>
-                      <p className="text-[11px] text-muted-foreground truncate">
+                      <p className="text-[10px] text-muted-foreground truncate">
                         {review.project} • {review.developerId}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 flex-shrink-0">
+                  <div className="flex items-center gap-0.5 flex-shrink-0">
                     <div className="flex">{renderStars(review.rating)}</div>
                   </div>
                 </div>
 
-                <p className="text-sm text-foreground/80 leading-relaxed line-clamp-2">
+                <p className="text-xs text-foreground/80 leading-snug line-clamp-2">
                   {review.comment}
                 </p>
-                <p className="text-[10px] text-muted-foreground">{review.date}</p>
+                <p className="text-[9px] text-muted-foreground">{review.date}</p>
 
                 {/* Developer Reply */}
                 {review.developerReply && (
-                  <div className="ms-6 p-3 bg-secondary/50 rounded-lg border border-border">
-                    <div className="flex items-center gap-1.5 mb-1">
-                      <MessageSquare className="w-3 h-3 text-primary" />
-                      <span className="text-xs font-semibold text-primary">
+                  <div className="ms-5 p-2 bg-secondary/50 rounded-md border border-border">
+                    <div className="flex items-center gap-1 mb-0.5">
+                      <MessageSquare className="w-2.5 h-2.5 text-primary" />
+                      <span className="text-[10px] font-semibold text-primary">
                         {review.developerReply.author}
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
+                      <span className="text-[9px] text-muted-foreground">
                         {review.developerReply.date}
                       </span>
                     </div>
-                    <p className="text-xs text-foreground/70 leading-relaxed line-clamp-2">
+                    <p className="text-[11px] text-foreground/70 leading-snug line-clamp-2">
                       {review.developerReply.comment}
                     </p>
                   </div>
@@ -235,10 +235,10 @@ export const FeaturedIdentitySpotlight = () => {
           {devReviews.length > 2 && (
             <button
               onClick={() => setShowAllReviews(!showAllReviews)}
-              className="mt-4 w-full flex items-center justify-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors"
+              className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
             >
               {showAllReviews ? "Show Less" : `View All ${devReviews.length} Reviews`}
-              <ChevronRight className={`w-4 h-4 transition-transform ${showAllReviews ? "rotate-90" : ""}`} />
+              <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showAllReviews ? "rotate-90" : ""}`} />
             </button>
           )}
         </div>
