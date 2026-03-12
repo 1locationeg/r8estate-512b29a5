@@ -174,28 +174,6 @@ const Index = () => {
               </div>
            </div>
 
-           {/* Mode-specific Tagline */}
-           <div className="text-center mb-0 max-w-3xl">
-             {userMode === "buyers" ? (
-               <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.tagline")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.taglineHighlight")}
-                 </p>
-               </>
-             ) : (
-               <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.industryTitle1")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.industryTitle2")}
-                 </p>
-               </>
-             )}
-           </div>
 
           {/* Mode-specific Description */}
           <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
