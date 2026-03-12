@@ -202,16 +202,49 @@ const Auth = () => {
           {/* Title */}
           <div className="text-center mb-6">
             <h1 className="text-2xl font-bold text-foreground mb-2">
-              {mode === 'signin' ? 'Welcome back' : 
-                accountType === 'business' ? 'Register your business' : 'Create your account'}
+              {mode === 'signin' 
+                ? (accountType === 'business' ? 'Business Sign In' : 'Welcome back')
+                : (accountType === 'business' ? 'Register your business' : 'Create your account')}
             </h1>
             <p className="text-muted-foreground">
               {mode === 'signin' 
-                ? 'Sign in to access your account' 
+                ? (accountType === 'business' 
+                    ? 'Sign in to manage your business profile' 
+                    : 'Sign in to access your account')
                 : accountType === 'business'
                   ? 'List your projects and manage reviews'
                   : 'Sign up to start exploring trusted developers'}
             </p>
+          </div>
+
+          {/* Account type toggle - shown on both signin and signup */}
+          <div className="grid grid-cols-2 gap-3 mb-6">
+            <button
+              type="button"
+              onClick={() => setAccountType('buyer')}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                accountType === 'buyer' 
+                  ? 'border-primary bg-primary/5 text-primary' 
+                  : 'border-border text-muted-foreground hover:border-primary/40'
+              }`}
+            >
+              <UserCircle className="w-6 h-6" />
+              <span className="text-sm font-semibold">Buyer / Reviewer</span>
+              <span className="text-xs text-muted-foreground">Browse & review projects</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => setAccountType('business')}
+              className={`flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all ${
+                accountType === 'business' 
+                  ? 'border-primary bg-primary/5 text-primary' 
+                  : 'border-border text-muted-foreground hover:border-primary/40'
+              }`}
+            >
+              <Building2 className="w-6 h-6" />
+              <span className="text-sm font-semibold">Business Account</span>
+              <span className="text-xs text-muted-foreground">List projects & manage</span>
+            </button>
           </div>
 
           {/* Account type toggle - only on signup */}
