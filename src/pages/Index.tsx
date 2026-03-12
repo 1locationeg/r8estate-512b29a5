@@ -344,12 +344,21 @@ const Index = () => {
 
             {showIndustryCategories && (
               <div id="industry-categories-section" className="w-full scroll-mt-24">
-                <HeroCategoryItems
-                  onInteraction={() => { setSpecialViewItem(null); }}
-                  externalCategory={externalCategory}
+                <BrowseCategoriesGrid
+                  onSelectCategory={(index) => {
+                    setShowIndustryCategories(false);
+                    setExternalCategory?.(undefined);
+                    setTimeout(() => {
+                      setShowIndustryCategories(false);
+                    }, 0);
+                  }}
                   onSelectItem={(item) => {
-                    setSpecialViewItem(item);
-                  }} />
+                    setSpecialViewItem(item as any);
+                    setTimeout(() => {
+                      document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }}
+                />
               </div>
             )}
 
