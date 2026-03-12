@@ -1,13 +1,17 @@
-import { useEffect, lazy } from 'react';
+import { useEffect } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import { BusinessProfileHeader } from '@/components/BusinessProfileHeader';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -42,7 +46,22 @@ const viewsChartData = [
   { date: '27 Feb', views: 0 },
 ];
 
+const companyData = {
+  name: myDev.name,
+  logo: myDev.logo,
+  location: myDev.location,
+  established: myDev.yearEstablished,
+  employees: myDev.employees,
+  specialties: myDev.specialties,
+  rating: myDev.rating,
+  reviewCount: myDev.reviewCount,
+  trustScore: myDev.trustScore,
+  isVerified: myDev.verified,
+};
+
 const DevOverview = () => {
+  const navigate = useNavigate();
+
   const stats = [
     { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent' },
     { icon: Edit, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary' },
@@ -51,6 +70,15 @@ const DevOverview = () => {
 
   return (
     <div>
+      {/* Business Profile Header */}
+      <BusinessProfileHeader
+        company={companyData}
+        profileCompletion={72}
+        onEditProfile={() => navigate('/developer/profile')}
+        onSharePage={() => {}}
+        onViewPublic={() => {}}
+      />
+
       {/* Stats cards */}
       <div className="grid sm:grid-cols-3 gap-4 mb-8">
         {stats.map((s) => (
@@ -293,6 +321,154 @@ const DevSettings = () => (
   </div>
 );
 
+// Business Profile Page
+const DevBusinessProfile = () => (
+  <div className="max-w-3xl">
+    <h2 className="text-2xl font-bold text-foreground mb-6">Business Profile</h2>
+    
+    <div className="space-y-6">
+      {/* Company Info */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Building2 className="w-4 h-4 text-muted-foreground" />
+          Company Information
+        </h3>
+        <div className="space-y-4">
+          {/* Logo Upload */}
+          <div>
+            <Label className="text-xs font-medium text-muted-foreground">Company Logo</Label>
+            <div className="mt-2 flex items-center gap-4">
+              <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center">
+                {myDev.logo ? (
+                  <img src={myDev.logo} alt={myDev.name} className="w-full h-full rounded-xl object-cover" />
+                ) : (
+                  <Upload className="w-6 h-6 text-muted-foreground" />
+                )}
+              </div>
+              <div>
+                <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+                  <Upload className="w-3.5 h-3.5" />
+                  Upload Logo
+                </Button>
+                <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Company Name</Label>
+              <Input className="mt-1" defaultValue={myDev.name} />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Year Established</Label>
+              <Input className="mt-1" type="number" defaultValue={myDev.yearEstablished} />
+            </div>
+          </div>
+
+          <div>
+            <Label className="text-xs font-medium text-muted-foreground">Description / Bio</Label>
+            <Textarea className="mt-1 min-h-[100px]" placeholder="Tell buyers about your company..." defaultValue={`${myDev.name} is a leading real estate developer in ${myDev.location}.`} />
+          </div>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <MapPin className="w-3 h-3" /> Location
+              </Label>
+              <Input className="mt-1" defaultValue={myDev.location} />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Specialties</Label>
+              <Input className="mt-1" defaultValue={myDev.specialties.join(', ')} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Details */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Phone className="w-4 h-4 text-muted-foreground" />
+          Contact Details
+        </h3>
+        <div className="space-y-4">
+          <div className="grid sm:grid-cols-2 gap-4">
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Mail className="w-3 h-3" /> Email
+              </Label>
+              <Input className="mt-1" type="email" placeholder="business@example.com" />
+            </div>
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+                <Phone className="w-3 h-3" /> Phone
+              </Label>
+              <Input className="mt-1" type="tel" placeholder="+971 XX XXX XXXX" />
+            </div>
+          </div>
+          <div>
+            <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
+              <Globe className="w-3 h-3" /> Website
+            </Label>
+            <Input className="mt-1" type="url" placeholder="https://www.yourcompany.com" />
+          </div>
+        </div>
+      </div>
+
+      {/* Business Documents */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <FileText className="w-4 h-4 text-muted-foreground" />
+          Business Documents
+        </h3>
+        <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
+          <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+          <p className="text-sm font-medium text-foreground mb-1">Upload Business License</p>
+          <p className="text-xs text-muted-foreground mb-3">Trade license, registration certificate, etc.</p>
+          <Button size="sm" variant="outline" className="gap-1.5">
+            <Upload className="w-3.5 h-3.5" />
+            Choose File
+          </Button>
+        </div>
+      </div>
+
+      {/* Public Profile Preview */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <Eye className="w-4 h-4 text-muted-foreground" />
+          Public Profile Preview
+        </h3>
+        <div className="bg-secondary/50 rounded-xl p-4">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold">
+              {myDev.name.charAt(0)}
+            </div>
+            <div>
+              <p className="font-semibold text-foreground text-sm">{myDev.name}</p>
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <MapPin className="w-3 h-3" /> {myDev.location}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1">
+              <Star className="w-3 h-3 text-accent fill-accent" /> {myDev.rating.toFixed(1)}
+            </span>
+            <span>{myDev.reviewCount} reviews</span>
+            <span>Est. {myDev.yearEstablished}</span>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-3">
+        <Button className="bg-brand-red text-white hover:bg-brand-red/90">Save Profile</Button>
+        <Button variant="outline">Cancel</Button>
+      </div>
+    </div>
+  </div>
+);
+
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -308,12 +484,12 @@ const DeveloperDashboard = () => {
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || (role !== 'developer' && role !== 'admin')) return null;
 
-  // Determine breadcrumb from current path
   const subPath = location.pathname.replace('/developer', '').replace('/', '');
   const pageTitle = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Dashboard';
 
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
+    { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/developer/profile' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
@@ -322,8 +498,6 @@ const DeveloperDashboard = () => {
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/developer/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
-
-  // NotificationsPage is imported at the top of the file
 
   return (
     <DashboardLayout
@@ -345,6 +519,7 @@ const DeveloperDashboard = () => {
     >
       <Routes>
         <Route index element={<DevOverview />} />
+        <Route path="profile" element={<DevBusinessProfile />} />
         <Route path="reviews" element={<DevReviews />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
