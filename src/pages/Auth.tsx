@@ -160,14 +160,10 @@ const Auth = () => {
           return;
         }
 
-        // If business account, assign developer role after signup
         if (accountType === 'business') {
-          // The role will be assigned by a trigger or we update it here
-          // We need to wait for the user to be created first
-          // For now, show a message that admin will verify
           toast({
-            title: 'Business account requested!',
-            description: 'Please check your email to verify your account. Your business account will be activated shortly.',
+            title: 'Business account created!',
+            description: 'Please check your email to verify your account, then sign in to access the business dashboard.',
           });
         } else {
           toast({
