@@ -9,7 +9,7 @@ import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
-
+import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search } from "lucide-react";
