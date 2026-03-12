@@ -149,26 +149,28 @@ const Index = () => {
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
-       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-2 pb-2 sm:py-10 md:py-14">
-            {/* Trust Meter Title + Gauge */}
-            <div className="text-center mb-0 md:mb-4">
-            <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-tight">
-               {t("hero.trustMeter")}
-            </p>
+       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
+             {/* Trust Meter Title + Gauge */}
+             <div className="text-center">
+             <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-none mb-0">
+                {t("hero.trustMeter")}
+             </p>
 
-             {/* Hero Trust Meter Gauge - Live Animated */}
-             <HeroTrustGauge />
-          </div>
+              {/* Hero Trust Meter Gauge - Live Animated */}
+              <div className="mt-0">
+                <HeroTrustGauge />
+              </div>
+           </div>
 
-          {/* Tagline */}
-          <div className="text-center mb-1 md:mb-3 max-w-3xl">
-            <p className="text-sm sm:text-lg md:text-xl text-foreground">
-              {t("hero.tagline")}
-            </p>
-            <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold mt-0">
-              {t("hero.taglineHighlight")}
-            </p>
-          </div>
+           {/* Tagline */}
+           <div className="text-center mb-0 max-w-3xl">
+             <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+               {t("hero.tagline")}
+             </p>
+             <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+               {t("hero.taglineHighlight")}
+             </p>
+           </div>
 
           {/* Description */}
           <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
