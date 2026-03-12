@@ -192,10 +192,6 @@ const Index = () => {
               )}
             </div>
 
-          {/* Mode-specific Description */}
-          <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
-            {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
-          </p>
 
           {userMode === "buyers" ? (
             <>
