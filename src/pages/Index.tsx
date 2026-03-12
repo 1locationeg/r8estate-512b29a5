@@ -66,9 +66,9 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full pt-[50px] safe-top">{/* pt-[50px] accounts for guest timer banner */}
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full safe-top">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 z-[100] safe-top bg-background/90 backdrop-blur-sm border-b border-border/40">
+      <header className="sticky top-0 z-[100] bg-background/90 backdrop-blur-sm border-b border-border/40">
         <div className="container mx-auto px-3 py-2 flex items-center justify-between">
           {/* Logo + Brand in header */}
           <button
