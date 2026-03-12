@@ -267,9 +267,10 @@ const Index = () => {
                 setSelectedDeveloperId(null);
               }} />
             
-            </> : (
+            </> :
 
-          /* ── Business / Industry View ── */
+          <>
+          {/* ── Business / Industry View ── */}
           <div className="w-full max-w-3xl px-4 mb-4">
               {/* Business Feature Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
@@ -358,7 +359,7 @@ const Index = () => {
                   onClose={() => setSpecialViewItem(null)} />
               </div>
             )}
-          </>)
+          </>
           }
         </div>
       </section>
