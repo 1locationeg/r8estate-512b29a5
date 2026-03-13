@@ -102,18 +102,30 @@ const AdminOverview = () => {
   );
 };
 
+const PERMISSION_LEVELS = [
+  { value: 'super_admin', label: 'Super Admin', color: 'bg-brand-red/20 text-brand-red', description: 'Full control over all admins and settings' },
+  { value: 'admin', label: 'Admin', color: 'bg-brand-red/10 text-brand-red', description: 'Can manage users, settings, and content' },
+  { value: 'editor', label: 'Editor', color: 'bg-primary/10 text-primary', description: 'Can edit content but not manage users' },
+  { value: 'view_only', label: 'View Only', color: 'bg-secondary text-muted-foreground', description: 'Can only view admin dashboard' },
+] as const;
+
 const AdminUsers = () => {
+  const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<Array<{
     id: string;
     email: string;
     full_name: string | null;
     avatar_url: string | null;
     roles: string[];
+    admin_permission: string | null;
     created_at: string;
   }>>([]);
   const [loading, setLoading] = useState(true);
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [callerPermission, setCallerPermission] = useState<string | null>(null);
+
+  const isSuperAdmin = callerPermission === 'super_admin';
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
@@ -126,7 +138,13 @@ const AdminUsers = () => {
     try {
       const { data, error } = await supabase.functions.invoke('admin-list-users');
       if (error) throw error;
-      setUsers(data || []);
+      // Handle both old format (array) and new format ({ users, callerPermission })
+      if (Array.isArray(data)) {
+        setUsers(data);
+      } else {
+        setUsers(data?.users || []);
+        setCallerPermission(data?.callerPermission || null);
+      }
     } catch (err: any) {
       toast.error('Failed to load users');
       console.error(err);
@@ -138,6 +156,18 @@ const AdminUsers = () => {
   useEffect(() => { fetchUsers(); }, []);
 
   const handleRoleChange = async (userId: string, targetRole: string, action: 'add' | 'remove') => {
+    // Only super_admin can add/remove admin role
+    if (targetRole === 'admin' && !isSuperAdmin) {
+      toast.error('Only the Super Admin can manage admin roles');
+      return;
+    }
+    // Prevent modifying super_admin's own admin role
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.admin_permission === 'super_admin' && targetRole === 'admin' && action === 'remove') {
+      toast.error('Cannot remove admin role from Super Admin');
+      return;
+    }
+
     setUpdatingId(userId);
     try {
       if (action === 'add') {
@@ -145,6 +175,10 @@ const AdminUsers = () => {
           .from('user_roles')
           .insert({ user_id: userId, role: targetRole as any });
         if (error) throw error;
+        // If adding admin role, also add admin_permissions entry
+        if (targetRole === 'admin') {
+          await supabase.from('admin_permissions' as any).insert({ user_id: userId, permission_level: 'view_only' });
+        }
         toast.success(`Role "${targetRole}" added`);
       } else {
         const { error } = await supabase
@@ -153,6 +187,10 @@ const AdminUsers = () => {
           .eq('user_id', userId)
           .eq('role', targetRole as any);
         if (error) throw error;
+        // If removing admin role, also remove admin_permissions entry
+        if (targetRole === 'admin') {
+          await supabase.from('admin_permissions' as any).delete().eq('user_id', userId);
+        }
         toast.success(`Role "${targetRole}" removed`);
       }
       // Update local state
@@ -163,10 +201,73 @@ const AdminUsers = () => {
           roles: action === 'add'
             ? [...u.roles, targetRole]
             : u.roles.filter(r => r !== targetRole),
+          admin_permission: targetRole === 'admin'
+            ? (action === 'add' ? 'view_only' : null)
+            : u.admin_permission,
         };
       }));
     } catch (err: any) {
       toast.error(`Failed to ${action} role: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handlePermissionChange = async (userId: string, newLevel: string) => {
+    if (!isSuperAdmin) {
+      toast.error('Only the Super Admin can change permission levels');
+      return;
+    }
+    if (newLevel === 'super_admin') {
+      toast.error('There can only be one Super Admin');
+      return;
+    }
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.admin_permission === 'super_admin') {
+      toast.error('Cannot change Super Admin permission level');
+      return;
+    }
+
+    setUpdatingId(userId);
+    try {
+      const { error } = await supabase
+        .from('admin_permissions' as any)
+        .update({ permission_level: newLevel, updated_at: new Date().toISOString() })
+        .eq('user_id', userId);
+      if (error) throw error;
+      toast.success(`Permission updated to "${newLevel.replace('_', ' ')}"`);
+      setUsers(prev => prev.map(u => u.id === userId ? { ...u, admin_permission: newLevel } : u));
+    } catch (err: any) {
+      toast.error(`Failed to update permission: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const handleRemoveAdmin = async (userId: string) => {
+    if (!isSuperAdmin) {
+      toast.error('Only the Super Admin can remove admins');
+      return;
+    }
+    const targetUser = users.find(u => u.id === userId);
+    if (targetUser?.admin_permission === 'super_admin') {
+      toast.error('Cannot remove the Super Admin');
+      return;
+    }
+
+    setUpdatingId(userId);
+    try {
+      // Remove admin role
+      await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'admin' as any);
+      // Remove admin permissions
+      await supabase.from('admin_permissions' as any).delete().eq('user_id', userId);
+      toast.success('Admin access removed');
+      setUsers(prev => prev.map(u => u.id === userId
+        ? { ...u, roles: u.roles.filter(r => r !== 'admin'), admin_permission: null }
+        : u
+      ));
+    } catch (err: any) {
+      toast.error(`Failed to remove admin: ${err.message}`);
     } finally {
       setUpdatingId(null);
     }
@@ -181,6 +282,9 @@ const AdminUsers = () => {
       u.roles.some(r => r.toLowerCase().includes(q))
     );
   });
+
+  const adminUsers = filtered.filter(u => u.roles.includes('admin'));
+  const nonAdminUsers = filtered.filter(u => !u.roles.includes('admin'));
 
   if (loading) {
     return (
@@ -197,6 +301,13 @@ const AdminUsers = () => {
         <span className="text-sm text-muted-foreground">{users.length} users</span>
       </div>
 
+      {isSuperAdmin && (
+        <div className="bg-brand-red/5 border border-brand-red/20 rounded-xl p-3 mb-4 flex items-center gap-2">
+          <Shield className="w-4 h-4 text-brand-red" />
+          <span className="text-xs text-foreground font-medium">You are the Super Admin — you have full control over all admin permissions.</span>
+        </div>
+      )}
+
       <div className="mb-4">
         <input
           type="text"
@@ -207,6 +318,94 @@ const AdminUsers = () => {
         />
       </div>
 
+      {/* Admin Team Section */}
+      {adminUsers.length > 0 && (
+        <div className="mb-6">
+          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Shield className="w-4 h-4 text-brand-red" /> Admin Team ({adminUsers.length})
+          </h3>
+          <div className="space-y-3">
+            {adminUsers.map((u) => {
+              const permInfo = PERMISSION_LEVELS.find(p => p.value === u.admin_permission);
+              const isMe = u.id === currentUser?.id;
+              const isSuperAdminUser = u.admin_permission === 'super_admin';
+              const isUpdating = updatingId === u.id;
+
+              return (
+                <div key={u.id} className={`bg-card border rounded-xl p-4 transition-all ${isSuperAdminUser ? 'border-brand-red/30 ring-1 ring-brand-red/10' : 'border-border'}`}>
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <Avatar className="h-10 w-10">
+                        {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
+                        <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                          {(u.full_name || u.email || '?')[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-semibold text-foreground">{u.full_name || 'No name'}</p>
+                          {isSuperAdminUser && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-brand-red/20 text-brand-red font-bold uppercase tracking-wider">Super Admin</span>
+                          )}
+                          {isMe && (
+                            <span className="text-[9px] px-1.5 py-0.5 rounded bg-primary/10 text-primary font-medium">You</span>
+                          )}
+                        </div>
+                        <p className="text-[10px] text-muted-foreground">{u.email}</p>
+                      </div>
+                    </div>
+                    {isSuperAdmin && !isSuperAdminUser && (
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        className="text-brand-red hover:text-brand-red hover:bg-brand-red/10 text-[10px] h-7"
+                        disabled={isUpdating}
+                        onClick={() => handleRemoveAdmin(u.id)}
+                      >
+                        <Trash2 className="w-3 h-3 me-1" /> Remove Admin
+                      </Button>
+                    )}
+                  </div>
+
+                  {/* Permission Level */}
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="text-[10px] text-muted-foreground font-medium">Permission:</span>
+                    {PERMISSION_LEVELS.filter(p => p.value !== 'super_admin').map(p => {
+                      const isActive = u.admin_permission === p.value;
+                      const canChange = isSuperAdmin && !isSuperAdminUser && !isUpdating;
+                      return (
+                        <button
+                          key={p.value}
+                          disabled={!canChange || isSuperAdminUser}
+                          onClick={() => canChange && handlePermissionChange(u.id, p.value)}
+                          className={`text-[10px] px-2 py-1 rounded-md font-medium transition-all ${
+                            isActive
+                              ? `${p.color} ring-1 ring-current/20`
+                              : canChange
+                                ? 'bg-secondary/50 text-muted-foreground hover:bg-secondary cursor-pointer'
+                                : 'bg-secondary/30 text-muted-foreground/50 cursor-not-allowed'
+                          }`}
+                          title={p.description}
+                        >
+                          {p.label}
+                        </button>
+                      );
+                    })}
+                    {isSuperAdminUser && (
+                      <span className={`text-[10px] px-2 py-1 rounded-md font-medium ${PERMISSION_LEVELS[0].color} ring-1 ring-current/20`}>
+                        Super Admin
+                      </span>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* All Users Table */}
+      <h3 className="text-sm font-semibold text-foreground mb-3">All Users ({nonAdminUsers.length})</h3>
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
@@ -215,11 +414,13 @@ const AdminUsers = () => {
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">User</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Current Roles</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Joined</th>
-                <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Manage Roles</th>
+                {isSuperAdmin && (
+                  <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Manage Roles</th>
+                )}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((u) => (
+              {nonAdminUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
@@ -253,32 +454,34 @@ const AdminUsers = () => {
                   <td className="px-4 py-3 text-xs text-muted-foreground">
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-1 justify-end flex-wrap">
-                      {availableRoles.map(ar => {
-                        const hasRole = u.roles.includes(ar.value);
-                        const isUpdating = updatingId === u.id;
-                        return (
-                          <Button
-                            key={ar.value}
-                            size="sm"
-                            variant={hasRole ? 'default' : 'outline'}
-                            disabled={isUpdating}
-                            className="text-[10px] h-7 px-2"
-                            onClick={() => handleRoleChange(u.id, ar.value, hasRole ? 'remove' : 'add')}
-                          >
-                            {isUpdating ? (
-                              <Loader2 className="w-3 h-3 animate-spin" />
-                            ) : hasRole ? (
-                              <><CheckCircle className="w-3 h-3 me-0.5" />{ar.label}</>
-                            ) : (
-                              <><Plus className="w-3 h-3 me-0.5" />{ar.label}</>
-                            )}
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </td>
+                  {isSuperAdmin && (
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-1 justify-end flex-wrap">
+                        {availableRoles.map(ar => {
+                          const hasRole = u.roles.includes(ar.value);
+                          const isUpdating = updatingId === u.id;
+                          return (
+                            <Button
+                              key={ar.value}
+                              size="sm"
+                              variant={hasRole ? 'default' : 'outline'}
+                              disabled={isUpdating}
+                              className="text-[10px] h-7 px-2"
+                              onClick={() => handleRoleChange(u.id, ar.value, hasRole ? 'remove' : 'add')}
+                            >
+                              {isUpdating ? (
+                                <Loader2 className="w-3 h-3 animate-spin" />
+                              ) : hasRole ? (
+                                <><CheckCircle className="w-3 h-3 me-0.5" />{ar.label}</>
+                              ) : (
+                                <><Plus className="w-3 h-3 me-0.5" />{ar.label}</>
+                              )}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>
