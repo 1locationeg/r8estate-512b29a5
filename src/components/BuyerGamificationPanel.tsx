@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target } from 'lucide-react';
+import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 
 export const BuyerGamificationPanel = () => {
   const navigate = useNavigate();
