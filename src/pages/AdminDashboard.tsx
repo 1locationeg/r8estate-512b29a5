@@ -8,7 +8,7 @@ import {
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
-  Plus, Trash2, TestTube, ExternalLink, Globe, Image
+  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -690,6 +690,97 @@ const AdminSEO = () => {
   );
 };
 
+const AdminFeedback = () => {
+  const [feedbackItems, setFeedbackItems] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  const fetchFeedback = async () => {
+    setLoading(true);
+    const { data } = await supabase
+      .from('guest_feedback' as any)
+      .select('*')
+      .order('created_at', { ascending: false });
+    setFeedbackItems((data as any[]) || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchFeedback(); }, []);
+
+  const handleDelete = async (id: string) => {
+    await supabase.from('guest_feedback' as any).delete().eq('id', id);
+    setFeedbackItems((prev) => prev.filter((f) => f.id !== id));
+    toast.success('Feedback deleted');
+  };
+
+  const avgRating = feedbackItems.length
+    ? (feedbackItems.reduce((s, f) => s + f.rating, 0) / feedbackItems.length).toFixed(1)
+    : '—';
+
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-4">Guest Feedback</h2>
+
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-foreground">{feedbackItems.length}</p>
+          <p className="text-xs text-muted-foreground">Total Submissions</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-foreground">{avgRating} <Star className="inline w-4 h-4 text-yellow-400 fill-yellow-400" /></p>
+          <p className="text-xs text-muted-foreground">Average Rating</p>
+        </div>
+      </div>
+
+      {feedbackItems.length === 0 ? (
+        <p className="text-muted-foreground text-sm text-center py-8">No feedback yet.</p>
+      ) : (
+        <div className="overflow-x-auto border border-border rounded-xl">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-muted/50 text-left">
+                <th className="p-3 font-semibold text-muted-foreground">Date</th>
+                <th className="p-3 font-semibold text-muted-foreground">Rating</th>
+                <th className="p-3 font-semibold text-muted-foreground">Type</th>
+                <th className="p-3 font-semibold text-muted-foreground">Feedback</th>
+                <th className="p-3 font-semibold text-muted-foreground"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {feedbackItems.map((f) => (
+                <tr key={f.id} className="border-t border-border hover:bg-muted/30">
+                  <td className="p-3 text-foreground whitespace-nowrap">
+                    {new Date(f.created_at).toLocaleDateString()}
+                  </td>
+                  <td className="p-3">
+                    <span className="flex gap-0.5">
+                      {[1, 2, 3, 4, 5].map((s) => (
+                        <Star key={s} className={`w-3.5 h-3.5 ${s <= f.rating ? 'fill-yellow-400 text-yellow-400' : 'text-muted-foreground/30'}`} />
+                      ))}
+                    </span>
+                  </td>
+                  <td className="p-3">
+                    <span className="text-xs bg-accent px-2 py-0.5 rounded-full text-accent-foreground capitalize">
+                      {f.feedback_type?.replace('_', ' ')}
+                    </span>
+                  </td>
+                  <td className="p-3 text-foreground max-w-xs truncate">{f.feedback}</td>
+                  <td className="p-3">
+                    <Button variant="ghost" size="sm" onClick={() => handleDelete(f.id)}>
+                      <Trash2 className="w-3.5 h-3.5 text-destructive" />
+                    </Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
+
 const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
@@ -738,6 +829,7 @@ const AdminDashboard = () => {
     { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
     { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
+    { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
@@ -760,6 +852,7 @@ const AdminDashboard = () => {
         <Route path="notifications" element={<AdminNotifications />} />
         <Route path="whatsapp" element={<AdminWhatsApp />} />
         <Route path="analytics" element={<AdminAnalytics />} />
+        <Route path="feedback" element={<AdminFeedback />} />
         <Route path="seo" element={<AdminSEO />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>

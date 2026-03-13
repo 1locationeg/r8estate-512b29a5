@@ -1,7 +1,11 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Users, Building2, MessageSquare, ArrowRight, LogIn, Clock } from 'lucide-react';
+import { Star, Users, Building2, MessageSquare, ArrowRight, LogIn, Clock, Gift, Send, Loader2 } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Textarea } from '@/components/ui/textarea';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from 'sonner';
 
 const STATS = [
   { icon: MessageSquare, value: '50K+', label: 'Verified Reviews' },
@@ -10,9 +14,32 @@ const STATS = [
   { icon: Star, value: '4.8★', label: 'Platform Trust Score' },
 ];
 
+const FEEDBACK_TYPES = [
+  { value: 'value_found', label: 'What I found valuable' },
+  { value: 'advice', label: "What I'd improve" },
+  { value: 'general', label: 'General feedback' },
+];
+
+function getOrCreateSessionId(): string {
+  const key = 'r8estate_guest_session';
+  let id = localStorage.getItem(key);
+  if (!id) {
+    id = crypto.randomUUID();
+    localStorage.setItem(key, id);
+  }
+  return id;
+}
+
 export function GuestTimerExpiredModal() {
-  const { expiredModalOpen, dismissExpiredModal, isGuest } = useGuestTimer();
+  const { expiredModalOpen, dismissExpiredModal, isGuest, grantBonusTime, hasBonusBeenUsed } = useGuestTimer();
   const navigate = useNavigate();
+
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [feedbackText, setFeedbackText] = useState('');
+  const [feedbackType, setFeedbackType] = useState('general');
+  const [submitting, setSubmitting] = useState(false);
 
   if (!isGuest) return null;
 
@@ -24,6 +51,38 @@ export function GuestTimerExpiredModal() {
   const handleLogin = () => {
     dismissExpiredModal();
     navigate('/auth?mode=signin');
+  };
+
+  const handleSubmitFeedback = async () => {
+    if (rating === 0) {
+      toast.error('Please select a star rating');
+      return;
+    }
+    if (feedbackText.trim().length < 10) {
+      toast.error('Please write at least 10 characters of feedback');
+      return;
+    }
+
+    setSubmitting(true);
+    const { error } = await supabase.from('guest_feedback' as any).insert({
+      rating,
+      feedback: feedbackText.trim(),
+      feedback_type: feedbackType,
+      session_id: getOrCreateSessionId(),
+    } as any);
+
+    setSubmitting(false);
+
+    if (error) {
+      toast.error('Failed to submit feedback. Please try again.');
+      return;
+    }
+
+    toast.success('Thank you! Enjoy 2 extra minutes of browsing.');
+    setShowFeedbackForm(false);
+    setRating(0);
+    setFeedbackText('');
+    grantBonusTime();
   };
 
   return (
@@ -59,6 +118,88 @@ export function GuestTimerExpiredModal() {
             </div>
           ))}
         </div>
+
+        {/* Bonus feedback section */}
+        {!hasBonusBeenUsed && (
+          <div className="px-5 pt-4">
+            {!showFeedbackForm ? (
+              <button
+                onClick={() => setShowFeedbackForm(true)}
+                className="w-full flex items-center justify-center gap-2 bg-accent/60 hover:bg-accent text-accent-foreground font-semibold py-3 rounded-xl transition-all duration-200 text-sm border border-border"
+              >
+                <Gift className="w-4 h-4 text-primary" />
+                Share feedback & get 2 extra minutes free
+              </button>
+            ) : (
+              <div className="space-y-3 bg-muted/40 rounded-xl p-4 border border-border">
+                <p className="text-xs font-semibold text-foreground">Rate your experience & share your thoughts</p>
+
+                {/* Star rating */}
+                <div className="flex items-center gap-1">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      onMouseEnter={() => setHoverRating(s)}
+                      onMouseLeave={() => setHoverRating(0)}
+                      onClick={() => setRating(s)}
+                      className="transition-transform hover:scale-110"
+                    >
+                      <Star
+                        className={`w-7 h-7 ${
+                          s <= (hoverRating || rating)
+                            ? 'fill-yellow-400 text-yellow-400'
+                            : 'text-muted-foreground/40'
+                        }`}
+                      />
+                    </button>
+                  ))}
+                </div>
+
+                {/* Type chips */}
+                <div className="flex flex-wrap gap-1.5">
+                  {FEEDBACK_TYPES.map((t) => (
+                    <button
+                      key={t.value}
+                      onClick={() => setFeedbackType(t.value)}
+                      className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                        feedbackType === t.value
+                          ? 'bg-primary text-primary-foreground border-primary'
+                          : 'bg-background text-muted-foreground border-border hover:border-primary/40'
+                      }`}
+                    >
+                      {t.label}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Text */}
+                <Textarea
+                  placeholder="Tell us what you think... (min 10 characters)"
+                  value={feedbackText}
+                  onChange={(e) => setFeedbackText(e.target.value)}
+                  className="min-h-[70px] text-sm resize-none"
+                  maxLength={500}
+                />
+
+                <button
+                  onClick={handleSubmitFeedback}
+                  disabled={submitting}
+                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2.5 rounded-lg shadow-md transition-all duration-200 active:scale-[0.98] text-sm disabled:opacity-50"
+                >
+                  {submitting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      <Send className="w-4 h-4" />
+                      Submit & Get 2 Extra Minutes
+                    </>
+                  )}
+                </button>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* CTAs */}
         <div className="p-5 flex flex-col gap-3 bg-background">
