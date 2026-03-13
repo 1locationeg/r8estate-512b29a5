@@ -34,10 +34,18 @@ export const DeveloperDetailCard = ({
   onCompare,
 }: DeveloperDetailCardProps) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  // Track developer view
+  useEffect(() => {
+    if (developer && user) {
+      trackBuyerEngagement(user.id, 'developers_viewed');
+    }
+  }, [developer.id, user]);
 
   const developerAsSearchItem: SearchItem = useMemo(() => ({
     id: developer.id,

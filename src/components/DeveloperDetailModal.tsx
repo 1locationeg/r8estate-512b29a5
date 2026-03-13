@@ -32,6 +32,13 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
   const { user, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
 
+  // Track developer view
+  useEffect(() => {
+    if (open && developer && user) {
+      trackBuyerEngagement(user.id, 'developers_viewed');
+    }
+  }, [open, developer?.id, user]);
+
   const isUnlocked = !!user;
 
   const handleGoogleSignIn = async () => {
