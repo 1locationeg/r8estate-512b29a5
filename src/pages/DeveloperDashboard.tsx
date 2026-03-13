@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -330,6 +330,41 @@ const DevSettings = () => (
 const DevBusinessProfile = () => {
   const { profile: bp, isLoading: bpLoading, isSaving, saveProfile } = useBusinessProfile();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 2 * 1024 * 1024) {
+      const { toast } = await import('sonner');
+      toast.error('File must be under 2MB');
+      return;
+    }
+    setIsUploadingLogo(true);
+    try {
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `${user.id}/logo.${ext}`;
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+      const logoUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      await saveProfile({ logo_url: logoUrl });
+      const { toast } = await import('sonner');
+      toast.success('Logo uploaded successfully');
+    } catch (err: any) {
+      console.error('Logo upload error:', err);
+      const { toast } = await import('sonner');
+      toast.error('Failed to upload logo');
+    } finally {
+      setIsUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
 
   const [form, setForm] = useState({
     company_name: '',
@@ -401,7 +436,7 @@ const DevBusinessProfile = () => {
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Company Logo</Label>
               <div className="mt-2 flex items-center gap-4">
-                <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
                   {bp?.logo_url || myDev.logo ? (
                     <img src={bp?.logo_url || myDev.logo} alt={form.company_name} className="w-full h-full rounded-xl object-cover" />
                   ) : (
@@ -409,9 +444,22 @@ const DevBusinessProfile = () => {
                   )}
                 </div>
                 <div>
-                  <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-                    <Upload className="w-3.5 h-3.5" />
-                    Upload Logo
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={handleLogoUpload}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-xs"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={isUploadingLogo}
+                  >
+                    {isUploadingLogo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                    {isUploadingLogo ? 'Uploading…' : 'Upload Logo'}
                   </Button>
                   <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
                 </div>
