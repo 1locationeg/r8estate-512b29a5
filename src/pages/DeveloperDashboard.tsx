@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -8,13 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { BusinessProfileHeader } from '@/components/BusinessProfileHeader';
+import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
 import { useBusinessProfile } from '@/hooks/useBusinessProfile';
+import { useGamification } from '@/hooks/useGamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
@@ -62,6 +64,7 @@ const companyData = {
 
 const DevOverview = () => {
   const navigate = useNavigate();
+  const { profileCompletion, currentTier } = useGamification();
 
   const stats = [
     { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent' },
@@ -74,7 +77,8 @@ const DevOverview = () => {
       {/* Business Profile Header */}
       <BusinessProfileHeader
         company={companyData}
-        profileCompletion={72}
+        profileCompletion={profileCompletion}
+        tier={{ name: currentTier.name, emoji: currentTier.emoji }}
         onEditProfile={() => navigate('/developer/profile')}
         onSharePage={() => {}}
         onViewPublic={() => {}}
@@ -552,6 +556,7 @@ const DeveloperDashboard = () => {
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/developer/profile' },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/developer/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
@@ -582,6 +587,7 @@ const DeveloperDashboard = () => {
       <Routes>
         <Route index element={<DevOverview />} />
         <Route path="profile" element={<DevBusinessProfile />} />
+        <Route path="gamification" element={<GamificationPanel />} />
         <Route path="reviews" element={<DevReviews />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
