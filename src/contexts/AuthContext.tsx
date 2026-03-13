@@ -166,13 +166,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInWithGoogle = async (accountType: AccountTypeIntent = 'buyer') => {
-    const redirectUrl = new URL(`${window.location.origin}/auth`);
-    redirectUrl.searchParams.set('mode', 'signin');
-    redirectUrl.searchParams.set('oauth', 'google');
-    redirectUrl.searchParams.set('type', accountType);
+    // Store intent in localStorage so we can pick it up after OAuth redirect
+    localStorage.setItem('oauth_account_type', accountType);
 
     const result = await lovable.auth.signInWithOAuth('google', {
-      redirect_uri: redirectUrl.toString(),
+      redirect_uri: window.location.origin,
       extraParams: {
         prompt: 'select_account',
       },
