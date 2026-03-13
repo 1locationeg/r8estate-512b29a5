@@ -791,6 +791,7 @@ const BuyerDashboard = () => {
         <Route index element={<BuyerOverview />} />
         <Route path="reviews" element={<BuyerReviews />} />
         <Route path="saved" element={<BuyerSaved />} />
+        <Route path="achievements" element={<BuyerGamificationPanel />} />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="settings" element={<BuyerProfile />} />
       </Routes>
