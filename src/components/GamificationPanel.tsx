@@ -39,7 +39,8 @@ export const GamificationPanel = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <ConfettiCelebration trigger={confettiTrigger} />
       {/* Tier & Points Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground">
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -translate-y-8 translate-x-8" />
