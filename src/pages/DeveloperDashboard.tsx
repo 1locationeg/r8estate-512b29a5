@@ -366,6 +366,41 @@ const DevBusinessProfile = () => {
     }
   };
 
+  const licenseInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingLicense, setIsUploadingLicense] = useState(false);
+
+  const handleLicenseUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      const { toast } = await import('sonner');
+      toast.error('File must be under 5MB');
+      return;
+    }
+    setIsUploadingLicense(true);
+    try {
+      const ext = file.name.split('.').pop() || 'pdf';
+      const path = `${user.id}/license.${ext}`;
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+      const licenseUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      await saveProfile({ license_url: licenseUrl });
+      const { toast } = await import('sonner');
+      toast.success('License uploaded — pending verification');
+    } catch (err: any) {
+      console.error('License upload error:', err);
+      const { toast } = await import('sonner');
+      toast.error('Failed to upload license');
+    } finally {
+      setIsUploadingLicense(false);
+      if (licenseInputRef.current) licenseInputRef.current.value = '';
+    }
+  };
+
   const [form, setForm] = useState({
     company_name: '',
     description: '',
@@ -533,15 +568,67 @@ const DevBusinessProfile = () => {
             <FileText className="w-4 h-4 text-muted-foreground" />
             Business Documents
           </h3>
-          <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
-            <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
-            <p className="text-sm font-medium text-foreground mb-1">Upload Business License</p>
-            <p className="text-xs text-muted-foreground mb-3">Trade license, registration certificate, etc.</p>
-            <Button size="sm" variant="outline" className="gap-1.5">
-              <Upload className="w-3.5 h-3.5" />
-              Choose File
-            </Button>
-          </div>
+
+          {bp?.license_url ? (
+            <div className="border border-border rounded-xl p-4 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-trust-excellent/10 flex items-center justify-center">
+                  <FileText className="w-5 h-5 text-trust-excellent" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-foreground">Trade License</p>
+                  <p className="text-xs text-muted-foreground">Uploaded — pending verification</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button size="sm" variant="ghost" className="text-xs" asChild>
+                  <a href={bp.license_url} target="_blank" rel="noopener noreferrer">
+                    <Eye className="w-3.5 h-3.5 mr-1" /> View
+                  </a>
+                </Button>
+                <input
+                  ref={licenseInputRef}
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp,application/pdf"
+                  className="hidden"
+                  onChange={handleLicenseUpload}
+                />
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="text-xs gap-1.5"
+                  onClick={() => licenseInputRef.current?.click()}
+                  disabled={isUploadingLicense}
+                >
+                  {isUploadingLicense ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                  Replace
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="border-2 border-dashed border-border rounded-xl p-8 text-center">
+              <Upload className="w-8 h-8 text-muted-foreground/40 mx-auto mb-2" />
+              <p className="text-sm font-medium text-foreground mb-1">Upload Business License</p>
+              <p className="text-xs text-muted-foreground mb-3">Trade license, registration certificate, etc. (PNG, JPG, PDF up to 5MB)</p>
+              <input
+                ref={licenseInputRef}
+                type="file"
+                accept="image/png,image/jpeg,image/webp,application/pdf"
+                className="hidden"
+                onChange={handleLicenseUpload}
+              />
+              <Button
+                size="sm"
+                variant="outline"
+                className="gap-1.5"
+                onClick={() => licenseInputRef.current?.click()}
+                disabled={isUploadingLicense}
+              >
+                {isUploadingLicense ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                {isUploadingLicense ? 'Uploading…' : 'Choose File'}
+              </Button>
+            </div>
+          )}
         </div>
 
         {/* Public Profile Preview */}
