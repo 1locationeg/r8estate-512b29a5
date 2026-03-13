@@ -22,7 +22,7 @@ import { DynamicMeta } from "./components/DynamicMeta";
 
 const queryClient = new QueryClient();
 
-// Main App component with proper provider hierarchy
+// App with proper provider hierarchy: Auth > GuestTimer > Router
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
