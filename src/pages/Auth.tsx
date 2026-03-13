@@ -36,9 +36,10 @@ const Auth = () => {
   const [fullName, setFullName] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
-  const isBusinessGoogleCallback = searchParams.get('oauth') === 'google' && searchParams.get('type') === 'business';
+  const oauthAccountType = localStorage.getItem('oauth_account_type');
+  const isBusinessGoogleCallback = Boolean(oauthAccountType === 'business' && user);
   const requiresBusinessRoleSync = Boolean(
-    isBusinessGoogleCallback && user && role !== 'developer' && role !== 'admin'
+    isBusinessGoogleCallback && role !== 'developer' && role !== 'admin'
   );
 
   // Sync parameters if query params change
