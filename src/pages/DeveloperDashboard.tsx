@@ -556,6 +556,7 @@ const DeveloperDashboard = () => {
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/developer/profile' },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/developer/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
