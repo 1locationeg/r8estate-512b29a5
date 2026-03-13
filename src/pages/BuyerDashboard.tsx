@@ -15,7 +15,8 @@ import { NotificationsPage } from '@/components/NotificationsPage';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
-  const { profile, role } = useAuth();
+  const { profile, role, refreshProfile } = useAuth();
+  const [isUpgrading, setIsUpgrading] = useState(false);
 
   const stats = [
     { icon: Building2, label: 'Developers Viewed', value: '24', bg: 'bg-primary/10', iconColor: 'text-primary' },
@@ -26,6 +27,21 @@ const BuyerOverview = () => {
 
   const recentReviews = reviews.slice(0, 4);
   const savedProjects = projects.slice(0, 3);
+
+  const handleUpgradeToBusiness = async () => {
+    setIsUpgrading(true);
+    try {
+      const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
+      if (error) throw error;
+      await refreshProfile();
+      toast.success('Account upgraded to Business! Redirecting to your business dashboard...');
+      setTimeout(() => navigate('/developer'), 1000);
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to upgrade account. Please try again.');
+    } finally {
+      setIsUpgrading(false);
+    }
+  };
 
   return (
     <div>
@@ -50,15 +66,20 @@ const BuyerOverview = () => {
           <div className="flex-1 text-center sm:text-start">
             <h3 className="font-bold text-foreground text-base">Are you a developer or business?</h3>
             <p className="text-sm text-muted-foreground mt-0.5">
-              Register your business to manage your profile, respond to reviews, and build trust with buyers.
+              Upgrade your account to manage your business profile, respond to reviews, and build trust with buyers.
             </p>
           </div>
           <Button
-            onClick={() => navigate('/auth?type=business&mode=signup')}
+            onClick={handleUpgradeToBusiness}
+            disabled={isUpgrading}
             className="flex-shrink-0 gap-2"
           >
-            <Building2 className="w-4 h-4" />
-            Register Your Business
+            {isUpgrading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Building2 className="w-4 h-4" />
+            )}
+            {isUpgrading ? 'Upgrading...' : 'Upgrade to Business'}
           </Button>
         </div>
       </div>
