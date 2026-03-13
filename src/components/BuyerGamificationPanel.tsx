@@ -14,6 +14,12 @@ export const BuyerGamificationPanel = () => {
     missions, earnedBadges, lockedBadges, profileCompletion, missingFields,
   } = useBuyerGamification();
 
+  const confettiTrigger = useConfettiTrigger(
+    'buyer_gamification_state',
+    earnedBadges.map((b) => b.id),
+    currentTier.id,
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-20">
