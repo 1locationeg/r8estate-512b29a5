@@ -401,7 +401,7 @@ const DevBusinessProfile = () => {
             <div>
               <Label className="text-xs font-medium text-muted-foreground">Company Logo</Label>
               <div className="mt-2 flex items-center gap-4">
-                <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center">
+                <div className="w-20 h-20 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center overflow-hidden">
                   {bp?.logo_url || myDev.logo ? (
                     <img src={bp?.logo_url || myDev.logo} alt={form.company_name} className="w-full h-full rounded-xl object-cover" />
                   ) : (
@@ -409,9 +409,22 @@ const DevBusinessProfile = () => {
                   )}
                 </div>
                 <div>
-                  <Button size="sm" variant="outline" className="gap-1.5 text-xs">
-                    <Upload className="w-3.5 h-3.5" />
-                    Upload Logo
+                  <input
+                    ref={logoInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    className="hidden"
+                    onChange={handleLogoUpload}
+                  />
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 text-xs"
+                    onClick={() => logoInputRef.current?.click()}
+                    disabled={isUploadingLogo}
+                  >
+                    {isUploadingLogo ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+                    {isUploadingLogo ? 'Uploading…' : 'Upload Logo'}
                   </Button>
                   <p className="text-[10px] text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
                 </div>
