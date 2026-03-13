@@ -92,6 +92,7 @@ const Auth = () => {
   // Redirect if already logged in
   useEffect(() => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
+      localStorage.removeItem('oauth_account_type');
       if (role === 'admin') navigate('/admin');
       else if (role === 'developer') navigate('/developer');
       else navigate('/buyer');
