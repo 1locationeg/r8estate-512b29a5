@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Developer } from "@/data/mockData";
+import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import {
   Dialog,
   DialogContent,
@@ -30,6 +31,13 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
   const navigate = useNavigate();
   const { user, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+
+  // Track developer view
+  useEffect(() => {
+    if (open && developer && user) {
+      trackBuyerEngagement(user.id, 'developers_viewed');
+    }
+  }, [open, developer?.id, user]);
 
   const isUnlocked = !!user;
 

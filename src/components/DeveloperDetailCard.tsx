@@ -9,7 +9,9 @@ import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import { cn } from "@/lib/utils";
 import { type SearchItem } from "@/data/searchIndex";
 import {
@@ -32,10 +34,18 @@ export const DeveloperDetailCard = ({
   onCompare,
 }: DeveloperDetailCardProps) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+
+  // Track developer view
+  useEffect(() => {
+    if (developer && user) {
+      trackBuyerEngagement(user.id, 'developers_viewed');
+    }
+  }, [developer.id, user]);
 
   const developerAsSearchItem: SearchItem = useMemo(() => ({
     id: developer.id,
