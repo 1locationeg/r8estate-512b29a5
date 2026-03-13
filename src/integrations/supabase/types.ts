@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_permissions: {
+        Row: {
+          created_at: string
+          id: string
+          permission_level: Database["public"]["Enums"]["admin_permission_level"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          permission_level?: Database["public"]["Enums"]["admin_permission_level"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          permission_level?: Database["public"]["Enums"]["admin_permission_level"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       business_profiles: {
         Row: {
           company_name: string | null
@@ -391,12 +415,14 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       set_my_account_type: {
         Args: { _account_type: string }
         Returns: Database["public"]["Enums"]["app_role"]
       }
     }
     Enums: {
+      admin_permission_level: "super_admin" | "admin" | "editor" | "view_only"
       app_role: "user" | "buyer" | "developer" | "admin"
     }
     CompositeTypes: {
@@ -525,6 +551,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      admin_permission_level: ["super_admin", "admin", "editor", "view_only"],
       app_role: ["user", "buyer", "developer", "admin"],
     },
   },
