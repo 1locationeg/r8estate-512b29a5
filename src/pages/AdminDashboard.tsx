@@ -8,7 +8,8 @@ import {
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
-  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart
+  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -1131,6 +1132,30 @@ const AdminSettings = () => (
   </div>
 );
 
+// ── Placeholder components for new admin sections ──
+const PlaceholderSection = ({ title, icon: Icon }: { title: string; icon: React.ElementType }) => (
+  <div className="space-y-4">
+    <div className="flex items-center gap-3">
+      <Icon className="w-6 h-6 text-primary" />
+      <h2 className="text-xl font-bold text-foreground">{title}</h2>
+    </div>
+    <div className="rounded-lg border border-border bg-card p-8 text-center">
+      <p className="text-muted-foreground">This section is coming soon.</p>
+    </div>
+  </div>
+);
+
+const AdminAIReviewer = () => <PlaceholderSection title="AI Reviewer" icon={Bot} />;
+const AdminAIReviewWriter = () => <PlaceholderSection title="AI Review Writer" icon={PenTool} />;
+const AdminPricing = () => <PlaceholderSection title="Pricing Plans" icon={CreditCard} />;
+const AdminSubscriptions = () => <PlaceholderSection title="Subscriptions" icon={Receipt} />;
+const AdminTransactions = () => <PlaceholderSection title="Transactions" icon={DollarSign} />;
+const AdminCategories = () => <PlaceholderSection title="Categories" icon={FolderTree} />;
+const AdminNavigation = () => <PlaceholderSection title="Navigation" icon={Navigation} />;
+const AdminNewsletter = () => <PlaceholderSection title="Newsletter" icon={Mail} />;
+const AdminSections = () => <PlaceholderSection title="Sections" icon={Layout} />;
+const AdminBusiness = () => <PlaceholderSection title="Business" icon={Briefcase} />;
+
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, role, isLoading } = useAuth();
@@ -1151,10 +1176,20 @@ const AdminDashboard = () => {
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/admin' },
     { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
+    { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
+    { icon: <Bot className="w-4 h-4" />, label: 'AI Reviewer', path: '/admin/ai-reviewer' },
+    { icon: <PenTool className="w-4 h-4" />, label: 'AI Review Writer', path: '/admin/ai-review-writer' },
     { icon: <Sparkles className="w-4 h-4" />, label: 'Spotlight', path: '/admin/spotlight' },
     { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
     { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
+    { icon: <CreditCard className="w-4 h-4" />, label: 'Pricing Plans', path: '/admin/pricing' },
+    { icon: <Receipt className="w-4 h-4" />, label: 'Subscriptions', path: '/admin/subscriptions' },
+    { icon: <DollarSign className="w-4 h-4" />, label: 'Transactions', path: '/admin/transactions' },
+    { icon: <FolderTree className="w-4 h-4" />, label: 'Categories', path: '/admin/categories' },
+    { icon: <Navigation className="w-4 h-4" />, label: 'Navigation', path: '/admin/navigation' },
+    { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
+    { icon: <Layout className="w-4 h-4" />, label: 'Sections', path: '/admin/sections' },
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
@@ -1174,10 +1209,20 @@ const AdminDashboard = () => {
         <Route index element={<AdminOverview />} />
         <Route path="users" element={<AdminUsers />} />
         <Route path="developers" element={<AdminDevelopers />} />
+        <Route path="business" element={<AdminBusiness />} />
         <Route path="reviews" element={<AdminReviewMod />} />
+        <Route path="ai-reviewer" element={<AdminAIReviewer />} />
+        <Route path="ai-review-writer" element={<AdminAIReviewWriter />} />
         <Route path="spotlight" element={<AdminSpotlight />} />
         <Route path="notifications" element={<AdminNotifications />} />
         <Route path="whatsapp" element={<AdminWhatsApp />} />
+        <Route path="pricing" element={<AdminPricing />} />
+        <Route path="subscriptions" element={<AdminSubscriptions />} />
+        <Route path="transactions" element={<AdminTransactions />} />
+        <Route path="categories" element={<AdminCategories />} />
+        <Route path="navigation" element={<AdminNavigation />} />
+        <Route path="newsletter" element={<AdminNewsletter />} />
+        <Route path="sections" element={<AdminSections />} />
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="feedback" element={<AdminFeedback />} />
         <Route path="seo" element={<AdminSEO />} />
