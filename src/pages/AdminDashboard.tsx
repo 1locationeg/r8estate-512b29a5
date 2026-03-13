@@ -1375,6 +1375,71 @@ const AdminBusiness = () => {
           </table>
         </div>
       )}
+      {/* Detail / Edit Modal */}
+      {selectedBusiness && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60" onClick={() => setSelectedBusiness(null)}>
+          <div className="bg-card border border-border rounded-2xl shadow-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto m-4 p-6" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-foreground">Business Details</h3>
+              <button onClick={() => setSelectedBusiness(null)} className="text-muted-foreground hover:text-foreground">
+                <Ban className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {[
+                { label: 'Company Name', key: 'company_name', type: 'text' },
+                { label: 'Email', key: 'email', type: 'email' },
+                { label: 'Phone', key: 'phone', type: 'text' },
+                { label: 'Location', key: 'location', type: 'text' },
+                { label: 'Website', key: 'website', type: 'url' },
+                { label: 'Year Established', key: 'year_established', type: 'number' },
+                { label: 'Employees', key: 'employees', type: 'number' },
+                { label: 'License URL', key: 'license_url', type: 'url' },
+                { label: 'Logo URL', key: 'logo_url', type: 'url' },
+              ].map(field => (
+                <div key={field.key}>
+                  <label className="block text-xs font-medium text-muted-foreground mb-1">{field.label}</label>
+                  <input
+                    type={field.type}
+                    value={editData[field.key] ?? ''}
+                    onChange={e => setEditData({ ...editData, [field.key]: field.type === 'number' ? (e.target.value ? Number(e.target.value) : null) : e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  />
+                </div>
+              ))}
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Description</label>
+                <textarea
+                  value={editData.description ?? ''}
+                  onChange={e => setEditData({ ...editData, description: e.target.value })}
+                  rows={3}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
+                />
+              </div>
+
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Specialties (comma-separated)</label>
+                <input
+                  type="text"
+                  value={(editData.specialties || []).join(', ')}
+                  onChange={e => setEditData({ ...editData, specialties: e.target.value.split(',').map((s: string) => s.trim()).filter(Boolean) })}
+                  className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
+              <Button variant="outline" onClick={() => setSelectedBusiness(null)}>Cancel</Button>
+              <Button onClick={handleSave} disabled={isSaving}>
+                {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                Save Changes
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
