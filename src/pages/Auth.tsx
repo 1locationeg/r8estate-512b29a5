@@ -68,6 +68,7 @@ const Auth = () => {
 
       try {
         await promoteToBusinessRole();
+        localStorage.removeItem('oauth_account_type');
       } catch {
         toast({
           title: 'Business activation failed',
