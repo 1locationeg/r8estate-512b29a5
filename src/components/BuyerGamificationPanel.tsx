@@ -5,6 +5,7 @@ import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target } from 'lucide-react';
+import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 
 export const BuyerGamificationPanel = () => {
   const navigate = useNavigate();
@@ -12,6 +13,12 @@ export const BuyerGamificationPanel = () => {
     isLoading, currentTier, totalPoints, nextTier, pointsToNext,
     missions, earnedBadges, lockedBadges, profileCompletion, missingFields,
   } = useBuyerGamification();
+
+  const confettiTrigger = useConfettiTrigger(
+    'buyer_gamification_state',
+    earnedBadges.map((b) => b.id),
+    currentTier.id,
+  );
 
   if (isLoading) {
     return (
@@ -26,7 +33,8 @@ export const BuyerGamificationPanel = () => {
     : 100;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <ConfettiCelebration trigger={confettiTrigger} />
       {/* Hero */}
       <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/10">
         <div className="flex items-center gap-3 mb-4">

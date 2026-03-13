@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Lock, CheckCircle2, ArrowRight, Trophy, Target, Award, Crown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 
 export const GamificationPanel = () => {
   const navigate = useNavigate();
@@ -23,6 +24,12 @@ export const GamificationPanel = () => {
     missions,
   } = useGamification();
 
+  const confettiTrigger = useConfettiTrigger(
+    'biz_gamification_state',
+    earnedBadges.map((b) => b.id),
+    currentTier.id,
+  );
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
@@ -32,7 +39,8 @@ export const GamificationPanel = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 relative">
+      <ConfettiCelebration trigger={confettiTrigger} />
       {/* Tier & Points Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground">
         <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -translate-y-8 translate-x-8" />
