@@ -9,7 +9,9 @@ import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import { cn } from "@/lib/utils";
 import { type SearchItem } from "@/data/searchIndex";
 import {
