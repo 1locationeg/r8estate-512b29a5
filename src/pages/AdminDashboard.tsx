@@ -1132,7 +1132,30 @@ const AdminSettings = () => (
   </div>
 );
 
-const AdminDashboard = () => {
+// ── Placeholder components for new admin sections ──
+const PlaceholderSection = ({ title, icon: Icon }: { title: string; icon: React.ElementType }) => (
+  <div className="space-y-4">
+    <div className="flex items-center gap-3">
+      <Icon className="w-6 h-6 text-primary" />
+      <h2 className="text-xl font-bold text-foreground">{title}</h2>
+    </div>
+    <div className="rounded-lg border border-border bg-card p-8 text-center">
+      <p className="text-muted-foreground">This section is coming soon.</p>
+    </div>
+  </div>
+);
+
+const AdminAIReviewer = () => <PlaceholderSection title="AI Reviewer" icon={Bot} />;
+const AdminAIReviewWriter = () => <PlaceholderSection title="AI Review Writer" icon={PenTool} />;
+const AdminPricing = () => <PlaceholderSection title="Pricing Plans" icon={CreditCard} />;
+const AdminSubscriptions = () => <PlaceholderSection title="Subscriptions" icon={Receipt} />;
+const AdminTransactions = () => <PlaceholderSection title="Transactions" icon={DollarSign} />;
+const AdminCategories = () => <PlaceholderSection title="Categories" icon={FolderTree} />;
+const AdminNavigation = () => <PlaceholderSection title="Navigation" icon={Navigation} />;
+const AdminNewsletter = () => <PlaceholderSection title="Newsletter" icon={Mail} />;
+const AdminSections = () => <PlaceholderSection title="Sections" icon={Layout} />;
+const AdminBusiness = () => <PlaceholderSection title="Business" icon={Briefcase} />;
+
   const navigate = useNavigate();
   const { user, role, isLoading } = useAuth();
 
