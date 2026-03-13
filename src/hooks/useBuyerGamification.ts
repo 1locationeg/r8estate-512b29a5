@@ -1,5 +1,6 @@
-import { useMemo } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import {
   calcBuyerProfileCompletion,
   calcBuyerEarnedBadges,
@@ -11,22 +12,81 @@ import {
   type BuyerGamificationInput,
 } from '@/lib/buyerGamification';
 
+interface EngagementData {
+  developers_viewed: number;
+  projects_saved: number;
+  reports_unlocked: number;
+  helpful_votes: number;
+}
+
 export function useBuyerGamification() {
-  const { profile, isLoading } = useAuth();
+  const { user, profile, isLoading: authLoading } = useAuth();
+  const [engagement, setEngagement] = useState<EngagementData | null>(null);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [hasVerifiedPurchase, setHasVerifiedPurchase] = useState(false);
+  const [dataLoading, setDataLoading] = useState(true);
+
+  useEffect(() => {
+    if (!user) {
+      setDataLoading(false);
+      return;
+    }
+
+    const fetchData = async () => {
+      setDataLoading(true);
+      try {
+        // Fetch engagement, review count, and receipt status in parallel
+        const [engRes, reviewRes, receiptRes] = await Promise.all([
+          supabase
+            .from('buyer_engagement')
+            .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes')
+            .eq('user_id', user.id)
+            .maybeSingle(),
+          supabase
+            .from('reviews')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id),
+          supabase
+            .from('receipt_submissions')
+            .select('id', { count: 'exact', head: true })
+            .eq('user_id', user.id)
+            .eq('status', 'approved'),
+        ]);
+
+        if (engRes.data) {
+          setEngagement(engRes.data as EngagementData);
+        } else {
+          // Create a default row for this user
+          await supabase.from('buyer_engagement').insert({ user_id: user.id });
+          setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0 });
+        }
+
+        setReviewCount(reviewRes.count ?? 0);
+        setHasVerifiedPurchase((receiptRes.count ?? 0) > 0);
+      } catch (err) {
+        console.error('Error fetching buyer engagement:', err);
+      } finally {
+        setDataLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [user]);
+
+  const isLoading = authLoading || dataLoading;
 
   return useMemo(() => {
     const profileFields = profile ?? {};
     const { percent: profileCompletion, missing } = calcBuyerProfileCompletion(profileFields);
 
-    // Mock engagement stats — in production these would come from DB
     const input: BuyerGamificationInput = {
       profileCompletion,
-      reviewsWritten: 3,
-      developersViewed: 24,
-      projectsSaved: 12,
-      reportsUnlocked: 8,
-      hasVerifiedPurchase: false,
-      helpfulVotes: 5,
+      reviewsWritten: reviewCount,
+      developersViewed: engagement?.developers_viewed ?? 0,
+      projectsSaved: engagement?.projects_saved ?? 0,
+      reportsUnlocked: engagement?.reports_unlocked ?? 0,
+      hasVerifiedPurchase,
+      helpfulVotes: engagement?.helpful_votes ?? 0,
       joinedDate: profile?.created_at ? new Date(profile.created_at) : new Date(),
     };
 
@@ -52,5 +112,5 @@ export function useBuyerGamification() {
       missions,
       allBadges: BUYER_BADGES,
     };
-  }, [profile, isLoading]);
+  }, [profile, isLoading, reviewCount, engagement, hasVerifiedPurchase]);
 }
