@@ -330,6 +330,41 @@ const DevSettings = () => (
 const DevBusinessProfile = () => {
   const { profile: bp, isLoading: bpLoading, isSaving, saveProfile } = useBusinessProfile();
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const logoInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingLogo, setIsUploadingLogo] = useState(false);
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 2 * 1024 * 1024) {
+      const { toast } = await import('sonner');
+      toast.error('File must be under 2MB');
+      return;
+    }
+    setIsUploadingLogo(true);
+    try {
+      const ext = file.name.split('.').pop() || 'png';
+      const path = `${user.id}/logo.${ext}`;
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+      const logoUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      await saveProfile({ logo_url: logoUrl });
+      const { toast } = await import('sonner');
+      toast.success('Logo uploaded successfully');
+    } catch (err: any) {
+      console.error('Logo upload error:', err);
+      const { toast } = await import('sonner');
+      toast.error('Failed to upload logo');
+    } finally {
+      setIsUploadingLogo(false);
+      if (logoInputRef.current) logoInputRef.current.value = '';
+    }
+  };
 
   const [form, setForm] = useState({
     company_name: '',
