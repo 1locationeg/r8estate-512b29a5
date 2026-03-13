@@ -1313,7 +1313,7 @@ const AdminBusiness = () => {
               {filtered.map((b) => {
                 const completion = getCompletionPercent(b);
                 return (
-                  <tr key={b.id} className="border-t border-border hover:bg-muted/30 transition-colors">
+                  <tr key={b.id} className="border-t border-border hover:bg-muted/30 transition-colors cursor-pointer" onClick={() => openDetail(b)}>
                     <td className="p-3">
                       <div className="flex items-center gap-3">
                         <Avatar className="h-9 w-9">
