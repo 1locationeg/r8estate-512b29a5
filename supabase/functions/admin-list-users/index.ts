@@ -7,7 +7,7 @@ const corsHeaders = {
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+    return new Response(null, { headers: corsHeaders });
   }
 
   try {
@@ -62,16 +62,27 @@ Deno.serve(async (req) => {
       profileMap[p.user_id] = { full_name: p.full_name, avatar_url: p.avatar_url };
     }
 
+    // Fetch admin permissions
+    const { data: adminPerms } = await adminClient.from("admin_permissions").select("user_id, permission_level");
+    const permMap: Record<string, string> = {};
+    for (const ap of adminPerms || []) {
+      permMap[ap.user_id] = ap.permission_level;
+    }
+
     const result = users.map((u) => ({
       id: u.id,
       email: u.email,
       full_name: profileMap[u.id]?.full_name || u.user_metadata?.full_name || null,
       avatar_url: profileMap[u.id]?.avatar_url || null,
       roles: roleMap[u.id] || [],
+      admin_permission: permMap[u.id] || null,
       created_at: u.created_at,
     }));
 
-    return new Response(JSON.stringify(result), {
+    // Also return the caller's permission level
+    const callerPermission = permMap[user.id] || null;
+
+    return new Response(JSON.stringify({ users: result, callerPermission }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
