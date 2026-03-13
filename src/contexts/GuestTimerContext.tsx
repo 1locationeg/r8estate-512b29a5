@@ -2,7 +2,9 @@ import { createContext, useContext, useEffect, useState, useRef, ReactNode, useC
 import { useAuth } from '@/contexts/AuthContext';
 
 const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
+const BONUS_SECONDS = 2 * 60; // 2 minutes
 const STORAGE_KEY = 'r8estate_guest_start';
+const BONUS_USED_KEY = 'r8estate_guest_bonus_used';
 
 interface GuestTimerContextType {
   secondsLeft: number;
@@ -10,6 +12,8 @@ interface GuestTimerContextType {
   isGuest: boolean;
   dismissExpiredModal: () => void;
   expiredModalOpen: boolean;
+  grantBonusTime: () => void;
+  hasBonusBeenUsed: boolean;
 }
 
 const GuestTimerContext = createContext<GuestTimerContextType | undefined>(undefined);
@@ -18,6 +22,7 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const { user, isLoading } = useAuth();
   const [secondsLeft, setSecondsLeft] = useState(GUEST_DURATION_SECONDS);
   const [expiredModalOpen, setExpiredModalOpen] = useState(false);
+  const [hasBonusBeenUsed, setHasBonusBeenUsed] = useState(() => localStorage.getItem(BONUS_USED_KEY) === '1');
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasExpiredRef = useRef(false);
 
@@ -30,29 +35,13 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  useEffect(() => {
-    // If user is logged in, clear everything
-    if (!isGuest || isLoading) {
-      clearTimer();
-      hasExpiredRef.current = false;
-      setExpiredModalOpen(false);
-      setSecondsLeft(GUEST_DURATION_SECONDS);
-      return;
-    }
-
-    // Get or set the start time in localStorage for persistence
-    let startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
-    const now = Date.now();
-
-    // If no start time or it was longer ago than our duration, reset
-    if (!startTime || now - startTime > GUEST_DURATION_SECONDS * 1000) {
-      startTime = now;
-      localStorage.setItem(STORAGE_KEY, String(startTime));
-    }
+  const startCountdown = useCallback((startTime: number, totalDuration: number) => {
+    clearTimer();
+    hasExpiredRef.current = false;
 
     const tick = () => {
       const elapsed = Math.floor((Date.now() - startTime) / 1000);
-      const remaining = Math.max(0, GUEST_DURATION_SECONDS - elapsed);
+      const remaining = Math.max(0, totalDuration - elapsed);
       setSecondsLeft(remaining);
 
       if (remaining === 0 && !hasExpiredRef.current) {
@@ -62,23 +51,68 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    tick(); // Run immediately
+    tick();
     intervalRef.current = setInterval(tick, 1000);
+  }, [clearTimer]);
 
+  useEffect(() => {
+    if (!isGuest || isLoading) {
+      clearTimer();
+      hasExpiredRef.current = false;
+      setExpiredModalOpen(false);
+      setSecondsLeft(GUEST_DURATION_SECONDS);
+      return;
+    }
+
+    let startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    const now = Date.now();
+    const bonusUsed = localStorage.getItem(BONUS_USED_KEY) === '1';
+    const totalDuration = bonusUsed ? GUEST_DURATION_SECONDS + BONUS_SECONDS : GUEST_DURATION_SECONDS;
+
+    if (!startTime || now - startTime > totalDuration * 1000) {
+      startTime = now;
+      localStorage.setItem(STORAGE_KEY, String(startTime));
+      localStorage.removeItem(BONUS_USED_KEY);
+      setHasBonusBeenUsed(false);
+    }
+
+    startCountdown(startTime, totalDuration);
     return clearTimer;
-  }, [isGuest, isLoading, clearTimer]);
+  }, [isGuest, isLoading, clearTimer, startCountdown]);
 
-  // When user signs in, clear the stored start time
   useEffect(() => {
     if (user) {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(BONUS_USED_KEY);
       hasExpiredRef.current = false;
+      setHasBonusBeenUsed(false);
     }
   }, [user]);
 
   const dismissExpiredModal = useCallback(() => {
     setExpiredModalOpen(false);
   }, []);
+
+  const grantBonusTime = useCallback(() => {
+    if (hasBonusBeenUsed) return;
+
+    // Mark bonus as used
+    localStorage.setItem(BONUS_USED_KEY, '1');
+    setHasBonusBeenUsed(true);
+
+    // Extend the start time so we get bonus seconds from NOW
+    const startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
+    const elapsed = Math.floor((Date.now() - startTime) / 1000);
+    const newTotalDuration = elapsed + BONUS_SECONDS;
+
+    // Update the total duration by adjusting start time
+    const newStartTime = Date.now() - elapsed * 1000;
+    localStorage.setItem(STORAGE_KEY, String(newStartTime));
+
+    setExpiredModalOpen(false);
+    hasExpiredRef.current = false;
+    startCountdown(newStartTime, newTotalDuration);
+  }, [hasBonusBeenUsed, startCountdown]);
 
   return (
     <GuestTimerContext.Provider
@@ -88,6 +122,8 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
         isGuest,
         dismissExpiredModal,
         expiredModalOpen,
+        grantBonusTime,
+        hasBonusBeenUsed,
       }}
     >
       {children}
