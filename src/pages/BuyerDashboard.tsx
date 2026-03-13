@@ -15,7 +15,7 @@ import { NotificationsPage } from '@/components/NotificationsPage';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, role } = useAuth();
 
   const stats = [
     { icon: Building2, label: 'Developers Viewed', value: '24', bg: 'bg-primary/10', iconColor: 'text-primary' },
