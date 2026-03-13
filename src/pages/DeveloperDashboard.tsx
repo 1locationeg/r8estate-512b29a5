@@ -366,6 +366,41 @@ const DevBusinessProfile = () => {
     }
   };
 
+  const licenseInputRef = useRef<HTMLInputElement>(null);
+  const [isUploadingLicense, setIsUploadingLicense] = useState(false);
+
+  const handleLicenseUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+    if (file.size > 5 * 1024 * 1024) {
+      const { toast } = await import('sonner');
+      toast.error('File must be under 5MB');
+      return;
+    }
+    setIsUploadingLicense(true);
+    try {
+      const ext = file.name.split('.').pop() || 'pdf';
+      const path = `${user.id}/license.${ext}`;
+      const { supabase } = await import('@/integrations/supabase/client');
+      const { error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(path, file, { upsert: true });
+      if (uploadError) throw uploadError;
+      const { data: urlData } = supabase.storage.from('avatars').getPublicUrl(path);
+      const licenseUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+      await saveProfile({ license_url: licenseUrl });
+      const { toast } = await import('sonner');
+      toast.success('License uploaded — pending verification');
+    } catch (err: any) {
+      console.error('License upload error:', err);
+      const { toast } = await import('sonner');
+      toast.error('Failed to upload license');
+    } finally {
+      setIsUploadingLicense(false);
+      if (licenseInputRef.current) licenseInputRef.current.value = '';
+    }
+  };
+
   const [form, setForm] = useState({
     company_name: '',
     description: '',
