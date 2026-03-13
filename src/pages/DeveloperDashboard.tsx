@@ -64,6 +64,7 @@ const companyData = {
 
 const DevOverview = () => {
   const navigate = useNavigate();
+  const { profileCompletion, currentTier } = useGamification();
 
   const stats = [
     { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent' },
@@ -76,7 +77,8 @@ const DevOverview = () => {
       {/* Business Profile Header */}
       <BusinessProfileHeader
         company={companyData}
-        profileCompletion={72}
+        profileCompletion={profileCompletion}
+        tier={{ name: currentTier.name, emoji: currentTier.emoji }}
         onEditProfile={() => navigate('/developer/profile')}
         onSharePage={() => {}}
         onViewPublic={() => {}}
