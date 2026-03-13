@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Developer } from "@/data/mockData";
+import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import {
   Dialog,
   DialogContent,
