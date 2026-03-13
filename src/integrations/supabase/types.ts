@@ -104,6 +104,33 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_feedback: {
+        Row: {
+          created_at: string
+          feedback: string
+          feedback_type: string
+          id: string
+          rating: number
+          session_id: string
+        }
+        Insert: {
+          created_at?: string
+          feedback: string
+          feedback_type?: string
+          id?: string
+          rating: number
+          session_id: string
+        }
+        Update: {
+          created_at?: string
+          feedback?: string
+          feedback_type?: string
+          id?: string
+          rating?: number
+          session_id?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
