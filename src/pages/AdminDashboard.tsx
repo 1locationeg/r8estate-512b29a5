@@ -103,56 +103,180 @@ const AdminOverview = () => {
 };
 
 const AdminUsers = () => {
-  const mockUsers = [
-    { name: 'Ahmed Mostafa', email: 'ahmed@example.com', role: 'buyer', status: 'active', joined: '2024-01-15' },
-    { name: 'Sara Mahmoud', email: 'sara@example.com', role: 'buyer', status: 'active', joined: '2024-01-10' },
-    { name: 'Palm Hills Developments', email: 'admin@palmhills.com', role: 'developer', status: 'active', joined: '2023-06-01' },
-    { name: 'Mohammed Hassan', email: 'mohammed@example.com', role: 'buyer', status: 'suspended', joined: '2024-01-05' },
-    { name: 'Emaar Misr', email: 'admin@emaarmisr.com', role: 'developer', status: 'active', joined: '2023-07-01' },
+  const [users, setUsers] = useState<Array<{
+    id: string;
+    email: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    roles: string[];
+    created_at: string;
+  }>>([]);
+  const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const availableRoles: Array<{ value: string; label: string; color: string }> = [
+    { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
+    { value: 'developer', label: 'Developer', color: 'bg-primary/10 text-primary' },
+    { value: 'admin', label: 'Admin', color: 'bg-brand-red/10 text-brand-red' },
   ];
+
+  const fetchUsers = async () => {
+    setLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('admin-list-users');
+      if (error) throw error;
+      setUsers(data || []);
+    } catch (err: any) {
+      toast.error('Failed to load users');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => { fetchUsers(); }, []);
+
+  const handleRoleChange = async (userId: string, targetRole: string, action: 'add' | 'remove') => {
+    setUpdatingId(userId);
+    try {
+      if (action === 'add') {
+        const { error } = await supabase
+          .from('user_roles')
+          .insert({ user_id: userId, role: targetRole as any });
+        if (error) throw error;
+        toast.success(`Role "${targetRole}" added`);
+      } else {
+        const { error } = await supabase
+          .from('user_roles')
+          .delete()
+          .eq('user_id', userId)
+          .eq('role', targetRole as any);
+        if (error) throw error;
+        toast.success(`Role "${targetRole}" removed`);
+      }
+      // Update local state
+      setUsers(prev => prev.map(u => {
+        if (u.id !== userId) return u;
+        return {
+          ...u,
+          roles: action === 'add'
+            ? [...u.roles, targetRole]
+            : u.roles.filter(r => r !== targetRole),
+        };
+      }));
+    } catch (err: any) {
+      toast.error(`Failed to ${action} role: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const filtered = users.filter(u => {
+    if (!searchQuery.trim()) return true;
+    const q = searchQuery.toLowerCase();
+    return (
+      u.email?.toLowerCase().includes(q) ||
+      u.full_name?.toLowerCase().includes(q) ||
+      u.roles.some(r => r.toLowerCase().includes(q))
+    );
+  });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold text-foreground mb-4">User Management</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-2xl font-bold text-foreground">User Management</h2>
+        <span className="text-sm text-muted-foreground">{users.length} users</span>
+      </div>
+
+      <div className="mb-4">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by name, email, or role..."
+          className="w-full max-w-sm px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+        />
+      </div>
+
       <div className="bg-card border border-border rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-secondary/50">
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">User</th>
-                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Role</th>
-                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Status</th>
+                <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Current Roles</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Joined</th>
-                <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Actions</th>
+                <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Manage Roles</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {mockUsers.map((u) => (
-                <tr key={u.email} className="hover:bg-secondary/30 transition-colors">
+              {filtered.map((u) => (
+                <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8"><AvatarFallback className="text-[10px] bg-primary/10 text-primary">{u.name[0]}</AvatarFallback></Avatar>
+                      <Avatar className="h-8 w-8">
+                        {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
+                        <AvatarFallback className="text-[10px] bg-primary/10 text-primary">
+                          {(u.full_name || u.email || '?')[0].toUpperCase()}
+                        </AvatarFallback>
+                      </Avatar>
                       <div>
-                        <p className="text-sm font-medium text-foreground">{u.name}</p>
+                        <p className="text-sm font-medium text-foreground">{u.full_name || 'No name'}</p>
                         <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
                     </div>
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize ${
-                      u.role === 'developer' ? 'bg-primary/10 text-primary' : 'bg-accent/20 text-accent-foreground'
-                    }`}>{u.role}</span>
+                    <div className="flex flex-wrap gap-1">
+                      {u.roles.length === 0 && (
+                        <span className="text-[10px] px-2 py-0.5 rounded-full bg-secondary text-muted-foreground font-medium">No role</span>
+                      )}
+                      {u.roles.map(r => {
+                        const roleInfo = availableRoles.find(ar => ar.value === r);
+                        return (
+                          <span key={r} className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize ${roleInfo?.color || 'bg-secondary text-muted-foreground'}`}>
+                            {r}
+                          </span>
+                        );
+                      })}
+                    </div>
+                  </td>
+                  <td className="px-4 py-3 text-xs text-muted-foreground">
+                    {new Date(u.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium capitalize ${
-                      u.status === 'active' ? 'bg-trust-excellent/10 text-trust-excellent' : 'bg-brand-red/10 text-brand-red'
-                    }`}>{u.status}</span>
-                  </td>
-                  <td className="px-4 py-3 text-xs text-muted-foreground">{u.joined}</td>
-                  <td className="px-4 py-3 text-end">
-                    <div className="flex items-center gap-1 justify-end">
-                      <Button size="sm" variant="ghost"><Eye className="w-3 h-3" /></Button>
-                      <Button size="sm" variant="ghost"><Ban className="w-3 h-3" /></Button>
+                    <div className="flex items-center gap-1 justify-end flex-wrap">
+                      {availableRoles.map(ar => {
+                        const hasRole = u.roles.includes(ar.value);
+                        const isUpdating = updatingId === u.id;
+                        return (
+                          <Button
+                            key={ar.value}
+                            size="sm"
+                            variant={hasRole ? 'default' : 'outline'}
+                            disabled={isUpdating}
+                            className="text-[10px] h-7 px-2"
+                            onClick={() => handleRoleChange(u.id, ar.value, hasRole ? 'remove' : 'add')}
+                          >
+                            {isUpdating ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : hasRole ? (
+                              <><CheckCircle className="w-3 h-3 me-0.5" />{ar.label}</>
+                            ) : (
+                              <><Plus className="w-3 h-3 me-0.5" />{ar.label}</>
+                            )}
+                          </Button>
+                        );
+                      })}
                     </div>
                   </td>
                 </tr>
