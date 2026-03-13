@@ -37,6 +37,9 @@ const Auth = () => {
   const [companyName, setCompanyName] = useState('');
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
   const isBusinessGoogleCallback = searchParams.get('oauth') === 'google' && searchParams.get('type') === 'business';
+  const requiresBusinessRoleSync = Boolean(
+    isBusinessGoogleCallback && user && role !== 'developer' && role !== 'admin'
+  );
 
   // Sync parameters if query params change
   useEffect(() => {
@@ -47,28 +50,33 @@ const Auth = () => {
     if (qMode === 'signup') setMode('signup');
   }, [searchParams]);
 
+  const promoteToBusinessRole = async () => {
+    const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
+    if (error) throw error;
+    await refreshProfile();
+  };
+
   // Ensure Google business auth callbacks are promoted to developer role
   useEffect(() => {
-    if (authLoading || !user || !isBusinessGoogleCallback || role === 'developer' || role === 'admin') return;
+    if (authLoading || !requiresBusinessRoleSync) return;
 
     let isMounted = true;
 
     const syncBusinessRole = async () => {
       setIsSyncingBusinessRole(true);
-      const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
 
-      if (error) {
+      try {
+        await promoteToBusinessRole();
+      } catch {
         toast({
           title: 'Business activation failed',
           description: 'We signed you in, but could not switch your account to Business. Please try again.',
           variant: 'destructive',
         });
-      } else {
-        await refreshProfile();
-      }
-
-      if (isMounted) {
-        setIsSyncingBusinessRole(false);
+      } finally {
+        if (isMounted) {
+          setIsSyncingBusinessRole(false);
+        }
       }
     };
 
@@ -77,16 +85,16 @@ const Auth = () => {
     return () => {
       isMounted = false;
     };
-  }, [authLoading, user, isBusinessGoogleCallback, role, refreshProfile, toast]);
+  }, [authLoading, requiresBusinessRoleSync, refreshProfile, toast]);
 
   // Redirect if already logged in
   useEffect(() => {
-    if (!authLoading && !isSyncingBusinessRole && user) {
+    if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       if (role === 'admin') navigate('/admin');
       else if (role === 'developer') navigate('/developer');
       else navigate('/buyer');
     }
-  }, [user, role, authLoading, isSyncingBusinessRole, navigate]);
+  }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate]);
 
   const validateForm = () => {
     const newErrors: { email?: string; password?: string } = {};
@@ -109,8 +117,14 @@ const Auth = () => {
     e.preventDefault();
     
     if (!validateForm()) return;
-    
+
+    const shouldSyncBusinessRole = mode === 'signin' && accountType === 'business';
+
     setIsLoading(true);
+    if (shouldSyncBusinessRole) {
+      setIsSyncingBusinessRole(true);
+    }
+
     try {
       if (mode === 'signin') {
         const { error } = await signIn(email, password);
@@ -136,10 +150,28 @@ const Auth = () => {
           }
           return;
         }
-        toast({
-          title: 'Welcome back!',
-          description: 'You have successfully signed in.',
-        });
+
+        if (shouldSyncBusinessRole) {
+          try {
+            await promoteToBusinessRole();
+            toast({
+              title: 'Business access ready',
+              description: 'Signed in successfully and switched to your business account.',
+            });
+          } catch {
+            toast({
+              title: 'Business activation failed',
+              description: 'Signed in, but we could not switch your account to Business. Please try again.',
+              variant: 'destructive',
+            });
+            return;
+          }
+        } else {
+          toast({
+            title: 'Welcome back!',
+            description: 'You have successfully signed in.',
+          });
+        }
         // Role-based redirect will happen via useEffect
       } else {
         const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'developer' : 'buyer');
@@ -173,6 +205,9 @@ const Auth = () => {
         }
       }
     } finally {
+      if (shouldSyncBusinessRole) {
+        setIsSyncingBusinessRole(false);
+      }
       setIsLoading(false);
     }
   };
