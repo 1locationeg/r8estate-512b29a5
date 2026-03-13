@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -8,13 +8,15 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { BusinessProfileHeader } from '@/components/BusinessProfileHeader';
+import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy
 } from 'lucide-react';
 import { developers, reviews, projects } from '@/data/mockData';
 import { useBusinessProfile } from '@/hooks/useBusinessProfile';
+import { useGamification } from '@/hooks/useGamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';

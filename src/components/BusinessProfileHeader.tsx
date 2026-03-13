@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import { Shield, MapPin, Star, Edit, Share2, ExternalLink, Building2, Calendar, Users, Briefcase } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -19,6 +20,7 @@ interface BusinessProfileHeaderProps {
     isVerified: boolean;
   };
   profileCompletion: number;
+  tier?: { name: string; emoji: string };
   onEditProfile?: () => void;
   onSharePage?: () => void;
   onViewPublic?: () => void;
@@ -27,10 +29,13 @@ interface BusinessProfileHeaderProps {
 export const BusinessProfileHeader = ({
   company,
   profileCompletion,
+  tier,
   onEditProfile,
   onSharePage,
   onViewPublic,
 }: BusinessProfileHeaderProps) => {
+  const navigate = useNavigate();
+
   return (
     <div className="space-y-4 mb-8">
       {/* Main Profile Card */}
@@ -56,6 +61,12 @@ export const BusinessProfileHeader = ({
                     <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-verified/10 border border-verified rounded-full">
                       <Shield className="w-3 h-3 text-verified fill-verified" />
                       <span className="text-[10px] font-semibold text-verified-foreground">Verified</span>
+                    </div>
+                  )}
+                  {tier && (
+                    <div className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/10 border border-accent/30 rounded-full">
+                      <span className="text-xs">{tier.emoji}</span>
+                      <span className="text-[10px] font-semibold text-accent-foreground">{tier.name}</span>
                     </div>
                   )}
                 </div>
@@ -129,22 +140,30 @@ export const BusinessProfileHeader = ({
         </div>
       </div>
 
-      {/* Profile Completion */}
-      <div className="bg-card border border-border rounded-xl p-4">
+      {/* Profile Completion – clickable */}
+      <button
+        className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-accent/50 transition-colors group cursor-pointer"
+        onClick={() => navigate(profileCompletion < 100 ? '/developer/profile' : '/developer/gamification')}
+      >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
             <Building2 className="w-4 h-4 text-muted-foreground" />
             <span className="text-sm font-medium text-foreground">Profile Completion</span>
           </div>
-          <span className="text-sm font-bold text-foreground">{profileCompletion}%</span>
+          <div className="flex items-center gap-2">
+            <span className="text-sm font-bold text-foreground">{profileCompletion}%</span>
+            <span className="text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+              {profileCompletion < 100 ? 'Complete now →' : 'View rewards →'}
+            </span>
+          </div>
         </div>
         <Progress value={profileCompletion} className="h-2" />
         {profileCompletion < 100 && (
           <p className="text-[11px] text-muted-foreground mt-2">
-            Complete your profile to increase visibility and build trust with buyers.
+            Complete your profile to earn the <strong className="text-accent">Profile Pioneer</strong> badge and unlock more perks!
           </p>
         )}
-      </div>
+      </button>
     </div>
   );
 };
