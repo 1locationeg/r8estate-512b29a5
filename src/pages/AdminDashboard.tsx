@@ -1159,6 +1159,33 @@ const AdminBusiness = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'complete' | 'incomplete'>('all');
+  const [selectedBusiness, setSelectedBusiness] = useState<any | null>(null);
+  const [editData, setEditData] = useState<any>({});
+  const [isSaving, setIsSaving] = useState(false);
+
+  const openDetail = (b: any) => {
+    setSelectedBusiness(b);
+    setEditData({ ...b });
+  };
+
+  const handleSave = async () => {
+    if (!selectedBusiness) return;
+    setIsSaving(true);
+    const { id, created_at, updated_at, ...rest } = editData;
+    const { error } = await supabase
+      .from('business_profiles')
+      .update(rest)
+      .eq('id', selectedBusiness.id);
+    if (error) {
+      toast.error('Failed to update business');
+      console.error(error);
+    } else {
+      toast.success('Business updated');
+      setSelectedBusiness(null);
+      fetchBusinesses();
+    }
+    setIsSaving(false);
+  };
 
   const fetchBusinesses = async () => {
     setLoading(true);
