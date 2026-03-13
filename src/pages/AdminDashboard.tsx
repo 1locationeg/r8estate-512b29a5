@@ -1154,7 +1154,203 @@ const AdminCategories = () => <PlaceholderSection title="Categories" icon={Folde
 const AdminNavigation = () => <PlaceholderSection title="Navigation" icon={Navigation} />;
 const AdminNewsletter = () => <PlaceholderSection title="Newsletter" icon={Mail} />;
 const AdminSections = () => <PlaceholderSection title="Sections" icon={Layout} />;
-const AdminBusiness = () => <PlaceholderSection title="Business" icon={Briefcase} />;
+const AdminBusiness = () => {
+  const [businesses, setBusinesses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'complete' | 'incomplete'>('all');
+
+  const fetchBusinesses = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('business_profiles')
+      .select('*')
+      .order('created_at', { ascending: false });
+    if (error) {
+      toast.error('Failed to load businesses');
+      console.error(error);
+    }
+    setBusinesses(data || []);
+    setLoading(false);
+  };
+
+  useEffect(() => { fetchBusinesses(); }, []);
+
+  const getCompletionPercent = (b: any) => {
+    const fields = ['company_name', 'description', 'logo_url', 'location', 'email', 'phone', 'website', 'year_established', 'license_url'];
+    const filled = fields.filter(f => b[f] && String(b[f]).trim() !== '').length;
+    return Math.round((filled / fields.length) * 100);
+  };
+
+  const filtered = businesses.filter(b => {
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch = !q || 
+      b.company_name?.toLowerCase().includes(q) ||
+      b.email?.toLowerCase().includes(q) ||
+      b.location?.toLowerCase().includes(q) ||
+      b.phone?.toLowerCase().includes(q);
+
+    const completion = getCompletionPercent(b);
+    const matchesStatus = statusFilter === 'all' ||
+      (statusFilter === 'complete' && completion === 100) ||
+      (statusFilter === 'incomplete' && completion < 100);
+
+    return matchesSearch && matchesStatus;
+  });
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h2 className="text-2xl font-bold text-foreground">Business Management</h2>
+          <p className="text-sm text-muted-foreground">{businesses.length} registered businesses</p>
+        </div>
+      </div>
+
+      {/* Search & Filters */}
+      <div className="flex flex-col sm:flex-row gap-3 mb-5">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search by name, email, location..."
+          className="flex-1 max-w-sm px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 text-sm"
+        />
+        <div className="flex gap-1.5">
+          {(['all', 'complete', 'incomplete'] as const).map(f => (
+            <button
+              key={f}
+              onClick={() => setStatusFilter(f)}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all capitalize ${
+                statusFilter === f
+                  ? 'bg-primary text-primary-foreground'
+                  : 'bg-secondary text-foreground hover:bg-secondary/80'
+              }`}
+            >
+              {f === 'all' ? `All (${businesses.length})` : f === 'complete' ? 'Complete' : 'Incomplete'}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Stats */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-foreground">{businesses.length}</p>
+          <p className="text-xs text-muted-foreground">Total Businesses</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-trust-excellent">{businesses.filter(b => getCompletionPercent(b) === 100).length}</p>
+          <p className="text-xs text-muted-foreground">Complete Profiles</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-accent">{businesses.filter(b => getCompletionPercent(b) < 100).length}</p>
+          <p className="text-xs text-muted-foreground">Incomplete Profiles</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-foreground">{businesses.filter(b => b.license_url).length}</p>
+          <p className="text-xs text-muted-foreground">With License</p>
+        </div>
+      </div>
+
+      {/* Table */}
+      {filtered.length === 0 ? (
+        <div className="bg-card border border-border rounded-xl p-8 text-center">
+          <Briefcase className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
+          <p className="text-sm text-muted-foreground">
+            {searchQuery || statusFilter !== 'all' ? 'No businesses match your filters.' : 'No businesses registered yet.'}
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto border border-border rounded-xl">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-muted/50 text-left">
+                <th className="p-3 font-semibold text-muted-foreground">Business</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden md:table-cell">Location</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">Contact</th>
+                <th className="p-3 font-semibold text-muted-foreground">Profile</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Registered</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">License</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((b) => {
+                const completion = getCompletionPercent(b);
+                return (
+                  <tr key={b.id} className="border-t border-border hover:bg-muted/30 transition-colors">
+                    <td className="p-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-9 w-9">
+                          {b.logo_url && <img src={b.logo_url} alt="" className="w-full h-full object-cover rounded-full" />}
+                          <AvatarFallback className="text-xs bg-primary/10 text-primary">
+                            {(b.company_name || '?')[0].toUpperCase()}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="font-medium text-foreground text-sm">{b.company_name || 'Unnamed Business'}</p>
+                          <p className="text-[10px] text-muted-foreground">{b.email || 'No email'}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-3 text-foreground hidden md:table-cell">
+                      <span className="text-xs">{b.location || '—'}</span>
+                    </td>
+                    <td className="p-3 hidden lg:table-cell">
+                      <div className="text-xs text-foreground">{b.phone || '—'}</div>
+                      {b.website && (
+                        <a href={b.website} target="_blank" rel="noopener noreferrer" className="text-[10px] text-primary hover:underline flex items-center gap-0.5">
+                          <ExternalLink className="w-2.5 h-2.5" /> Website
+                        </a>
+                      )}
+                    </td>
+                    <td className="p-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-16 h-1.5 bg-secondary rounded-full overflow-hidden">
+                          <div
+                            className={`h-full rounded-full transition-all ${
+                              completion === 100 ? 'bg-trust-excellent' : completion >= 50 ? 'bg-accent' : 'bg-brand-red'
+                            }`}
+                            style={{ width: `${completion}%` }}
+                          />
+                        </div>
+                        <span className={`text-[10px] font-medium ${
+                          completion === 100 ? 'text-trust-excellent' : completion >= 50 ? 'text-accent' : 'text-brand-red'
+                        }`}>
+                          {completion}%
+                        </span>
+                      </div>
+                    </td>
+                    <td className="p-3 text-foreground hidden sm:table-cell">
+                      <span className="text-xs">{new Date(b.created_at).toLocaleDateString()}</span>
+                    </td>
+                    <td className="p-3 hidden lg:table-cell">
+                      {b.license_url ? (
+                        <a href={b.license_url} target="_blank" rel="noopener noreferrer" className="text-xs text-primary hover:underline flex items-center gap-1">
+                          <Eye className="w-3 h-3" /> View
+                        </a>
+                      ) : (
+                        <span className="text-xs text-muted-foreground">—</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </div>
+  );
+};
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
