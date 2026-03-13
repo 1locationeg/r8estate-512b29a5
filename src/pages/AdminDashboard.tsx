@@ -8,7 +8,8 @@ import {
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
-  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart
+  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
