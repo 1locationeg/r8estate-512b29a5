@@ -15,7 +15,7 @@ import { NotificationsPage } from '@/components/NotificationsPage';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
-  const { profile } = useAuth();
+  const { profile, role } = useAuth();
 
   const stats = [
     { icon: Building2, label: 'Developers Viewed', value: '24', bg: 'bg-primary/10', iconColor: 'text-primary' },
@@ -37,7 +37,8 @@ const BuyerOverview = () => {
         <p className="text-muted-foreground text-sm">Continue your search for the perfect developer</p>
       </div>
 
-      {/* Register Your Business CTA */}
+      {/* Register Your Business CTA - only for non-developer users */}
+      {role !== 'developer' && role !== 'admin' && (
       <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/10">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary rounded-full blur-3xl" />
@@ -61,6 +62,7 @@ const BuyerOverview = () => {
           </Button>
         </div>
       </div>
+      )}
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
