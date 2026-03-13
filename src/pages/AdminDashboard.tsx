@@ -1156,6 +1156,7 @@ const AdminNewsletter = () => <PlaceholderSection title="Newsletter" icon={Mail}
 const AdminSections = () => <PlaceholderSection title="Sections" icon={Layout} />;
 const AdminBusiness = () => <PlaceholderSection title="Business" icon={Briefcase} />;
 
+const AdminDashboard = () => {
   const navigate = useNavigate();
   const { user, role, isLoading } = useAuth();
 
