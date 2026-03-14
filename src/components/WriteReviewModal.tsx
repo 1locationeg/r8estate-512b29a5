@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -37,6 +37,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { ConfettiCelebration } from "@/components/ConfettiCelebration";
+import { Trophy } from "lucide-react";
 
 interface WriteReviewModalProps {
   open: boolean;
@@ -68,6 +70,7 @@ export const WriteReviewModal = ({
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [firstReviewCelebration, setFirstReviewCelebration] = useState(false);
 
   // Form state
   const [rating, setRating] = useState(0);
@@ -384,10 +387,28 @@ export const WriteReviewModal = ({
 
       if (insertError) throw insertError;
 
-      toast({
-        title: "✅ Review submitted!",
-        description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
-      });
+      // Check if this was the user's first review for badge celebration
+      const { count: totalReviews } = await supabase
+        .from("reviews")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      const isFirstReview = totalReviews === 1;
+
+      if (isFirstReview) {
+        setFirstReviewCelebration(true);
+        toast({
+          title: "🏆 First Review Badge Earned!",
+          description: "You've earned the 'First Review' badge and +25 points! Keep sharing your experiences.",
+          duration: 6000,
+        });
+        setTimeout(() => setFirstReviewCelebration(false), 4000);
+      } else {
+        toast({
+          title: "✅ Review submitted!",
+          description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
+        });
+      }
 
       resetForm();
       onReviewSubmitted?.();
@@ -407,6 +428,8 @@ export const WriteReviewModal = ({
   if (!open) return null;
 
   return (
+    <>
+    <ConfettiCelebration trigger={firstReviewCelebration} duration={3500} particleCount={80} />
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="p-4 md:p-6 pb-0">
@@ -752,5 +775,6 @@ export const WriteReviewModal = ({
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
