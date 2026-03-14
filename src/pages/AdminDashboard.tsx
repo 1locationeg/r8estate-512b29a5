@@ -65,6 +65,9 @@ const AdminOverview = () => {
           })) || [],
           recentBusinesses: bizRes.data || [],
           recentReviews: recentRevsRes.data || [],
+          allProfileDates: (allProfilesRes.data || []).map((p: any) => p.created_at),
+          allBizDates: (allBizRes.data || []).map((b: any) => b.created_at),
+          allReviewDates: (allReviewsRes.data || []).map((r: any) => r.created_at),
         });
       } catch (err) {
         console.error('Dashboard fetch error:', err);
