@@ -1,10 +1,11 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { BUYER_TIERS, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target } from 'lucide-react';
+import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 
 export const BuyerGamificationPanel = () => {
@@ -19,6 +20,24 @@ export const BuyerGamificationPanel = () => {
     earnedBadges.map((b) => b.id),
     currentTier.id,
   );
+
+  // Track newly earned badges the user hasn't dismissed yet
+  const [newBadgeIds, setNewBadgeIds] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (isLoading || earnedBadges.length === 0) return;
+    const seenKey = 'buyer_seen_badges';
+    const seen: string[] = JSON.parse(localStorage.getItem(seenKey) || '[]');
+    const fresh = earnedBadges.filter((b) => !seen.includes(b.id));
+    if (fresh.length > 0) setNewBadgeIds(fresh.map((b) => b.id));
+  }, [isLoading, earnedBadges]);
+
+  const dismissNewBadge = (id: string) => {
+    const seenKey = 'buyer_seen_badges';
+    const seen: string[] = JSON.parse(localStorage.getItem(seenKey) || '[]');
+    localStorage.setItem(seenKey, JSON.stringify([...seen, id]));
+    setNewBadgeIds((prev) => prev.filter((x) => x !== id));
+  };
 
   if (isLoading) {
     return (
@@ -35,7 +54,43 @@ export const BuyerGamificationPanel = () => {
   return (
     <div className="space-y-6 relative">
       <ConfettiCelebration trigger={confettiTrigger} />
-      {/* Hero */}
+
+      {/* Newly earned badge banners */}
+      {newBadgeIds.map((id) => {
+        const badge = earnedBadges.find((b) => b.id === id);
+        if (!badge) return null;
+        const Icon = badge.icon;
+        return (
+          <div
+            key={id}
+            className="relative bg-gradient-to-r from-accent/15 via-primary/10 to-accent/15 border border-accent/30 rounded-xl p-4 animate-fade-in"
+          >
+            <button
+              onClick={() => dismissNewBadge(id)}
+              className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+              aria-label="Dismiss"
+            >
+              <X className="w-4 h-4" />
+            </button>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center animate-pulse">
+                <Icon className="w-6 h-6 text-accent" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5">
+                  <Star className="w-4 h-4 text-accent fill-accent" />
+                  <span className="text-sm font-bold text-foreground">New Badge Earned!</span>
+                </div>
+                <p className="text-sm font-semibold text-foreground">{badge.name}</p>
+                <p className="text-xs text-muted-foreground">{badge.description}</p>
+              </div>
+              <Badge className="bg-accent text-accent-foreground text-xs flex-shrink-0">
+                +{badge.points} pts
+              </Badge>
+            </div>
+          </div>
+        );
+      })}
       <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/10">
         <div className="flex items-center gap-3 mb-4">
           <span className="text-4xl">{currentTier.emoji}</span>
