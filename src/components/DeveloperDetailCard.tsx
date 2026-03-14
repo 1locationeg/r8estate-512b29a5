@@ -71,7 +71,7 @@ export const DeveloperDetailCard = ({
     return "stroke-trust-fair";
   };
 
-  const { reviews } = useReviews(developer.id);
+  const { reviews, refetch: refetchReviews } = useReviews(developer.id);
 
   // Filter reviews for this developer
   const developerReviews = useMemo(() => {
