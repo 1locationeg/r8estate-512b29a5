@@ -32,12 +32,13 @@ const AdminOverview = () => {
     const fetchDashboard = async () => {
       setLoading(true);
       try {
-        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes] = await Promise.all([
+        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes, recentRevsRes] = await Promise.all([
           supabase.functions.invoke('admin-list-users'),
           supabase.from('business_profiles').select('id, company_name, logo_url, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('reviews').select('id, is_verified', { count: 'exact' }),
           supabase.from('profiles').select('id, full_name, avatar_url, user_id, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('business_profiles').select('id', { count: 'exact' }),
+          supabase.from('reviews').select('id, author_name, developer_name, rating, comment, created_at').order('created_at', { ascending: false }).limit(6),
         ]);
 
         const allUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data?.users || [];
@@ -56,6 +57,7 @@ const AdminOverview = () => {
             created_at: p.created_at,
           })) || [],
           recentBusinesses: bizRes.data || [],
+          recentReviews: recentRevsRes.data || [],
         });
       } catch (err) {
         console.error('Dashboard fetch error:', err);
