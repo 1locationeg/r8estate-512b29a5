@@ -103,6 +103,12 @@ export default {
           "0%": { transform: "translateX(-100%)" },
           "100%": { transform: "translateX(100%)" },
         },
+        "bounce-in": {
+          "0%": { transform: "scale(0)", opacity: "0" },
+          "50%": { transform: "scale(1.1)" },
+          "70%": { transform: "scale(0.95)" },
+          "100%": { transform: "scale(1)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
