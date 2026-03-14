@@ -188,11 +188,16 @@ const AdminOverview = () => {
         {/* Users Statistics Placeholder */}
         <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Users Statistics For This Month</h3>
-          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
-            <div className="text-center">
-              <TrendingUp className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
-            </div>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={usersChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} interval="preserveStartEnd" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} width={24} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }} />
+                <Line type="monotone" dataKey="count" name="Users" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
