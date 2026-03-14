@@ -21,14 +21,6 @@ export const BuyerGamificationPanel = () => {
     currentTier.id,
   );
 
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 animate-spin text-primary" />
-      </div>
-    );
-  }
-
   // Track newly earned badges the user hasn't dismissed yet
   const [newBadgeIds, setNewBadgeIds] = useState<string[]>([]);
 
@@ -46,6 +38,14 @@ export const BuyerGamificationPanel = () => {
     localStorage.setItem(seenKey, JSON.stringify([...seen, id]));
     setNewBadgeIds((prev) => prev.filter((x) => x !== id));
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-primary" />
+      </div>
+    );
+  }
 
   const tierProgress = nextTier
     ? ((totalPoints - currentTier.minPoints) / (nextTier.minPoints - currentTier.minPoints)) * 100
