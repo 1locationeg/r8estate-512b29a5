@@ -26,15 +26,15 @@ export const ReviewMotivatorFloat = ({
 
   // 3-second entrance delay
   useEffect(() => {
-    if (!user || dismissed || isReviewModalOpen) {
+    if (dismissed || isReviewModalOpen) {
       setVisible(false);
       return;
     }
     const timer = setTimeout(() => setVisible(true), 3000);
     return () => clearTimeout(timer);
-  }, [user, dismissed, isReviewModalOpen]);
+  }, [dismissed, isReviewModalOpen]);
 
-  if (!user || dismissed || isReviewModalOpen || !visible) return null;
+  if (dismissed || isReviewModalOpen || !visible) return null;
 
   // Find the next review-related badge the user can earn
   const reviewBadge = lockedBadges.find(
@@ -47,11 +47,11 @@ export const ReviewMotivatorFloat = ({
   return (
     <div
       className={cn(
-        "sticky bottom-4 z-30 ml-auto w-full max-w-[300px]",
-        "rounded-xl border border-border/60 bg-card/80 backdrop-blur-lg shadow-lg",
+        "fixed bottom-20 right-4 z-40 w-[280px]",
+        "rounded-xl border border-border/60 bg-card/95 backdrop-blur-lg shadow-xl",
         "p-4 transition-all duration-500 ease-out",
         "animate-fade-in",
-        "md:max-w-[280px]"
+        "max-[640px]:left-4 max-[640px]:right-4 max-[640px]:w-auto"
       )}
     >
       {/* Dismiss */}
@@ -106,7 +106,7 @@ export const ReviewMotivatorFloat = ({
             className="mt-3 h-7 text-xs gap-1.5 w-full"
           >
             <PenLine className="w-3.5 h-3.5" />
-            Write a Review
+            {user ? "Write a Review" : "Sign in to Review"}
           </Button>
         </div>
       </div>
