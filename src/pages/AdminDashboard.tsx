@@ -17,86 +17,226 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 const AdminOverview = () => {
-  const stats = [
-    { icon: Users, label: 'Total Users', value: '12,847', status: 'success' as const },
-    { icon: Building2, label: 'Verified Developers', value: '156', status: 'success' as const },
-    { icon: MessageSquare, label: 'Pending Reviews', value: '23', status: 'warning' as const },
-    { icon: AlertTriangle, label: 'Flagged Content', value: '5', status: 'error' as const },
-  ];
+  const [dashData, setDashData] = useState({
+    totalUsers: 0,
+    totalBusinesses: 0,
+    totalReviews: 0,
+    pendingReviews: 0,
+    recentUsers: [] as Array<{ id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string }>,
+    recentBusinesses: [] as Array<{ id: string; company_name: string | null; logo_url: string | null; created_at: string }>,
+  });
+  const [loading, setLoading] = useState(true);
 
-  const statusColors = {
-    success: { bg: 'bg-trust-excellent/10', text: 'text-trust-excellent' },
-    warning: { bg: 'bg-accent/20', text: 'text-accent' },
-    error: { bg: 'bg-brand-red/10', text: 'text-brand-red' },
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      setLoading(true);
+      try {
+        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes] = await Promise.all([
+          supabase.functions.invoke('admin-list-users'),
+          supabase.from('business_profiles').select('id, company_name, logo_url, created_at').order('created_at', { ascending: false }).limit(6),
+          supabase.from('reviews').select('id, is_verified', { count: 'exact' }),
+          supabase.from('profiles').select('id, full_name, avatar_url, user_id, created_at').order('created_at', { ascending: false }).limit(6),
+          supabase.from('business_profiles').select('id', { count: 'exact' }),
+        ]);
+
+        const allUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data?.users || [];
+        const pendingCount = reviewsRes.data?.filter((r: any) => !r.is_verified).length || 0;
+
+        setDashData({
+          totalUsers: allUsers.length,
+          totalBusinesses: bizListRes.count || 0,
+          totalReviews: reviewsRes.count || 0,
+          pendingReviews: pendingCount,
+          recentUsers: profilesRes.data?.map((p: any) => ({
+            id: p.user_id,
+            email: '',
+            full_name: p.full_name,
+            avatar_url: p.avatar_url,
+            created_at: p.created_at,
+          })) || [],
+          recentBusinesses: bizRes.data || [],
+        });
+      } catch (err) {
+        console.error('Dashboard fetch error:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchDashboard();
+  }, []);
+
+  const timeAgo = (dateStr: string) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const days = Math.floor(diff / 86400000);
+    if (days === 0) return 'Today';
+    if (days === 1) return '1 day ago';
+    if (days < 7) return `${days} days ago`;
+    if (days < 30) return `${Math.floor(days / 7)} weeks ago`;
+    return `${Math.floor(days / 30)} months ago`;
   };
 
+  const heroStats = [
+    { icon: DollarSign, label: 'EARNINGS', value: '$0.00', gradient: 'from-trust-excellent to-trust-excellent/80' },
+    { icon: Receipt, label: 'SUBSCRIPTIONS', value: '0', gradient: 'from-primary to-primary/80' },
+    { icon: CreditCard, label: 'TRANSACTIONS', value: '0', gradient: 'from-brand-red to-brand-red/80' },
+  ];
+
+  const midStats = [
+    { icon: Briefcase, label: 'TOTAL BUSINESSES', value: dashData.totalBusinesses.toString(), color: 'bg-primary text-primary-foreground' },
+    { icon: Star, label: 'TOTAL REVIEWS', value: dashData.totalReviews.toString(), color: 'bg-accent text-accent-foreground' },
+    { icon: MessageSquare, label: 'PENDING REVIEWS', value: dashData.pendingReviews.toString(), color: 'bg-muted text-foreground' },
+    { icon: AlertTriangle, label: 'REPORTED REVIEWS', value: '0', color: 'bg-brand-red/90 text-primary-foreground' },
+  ];
+
+  const bottomStats = [
+    { icon: Building2, label: 'BUSINESS OWNERS', value: dashData.totalBusinesses.toString(), color: 'bg-primary/90 text-primary-foreground' },
+    { icon: Users, label: 'USERS', value: dashData.totalUsers.toString(), color: 'bg-accent/90 text-accent-foreground' },
+    { icon: Shield, label: 'KYC VERIFICATIONS', value: '0', color: 'bg-trust-excellent/90 text-primary-foreground' },
+    { icon: Loader2, label: 'KYC PENDING', value: '0', color: 'bg-brand-red/80 text-primary-foreground' },
+  ];
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-16">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {stats.map((s) => (
-          <div key={s.label} className="bg-card border border-border rounded-xl p-4">
-            <div className="flex items-center justify-between mb-3">
-              <div className={`w-10 h-10 ${statusColors[s.status].bg} rounded-lg flex items-center justify-center`}>
-                <s.icon className={`w-5 h-5 ${statusColors[s.status].text}`} />
+    <div className="space-y-6">
+      {/* Hero Stats Row */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        {heroStats.map((s) => (
+          <div key={s.label} className={`bg-gradient-to-br ${s.gradient} rounded-xl p-5 text-primary-foreground`}>
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center backdrop-blur-sm">
+                <s.icon className="w-5 h-5" />
               </div>
-              {s.status === 'success' && <CheckCircle className="w-4 h-4 text-trust-excellent" />}
-              {s.status === 'warning' && <AlertTriangle className="w-4 h-4 text-accent" />}
-              {s.status === 'error' && <AlertTriangle className="w-4 h-4 text-brand-red" />}
+              <span className="text-[10px] font-bold tracking-widest uppercase opacity-80">{s.label}</span>
             </div>
-            <div className="text-2xl font-bold text-foreground">{s.value}</div>
-            <div className="text-xs text-muted-foreground">{s.label}</div>
+            <div className="text-2xl font-extrabold">{s.value}</div>
           </div>
         ))}
       </div>
 
-      {/* Pending Actions */}
-      <h3 className="text-lg font-semibold text-foreground mb-3">Pending Actions</h3>
-      <div className="bg-card border border-border rounded-xl divide-y divide-border mb-6">
-        <div className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-accent/20 rounded-lg flex items-center justify-center">
-              <MessageSquare className="w-5 h-5 text-accent" />
+      {/* Mid Stats Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {midStats.map((s) => (
+          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+            <div className="flex items-center gap-2 mb-1">
+              <s.icon className="w-4 h-4 opacity-80" />
+              <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
             </div>
-            <div>
-              <p className="font-medium text-foreground text-sm">23 reviews pending moderation</p>
-              <p className="text-xs text-muted-foreground">Flagged by users or system</p>
+            <div className="text-xl font-extrabold">{s.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Bottom Stats Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {bottomStats.map((s) => (
+          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+            <div className="flex items-center gap-2 mb-1">
+              <s.icon className="w-4 h-4 opacity-80" />
+              <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
+            </div>
+            <div className="text-xl font-extrabold">{s.value}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Two-Column: Chart + Recent Users */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Users Statistics Placeholder */}
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Users Statistics For This Month</h3>
+          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
+            <div className="text-center">
+              <TrendingUp className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
             </div>
           </div>
-          <Button size="sm">Review</Button>
         </div>
-        <div className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
-              <Building2 className="w-5 h-5 text-primary" />
-            </div>
-            <div>
-              <p className="font-medium text-foreground text-sm">7 developers awaiting verification</p>
-              <p className="text-xs text-muted-foreground">New registration requests</p>
-            </div>
+
+        {/* Recently Registered Users */}
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Recently Registered Users</h3>
+          <div className="space-y-3">
+            {dashData.recentUsers.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-6">No users yet</p>
+            ) : (
+              dashData.recentUsers.map((u) => (
+                <div key={u.id} className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-9 w-9">
+                      {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
+                      <AvatarFallback className="text-[10px] font-bold bg-primary/10 text-primary">
+                        {(u.full_name || '?').slice(0, 2).toUpperCase()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-xs font-medium text-foreground">{u.full_name || 'Anonymous'}</p>
+                      <p className="text-[10px] text-muted-foreground">{timeAgo(u.created_at)}</p>
+                    </div>
+                  </div>
+                  <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Eye className="w-3.5 h-3.5 text-primary" />
+                  </div>
+                </div>
+              ))
+            )}
           </div>
-          <Button size="sm">Verify</Button>
-        </div>
-        <div className="p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-brand-red/10 rounded-lg flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-brand-red" />
-            </div>
-            <div>
-              <p className="font-medium text-foreground text-sm">5 flagged content items</p>
-              <p className="text-xs text-muted-foreground">Reported for policy violations</p>
-            </div>
-          </div>
-          <Button size="sm" variant="destructive">Review</Button>
         </div>
       </div>
 
-      {/* Platform Activity */}
-      <h3 className="text-lg font-semibold text-foreground mb-3">Recent Platform Activity</h3>
-      <div className="bg-card border border-border rounded-xl p-6 h-48 flex items-center justify-center">
-        <div className="text-center">
-          <BarChart3 className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
-          <p className="text-sm text-muted-foreground">Activity charts coming soon</p>
+      {/* Two-Column: Recent Businesses + Chart */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Recently Added Businesses */}
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Recently Added Businesses</h3>
+          <div className="space-y-3">
+            {dashData.recentBusinesses.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-6">No businesses yet</p>
+            ) : (
+              dashData.recentBusinesses.map((b) => (
+                <div key={b.id} className="flex items-center gap-3">
+                  <Avatar className="h-9 w-9">
+                    {b.logo_url && <img src={b.logo_url} alt="" className="w-full h-full object-cover rounded-full" />}
+                    <AvatarFallback className="text-[10px] font-bold bg-accent/20 text-accent-foreground">
+                      {(b.company_name || '?')[0].toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium text-foreground truncate">{b.company_name || 'Unnamed'}</p>
+                    <p className="text-[10px] text-muted-foreground">{timeAgo(b.created_at)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Businesses Statistics Placeholder */}
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Businesses Statistics For This Month</h3>
+          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
+            <div className="text-center">
+              <BarChart3 className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Reviews Statistics */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <h3 className="text-sm font-semibold text-foreground mb-4">Reviews Statistics For This Month</h3>
+        <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
+          <div className="text-center">
+            <Star className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+            <p className="text-xs text-muted-foreground">Chart data coming soon</p>
+          </div>
         </div>
       </div>
     </div>
