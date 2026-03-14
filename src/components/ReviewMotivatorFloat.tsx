@@ -112,7 +112,8 @@ export const ReviewMotivatorFloat = ({
         className={cn(
           "w-12 h-12 rounded-full shadow-xl flex items-center justify-center transition-all",
           "bg-primary text-primary-foreground hover:bg-primary/90",
-          "shadow-[0_0_12px_hsl(var(--primary)/0.3)]"
+          "shadow-[0_0_12px_hsl(var(--primary)/0.3)]",
+          visible && "animate-bounce-in"
         )}
         aria-label="Write a review"
       >
