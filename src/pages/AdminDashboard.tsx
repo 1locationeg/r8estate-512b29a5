@@ -278,6 +278,75 @@ const AdminOverview = () => {
           </div>
         </div>
       </div>
+
+      {/* Latest Activity Feed */}
+      <div className="bg-card border border-border rounded-xl p-5">
+        <div className="flex items-center gap-2 mb-4">
+          <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-primary" />
+          </div>
+          <h3 className="text-sm font-semibold text-foreground">Latest Activity</h3>
+        </div>
+        <div className="space-y-1">
+          {(() => {
+            type ActivityItem = { id: string; type: 'review' | 'signup' | 'business'; title: string; subtitle: string; timestamp: string; icon: typeof Star };
+            const items: ActivityItem[] = [
+              ...dashData.recentReviews.map((r) => ({
+                id: `review-${r.id}`,
+                type: 'review' as const,
+                title: `${r.author_name} left a ${r.rating}★ review`,
+                subtitle: r.developer_name || 'Unknown entity',
+                timestamp: r.created_at,
+                icon: Star,
+              })),
+              ...dashData.recentUsers.map((u) => ({
+                id: `user-${u.id}`,
+                type: 'signup' as const,
+                title: `${u.full_name || 'New user'} signed up`,
+                subtitle: 'New account',
+                timestamp: u.created_at,
+                icon: Users,
+              })),
+              ...dashData.recentBusinesses.map((b) => ({
+                id: `biz-${b.id}`,
+                type: 'business' as const,
+                title: `${b.company_name || 'A business'} was registered`,
+                subtitle: 'New business profile',
+                timestamp: b.created_at,
+                icon: Building2,
+              })),
+            ].sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()).slice(0, 10);
+
+            if (items.length === 0) {
+              return <p className="text-xs text-muted-foreground text-center py-6">No activity yet</p>;
+            }
+
+            const typeStyles = {
+              review: 'bg-primary/10 text-primary',
+              signup: 'bg-trust-excellent/10 text-trust-excellent',
+              business: 'bg-accent text-accent-foreground',
+            };
+
+            return items.map((item, idx) => (
+              <div key={item.id} className="flex items-center gap-3 py-2.5 group">
+                {/* Timeline dot + line */}
+                <div className="flex flex-col items-center self-stretch">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${typeStyles[item.type]}`}>
+                    <item.icon className="w-3.5 h-3.5" />
+                  </div>
+                  {idx < items.length - 1 && <div className="w-px flex-1 bg-border mt-1" />}
+                </div>
+                {/* Content */}
+                <div className="min-w-0 flex-1">
+                  <p className="text-xs font-medium text-foreground">{item.title}</p>
+                  <p className="text-[10px] text-muted-foreground">{item.subtitle}</p>
+                </div>
+                <span className="text-[10px] text-muted-foreground/70 whitespace-nowrap shrink-0">{timeAgo(item.timestamp)}</span>
+              </div>
+            ));
+          })()}
+        </div>
+      </div>
     </div>
   );
 };
