@@ -31,13 +31,54 @@ Trust Score Categories you should reference:
 3. Buyer Experience (customer service, transparency, communication)
 4. Market Insights (location value, appreciation potential, demand trends in Egypt)`;
 
+async function checkAndTrackUsage(serviceClient: any, userId: string, functionName: string): Promise<{ allowed: boolean; error?: string }> {
+  const { data: settings } = await serviceClient
+    .from("platform_settings")
+    .select("key, value")
+    .in("key", ["ai_daily_limit", "ai_monthly_limit"]);
+
+  const dailyLimit = parseInt(settings?.find((s: any) => s.key === "ai_daily_limit")?.value || "50", 10);
+  const monthlyLimit = parseInt(settings?.find((s: any) => s.key === "ai_monthly_limit")?.value || "500", 10);
+
+  const now = new Date();
+  const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+  const { count: dailyCount } = await serviceClient
+    .from("ai_usage")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .gte("created_at", startOfDay);
+
+  if ((dailyCount || 0) >= dailyLimit) {
+    return { allowed: false, error: `Daily AI limit reached (${dailyLimit} requests/day). Try again tomorrow.` };
+  }
+
+  const { count: monthlyCount } = await serviceClient
+    .from("ai_usage")
+    .select("id", { count: "exact", head: true })
+    .eq("user_id", userId)
+    .gte("created_at", startOfMonth);
+
+  if ((monthlyCount || 0) >= monthlyLimit) {
+    return { allowed: false, error: `Monthly AI limit reached (${monthlyLimit} requests/month).` };
+  }
+
+  await serviceClient.from("ai_usage").insert({
+    user_id: userId,
+    function_name: functionName,
+    tokens_used: 1,
+  });
+
+  return { allowed: true };
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Authenticate the user
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -46,11 +87,13 @@ serve(async (req) => {
       });
     }
 
-    const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      { global: { headers: { Authorization: authHeader } } }
-    );
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const anonKey = Deno.env.get("SUPABASE_ANON_KEY") ?? "";
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+
+    const supabaseClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: authHeader } },
+    });
 
     const token = authHeader.replace("Bearer ", "");
     const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
@@ -61,12 +104,21 @@ serve(async (req) => {
       });
     }
 
+    const userId = claimsData.claims.sub as string;
+    const serviceClient = createClient(supabaseUrl, serviceRoleKey);
+
+    // Check usage limits
+    const { allowed, error: limitError } = await checkAndTrackUsage(serviceClient, userId, "trust-insights");
+    if (!allowed) {
+      return new Response(JSON.stringify({ error: limitError }), {
+        status: 429,
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
     const { messages } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -76,10 +128,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: systemPrompt },
-          ...messages,
-        ],
+        messages: [{ role: "system", content: systemPrompt }, ...messages],
         stream: true,
       }),
     });
