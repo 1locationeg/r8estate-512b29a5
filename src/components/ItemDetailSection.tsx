@@ -2,6 +2,7 @@ import { useState, useMemo } from "react";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
+import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -827,6 +828,10 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         </div>
       </div>
 
+      <ReviewMotivatorFloat
+        onWriteReview={() => setIsReviewModalOpen(true)}
+        isReviewModalOpen={isReviewModalOpen}
+      />
       <WriteReviewModal
         open={isReviewModalOpen}
         onOpenChange={setIsReviewModalOpen}

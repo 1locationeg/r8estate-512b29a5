@@ -1,41 +1,32 @@
 
 
-# Floating "Write a Review" Motivator on Detail Views
+## Make Search Dropdown Items Compact on Mobile
 
-## What We're Building
+### Changes to `src/components/SearchSuggestions.tsx`
 
-A small, animated floating prompt that appears when users view developer or item details, encouraging them to write a review. It shows the points and badge they can earn, and links directly to the review modal.
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-## Design
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-- **Component**: `ReviewMotivatorFloat` — a compact floating card (bottom-right of the detail section, not screen-fixed) that slides in after a 3-second delay
-- **Content**: PenLine icon, "Share your experience!" text, points reward preview (e.g., "+25 pts"), next badge hint (e.g., "Earn 'First Review' badge"), and a CTA button that opens the WriteReviewModal
-- **Dismissible**: X button to close; stays hidden for that session via local state
-- **Conditional**: Only shows if user is logged in and hasn't dismissed it; hides if the review modal is already open
-- **Gamification integration**: Uses `useBuyerGamification()` to show relevant unlockable badge (first_review or review_pro) and points
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-## Files to Create/Edit
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-1. **Create `src/components/ReviewMotivatorFloat.tsx`**
-   - Accepts `onWriteReview: () => void` prop
-   - 3s delay entrance animation (translate-y + opacity via Tailwind)
-   - Shows points for next review badge, current tier progress
-   - Dismiss button sets local state
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-2. **Edit `src/components/ItemDetailSection.tsx`**
-   - Import and render `<ReviewMotivatorFloat>` near the bottom of the detail section
-   - Wire `onWriteReview` to open the existing `WriteReviewModal`
-
-3. **Edit `src/components/DeveloperDetailCard.tsx`**
-   - Same integration as ItemDetailSection
-
-4. **Edit `src/components/DeveloperDetailModal.tsx`**
-   - Same integration for the modal detail view
-
-## Visual Approach
-
-- Small card (~280px wide) with glass/blur background, subtle border, rounded corners
-- Positioned as `sticky bottom-4 right-4` or absolutely within the detail container
-- Gentle pulse animation on the points badge to draw attention
-- Mobile-responsive: full-width at bottom on small screens
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 

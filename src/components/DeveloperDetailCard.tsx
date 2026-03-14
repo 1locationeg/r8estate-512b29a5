@@ -9,6 +9,7 @@ import { ReviewCard } from "./ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
+import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
 import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
@@ -287,6 +288,10 @@ export const DeveloperDetailCard = ({
         </div>
       </div>
 
+      <ReviewMotivatorFloat
+        onWriteReview={() => setIsReviewModalOpen(true)}
+        isReviewModalOpen={isReviewModalOpen}
+      />
       {/* Write Review Modal */}
       <WriteReviewModal
         open={isReviewModalOpen}
