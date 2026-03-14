@@ -428,6 +428,8 @@ export const WriteReviewModal = ({
   if (!open) return null;
 
   return (
+    <>
+    <ConfettiCelebration trigger={firstReviewCelebration} duration={3500} particleCount={80} />
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="p-4 md:p-6 pb-0">
