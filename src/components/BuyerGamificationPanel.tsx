@@ -1,10 +1,11 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { BUYER_TIERS, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target } from 'lucide-react';
+import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 
 export const BuyerGamificationPanel = () => {
