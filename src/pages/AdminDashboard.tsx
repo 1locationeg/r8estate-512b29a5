@@ -1971,6 +1971,7 @@ const AdminDashboard = () => {
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="ai-reviewer" element={<AdminAIReviewer />} />
         <Route path="ai-review-writer" element={<AdminAIReviewWriter />} />
+        <Route path="ai-usage" element={<AdminAIUsage />} />
         <Route path="spotlight" element={<AdminSpotlight />} />
         <Route path="notifications" element={<AdminNotifications />} />
         <Route path="whatsapp" element={<AdminWhatsApp />} />
