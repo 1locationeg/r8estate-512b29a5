@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { GuestTimerProvider } from "@/contexts/GuestTimerContext";
 import { GuestTimerBanner } from "@/components/GuestTimerBanner";
@@ -11,8 +11,17 @@ import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { BottomNav } from "./components/BottomNav";
-import { DynamicMeta } from "./components/DynamicMeta";
-import { Loader2 } from "lucide-react";
+import { DynamicMeta } from "@/components/DynamicMeta";
+import {
+  IndexSkeleton,
+  AuthSkeleton,
+  AdminDashboardSkeleton,
+  BuyerDashboardSkeleton,
+  DeveloperDashboardSkeleton,
+  DeveloperDirectorySkeleton,
+  InstallSkeleton,
+  NotFoundSkeleton,
+} from "@/components/PageSkeletons";
 
 // Lazy-loaded pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
@@ -26,11 +35,22 @@ const Install = lazy(() => import("./pages/Install"));
 
 const queryClient = new QueryClient();
 
-const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
-    <Loader2 className="w-8 h-8 animate-spin text-primary" />
-  </div>
-);
+// Route-aware fallback component
+const RouteLoader = () => {
+  const location = useLocation();
+  const path = location.pathname;
+
+  // Return skeleton based on current route
+  if (path === "/") return <IndexSkeleton />;
+  if (path === "/auth") return <AuthSkeleton />;
+  if (path.startsWith("/buyer")) return <BuyerDashboardSkeleton />;
+  if (path.startsWith("/developer")) return <DeveloperDashboardSkeleton />;
+  if (path.startsWith("/admin")) return <AdminDashboardSkeleton />;
+  if (path === "/directory") return <DeveloperDirectorySkeleton />;
+  if (path === "/install") return <InstallSkeleton />;
+  if (path === "*") return <NotFoundSkeleton />;
+  return <IndexSkeleton />;
+};
 
 // App with proper provider hierarchy: Auth > GuestTimer > Router
 const App = () => (
@@ -44,7 +64,7 @@ const App = () => (
           <BrowserRouter>
             <GuestTimerBanner />
             <GuestTimerExpiredModal />
-            <Suspense fallback={<PageLoader />}>
+            <Suspense fallback={<RouteLoader />}>
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
