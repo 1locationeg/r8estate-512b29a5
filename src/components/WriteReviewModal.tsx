@@ -62,8 +62,6 @@ export const WriteReviewModal = ({
   developerName = "",
   developerId = "",
   onReviewSubmitted,
-  developerName = "",
-  developerId = "",
 }: WriteReviewModalProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
