@@ -287,6 +287,10 @@ export const DeveloperDetailCard = ({
         </div>
       </div>
 
+      <ReviewMotivatorFloat
+        onWriteReview={() => setIsReviewModalOpen(true)}
+        isReviewModalOpen={isReviewModalOpen}
+      />
       {/* Write Review Modal */}
       <WriteReviewModal
         open={isReviewModalOpen}
