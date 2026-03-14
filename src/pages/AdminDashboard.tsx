@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Routes, Route } from 'react-router-dom';
+import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
@@ -25,6 +26,9 @@ const AdminOverview = () => {
     recentUsers: [] as Array<{ id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string }>,
     recentBusinesses: [] as Array<{ id: string; company_name: string | null; logo_url: string | null; created_at: string }>,
     recentReviews: [] as Array<{ id: string; author_name: string; developer_name: string | null; rating: number; comment: string; created_at: string }>,
+    allProfileDates: [] as string[],
+    allBizDates: [] as string[],
+    allReviewDates: [] as string[],
   });
   const [loading, setLoading] = useState(true);
 
@@ -32,13 +36,16 @@ const AdminOverview = () => {
     const fetchDashboard = async () => {
       setLoading(true);
       try {
-        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes, recentRevsRes] = await Promise.all([
+        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes, recentRevsRes, allProfilesRes, allBizRes, allReviewsRes] = await Promise.all([
           supabase.functions.invoke('admin-list-users'),
           supabase.from('business_profiles').select('id, company_name, logo_url, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('reviews').select('id, is_verified', { count: 'exact' }),
           supabase.from('profiles').select('id, full_name, avatar_url, user_id, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('business_profiles').select('id', { count: 'exact' }),
           supabase.from('reviews').select('id, author_name, developer_name, rating, comment, created_at').order('created_at', { ascending: false }).limit(6),
+          supabase.from('profiles').select('created_at'),
+          supabase.from('business_profiles').select('created_at'),
+          supabase.from('reviews').select('created_at'),
         ]);
 
         const allUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data?.users || [];
@@ -58,6 +65,9 @@ const AdminOverview = () => {
           })) || [],
           recentBusinesses: bizRes.data || [],
           recentReviews: recentRevsRes.data || [],
+          allProfileDates: (allProfilesRes.data || []).map((p: any) => p.created_at),
+          allBizDates: (allBizRes.data || []).map((b: any) => b.created_at),
+          allReviewDates: (allReviewsRes.data || []).map((r: any) => r.created_at),
         });
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -67,6 +77,30 @@ const AdminOverview = () => {
     };
     fetchDashboard();
   }, []);
+
+  // Build daily chart data for the current month
+  const buildMonthlyChart = (dates: string[]) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const counts: Record<number, number> = {};
+    for (let d = 1; d <= daysInMonth; d++) counts[d] = 0;
+    dates.forEach((dt) => {
+      const date = new Date(dt);
+      if (date.getFullYear() === year && date.getMonth() === month) {
+        counts[date.getDate()] = (counts[date.getDate()] || 0) + 1;
+      }
+    });
+    return Array.from({ length: daysInMonth }, (_, i) => ({
+      day: `${i + 1}`,
+      count: counts[i + 1] || 0,
+    }));
+  };
+
+  const usersChartData = useMemo(() => buildMonthlyChart(dashData.allProfileDates), [dashData.allProfileDates]);
+  const bizChartData = useMemo(() => buildMonthlyChart(dashData.allBizDates), [dashData.allBizDates]);
+  const reviewsChartData = useMemo(() => buildMonthlyChart(dashData.allReviewDates), [dashData.allReviewDates]);
 
   const timeAgo = (dateStr: string) => {
     const diff = Date.now() - new Date(dateStr).getTime();
@@ -154,11 +188,16 @@ const AdminOverview = () => {
         {/* Users Statistics Placeholder */}
         <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Users Statistics For This Month</h3>
-          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
-            <div className="text-center">
-              <TrendingUp className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
-            </div>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={usersChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} interval="preserveStartEnd" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} width={24} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }} />
+                <Line type="monotone" dataKey="count" name="Users" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
 
@@ -223,11 +262,16 @@ const AdminOverview = () => {
         {/* Businesses Statistics Placeholder */}
         <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Businesses Statistics For This Month</h3>
-          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
-            <div className="text-center">
-              <BarChart3 className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
-            </div>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={bizChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} interval="preserveStartEnd" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} width={24} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }} />
+                <Line type="monotone" dataKey="count" name="Businesses" stroke="hsl(var(--accent-foreground))" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
@@ -270,11 +314,16 @@ const AdminOverview = () => {
         {/* Reviews Statistics */}
         <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
           <h3 className="text-sm font-semibold text-foreground mb-4">Reviews Statistics For This Month</h3>
-          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
-            <div className="text-center">
-              <Star className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
-            </div>
+          <div className="h-48">
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={reviewsChartData}>
+                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                <XAxis dataKey="day" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} interval="preserveStartEnd" />
+                <YAxis allowDecimals={false} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} width={24} />
+                <Tooltip contentStyle={{ fontSize: 12, borderRadius: 8, border: '1px solid hsl(var(--border))', background: 'hsl(var(--card))' }} />
+                <Line type="monotone" dataKey="count" name="Reviews" stroke="hsl(var(--primary))" strokeWidth={2} dot={false} />
+              </LineChart>
+            </ResponsiveContainer>
           </div>
         </div>
       </div>
