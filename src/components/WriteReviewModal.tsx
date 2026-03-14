@@ -775,5 +775,6 @@ export const WriteReviewModal = ({
         </div>
       </DialogContent>
     </Dialog>
+    </>
   );
 };
