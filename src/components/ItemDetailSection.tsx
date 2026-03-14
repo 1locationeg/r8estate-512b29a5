@@ -827,6 +827,10 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         </div>
       </div>
 
+      <ReviewMotivatorFloat
+        onWriteReview={() => setIsReviewModalOpen(true)}
+        isReviewModalOpen={isReviewModalOpen}
+      />
       <WriteReviewModal
         open={isReviewModalOpen}
         onOpenChange={setIsReviewModalOpen}
