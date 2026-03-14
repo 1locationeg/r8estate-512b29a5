@@ -390,6 +390,7 @@ export const WriteReviewModal = ({
       });
 
       resetForm();
+      onReviewSubmitted?.();
       onOpenChange(false);
     } catch (e) {
       console.error("Review submission error:", e);
