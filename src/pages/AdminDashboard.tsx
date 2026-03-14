@@ -26,6 +26,9 @@ const AdminOverview = () => {
     recentUsers: [] as Array<{ id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string }>,
     recentBusinesses: [] as Array<{ id: string; company_name: string | null; logo_url: string | null; created_at: string }>,
     recentReviews: [] as Array<{ id: string; author_name: string; developer_name: string | null; rating: number; comment: string; created_at: string }>,
+    allProfileDates: [] as string[],
+    allBizDates: [] as string[],
+    allReviewDates: [] as string[],
   });
   const [loading, setLoading] = useState(true);
 
