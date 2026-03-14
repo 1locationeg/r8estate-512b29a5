@@ -43,6 +43,7 @@ interface WriteReviewModalProps {
   onOpenChange: (open: boolean) => void;
   developerName?: string;
   developerId?: string;
+  onReviewSubmitted?: () => void;
 }
 
 const EXPERIENCE_TYPES = [
@@ -60,6 +61,7 @@ export const WriteReviewModal = ({
   onOpenChange,
   developerName = "",
   developerId = "",
+  onReviewSubmitted,
 }: WriteReviewModalProps) => {
   const { t } = useTranslation();
   const { toast } = useToast();
@@ -388,6 +390,7 @@ export const WriteReviewModal = ({
       });
 
       resetForm();
+      onReviewSubmitted?.();
       onOpenChange(false);
     } catch (e) {
       console.error("Review submission error:", e);

@@ -71,7 +71,7 @@ export const DeveloperDetailCard = ({
     return "stroke-trust-fair";
   };
 
-  const { reviews } = useReviews(developer.id);
+  const { reviews, refetch: refetchReviews } = useReviews(developer.id);
 
   // Filter reviews for this developer
   const developerReviews = useMemo(() => {
@@ -293,6 +293,7 @@ export const DeveloperDetailCard = ({
         onOpenChange={setIsReviewModalOpen}
         developerName={developer.name}
         developerId={developer.id}
+        onReviewSubmitted={refetchReviews}
       />
     </div>
     <CompareModal

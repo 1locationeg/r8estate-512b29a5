@@ -24,6 +24,7 @@ const AdminOverview = () => {
     pendingReviews: 0,
     recentUsers: [] as Array<{ id: string; email: string; full_name: string | null; avatar_url: string | null; created_at: string }>,
     recentBusinesses: [] as Array<{ id: string; company_name: string | null; logo_url: string | null; created_at: string }>,
+    recentReviews: [] as Array<{ id: string; author_name: string; developer_name: string | null; rating: number; comment: string; created_at: string }>,
   });
   const [loading, setLoading] = useState(true);
 
@@ -31,12 +32,13 @@ const AdminOverview = () => {
     const fetchDashboard = async () => {
       setLoading(true);
       try {
-        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes] = await Promise.all([
+        const [usersRes, bizRes, reviewsRes, profilesRes, bizListRes, recentRevsRes] = await Promise.all([
           supabase.functions.invoke('admin-list-users'),
           supabase.from('business_profiles').select('id, company_name, logo_url, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('reviews').select('id, is_verified', { count: 'exact' }),
           supabase.from('profiles').select('id, full_name, avatar_url, user_id, created_at').order('created_at', { ascending: false }).limit(6),
           supabase.from('business_profiles').select('id', { count: 'exact' }),
+          supabase.from('reviews').select('id, author_name, developer_name, rating, comment, created_at').order('created_at', { ascending: false }).limit(6),
         ]);
 
         const allUsers = Array.isArray(usersRes.data) ? usersRes.data : usersRes.data?.users || [];
@@ -55,6 +57,7 @@ const AdminOverview = () => {
             created_at: p.created_at,
           })) || [],
           recentBusinesses: bizRes.data || [],
+          recentReviews: recentRevsRes.data || [],
         });
       } catch (err) {
         console.error('Dashboard fetch error:', err);
@@ -229,13 +232,49 @@ const AdminOverview = () => {
         </div>
       </div>
 
-      {/* Reviews Statistics */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="text-sm font-semibold text-foreground mb-4">Reviews Statistics For This Month</h3>
-        <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
-          <div className="text-center">
-            <Star className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-            <p className="text-xs text-muted-foreground">Chart data coming soon</p>
+      {/* Recent Reviews + Reviews Statistics */}
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-4">
+        {/* Recent Reviews */}
+        <div className="lg:col-span-2 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Recent Reviews</h3>
+          <div className="space-y-3">
+            {dashData.recentReviews.length === 0 ? (
+              <p className="text-xs text-muted-foreground text-center py-6">No reviews yet</p>
+            ) : (
+              dashData.recentReviews.map((r) => (
+                <div key={r.id} className="flex items-start gap-3">
+                  <Avatar className="h-9 w-9">
+                    <AvatarFallback className="text-[10px] font-bold bg-accent/20 text-accent-foreground">
+                      {(r.author_name || '?').slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2">
+                      <p className="text-xs font-medium text-foreground truncate">{r.author_name}</p>
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} className={`w-3 h-3 ${s <= r.rating ? 'fill-primary text-primary' : 'text-muted-foreground/30'}`} />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-[10px] text-muted-foreground truncate">{r.developer_name || 'Unknown entity'}</p>
+                    <p className="text-[10px] text-muted-foreground mt-0.5 line-clamp-1">{r.comment}</p>
+                    <p className="text-[9px] text-muted-foreground/70 mt-0.5">{timeAgo(r.created_at)}</p>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        {/* Reviews Statistics */}
+        <div className="lg:col-span-3 bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-4">Reviews Statistics For This Month</h3>
+          <div className="h-48 flex items-center justify-center border border-dashed border-border rounded-lg">
+            <div className="text-center">
+              <Star className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
+              <p className="text-xs text-muted-foreground">Chart data coming soon</p>
+            </div>
           </div>
         </div>
       </div>
