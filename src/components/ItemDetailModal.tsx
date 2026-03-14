@@ -134,7 +134,7 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
-  const { dbReviews } = useReviews(item?.id);
+  const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
 
   // Generate deterministic scores based on item id
   const { trustScore, rating, categoryScores, reviews } = useMemo(() => {
