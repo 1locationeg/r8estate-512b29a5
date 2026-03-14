@@ -293,6 +293,7 @@ export const DeveloperDetailCard = ({
         onOpenChange={setIsReviewModalOpen}
         developerName={developer.name}
         developerId={developer.id}
+        onReviewSubmitted={refetchReviews}
       />
     </div>
     <CompareModal

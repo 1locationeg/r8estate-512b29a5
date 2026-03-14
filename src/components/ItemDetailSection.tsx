@@ -832,6 +832,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         onOpenChange={setIsReviewModalOpen}
         developerName={item?.name || ""}
         developerId={item?.id || ""}
+        onReviewSubmitted={refetchReviews}
       />
       <CompareModal
         item={item}
