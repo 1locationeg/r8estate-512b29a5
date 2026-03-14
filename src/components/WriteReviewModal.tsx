@@ -37,6 +37,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
+import { ConfettiCelebration } from "@/components/ConfettiCelebration";
+import { Trophy } from "lucide-react";
 
 interface WriteReviewModalProps {
   open: boolean;
