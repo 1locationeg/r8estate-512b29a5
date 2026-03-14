@@ -43,6 +43,7 @@ interface WriteReviewModalProps {
   onOpenChange: (open: boolean) => void;
   developerName?: string;
   developerId?: string;
+  onReviewSubmitted?: () => void;
 }
 
 const EXPERIENCE_TYPES = [
