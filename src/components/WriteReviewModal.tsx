@@ -70,6 +70,7 @@ export const WriteReviewModal = ({
   const { user } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [firstReviewCelebration, setFirstReviewCelebration] = useState(false);
 
   // Form state
   const [rating, setRating] = useState(0);
