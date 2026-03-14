@@ -78,6 +78,30 @@ const AdminOverview = () => {
     fetchDashboard();
   }, []);
 
+  // Build daily chart data for the current month
+  const buildMonthlyChart = (dates: string[]) => {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = now.getMonth();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const counts: Record<number, number> = {};
+    for (let d = 1; d <= daysInMonth; d++) counts[d] = 0;
+    dates.forEach((dt) => {
+      const date = new Date(dt);
+      if (date.getFullYear() === year && date.getMonth() === month) {
+        counts[date.getDate()] = (counts[date.getDate()] || 0) + 1;
+      }
+    });
+    return Array.from({ length: daysInMonth }, (_, i) => ({
+      day: `${i + 1}`,
+      count: counts[i + 1] || 0,
+    }));
+  };
+
+  const usersChartData = useMemo(() => buildMonthlyChart(dashData.allProfileDates), [dashData.allProfileDates]);
+  const bizChartData = useMemo(() => buildMonthlyChart(dashData.allBizDates), [dashData.allBizDates]);
+  const reviewsChartData = useMemo(() => buildMonthlyChart(dashData.allReviewDates), [dashData.allReviewDates]);
+
   const timeAgo = (dateStr: string) => {
     const diff = Date.now() - new Date(dateStr).getTime();
     const days = Math.floor(diff / 86400000);
