@@ -1444,6 +1444,178 @@ const PlaceholderSection = ({ title, icon: Icon }: { title: string; icon: React.
 
 const AdminAIReviewer = () => <PlaceholderSection title="AI Reviewer" icon={Bot} />;
 const AdminAIReviewWriter = () => <PlaceholderSection title="AI Review Writer" icon={PenTool} />;
+
+const AdminAIUsage = () => {
+  const [usage, setUsage] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [dailyLimit, setDailyLimit] = useState('50');
+  const [monthlyLimit, setMonthlyLimit] = useState('500');
+  const [saving, setSaving] = useState(false);
+  const [stats, setStats] = useState({ today: 0, thisMonth: 0, totalAll: 0, topUsers: [] as any[] });
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    setLoading(true);
+    const now = new Date();
+    const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
+
+    const [settingsRes, todayRes, monthRes, allRes, recentRes] = await Promise.all([
+      supabase.from('platform_settings').select('key, value').in('key', ['ai_daily_limit', 'ai_monthly_limit']),
+      supabase.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', startOfDay),
+      supabase.from('ai_usage').select('id', { count: 'exact', head: true }).gte('created_at', startOfMonth),
+      supabase.from('ai_usage').select('id', { count: 'exact', head: true }),
+      supabase.from('ai_usage').select('*').order('created_at', { ascending: false }).limit(50),
+    ]);
+
+    const settings = settingsRes.data || [];
+    setDailyLimit(settings.find((s: any) => s.key === 'ai_daily_limit')?.value || '50');
+    setMonthlyLimit(settings.find((s: any) => s.key === 'ai_monthly_limit')?.value || '500');
+
+    // Aggregate top users from recent data
+    const userCounts: Record<string, number> = {};
+    for (const r of recentRes.data || []) {
+      userCounts[r.user_id] = (userCounts[r.user_id] || 0) + 1;
+    }
+    const topUsers = Object.entries(userCounts)
+      .map(([uid, count]) => ({ user_id: uid, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    setStats({
+      today: todayRes.count || 0,
+      thisMonth: monthRes.count || 0,
+      totalAll: allRes.count || 0,
+      topUsers,
+    });
+    setUsage(recentRes.data || []);
+    setLoading(false);
+  };
+
+  const saveLimits = async () => {
+    setSaving(true);
+    const updates = [
+      supabase.from('platform_settings').update({ value: dailyLimit }).eq('key', 'ai_daily_limit'),
+      supabase.from('platform_settings').update({ value: monthlyLimit }).eq('key', 'ai_monthly_limit'),
+    ];
+    const results = await Promise.all(updates);
+    const hasError = results.some(r => r.error);
+    if (hasError) {
+      toast.error('Failed to save limits');
+    } else {
+      toast.success('AI usage limits updated');
+    }
+    setSaving(false);
+  };
+
+  if (loading) return <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-primary" /></div>;
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center gap-3">
+        <Bot className="w-6 h-6 text-primary" />
+        <h2 className="text-xl font-bold text-foreground">AI Usage & Rate Limits</h2>
+      </div>
+
+      {/* Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="bg-card border border-border rounded-xl p-5">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider">Today's Requests</p>
+          <p className="text-3xl font-bold text-foreground mt-1">{stats.today}</p>
+          <p className="text-xs text-muted-foreground mt-1">Limit: {dailyLimit}/user/day</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-5">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider">This Month</p>
+          <p className="text-3xl font-bold text-foreground mt-1">{stats.thisMonth}</p>
+          <p className="text-xs text-muted-foreground mt-1">Limit: {monthlyLimit}/user/month</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-5">
+          <p className="text-xs text-muted-foreground uppercase tracking-wider">All Time</p>
+          <p className="text-3xl font-bold text-foreground mt-1">{stats.totalAll}</p>
+        </div>
+      </div>
+
+      {/* Limit Controls */}
+      <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+        <h3 className="text-sm font-semibold text-foreground">Configure Limits</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Daily Limit (per user)</label>
+            <input
+              type="number"
+              value={dailyLimit}
+              onChange={e => setDailyLimit(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              min="1"
+            />
+          </div>
+          <div>
+            <label className="text-xs text-muted-foreground block mb-1">Monthly Limit (per user)</label>
+            <input
+              type="number"
+              value={monthlyLimit}
+              onChange={e => setMonthlyLimit(e.target.value)}
+              className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm"
+              min="1"
+            />
+          </div>
+        </div>
+        <Button onClick={saveLimits} disabled={saving} size="sm">
+          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
+          Save Limits
+        </Button>
+      </div>
+
+      {/* Top Users */}
+      {stats.topUsers.length > 0 && (
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-3">Top Users (Recent)</h3>
+          <div className="space-y-2">
+            {stats.topUsers.map((u, i) => (
+              <div key={u.user_id} className="flex items-center justify-between text-sm">
+                <span className="text-muted-foreground font-mono text-xs truncate max-w-[200px]">{u.user_id}</span>
+                <span className="font-semibold text-foreground">{u.count} requests</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Recent Usage Log */}
+      <div className="bg-card border border-border rounded-xl overflow-hidden">
+        <h3 className="text-sm font-semibold text-foreground p-4 border-b border-border">Recent AI Requests</h3>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-border text-muted-foreground text-xs">
+                <th className="text-left p-3">User ID</th>
+                <th className="text-left p-3">Function</th>
+                <th className="text-left p-3">Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {usage.slice(0, 20).map(u => (
+                <tr key={u.id} className="border-b border-border/50 hover:bg-muted/30">
+                  <td className="p-3 font-mono text-xs truncate max-w-[150px]">{u.user_id}</td>
+                  <td className="p-3">
+                    <span className="px-2 py-0.5 rounded-full text-xs bg-primary/10 text-primary">{u.function_name}</span>
+                  </td>
+                  <td className="p-3 text-muted-foreground text-xs">{new Date(u.created_at).toLocaleString()}</td>
+                </tr>
+              ))}
+              {usage.length === 0 && (
+                <tr><td colSpan={3} className="p-6 text-center text-muted-foreground">No AI usage recorded yet</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
+};
 const AdminPricing = () => <PlaceholderSection title="Pricing Plans" icon={CreditCard} />;
 const AdminSubscriptions = () => <PlaceholderSection title="Subscriptions" icon={Receipt} />;
 const AdminTransactions = () => <PlaceholderSection title="Transactions" icon={DollarSign} />;
