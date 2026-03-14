@@ -386,10 +386,28 @@ export const WriteReviewModal = ({
 
       if (insertError) throw insertError;
 
-      toast({
-        title: "✅ Review submitted!",
-        description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
-      });
+      // Check if this was the user's first review for badge celebration
+      const { count: totalReviews } = await supabase
+        .from("reviews")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+
+      const isFirstReview = totalReviews === 1;
+
+      if (isFirstReview) {
+        setFirstReviewCelebration(true);
+        toast({
+          title: "🏆 First Review Badge Earned!",
+          description: "You've earned the 'First Review' badge and +25 points! Keep sharing your experiences.",
+          duration: 6000,
+        });
+        setTimeout(() => setFirstReviewCelebration(false), 4000);
+      } else {
+        toast({
+          title: "✅ Review submitted!",
+          description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
+        });
+      }
 
       resetForm();
       onReviewSubmitted?.();
