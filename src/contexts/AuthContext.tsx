@@ -146,6 +146,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
+          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
           const [profileData, roleData] = await Promise.all([
             fetchProfile(session.user.id),
             fetchUserRole(session.user.id),
