@@ -1,45 +1,32 @@
 
 
-## Plan: Voice Search + AI-Enhanced Autocomplete in Search Bar
+## Make Search Dropdown Items Compact on Mobile
 
-### What We're Building
-1. **Mic icon inside the search bar** — uses browser Web Speech API for voice-to-text
-2. **AI-powered autocomplete** — as the user types (debounced), call the existing `ai-chat` edge function to get smart suggestions beyond the static fuzzy search
-3. **Enhanced spell correction** — AI suggests corrections inline in the dropdown
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Changes
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-#### 1. Add Voice Search to `HeroSearchBar.tsx`
-- Add a `Mic` icon button between the search input and the Search icon (line ~153)
-- Use the browser's `webkitSpeechRecognition` / `SpeechRecognition` API (no external dependency needed)
-- State: `isListening` boolean — toggles mic icon style (animated pulse when active)
-- On speech result, set the query text and trigger focus
-- Support both English and Arabic recognition based on current i18n language
-- Show a visual indicator (red pulsing dot or mic color change) when listening
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-#### 2. AI-Enhanced Autocomplete in `SearchSuggestions.tsx`
-- Add a debounced call (500ms) to the `ai-chat` edge function when query length >= 3 characters
-- Send a prompt like: "Suggest 3-5 autocomplete results for the Egyptian real estate search query: '{query}'. Return as JSON array of strings."
-- Display AI suggestions in a new "AI Suggestions" section at the top of the dropdown with a Sparkles icon
-- Merge with existing fuzzy search results (AI section appears above local results)
-- Show a small loading spinner while AI suggestions load
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-#### 3. AI Spell Correction Enhancement
-- When the existing `findSpellCorrection` returns null but query has 3+ chars, ask AI for correction via the same edge function
-- Display AI-corrected suggestion in the existing spell correction banner
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-#### 4. Update Edge Function `ai-chat/index.ts`
-- Add a `mode` parameter: `"chat"` (default) or `"autocomplete"`
-- For `"autocomplete"` mode, use a focused system prompt and return non-streaming JSON with suggestions
-- Use tool calling to get structured `{ suggestions: string[], correction?: string }` output
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-#### 5. Translation Keys
-- Add `hero.voiceSearch`, `hero.listening`, `search.aiSuggestions` to both `en.json` and `ar.json`
-
-### Files to Create/Edit
-- `src/components/HeroSearchBar.tsx` — add mic button + voice recognition logic
-- `src/components/SearchSuggestions.tsx` — add AI suggestions section
-- `supabase/functions/ai-chat/index.ts` — add autocomplete mode
-- `src/i18n/locales/en.json` — new keys
-- `src/i18n/locales/ar.json` — new keys
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 

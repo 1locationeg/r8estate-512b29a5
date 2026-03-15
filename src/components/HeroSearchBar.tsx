@@ -1,6 +1,7 @@
 import { useState, useMemo, useCallback, useRef, useEffect } from "react";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
@@ -17,7 +18,7 @@ interface HeroSearchBarProps {
 }
 
 export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
@@ -25,8 +26,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
   const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const recognitionRef = useRef<any>(null);
 
   // Reset selected index when query changes
   useEffect(() => {
@@ -112,11 +115,48 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
     }, 200);
   }, []);
 
+  // Voice search handler
+  const handleVoiceSearch = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error(t("hero.voiceNotSupported"));
+      return;
+    }
+
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = i18n.language === "ar" ? "ar-EG" : "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+      setIsFocused(true);
+      inputRef.current?.focus();
+    };
+
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => setIsListening(false);
+
+    setIsListening(true);
+    recognition.start();
+  }, [isListening, i18n.language, t]);
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (blurTimeoutRef.current) {
         clearTimeout(blurTimeoutRef.current);
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
       }
     };
   }, []);
@@ -149,6 +189,23 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
             className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
           />
         </div>
+
+        {/* Voice Search Button */}
+        <button
+          onClick={handleVoiceSearch}
+          className={cn(
+            "relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
+            isListening
+              ? "bg-destructive text-destructive-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+          )}
+          title={t("hero.voiceSearch")}
+        >
+          <Mic className="w-4 h-4 md:w-5 md:h-5" />
+          {isListening && (
+            <span className="absolute top-0.5 end-0.5 w-2 h-2 bg-destructive rounded-full animate-ping" />
+          )}
+        </button>
 
         {/* Search Icon */}
         <Search className="w-5 h-5 text-muted-foreground me-2" />

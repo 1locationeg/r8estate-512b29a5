@@ -19,8 +19,16 @@ Guidelines:
 - Respond in the same language the user writes in (Arabic or English).
 - Keep responses focused and actionable.`;
 
+const autocompleteSystemPrompt = `You are an autocomplete engine for R8Estate, an Egyptian real estate platform. Given a partial search query, suggest 3-5 relevant completions. Focus on Egyptian real estate developers, projects, locations, and property types.
+
+Return ONLY a JSON object in this exact format, no markdown, no extra text:
+{"suggestions":["suggestion 1","suggestion 2","suggestion 3"],"correction":null}
+
+If the query has a spelling error, set "correction" to the corrected query string. Otherwise keep it null.
+
+Known entities include: Palm Hills, Emaar Misr, Mountain View, SODIC, Ora Developers, Hassan Allam, TMG Holding, Hyde Park, Madinaty, New Cairo, 6th October, North Coast, New Administrative Capital, Ain Sokhna, Sheikh Zayed, El Gouna, Hurghada.`;
+
 async function checkAndTrackUsage(serviceClient: any, userId: string, functionName: string): Promise<{ allowed: boolean; error?: string }> {
-  // Get limits from platform_settings
   const { data: settings } = await serviceClient
     .from("platform_settings")
     .select("key, value")
@@ -33,7 +41,6 @@ async function checkAndTrackUsage(serviceClient: any, userId: string, functionNa
   const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString();
 
-  // Count daily usage
   const { count: dailyCount } = await serviceClient
     .from("ai_usage")
     .select("id", { count: "exact", head: true })
@@ -44,7 +51,6 @@ async function checkAndTrackUsage(serviceClient: any, userId: string, functionNa
     return { allowed: false, error: `Daily AI limit reached (${dailyLimit} requests/day). Try again tomorrow.` };
   }
 
-  // Count monthly usage
   const { count: monthlyCount } = await serviceClient
     .from("ai_usage")
     .select("id", { count: "exact", head: true })
@@ -55,7 +61,6 @@ async function checkAndTrackUsage(serviceClient: any, userId: string, functionNa
     return { allowed: false, error: `Monthly AI limit reached (${monthlyLimit} requests/month).` };
   }
 
-  // Track this usage
   await serviceClient.from("ai_usage").insert({
     user_id: userId,
     function_name: functionName,
@@ -71,7 +76,8 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const body = await req.json();
+    const { messages, mode } = body;
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
@@ -79,7 +85,7 @@ serve(async (req) => {
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const serviceClient = createClient(supabaseUrl, serviceRoleKey);
 
-    // Check auth (optional for ai-chat - allow anonymous but track if authenticated)
+    // Check auth
     const authHeader = req.headers.get("Authorization");
     let userId: string | null = null;
 
@@ -96,7 +102,8 @@ serve(async (req) => {
 
     // Enforce rate limits for authenticated users
     if (userId) {
-      const { allowed, error } = await checkAndTrackUsage(serviceClient, userId, "ai-chat");
+      const fnName = mode === "autocomplete" ? "ai-autocomplete" : "ai-chat";
+      const { allowed, error } = await checkAndTrackUsage(serviceClient, userId, fnName);
       if (!allowed) {
         return new Response(JSON.stringify({ error }), {
           status: 429,
@@ -105,6 +112,59 @@ serve(async (req) => {
       }
     }
 
+    // ===== AUTOCOMPLETE MODE =====
+    if (mode === "autocomplete") {
+      const query = body.query || "";
+      const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-lite",
+          messages: [
+            { role: "system", content: autocompleteSystemPrompt },
+            { role: "user", content: `Search query: "${query}"` },
+          ],
+          stream: false,
+        }),
+      });
+
+      if (!response.ok) {
+        const t = await response.text();
+        console.error("AI autocomplete error:", response.status, t);
+        return new Response(JSON.stringify({ suggestions: [], correction: null }), {
+          status: 200,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+
+      const data = await response.json();
+      const content = data.choices?.[0]?.message?.content || "";
+
+      try {
+        // Extract JSON from response (handle markdown code blocks)
+        const jsonMatch = content.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          return new Response(JSON.stringify({
+            suggestions: parsed.suggestions || [],
+            correction: parsed.correction || null,
+          }), {
+            headers: { ...corsHeaders, "Content-Type": "application/json" },
+          });
+        }
+      } catch (parseErr) {
+        console.error("Failed to parse autocomplete response:", content);
+      }
+
+      return new Response(JSON.stringify({ suggestions: [], correction: null }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // ===== CHAT MODE (default) =====
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {

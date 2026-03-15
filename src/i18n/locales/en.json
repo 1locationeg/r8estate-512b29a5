@@ -135,7 +135,9 @@
     "voiceReviewTooltip": "Record a voice review",
     "downloadReportTooltip": "Download trust report",
     "compare": "Compare",
-    "compareTooltip": "Compare with another similar item"
+    "compareTooltip": "Compare with another similar item",
+    "aiSuggestions": "AI Suggestions",
+    "aiSuggestionsLoading": "Getting smart suggestions..."
   },
   "common": {
     "signIn": "Sign In",
@@ -168,6 +170,9 @@
     "askAI": "Ask AI",
     "searchPlaceholder": "Search for the real estate trusted story",
     "validateDecision": "Validate Decision",
+    "voiceSearch": "Voice Search",
+    "listening": "Listening...",
+    "voiceNotSupported": "Voice search is not supported in this browser",
     "bestOf2025": "BEST OF 2025",
     "trendingProjects": "Trending Projects",
     "newLaunches": "New Launches",
