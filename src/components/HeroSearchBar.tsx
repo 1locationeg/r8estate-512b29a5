@@ -167,11 +167,11 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   return (
     <div className="w-full max-w-3xl mx-auto relative">
       {/* Search Container */}
-      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2">
+      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04]">
         {/* Ask AI Button */}
         <button 
           onClick={() => setIsAIModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:bg-primary/90 transition-colors"
+          className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all"
         >
           <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
           <span>{t("hero.askAI")}</span>
