@@ -228,7 +228,7 @@ export function ReviewsCarousel() {
         </div>
 
         {/* Footer bar */}
-        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6">
+        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
           <div className="flex items-center gap-2">
             {renderStars(Math.round(Number(avgRating)))}
             <span className="text-sm font-semibold text-foreground">
