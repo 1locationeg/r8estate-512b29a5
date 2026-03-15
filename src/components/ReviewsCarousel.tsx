@@ -139,17 +139,8 @@ export function ReviewsCarousel() {
   );
 
   return (
-    <section className="w-full py-8 md:py-12 overflow-hidden">
+    <section className="w-full py-2 md:py-3 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-6 md:mb-8">
-          <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-foreground mb-2">
-            {t("reviews.carouselTitle")}
-          </h2>
-          <p className="text-sm md:text-base text-muted-foreground max-w-xl mx-auto">
-            {t("reviews.carouselSubtitle")}
-          </p>
-        </div>
 
         {/* Carousel */}
         <div className="relative group">
