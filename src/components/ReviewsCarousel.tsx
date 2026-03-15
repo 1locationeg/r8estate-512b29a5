@@ -38,11 +38,51 @@ export function ReviewsCarousel() {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
 
-  const sortedReviews = [...reviews].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  ).slice(0, 12);
+  const [liveReviews, setLiveReviews] = useState<CarouselReview[]>([]);
 
-  const avgRating = (sortedReviews.reduce((s, r) => s + r.rating, 0) / sortedReviews.length).toFixed(1);
+  // Fetch live reviews from database
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const { data } = await supabase
+        .from("reviews")
+        .select("id, author_name, is_anonymous, rating, created_at, comment, developer_id")
+        .order("created_at", { ascending: false })
+        .limit(20);
+
+      if (data) {
+        setLiveReviews(
+          data.map((r) => ({
+            id: r.id,
+            author: r.is_anonymous ? (isRTL ? "مستخدم مجهول" : "Anonymous") : r.author_name,
+            rating: r.rating,
+            date: new Date(r.created_at).toISOString().split("T")[0],
+            comment: r.comment,
+            developerId: r.developer_id,
+          }))
+        );
+      }
+    };
+    fetchReviews();
+  }, [isRTL]);
+
+  // Merge live DB reviews with mock, dedup by id, latest first
+  const allReviews: CarouselReview[] = [...liveReviews];
+  if (allReviews.length < 12) {
+    const liveIds = new Set(liveReviews.map((r) => r.id));
+    const mockFill = mockReviews
+      .filter((r) => !liveIds.has(r.id))
+      .slice(0, 12 - allReviews.length)
+      .map((r) => ({ id: r.id, author: r.author, rating: r.rating, date: r.date, comment: r.comment, developerId: r.developerId, avatar: (r as any).avatar }));
+    allReviews.push(...mockFill);
+  }
+
+  const sortedReviews = allReviews
+    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .slice(0, 12);
+
+  const avgRating = sortedReviews.length
+    ? (sortedReviews.reduce((s, r) => s + r.rating, 0) / sortedReviews.length).toFixed(1)
+    : "0";
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
