@@ -26,6 +26,8 @@ import {
 // Lazy-loaded pages for code splitting
 const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
+const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
+const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const BuyerDashboard = lazy(() => import("./pages/BuyerDashboard"));
 const DeveloperDashboard = lazy(() => import("./pages/DeveloperDashboard"));
 const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
@@ -68,6 +70,8 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/auth" element={<Auth />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/buyer/*" element={<BuyerDashboard />} />
                 <Route path="/developer/*" element={<DeveloperDashboard />} />
                 <Route path="/admin/*" element={<AdminDashboard />} />
