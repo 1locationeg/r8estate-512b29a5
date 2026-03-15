@@ -4,6 +4,7 @@ import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Sta
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
+import { getSearchHistory } from "@/lib/searchHistory";
 import { supabase } from "@/integrations/supabase/client";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
