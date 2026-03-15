@@ -135,7 +135,9 @@
     "voiceReviewTooltip": "Record a voice review",
     "downloadReportTooltip": "Download trust report",
     "compare": "Compare",
-    "compareTooltip": "Compare with another similar item"
+    "compareTooltip": "Compare with another similar item",
+    "aiSuggestions": "AI Suggestions",
+    "aiSuggestionsLoading": "Getting smart suggestions..."
   },
   "common": {
     "signIn": "Sign In",
