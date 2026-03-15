@@ -28,6 +28,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName?: string, accountType?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
+  signInWithApple: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -212,6 +213,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   };
 
+  const signInWithApple = async (accountType: AccountTypeIntent = 'buyer') => {
+    localStorage.setItem('oauth_account_type', accountType);
+
+    const result = await lovable.auth.signInWithOAuth('apple', {
+      redirect_uri: window.location.origin,
+    });
+    
+    if (result.error) {
+      return { error: result.error };
+    }
+    
+    return { error: null };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -231,6 +246,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signUp,
         signIn,
         signInWithGoogle,
+        signInWithApple,
         signOut,
         refreshProfile,
       }}

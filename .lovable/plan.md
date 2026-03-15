@@ -1,75 +1,32 @@
 
 
-## Plan: Frictionless Auth — Simplify Sign In / Sign Up
+## Make Search Dropdown Items Compact on Mobile
 
-### Problem
-The current auth page has too many steps and choices upfront: account type toggle, email form with multiple fields, mode switching. This creates friction for new users.
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Approach: "Google-first, one-tap" pattern
-Follow the pattern used by Uber, Airbnb, and modern apps — make the primary action a single button tap, defer complexity to later.
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-### Design
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-**New simplified Auth page layout:**
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-```text
-┌─────────────────────────────┐
-│        R8ESTATE logo        │
-│                             │
-│   "Continue to R8ESTATE"    │
-│   "Sign in or create your   │
-│    account in one tap"      │
-│                             │
-│  ┌───────────────────────┐  │
-│  │ 🔵 Continue with Google│  │  ← Primary CTA (large)
-│  └───────────────────────┘  │
-│                             │
-│  ┌───────────────────────┐  │
-│  │ 🍎 Continue with Apple │  │  ← Secondary CTA
-│  └───────────────────────┘  │
-│                             │
-│  ──── or use email ──────   │
-│                             │
-│  ┌───────────────────────┐  │
-│  │ ✉  Continue with Email │  │  ← Expands email form
-│  └───────────────────────┘  │
-│                             │
-│  "Are you a developer?"     │
-│  "Register your business →" │  ← Small text link
-│                             │
-│  Terms of Service · Privacy │
-└─────────────────────────────┘
-```
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-### Key Simplifications
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-1. **Remove the account type toggle from the default view** — most users are buyers. Business registration becomes a small text link at the bottom that navigates to `/auth?type=business`.
-
-2. **Remove sign-in vs sign-up toggle** — Google/Apple handle both automatically. For email, show a single "Continue with Email" button that expands an inline form. The form auto-detects if the email exists (attempt sign-in first, if "Invalid credentials" show password field; if new user, show signup fields). Actually, to keep it simple: expand to show email + password, with a small "New here? Create account" toggle only within the expanded section.
-
-3. **Add Apple Sign-In** — supported by Lovable Cloud, adds a second one-tap option.
-
-4. **Email form starts collapsed** — only expands when user clicks "Continue with Email", reducing visual clutter.
-
-5. **Business flow preserved** — clicking "Register your business" shows the full form with company name field, but this is a secondary path.
-
-### Changes
-
-#### `src/pages/Auth.tsx` — Full rewrite of the UI
-- Default view: logo + 3 buttons (Google, Apple, Email) + business link
-- Email button expands inline form (email + password, with sign-in/sign-up toggle inside)
-- Business mode (via `?type=business` or link click): shows account type prominently + company name field
-- Keep all existing logic (role sync, redirects, validation) but reorganize the UI
-
-#### `src/contexts/AuthContext.tsx` — Add `signInWithApple` method
-- Use `lovable.auth.signInWithOAuth('apple', ...)` similar to Google implementation
-
-#### `src/i18n/locales/en.json` + `ar.json` — New keys
-- `auth.continueGoogle`, `auth.continueApple`, `auth.continueEmail`, `auth.orUseEmail`, `auth.registerBusiness`, `auth.areYouDeveloper`
-
-### Files to Edit
-- `src/pages/Auth.tsx` — Redesign UI
-- `src/contexts/AuthContext.tsx` — Add Apple sign-in
-- `src/i18n/locales/en.json` — New translation keys
-- `src/i18n/locales/ar.json` — New translation keys
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 
