@@ -135,7 +135,9 @@
     "voiceReviewTooltip": "سجل تقييماً صوتياً",
     "downloadReportTooltip": "تحميل تقرير الثقة",
     "compare": "قارن",
-    "compareTooltip": "قارن مع عنصر مماثل آخر"
+    "compareTooltip": "قارن مع عنصر مماثل آخر",
+    "aiSuggestions": "اقتراحات ذكية",
+    "aiSuggestionsLoading": "جارٍ الحصول على اقتراحات ذكية..."
   },
   "common": {
     "signIn": "تسجيل الدخول",
