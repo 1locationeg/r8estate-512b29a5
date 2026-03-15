@@ -429,5 +429,20 @@
     "passwordMin": "Password must be at least 6 characters",
     "passwordMismatch": "Passwords do not match",
     "error": "Error"
+  },
+  "trustSignals": {
+    "reviewProtected": "Your review is protected",
+    "encrypted": "256-bit encrypted",
+    "noSpam": "We never spam",
+    "anonymousOption": "Anonymous option available"
+  },
+  "guestReview": {
+    "noAccountNeeded": "No account needed — share your experience freely",
+    "yourName": "Your Name",
+    "namePlaceholder": "Enter your name (optional)",
+    "claimTitle": "Claim your review",
+    "claimDescription": "Create an account to track your review, earn badges, and edit it later.",
+    "creatingAccount": "Creating account...",
+    "skipForNow": "Skip for now"
   }
 }

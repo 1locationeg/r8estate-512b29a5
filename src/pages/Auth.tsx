@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, ChevronDown, ChevronUp } from 'lucide-react';
 import logoIcon from '@/assets/logo-icon.png';
 import { Footer } from '@/components/Footer';
+import { TrustSignals } from '@/components/TrustSignals';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
