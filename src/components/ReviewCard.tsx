@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Star, CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
+import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
