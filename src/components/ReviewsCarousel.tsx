@@ -182,7 +182,10 @@ export function ReviewsCarousel() {
                 >
                   {/* Stars + Title */}
                   <div className="flex items-center gap-1.5">
-                    <img src={r8Stars} alt="R8 Stars" className="h-4 object-contain shrink-0" />
+                    <div className="relative shrink-0 h-4" style={{ width: '80px' }}>
+                      <img src={r8Stars} alt="" className="h-4 object-contain opacity-25 grayscale" style={{ width: '80px' }} />
+                      <img src={r8Stars} alt={`${review.rating}/5`} className="absolute inset-0 h-4 object-contain object-left" style={{ width: '80px', clipPath: `inset(0 ${100 - (review.rating / 5) * 100}% 0 0)` }} />
+                    </div>
                     <h3 className="font-semibold text-sm text-foreground line-clamp-1">
                       {review.comment.slice(0, 50)}
                       {review.comment.length > 50 ? "…" : ""}
