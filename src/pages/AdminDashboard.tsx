@@ -17,6 +17,7 @@ import { getRatingColorClass } from '@/lib/ratingColors';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AdminEmailBranding from '@/components/AdminEmailBranding';
+import AdminGuestReviews from '@/components/AdminGuestReviews';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
