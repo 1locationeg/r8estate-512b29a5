@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
+import { TrustInsightsModal } from "@/components/TrustInsightsModal";
+import { CompareModal } from "@/components/CompareModal";
 
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
@@ -38,6 +40,8 @@ const Index = () => {
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
+  const [showInsightsModal, setShowInsightsModal] = useState(false);
+  const [showCompareModal, setShowCompareModal] = useState(false);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
@@ -69,11 +73,31 @@ const Index = () => {
     return '/buyer';
   };
 
+  const handleQuickAction = (actionKey: string) => {
+    switch (actionKey) {
+      case 'compare':
+        setShowCompareModal(true);
+        break;
+      case 'topRated':
+        setActiveView((prev) => prev === 'bestOf' ? null : 'bestOf');
+        setSelectedDeveloperId(null);
+        setSpecialViewItem(null);
+        break;
+      case 'legal':
+        setExternalCategory('categories.lawFirms');
+        setTimeout(() => setExternalCategory(null), 100);
+        break;
+      case 'insights':
+        setShowInsightsModal(true);
+        break;
+    }
+  };
+
   const quickActions = [
-    { icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
-    { icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
-    { icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
-    { icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" },
+    { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
+    { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
+    { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
+    { key: 'insights', icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" },
   ];
 
   const verifiedBadges = [
@@ -303,6 +327,7 @@ const Index = () => {
                     return (
                       <button
                         key={action.title}
+                        onClick={() => handleQuickAction(action.key)}
                         className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group"
                       >
                         <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -456,6 +481,10 @@ const Index = () => {
           }
         </div>
       </section>
+
+      {/* Quick Action Modals */}
+      <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
+      <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
 
       <Footer />
 
