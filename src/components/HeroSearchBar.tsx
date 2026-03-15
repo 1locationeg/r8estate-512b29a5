@@ -18,7 +18,7 @@ interface HeroSearchBarProps {
 }
 
 export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
   const [isAIModalOpen, setIsAIModalOpen] = useState(false);
@@ -26,8 +26,10 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
   const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
+  const [isListening, setIsListening] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const recognitionRef = useRef<any>(null);
 
   // Reset selected index when query changes
   useEffect(() => {
