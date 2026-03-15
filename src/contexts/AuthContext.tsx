@@ -28,6 +28,7 @@ interface AuthContextType {
   signUp: (email: string, password: string, fullName?: string, accountType?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
+  signInWithApple: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
