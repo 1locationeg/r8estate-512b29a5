@@ -38,6 +38,8 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [query]);
 
   const handleSelect = useCallback((item: SearchItem) => {
+    // Save to search history
+    addToSearchHistory(item.name);
     // Show item detail inline on the page
     setSelectedItem(item);
     setQuery("");
