@@ -1987,6 +1987,7 @@ const AdminDashboard = () => {
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="feedback" element={<AdminFeedback />} />
         <Route path="seo" element={<AdminSEO />} />
+        <Route path="email-branding" element={<AdminEmailBranding />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>
