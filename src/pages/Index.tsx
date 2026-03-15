@@ -482,6 +482,10 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Quick Action Modals */}
+      <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
+      <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
+
       <Footer />
 
     </div>);
