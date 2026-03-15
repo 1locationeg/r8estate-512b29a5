@@ -178,20 +178,8 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  {/* R8 Stars */}
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={r8Stars}
-                      alt="R8ESTATE rating"
-                      className="h-5 md:h-6 object-contain"
-                    />
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      {review.rating}/5
-                    </span>
-                  </div>
-
                   {/* Title */}
                   <h3 className="font-semibold text-sm text-foreground line-clamp-1">
                     {review.comment.slice(0, 50)}
@@ -199,12 +187,12 @@ export function ReviewsCarousel() {
                   </h3>
 
                   {/* Comment */}
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-snug flex-1">
                     {review.comment}
                   </p>
 
                   {/* Author + time */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                  <div className="flex items-center justify-between pt-1 border-t border-border">
                     <div className="flex items-center gap-2">
                       {review.avatar && (
                         <img
