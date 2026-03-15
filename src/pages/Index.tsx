@@ -327,6 +327,7 @@ const Index = () => {
                     return (
                       <button
                         key={action.title}
+                        onClick={() => handleQuickAction(action.key)}
                         className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group"
                       >
                         <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
