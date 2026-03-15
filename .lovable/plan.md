@@ -1,21 +1,32 @@
 
 
-## Plan: Replace Star Icons with Custom House-Star Asset in ReviewCard
+## Make Search Dropdown Items Compact on Mobile
 
-The user wants to replace the Lucide `Star` icons in `ReviewCard.tsx` with their branded `r8-stars.png` asset, using the same dynamic `clipPath` technique already working in `ReviewsCarousel.tsx`.
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Changes to `src/components/ReviewCard.tsx`
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-1. **Import** `r8Stars` from `@/assets/r8-stars.png`
-2. **Remove** unused imports: `Star` from lucide-react, `getStarColorClass` from ratingColors
-3. **Replace** the star loop (lines 95-101) with the layered image approach:
-   - Grayscale background image (empty stars)
-   - Clipped foreground image based on `review.rating / 5 * 100`
-   - Size: `h-5` / `100px` wide for good visibility at ReviewCard's larger layout
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-This is the exact same pattern used in `ReviewsCarousel.tsx` lines 185-188, just slightly larger to match the card's bigger layout.
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-### Optional
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-If the user wants to upload a **different** star asset (not the existing `r8-stars.png`), they can provide the image and we'll save it as a new asset. Otherwise we reuse the existing house-star asset.
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
+
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 

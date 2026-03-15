@@ -1,11 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { Star, CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
+import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ShareMenu } from "@/components/ShareMenu";
-import { getStarColorClass } from "@/lib/ratingColors";
+import r8Stars from "@/assets/r8-stars.png";
 
 interface ReviewCardProps {
   review: Review;
@@ -92,13 +92,14 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
         </div>
 
         <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-          <div className="flex items-center gap-0.5 md:gap-1">
-            {[...Array(5)].map((_, i) => (
-              <Star
-                key={i}
-                className={`w-3.5 h-3.5 md:w-4 md:h-4 ${getStarColorClass(review.rating, i)}`}
-              />
-            ))}
+          <div className="relative w-[80px] h-4 md:w-[100px] md:h-5">
+            <img src={r8Stars} alt="" className="absolute inset-0 w-full h-full object-contain grayscale opacity-25" />
+            <img
+              src={r8Stars}
+              alt={`${review.rating} / 5`}
+              className="absolute inset-0 w-full h-full object-contain"
+              style={{ clipPath: `inset(0 ${100 - (review.rating / 5) * 100}% 0 0)` }}
+            />
           </div>
           <ShareMenu
             title={t("share.shareReview", { item: developer?.name || review.project })}
