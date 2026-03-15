@@ -166,7 +166,7 @@ export function ReviewsCarousel() {
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2"
+            className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-0"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
