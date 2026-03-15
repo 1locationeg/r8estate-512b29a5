@@ -10,13 +10,14 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AdminEmailBranding from '@/components/AdminEmailBranding';
+import AdminGuestReviews from '@/components/AdminGuestReviews';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1936,6 +1937,7 @@ const AdminDashboard = () => {
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
     { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
+    { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
     { icon: <Bot className="w-4 h-4" />, label: 'AI Reviewer', path: '/admin/ai-reviewer' },
     { icon: <Zap className="w-4 h-4" />, label: 'AI Usage', path: '/admin/ai-usage' },
     { icon: <PenTool className="w-4 h-4" />, label: 'AI Review Writer', path: '/admin/ai-review-writer' },
@@ -1971,6 +1973,7 @@ const AdminDashboard = () => {
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="business" element={<AdminBusiness />} />
         <Route path="reviews" element={<AdminReviewMod />} />
+        <Route path="guest-reviews" element={<AdminGuestReviews />} />
         <Route path="ai-reviewer" element={<AdminAIReviewer />} />
         <Route path="ai-review-writer" element={<AdminAIReviewWriter />} />
         <Route path="ai-usage" element={<AdminAIUsage />} />
