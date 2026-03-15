@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Star, Download, GitCompare, Shield, MessageSquare, ChevronRight } from "lucide-react";
+import { Star, Shield, MessageSquare, ChevronRight } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
-
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
@@ -31,11 +30,9 @@ export const FeaturedIdentitySpotlight = () => {
   }, []);
 
   const developer = developers[currentIndex];
-
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
   const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
 
-  // Generate deterministic category scores from developer data
   const getCategoryScore = (key: string) => {
     const hash = key.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
     return Math.min(99, Math.max(75, (developer.trustScore + hash) % 30 + 75));
@@ -72,23 +69,37 @@ export const FeaturedIdentitySpotlight = () => {
         <h2 className="text-base md:text-lg font-bold text-foreground">
           Spotlight
         </h2>
-        <span className="text-[10px] uppercase tracking-widest text-muted-foreground bg-secondary px-2 py-0.5 rounded-full">
+        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-primary-foreground bg-primary/80 px-2.5 py-0.5 rounded-full">
           Featured
         </span>
       </div>
 
-      <Card className="overflow-hidden border-primary/20 bg-card">
-        {/* Header */}
-        <div className="px-4 pt-3 pb-2 text-center border-b border-border">
-          <div className="flex items-center justify-end">
-            <ShareMenu title={developer.name} iconOnly />
+      <Card className="overflow-hidden border-primary/20 bg-card shadow-sm">
+        {/* Navy gradient banner header */}
+        <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 px-4 pt-4 pb-8 text-center">
+          {/* Dot grid texture overlay */}
+          <div className="absolute inset-0 opacity-[0.06]" style={{
+            backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)',
+            backgroundSize: '16px 16px'
+          }} />
+          <div className="relative">
+            <div className="flex items-center justify-end mb-1">
+              <ShareMenu title={developer.name} iconOnly />
+            </div>
+            <h3 className="text-lg md:text-xl font-bold text-primary-foreground">
+              {developer.name}
+            </h3>
+            {developer.verified && (
+              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/15 backdrop-blur-sm rounded-full text-[11px] font-semibold text-primary-foreground mt-1.5">
+                <Shield className="w-3 h-3" />
+                Verified Identity
+              </div>
+            )}
           </div>
+        </div>
 
-          <h3 className="text-lg md:text-xl font-bold text-foreground mb-2">
-            {developer.name}
-          </h3>
-
-          {/* Trust Gauge */}
+        {/* Trust Gauge - overlapping banner */}
+        <div className="relative -mt-6 text-center px-4 pb-2">
           <div className="relative w-36 h-20 md:w-44 md:h-24 mx-auto mb-1">
             <svg viewBox="0 0 200 110" className="w-full h-full">
               <defs>
@@ -143,18 +154,10 @@ export const FeaturedIdentitySpotlight = () => {
               ({developer.reviewCount} reviews)
             </span>
           </div>
-
-          {/* Verified badge */}
-          {developer.verified && (
-            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-primary/10 rounded-full text-[11px] font-semibold text-primary mb-1">
-              <Shield className="w-3 h-3" />
-              Verified Identity
-            </div>
-          )}
         </div>
 
         {/* Trust Categories */}
-        <div className="px-4 py-2.5 border-b border-border">
+        <div className="px-4 py-2.5 border-t border-border">
           <h4 className="text-xs font-semibold text-foreground mb-1.5">Trust Categories</h4>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
             {trustCategories.map((cat) => {
@@ -171,7 +174,7 @@ export const FeaturedIdentitySpotlight = () => {
         </div>
 
         {/* Customer Reviews */}
-        <div className="px-4 py-2.5">
+        <div className="px-4 py-2.5 border-t border-border">
           <div className="flex items-center justify-between mb-2">
             <h4 className="text-xs font-semibold text-foreground">Customer Reviews</h4>
             <span className="text-[10px] text-muted-foreground">Newest</span>
@@ -211,7 +214,6 @@ export const FeaturedIdentitySpotlight = () => {
                 </p>
                 <p className="text-[9px] text-muted-foreground">{review.date}</p>
 
-                {/* Developer Reply */}
                 {review.developerReply && (
                   <div className="ms-5 p-2 bg-secondary/50 rounded-md border border-border">
                     <div className="flex items-center gap-1 mb-0.5">

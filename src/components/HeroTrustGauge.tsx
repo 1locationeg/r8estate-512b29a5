@@ -52,10 +52,11 @@ export const HeroTrustGauge = () => {
   const my = 100 + 90 * Math.sin(angle);
   const rotDeg = pct * 180 - 90;
   const color = getScoreColor(gaugeScore);
+  const showCheck = gaugeScore >= 66;
 
   return (
-    <div className="relative w-48 h-28 md:w-56 md:h-32 mt-4 mx-auto">
-      <svg viewBox="0 0 200 115" className="w-full h-full drop-shadow-sm">
+    <div className="relative w-56 h-32 md:w-64 md:h-36 mt-4 mx-auto">
+      <svg viewBox="0 0 200 120" className="w-full h-full">
         <defs>
           <linearGradient id="heroGaugeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
             <stop offset="0%" stopColor="hsl(0, 72%, 51%)" />
@@ -72,15 +73,35 @@ export const HeroTrustGauge = () => {
               <feMergeNode in="SourceGraphic" />
             </feMerge>
           </filter>
+          <filter id="outerArcGlow">
+            <feGaussianBlur stdDeviation="5" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
           <filter id="markerShadow">
             <feDropShadow dx="0" dy="1" stdDeviation="2" floodOpacity="0.3" />
           </filter>
         </defs>
 
+        {/* Outer glow ring */}
+        <path
+          d="M 10 100 A 90 90 0 0 1 190 100"
+          stroke="url(#heroGaugeGradient)"
+          strokeWidth="2"
+          fill="none"
+          strokeLinecap="round"
+          strokeDasharray={`${filled} ${arcLen}`}
+          opacity="0.25"
+          filter="url(#outerArcGlow)"
+          transform="translate(0, 0) scale(1)"
+        />
+
         {/* Tick marks */}
         {[0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100].map((tick) => {
           const tickAngle = Math.PI + (tick / 100) * Math.PI;
-          const innerR = tick % 50 === 0 ? 72 : 76;
+          const innerR = tick % 50 === 0 ? 72 : tick % 20 === 0 ? 74 : 76;
           const outerR = 80;
           const x1 = 100 + innerR * Math.cos(tickAngle);
           const y1 = 100 + innerR * Math.sin(tickAngle);
@@ -88,18 +109,18 @@ export const HeroTrustGauge = () => {
           const y2 = 100 + outerR * Math.sin(tickAngle);
           return (
             <line key={tick} x1={x1} y1={y1} x2={x2} y2={y2}
-              stroke="hsl(var(--muted-foreground))" strokeWidth={tick % 50 === 0 ? "2" : "1"} opacity="0.3" />
+              stroke="hsl(var(--muted-foreground))" strokeWidth={tick % 50 === 0 ? "2" : "1"} opacity="0.25" />
           );
         })}
 
         {/* Background arc */}
-        <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="hsl(var(--border))" strokeWidth="16" fill="none" strokeLinecap="round" />
+        <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="hsl(var(--border))" strokeWidth="14" fill="none" strokeLinecap="round" />
 
         {/* Gradient filled arc */}
         <path
           d="M 10 100 A 90 90 0 0 1 190 100"
           stroke="url(#heroGaugeGradient)"
-          strokeWidth="16"
+          strokeWidth="14"
           fill="none"
           strokeLinecap="round"
           strokeDasharray={`${filled} ${arcLen}`}
@@ -110,18 +131,35 @@ export const HeroTrustGauge = () => {
         <circle cx={mx} cy={my} r="9" fill="hsl(var(--background))" stroke={color} strokeWidth="3" filter="url(#markerShadow)" />
         <polygon points="-4,5 4,5 0,-7" fill={color} transform={`translate(${mx},${my}) rotate(${rotDeg})`} />
 
+        {/* Verified checkmark at gauge tip */}
+        {showCheck && (
+          <g transform={`translate(${mx},${my})`}>
+            <circle cx="0" cy="-16" r="6" fill={color} />
+            <polyline
+              points="-2.5,-16 -0.5,-14 3,-18"
+              fill="none"
+              stroke="white"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </g>
+        )}
+
         {/* Min/Max labels */}
-        <text x="12" y="113" fontSize="9" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.6">0</text>
-        <text x="180" y="113" fontSize="9" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.6">100</text>
+        <text x="12" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">0</text>
+        <text x="182" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">100</text>
+
+        {/* TRUST SCORE label in SVG */}
+        <text x="100" y="119" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))" fontWeight="700" letterSpacing="0.25em" opacity="0.5">
+          TRUST SCORE
+        </text>
       </svg>
 
       {/* Center score display */}
-      <div className="absolute inset-0 flex flex-col items-center justify-end pb-1">
-        <span className="text-3xl md:text-4xl font-black tabular-nums" style={{ color }}>
+      <div className="absolute inset-0 flex flex-col items-center justify-end pb-5">
+        <span className="text-3xl md:text-4xl font-black tabular-nums leading-none" style={{ color }}>
           {gaugeScore}
-        </span>
-        <span className="text-[8px] md:text-[9px] font-bold uppercase tracking-[0.25em] text-muted-foreground">
-          Trust Score
         </span>
       </div>
     </div>

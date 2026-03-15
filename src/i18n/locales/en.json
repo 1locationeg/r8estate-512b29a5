@@ -186,7 +186,21 @@
     "popularSearches": "Popular searches:",
     "palmHillsDevelopments": "Palm Hills",
     "newCairo": "New Cairo",
-    "northCoast": "North Coast"
+    "northCoast": "North Coast",
+    "aiVerifiedReviews": "AI-Verified Reviews",
+    "realBuyerData": "Real Buyer Data",
+    "zeroFakeReviews": "Zero Fake Reviews",
+    "qaCompare": "Compare",
+    "qaCompareDesc": "Side-by-side developer comparison",
+    "qaTopRated": "Top Rated",
+    "qaTopRatedDesc": "Highest trust score developers",
+    "qaLegal": "Legal Advisory",
+    "qaLegalDesc": "Verified legal consultants",
+    "qaInsights": "Insights",
+    "qaInsightsDesc": "AI-powered market analysis",
+    "badgeVerifiedDev": "Verified Developer ✓",
+    "badgeTrustedBroker": "Trusted Broker ✓",
+    "badgeVerifiedBuyer": "Verified Buyer ✓"
   },
   "categories": {
     "units": "UNITS",

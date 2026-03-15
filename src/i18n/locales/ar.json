@@ -186,7 +186,21 @@
     "popularSearches": "عمليات البحث الشائعة:",
     "palmHillsDevelopments": "بالم هيلز",
     "newCairo": "القاهرة الجديدة",
-    "northCoast": "الساحل الشمالي"
+    "northCoast": "الساحل الشمالي",
+    "aiVerifiedReviews": "تقييمات موثقة بالذكاء الاصطناعي",
+    "realBuyerData": "بيانات مشترين حقيقية",
+    "zeroFakeReviews": "صفر تقييمات مزيفة",
+    "qaCompare": "قارن",
+    "qaCompareDesc": "مقارنة جنبًا إلى جنب بين المطورين",
+    "qaTopRated": "الأعلى تقييمًا",
+    "qaTopRatedDesc": "المطورون ذوو أعلى درجة ثقة",
+    "qaLegal": "استشارات قانونية",
+    "qaLegalDesc": "مستشارون قانونيون موثقون",
+    "qaInsights": "رؤى",
+    "qaInsightsDesc": "تحليل سوقي بالذكاء الاصطناعي",
+    "badgeVerifiedDev": "✓ مطور موثق",
+    "badgeTrustedBroker": "✓ وسيط موثوق",
+    "badgeVerifiedBuyer": "✓ مشتري موثق"
   },
   "categories": {
     "units": "الوحدات",

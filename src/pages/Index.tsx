@@ -14,7 +14,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -68,6 +68,19 @@ const Index = () => {
     if (role === 'developer') return '/developer';
     return '/buyer';
   };
+
+  const quickActions = [
+    { icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
+    { icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
+    { icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
+    { icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" },
+  ];
+
+  const verifiedBadges = [
+    { label: t("hero.badgeVerifiedDev"), icon: ShieldCheck },
+    { label: t("hero.badgeTrustedBroker"), icon: Shield },
+    { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle },
+  ];
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full" style={{ paddingTop: 'max(50px, env(safe-area-inset-top, 0px))' }}>
@@ -172,43 +185,50 @@ const Index = () => {
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
-             {/* Trust Meter Title + Gauge */}
-             <div className="text-center">
-             <p className="text-lg sm:text-2xl md:text-4xl font-bold text-accent leading-none mb-0">
-                {t("hero.trustMeter")}
-             </p>
+             {/* Hero Card with dot-grid background */}
+             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden">
+               {/* Dot-grid SVG texture */}
+               <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+                 backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
+                 backgroundSize: '20px 20px'
+               }} />
+               
+               <div className="relative text-center">
+                 <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-1">
+                   {t("hero.trustMeter")}
+                 </p>
 
-              {/* Hero Trust Meter Gauge - Live Animated */}
-              <div className="mt-0">
-                <HeroTrustGauge />
-              </div>
-           </div>
+                 {/* Hero Trust Meter Gauge - Live Animated */}
+                 <div className="mt-0">
+                   <HeroTrustGauge />
+                 </div>
 
-           {/* Mode-specific Tagline */}
-           <div className="text-center mb-0 max-w-3xl">
-             {userMode === "buyers" ?
-            <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.tagline")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.taglineHighlight")}
-                 </p>
-               </> :
-
-            <>
-                 <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                   {t("hero.industryTitle1")}
-                 </p>
-                 <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                   {t("hero.industryTitle2")}
-                 </p>
-               </>
-            }
-           </div>
+                 {/* Mode-specific Tagline */}
+                 <div className="mt-1 mb-0 max-w-3xl mx-auto">
+                   {userMode === "buyers" ?
+                  <>
+                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                         {t("hero.tagline")}
+                       </p>
+                       <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+                         {t("hero.taglineHighlight")}
+                       </p>
+                     </> :
+                  <>
+                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                         {t("hero.industryTitle1")}
+                       </p>
+                       <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+                         {t("hero.industryTitle2")}
+                       </p>
+                     </>
+                  }
+                 </div>
+               </div>
+             </div>
 
           {/* Mode-specific Description */}
-          <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug">
+          <p className="text-xs md:text-base text-muted-foreground text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug mt-3">
             {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
           </p>
 
@@ -217,6 +237,26 @@ const Index = () => {
               {/* Search Bar */}
               <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
                 <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+              </div>
+
+              {/* AI Trust Strip */}
+              <div className="w-full max-w-3xl px-4 mb-3">
+                <div className="flex items-center justify-center gap-3 md:gap-6 py-2.5 px-4 rounded-xl bg-primary text-primary-foreground overflow-x-auto scrollbar-hide">
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                    <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
+                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.aiVerifiedReviews")}</span>
+                  </div>
+                  <div className="w-px h-4 bg-primary-foreground/20 flex-shrink-0" />
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                    <Database className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
+                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.realBuyerData")}</span>
+                  </div>
+                  <div className="w-px h-4 bg-primary-foreground/20 flex-shrink-0" />
+                  <div className="flex items-center gap-1.5 whitespace-nowrap">
+                    <Ban className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
+                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.zeroFakeReviews")}</span>
+                  </div>
+                </div>
               </div>
 
               {/* Category Links + Special View Grid */}
@@ -240,6 +280,41 @@ const Index = () => {
                 setTimeout(() => setExternalCategory(null), 100);
               }} />
             
+              {/* Verified Badge Row */}
+              <div className="w-full max-w-3xl px-4 mt-3 mb-2">
+                <div className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-hide">
+                  {verifiedBadges.map((badge) => {
+                    const Icon = badge.icon;
+                    return (
+                      <span key={badge.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] text-[10px] md:text-xs font-semibold text-primary whitespace-nowrap">
+                        <Icon className="w-3 h-3" />
+                        {badge.label}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Quick Actions Grid */}
+              <div className="w-full max-w-3xl px-4 mb-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+                  {quickActions.map((action) => {
+                    const Icon = action.icon;
+                    return (
+                      <button
+                        key={action.title}
+                        className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group"
+                      >
+                        <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
+                          <Icon className={`w-4 h-4 ${action.color}`} />
+                        </div>
+                        <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
+                        <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               {/* Special View Item Detail */}
               {specialViewItem &&
@@ -260,8 +335,6 @@ const Index = () => {
               
                 </div>
             }
-
-              {/* Reviews Carousel moved to Footer */}
 
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
