@@ -1,12 +1,17 @@
 import { useTranslation } from "react-i18next";
 import logoIcon from "@/assets/logo-icon.png";
+import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 
 export const Footer = () => {
   const { t } = useTranslation();
 
   return (
-    <footer className="bg-card border-t border-border py-6 md:py-8 safe-bottom">
-      <div className="container mx-auto px-4">
+    <footer className="bg-card border-t border-border safe-bottom">
+      {/* Reviews Carousel */}
+      <ReviewsCarousel />
+
+      {/* Copyright */}
+      <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
             <span className="text-xl md:text-2xl font-bold inline-flex items-center gap-2">
