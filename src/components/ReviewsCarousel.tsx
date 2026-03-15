@@ -139,8 +139,8 @@ export function ReviewsCarousel() {
   );
 
   return (
-    <section className="w-full py-2 md:py-3 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="w-full py-0 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-2">
 
         {/* Carousel */}
         <div className="relative group">
