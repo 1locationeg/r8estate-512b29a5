@@ -180,11 +180,14 @@ export function ReviewsCarousel() {
                   key={review.id}
                   className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  {/* Title */}
-                  <h3 className="font-semibold text-sm text-foreground line-clamp-1">
-                    {review.comment.slice(0, 50)}
-                    {review.comment.length > 50 ? "…" : ""}
-                  </h3>
+                  {/* Stars + Title */}
+                  <div className="flex items-center gap-1.5">
+                    <img src={r8Stars} alt="R8 Stars" className="h-4 object-contain shrink-0" />
+                    <h3 className="font-semibold text-sm text-foreground line-clamp-1">
+                      {review.comment.slice(0, 50)}
+                      {review.comment.length > 50 ? "…" : ""}
+                    </h3>
+                  </div>
 
                   {/* Comment */}
                   <p className="text-xs text-muted-foreground line-clamp-2 leading-snug flex-1">
