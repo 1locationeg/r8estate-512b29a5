@@ -1937,6 +1937,7 @@ const AdminDashboard = () => {
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
     { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
+    { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
     { icon: <Bot className="w-4 h-4" />, label: 'AI Reviewer', path: '/admin/ai-reviewer' },
     { icon: <Zap className="w-4 h-4" />, label: 'AI Usage', path: '/admin/ai-usage' },
     { icon: <PenTool className="w-4 h-4" />, label: 'AI Review Writer', path: '/admin/ai-review-writer' },
