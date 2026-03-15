@@ -243,7 +243,7 @@ export function ReviewsCarousel() {
             <span className="text-sm font-semibold text-foreground">
               {t("reviews.basedOn", {
                 rating: avgRating,
-                count: reviews.length,
+                count: sortedReviews.length,
               })}
             </span>
           </div>
