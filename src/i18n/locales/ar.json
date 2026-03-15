@@ -429,5 +429,20 @@
     "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
     "passwordMismatch": "كلمات المرور غير متطابقة",
     "error": "خطأ"
+  },
+  "trustSignals": {
+    "reviewProtected": "مراجعتك محمية",
+    "encrypted": "تشفير 256-بت",
+    "noSpam": "لن نرسل لك رسائل مزعجة",
+    "anonymousOption": "خيار المراجعة المجهولة متاح"
+  },
+  "guestReview": {
+    "noAccountNeeded": "لا حاجة لحساب — شارك تجربتك بحرية",
+    "yourName": "اسمك",
+    "namePlaceholder": "أدخل اسمك (اختياري)",
+    "claimTitle": "احفظ مراجعتك",
+    "claimDescription": "أنشئ حسابًا لتتبع مراجعتك، واكسب شارات، وعدّلها لاحقًا.",
+    "creatingAccount": "جارِ إنشاء الحساب...",
+    "skipForNow": "تخطي الآن"
   }
 }

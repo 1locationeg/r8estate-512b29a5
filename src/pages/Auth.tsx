@@ -11,6 +11,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, ChevronDown, ChevronUp } from 'lucide-react';
 import logoIcon from '@/assets/logo-icon.png';
 import { Footer } from '@/components/Footer';
+import { TrustSignals } from '@/components/TrustSignals';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -378,8 +379,11 @@ const Auth = () => {
               </div>
             )}
 
+            {/* Trust Signals */}
+            <TrustSignals className="mt-6" />
+
             {/* Terms */}
-            <p className="mt-6 text-xs text-center text-muted-foreground">
+            <p className="mt-4 text-xs text-center text-muted-foreground">
               {t('auth.termsPrefix', "By continuing, you agree to R8ESTATE's")}{' '}
               <a href="#" className="underline hover:text-foreground transition-colors">
                 {t('auth.terms', 'Terms of Service')}
