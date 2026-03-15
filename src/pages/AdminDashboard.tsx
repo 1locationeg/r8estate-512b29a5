@@ -16,6 +16,7 @@ import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
+import AdminEmailBranding from '@/components/AdminEmailBranding';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1951,6 +1952,7 @@ const AdminDashboard = () => {
     { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
     { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
+    { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
@@ -1985,6 +1987,7 @@ const AdminDashboard = () => {
         <Route path="analytics" element={<AdminAnalytics />} />
         <Route path="feedback" element={<AdminFeedback />} />
         <Route path="seo" element={<AdminSEO />} />
+        <Route path="email-branding" element={<AdminEmailBranding />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>
