@@ -46,6 +46,41 @@ export const SearchSuggestions = ({
 }: SearchSuggestionsProps) => {
   const { t } = useTranslation();
   const containerRef = useRef<HTMLDivElement>(null);
+  const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
+  const [aiCorrection, setAiCorrection] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+
+  // Debounced AI autocomplete
+  useEffect(() => {
+    if (aiDebounceRef.current) clearTimeout(aiDebounceRef.current);
+    
+    if (query.trim().length < 3 || !isOpen) {
+      setAiSuggestions([]);
+      setAiCorrection(null);
+      setAiLoading(false);
+      return;
+    }
+
+    setAiLoading(true);
+    aiDebounceRef.current = setTimeout(async () => {
+      try {
+        const { data } = await supabase.functions.invoke("ai-chat", {
+          body: { mode: "autocomplete", query: query.trim() },
+        });
+        if (data?.suggestions) setAiSuggestions(data.suggestions);
+        if (data?.correction) setAiCorrection(data.correction);
+      } catch {
+        // Silently fail - local search still works
+      } finally {
+        setAiLoading(false);
+      }
+    }, 500);
+
+    return () => {
+      if (aiDebounceRef.current) clearTimeout(aiDebounceRef.current);
+    };
+  }, [query, isOpen]);
   
   // Perform search or get popular items
   const { results, popular, flatItems } = useMemo(() => {
