@@ -115,11 +115,48 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
     }, 200);
   }, []);
 
+  // Voice search handler
+  const handleVoiceSearch = useCallback(() => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error(t("hero.voiceNotSupported"));
+      return;
+    }
+
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognitionRef.current = recognition;
+    recognition.lang = i18n.language === "ar" ? "ar-EG" : "en-US";
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setQuery(transcript);
+      setIsFocused(true);
+      inputRef.current?.focus();
+    };
+
+    recognition.onend = () => setIsListening(false);
+    recognition.onerror = () => setIsListening(false);
+
+    setIsListening(true);
+    recognition.start();
+  }, [isListening, i18n.language, t]);
+
   // Cleanup timeout on unmount
   useEffect(() => {
     return () => {
       if (blurTimeoutRef.current) {
         clearTimeout(blurTimeoutRef.current);
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.abort();
       }
     };
   }, []);
