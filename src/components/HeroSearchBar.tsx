@@ -190,6 +190,23 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
           />
         </div>
 
+        {/* Voice Search Button */}
+        <button
+          onClick={handleVoiceSearch}
+          className={cn(
+            "relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
+            isListening
+              ? "bg-destructive text-destructive-foreground"
+              : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+          )}
+          title={t("hero.voiceSearch")}
+        >
+          <Mic className="w-4 h-4 md:w-5 md:h-5" />
+          {isListening && (
+            <span className="absolute top-0.5 end-0.5 w-2 h-2 bg-destructive rounded-full animate-ping" />
+          )}
+        </button>
+
         {/* Search Icon */}
         <Search className="w-5 h-5 text-muted-foreground me-2" />
 
