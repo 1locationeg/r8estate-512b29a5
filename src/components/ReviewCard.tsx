@@ -5,7 +5,7 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ShareMenu } from "@/components/ShareMenu";
-import { getStarColorClass } from "@/lib/ratingColors";
+import r8Stars from "@/assets/r8-stars.png";
 
 interface ReviewCardProps {
   review: Review;
