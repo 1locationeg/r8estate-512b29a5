@@ -213,6 +213,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return { error: null };
   };
 
+  const signInWithApple = async (accountType: AccountTypeIntent = 'buyer') => {
+    localStorage.setItem('oauth_account_type', accountType);
+
+    const result = await lovable.auth.signInWithOAuth('apple', {
+      redirect_uri: window.location.origin,
+    });
+    
+    if (result.error) {
+      return { error: result.error };
+    }
+    
+    return { error: null };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
     setUser(null);
