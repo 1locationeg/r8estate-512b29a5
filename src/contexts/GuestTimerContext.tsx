@@ -5,6 +5,7 @@ const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
 const BONUS_SECONDS = 2 * 60; // 2 minutes
 const STORAGE_KEY = 'r8estate_guest_start';
 const BONUS_USED_KEY = 'r8estate_guest_bonus_used';
+export const DEVICE_REGISTERED_KEY = 'r8estate_device_registered';
 
 interface GuestTimerContextType {
   secondsLeft: number;
