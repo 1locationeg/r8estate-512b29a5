@@ -27,7 +27,9 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasExpiredRef = useRef(false);
 
-  const isGuest = !isLoading && !user;
+  // Device that has logged in before is NOT a guest — skip timer entirely
+  const deviceWasRegistered = localStorage.getItem(DEVICE_REGISTERED_KEY) === '1';
+  const isGuest = !isLoading && !user && !deviceWasRegistered;
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {

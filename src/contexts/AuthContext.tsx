@@ -100,6 +100,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
 
+        // Mark this device as registered when user logs in
+        if (session?.user) {
+          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
+        }
+
         // Defer profile/role fetch to avoid deadlock
         if (session?.user) {
           setTimeout(async () => {
