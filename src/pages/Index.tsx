@@ -40,6 +40,8 @@ const Index = () => {
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
+  const [showInsightsModal, setShowInsightsModal] = useState(false);
+  const [showCompareModal, setShowCompareModal] = useState(false);
   const { user, profile, role, signOut, isLoading } = useAuth();
   const { toast } = useToast();
 
