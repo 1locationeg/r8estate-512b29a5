@@ -261,6 +261,11 @@ const Index = () => {
                 </div>
             }
 
+              {/* Reviews Carousel */}
+              {!specialViewItem && !selectedDeveloper &&
+                <ReviewsCarousel />
+              }
+
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
             <FeaturedIdentitySpotlight />
