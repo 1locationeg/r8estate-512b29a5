@@ -367,5 +367,10 @@
       "locationValue": "How do I evaluate the long-term value of a location?",
       "investmentPotential": "What factors affect off-plan property appreciation?"
     }
+  },
+  "reviews": {
+    "carouselTitle": "See what people are saying about R8ESTATE",
+    "carouselSubtitle": "We continuously aim to improve our platform based on your feedback and trust.",
+    "basedOn": "Rated {{rating}} / 5 based on {{count}} reviews"
   }
 }
