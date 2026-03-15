@@ -310,7 +310,14 @@ const Auth = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="password">{t('auth.password', 'Password')}</Label>
+                  <div className="flex items-center justify-between">
+                    <Label htmlFor="password">{t('auth.password', 'Password')}</Label>
+                    {emailMode === 'signin' && (
+                      <Link to="/forgot-password" className="text-xs text-primary hover:underline">
+                        {t('auth.forgotPassword', 'Forgot password?')}
+                      </Link>
+                    )}
+                  </div>
                   <div className="relative">
                     <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className={`ps-10 ${errors.password ? 'border-destructive' : ''}`} />
