@@ -179,6 +179,51 @@ export type Database = {
         }
         Relationships: []
       }
+      guest_reviews: {
+        Row: {
+          claimed_by: string | null
+          comment: string
+          created_at: string
+          developer_id: string
+          developer_name: string | null
+          experience_type: string | null
+          guest_email: string | null
+          guest_name: string
+          id: string
+          is_claimed: boolean
+          rating: number
+          title: string | null
+        }
+        Insert: {
+          claimed_by?: string | null
+          comment: string
+          created_at?: string
+          developer_id: string
+          developer_name?: string | null
+          experience_type?: string | null
+          guest_email?: string | null
+          guest_name?: string
+          id?: string
+          is_claimed?: boolean
+          rating: number
+          title?: string | null
+        }
+        Update: {
+          claimed_by?: string | null
+          comment?: string
+          created_at?: string
+          developer_id?: string
+          developer_name?: string | null
+          experience_type?: string | null
+          guest_email?: string | null
+          guest_name?: string
+          id?: string
+          is_claimed?: boolean
+          rating?: number
+          title?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string
