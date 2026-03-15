@@ -2,6 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
+import { DEVICE_REGISTERED_KEY } from '@/contexts/GuestTimerContext';
 
 type AppRole = 'user' | 'buyer' | 'developer' | 'admin';
 type AccountTypeIntent = 'buyer' | 'business';
@@ -98,6 +99,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         
         setSession(session);
         setUser(session?.user ?? null);
+
+        // Mark this device as registered when user logs in
+        if (session?.user) {
+          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
+        }
 
         // Defer profile/role fetch to avoid deadlock
         if (session?.user) {

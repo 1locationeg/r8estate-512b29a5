@@ -12,6 +12,7 @@ import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/sea
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { categories, calculateEngagementScore, type CategoryItem } from "@/components/HeroCategoryItems";
 import { TractionStats } from "@/components/TractionStats";
+import { addToSearchHistory } from "@/lib/searchHistory";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
@@ -37,6 +38,8 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   }, [query]);
 
   const handleSelect = useCallback((item: SearchItem) => {
+    // Save to search history
+    addToSearchHistory(item.name);
     // Show item detail inline on the page
     setSelectedItem(item);
     setQuery("");

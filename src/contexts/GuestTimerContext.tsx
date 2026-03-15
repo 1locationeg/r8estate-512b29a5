@@ -5,6 +5,7 @@ const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
 const BONUS_SECONDS = 2 * 60; // 2 minutes
 const STORAGE_KEY = 'r8estate_guest_start';
 const BONUS_USED_KEY = 'r8estate_guest_bonus_used';
+export const DEVICE_REGISTERED_KEY = 'r8estate_device_registered';
 
 interface GuestTimerContextType {
   secondsLeft: number;
@@ -26,7 +27,9 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasExpiredRef = useRef(false);
 
-  const isGuest = !isLoading && !user;
+  // Device that has logged in before is NOT a guest — skip timer entirely
+  const deviceWasRegistered = localStorage.getItem(DEVICE_REGISTERED_KEY) === '1';
+  const isGuest = !isLoading && !user && !deviceWasRegistered;
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {

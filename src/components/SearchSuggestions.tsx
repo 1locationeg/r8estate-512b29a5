@@ -4,6 +4,7 @@ import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Sta
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
+import { getSearchHistory } from "@/lib/searchHistory";
 import { supabase } from "@/integrations/supabase/client";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
@@ -411,14 +412,37 @@ export const SearchSuggestions = ({
         </div>
       )}
       
-      {/* Popular Header (when no query) */}
-      {!query.trim() && (
-        <div className="px-4 py-3 border-b border-border">
-          <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-            {t("search.popular")}
-          </div>
-        </div>
-      )}
+      {/* Recent & Popular Header (when no query) */}
+      {!query.trim() && (() => {
+        const history = getSearchHistory();
+        return (
+          <>
+            {history.length > 0 && (
+              <div className="border-b border-border">
+                <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  <Search className="w-3.5 h-3.5" />
+                  <span>{t("search.recent")}</span>
+                </div>
+                {history.slice(0, 5).map((entry, idx) => (
+                  <button
+                    key={idx}
+                    onClick={() => onCorrection(entry.query)}
+                    className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-foreground hover:bg-secondary/30 transition-colors text-start"
+                  >
+                    <ArrowRight className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 rtl:rotate-180" />
+                    <span>{entry.query}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+            <div className="px-4 py-3 border-b border-border">
+              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                {t("search.popular")}
+              </div>
+            </div>
+          </>
+        );
+      })()}
       
       {/* Category Sections */}
       <div className="divide-y divide-border/50">
