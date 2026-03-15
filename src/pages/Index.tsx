@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
+import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 import { HeroTrustGauge } from "@/components/HeroTrustGauge";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
@@ -259,6 +260,11 @@ const Index = () => {
               
                 </div>
             }
+
+              {/* Reviews Carousel */}
+              {!specialViewItem && !selectedDeveloper &&
+                <ReviewsCarousel />
+              }
 
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
