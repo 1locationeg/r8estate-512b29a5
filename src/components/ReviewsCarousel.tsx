@@ -139,8 +139,8 @@ export function ReviewsCarousel() {
   );
 
   return (
-    <section className="w-full py-2 md:py-3 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-4">
+    <section className="w-full py-0 overflow-hidden">
+      <div className="max-w-6xl mx-auto px-2">
 
         {/* Carousel */}
         <div className="relative group">
@@ -166,7 +166,7 @@ export function ReviewsCarousel() {
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2"
+            className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-0"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
@@ -178,20 +178,8 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-4 flex flex-col gap-3 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  {/* R8 Stars */}
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={r8Stars}
-                      alt="R8ESTATE rating"
-                      className="h-5 md:h-6 object-contain"
-                    />
-                    <span className="text-xs font-semibold text-muted-foreground">
-                      {review.rating}/5
-                    </span>
-                  </div>
-
                   {/* Title */}
                   <h3 className="font-semibold text-sm text-foreground line-clamp-1">
                     {review.comment.slice(0, 50)}
@@ -199,12 +187,12 @@ export function ReviewsCarousel() {
                   </h3>
 
                   {/* Comment */}
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-relaxed flex-1">
+                  <p className="text-xs text-muted-foreground line-clamp-2 leading-snug flex-1">
                     {review.comment}
                   </p>
 
                   {/* Author + time */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border">
+                  <div className="flex items-center justify-between pt-1 border-t border-border">
                     <div className="flex items-center gap-2">
                       {review.avatar && (
                         <img
@@ -228,7 +216,7 @@ export function ReviewsCarousel() {
         </div>
 
         {/* Footer bar */}
-        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4">
+        <div className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
           <div className="flex items-center gap-2">
             {renderStars(Math.round(Number(avgRating)))}
             <span className="text-sm font-semibold text-foreground">
