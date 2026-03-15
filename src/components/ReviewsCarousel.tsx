@@ -1,10 +1,20 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
-import { reviews, developers } from "@/data/mockData";
+import { reviews as mockReviews, developers } from "@/data/mockData";
+import { supabase } from "@/integrations/supabase/client";
 import r8Stars from "@/assets/r8-stars.png";
 import logoSlogan from "@/assets/logo-slogan.jpg";
 
+interface CarouselReview {
+  id: string;
+  author: string;
+  rating: number;
+  date: string;
+  comment: string;
+  developerId: string;
+  avatar?: string;
+}
 function getRelativeTime(dateStr: string, lang: string) {
   const now = new Date();
   const date = new Date(dateStr);
