@@ -378,8 +378,11 @@ const Auth = () => {
               </div>
             )}
 
+            {/* Trust Signals */}
+            <TrustSignals className="mt-6" />
+
             {/* Terms */}
-            <p className="mt-6 text-xs text-center text-muted-foreground">
+            <p className="mt-4 text-xs text-center text-muted-foreground">
               {t('auth.termsPrefix', "By continuing, you agree to R8ESTATE's")}{' '}
               <a href="#" className="underline hover:text-foreground transition-colors">
                 {t('auth.terms', 'Terms of Service')}
