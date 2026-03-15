@@ -224,7 +224,10 @@ export function ReviewsCarousel() {
         {/* Footer bar */}
         <div className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
           <div className="flex items-center gap-2">
-            {renderStars(Math.round(Number(avgRating)))}
+            <div className="relative shrink-0 h-5" style={{ width: '100px' }}>
+              <img src={r8Stars} alt="" className="h-5 object-contain opacity-25 grayscale" style={{ width: '100px' }} />
+              <img src={r8Stars} alt={`${avgRating}/5`} className="absolute inset-0 h-5 object-contain object-left" style={{ width: '100px', clipPath: `inset(0 ${100 - (Number(avgRating) / 5) * 100}% 0 0)` }} />
+            </div>
             <span className="text-sm font-semibold text-foreground">
               {t("reviews.basedOn", {
                 rating: avgRating,
