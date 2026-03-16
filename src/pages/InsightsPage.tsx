@@ -143,6 +143,41 @@ const InsightsPage = () => {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+        {/* Cache Status Banner */}
+        {cacheInfo && hasLoaded && (
+          <div className={`flex items-center justify-between p-3 rounded-xl border ${
+            cacheInfo.cached ? 'bg-secondary/50 border-border' : 'bg-trust-excellent/5 border-trust-excellent/20'
+          }`}>
+            <div className="flex items-center gap-2 text-xs">
+              {cacheInfo.cached ? (
+                <>
+                  <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-muted-foreground">
+                    Cached · Refreshes in {cacheInfo.expires_in_minutes}m
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-3.5 h-3.5 text-trust-excellent" />
+                  <span className="text-trust-excellent font-medium">Fresh insights · Just generated</span>
+                </>
+              )}
+            </div>
+            {cacheInfo.cached && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => fetchInsights(true)}
+                disabled={loading}
+                className="text-[10px] h-7 gap-1 text-primary"
+              >
+                <Zap className="w-3 h-3" />
+                Force Refresh
+              </Button>
+            )}
+          </div>
+        )}
+
         {/* Snapshot Stats */}
         {snapshot && (
           <div className="grid grid-cols-2 gap-3">
