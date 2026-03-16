@@ -51,7 +51,7 @@ const RouteLoader = () => {
   if (path === "/") return <IndexSkeleton />;
   if (path === "/auth") return <AuthSkeleton />;
   if (path.startsWith("/buyer")) return <BuyerDashboardSkeleton />;
-  if (path.startsWith("/developer")) return <DeveloperDashboardSkeleton />;
+  if (path.startsWith("/business")) return <DeveloperDashboardSkeleton />;
   if (path.startsWith("/admin")) return <AdminDashboardSkeleton />;
   if (path === "/directory") return <DeveloperDirectorySkeleton />;
   if (path === "/install") return <InstallSkeleton />;
