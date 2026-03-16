@@ -153,6 +153,11 @@ export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
   if (input.communityReplies >= 10) earned.push('reply_streak');
   if (input.communityVotes >= 10) earned.push('community_voter');
   if (input.communityPosts >= 10 && input.communityReplies >= 20) earned.push('community_champion');
+  // Streak badges
+  if (input.longestStreak >= 3) earned.push('streak_3');
+  if (input.longestStreak >= 7) earned.push('streak_7');
+  if (input.longestStreak >= 14) earned.push('streak_14');
+  if (input.longestStreak >= 30) earned.push('streak_30');
 
   return earned;
 }
