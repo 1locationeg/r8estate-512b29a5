@@ -224,6 +224,7 @@ const Community = () => {
         open={showNewPost}
         onOpenChange={setShowNewPost}
         onCreated={refetch}
+        prefillDeveloper={developerFilter}
       />
     </div>
   );

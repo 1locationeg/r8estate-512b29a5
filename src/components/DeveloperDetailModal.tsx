@@ -187,6 +187,24 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
 
           {isUnlocked ? (
             <div className="space-y-4">
+              {/* Start Discussion CTA */}
+              <div className="bg-primary/5 border border-primary/20 rounded-lg p-4 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                  <MessageCircle className="w-5 h-5 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <p className="text-sm font-medium text-foreground">Join the conversation</p>
+                  <p className="text-xs text-muted-foreground">Ask a question or share your experience with this developer</p>
+                </div>
+                <Button 
+                  onClick={handleStartDiscussion} 
+                  size="sm"
+                  className="gap-1.5 whitespace-nowrap"
+                >
+                  Start Discussion
+                </Button>
+              </div>
+
               <div className="flex items-center gap-2 text-green-600">
                 <CheckCircle className="w-5 h-5" />
                 <span className="font-medium">Full Report Unlocked</span>
