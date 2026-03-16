@@ -21,6 +21,7 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
+  const isPortfolio = location.pathname === "/portfolio";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
   return (
