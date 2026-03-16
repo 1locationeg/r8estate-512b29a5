@@ -67,6 +67,23 @@ export const BottomNav = () => {
             </div>
           </button>
 
+          {/* Insights */}
+          <button
+            onClick={() => {
+              if (user) {
+                navigate("/insights");
+              } else {
+                navigate("/auth");
+              }
+            }}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+              isInsights ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
+          </button>
+
           {/* Portfolio / My Activity */}
           <button
             onClick={() => {
@@ -76,7 +93,7 @@ export const BottomNav = () => {
                 navigate("/auth");
               }
             }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isPortfolio ? "text-primary" : "text-muted-foreground"
             }`}
           >
@@ -87,7 +104,7 @@ export const BottomNav = () => {
           {/* More / Menu */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 text-muted-foreground transition-colors"
+            className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 text-muted-foreground transition-colors"
           >
             <Menu className="h-5 w-5" />
             <span className="text-[10px] font-medium">{t("nav.more", "More")}</span>
