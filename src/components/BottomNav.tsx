@@ -35,7 +35,7 @@ export const BottomNav = () => {
           {/* Reviews */}
           <button
             onClick={() => navigate("/reviews")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isReviews ? "text-primary" : "text-muted-foreground"
             }`}
           >
