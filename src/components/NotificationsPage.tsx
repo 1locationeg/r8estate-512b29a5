@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bell, Check, CheckCheck, Trash2, Megaphone, MessageSquare, TrendingUp, Star, Filter } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import { Bell, Check, CheckCheck, Trash2, Megaphone, MessageSquare, TrendingUp, Star, Filter, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications, Notification } from "@/hooks/useNotifications";
