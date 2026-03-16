@@ -253,8 +253,8 @@ export function ReviewsCarousel() {
         </div>
 
         {/* Footer bar */}
-        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pb-2">
-          <div className="flex items-center gap-2">
+        <div className="mt-2 flex flex-row flex-wrap items-center justify-center gap-1.5 sm:gap-3 pb-2">
+          <div className="flex items-center gap-1 sm:gap-2">
             {renderStars(Math.round(Number(avgRating)))}
             <span className="text-sm font-bold text-foreground">
               {avgRating}
@@ -263,16 +263,16 @@ export function ReviewsCarousel() {
               ({sortedReviews.length.toLocaleString()})
             </span>
           </div>
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1">
             <img
               src={logoOnly}
               alt="R8ESTATE"
-              className="h-6 md:h-7 w-auto object-contain"
+              className="h-4 sm:h-6 md:h-7 w-auto object-contain"
             />
             <img
               src={sideLongLogo}
               alt="R8ESTATE"
-              className="h-7 md:h-9 object-contain rounded"
+              className="h-5 sm:h-7 md:h-9 object-contain rounded"
             />
           </div>
         </div>
