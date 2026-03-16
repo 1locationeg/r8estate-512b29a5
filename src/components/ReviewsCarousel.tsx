@@ -127,23 +127,30 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
-  const getStarBgColor = (rating: number) => {
-    if (rating >= 4) return "bg-[hsl(152,68%,40%)]"; // green like Trustpilot excellent
-    if (rating >= 3) return "bg-[hsl(152,68%,40%)]"; // green
-    if (rating >= 2) return "bg-[hsl(45,100%,50%)]"; // yellow
-    return "bg-[hsl(0,70%,55%)]"; // red
+  // Brand-inspired: navy house bg with gold star for high, muted navy for mid, red-tinted for low
+  const getStarBgColor = (rating: number, starIndex: number) => {
+    if (starIndex > rating) return "bg-[hsl(210,12%,82%)]"; // gray empty
+    // Color varies by overall rating level
+    if (rating >= 4) return "bg-[hsl(207,76%,21%)]";  // navy (brand primary)
+    if (rating === 3) return "bg-[hsl(43,90%,52%)]";  // gold (brand accent)
+    if (rating === 2) return "bg-[hsl(30,90%,55%)]";  // orange
+    return "bg-[hsl(0,70%,50%)]";                      // red
   };
 
-  const getEmptyStarBg = () => "bg-[hsl(210,10%,83%)]";
+  const getStarFill = (rating: number, starIndex: number) => {
+    if (starIndex > rating) return "fill-white/60 text-white/60";
+    if (rating >= 4) return "fill-[hsl(43,90%,52%)] text-[hsl(43,90%,52%)]"; // gold star on navy
+    return "fill-white text-white";
+  };
 
   const renderStars = (rating: number) => (
-    <div className="flex gap-[3px]">
+    <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((i) => (
         <div
           key={i}
-          className={`w-7 h-7 rounded-sm flex items-center justify-center ${i <= rating ? getStarBgColor(rating) : getEmptyStarBg()}`}
+          className={`w-8 h-8 rounded-[4px] flex items-center justify-center ${getStarBgColor(rating, i)}`}
         >
-          <Star className="w-4 h-4 fill-white text-white" />
+          <Star className={`w-5 h-5 ${getStarFill(rating, i)}`} />
         </div>
       ))}
     </div>
