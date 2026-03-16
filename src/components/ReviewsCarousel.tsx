@@ -138,11 +138,11 @@ export function ReviewsCarousel() {
 
   // Star color based on satisfaction level
   const getStarColor = (rating: number) => {
-    if (rating <= 1) return "text-red-500 fill-red-500";        // Very unsatisfied
-    if (rating <= 2) return "text-orange-500 fill-orange-500";  // Unsatisfied
-    if (rating <= 3) return "text-yellow-500 fill-yellow-500";  // Neutral
-    if (rating <= 4) return "text-lime-500 fill-lime-500";      // Satisfied
-    return "text-green-500 fill-green-500";                      // Very satisfied
+    if (rating <= 1) return "text-red-500 fill-red-500";
+    if (rating <= 2) return "text-orange-500 fill-orange-500";
+    if (rating <= 3) return "text-yellow-500 fill-yellow-500";
+    if (rating <= 4) return "text-green-500 fill-green-500";
+    return "text-primary fill-primary"; // navy for 5 stars
   };
 
   const renderStars = (rating: number) => (
