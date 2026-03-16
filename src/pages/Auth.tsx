@@ -354,7 +354,7 @@ const Auth = () => {
             {!isBusinessMode && (
               <div className="text-center mt-4">
                 <p className="text-sm text-muted-foreground">
-                  {t('auth.areYouDeveloper', 'Are you a developer?')}{' '}
+                  {t('auth.areYouBusiness', 'Are you a business?')}{' '}
                   <button
                     type="button"
                     onClick={() => navigate('/auth?type=business')}
