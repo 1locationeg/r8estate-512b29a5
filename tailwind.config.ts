@@ -100,8 +100,8 @@ export default {
           "100%": { transform: "translateX(33.3333%)" },
         },
         "shimmer": {
-          "0%": { transform: "translateX(-100%)" },
-          "100%": { transform: "translateX(100%)" },
+          "0%": { backgroundPosition: "200% 0" },
+          "100%": { backgroundPosition: "-200% 0" },
         },
         "bounce-in": {
           "0%": { transform: "scale(0)", opacity: "0" },
@@ -116,6 +116,7 @@ export default {
         "marquee": "marquee 30s linear infinite",
         "marquee-rtl": "marquee-rtl 30s linear infinite",
         "bounce-in": "bounce-in 0.6s ease-out",
+        "shimmer": "shimmer 3s ease-in-out infinite",
       },
     },
   },
