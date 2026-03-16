@@ -104,7 +104,33 @@ export const FeaturedIdentitySpotlight = () => {
               <h3 className="text-lg md:text-xl font-bold text-primary-foreground text-center">
                 {developer.name}
               </h3>
-              <div className="absolute right-0">
+              <div className="absolute right-0 flex items-center gap-1">
+                <button
+                  onClick={() => {
+                    if (!user) { navigate("/auth"); return; }
+                    toggleSave(developer.name, developer.logo);
+                  }}
+                  disabled={saveLoading}
+                  className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
+                  title={isSaved ? "Remove from saved" : "Save"}
+                >
+                  <Bookmark className={`h-3.5 w-3.5 ${isSaved ? "fill-primary-foreground text-primary-foreground" : "text-primary-foreground/70"}`} />
+                </button>
+                <button
+                  onClick={() => {
+                    if (!user) { navigate("/auth"); return; }
+                    toggleFollow(developer.name);
+                  }}
+                  disabled={followLoading}
+                  className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
+                  title={isFollowing ? "Unfollow" : "Follow"}
+                >
+                  {isFollowing ? (
+                    <UserCheck className="h-3.5 w-3.5 text-primary-foreground" />
+                  ) : (
+                    <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
+                  )}
+                </button>
                 <ShareMenu title={developer.name} iconOnly />
               </div>
             </div>
