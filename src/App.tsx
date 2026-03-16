@@ -40,6 +40,13 @@ const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 const Community = lazy(() => import("./pages/Community"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
+// Redirect old /developer/* routes to /business/*
+const RedirectDeveloperToBusiness = () => {
+  const location = useLocation();
+  const newPath = location.pathname.replace(/^\/developer/, '/business') + location.search + location.hash;
+  return <Navigate to={newPath} replace />;
+};
+
 const queryClient = new QueryClient();
 
 // Route-aware fallback component
