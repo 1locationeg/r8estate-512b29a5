@@ -20,6 +20,7 @@ import { useGamification } from '@/hooks/useGamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
+import DevProjects from '@/components/DevProjects';
 
 // Use first developer as "my business"
 const myDev = developers[0];
