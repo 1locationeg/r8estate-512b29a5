@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Plus, Search, TrendingUp, Clock, MessageCircle, Users } from "lucide-react";
+import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CommunityPostCard } from "@/components/CommunityPostCard";
@@ -8,6 +8,7 @@ import { CommunityPostDetail } from "@/components/CommunityPostDetail";
 import { CommunityNewPost } from "@/components/CommunityNewPost";
 import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory } from "@/hooks/useCommunity";
 import { useAuth } from "@/contexts/AuthContext";
+import { developers } from "@/data/mockData";
 import { Loader2 } from "lucide-react";
 
 const categoryFilters: { value: CommunityPostCategory | undefined; label: string }[] = [
