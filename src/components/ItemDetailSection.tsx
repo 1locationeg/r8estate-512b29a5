@@ -881,7 +881,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       </div>
 
       <ReviewMotivatorFloat
-        onWriteReview={() => setIsReviewModalOpen(true)}
+        onWriteReview={handleWriteReview}
         isReviewModalOpen={isReviewModalOpen}
       />
       <WriteReviewModal
@@ -890,6 +890,12 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         developerName={item?.name || ""}
         developerId={item?.id || ""}
         onReviewSubmitted={refetchReviews}
+      />
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || item?.name}
+        childProjects={childProjects}
       />
       <CompareModal
         item={item}
