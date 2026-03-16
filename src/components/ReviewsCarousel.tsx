@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import logoOnly from "@/assets/logo-only.png";
-import logoSlogan from "@/assets/logo-slogan.jpg";
+import sideLongLogo from "@/assets/side-long-logo.png";
 
 interface CarouselReview {
   id: string;
