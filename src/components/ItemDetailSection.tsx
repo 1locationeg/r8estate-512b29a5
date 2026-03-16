@@ -569,11 +569,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
 
         {/* Action Buttons (Trustpilot style) */}
         <div className="flex flex-wrap gap-2 mt-3">
-          <Button size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+          <Button size="sm" className="gap-2" onClick={handleWriteReview}>
             <PenLine className="w-4 h-4" />
             {t("search.writeReview")}
           </Button>
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+          <Button variant="outline" size="sm" className="gap-2" onClick={handleWriteReview}>
             <Mic className="w-4 h-4" />
             {t("itemDetail.voiceReview")}
           </Button>
