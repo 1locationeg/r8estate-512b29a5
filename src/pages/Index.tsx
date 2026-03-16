@@ -210,7 +210,7 @@ const Index = () => {
       <section className="flex-1 flex flex-col bg-background">
        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
              {/* Hero Card with dot-grid background */}
-             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden my-[6px]">
+             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden my-[6px] py-[6px]">
                {/* Dot-grid SVG texture */}
                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
               backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
