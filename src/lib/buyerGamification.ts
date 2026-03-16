@@ -162,13 +162,13 @@ export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
   return earned;
 }
 
-export function calcBuyerTotalPoints(earnedBadgeIds: string[], profileCompletion: number): number {
+export function calcBuyerTotalPoints(earnedBadgeIds: string[], profileCompletion: number, streakBonusPoints: number = 0): number {
   const badgePoints = earnedBadgeIds.reduce((sum, id) => {
     const badge = BUYER_BADGES.find((b) => b.id === id);
     return sum + (badge?.points ?? 0);
   }, 0);
   const profilePoints = Math.floor(profileCompletion / 10) * 3;
-  return badgePoints + profilePoints;
+  return badgePoints + profilePoints + streakBonusPoints;
 }
 
 // ── Buyer Mission Progress ──
