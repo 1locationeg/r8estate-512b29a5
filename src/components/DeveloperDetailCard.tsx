@@ -1,4 +1,4 @@
-import { Star, Mic, Download, GitCompare } from "lucide-react";
+import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
