@@ -108,7 +108,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
       );
     }
     setLoading(false);
-  }, [category, sortBy, user]);
+  }, [category, sortBy, user, developerId]);
 
   useEffect(() => {
     fetchPosts();
