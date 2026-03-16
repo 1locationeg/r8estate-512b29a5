@@ -94,17 +94,17 @@ const Index = () => {
   };
 
   const quickActions = [
-    { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
-    { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
-    { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
-    { key: 'insights', icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" },
-  ];
+  { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
+  { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
+  { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
+  { key: 'insights', icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" }];
+
 
   const verifiedBadges = [
-    { label: t("hero.badgeVerifiedDev"), icon: ShieldCheck },
-    { label: t("hero.badgeTrustedBroker"), icon: Shield },
-    { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle },
-  ];
+  { label: t("hero.badgeVerifiedDev"), icon: ShieldCheck },
+  { label: t("hero.badgeTrustedBroker"), icon: Shield },
+  { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle }];
+
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full" style={{ paddingTop: 'max(50px, env(safe-area-inset-top, 0px))' }}>
@@ -210,12 +210,12 @@ const Index = () => {
       <section className="flex-1 flex flex-col bg-background">
        <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
              {/* Hero Card with dot-grid background */}
-             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden">
+             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden my-[6px]">
                {/* Dot-grid SVG texture */}
                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-                 backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
-                 backgroundSize: '20px 20px'
-               }} />
+              backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
+              backgroundSize: '20px 20px'
+            }} />
                
                <div className="relative text-center">
                  <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-1">
@@ -230,7 +230,7 @@ const Index = () => {
                  {/* Mode-specific Tagline */}
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
                    {userMode === "buyers" ?
-                  <>
+                <>
                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
                          {t("hero.tagline")}
                        </p>
@@ -238,7 +238,7 @@ const Index = () => {
                          {t("hero.taglineHighlight")}
                        </p>
                      </> :
-                  <>
+                <>
                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
                          {t("hero.industryTitle1")}
                        </p>
@@ -246,7 +246,7 @@ const Index = () => {
                          {t("hero.industryTitle2")}
                        </p>
                      </>
-                  }
+                }
                  </div>
                </div>
              </div>
@@ -308,14 +308,14 @@ const Index = () => {
               <div className="w-full max-w-3xl px-4 mt-3 mb-2">
                 <div className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-hide">
                   {verifiedBadges.map((badge) => {
-                    const Icon = badge.icon;
-                    return (
-                      <span key={badge.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] text-[10px] md:text-xs font-semibold text-primary whitespace-nowrap">
+                  const Icon = badge.icon;
+                  return (
+                    <span key={badge.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] text-[10px] md:text-xs font-semibold text-primary whitespace-nowrap">
                         <Icon className="w-3 h-3" />
                         {badge.label}
-                      </span>
-                    );
-                  })}
+                      </span>);
+
+                })}
                 </div>
               </div>
 
@@ -323,21 +323,21 @@ const Index = () => {
               <div className="w-full max-w-3xl px-4 mb-4">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                   {quickActions.map((action) => {
-                    const Icon = action.icon;
-                    return (
-                      <button
-                        key={action.title}
-                        onClick={() => handleQuickAction(action.key)}
-                        className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group"
-                      >
+                  const Icon = action.icon;
+                  return (
+                    <button
+                      key={action.title}
+                      onClick={() => handleQuickAction(action.key)}
+                      className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group">
+                      
                         <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
                           <Icon className={`w-4 h-4 ${action.color}`} />
                         </div>
                         <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
                         <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
-                      </button>
-                    );
-                  })}
+                      </button>);
+
+                })}
                 </div>
               </div>
 
@@ -430,53 +430,53 @@ const Index = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
-                onClick={() => navigate('/auth?type=business')}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                  onClick={() => navigate('/auth?type=business')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
                 
                   Claim Your Business Profile
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
-                onClick={() => {
-                  setShowIndustryCategories(prev => !prev);
-                  setTimeout(() => {
-                    document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
-                }}
-                className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
+                  onClick={() => {
+                    setShowIndustryCategories((prev) => !prev);
+                    setTimeout(() => {
+                      document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                  }}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
                 
                   Browse Categories   
                 </button>
               </div>
             </div>
 
-            {showIndustryCategories && (
-              <div id="industry-categories-section" className="w-full scroll-mt-24">
+            {showIndustryCategories &&
+            <div id="industry-categories-section" className="w-full scroll-mt-24">
                 <BrowseCategoriesGrid
-                  onSelectCategory={(index) => {
+                onSelectCategory={(index) => {
+                  setShowIndustryCategories(false);
+                  setExternalCategory?.(undefined);
+                  setTimeout(() => {
                     setShowIndustryCategories(false);
-                    setExternalCategory?.(undefined);
-                    setTimeout(() => {
-                      setShowIndustryCategories(false);
-                    }, 0);
-                  }}
-                  onSelectItem={(item) => {
-                    setSpecialViewItem(item as any);
-                    setTimeout(() => {
-                      document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }}
-                />
+                  }, 0);
+                }}
+                onSelectItem={(item) => {
+                  setSpecialViewItem(item as any);
+                  setTimeout(() => {
+                    document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                  }, 100);
+                }} />
+              
               </div>
-            )}
+            }
 
-            {specialViewItem && showIndustryCategories && (
-              <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+            {specialViewItem && showIndustryCategories &&
+            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
                 <ItemDetailSection
-                  item={specialViewItem}
-                  onClose={() => setSpecialViewItem(null)} />
+                item={specialViewItem}
+                onClose={() => setSpecialViewItem(null)} />
               </div>
-            )}
+            }
           </>
           }
         </div>
