@@ -1829,8 +1829,33 @@ const AdminBusiness = () => {
                         </span>
                       </div>
                     </td>
-                    <td className="p-3 text-foreground hidden sm:table-cell">
-                      <span className="text-xs">{new Date(b.created_at).toLocaleDateString()}</span>
+                    <td className="p-3 hidden sm:table-cell">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const toggleReviewable = async () => {
+                            const { error } = await supabase
+                              .from('business_profiles')
+                              .update({ is_reviewable: !b.is_reviewable })
+                              .eq('id', b.id);
+                            if (error) {
+                              toast.error('Failed to update');
+                            } else {
+                              toast.success(b.is_reviewable ? 'Reviews disabled' : 'Reviews enabled');
+                              fetchBusinesses();
+                            }
+                          };
+                          toggleReviewable();
+                        }}
+                        className={`inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium transition-colors ${
+                          b.is_reviewable
+                            ? 'bg-trust-excellent/10 text-trust-excellent'
+                            : 'bg-destructive/10 text-destructive'
+                        }`}
+                      >
+                        {b.is_reviewable ? <CheckCircle className="w-3 h-3" /> : <Lock className="w-3 h-3" />}
+                        {b.is_reviewable ? 'Open' : 'Blocked'}
+                      </button>
                     </td>
                     <td className="p-3 hidden lg:table-cell">
                       {b.license_url ? (
