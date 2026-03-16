@@ -12,7 +12,7 @@ import {
 import { toast } from 'sonner';
 
 interface Insight {
-  category: 'reviews' | 'engagement' | 'businesses' | 'growth' | 'risk' | 'opportunity';
+  category: string;
   title: string;
   summary: string;
   trend: 'up' | 'down' | 'stable' | 'alert';
