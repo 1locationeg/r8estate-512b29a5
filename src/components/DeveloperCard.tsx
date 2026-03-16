@@ -41,7 +41,12 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
   };
 
   return (
-    <Card className="p-4 md:p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50 cursor-pointer relative" onClick={onClick}>
+    <Card
+      className="p-4 md:p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50 cursor-pointer relative"
+      onClick={handleCardClick}
+      onMouseEnter={() => startLinger(developer.id, developer.name)}
+      onMouseLeave={() => cancelLinger(developer.id)}
+    >
       {/* Save & Follow buttons */}
       <div className="absolute top-2 right-2 flex gap-1 z-10">
         <button

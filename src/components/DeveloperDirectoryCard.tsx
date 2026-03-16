@@ -6,6 +6,7 @@ import { Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 
 interface DeveloperDirectoryCardProps {
   developer: Developer;
