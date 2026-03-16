@@ -37,7 +37,7 @@ const getTierConfig = (tier: ReviewerTier) => {
   }
 };
 
-export const ReviewCard = ({ review }: ReviewCardProps) => {
+export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const { t, i18n } = useTranslation();
   const developer = developers.find((d) => d.id === review.developerId);
   const tierConfig = getTierConfig(review.tier);
