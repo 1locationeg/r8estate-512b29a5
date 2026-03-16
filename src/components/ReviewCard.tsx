@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
