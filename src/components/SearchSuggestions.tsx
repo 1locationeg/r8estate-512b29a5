@@ -221,7 +221,7 @@ export const SearchSuggestions = ({
       >
         {/* Main item row - clickable */}
         <button
-          onClick={() => onSelect(item)}
+          onClick={() => handleSelect(item)}
           className="w-full flex items-center gap-2.5 md:gap-4 text-start"
         >
           {/* Logo with verification badge */}
