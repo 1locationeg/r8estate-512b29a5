@@ -105,6 +105,7 @@ const InsightsPage = () => {
       } else {
         setInsights(data.insights || []);
         setSnapshot(data.snapshot || null);
+        setInsightRole(data.role || effectiveRole);
         setCacheInfo({
           cached: data.cached ?? false,
           cached_at: data.cached_at ?? '',
