@@ -128,6 +128,9 @@ export interface BuyerGamificationInput {
   communityPosts: number;
   communityReplies: number;
   communityVotes: number;
+  currentStreak: number;
+  longestStreak: number;
+  streakBonusPoints: number;
 }
 
 export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
