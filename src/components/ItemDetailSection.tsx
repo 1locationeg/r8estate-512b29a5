@@ -595,6 +595,15 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             <GitCompare className="w-4 h-4" />
             {t("itemDetail.compareItem")}
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => navigate(`/community?newPost=true&developer=${item.id}`)}
+          >
+            <MessageCircle className="w-4 h-4" />
+            Ask Community
+          </Button>
           <ShareMenu
             title={item.name}
             description={`Trust Score: ${trustScore} • ${rating.toFixed(1)}★`}

@@ -95,6 +95,18 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
             {t("developers.unclaimedProfile")}
           </Badge>
         )}
+
+        {/* Ask the community link */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/community?newPost=true&developer=${developer.id}`);
+          }}
+          className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors mt-1"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Ask the community</span>
+        </button>
       </div>
     </Card>
   );

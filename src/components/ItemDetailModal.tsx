@@ -24,6 +24,7 @@ import {
   Award, 
   PenLine, 
   Mic, 
+  MessageCircle,
   FileDown, 
   GitCompare,
   Building2,
