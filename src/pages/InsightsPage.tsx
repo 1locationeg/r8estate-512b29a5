@@ -132,7 +132,7 @@ const InsightsPage = () => {
           <Button
             size="sm"
             variant="outline"
-            onClick={fetchInsights}
+            onClick={() => fetchInsights(false)}
             disabled={loading}
             className="gap-1.5 text-xs"
           >
