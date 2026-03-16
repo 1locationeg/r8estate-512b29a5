@@ -757,8 +757,8 @@ const BuyerDashboard = () => {
       return;
     }
 
-    if (role === 'developer') {
-      navigate('/developer');
+    if (role === 'business') {
+      navigate('/business');
       return;
     }
 
