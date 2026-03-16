@@ -78,7 +78,7 @@ const Auth = () => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       localStorage.removeItem('oauth_account_type');
       if (role === 'admin') navigate('/admin');
-      else if (role === 'developer') navigate('/developer');
+      else if (role === 'business') navigate('/business');
       else navigate('/buyer');
     }
   }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate]);
