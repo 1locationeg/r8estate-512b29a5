@@ -148,7 +148,22 @@ export const DeveloperDetailCard = ({
       {/* Header with Developer Info */}
       <div className="p-4 md:p-6 text-center">
         <div className="flex items-center justify-between mb-4">
-          <div className="w-8" /> {/* Spacer */}
+          <div className="flex gap-1">
+            <button
+              onClick={() => { if (!user) { navigate("/auth"); return; } toggleSave(developer.name, developer.logo); }}
+              className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+              title={isSaved ? "Remove from saved" : "Save"}
+            >
+              <Bookmark className={`w-4 h-4 ${isSaved ? "fill-accent text-accent" : "text-foreground"}`} />
+            </button>
+            <button
+              onClick={() => { if (!user) { navigate("/auth"); return; } toggleFollow(developer.name); }}
+              className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+              title={isFollowing ? "Unfollow" : "Follow"}
+            >
+              {isFollowing ? <UserCheck className="w-4 h-4 text-primary" /> : <UserPlus className="w-4 h-4 text-foreground" />}
+            </button>
+          </div>
           <h2 className="text-lg md:text-xl font-bold text-foreground">
             {developer.name}
           </h2>
