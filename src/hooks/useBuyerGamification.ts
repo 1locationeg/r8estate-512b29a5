@@ -61,7 +61,7 @@ export function useBuyerGamification() {
         } else {
           // Create a default row for this user
           await supabase.from('buyer_engagement').insert({ user_id: user.id });
-          setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0 });
+          setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0, community_posts: 0, community_replies: 0, community_votes: 0 });
         }
 
         setReviewCount(reviewRes.count ?? 0);
