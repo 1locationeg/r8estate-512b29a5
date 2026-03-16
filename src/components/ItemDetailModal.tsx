@@ -135,7 +135,17 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
 
   // Generate deterministic scores based on item id
