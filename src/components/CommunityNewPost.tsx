@@ -4,9 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Send, Loader2 } from "lucide-react";
+import { Send, Loader2, X, Building2 } from "lucide-react";
 import type { CommunityPostCategory } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
+import { developers } from "@/data/mockData";
 
 const categories: { value: CommunityPostCategory; label: string }[] = [
   { value: "question", label: "❓ Question" },
@@ -20,19 +21,21 @@ interface Props {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onCreated: () => void;
+  prefillDeveloper?: string;
 }
 
-export const CommunityNewPost = ({ open, onOpenChange, onCreated }: Props) => {
+export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDeveloper }: Props) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<CommunityPostCategory>("question");
   const [submitting, setSubmitting] = useState(false);
   const { createPost } = useCommunityActions();
+  const prefillDev = prefillDeveloper ? developers.find(d => d.id === prefillDeveloper) : null;
 
   const handleSubmit = async () => {
     if (!title.trim() || !body.trim()) return;
     setSubmitting(true);
-    const result = await createPost(title.trim(), body.trim(), category);
+    const result = await createPost(title.trim(), body.trim(), category, prefillDev?.id);
     if (result) {
       setTitle("");
       setBody("");
@@ -51,6 +54,17 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated }: Props) => {
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Prefilled developer tag */}
+          {prefillDev && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-3 py-1.5 text-sm">
+                <Building2 className="w-4 h-4 text-primary" />
+                <span className="text-foreground font-medium">{prefillDev.name}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">Discussion will be tagged with this developer</span>
+            </div>
+          )}
+
           {/* Category chips */}
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-2 block">Category</label>

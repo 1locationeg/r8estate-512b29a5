@@ -46,6 +46,25 @@ const Community = () => {
     if (postParam) setSelectedPostId(postParam);
   }, [searchParams]);
 
+  // Auto-open new post modal if query param present
+  useEffect(() => {
+    const shouldOpenNewPost = searchParams.get("newPost") === "true";
+    const devParam = searchParams.get("developer");
+    if (shouldOpenNewPost && !showNewPost) {
+      if (!user) {
+        navigate("/auth");
+        return;
+      }
+      setShowNewPost(true);
+      // Clean up URL params
+      const p = new URLSearchParams(searchParams);
+      p.delete("newPost");
+      p.delete("developer");
+      if (devParam) p.set("developer", devParam);
+      setSearchParams(p, { replace: true });
+    }
+  }, [searchParams, showNewPost, user, navigate, setSearchParams]);
+
   const filteredPosts = searchQuery
     ? posts.filter(p => p.title.toLowerCase().includes(searchQuery.toLowerCase()) || p.body.toLowerCase().includes(searchQuery.toLowerCase()))
     : posts;
@@ -224,6 +243,7 @@ const Community = () => {
         open={showNewPost}
         onOpenChange={setShowNewPost}
         onCreated={refetch}
+        prefillDeveloper={developerFilter}
       />
     </div>
   );
