@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Menu, LayoutPanelTop } from "lucide-react";
+import { MessageSquare, LayoutGrid, Menu, LayoutPanelTop, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "./MobileNav";
@@ -21,6 +21,7 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
+  const isInsights = location.pathname === "/insights";
   const isPortfolio = location.pathname === "/portfolio";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
@@ -34,7 +35,7 @@ export const BottomNav = () => {
           {/* Reviews */}
           <button
             onClick={() => navigate("/reviews")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isReviews ? "text-primary" : "text-muted-foreground"
             }`}
           >
@@ -45,7 +46,7 @@ export const BottomNav = () => {
           {/* Categories / Directory */}
           <button
             onClick={() => navigate("/directory")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isDirectory ? "text-primary" : "text-muted-foreground"
             }`}
           >
@@ -66,6 +67,23 @@ export const BottomNav = () => {
             </div>
           </button>
 
+          {/* Insights */}
+          <button
+            onClick={() => {
+              if (user) {
+                navigate("/insights");
+              } else {
+                navigate("/auth");
+              }
+            }}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+              isInsights ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
+          </button>
+
           {/* Portfolio / My Activity */}
           <button
             onClick={() => {
@@ -75,7 +93,7 @@ export const BottomNav = () => {
                 navigate("/auth");
               }
             }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isPortfolio ? "text-primary" : "text-muted-foreground"
             }`}
           >
@@ -86,7 +104,7 @@ export const BottomNav = () => {
           {/* More / Menu */}
           <button
             onClick={() => setMenuOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 text-muted-foreground transition-colors"
+            className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 text-muted-foreground transition-colors"
           >
             <Menu className="h-5 w-5" />
             <span className="text-[10px] font-medium">{t("nav.more", "More")}</span>

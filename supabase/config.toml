@@ -11,3 +11,6 @@ verify_jwt = false
 
 [functions.trust-insights]
 verify_jwt = false
+
+[functions.platform-insights]
+verify_jwt = false
