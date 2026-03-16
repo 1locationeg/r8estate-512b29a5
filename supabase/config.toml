@@ -14,3 +14,6 @@ verify_jwt = false
 
 [functions.platform-insights]
 verify_jwt = false
+
+[functions.review-analysis]
+verify_jwt = false
