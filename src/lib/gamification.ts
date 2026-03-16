@@ -74,6 +74,9 @@ export const BADGES: BadgeDef[] = [
   { id: 'verified_biz', name: 'Verified Business', description: 'Upload a business license', icon: FileText, points: 50, category: 'trust' },
   { id: 'superstar', name: 'Superstar', description: 'Reach 4.5+ average rating', icon: Trophy, points: 100, category: 'trust' },
   { id: 'early_adopter', name: 'Early Adopter', description: 'Join the platform in its first year', icon: Zap, points: 40, category: 'profile' },
+  // Community badges for businesses
+  { id: 'community_engaged', name: 'Community Engaged', description: 'Participate in 3+ community discussions', icon: Users, points: 30, category: 'engagement' },
+  { id: 'community_leader', name: 'Community Leader', description: 'Create 5+ community posts and 10+ replies', icon: Trophy, points: 60, category: 'engagement' },
 ];
 
 // ── Mission Definitions ──
