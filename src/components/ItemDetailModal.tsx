@@ -2,6 +2,8 @@ import { useState, useMemo } from "react";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
+import { ReviewBlockedModal } from "./ReviewBlockedModal";
+import { useReviewability } from "@/hooks/useReviewability";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
