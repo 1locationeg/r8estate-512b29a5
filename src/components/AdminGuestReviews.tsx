@@ -275,6 +275,13 @@ const AdminGuestReviews = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ReviewToSocialModal
+        open={!!socialReview}
+        onOpenChange={(open) => { if (!open) setSocialReview(null); }}
+        review={socialReview || { author: '', rating: 0, comment: '' }}
+        businessName={socialBizName}
+      />
     </div>
   );
 };
