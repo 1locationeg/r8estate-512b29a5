@@ -88,13 +88,16 @@ const InsightsPage = () => {
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [cacheInfo, setCacheInfo] = useState<{ cached: boolean; cached_at: string; expires_in_minutes: number } | null>(null);
+  const [insightRole, setInsightRole] = useState<string>('buyer');
+
+  const effectiveRole = role === 'admin' ? 'admin' : role === 'developer' ? 'developer' : 'buyer';
 
   const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('platform-insights', {
-        body: { forceRefresh },
+        body: { forceRefresh, role: effectiveRole },
       });
       if (error) throw error;
       if (data?.error) {
