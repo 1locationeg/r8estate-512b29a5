@@ -39,6 +39,13 @@ export const BUYER_BADGES: BuyerBadgeDef[] = [
   { id: 'early_bird', name: 'Early Bird', description: 'Join the platform in its first year', icon: Zap, points: 30, category: 'profile' },
   { id: 'top_reviewer', name: 'Top Reviewer', description: 'Write 10+ detailed reviews', icon: Trophy, points: 80, category: 'community' },
   { id: 'helpful_voter', name: 'Helpful Voter', description: 'Mark 10+ reviews as helpful', icon: Award, points: 25, category: 'community' },
+  // Community badges
+  { id: 'first_post', name: 'Conversation Starter', description: 'Create your first community post', icon: MessageSquare, points: 15, category: 'community' },
+  { id: 'active_poster', name: 'Active Contributor', description: 'Create 5+ community posts', icon: MessageSquare, points: 40, category: 'community' },
+  { id: 'first_reply', name: 'Helping Hand', description: 'Reply to a community post', icon: MessageSquare, points: 10, category: 'community' },
+  { id: 'reply_streak', name: 'Discussion Leader', description: 'Write 10+ community replies', icon: MessageSquare, points: 50, category: 'community' },
+  { id: 'community_voter', name: 'Community Voter', description: 'Vote on 10+ community posts or replies', icon: Award, points: 20, category: 'community' },
+  { id: 'community_champion', name: 'Community Champion', description: 'Create 10+ posts and 20+ replies', icon: Trophy, points: 100, category: 'community' },
 ];
 
 // ── Buyer Mission Definitions ──
