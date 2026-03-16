@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+// My Hub icon
 import { MessageSquare, LayoutGrid, Menu, LayoutPanelTop } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
