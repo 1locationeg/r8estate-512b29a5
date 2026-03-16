@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -39,6 +40,7 @@ const getTierConfig = (tier: ReviewerTier) => {
 
 export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const developer = developers.find((d) => d.id === review.developerId);
   const tierConfig = getTierConfig(review.tier);
   const TierIcon = tierConfig.icon;
@@ -117,15 +119,24 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
         {review.comment}
       </p>
-      <div className="text-[10px] md:text-xs text-muted-foreground mb-2 md:mb-3">
-        {new Date(review.date).toLocaleDateString(
-          i18n.language === "ar" ? "ar-AE" : "en-US",
-          {
-            month: "long",
-            day: "numeric",
-            year: "numeric",
-          }
-        )}
+      <div className="flex items-center justify-between mb-2 md:mb-3">
+        <span className="text-[10px] md:text-xs text-muted-foreground">
+          {new Date(review.date).toLocaleDateString(
+            i18n.language === "ar" ? "ar-AE" : "en-US",
+            {
+              month: "long",
+              day: "numeric",
+              year: "numeric",
+            }
+          )}
+        </span>
+        <button
+          onClick={() => navigate(`/community?developer=${review.developerId}`)}
+          className="flex items-center gap-1 text-[10px] md:text-xs text-primary hover:text-primary/80 font-medium transition-colors"
+        >
+          <Users className="w-3 h-3" />
+          Discuss this
+        </button>
       </div>
 
       {/* Developer Reply */}

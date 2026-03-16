@@ -36,7 +36,7 @@ export interface CommunityReply {
   children?: CommunityReply[];
 }
 
-export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'trending' | 'newest' | 'discussed' = 'newest') {
+export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'trending' | 'newest' | 'discussed' = 'newest', developerId?: string) {
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
   const { user } = useAuth();
@@ -47,6 +47,10 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
 
     if (category) {
       query = query.eq("category", category);
+    }
+
+    if (developerId) {
+      query = query.eq("developer_id", developerId);
     }
 
     if (sortBy === 'newest') {
@@ -104,7 +108,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
       );
     }
     setLoading(false);
-  }, [category, sortBy, user]);
+  }, [category, sortBy, user, developerId]);
 
   useEffect(() => {
     fetchPosts();

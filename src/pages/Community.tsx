@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Plus, Search, TrendingUp, Clock, MessageCircle, Users } from "lucide-react";
+import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CommunityPostCard } from "@/components/CommunityPostCard";
@@ -8,6 +8,7 @@ import { CommunityPostDetail } from "@/components/CommunityPostDetail";
 import { CommunityNewPost } from "@/components/CommunityNewPost";
 import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory } from "@/hooks/useCommunity";
 import { useAuth } from "@/contexts/AuthContext";
+import { developers } from "@/data/mockData";
 import { Loader2 } from "lucide-react";
 
 const categoryFilters: { value: CommunityPostCategory | undefined; label: string }[] = [
@@ -34,8 +35,9 @@ const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewPost, setShowNewPost] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(searchParams.get("post"));
+  const developerFilter = searchParams.get("developer") || undefined;
 
-  const { posts, loading, refetch } = useCommunityPosts(category, sortBy);
+  const { posts, loading, refetch } = useCommunityPosts(category, sortBy, developerFilter);
   const { post: detailPost, replies, loading: detailLoading, refetch: refetchDetail } = useCommunityPost(selectedPostId);
   const { toggleVote } = useCommunityActions();
 
@@ -118,6 +120,25 @@ const Community = () => {
             <Plus className="w-4 h-4" /> New Post
           </Button>
         </div>
+
+        {/* Developer filter banner */}
+        {developerFilter && (() => {
+          const dev = developers.find(d => d.id === developerFilter);
+          return (
+            <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-3 py-2 text-xs">
+              <Users className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              <span className="text-foreground font-medium">
+                Showing discussions about <span className="text-primary">{dev?.name || 'this developer'}</span>
+              </span>
+              <button
+                onClick={() => { const p = new URLSearchParams(searchParams); p.delete("developer"); setSearchParams(p); }}
+                className="ml-auto text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          );
+        })()}
 
         {/* Search */}
         <div className="relative">
