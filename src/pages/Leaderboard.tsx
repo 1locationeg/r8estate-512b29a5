@@ -1,0 +1,301 @@
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Trophy, Medal, Crown, ArrowLeft, MessageSquare, Reply, ThumbsUp, Eye, Heart, Flame } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
+import { Footer } from "@/components/Footer";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import logoIcon from "@/assets/logo-icon.png";
+
+interface LeaderboardEntry {
+  user_id: string;
+  full_name: string;
+  avatar_url: string | null;
+  community_posts: number;
+  community_replies: number;
+  community_votes: number;
+  developers_viewed: number;
+  projects_saved: number;
+  helpful_votes: number;
+  reports_unlocked: number;
+  total_points: number;
+}
+
+const rankIcons = [
+  <Crown className="w-5 h-5 text-accent" />,
+  <Medal className="w-5 h-5 text-muted-foreground" />,
+  <Medal className="w-5 h-5 text-amber-700" />,
+];
+
+const Leaderboard = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+  const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [tab, setTab] = useState<"points" | "posts" | "replies">("points");
+
+  useEffect(() => {
+    const fetchLeaderboard = async () => {
+      setLoading(true);
+      const { data, error } = await supabase.rpc("get_leaderboard", { _limit: 50 });
+      if (!error && data) {
+        setEntries(data as LeaderboardEntry[]);
+      }
+      setLoading(false);
+    };
+    fetchLeaderboard();
+  }, []);
+
+  const sorted = [...entries].sort((a, b) => {
+    if (tab === "posts") return b.community_posts - a.community_posts;
+    if (tab === "replies") return b.community_replies - a.community_replies;
+    return b.total_points - a.total_points;
+  });
+
+  const getStatValue = (entry: LeaderboardEntry) => {
+    if (tab === "posts") return entry.community_posts;
+    if (tab === "replies") return entry.community_replies;
+    return entry.total_points;
+  };
+
+  const getStatLabel = () => {
+    if (tab === "posts") return "posts";
+    if (tab === "replies") return "replies";
+    return "pts";
+  };
+
+  const currentUserRank = user
+    ? sorted.findIndex((e) => e.user_id === user.id) + 1
+    : 0;
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Header */}
+      <header className="border-b border-border bg-card">
+        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => navigate(-1)}
+              className="p-2 rounded-lg hover:bg-secondary transition-colors"
+              aria-label="Go back"
+            >
+              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
+            </button>
+            <button
+              onClick={() => navigate("/")}
+              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            >
+              <img src={logoIcon} alt="R8ESTATE" className="h-14 w-auto object-contain" />
+              <h1 className="text-2xl font-bold inline-flex">
+                <span className="text-brand-red">R8</span>
+                <span className="text-primary">ESTATE</span>
+              </h1>
+            </button>
+          </div>
+          <LanguageSwitcher />
+        </div>
+      </header>
+
+      <main className="container mx-auto px-4 py-8 max-w-2xl">
+        {/* Hero */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/15 mb-4">
+            <Trophy className="w-8 h-8 text-accent" />
+          </div>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Community Leaderboard</h2>
+          <p className="text-muted-foreground text-sm">
+            Top contributors making the community better for everyone
+          </p>
+        </div>
+
+        {/* Current user rank card */}
+        {user && currentUserRank > 0 && (
+          <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 flex items-center gap-4">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-sm font-bold text-primary">
+              #{currentUserRank}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-foreground">Your Rank</p>
+              <p className="text-xs text-muted-foreground">
+                {sorted[currentUserRank - 1]?.total_points ?? 0} total points
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-sm">
+                {getBuyerTier(sorted[currentUserRank - 1]?.total_points ?? 0).emoji}{" "}
+                {getBuyerTier(sorted[currentUserRank - 1]?.total_points ?? 0).name}
+              </span>
+            </div>
+          </div>
+        )}
+
+        {/* Tabs */}
+        <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="mb-6">
+          <TabsList className="w-full grid grid-cols-3">
+            <TabsTrigger value="points" className="gap-1.5 text-xs">
+              <Flame className="w-3.5 h-3.5" /> Total Points
+            </TabsTrigger>
+            <TabsTrigger value="posts" className="gap-1.5 text-xs">
+              <MessageSquare className="w-3.5 h-3.5" /> Posts
+            </TabsTrigger>
+            <TabsTrigger value="replies" className="gap-1.5 text-xs">
+              <Reply className="w-3.5 h-3.5" /> Replies
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
+
+        {/* Leaderboard List */}
+        {loading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="h-16 rounded-xl bg-secondary/50 animate-pulse" />
+            ))}
+          </div>
+        ) : sorted.length === 0 ? (
+          <div className="text-center py-16 space-y-3">
+            <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto" />
+            <p className="text-muted-foreground text-sm">No contributors yet. Be the first!</p>
+          </div>
+        ) : (
+          <div className="space-y-2">
+            {/* Top 3 podium */}
+            {sorted.length >= 3 && (
+              <div className="grid grid-cols-3 gap-3 mb-6">
+                {[1, 0, 2].map((idx) => {
+                  const entry = sorted[idx];
+                  if (!entry) return null;
+                  const tier = getBuyerTier(entry.total_points);
+                  const isFirst = idx === 0;
+                  return (
+                    <div
+                      key={entry.user_id}
+                      className={`flex flex-col items-center p-4 rounded-xl border transition-all ${
+                        isFirst
+                          ? "bg-accent/10 border-accent/30 -mt-4 shadow-md"
+                          : "bg-card border-border"
+                      }`}
+                    >
+                      <div className="mb-2">{rankIcons[idx]}</div>
+                      <Avatar className={`${isFirst ? "h-14 w-14" : "h-11 w-11"} mb-2`}>
+                        <AvatarImage src={entry.avatar_url || undefined} />
+                        <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                          {entry.full_name.charAt(0)}
+                        </AvatarFallback>
+                      </Avatar>
+                      <p className="text-xs font-semibold text-foreground text-center truncate w-full">
+                        {entry.full_name}
+                      </p>
+                      <span className="text-[10px] text-muted-foreground">{tier.emoji} {tier.name}</span>
+                      <p className={`text-sm font-bold mt-1 ${isFirst ? "text-accent" : "text-primary"}`}>
+                        {getStatValue(entry)} {getStatLabel()}
+                      </p>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
+            {/* Rest of the list */}
+            {sorted.slice(sorted.length >= 3 ? 3 : 0).map((entry, i) => {
+              const rank = (sorted.length >= 3 ? 3 : 0) + i + 1;
+              const tier = getBuyerTier(entry.total_points);
+              const isCurrentUser = user?.id === entry.user_id;
+              return (
+                <div
+                  key={entry.user_id}
+                  className={`flex items-center gap-3 p-3 rounded-xl border transition-colors ${
+                    isCurrentUser
+                      ? "bg-primary/5 border-primary/20"
+                      : "bg-card border-border hover:bg-secondary/50"
+                  }`}
+                >
+                  <span className="w-8 text-center text-sm font-bold text-muted-foreground">
+                    {rank}
+                  </span>
+                  <Avatar className="h-9 w-9">
+                    <AvatarImage src={entry.avatar_url || undefined} />
+                    <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                      {entry.full_name.charAt(0)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-foreground truncate">
+                      {entry.full_name}
+                      {isCurrentUser && (
+                        <span className="ml-1.5 text-[10px] text-primary font-normal">(You)</span>
+                      )}
+                    </p>
+                    <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
+                      <span>{tier.emoji} {tier.name}</span>
+                      <span>·</span>
+                      <span className="flex items-center gap-0.5">
+                        <MessageSquare className="w-2.5 h-2.5" /> {entry.community_posts}
+                      </span>
+                      <span className="flex items-center gap-0.5">
+                        <Reply className="w-2.5 h-2.5" /> {entry.community_replies}
+                      </span>
+                      <span className="flex items-center gap-0.5">
+                        <ThumbsUp className="w-2.5 h-2.5" /> {entry.community_votes}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-sm font-bold text-primary">
+                      {getStatValue(entry)}
+                    </p>
+                    <p className="text-[10px] text-muted-foreground">{getStatLabel()}</p>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* Tier Legend */}
+        <div className="mt-10 bg-secondary/50 border border-border rounded-xl p-5">
+          <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-accent" />
+            How Points Work
+          </h3>
+          <div className="grid grid-cols-2 gap-2 text-xs text-muted-foreground mb-4">
+            <div className="flex items-center gap-1.5">
+              <MessageSquare className="w-3 h-3" /> Community Post: <span className="font-medium text-foreground">15 pts</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Reply className="w-3 h-3" /> Reply: <span className="font-medium text-foreground">10 pts</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <ThumbsUp className="w-3 h-3" /> Vote: <span className="font-medium text-foreground">5 pts</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Eye className="w-3 h-3" /> Developer View: <span className="font-medium text-foreground">2 pts</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <Heart className="w-3 h-3" /> Project Saved: <span className="font-medium text-foreground">4 pts</span>
+            </div>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {BUYER_TIERS.filter(t => t.id !== 'newcomer').map((tier) => (
+              <span
+                key={tier.id}
+                className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-card border border-border"
+              >
+                {tier.emoji} {tier.name}
+                <span className="text-muted-foreground">({tier.minPoints}+)</span>
+              </span>
+            ))}
+          </div>
+        </div>
+      </main>
+
+      <Footer />
+    </div>
+  );
+};
+
+export default Leaderboard;

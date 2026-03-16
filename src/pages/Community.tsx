@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X } from "lucide-react";
+import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CommunityPostCard } from "@/components/CommunityPostCard";
@@ -128,16 +128,26 @@ const Community = () => {
               {posts.length} posts
             </span>
           </div>
-          <Button
-            size="sm"
-            className="gap-1.5"
-            onClick={() => {
-              if (!user) { navigate("/auth"); return; }
-              setShowNewPost(true);
-            }}
-          >
-            <Plus className="w-4 h-4" /> New Post
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5"
+              onClick={() => navigate("/leaderboard")}
+            >
+              <Trophy className="w-4 h-4" /> Leaderboard
+            </Button>
+            <Button
+              size="sm"
+              className="gap-1.5"
+              onClick={() => {
+                if (!user) { navigate("/auth"); return; }
+                setShowNewPost(true);
+              }}
+            >
+              <Plus className="w-4 h-4" /> New Post
+            </Button>
+          </div>
         </div>
 
         {/* Developer filter banner */}

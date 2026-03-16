@@ -38,6 +38,7 @@ const Reviews = lazy(() => import("./pages/Reviews"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
 const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 const Community = lazy(() => import("./pages/Community"));
+const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 
 const queryClient = new QueryClient();
 
@@ -85,6 +86,7 @@ const App = () => (
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/community" element={<Community />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>

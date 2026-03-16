@@ -748,6 +748,22 @@ export type Database = {
         }
         Returns: undefined
       }
+      get_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar_url: string
+          community_posts: number
+          community_replies: number
+          community_votes: number
+          developers_viewed: number
+          full_name: string
+          helpful_votes: number
+          projects_saved: number
+          reports_unlocked: number
+          total_points: number
+          user_id: string
+        }[]
+      }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
