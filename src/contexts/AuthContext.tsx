@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
-import { DEVICE_REGISTERED_KEY } from '@/contexts/GuestTimerContext';
+import { registerDevice, markIntentionalLogout, refreshDeviceExpiry } from '@/utils/deviceAuth';
 
 type AppRole = 'user' | 'buyer' | 'developer' | 'admin';
 type AccountTypeIntent = 'buyer' | 'business';
@@ -101,9 +101,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Mark this device as registered when user logs in
+        // Register device token on login
         if (session?.user) {
-          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
+          registerDevice(session.user.id, session.user.email || '');
         }
 
         // Defer profile/role fetch to avoid deadlock
@@ -147,7 +147,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setUser(session?.user ?? null);
 
         if (session?.user) {
-          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
+          registerDevice(session.user.id, session.user.email || '');
+          refreshDeviceExpiry();
           const [profileData, roleData] = await Promise.all([
             fetchProfile(session.user.id),
             fetchUserRole(session.user.id),
@@ -228,6 +229,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signOut = async () => {
+    markIntentionalLogout();
     await supabase.auth.signOut();
     setUser(null);
     setSession(null);

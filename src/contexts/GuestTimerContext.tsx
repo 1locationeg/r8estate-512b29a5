@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { checkDeviceRegistered } from '@/utils/deviceAuth';
 
 const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
 const BONUS_SECONDS = 2 * 60; // 2 minutes
@@ -28,7 +29,8 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const hasExpiredRef = useRef(false);
 
   // Device that has logged in before is NOT a guest — skip timer entirely
-  const deviceWasRegistered = localStorage.getItem(DEVICE_REGISTERED_KEY) === '1';
+  // Uses fingerprinted token with expiry; intentional logout still shows gate
+  const { registered: deviceWasRegistered } = checkDeviceRegistered();
   const isGuest = !isLoading && !user && !deviceWasRegistered;
 
   const clearTimer = useCallback(() => {
