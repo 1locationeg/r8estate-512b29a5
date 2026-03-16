@@ -67,6 +67,11 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
     navigate('/auth');
   };
 
+  const handleStartDiscussion = () => {
+    onClose();
+    navigate(`/community?newPost=true&developer=${developer?.id}`);
+  };
+
   if (!developer) return null;
 
   const yearsInBusiness = new Date().getFullYear() - developer.yearEstablished;
