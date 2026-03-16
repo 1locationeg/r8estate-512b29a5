@@ -139,6 +139,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
                   <AvatarFallback className="text-[8px] bg-secondary">{post.author_name?.charAt(0)}</AvatarFallback>
                 </Avatar>
                 <span className="font-medium">{post.author_name}</span>
+                <UserTierBadge userId={post.user_id} />
               </div>
               <span>{timeAgo(post.created_at)}</span>
               <div className="flex items-center gap-1">
