@@ -56,6 +56,7 @@ export const NotificationsPage = () => {
             </Link>
           </Button>
         </div>
+      </div>
 
       {/* Type Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
