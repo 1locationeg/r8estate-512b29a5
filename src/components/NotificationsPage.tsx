@@ -42,13 +42,20 @@ export const NotificationsPage = () => {
               : "All caught up!"}
           </p>
         </div>
-        {unreadCount > 0 && (
-          <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-2 shrink-0">
-            <CheckCheck className="w-4 h-4" />
-            Mark all as read
+        <div className="flex items-center gap-2 shrink-0">
+          {unreadCount > 0 && (
+            <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-2">
+              <CheckCheck className="w-4 h-4" />
+              Mark all as read
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
+            <Link to="../notification-preferences">
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Preferences</span>
+            </Link>
           </Button>
-        )}
-      </div>
+        </div>
 
       {/* Type Filters */}
       <div className="flex flex-wrap gap-2 mb-6">
