@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { BuyerGamificationPanel } from '@/components/BuyerGamificationPanel';
+import { NotificationPreferences } from '@/components/NotificationPreferences';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -776,7 +777,7 @@ const BuyerDashboard = () => {
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/buyer/notifications' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Settings & Preferences', path: '/buyer/settings' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/buyer/notification-preferences' },
     { icon: <User className="w-4 h-4" />, label: 'Account Details', path: '/buyer/settings' },
   ];
 
@@ -793,6 +794,7 @@ const BuyerDashboard = () => {
         <Route path="saved" element={<BuyerSaved />} />
         <Route path="achievements" element={<BuyerGamificationPanel />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<BuyerProfile />} />
       </Routes>
     </DashboardLayout>
