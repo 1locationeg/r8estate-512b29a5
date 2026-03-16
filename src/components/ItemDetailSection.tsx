@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
