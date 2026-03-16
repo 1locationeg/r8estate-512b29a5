@@ -177,6 +177,7 @@ serve(async (req) => {
 
     // Gather platform data
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).toISOString();
 
     const [
       { count: totalReviews },
@@ -187,15 +188,21 @@ serve(async (req) => {
       { data: recentReviewsData },
       { count: totalUsers },
       { data: engagementData },
+      { data: allBusinesses },
+      { count: recentReviews7d },
+      { data: guestReviewsData },
     ] = await Promise.all([
       serviceClient.from("reviews").select("id", { count: "exact", head: true }),
       serviceClient.from("reviews").select("id", { count: "exact", head: true }).gte("created_at", thirtyDaysAgo),
       serviceClient.from("guest_reviews").select("id", { count: "exact", head: true }),
       serviceClient.from("business_profiles").select("id", { count: "exact", head: true }),
       serviceClient.from("business_profiles").select("id, company_name, is_reviewable, parent_id, location, specialties").is("parent_id", null),
-      serviceClient.from("reviews").select("rating, developer_name, experience_type, created_at").order("created_at", { ascending: false }).limit(100),
+      serviceClient.from("reviews").select("rating, developer_name, developer_id, experience_type, created_at").order("created_at", { ascending: false }).limit(200),
       serviceClient.from("user_roles").select("id", { count: "exact", head: true }),
       serviceClient.from("buyer_engagement").select("developers_viewed, projects_saved, reports_unlocked, helpful_votes").limit(100),
+      serviceClient.from("business_profiles").select("id, company_name, location, specialties, parent_id, is_reviewable, created_at").limit(500),
+      serviceClient.from("reviews").select("id", { count: "exact", head: true }).gte("created_at", sevenDaysAgo),
+      serviceClient.from("guest_reviews").select("rating, developer_name, developer_id, created_at").order("created_at", { ascending: false }).limit(100),
     ]);
 
     const { data: childBusinesses } = await serviceClient
@@ -208,6 +215,7 @@ serve(async (req) => {
       parentChildMap[c.parent_id] = (parentChildMap[c.parent_id] || 0) + 1;
     });
 
+    // Rating distribution
     const ratingDist = [0, 0, 0, 0, 0];
     (recentReviewsData || []).forEach((r: any) => {
       if (r.rating >= 1 && r.rating <= 5) ratingDist[r.rating - 1]++;
@@ -216,6 +224,7 @@ serve(async (req) => {
       ? (recentReviewsData.reduce((s: number, r: any) => s + r.rating, 0) / recentReviewsData.length).toFixed(2)
       : "N/A";
 
+    // Engagement aggregates
     const engAgg = { totalViewed: 0, totalSaved: 0, totalReports: 0, totalVotes: 0 };
     (engagementData || []).forEach((e: any) => {
       engAgg.totalViewed += e.developers_viewed || 0;
@@ -224,6 +233,72 @@ serve(async (req) => {
       engAgg.totalVotes += e.helpful_votes || 0;
     });
 
+    // Category performance: group businesses by specialties
+    const categoryMap: Record<string, { count: number; reviewCount: number; totalRating: number }> = {};
+    (allBusinesses || []).forEach((b: any) => {
+      const specs = b.specialties || [];
+      specs.forEach((s: string) => {
+        if (!categoryMap[s]) categoryMap[s] = { count: 0, reviewCount: 0, totalRating: 0 };
+        categoryMap[s].count++;
+      });
+    });
+    // Attach review counts to categories by developer
+    const devCategoryMap: Record<string, string[]> = {};
+    (allBusinesses || []).forEach((b: any) => {
+      devCategoryMap[b.id] = b.specialties || [];
+    });
+    (recentReviewsData || []).forEach((r: any) => {
+      const cats = devCategoryMap[r.developer_id] || [];
+      cats.forEach((cat: string) => {
+        if (categoryMap[cat]) {
+          categoryMap[cat].reviewCount++;
+          categoryMap[cat].totalRating += r.rating;
+        }
+      });
+    });
+    const categoryPerformance = Object.entries(categoryMap)
+      .map(([name, data]) => ({
+        name,
+        businessCount: data.count,
+        reviewCount: data.reviewCount,
+        avgRating: data.reviewCount > 0 ? parseFloat((data.totalRating / data.reviewCount).toFixed(2)) : 0,
+      }))
+      .sort((a, b) => b.reviewCount - a.reviewCount)
+      .slice(0, 8);
+
+    // Trending companies: combine review volume + recency
+    const allReviews = [...(recentReviewsData || []), ...(guestReviewsData || [])];
+    const companyStats: Record<string, { name: string; totalReviews: number; recent30d: number; recent7d: number; totalRating: number; ratingCount: number }> = {};
+    allReviews.forEach((r: any) => {
+      const devName = r.developer_name;
+      if (!devName) return;
+      const devId = r.developer_id || devName;
+      if (!companyStats[devId]) {
+        companyStats[devId] = { name: devName, totalReviews: 0, recent30d: 0, recent7d: 0, totalRating: 0, ratingCount: 0 };
+      }
+      companyStats[devId].totalReviews++;
+      if (r.rating) {
+        companyStats[devId].totalRating += r.rating;
+        companyStats[devId].ratingCount++;
+      }
+      const createdAt = new Date(r.created_at).getTime();
+      if (createdAt >= new Date(thirtyDaysAgo).getTime()) companyStats[devId].recent30d++;
+      if (createdAt >= new Date(sevenDaysAgo).getTime()) companyStats[devId].recent7d++;
+    });
+
+    const trendingCompanies = Object.values(companyStats)
+      .map(c => ({
+        name: c.name,
+        totalReviews: c.totalReviews,
+        recentReviews: c.recent30d,
+        weeklyReviews: c.recent7d,
+        avgRating: c.ratingCount > 0 ? parseFloat((c.totalRating / c.ratingCount).toFixed(2)) : 0,
+        momentum: c.recent7d * 3 + c.recent30d, // weighted momentum score
+      }))
+      .sort((a, b) => b.momentum - a.momentum)
+      .slice(0, 6);
+
+    // Top reviewed devs
     const devMentions: Record<string, number> = {};
     (recentReviewsData || []).forEach((r: any) => {
       if (r.developer_name) devMentions[r.developer_name] = (devMentions[r.developer_name] || 0) + 1;
@@ -234,6 +309,7 @@ serve(async (req) => {
       totalRegisteredUsers: totalUsers || 0,
       totalAuthenticatedReviews: totalReviews || 0,
       recentReviews30d: recentReviews || 0,
+      recentReviews7d: recentReviews7d || 0,
       totalGuestReviews: totalGuestReviews || 0,
       totalBusinessProfiles: totalBusinesses || 0,
       parentDevelopers: (parentBusinesses || []).length,
@@ -247,6 +323,8 @@ serve(async (req) => {
       ratingDistribution: { "1star": ratingDist[0], "2star": ratingDist[1], "3star": ratingDist[2], "4star": ratingDist[3], "5star": ratingDist[4] },
       topReviewedDevelopers: topReviewedDevs.map(([name, count]) => ({ name, reviewCount: count })),
       buyerEngagement: engAgg,
+      categoryPerformance,
+      trendingCompanies,
     };
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
