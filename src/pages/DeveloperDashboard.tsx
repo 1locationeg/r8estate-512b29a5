@@ -81,7 +81,7 @@ const DevOverview = () => {
         company={companyData}
         profileCompletion={profileCompletion}
         tier={{ name: currentTier.name, emoji: currentTier.emoji }}
-        onEditProfile={() => navigate('/developer/profile')}
+        onEditProfile={() => navigate('/business/profile')}
         onSharePage={() => {}}
         onViewPublic={() => {}}
       />
