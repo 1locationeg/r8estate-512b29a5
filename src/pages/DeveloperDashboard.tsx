@@ -20,6 +20,7 @@ import { useGamification } from '@/hooks/useGamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
+import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
 
 // Use first developer as "my business"
@@ -700,6 +701,7 @@ const DeveloperDashboard = () => {
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/developer/categories' },
     { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/developer/integration' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/developer/notifications' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/developer/notification-preferences' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
 
@@ -732,6 +734,7 @@ const DeveloperDashboard = () => {
         <Route path="categories" element={<DevCategories />} />
         <Route path="integration" element={<DevIntegration />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<DevSettings />} />
       </Routes>
     </DashboardLayout>
