@@ -34,6 +34,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
 const DeveloperDirectory = lazy(() => import("./pages/DeveloperDirectory"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Install = lazy(() => import("./pages/Install"));
+const Reviews = lazy(() => import("./pages/Reviews"));
 
 const queryClient = new QueryClient();
 
@@ -76,6 +77,7 @@ const App = () => (
                 <Route path="/developer/*" element={<DeveloperDashboard />} />
                 <Route path="/admin/*" element={<AdminDashboard />} />
                 <Route path="/directory" element={<DeveloperDirectory />} />
+                <Route path="/reviews" element={<Reviews />} />
                 <Route path="/install" element={<Install />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />

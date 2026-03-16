@@ -20,7 +20,7 @@ export const BottomNav = () => {
     return "/buyer";
   };
 
-  const isHome = location.pathname === "/";
+  const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
@@ -33,12 +33,12 @@ export const BottomNav = () => {
         <div className="flex items-center justify-around h-12 px-2 max-w-md mx-auto">
           {/* Reviews */}
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/reviews")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
-              isHome ? "text-primary" : "text-muted-foreground"
+              isReviews ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <MessageSquare className="h-5 w-5" strokeWidth={isHome ? 2.5 : 2} />
+            <MessageSquare className="h-5 w-5" strokeWidth={isReviews ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
 
