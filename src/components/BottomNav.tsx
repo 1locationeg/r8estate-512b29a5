@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MessageSquare, LayoutGrid, Menu, Briefcase } from "lucide-react";
+// Reviews icon replaces Home
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "./MobileNav";
