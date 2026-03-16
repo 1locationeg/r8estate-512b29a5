@@ -22,9 +22,16 @@ interface EngagementData {
   community_votes: number;
 }
 
+interface StreakData {
+  current_streak: number;
+  longest_streak: number;
+  streak_bonus_points: number;
+}
+
 export function useBuyerGamification() {
   const { user, profile, isLoading: authLoading } = useAuth();
   const [engagement, setEngagement] = useState<EngagementData | null>(null);
+  const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [reviewCount, setReviewCount] = useState(0);
   const [hasVerifiedPurchase, setHasVerifiedPurchase] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
@@ -39,7 +46,7 @@ export function useBuyerGamification() {
       setDataLoading(true);
       try {
         // Fetch engagement, review count, and receipt status in parallel
-        const [engRes, reviewRes, receiptRes] = await Promise.all([
+        const [engRes, reviewRes, receiptRes, streakRes] = await Promise.all([
           supabase
             .from('buyer_engagement')
             .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes, community_posts, community_replies, community_votes')
@@ -54,16 +61,21 @@ export function useBuyerGamification() {
             .select('id', { count: 'exact', head: true })
             .eq('user_id', user.id)
             .eq('status', 'approved'),
+          supabase
+            .from('user_streaks')
+            .select('current_streak, longest_streak, streak_bonus_points')
+            .eq('user_id', user.id)
+            .maybeSingle(),
         ]);
 
         if (engRes.data) {
           setEngagement(engRes.data as EngagementData);
         } else {
-          // Create a default row for this user
           await supabase.from('buyer_engagement').insert({ user_id: user.id });
           setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0, community_posts: 0, community_replies: 0, community_votes: 0 });
         }
 
+        setStreakData(streakRes.data as StreakData | null);
         setReviewCount(reviewRes.count ?? 0);
         setHasVerifiedPurchase((receiptRes.count ?? 0) > 0);
       } catch (err) {
@@ -94,10 +106,13 @@ export function useBuyerGamification() {
       communityPosts: engagement?.community_posts ?? 0,
       communityReplies: engagement?.community_replies ?? 0,
       communityVotes: engagement?.community_votes ?? 0,
+      currentStreak: streakData?.current_streak ?? 0,
+      longestStreak: streakData?.longest_streak ?? 0,
+      streakBonusPoints: streakData?.streak_bonus_points ?? 0,
     };
 
     const earnedIds = calcBuyerEarnedBadges(input);
-    const totalPoints = calcBuyerTotalPoints(earnedIds, profileCompletion);
+    const totalPoints = calcBuyerTotalPoints(earnedIds, profileCompletion, input.streakBonusPoints);
     const currentTier = getBuyerTier(totalPoints);
     const nextTier = getNextBuyerTier(totalPoints);
     const missions = calcBuyerMissionProgress(input);
@@ -117,6 +132,9 @@ export function useBuyerGamification() {
       lockedBadges,
       missions,
       allBadges: BUYER_BADGES,
+      currentStreak: input.currentStreak,
+      longestStreak: input.longestStreak,
+      streakBonusPoints: input.streakBonusPoints,
     };
-  }, [profile, isLoading, reviewCount, engagement, hasVerifiedPurchase]);
+  }, [profile, isLoading, reviewCount, engagement, hasVerifiedPurchase, streakData]);
 }

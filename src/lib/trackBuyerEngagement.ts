@@ -5,7 +5,7 @@ type EngagementField = 'developers_viewed' | 'projects_saved' | 'reports_unlocke
 /**
  * Increment a buyer engagement counter by 1.
  * Creates the row if it doesn't exist yet.
- * Also increments the weekly engagement table for leaderboard.
+ * Also increments the weekly engagement table and updates daily streak.
  */
 export async function trackBuyerEngagement(userId: string, field: EngagementField) {
   // All-time tracking
@@ -27,8 +27,17 @@ export async function trackBuyerEngagement(userId: string, field: EngagementFiel
       .insert({ user_id: userId, [field]: 1 });
   }
 
-  // Weekly tracking
+  // Weekly tracking + streak (fire and forget)
   trackWeeklyEngagement(userId, field);
+  updateStreak(userId);
+}
+
+async function updateStreak(userId: string) {
+  try {
+    await supabase.rpc('update_user_streak', { _user_id: userId });
+  } catch (err) {
+    console.error('Error updating streak:', err);
+  }
 }
 
 async function trackWeeklyEngagement(userId: string, field: EngagementField) {

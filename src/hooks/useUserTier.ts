@@ -81,6 +81,9 @@ export function useUserTier(userId: string | undefined): UserTierResult {
           communityPosts: eng.community_posts ?? 0,
           communityReplies: eng.community_replies ?? 0,
           communityVotes: eng.community_votes ?? 0,
+          currentStreak: 0,
+          longestStreak: 0,
+          streakBonusPoints: 0,
         };
 
         const earnedIds = calcBuyerEarnedBadges(input);

@@ -46,6 +46,11 @@ export const BUYER_BADGES: BuyerBadgeDef[] = [
   { id: 'reply_streak', name: 'Discussion Leader', description: 'Write 10+ community replies', icon: MessageSquare, points: 50, category: 'community' },
   { id: 'community_voter', name: 'Community Voter', description: 'Vote on 10+ community posts or replies', icon: Award, points: 20, category: 'community' },
   { id: 'community_champion', name: 'Community Champion', description: 'Create 10+ posts and 20+ replies', icon: Trophy, points: 100, category: 'community' },
+  // Streak badges
+  { id: 'streak_3', name: 'On Fire', description: '3-day activity streak', icon: Zap, points: 10, category: 'engagement' },
+  { id: 'streak_7', name: 'Week Warrior', description: '7-day activity streak', icon: Zap, points: 25, category: 'engagement' },
+  { id: 'streak_14', name: 'Unstoppable', description: '14-day activity streak', icon: Zap, points: 50, category: 'engagement' },
+  { id: 'streak_30', name: 'Streak Legend', description: '30-day activity streak', icon: Trophy, points: 100, category: 'engagement' },
 ];
 
 // ── Buyer Mission Definitions ──
@@ -123,6 +128,9 @@ export interface BuyerGamificationInput {
   communityPosts: number;
   communityReplies: number;
   communityVotes: number;
+  currentStreak: number;
+  longestStreak: number;
+  streakBonusPoints: number;
 }
 
 export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
@@ -145,17 +153,22 @@ export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
   if (input.communityReplies >= 10) earned.push('reply_streak');
   if (input.communityVotes >= 10) earned.push('community_voter');
   if (input.communityPosts >= 10 && input.communityReplies >= 20) earned.push('community_champion');
+  // Streak badges
+  if (input.longestStreak >= 3) earned.push('streak_3');
+  if (input.longestStreak >= 7) earned.push('streak_7');
+  if (input.longestStreak >= 14) earned.push('streak_14');
+  if (input.longestStreak >= 30) earned.push('streak_30');
 
   return earned;
 }
 
-export function calcBuyerTotalPoints(earnedBadgeIds: string[], profileCompletion: number): number {
+export function calcBuyerTotalPoints(earnedBadgeIds: string[], profileCompletion: number, streakBonusPoints: number = 0): number {
   const badgePoints = earnedBadgeIds.reduce((sum, id) => {
     const badge = BUYER_BADGES.find((b) => b.id === id);
     return sum + (badge?.points ?? 0);
   }, 0);
   const profilePoints = Math.floor(profileCompletion / 10) * 3;
-  return badgePoints + profilePoints;
+  return badgePoints + profilePoints + streakBonusPoints;
 }
 
 // ── Buyer Mission Progress ──
