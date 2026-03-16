@@ -64,6 +64,20 @@ export const SearchSuggestions = ({
   const [activeCategory, setActiveCategory] = useState<SearchCategory | 'all'>('all');
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { trackSearch } = useTrackInterest();
+
+  const handleSelect = (item: SearchItem) => {
+    trackSearch(item.id, item.name);
+    onSelect(item);
+  };
+
+  // Reset category filter when query changes
+  useEffect(() => {
+    setActiveCategory('all');
+  }, [query]);
+
+  // Debounced AI autocomplete
+  useEffect(() => {
+    if (aiDebounceRef.current) clearTimeout(aiDebounceRef.current);
     
     if (query.trim().length < 3 || !isOpen) {
       setAiSuggestions([]);
