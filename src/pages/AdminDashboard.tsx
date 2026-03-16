@@ -1778,6 +1778,7 @@ const AdminBusiness = () => {
                 <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">Contact</th>
                 <th className="p-3 font-semibold text-muted-foreground">Profile</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Registered</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Reviews</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">License</th>
               </tr>
             </thead>
