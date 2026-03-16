@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { ArrowBigUp, MessageCircle, ArrowLeft, Send, CornerDownRight } from "lucide-react";
+import { ArrowBigUp, MessageCircle, ArrowLeft, Send, CornerDownRight, Share2, Flag, ThumbsUp, Heart, Smile, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
+import { ShareMenu } from "@/components/ShareMenu";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "@/hooks/use-toast";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
 
@@ -15,6 +18,14 @@ const categoryConfig: Record<string, { label: string; className: string }> = {
   experience: { label: "Experience", className: "bg-amber-500/10 text-amber-600 border-amber-200" },
   poll: { label: "Poll", className: "bg-purple-500/10 text-purple-600 border-purple-200" },
 };
+
+const reactionEmojis = [
+  { emoji: "👍", label: "Like" },
+  { emoji: "❤️", label: "Love" },
+  { emoji: "😂", label: "Haha" },
+  { emoji: "😮", label: "Wow" },
+  { emoji: "😢", label: "Sad" },
+];
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -36,12 +47,126 @@ interface Props {
   onRefetch: () => void;
 }
 
+const EngagementToolbar = ({ 
+  onReply, 
+  onVote, 
+  voted,
+  shareTitle,
+  shareUrl,
+  compact = false 
+}: { 
+  onReply?: () => void; 
+  onVote: () => void; 
+  voted: boolean;
+  shareTitle: string;
+  shareUrl?: string;
+  compact?: boolean;
+}) => {
+  const [showEmojis, setShowEmojis] = useState(false);
+  const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
+
+  const handleReaction = (emoji: string) => {
+    setSelectedReaction(selectedReaction === emoji ? null : emoji);
+    setShowEmojis(false);
+    toast({ title: `Reacted with ${emoji}`, duration: 1500 });
+  };
+
+  const handleFlag = () => {
+    toast({ title: "Reported", description: "Thank you for helping keep our community safe.", duration: 2000 });
+  };
+
+  return (
+    <div className={`flex items-center gap-1 ${compact ? 'mt-1.5' : 'mt-3 pt-3 border-t border-border'}`}>
+      {/* Like / React */}
+      <div className="relative">
+        <button
+          onClick={onVote}
+          onMouseEnter={() => setShowEmojis(true)}
+          onMouseLeave={() => setShowEmojis(false)}
+          className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-colors ${
+            voted || selectedReaction
+              ? 'text-primary bg-primary/10 font-medium'
+              : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+          }`}
+        >
+          {selectedReaction ? (
+            <span className="text-sm">{selectedReaction}</span>
+          ) : (
+            <ThumbsUp className="w-3.5 h-3.5" fill={voted ? "currentColor" : "none"} />
+          )}
+          <span>{voted || selectedReaction ? 'Liked' : 'Like'}</span>
+        </button>
+        {showEmojis && (
+          <div
+            onMouseEnter={() => setShowEmojis(true)}
+            onMouseLeave={() => setShowEmojis(false)}
+            className="absolute -top-10 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-lg"
+          >
+            {reactionEmojis.map((r) => (
+              <button
+                key={r.emoji}
+                onClick={(e) => { e.stopPropagation(); handleReaction(r.emoji); }}
+                className="hover:scale-125 transition-transform p-0.5 text-base"
+                title={r.label}
+              >
+                {r.emoji}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Comment */}
+      {onReply && (
+        <button
+          onClick={onReply}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          <span>Comment</span>
+        </button>
+      )}
+
+      {/* Share */}
+      <ShareMenu
+        title={shareTitle}
+        url={shareUrl}
+        iconOnly={false}
+        variant="ghost"
+        size="sm"
+        className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-primary gap-1 font-normal"
+      />
+
+      {/* Bookmark */}
+      <button
+        onClick={() => toast({ title: "Saved!", description: "Post bookmarked.", duration: 1500 })}
+        className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+      >
+        <Bookmark className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Save</span>
+      </button>
+
+      {/* Flag */}
+      <button
+        onClick={handleFlag}
+        className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors ml-auto"
+      >
+        <Flag className="w-3.5 h-3.5" />
+        <span className="hidden sm:inline">Report</span>
+      </button>
+    </div>
+  );
+};
+
 export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch }: Props) => {
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const { createReply } = useCommunityActions();
+  const { user, profile } = useAuth();
   const cat = categoryConfig[post.category] || categoryConfig.discussion;
+
+  const displayName = profile?.full_name || user?.email?.split('@')[0] || 'Anonymous';
 
   const handleSubmitReply = async () => {
     if (!replyText.trim()) return;
@@ -55,16 +180,37 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
     setSubmitting(false);
   };
 
+  const ReplyComposer = ({ parentReplyId }: { parentReplyId?: string | null }) => (
+    <div className={`${parentReplyId ? 'ml-8 mt-2' : ''}`}>
+      {/* Commenting as indicator */}
+      {user && (
+        <div className="flex items-center gap-1.5 mb-2">
+          <Avatar className="h-4 w-4">
+            <AvatarImage src={profile?.avatar_url || undefined} />
+            <AvatarFallback className="text-[7px] bg-secondary">{displayName.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <span className="text-[11px] text-muted-foreground">
+            Commenting as <span className="font-medium text-muted-foreground/80">{displayName}</span>
+          </span>
+        </div>
+      )}
+      <div className="flex gap-2">
+        <Textarea
+          value={replyText}
+          onChange={(e) => setReplyText(e.target.value)}
+          placeholder={parentReplyId ? "Write a reply..." : "Share your thoughts..."}
+          className={`${parentReplyId ? 'min-h-[60px]' : 'min-h-[80px]'} text-sm`}
+        />
+        <Button size="sm" onClick={handleSubmitReply} disabled={submitting || !replyText.trim()} className="self-end">
+          <Send className="w-3.5 h-3.5" />
+        </Button>
+      </div>
+    </div>
+  );
+
   const ReplyItem = ({ reply, isNested }: { reply: CommunityReply; isNested?: boolean }) => (
     <div className={`${isNested ? 'ml-8 border-l-2 border-border pl-3' : ''} py-3`}>
       <div className="flex items-start gap-3">
-        <button
-          onClick={() => onVoteReply(reply.id)}
-          className={`flex flex-col items-center gap-0 pt-0.5 ${reply.user_voted ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`}
-        >
-          <ArrowBigUp className="w-4 h-4" fill={reply.user_voted ? "currentColor" : "none"} />
-          <span className="text-[10px] font-bold">{reply.upvotes}</span>
-        </button>
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
             <Avatar className="h-5 w-5">
@@ -76,30 +222,19 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
             <span className="text-[10px] text-muted-foreground">{timeAgo(reply.created_at)}</span>
           </div>
           <p className="text-sm text-foreground leading-relaxed">{reply.body}</p>
-          {!isNested && (
-            <button
-              onClick={() => setReplyingTo(replyingTo === reply.id ? null : reply.id)}
-              className="text-[11px] text-muted-foreground hover:text-primary mt-1 flex items-center gap-1"
-            >
-              <CornerDownRight className="w-3 h-3" /> Reply
-            </button>
-          )}
+          
+          {/* Engagement toolbar for replies */}
+          <EngagementToolbar
+            onReply={!isNested ? () => setReplyingTo(replyingTo === reply.id ? null : reply.id) : undefined}
+            onVote={() => onVoteReply(reply.id)}
+            voted={!!reply.user_voted}
+            shareTitle={reply.body.slice(0, 60)}
+            compact
+          />
         </div>
       </div>
       {reply.children?.map(child => <ReplyItem key={child.id} reply={child} isNested />)}
-      {replyingTo === reply.id && (
-        <div className="ml-8 mt-2 flex gap-2">
-          <Textarea
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Write a reply..."
-            className="min-h-[60px] text-sm"
-          />
-          <Button size="sm" onClick={handleSubmitReply} disabled={submitting || !replyText.trim()}>
-            <Send className="w-3.5 h-3.5" />
-          </Button>
-        </div>
-      )}
+      {replyingTo === reply.id && <ReplyComposer parentReplyId={reply.id} />}
     </div>
   );
 
@@ -113,17 +248,6 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
       {/* Post */}
       <div className="bg-card border border-border rounded-xl p-5">
         <div className="flex items-start gap-3">
-          <div className="flex flex-col items-center gap-0.5">
-            <button
-              onClick={onVotePost}
-              className={`p-1.5 rounded-md transition-colors ${post.user_voted ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
-            >
-              <ArrowBigUp className="w-6 h-6" fill={post.user_voted ? "currentColor" : "none"} />
-            </button>
-            <span className={`text-sm font-bold ${post.user_voted ? 'text-primary' : 'text-muted-foreground'}`}>
-              {post.upvotes}
-            </span>
-          </div>
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2 flex-wrap">
               <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${cat.className}`}>
@@ -147,6 +271,17 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
                 <span>{post.reply_count} replies</span>
               </div>
             </div>
+
+            {/* Post engagement toolbar */}
+            <EngagementToolbar
+              onReply={() => {
+                setReplyingTo(null);
+                document.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+              }}
+              onVote={onVotePost}
+              voted={!!post.user_voted}
+              shareTitle={post.title}
+            />
           </div>
         </div>
       </div>
@@ -154,17 +289,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
       {/* Reply composer (top-level) */}
       {!replyingTo && (
         <div className="bg-card border border-border rounded-xl p-4">
-          <Textarea
-            value={replyText}
-            onChange={(e) => setReplyText(e.target.value)}
-            placeholder="Share your thoughts..."
-            className="min-h-[80px] text-sm mb-3"
-          />
-          <div className="flex justify-end">
-            <Button onClick={handleSubmitReply} disabled={submitting || !replyText.trim()} size="sm" className="gap-1.5">
-              <Send className="w-3.5 h-3.5" /> Reply
-            </Button>
-          </div>
+          <ReplyComposer />
         </div>
       )}
 
