@@ -10,11 +10,13 @@ import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
 import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
+import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import { cn } from "@/lib/utils";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useReviewability } from "@/hooks/useReviewability";
 import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
 import {
