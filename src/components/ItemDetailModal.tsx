@@ -459,6 +459,12 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
         developerId={item?.id || ""}
         onReviewSubmitted={refetchReviews}
       />
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || item?.name}
+        childProjects={childProjects}
+      />
       <CompareModal
         item={item}
         open={isCompareOpen}
