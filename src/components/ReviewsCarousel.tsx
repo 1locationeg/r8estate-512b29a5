@@ -136,32 +136,22 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
-  // Navy house + gold star (matching brand logo), unfilled = gray
-  const getHouseColor = (rating: number, starIndex: number) => {
-    if (starIndex > rating) return "hsl(210,14%,83%)"; // gray empty
-    return "hsl(207,76%,21%)";                          // navy filled
-  };
-
-  const getInnerStarColor = (rating: number, starIndex: number) => {
-    if (starIndex > rating) return "hsl(210,10%,92%)"; // light gray star
-    return "hsl(43,90%,52%)";                           // gold/yellow star
+  // Star color based on satisfaction level
+  const getStarColor = (rating: number) => {
+    if (rating <= 1) return "text-red-500 fill-red-500";        // Very unsatisfied
+    if (rating <= 2) return "text-orange-500 fill-orange-500";  // Unsatisfied
+    if (rating <= 3) return "text-yellow-500 fill-yellow-500";  // Neutral
+    if (rating <= 4) return "text-lime-500 fill-lime-500";      // Satisfied
+    return "text-green-500 fill-green-500";                      // Very satisfied
   };
 
   const renderStars = (rating: number) => (
-    <div className="flex gap-1">
+    <div className="flex gap-0.5">
       {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width="18" height="18" viewBox="0 0 100 100" className="flex-shrink-0">
-          {/* House shape */}
-          <path
-            d="M50 8 L90 40 L90 85 Q90 92 83 92 L17 92 Q10 92 10 85 L10 40 Z"
-            fill={getHouseColor(rating, i)}
-          />
-          {/* Star inside */}
-          <polygon
-            points="50,30 58,48 78,48 62,60 68,78 50,67 32,78 38,60 22,48 42,48"
-            fill={getInnerStarColor(rating, i)}
-          />
-        </svg>
+        <Star
+          key={i}
+          className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
+        />
       ))}
     </div>
   );
