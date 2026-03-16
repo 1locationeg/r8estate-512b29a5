@@ -700,6 +700,39 @@ export type Database = {
         }
         Relationships: []
       }
+      user_streaks: {
+        Row: {
+          created_at: string
+          current_streak: number
+          id: string
+          last_active_date: string
+          longest_streak: number
+          streak_bonus_points: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_active_date?: string
+          longest_streak?: number
+          streak_bonus_points?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          current_streak?: number
+          id?: string
+          last_active_date?: string
+          longest_streak?: number
+          streak_bonus_points?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       weekly_buyer_engagement: {
         Row: {
           community_posts: number
@@ -840,6 +873,14 @@ export type Database = {
       set_my_account_type: {
         Args: { _account_type: string }
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      update_user_streak: {
+        Args: { _user_id: string }
+        Returns: {
+          bonus_awarded: number
+          current_streak: number
+          longest_streak: number
+        }[]
       }
     }
     Enums: {
