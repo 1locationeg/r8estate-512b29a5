@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import {
   Loader2, TrendingUp, TrendingDown, Minus, AlertTriangle,
   MessageSquare, Users, Building2, BarChart3, Shield, Lightbulb,
-  RefreshCw, Sparkles, ArrowLeft, Clock, Zap
+  RefreshCw, Sparkles, ArrowLeft, Clock, Zap, Star, MapPin,
+  Search, Trophy, Target, Eye
 } from 'lucide-react';
 import { toast } from 'sonner';
 
