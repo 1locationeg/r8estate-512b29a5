@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import {
   Loader2, TrendingUp, TrendingDown, Minus, AlertTriangle,
   MessageSquare, Users, Building2, BarChart3, Shield, Lightbulb,
-  RefreshCw, Sparkles, ArrowLeft
+  RefreshCw, Sparkles, ArrowLeft, Clock, Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -59,19 +59,32 @@ const InsightsPage = () => {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [cacheInfo, setCacheInfo] = useState<{ cached: boolean; cached_at: string; expires_in_minutes: number } | null>(null);
 
-  const fetchInsights = async () => {
+  const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('platform-insights');
+      const { data, error } = await supabase.functions.invoke('platform-insights', {
+        body: { forceRefresh },
+      });
       if (error) throw error;
       if (data?.error) {
         toast.error(data.error);
       } else {
         setInsights(data.insights || []);
         setSnapshot(data.snapshot || null);
+        setCacheInfo({
+          cached: data.cached ?? false,
+          cached_at: data.cached_at ?? '',
+          expires_in_minutes: data.expires_in_minutes ?? 0,
+        });
         setHasLoaded(true);
+        if (data.cached) {
+          toast.info('Showing cached insights');
+        } else {
+          toast.success('Fresh insights generated');
+        }
       }
     } catch (err: any) {
       console.error('Insights error:', err);
@@ -119,7 +132,7 @@ const InsightsPage = () => {
           <Button
             size="sm"
             variant="outline"
-            onClick={fetchInsights}
+            onClick={() => fetchInsights(false)}
             disabled={loading}
             className="gap-1.5 text-xs"
           >
@@ -130,6 +143,41 @@ const InsightsPage = () => {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
+        {/* Cache Status Banner */}
+        {cacheInfo && hasLoaded && (
+          <div className={`flex items-center justify-between p-3 rounded-xl border ${
+            cacheInfo.cached ? 'bg-secondary/50 border-border' : 'bg-trust-excellent/5 border-trust-excellent/20'
+          }`}>
+            <div className="flex items-center gap-2 text-xs">
+              {cacheInfo.cached ? (
+                <>
+                  <Clock className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="text-muted-foreground">
+                    Cached · Refreshes in {cacheInfo.expires_in_minutes}m
+                  </span>
+                </>
+              ) : (
+                <>
+                  <Zap className="w-3.5 h-3.5 text-trust-excellent" />
+                  <span className="text-trust-excellent font-medium">Fresh insights · Just generated</span>
+                </>
+              )}
+            </div>
+            {cacheInfo.cached && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => fetchInsights(true)}
+                disabled={loading}
+                className="text-[10px] h-7 gap-1 text-primary"
+              >
+                <Zap className="w-3 h-3" />
+                Force Refresh
+              </Button>
+            )}
+          </div>
+        )}
+
         {/* Snapshot Stats */}
         {snapshot && (
           <div className="grid grid-cols-2 gap-3">
@@ -205,7 +253,7 @@ const InsightsPage = () => {
             <Sparkles className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
             <h3 className="font-semibold text-foreground mb-1">No Insights Available</h3>
             <p className="text-sm text-muted-foreground mb-4">Try refreshing to generate fresh insights.</p>
-            <Button onClick={fetchInsights}>
+            <Button onClick={() => fetchInsights(false)}>
               <RefreshCw className="w-4 h-4 me-1" /> Generate Insights
             </Button>
           </div>
