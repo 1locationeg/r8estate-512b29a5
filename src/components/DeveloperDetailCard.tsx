@@ -239,13 +239,13 @@ export const DeveloperDetailCard = ({
         {/* Action Buttons */}
         <div className="flex items-center justify-center gap-2 mb-4">
           <button
-            onClick={() => setIsReviewModalOpen(true)}
+            onClick={handleWriteReview}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors"
           >
             {t("reviews.writeReview")}
           </button>
           <button
-            onClick={() => setIsReviewModalOpen(true)}
+            onClick={handleWriteReview}
             className="p-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
           >
             <Mic className="w-4 h-4 text-foreground" />
