@@ -1,20 +1,64 @@
 import { useTranslation } from "react-i18next";
-import { Star, MapPin, Building } from "lucide-react";
+import { Star, MapPin, Building, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { TrustBadge } from "./TrustBadge";
 import { TrustScore } from "./TrustScore";
 import { getRatingColorClass } from "@/lib/ratingColors";
+import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface DeveloperCardProps {
   developer: Developer;
+  onClick?: () => void;
 }
 
-export const DeveloperCard = ({ developer }: DeveloperCardProps) => {
+export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
+  const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
+
+  const handleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) { navigate("/auth"); return; }
+    toggleSave(developer.name, developer.logo);
+  };
+
+  const handleFollow = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) { navigate("/auth"); return; }
+    toggleFollow(developer.name);
+  };
 
   return (
-    <Card className="p-4 md:p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50">
+    <Card className="p-4 md:p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50 cursor-pointer relative" onClick={onClick}>
+      {/* Save & Follow buttons */}
+      <div className="absolute top-2 right-2 flex gap-1 z-10">
+        <button
+          onClick={handleSave}
+          disabled={saveLoading}
+          className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+          title={isSaved ? t("common.removeSaved", "Remove from saved") : t("common.save", "Save")}
+        >
+          <Bookmark className={`h-4 w-4 ${isSaved ? "fill-accent text-accent" : "text-muted-foreground"}`} />
+        </button>
+        <button
+          onClick={handleFollow}
+          disabled={followLoading}
+          className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
+          title={isFollowing ? t("common.unfollow", "Unfollow") : t("common.follow", "Follow")}
+        >
+          {isFollowing ? (
+            <UserCheck className="h-4 w-4 text-primary" />
+          ) : (
+            <UserPlus className="h-4 w-4 text-muted-foreground" />
+          )}
+        </button>
+      </div>
+
       <div className="flex items-start justify-between mb-3 md:mb-4">
         <div className="flex items-center gap-3 md:gap-4">
           <div className="w-12 h-12 md:w-16 md:h-16 bg-secondary rounded-xl flex items-center justify-center text-2xl md:text-3xl">

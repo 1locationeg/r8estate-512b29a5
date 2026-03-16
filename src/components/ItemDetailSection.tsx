@@ -515,8 +515,38 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         {/* Quick Business Stats Bar */}
         {renderQuickStats(item)}
 
+        {/* Save & Follow Actions */}
+        <div className="flex items-center gap-2 mt-4">
+          <Button
+            variant={isSaved ? "default" : "outline"}
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              if (!user) { navigate("/auth"); return; }
+              toggleSave(item.name, item.image);
+            }}
+            disabled={saveLoading}
+          >
+            <Bookmark className={`w-4 h-4 ${isSaved ? "fill-primary-foreground" : ""}`} />
+            {isSaved ? t("common.saved", "Saved") : t("common.save", "Save")}
+          </Button>
+          <Button
+            variant={isFollowing ? "default" : "outline"}
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              if (!user) { navigate("/auth"); return; }
+              toggleFollow(item.name);
+            }}
+            disabled={followLoading}
+          >
+            {isFollowing ? <UserCheck className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+            {isFollowing ? t("common.following", "Following") : t("common.follow", "Follow")}
+          </Button>
+        </div>
+
         {/* Action Buttons (Trustpilot style) */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-3">
           <Button size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
             <PenLine className="w-4 h-4" />
             {t("search.writeReview")}
