@@ -680,7 +680,7 @@ const DeveloperDashboard = () => {
   useEffect(() => {
     if (!isLoading) {
       if (!user) navigate('/auth');
-      else if (role !== 'developer' && role !== 'admin') navigate('/buyer');
+      else if (role !== 'business' && role !== 'admin') navigate('/buyer');
     }
   }, [user, role, isLoading, navigate]);
 
