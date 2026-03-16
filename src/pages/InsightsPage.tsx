@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import {
   Loader2, TrendingUp, TrendingDown, Minus, AlertTriangle,
   MessageSquare, Users, Building2, BarChart3, Shield, Lightbulb,
-  RefreshCw, Sparkles, ArrowLeft
+  RefreshCw, Sparkles, ArrowLeft, Clock, Zap
 } from 'lucide-react';
 import { toast } from 'sonner';
 
