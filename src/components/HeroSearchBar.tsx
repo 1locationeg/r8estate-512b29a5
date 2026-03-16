@@ -32,14 +32,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
 
-  const trustPhrases = useMemo(() => [
-    t("hero.searchPlaceholder"),
-    "Find AI-verified developers you can trust ✦",
-    "Every review is real — zero fake ratings",
-    "Compare developers side by side instantly",
-    "Your trusted gateway to Egypt's real estate",
-    "Discover top-rated projects backed by data",
-  ], [t]);
+  const trustPhrases = useSearchPhrases();
 
   useEffect(() => {
     if (query || isFocused) return;
