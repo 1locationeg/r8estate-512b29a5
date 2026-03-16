@@ -22,6 +22,16 @@ interface SearchSuggestionsProps {
   className?: string;
 }
 
+const categoryFilters: { key: SearchCategory | 'all'; icon: React.ReactNode; label: string; color: string }[] = [
+  { key: 'all', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'All', color: 'bg-primary/10 text-primary border-primary/20' },
+  { key: 'developers', icon: <Building2 className="w-3.5 h-3.5" />, label: 'Developers', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  { key: 'projects', icon: <Home className="w-3.5 h-3.5" />, label: 'Projects', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  { key: 'locations', icon: <MapPin className="w-3.5 h-3.5" />, label: 'Locations', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  { key: 'brokers', icon: <Users className="w-3.5 h-3.5" />, label: 'Brokers', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  { key: 'units', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'Units', color: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
+  { key: 'apps', icon: <Smartphone className="w-3.5 h-3.5" />, label: 'Apps', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' },
+];
+
 const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   developers: <Building2 className="w-4 h-4" />,
   projects: <Home className="w-4 h-4" />,
