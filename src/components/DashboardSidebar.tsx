@@ -3,6 +3,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
+import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import logoIcon from '@/assets/logo-icon.png';
 import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -119,6 +120,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           );
         })}
       </nav>
+
+      {/* Mini Leaderboard */}
+      <MiniLeaderboard onNavigate={onNavigate} />
 
       {/* Bottom */}
       <div className="p-3 space-y-2 border-t border-border safe-bottom">
