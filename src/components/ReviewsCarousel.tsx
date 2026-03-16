@@ -144,7 +144,7 @@ export function ReviewsCarousel() {
   const renderStars = (rating: number) => (
     <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((i) => (
-        <svg key={i} width="36" height="36" viewBox="0 0 100 100" className="flex-shrink-0">
+        <svg key={i} width="18" height="18" viewBox="0 0 100 100" className="flex-shrink-0">
           {/* House shape */}
           <path
             d="M50 8 L90 40 L90 85 Q90 92 83 92 L17 92 Q10 92 10 85 L10 40 Z"
