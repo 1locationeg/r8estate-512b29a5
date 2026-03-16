@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from "react";
+import { useSearchPhrases } from "@/hooks/useSearchPhrases";
 import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
@@ -31,14 +32,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
 
-  const trustPhrases = useMemo(() => [
-    t("hero.searchPlaceholder"),
-    "Find AI-verified developers you can trust ✦",
-    "Every review is real — zero fake ratings",
-    "Compare developers side by side instantly",
-    "Your trusted gateway to Egypt's real estate",
-    "Discover top-rated projects backed by data",
-  ], [t]);
+  const trustPhrases = useSearchPhrases();
 
   useEffect(() => {
     if (query || isFocused) return;

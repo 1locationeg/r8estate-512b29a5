@@ -10,7 +10,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search
 } from 'lucide-react';
 import { developers, reviews } from '@/data/mockData';
 import { getRatingColorClass } from '@/lib/ratingColors';
@@ -18,6 +18,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import AdminEmailBranding from '@/components/AdminEmailBranding';
 import AdminGuestReviews from '@/components/AdminGuestReviews';
+import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1955,6 +1956,7 @@ const AdminDashboard = () => {
     { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
     { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
+    { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
@@ -1991,6 +1993,7 @@ const AdminDashboard = () => {
         <Route path="feedback" element={<AdminFeedback />} />
         <Route path="seo" element={<AdminSEO />} />
         <Route path="email-branding" element={<AdminEmailBranding />} />
+        <Route path="search-phrases" element={<AdminSearchPhrases />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>
