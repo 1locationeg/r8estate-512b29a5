@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
-import r8Stars from "@/assets/r8-stars.png";
+import logoOnly from "@/assets/logo-only.png";
 import logoSlogan from "@/assets/logo-slogan.jpg";
 
 interface CarouselReview {
@@ -127,13 +127,24 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
+  const getStarBgColor = (rating: number) => {
+    if (rating >= 4) return "bg-[hsl(152,68%,40%)]"; // green like Trustpilot excellent
+    if (rating >= 3) return "bg-[hsl(152,68%,40%)]"; // green
+    if (rating >= 2) return "bg-[hsl(45,100%,50%)]"; // yellow
+    return "bg-[hsl(0,70%,55%)]"; // red
+  };
+
+  const getEmptyStarBg = () => "bg-[hsl(210,10%,83%)]";
+
   const renderStars = (rating: number) => (
-    <div className="flex gap-0.5">
+    <div className="flex gap-[3px]">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star
+        <div
           key={i}
-          className={`w-4 h-4 ${i <= rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`}
-        />
+          className={`w-7 h-7 rounded-sm flex items-center justify-center ${i <= rating ? getStarBgColor(rating) : getEmptyStarBg()}`}
+        >
+          <Star className="w-4 h-4 fill-white text-white" />
+        </div>
       ))}
     </div>
   );
@@ -181,13 +192,13 @@ export function ReviewsCarousel() {
                   className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Stars + Title */}
-                  <div className="flex items-center gap-1.5">
+                  <div className="flex items-center gap-2">
                     {renderStars(review.rating)}
-                    <h3 className="font-semibold text-sm text-foreground line-clamp-1">
-                      {review.comment.slice(0, 50)}
-                      {review.comment.length > 50 ? "…" : ""}
-                    </h3>
                   </div>
+                  <h3 className="font-semibold text-sm text-foreground line-clamp-1">
+                    {review.comment.slice(0, 50)}
+                    {review.comment.length > 50 ? "…" : ""}
+                  </h3>
 
                   {/* Comment */}
                   <p className="text-xs text-muted-foreground line-clamp-2 leading-snug flex-1">
@@ -219,16 +230,22 @@ export function ReviewsCarousel() {
         </div>
 
         {/* Footer bar */}
-        <div className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pb-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground">
-              {t("reviews.basedOn", {
-                rating: avgRating,
-                count: sortedReviews.length,
-              })}
+            {renderStars(Math.round(Number(avgRating)))}
+            <span className="text-sm font-bold text-foreground">
+              {avgRating}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              ({sortedReviews.length.toLocaleString()})
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <img
+              src={logoOnly}
+              alt="R8ESTATE"
+              className="h-6 md:h-7 w-auto object-contain"
+            />
             <img
               src={logoSlogan}
               alt="R8ESTATE"
