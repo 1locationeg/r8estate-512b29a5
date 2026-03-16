@@ -21,13 +21,8 @@ function getRelativeTime(dateStr: string, lang: string) {
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
   if (diffDays < 1) return lang === "ar" ? "اليوم" : "today";
-  if (diffDays < 7) return lang === "ar" ? `منذ ${diffDays} أيام` : `${diffDays} days ago`;
-  if (diffDays < 30) {
-    const w = Math.floor(diffDays / 7);
-    return lang === "ar" ? `منذ ${w} أسابيع` : `${w} week${w > 1 ? "s" : ""} ago`;
-  }
-  const m = Math.floor(diffDays / 30);
-  return lang === "ar" ? `منذ ${m} أشهر` : `${m} month${m > 1 ? "s" : ""} ago`;
+  const cappedDays = Math.min(diffDays, 20);
+  return lang === "ar" ? `منذ ${cappedDays} يوم` : `${cappedDays} day${cappedDays > 1 ? "s" : ""} ago`;
 }
 
 export function ReviewsCarousel() {
