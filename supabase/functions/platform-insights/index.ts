@@ -6,6 +6,9 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
+const CACHE_KEY = "platform_insights_cache";
+const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -15,8 +18,7 @@ serve(async (req) => {
     const authHeader = req.headers.get("Authorization");
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
@@ -32,15 +34,51 @@ serve(async (req) => {
     const { data: claimsData, error: claimsError } = await supabaseClient.auth.getClaims(token);
     if (claimsError || !claimsData?.claims) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
-        status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
     const userId = claimsData.claims.sub as string;
     const serviceClient = createClient(supabaseUrl, serviceRoleKey);
 
-    // Check usage
+    // Parse request body for force refresh flag
+    let forceRefresh = false;
+    try {
+      const body = await req.json();
+      forceRefresh = body?.forceRefresh === true;
+    } catch {
+      // No body or invalid JSON — that's fine
+    }
+
+    // Check cache first
+    if (!forceRefresh) {
+      const { data: cached } = await serviceClient
+        .from("platform_settings")
+        .select("value, updated_at")
+        .eq("key", CACHE_KEY)
+        .maybeSingle();
+
+      if (cached) {
+        const cacheAge = Date.now() - new Date(cached.updated_at).getTime();
+        if (cacheAge < CACHE_TTL_MS) {
+          try {
+            const cachedData = JSON.parse(cached.value);
+            return new Response(JSON.stringify({
+              ...cachedData,
+              cached: true,
+              cached_at: cached.updated_at,
+              expires_in_minutes: Math.round((CACHE_TTL_MS - cacheAge) / 60000),
+            }), {
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          } catch {
+            // Invalid cache, regenerate
+          }
+        }
+      }
+    }
+
+    // Check usage limits (only counted when actually calling AI)
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
     const { data: settings } = await serviceClient
@@ -55,8 +93,7 @@ serve(async (req) => {
       .gte("created_at", startOfDay);
     if ((dailyCount || 0) >= dailyLimit) {
       return new Response(JSON.stringify({ error: `Daily AI limit reached (${dailyLimit}/day). Try again tomorrow.` }), {
-        status: 429,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     await serviceClient.from("ai_usage").insert({ user_id: userId, function_name: "platform-insights", tokens_used: 1 });
@@ -84,7 +121,6 @@ serve(async (req) => {
       serviceClient.from("buyer_engagement").select("developers_viewed, projects_saved, reports_unlocked, helpful_votes").limit(100),
     ]);
 
-    // Compute child counts per parent
     const { data: childBusinesses } = await serviceClient
       .from("business_profiles")
       .select("parent_id, company_name, is_reviewable")
@@ -95,7 +131,6 @@ serve(async (req) => {
       parentChildMap[c.parent_id] = (parentChildMap[c.parent_id] || 0) + 1;
     });
 
-    // Rating distribution
     const ratingDist = [0, 0, 0, 0, 0];
     (recentReviewsData || []).forEach((r: any) => {
       if (r.rating >= 1 && r.rating <= 5) ratingDist[r.rating - 1]++;
@@ -104,7 +139,6 @@ serve(async (req) => {
       ? (recentReviewsData.reduce((s: number, r: any) => s + r.rating, 0) / recentReviewsData.length).toFixed(2)
       : "N/A";
 
-    // Engagement aggregates
     const engAgg = { totalViewed: 0, totalSaved: 0, totalReports: 0, totalVotes: 0 };
     (engagementData || []).forEach((e: any) => {
       engAgg.totalViewed += e.developers_viewed || 0;
@@ -113,7 +147,6 @@ serve(async (req) => {
       engAgg.totalVotes += e.helpful_votes || 0;
     });
 
-    // Developer names mentioned most
     const devMentions: Record<string, number> = {};
     (recentReviewsData || []).forEach((r: any) => {
       if (r.developer_name) devMentions[r.developer_name] = (devMentions[r.developer_name] || 0) + 1;
@@ -237,15 +270,39 @@ For each insight provide:
     }
 
     const insights = JSON.parse(toolCall.function.arguments);
+    const resultPayload = { insights: insights.insights, snapshot: platformSnapshot };
 
-    return new Response(JSON.stringify({ insights: insights.insights, snapshot: platformSnapshot }), {
+    // Store in cache
+    const cacheValue = JSON.stringify(resultPayload);
+    const { data: existing } = await serviceClient
+      .from("platform_settings")
+      .select("id")
+      .eq("key", CACHE_KEY)
+      .maybeSingle();
+
+    if (existing) {
+      await serviceClient
+        .from("platform_settings")
+        .update({ value: cacheValue, updated_at: new Date().toISOString() })
+        .eq("key", CACHE_KEY);
+    } else {
+      await serviceClient
+        .from("platform_settings")
+        .insert({ key: CACHE_KEY, value: cacheValue });
+    }
+
+    return new Response(JSON.stringify({
+      ...resultPayload,
+      cached: false,
+      cached_at: new Date().toISOString(),
+      expires_in_minutes: Math.round(CACHE_TTL_MS / 60000),
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
     console.error("Platform insights error:", error);
     return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "An error occurred" }), {
-      status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   }
 });
