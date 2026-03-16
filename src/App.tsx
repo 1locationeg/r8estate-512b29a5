@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { GuestTimerProvider } from "@/contexts/GuestTimerContext";
 import { GuestTimerBanner } from "@/components/GuestTimerBanner";
@@ -39,6 +39,13 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 const Community = lazy(() => import("./pages/Community"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+
+// Redirect old /developer/* routes to /business/*
+const RedirectDeveloperToBusiness = () => {
+  const location = useLocation();
+  const newPath = location.pathname.replace(/^\/developer/, '/business') + location.search + location.hash;
+  return <Navigate to={newPath} replace />;
+};
 
 const queryClient = new QueryClient();
 
@@ -87,6 +94,8 @@ const App = () => (
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                {/* Legacy /developer redirects */}
+                <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
