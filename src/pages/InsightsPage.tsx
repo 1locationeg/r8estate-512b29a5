@@ -37,20 +37,47 @@ interface Snapshot {
   };
 }
 
-const categoryConfig: Record<string, { icon: typeof MessageSquare; color: string; bg: string }> = {
-  reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
-  engagement: { icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
-  businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
-  growth: { icon: BarChart3, color: 'text-accent', bg: 'bg-accent/10' },
-  risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
-  opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+// Role-specific category configs
+const categoryConfigs: Record<string, Record<string, { icon: typeof MessageSquare; color: string; bg: string }>> = {
+  admin: {
+    growth: { icon: BarChart3, color: 'text-accent', bg: 'bg-accent/10' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
+    businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/10' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+  },
+  developer: {
+    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
+    reputation: { icon: Star, color: 'text-accent', bg: 'bg-accent/10' },
+    engagement: { icon: Eye, color: 'text-primary', bg: 'bg-primary/10' },
+    projects: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+    competition: { icon: Target, color: 'text-destructive', bg: 'bg-destructive/10' },
+  },
+  buyer: {
+    market: { icon: MapPin, color: 'text-primary', bg: 'bg-primary/10' },
+    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
+    deals: { icon: Trophy, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10' },
+    discovery: { icon: Search, color: 'text-primary', bg: 'bg-primary/10' },
+  },
 };
+
+const defaultCat = { icon: Sparkles, color: 'text-muted-foreground', bg: 'bg-secondary' };
 
 const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; label: string }> = {
   up: { icon: TrendingUp, color: 'text-trust-excellent', label: 'Trending Up' },
   down: { icon: TrendingDown, color: 'text-destructive', label: 'Declining' },
   stable: { icon: Minus, color: 'text-muted-foreground', label: 'Stable' },
   alert: { icon: AlertTriangle, color: 'text-accent', label: 'Needs Attention' },
+};
+
+const roleLabels: Record<string, { label: string; description: string }> = {
+  admin: { label: 'Admin', description: 'Platform health, moderation & growth' },
+  developer: { label: 'Developer', description: 'Reputation, reviews & competitive position' },
+  buyer: { label: 'Buyer', description: 'Market trends, deals & smart decisions' },
 };
 
 const InsightsPage = () => {
