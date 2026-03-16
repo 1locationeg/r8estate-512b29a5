@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
-import r8Stars from "@/assets/r8-stars.png";
+import logoOnly from "@/assets/logo-only.png";
 import logoSlogan from "@/assets/logo-slogan.jpg";
 
 interface CarouselReview {
