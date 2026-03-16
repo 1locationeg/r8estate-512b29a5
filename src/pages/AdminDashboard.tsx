@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import AdminEmailBranding from '@/components/AdminEmailBranding';
 import AdminGuestReviews from '@/components/AdminGuestReviews';
 import AdminSearchPhrases from '@/components/AdminSearchPhrases';
+import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
