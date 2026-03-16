@@ -127,13 +127,24 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
+  const getStarBgColor = (rating: number) => {
+    if (rating >= 4) return "bg-[hsl(152,68%,40%)]"; // green like Trustpilot excellent
+    if (rating >= 3) return "bg-[hsl(152,68%,40%)]"; // green
+    if (rating >= 2) return "bg-[hsl(45,100%,50%)]"; // yellow
+    return "bg-[hsl(0,70%,55%)]"; // red
+  };
+
+  const getEmptyStarBg = () => "bg-[hsl(210,10%,83%)]";
+
   const renderStars = (rating: number) => (
-    <div className="flex gap-0.5">
+    <div className="flex gap-[3px]">
       {[1, 2, 3, 4, 5].map((i) => (
-        <Star
+        <div
           key={i}
-          className={`w-4 h-4 ${i <= rating ? "fill-amber-400 text-amber-400" : "fill-muted text-muted"}`}
-        />
+          className={`w-7 h-7 rounded-sm flex items-center justify-center ${i <= rating ? getStarBgColor(rating) : getEmptyStarBg()}`}
+        >
+          <Star className="w-4 h-4 fill-white text-white" />
+        </div>
       ))}
     </div>
   );
