@@ -1,6 +1,7 @@
 import { ArrowBigUp, MessageCircle, Pin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserTierBadge } from "@/components/UserTierBadge";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 const categoryConfig: Record<string, { label: string; className: string }> = {
@@ -75,6 +76,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
                 <AvatarFallback className="text-[8px] bg-secondary">{post.author_name?.charAt(0)}</AvatarFallback>
               </Avatar>
               <span className="font-medium">{post.author_name}</span>
+              <UserTierBadge userId={post.user_id} />
             </div>
             <div className="flex items-center gap-1">
               <MessageCircle className="w-3 h-3" />
