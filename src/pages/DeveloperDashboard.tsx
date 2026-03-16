@@ -701,6 +701,7 @@ const DeveloperDashboard = () => {
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/developer/categories' },
     { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/developer/integration' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/developer/notifications' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/developer/notification-preferences' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
   ];
 
