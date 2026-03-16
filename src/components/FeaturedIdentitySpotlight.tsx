@@ -20,6 +20,9 @@ export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [categoryPairIndex, setCategoryPairIndex] = useState(0);
+
+  const totalPairs = Math.ceil(trustCategories.length / 2);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +31,13 @@ export const FeaturedIdentitySpotlight = () => {
     }, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCategoryPairIndex((prev) => (prev + 1) % totalPairs);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [totalPairs]);
 
   const developer = developers[currentIndex];
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
