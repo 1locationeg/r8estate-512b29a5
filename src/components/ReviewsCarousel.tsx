@@ -15,6 +15,12 @@ interface CarouselReview {
   developerId: string;
   avatar?: string;
 }
+
+interface BusinessLogo {
+  id: string;
+  name: string;
+  logo: string;
+}
 function getRelativeTime(dateStr: string, lang: string) {
   const now = new Date();
   const date = new Date(dateStr);
