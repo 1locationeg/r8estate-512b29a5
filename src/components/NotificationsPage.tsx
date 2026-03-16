@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Bell, Check, CheckCheck, Trash2, Megaphone, MessageSquare, TrendingUp, Star, Filter } from "lucide-react";
+import { useLocation, Link } from "react-router-dom";
+import { Bell, Check, CheckCheck, Trash2, Megaphone, MessageSquare, TrendingUp, Star, Filter, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications, Notification } from "@/hooks/useNotifications";
@@ -41,12 +42,20 @@ export const NotificationsPage = () => {
               : "All caught up!"}
           </p>
         </div>
-        {unreadCount > 0 && (
-          <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-2 shrink-0">
-            <CheckCheck className="w-4 h-4" />
-            Mark all as read
+        <div className="flex items-center gap-2 shrink-0">
+          {unreadCount > 0 && (
+            <Button variant="outline" size="sm" onClick={markAllAsRead} className="gap-2">
+              <CheckCheck className="w-4 h-4" />
+              Mark all as read
+            </Button>
+          )}
+          <Button variant="ghost" size="sm" asChild className="gap-2 text-muted-foreground">
+            <Link to="../notification-preferences">
+              <Settings className="w-4 h-4" />
+              <span className="hidden sm:inline">Preferences</span>
+            </Link>
           </Button>
-        )}
+        </div>
       </div>
 
       {/* Type Filters */}
