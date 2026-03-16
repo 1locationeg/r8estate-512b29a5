@@ -34,8 +34,9 @@ const Community = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewPost, setShowNewPost] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(searchParams.get("post"));
+  const developerFilter = searchParams.get("developer") || undefined;
 
-  const { posts, loading, refetch } = useCommunityPosts(category, sortBy);
+  const { posts, loading, refetch } = useCommunityPosts(category, sortBy, developerFilter);
   const { post: detailPost, replies, loading: detailLoading, refetch: refetchDetail } = useCommunityPost(selectedPostId);
   const { toggleVote } = useCommunityActions();
 
