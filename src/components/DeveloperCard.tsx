@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Star, MapPin, Building, Bookmark, UserPlus, UserCheck } from "lucide-react";
+import { Star, MapPin, Building, Bookmark, UserPlus, UserCheck, MessageCircle } from "lucide-react";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { TrustBadge } from "./TrustBadge";
