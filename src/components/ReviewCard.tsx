@@ -5,10 +5,13 @@ import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { ShareMenu } from "@/components/ShareMenu";
+import { SentimentBadge } from "@/components/SentimentBadge";
+import type { ReviewAnalysis } from "@/hooks/useReviewAnalysis";
 import r8Stars from "@/assets/r8-stars.png";
 
 interface ReviewCardProps {
   review: Review;
+  analysis?: ReviewAnalysis;
 }
 
 const getTierConfig = (tier: ReviewerTier) => {
@@ -34,7 +37,7 @@ const getTierConfig = (tier: ReviewerTier) => {
   }
 };
 
-export const ReviewCard = ({ review }: ReviewCardProps) => {
+export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const { t, i18n } = useTranslation();
   const developer = developers.find((d) => d.id === review.developerId);
   const tierConfig = getTierConfig(review.tier);
@@ -84,6 +87,7 @@ export const ReviewCard = ({ review }: ReviewCardProps) => {
                 <TierIcon className="w-3 h-3" />
                 {tierConfig.label}
               </Badge>
+              {analysis && <SentimentBadge analysis={analysis} compact />}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">
               {review.project} • {developer?.name}

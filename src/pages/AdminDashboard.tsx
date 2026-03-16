@@ -20,6 +20,7 @@ import { toast } from 'sonner';
 import AdminEmailBranding from '@/components/AdminEmailBranding';
 import AdminGuestReviews from '@/components/AdminGuestReviews';
 import AdminSearchPhrases from '@/components/AdminSearchPhrases';
+import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1996,6 +1997,7 @@ const AdminDashboard = () => {
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
     { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
     { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
+    { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
@@ -2033,6 +2035,7 @@ const AdminDashboard = () => {
         <Route path="seo" element={<AdminSEO />} />
         <Route path="email-branding" element={<AdminEmailBranding />} />
         <Route path="search-phrases" element={<AdminSearchPhrases />} />
+        <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>

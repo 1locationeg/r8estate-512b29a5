@@ -15,6 +15,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
+import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
@@ -363,7 +364,12 @@ const Index = () => {
 
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
-            <FeaturedIdentitySpotlight />
+            <>
+              <FeaturedIdentitySpotlight />
+              <div className="w-full max-w-3xl px-4">
+                <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
+              </div>
+            </>
             }
 
               {/* Category Bar */}
