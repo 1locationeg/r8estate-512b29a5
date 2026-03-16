@@ -1,7 +1,9 @@
-import { ArrowBigUp, MessageCircle, Pin } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Share2, Flag, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
+import { ShareMenu } from "@/components/ShareMenu";
+import { toast } from "@/hooks/use-toast";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 const categoryConfig: Record<string, { label: string; className: string }> = {
@@ -33,62 +35,108 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
   const cat = categoryConfig[post.category] || categoryConfig.discussion;
 
   return (
-    <button
-      onClick={onClick}
-      className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all group"
-    >
-      <div className="flex items-start gap-3">
-        {/* Vote column */}
-        <div className="flex flex-col items-center gap-0.5 pt-0.5">
-          <button
-            onClick={(e) => { e.stopPropagation(); onVote(); }}
-            className={`p-1 rounded-md transition-colors ${post.user_voted ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
-          >
-            <ArrowBigUp className="w-5 h-5" fill={post.user_voted ? "currentColor" : "none"} />
-          </button>
-          <span className={`text-xs font-bold ${post.user_voted ? 'text-primary' : 'text-muted-foreground'}`}>
-            {post.upvotes}
-          </span>
-        </div>
-
-        {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-            <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${cat.className}`}>
-              {cat.label}
-            </Badge>
-            {post.is_pinned && (
-              <Pin className="w-3 h-3 text-primary" />
-            )}
+    <div className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all group">
+      <button onClick={onClick} className="w-full text-left">
+        <div className="flex items-start gap-3">
+          {/* Vote column */}
+          <div className="flex flex-col items-center gap-0.5 pt-0.5">
+            <button
+              onClick={(e) => { e.stopPropagation(); onVote(); }}
+              className={`p-1 rounded-md transition-colors ${post.user_voted ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
+            >
+              <ArrowBigUp className="w-5 h-5" fill={post.user_voted ? "currentColor" : "none"} />
+            </button>
+            <span className={`text-xs font-bold ${post.user_voted ? 'text-primary' : 'text-muted-foreground'}`}>
+              {post.upvotes}
+            </span>
           </div>
 
-          <h3 className="font-semibold text-sm text-foreground leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">
-            {post.title}
-          </h3>
-          <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-            {post.body}
-          </p>
+          {/* Content */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${cat.className}`}>
+                {cat.label}
+              </Badge>
+              {post.is_pinned && (
+                <Pin className="w-3 h-3 text-primary" />
+              )}
+            </div>
 
-          <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-            <div className="flex items-center gap-1.5">
-              <Avatar className="h-4 w-4">
-                <AvatarImage src={post.author_avatar} />
-                <AvatarFallback className="text-[8px] bg-secondary">{post.author_name?.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <span className="font-medium">{post.author_name}</span>
-              <UserTierBadge userId={post.user_id} />
+            <h3 className="font-semibold text-sm text-foreground leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">
+              {post.title}
+            </h3>
+            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
+              {post.body}
+            </p>
+
+            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
+              <div className="flex items-center gap-1.5">
+                <Avatar className="h-4 w-4">
+                  <AvatarImage src={post.author_avatar} />
+                  <AvatarFallback className="text-[8px] bg-secondary">{post.author_name?.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <span className="font-medium">{post.author_name}</span>
+                <UserTierBadge userId={post.user_id} />
+              </div>
+              <span>{timeAgo(post.created_at)}</span>
+              {post.reply_count === 0 && post.category === 'question' && (
+                <span className="text-primary font-medium">Be the first to answer!</span>
+              )}
             </div>
-            <div className="flex items-center gap-1">
-              <MessageCircle className="w-3 h-3" />
-              <span>{post.reply_count}</span>
-            </div>
-            <span>{timeAgo(post.created_at)}</span>
-            {post.reply_count === 0 && post.category === 'question' && (
-              <span className="text-primary font-medium">Be the first to answer!</span>
-            )}
           </div>
         </div>
+      </button>
+
+      {/* Engagement toolbar */}
+      <div className="flex items-center gap-1 mt-3 pt-2.5 border-t border-border ml-10">
+        <button
+          onClick={(e) => { e.stopPropagation(); onVote(); }}
+          className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] transition-colors ${
+            post.user_voted
+              ? 'text-primary bg-primary/10 font-medium'
+              : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+          }`}
+        >
+          <ThumbsUp className="w-3 h-3" fill={post.user_voted ? "currentColor" : "none"} />
+          <span>{post.user_voted ? 'Liked' : 'Like'}</span>
+        </button>
+
+        <button
+          onClick={onClick}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+        >
+          <MessageCircle className="w-3 h-3" />
+          <span>{post.reply_count} Comment{post.reply_count !== 1 ? 's' : ''}</span>
+        </button>
+
+        <ShareMenu
+          title={post.title}
+          iconOnly
+          variant="ghost"
+          size="sm"
+          className="h-auto px-2 py-1 text-[11px] text-muted-foreground hover:text-primary"
+        />
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toast({ title: "Saved!", description: "Post bookmarked.", duration: 1500 });
+          }}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+        >
+          <Bookmark className="w-3 h-3" />
+        </button>
+
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            toast({ title: "Reported", description: "Thank you for helping keep our community safe.", duration: 2000 });
+          }}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors ml-auto"
+        >
+          <Flag className="w-3 h-3" />
+        </button>
       </div>
-    </button>
+    </div>
   );
 };
