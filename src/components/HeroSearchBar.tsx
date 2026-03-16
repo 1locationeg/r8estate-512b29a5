@@ -201,7 +201,7 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
         </button>
 
         {/* Search Input */}
-        <div className="flex-1 relative">
+        <div className="flex-1 relative overflow-hidden">
           <input
             data-hero-search
             ref={inputRef}
@@ -211,9 +211,26 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
             onFocus={handleFocus}
             onBlur={handleBlur}
             onKeyDown={handleKeyDown}
-            placeholder={t("hero.searchPlaceholder")}
-            className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground placeholder:text-muted-foreground focus:outline-none"
+            placeholder=""
+            className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
           />
+          {/* Animated trust placeholder */}
+          {!query && (
+            <div className="absolute inset-0 flex items-center px-3 pointer-events-none overflow-hidden">
+              <span
+                className={cn(
+                  "text-sm md:text-base text-muted-foreground transition-all duration-400 ease-out truncate",
+                  "bg-gradient-to-r from-muted-foreground via-primary/60 to-muted-foreground bg-[length:200%_100%] bg-clip-text",
+                  placeholderVisible
+                    ? "opacity-100 translate-y-0 animate-[shimmer_3s_ease-in-out_infinite]"
+                    : "opacity-0 translate-y-2"
+                )}
+                style={{ WebkitTextFillColor: placeholderVisible ? 'transparent' : undefined }}
+              >
+                {trustPhrases[placeholderIndex]}
+              </span>
+            </div>
+          )}
         </div>
 
         {/* Voice Search Button */}
