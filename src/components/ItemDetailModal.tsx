@@ -333,6 +333,18 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
               <GitCompare className="w-4 h-4" />
               {t("itemDetail.compareItem")}
             </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                onClose();
+                navigate(`/community?newPost=true&developer=${item?.id}`);
+              }}
+            >
+              <MessageCircle className="w-4 h-4" />
+              Ask Community
+            </Button>
           </div>
 
           <Separator />
