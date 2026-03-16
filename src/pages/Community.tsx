@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X } from "lucide-react";
+import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { CommunityPostCard } from "@/components/CommunityPostCard";
