@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
+import { checkDeviceRegistered } from '@/utils/deviceAuth';
 
 const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
 const BONUS_SECONDS = 2 * 60; // 2 minutes
