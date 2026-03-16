@@ -5,7 +5,7 @@ import { BUYER_TIERS, type BuyerBadgeDef, type BuyerMissionProgress } from '@/li
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X } from 'lucide-react';
+import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Flame } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 import { toast } from '@/hooks/use-toast';
 
