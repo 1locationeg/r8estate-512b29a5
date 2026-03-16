@@ -13,9 +13,10 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  Loader2, Search, CheckCircle, Ban, Star, UserCheck, Clock, Trash2,
+  Loader2, Search, CheckCircle, Ban, Star, UserCheck, Clock, Trash2, Share2,
 } from "lucide-react";
 import { getRatingColorClass } from "@/lib/ratingColors";
+import { ReviewToSocialModal } from "@/components/ReviewToSocialModal";
 
 interface GuestReview {
   id: string;
@@ -38,6 +39,8 @@ const AdminGuestReviews = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "unclaimed" | "claimed">("all");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [socialReview, setSocialReview] = useState<{ author: string; rating: number; comment: string; project?: string } | null>(null);
+  const [socialBizName, setSocialBizName] = useState("");
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -218,6 +221,18 @@ const AdminGuestReviews = () => {
                         <Button
                           size="sm"
                           variant="ghost"
+                          className="text-primary hover:text-primary"
+                          onClick={() => {
+                            setSocialReview({ author: r.guest_name, rating: r.rating, comment: r.comment });
+                            setSocialBizName(r.developer_name || "Our Business");
+                          }}
+                          title="Share as social post"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           className="text-verified hover:text-verified"
                           onClick={() => handleApprove(r)}
                           title="Approve & publish"
@@ -260,6 +275,13 @@ const AdminGuestReviews = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <ReviewToSocialModal
+        open={!!socialReview}
+        onOpenChange={(open) => { if (!open) setSocialReview(null); }}
+        review={socialReview || { author: '', rating: 0, comment: '' }}
+        businessName={socialBizName}
+      />
     </div>
   );
 };
