@@ -70,9 +70,11 @@ export type Database = {
           email: string | null
           employees: number | null
           id: string
+          is_reviewable: boolean
           license_url: string | null
           location: string | null
           logo_url: string | null
+          parent_id: string | null
           phone: string | null
           social_links: Json | null
           specialties: string[] | null
@@ -88,9 +90,11 @@ export type Database = {
           email?: string | null
           employees?: number | null
           id?: string
+          is_reviewable?: boolean
           license_url?: string | null
           location?: string | null
           logo_url?: string | null
+          parent_id?: string | null
           phone?: string | null
           social_links?: Json | null
           specialties?: string[] | null
@@ -106,9 +110,11 @@ export type Database = {
           email?: string | null
           employees?: number | null
           id?: string
+          is_reviewable?: boolean
           license_url?: string | null
           location?: string | null
           logo_url?: string | null
+          parent_id?: string | null
           phone?: string | null
           social_links?: Json | null
           specialties?: string[] | null
@@ -117,7 +123,15 @@ export type Database = {
           website?: string | null
           year_established?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "business_profiles_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       buyer_engagement: {
         Row: {

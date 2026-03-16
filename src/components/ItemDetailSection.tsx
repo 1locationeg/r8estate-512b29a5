@@ -3,6 +3,8 @@ import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
 import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
+import { ReviewBlockedModal } from "./ReviewBlockedModal";
+import { useReviewability } from "@/hooks/useReviewability";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -126,7 +128,17 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(item?.id || "", item?.category || "item");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(item?.id || "");
@@ -557,11 +569,11 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
 
         {/* Action Buttons (Trustpilot style) */}
         <div className="flex flex-wrap gap-2 mt-3">
-          <Button size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+          <Button size="sm" className="gap-2" onClick={handleWriteReview}>
             <PenLine className="w-4 h-4" />
             {t("search.writeReview")}
           </Button>
-          <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+          <Button variant="outline" size="sm" className="gap-2" onClick={handleWriteReview}>
             <Mic className="w-4 h-4" />
             {t("itemDetail.voiceReview")}
           </Button>
@@ -869,7 +881,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       </div>
 
       <ReviewMotivatorFloat
-        onWriteReview={() => setIsReviewModalOpen(true)}
+        onWriteReview={handleWriteReview}
         isReviewModalOpen={isReviewModalOpen}
       />
       <WriteReviewModal
@@ -878,6 +890,12 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         developerName={item?.name || ""}
         developerId={item?.id || ""}
         onReviewSubmitted={refetchReviews}
+      />
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || item?.name}
+        childProjects={childProjects}
       />
       <CompareModal
         item={item}

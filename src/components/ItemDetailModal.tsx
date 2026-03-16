@@ -2,6 +2,8 @@ import { useState, useMemo } from "react";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
+import { ReviewBlockedModal } from "./ReviewBlockedModal";
+import { useReviewability } from "@/hooks/useReviewability";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -133,7 +135,17 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
   const { t } = useTranslation();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
 
   // Generate deterministic scores based on item id
@@ -303,11 +315,11 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+            <Button variant="default" size="sm" className="gap-2" onClick={handleWriteReview}>
               <PenLine className="w-4 h-4" />
               {t("search.writeReview")}
             </Button>
-            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+            <Button variant="outline" size="sm" className="gap-2" onClick={handleWriteReview}>
               <Mic className="w-4 h-4" />
               {t("itemDetail.voiceReview")}
             </Button>
@@ -446,6 +458,12 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
         developerName={item?.name || ""}
         developerId={item?.id || ""}
         onReviewSubmitted={refetchReviews}
+      />
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || item?.name}
+        childProjects={childProjects}
       />
       <CompareModal
         item={item}

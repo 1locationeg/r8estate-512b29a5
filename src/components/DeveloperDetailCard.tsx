@@ -10,11 +10,13 @@ import { ReviewFilters, ReviewFilterType } from "./ReviewFilters";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
 import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
+import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import { cn } from "@/lib/utils";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useReviewability } from "@/hooks/useReviewability";
 import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
 import {
@@ -42,9 +44,19 @@ export const DeveloperDetailCard = ({
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isSaved, toggle: toggleSave } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow } = useFollowBusiness(developer.id);
+  const { isReviewable, parentName, childProjects } = useReviewability(developer.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
 
   // Track developer view
   useEffect(() => {
@@ -227,13 +239,13 @@ export const DeveloperDetailCard = ({
         {/* Action Buttons */}
         <div className="flex items-center justify-center gap-2 mb-4">
           <button
-            onClick={() => setIsReviewModalOpen(true)}
+            onClick={handleWriteReview}
             className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:bg-primary/90 transition-colors"
           >
             {t("reviews.writeReview")}
           </button>
           <button
-            onClick={() => setIsReviewModalOpen(true)}
+            onClick={handleWriteReview}
             className="p-2 bg-secondary rounded-lg hover:bg-secondary/80 transition-colors"
           >
             <Mic className="w-4 h-4 text-foreground" />
@@ -309,7 +321,7 @@ export const DeveloperDetailCard = ({
       </div>
 
       <ReviewMotivatorFloat
-        onWriteReview={() => setIsReviewModalOpen(true)}
+        onWriteReview={handleWriteReview}
         isReviewModalOpen={isReviewModalOpen}
       />
       {/* Write Review Modal */}
@@ -319,6 +331,13 @@ export const DeveloperDetailCard = ({
         developerName={developer.name}
         developerId={developer.id}
         onReviewSubmitted={refetchReviews}
+      />
+      {/* Review Blocked Modal */}
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || developer.name}
+        childProjects={childProjects}
       />
     </div>
     <CompareModal
