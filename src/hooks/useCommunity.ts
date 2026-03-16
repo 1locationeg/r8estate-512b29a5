@@ -248,6 +248,8 @@ export function useCommunityActions() {
       .select()
       .single();
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
+    // Track engagement for gamification
+    trackBuyerEngagement(user.id, 'community_posts');
     return data;
   };
 
