@@ -1,6 +1,7 @@
 import { ArrowBigUp, MessageCircle, Pin } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { UserTierBadge } from "@/components/UserTierBadge";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 const categoryConfig: Record<string, { label: string; className: string }> = {
