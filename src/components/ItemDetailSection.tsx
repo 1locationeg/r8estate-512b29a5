@@ -122,10 +122,14 @@ const getCategoryBannerStyle = (category: SearchCategory) => {
 
 export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
+  const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(item?.id || "", item?.category || "item");
+  const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(item?.id || "");
 
   const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
     if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
