@@ -30,7 +30,16 @@ export const BuyerGamificationPanel = () => {
     const seenKey = 'buyer_seen_badges';
     const seen: string[] = JSON.parse(localStorage.getItem(seenKey) || '[]');
     const fresh = earnedBadges.filter((b) => !seen.includes(b.id));
-    if (fresh.length > 0) setNewBadgeIds(fresh.map((b) => b.id));
+    if (fresh.length > 0) {
+      setNewBadgeIds(fresh.map((b) => b.id));
+      // Show toast for each newly earned badge
+      fresh.forEach((badge) => {
+        toast({
+          title: `🏆 Badge Earned: ${badge.name}`,
+          description: `${badge.description} (+${badge.points} pts)`,
+        });
+      });
+    }
   }, [isLoading, earnedBadges]);
 
   const dismissNewBadge = (id: string) => {

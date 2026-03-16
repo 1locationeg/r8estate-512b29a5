@@ -32,6 +32,23 @@ export const GamificationPanel = () => {
     currentTier.id,
   );
 
+  // Toast notifications for newly earned badges
+  useEffect(() => {
+    if (isLoading || earnedBadges.length === 0) return;
+    const seenKey = 'biz_seen_badges';
+    const seen: string[] = JSON.parse(localStorage.getItem(seenKey) || '[]');
+    const fresh = earnedBadges.filter((b) => !seen.includes(b.id));
+    if (fresh.length > 0) {
+      fresh.forEach((badge) => {
+        toast({
+          title: `🏆 Badge Earned: ${badge.name}`,
+          description: `${badge.description} (+${badge.points} pts)`,
+        });
+      });
+      localStorage.setItem(seenKey, JSON.stringify(earnedBadges.map((b) => b.id)));
+    }
+  }, [isLoading, earnedBadges]);
+
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
