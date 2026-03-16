@@ -6,6 +6,7 @@ import { performSearch, getPopularItems, type SearchItem, type SearchCategory } 
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { getSearchHistory } from "@/lib/searchHistory";
 import { supabase } from "@/integrations/supabase/client";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { Button } from "./ui/button";
@@ -51,6 +52,12 @@ export const SearchSuggestions = ({
   const [aiCorrection, setAiCorrection] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const { trackSearch } = useTrackInterest();
+
+  const handleSelect = (item: SearchItem) => {
+    trackSearch(item.id, item.name);
+    onSelect(item);
+  };
 
   // Debounced AI autocomplete
   useEffect(() => {
@@ -214,7 +221,7 @@ export const SearchSuggestions = ({
       >
         {/* Main item row - clickable */}
         <button
-          onClick={() => onSelect(item)}
+          onClick={() => handleSelect(item)}
           className="w-full flex items-center gap-2.5 md:gap-4 text-start"
         >
           {/* Logo with verification badge */}

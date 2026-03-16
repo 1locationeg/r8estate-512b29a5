@@ -1,4 +1,5 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
@@ -131,6 +132,14 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+
+  // Track implicit interest when item detail is opened
+  const { trackClick } = useTrackInterest();
+  useEffect(() => {
+    if (item?.id) {
+      trackClick(item.id, item.name);
+    }
+  }, [item?.id]);
 
   const handleWriteReview = () => {
     if (!isReviewable) {
