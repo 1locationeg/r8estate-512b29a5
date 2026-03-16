@@ -35,6 +35,7 @@ const DeveloperDirectory = lazy(() => import("./pages/DeveloperDirectory"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 const Install = lazy(() => import("./pages/Install"));
 const Reviews = lazy(() => import("./pages/Reviews"));
+const Portfolio = lazy(() => import("./pages/Portfolio"));
 
 const queryClient = new QueryClient();
 
