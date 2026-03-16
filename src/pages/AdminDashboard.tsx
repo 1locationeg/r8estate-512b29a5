@@ -1997,6 +1997,7 @@ const AdminDashboard = () => {
     { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
     { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
     { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
+    { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
     { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
   ];
 
