@@ -315,11 +315,11 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
 
           {/* Action Buttons */}
           <div className="flex flex-wrap gap-2">
-            <Button variant="default" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+            <Button variant="default" size="sm" className="gap-2" onClick={handleWriteReview}>
               <PenLine className="w-4 h-4" />
               {t("search.writeReview")}
             </Button>
-            <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
+            <Button variant="outline" size="sm" className="gap-2" onClick={handleWriteReview}>
               <Mic className="w-4 h-4" />
               {t("itemDetail.voiceReview")}
             </Button>
