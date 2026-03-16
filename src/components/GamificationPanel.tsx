@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useGamification } from '@/hooks/useGamification';
 import { TIERS, type BadgeDef, type MissionProgress } from '@/lib/gamification';
@@ -8,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader2, Lock, CheckCircle2, ArrowRight, Trophy, Target, Award, Crown, ChevronRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
+import { toast } from '@/hooks/use-toast';
 
 export const GamificationPanel = () => {
   const navigate = useNavigate();
