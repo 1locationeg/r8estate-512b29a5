@@ -1,11 +1,11 @@
 import { useState, useMemo } from "react";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { toast } from "@/hooks/use-toast";
-import { useReactions, useBulkReactions, type ReactionSummary } from "@/hooks/useReactions";
+import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 const categoryConfig: Record<string, { label: string; className: string }> = {
@@ -27,33 +27,35 @@ const reactionEmojis = [
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 60) return `${mins}m ago`;
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m`;
   const hrs = Math.floor(mins / 60);
-  if (hrs < 24) return `${hrs}h ago`;
+  if (hrs < 24) return `${hrs}h`;
   const days = Math.floor(hrs / 24);
-  if (days < 30) return `${days}d ago`;
+  if (days < 7) return `${days}d`;
+  const weeks = Math.floor(days / 7);
+  if (weeks < 4) return `${weeks}w`;
   return new Date(dateStr).toLocaleDateString();
 }
 
-// Reaction pills
-const ReactionPills = ({ reactions, onToggle }: { reactions: ReactionSummary[]; onToggle: (emoji: string) => void }) => {
-  if (!reactions.length) return null;
+// Reaction summary row
+const ReactionSummaryRow = ({ reactions, onToggle }: { reactions: ReactionSummary[]; onToggle: (emoji: string) => void }) => {
+  const totalReactions = reactions.reduce((sum, r) => sum + r.count, 0);
+  if (totalReactions === 0) return null;
+  
+  // Show top 3 emoji icons
+  const topEmojis = reactions.slice(0, 3);
+
   return (
-    <div className="flex items-center gap-1 flex-wrap mt-1">
-      {reactions.map((r) => (
-        <button
-          key={r.emoji}
-          onClick={(e) => { e.stopPropagation(); onToggle(r.emoji); }}
-          className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] border transition-colors ${
-            r.user_reacted
-              ? 'border-primary/30 bg-primary/10 text-primary'
-              : 'border-border bg-secondary/50 text-muted-foreground hover:border-primary/20'
-          }`}
-        >
-          <span>{r.emoji}</span>
-          <span className="font-medium">{r.count}</span>
-        </button>
-      ))}
+    <div className="flex items-center justify-between px-4 py-1.5 text-xs text-muted-foreground">
+      <div className="flex items-center gap-1">
+        <div className="flex -space-x-0.5">
+          {topEmojis.map((r) => (
+            <span key={r.emoji} className="text-sm">{r.emoji}</span>
+          ))}
+        </div>
+        <span className="ml-1">{totalReactions}</span>
+      </div>
     </div>
   );
 };
@@ -73,90 +75,109 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
   const userHasReacted = reactions.some(r => r.user_reacted);
 
   return (
-    <div className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all group">
-      <button onClick={onClick} className="w-full text-left">
-        <div className="flex items-start gap-3">
-          {/* Vote column */}
-          <div className="flex flex-col items-center gap-0.5 pt-0.5">
-            <button
-              onClick={(e) => { e.stopPropagation(); onVote(); }}
-              className={`p-1 rounded-md transition-colors ${post.user_voted ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-primary hover:bg-primary/5'}`}
-            >
-              <ArrowBigUp className="w-5 h-5" fill={post.user_voted ? "currentColor" : "none"} />
-            </button>
-            <span className={`text-xs font-bold ${post.user_voted ? 'text-primary' : 'text-muted-foreground'}`}>
-              {post.upvotes}
-            </span>
+    <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+      {/* Author header — Facebook style */}
+      <div className="flex items-center gap-3 px-4 pt-3 pb-2">
+        <Avatar className="h-10 w-10 ring-2 ring-border">
+          <AvatarImage src={post.author_avatar} />
+          <AvatarFallback className="text-sm bg-secondary font-semibold">{post.author_name?.charAt(0)}</AvatarFallback>
+        </Avatar>
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-1.5">
+            <span className="font-semibold text-sm text-foreground truncate">{post.author_name}</span>
+            <UserTierBadge userId={post.user_id} />
           </div>
-
-          {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <Badge variant="outline" className={`text-[10px] px-1.5 py-0 ${cat.className}`}>
-                {cat.label}
-              </Badge>
-              {post.is_pinned && (
+          <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <span>{timeAgo(post.created_at)}</span>
+            <span>·</span>
+            <Globe className="w-3 h-3" />
+            <span>·</span>
+            <Badge variant="outline" className={`text-[9px] px-1 py-0 leading-tight ${cat.className}`}>
+              {cat.label}
+            </Badge>
+            {post.is_pinned && (
+              <>
+                <span>·</span>
                 <Pin className="w-3 h-3 text-primary" />
-              )}
-            </div>
-
-            <h3 className="font-semibold text-sm text-foreground leading-tight mb-1 group-hover:text-primary transition-colors line-clamp-2">
-              {post.title}
-            </h3>
-            <p className="text-xs text-muted-foreground line-clamp-2 mb-2">
-              {post.body}
-            </p>
-
-            <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-              <div className="flex items-center gap-1.5">
-                <Avatar className="h-4 w-4">
-                  <AvatarImage src={post.author_avatar} />
-                  <AvatarFallback className="text-[8px] bg-secondary">{post.author_name?.charAt(0)}</AvatarFallback>
-                </Avatar>
-                <span className="font-medium">{post.author_name}</span>
-                <UserTierBadge userId={post.user_id} />
-              </div>
-              <span>{timeAgo(post.created_at)}</span>
-              {post.reply_count === 0 && post.category === 'question' && (
-                <span className="text-primary font-medium">Be the first to answer!</span>
-              )}
-            </div>
+              </>
+            )}
           </div>
         </div>
-      </button>
-
-      {/* Reaction pills */}
-      <div className="ml-10">
-        <ReactionPills reactions={reactions} onToggle={toggleReaction} />
+        <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
       </div>
 
-      {/* Engagement toolbar */}
-      <div className="flex items-center gap-1 mt-2 pt-2.5 border-t border-border ml-10">
-        <div className="relative">
+      {/* Post body — clickable */}
+      <button onClick={onClick} className="w-full text-left px-4 pb-3">
+        <h3 className="font-semibold text-[15px] text-foreground leading-snug mb-1">
+          {post.title}
+        </h3>
+        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+          {post.body}
+        </p>
+        {post.reply_count === 0 && post.category === 'question' && (
+          <p className="text-xs text-primary font-medium mt-2">Be the first to answer!</p>
+        )}
+      </button>
+
+      {/* Reaction + comment count summary */}
+      <div className="flex items-center justify-between px-4 py-1.5 text-xs text-muted-foreground">
+        <div className="flex items-center gap-1">
+          {totalReactions > 0 && (
+            <>
+              <div className="flex -space-x-0.5">
+                {reactions.slice(0, 3).map((r) => (
+                  <span key={r.emoji} className="text-sm">{r.emoji}</span>
+                ))}
+              </div>
+              <span className="ml-1">{totalReactions}</span>
+            </>
+          )}
+        </div>
+        <div className="flex items-center gap-3">
+          {post.reply_count > 0 && (
+            <button onClick={onClick} className="hover:underline">
+              {post.reply_count} comment{post.reply_count !== 1 ? 's' : ''}
+            </button>
+          )}
+          {post.upvotes > 0 && (
+            <span>{post.upvotes} upvote{post.upvotes !== 1 ? 's' : ''}</span>
+          )}
+        </div>
+      </div>
+
+      {/* Divider */}
+      <div className="mx-4 border-t border-border" />
+
+      {/* Action bar — Facebook style */}
+      <div className="flex items-center px-2 py-1">
+        {/* Like with emoji picker */}
+        <div className="relative flex-1">
           <button
             onClick={(e) => { e.stopPropagation(); toggleReaction("👍"); }}
             onMouseEnter={() => setShowEmojis(true)}
             onMouseLeave={() => setShowEmojis(false)}
-            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] transition-colors ${
+            className={`flex items-center justify-center gap-1.5 w-full py-2 rounded-md text-sm font-medium transition-colors ${
               userHasReacted
-                ? 'text-primary bg-primary/10 font-medium'
-                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+                ? 'text-primary'
+                : 'text-muted-foreground hover:bg-secondary'
             }`}
           >
-            <ThumbsUp className="w-3 h-3" fill={userHasReacted ? "currentColor" : "none"} />
-            <span>{totalReactions > 0 ? totalReactions : 'Like'}</span>
+            <ThumbsUp className="w-4 h-4" fill={userHasReacted ? "currentColor" : "none"} />
+            <span>{userHasReacted ? 'Liked' : 'Like'}</span>
           </button>
           {showEmojis && (
             <div
               onMouseEnter={() => setShowEmojis(true)}
               onMouseLeave={() => setShowEmojis(false)}
-              className="absolute -top-10 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-lg"
+              className="absolute -top-11 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-card border border-border rounded-full px-3 py-1.5 shadow-xl"
             >
               {reactionEmojis.map((r) => (
                 <button
                   key={r.emoji}
                   onClick={(e) => { e.stopPropagation(); toggleReaction(r.emoji); setShowEmojis(false); }}
-                  className="hover:scale-125 transition-transform p-0.5 text-base"
+                  className="hover:scale-[1.3] transition-transform text-lg p-0.5"
                   title={r.label}
                 >
                   {r.emoji}
@@ -166,41 +187,25 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
           )}
         </div>
 
+        {/* Comment */}
         <button
           onClick={onClick}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+          className="flex items-center justify-center gap-1.5 flex-1 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
         >
-          <MessageCircle className="w-3 h-3" />
-          <span>{post.reply_count} Comment{post.reply_count !== 1 ? 's' : ''}</span>
+          <MessageCircle className="w-4 h-4" />
+          <span>Comment</span>
         </button>
 
-        <ShareMenu
-          title={post.title}
-          iconOnly
-          variant="ghost"
-          size="sm"
-          className="h-auto px-2 py-1 text-[11px] text-muted-foreground hover:text-primary"
-        />
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toast({ title: "Saved!", description: "Post bookmarked.", duration: 1500 });
-          }}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-        >
-          <Bookmark className="w-3 h-3" />
-        </button>
-
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            toast({ title: "Reported", description: "Thank you for helping keep our community safe.", duration: 2000 });
-          }}
-          className="flex items-center gap-1 px-2 py-1 rounded-md text-[11px] text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors ml-auto"
-        >
-          <Flag className="w-3 h-3" />
-        </button>
+        {/* Share */}
+        <div className="flex-1 flex justify-center">
+          <ShareMenu
+            title={post.title}
+            iconOnly={false}
+            variant="ghost"
+            size="sm"
+            className="w-full justify-center h-auto py-2 text-sm font-medium text-muted-foreground hover:bg-secondary gap-1.5"
+          />
+        </div>
       </div>
     </div>
   );
