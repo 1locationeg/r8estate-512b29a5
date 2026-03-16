@@ -66,7 +66,7 @@ export function useUserTier(userId: string | undefined): UserTierResult {
         if (cancelled) return;
 
         const eng = engRes.data as any || {};
-        const profile = profileRes.data || {};
+        const profile = (profileRes.data || {}) as Record<string, any>;
         const { percent: profileCompletion } = calcBuyerProfileCompletion(profile);
 
         const input: BuyerGamificationInput = {
@@ -77,7 +77,7 @@ export function useUserTier(userId: string | undefined): UserTierResult {
           reportsUnlocked: eng.reports_unlocked ?? 0,
           hasVerifiedPurchase: (receiptRes.count ?? 0) > 0,
           helpfulVotes: eng.helpful_votes ?? 0,
-          joinedDate: profile.created_at ? new Date(profile.created_at) : new Date(),
+          joinedDate: profile?.created_at ? new Date(profile.created_at) : new Date(),
           communityPosts: eng.community_posts ?? 0,
           communityReplies: eng.community_replies ?? 0,
           communityVotes: eng.community_votes ?? 0,
