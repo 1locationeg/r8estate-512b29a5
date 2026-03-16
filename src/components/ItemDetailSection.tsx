@@ -128,7 +128,17 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(item?.id || "", item?.category || "item");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(item?.id || "");
