@@ -8,6 +8,7 @@ import { getRatingColorClass } from "@/lib/ratingColors";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 
 interface DeveloperCardProps {
   developer: Developer;
