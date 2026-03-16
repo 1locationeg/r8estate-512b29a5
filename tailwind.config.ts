@@ -116,6 +116,7 @@ export default {
         "marquee": "marquee 30s linear infinite",
         "marquee-rtl": "marquee-rtl 30s linear infinite",
         "bounce-in": "bounce-in 0.6s ease-out",
+        "shimmer": "shimmer 3s ease-in-out infinite",
       },
     },
   },
