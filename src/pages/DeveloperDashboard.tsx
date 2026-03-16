@@ -20,6 +20,7 @@ import { useGamification } from '@/hooks/useGamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
+import DevProjects from '@/components/DevProjects';
 
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -691,6 +692,7 @@ const DeveloperDashboard = () => {
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/developer/profile' },
+    { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/developer/projects' },
     { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/developer/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
@@ -722,6 +724,7 @@ const DeveloperDashboard = () => {
       <Routes>
         <Route index element={<DevOverview />} />
         <Route path="profile" element={<DevBusinessProfile />} />
+        <Route path="projects" element={<DevProjects />} />
         <Route path="gamification" element={<GamificationPanel />} />
         <Route path="reviews" element={<DevReviews />} />
         <Route path="gallery" element={<DevGallery />} />
