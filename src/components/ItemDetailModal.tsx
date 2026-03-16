@@ -135,6 +135,7 @@ const getTierIcon = (tier: string) => {
 
 export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
