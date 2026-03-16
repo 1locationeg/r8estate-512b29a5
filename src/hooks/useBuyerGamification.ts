@@ -22,9 +22,16 @@ interface EngagementData {
   community_votes: number;
 }
 
+interface StreakData {
+  current_streak: number;
+  longest_streak: number;
+  streak_bonus_points: number;
+}
+
 export function useBuyerGamification() {
   const { user, profile, isLoading: authLoading } = useAuth();
   const [engagement, setEngagement] = useState<EngagementData | null>(null);
+  const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [reviewCount, setReviewCount] = useState(0);
   const [hasVerifiedPurchase, setHasVerifiedPurchase] = useState(false);
   const [dataLoading, setDataLoading] = useState(true);
