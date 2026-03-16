@@ -59,19 +59,32 @@ const InsightsPage = () => {
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
+  const [cacheInfo, setCacheInfo] = useState<{ cached: boolean; cached_at: string; expires_in_minutes: number } | null>(null);
 
-  const fetchInsights = async () => {
+  const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke('platform-insights');
+      const { data, error } = await supabase.functions.invoke('platform-insights', {
+        body: { forceRefresh },
+      });
       if (error) throw error;
       if (data?.error) {
         toast.error(data.error);
       } else {
         setInsights(data.insights || []);
         setSnapshot(data.snapshot || null);
+        setCacheInfo({
+          cached: data.cached ?? false,
+          cached_at: data.cached_at ?? '',
+          expires_in_minutes: data.expires_in_minutes ?? 0,
+        });
         setHasLoaded(true);
+        if (data.cached) {
+          toast.info('Showing cached insights');
+        } else {
+          toast.success('Fresh insights generated');
+        }
       }
     } catch (err: any) {
       console.error('Insights error:', err);
