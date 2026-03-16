@@ -46,11 +46,6 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
     setSubmitting(false);
   };
 
-  const clearPrefill = () => {
-    // This just clears the UI - the actual prefill is handled in onOpenChange
-    // We don't have direct access to modify URL here, so we rely on parent
-  };
-
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
