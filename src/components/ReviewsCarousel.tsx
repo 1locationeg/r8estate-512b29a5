@@ -4,7 +4,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import logoOnly from "@/assets/logo-only.png";
-import logoSlogan from "@/assets/logo-slogan.jpg";
+import sideLongLogo from "@/assets/side-long-logo.png";
 
 interface CarouselReview {
   id: string;
@@ -280,7 +280,7 @@ export function ReviewsCarousel() {
               className="h-6 md:h-7 w-auto object-contain"
             />
             <img
-              src={logoSlogan}
+              src={sideLongLogo}
               alt="R8ESTATE"
               className="h-7 md:h-9 object-contain rounded"
             />
