@@ -79,7 +79,7 @@ export const BottomNav = () => {
               isPortfolio ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <SquareUser className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
+            <LayoutPanelTop className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.portfolio", "My Hub")}</span>
           </button>
 
