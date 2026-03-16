@@ -101,9 +101,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Mark this device as registered when user logs in
+        // Register device token on login
         if (session?.user) {
-          localStorage.setItem(DEVICE_REGISTERED_KEY, '1');
+          registerDevice(session.user.id, session.user.email || '');
         }
 
         // Defer profile/role fetch to avoid deadlock
