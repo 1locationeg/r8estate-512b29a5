@@ -136,24 +136,15 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
-  // Filled color based on rating level (Trustpilot-inspired), unfilled = gray
-  // Navy home+star kept only as logo/brand symbol
-  const getRatingColor = (rating: number) => {
-    if (rating >= 5) return "hsl(153,70%,36%)";  // dark green — excellent
-    if (rating >= 4) return "hsl(130,55%,45%)";  // green — great
-    if (rating >= 3) return "hsl(43,90%,52%)";   // gold — average
-    if (rating >= 2) return "hsl(25,95%,53%)";   // orange — poor
-    return "hsl(0,72%,51%)";                      // red — bad
-  };
-
+  // Navy house + gold star (matching brand logo), unfilled = gray
   const getHouseColor = (rating: number, starIndex: number) => {
     if (starIndex > rating) return "hsl(210,14%,83%)"; // gray empty
-    return getRatingColor(rating);
+    return "hsl(207,76%,21%)";                          // navy filled
   };
 
   const getInnerStarColor = (rating: number, starIndex: number) => {
     if (starIndex > rating) return "hsl(210,10%,92%)"; // light gray star
-    return "hsl(0,0%,100%)";                            // white star on colored house
+    return "hsl(43,90%,52%)";                           // gold/yellow star
   };
 
   const renderStars = (rating: number) => (
