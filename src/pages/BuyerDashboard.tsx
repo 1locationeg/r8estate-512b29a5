@@ -13,6 +13,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { BuyerGamificationPanel } from '@/components/BuyerGamificationPanel';
+import { NotificationPreferences } from '@/components/NotificationPreferences';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
