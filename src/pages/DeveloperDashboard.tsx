@@ -665,7 +665,7 @@ const DevBusinessProfile = () => {
           <Button className="bg-brand-red text-white hover:bg-brand-red/90" onClick={handleSave} disabled={isSaving}>
             {isSaving ? <><Loader2 className="w-4 h-4 animate-spin me-1" /> Saving...</> : 'Save Profile'}
           </Button>
-          <Button variant="outline" onClick={() => navigate('/developer')}>Cancel</Button>
+          <Button variant="outline" onClick={() => navigate('/business')}>Cancel</Button>
         </div>
       </div>
     </div>

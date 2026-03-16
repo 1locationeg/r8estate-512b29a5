@@ -191,7 +191,7 @@ export const GamificationPanel = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           {missions.map((mp) => (
-            <MissionCard key={mp.mission.id} progress={mp} onAction={() => navigate('/developer/profile')} />
+            <MissionCard key={mp.mission.id} progress={mp} onAction={() => navigate('/business/profile')} />
           ))}
         </CardContent>
       </Card>
