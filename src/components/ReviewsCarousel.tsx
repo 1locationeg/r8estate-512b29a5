@@ -54,8 +54,9 @@ export function ReviewsCarousel() {
   };
 
   const [liveReviews, setLiveReviews] = useState<CarouselReview[]>([]);
+  const [businessLogos, setBusinessLogos] = useState<BusinessLogo[]>([]);
 
-  // Fetch live reviews from database
+  // Fetch live reviews and business profiles
   useEffect(() => {
     const fetchReviews = async () => {
       const { data } = await supabase
@@ -77,7 +78,24 @@ export function ReviewsCarousel() {
         );
       }
     };
+
+    const fetchBusinessLogos = async () => {
+      const { data } = await supabase
+        .from("business_profiles")
+        .select("id, company_name, logo_url");
+      if (data) {
+        setBusinessLogos(
+          data.map((b) => ({
+            id: b.id,
+            name: b.company_name || "",
+            logo: b.logo_url || "",
+          }))
+        );
+      }
+    };
+
     fetchReviews();
+    fetchBusinessLogos();
   }, [isRTL]);
 
   // Merge live DB reviews with mock, dedup by id, latest first
