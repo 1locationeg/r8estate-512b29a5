@@ -321,7 +321,7 @@ export const DeveloperDetailCard = ({
       </div>
 
       <ReviewMotivatorFloat
-        onWriteReview={() => setIsReviewModalOpen(true)}
+        onWriteReview={handleWriteReview}
         isReviewModalOpen={isReviewModalOpen}
       />
       {/* Write Review Modal */}
@@ -331,6 +331,13 @@ export const DeveloperDetailCard = ({
         developerName={developer.name}
         developerId={developer.id}
         onReviewSubmitted={refetchReviews}
+      />
+      {/* Review Blocked Modal */}
+      <ReviewBlockedModal
+        open={isReviewBlockedOpen}
+        onOpenChange={setIsReviewBlockedOpen}
+        parentName={parentName || developer.name}
+        childProjects={childProjects}
       />
     </div>
     <CompareModal
