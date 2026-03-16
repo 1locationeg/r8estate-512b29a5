@@ -221,6 +221,18 @@ const AdminGuestReviews = () => {
                         <Button
                           size="sm"
                           variant="ghost"
+                          className="text-primary hover:text-primary"
+                          onClick={() => {
+                            setSocialReview({ author: r.guest_name, rating: r.rating, comment: r.comment });
+                            setSocialBizName(r.developer_name || "Our Business");
+                          }}
+                          title="Share as social post"
+                        >
+                          <Share2 className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="ghost"
                           className="text-verified hover:text-verified"
                           onClick={() => handleApprove(r)}
                           title="Approve & publish"
