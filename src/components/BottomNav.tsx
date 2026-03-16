@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Home, LayoutGrid, Menu, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Menu, Briefcase } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "./MobileNav";
