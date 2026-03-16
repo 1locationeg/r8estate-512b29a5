@@ -36,6 +36,8 @@ export function useGamification() {
       teamCount: 3, // mock
       hasLicense: !!profile?.license_url,
       joinedDate: new Date(), // would come from user created_at
+      communityPosts: 0, // TODO: fetch from DB
+      communityReplies: 0, // TODO: fetch from DB
     };
 
     const earnedIds = calcEarnedBadges(input);

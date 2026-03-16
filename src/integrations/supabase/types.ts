@@ -135,6 +135,9 @@ export type Database = {
       }
       buyer_engagement: {
         Row: {
+          community_posts: number
+          community_replies: number
+          community_votes: number
           created_at: string
           developers_viewed: number
           helpful_votes: number
@@ -145,6 +148,9 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          community_posts?: number
+          community_replies?: number
+          community_votes?: number
           created_at?: string
           developers_viewed?: number
           helpful_votes?: number
@@ -155,6 +161,9 @@ export type Database = {
           user_id: string
         }
         Update: {
+          community_posts?: number
+          community_replies?: number
+          community_votes?: number
           created_at?: string
           developers_viewed?: number
           helpful_votes?: number

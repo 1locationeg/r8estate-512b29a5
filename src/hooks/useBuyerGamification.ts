@@ -17,6 +17,9 @@ interface EngagementData {
   projects_saved: number;
   reports_unlocked: number;
   helpful_votes: number;
+  community_posts: number;
+  community_replies: number;
+  community_votes: number;
 }
 
 export function useBuyerGamification() {
@@ -39,7 +42,7 @@ export function useBuyerGamification() {
         const [engRes, reviewRes, receiptRes] = await Promise.all([
           supabase
             .from('buyer_engagement')
-            .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes')
+            .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes, community_posts, community_replies, community_votes')
             .eq('user_id', user.id)
             .maybeSingle(),
           supabase
@@ -58,7 +61,7 @@ export function useBuyerGamification() {
         } else {
           // Create a default row for this user
           await supabase.from('buyer_engagement').insert({ user_id: user.id });
-          setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0 });
+          setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0, community_posts: 0, community_replies: 0, community_votes: 0 });
         }
 
         setReviewCount(reviewRes.count ?? 0);
@@ -88,6 +91,9 @@ export function useBuyerGamification() {
       hasVerifiedPurchase,
       helpfulVotes: engagement?.helpful_votes ?? 0,
       joinedDate: profile?.created_at ? new Date(profile.created_at) : new Date(),
+      communityPosts: engagement?.community_posts ?? 0,
+      communityReplies: engagement?.community_replies ?? 0,
+      communityVotes: engagement?.community_votes ?? 0,
     };
 
     const earnedIds = calcBuyerEarnedBadges(input);

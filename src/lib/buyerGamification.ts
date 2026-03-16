@@ -39,6 +39,13 @@ export const BUYER_BADGES: BuyerBadgeDef[] = [
   { id: 'early_bird', name: 'Early Bird', description: 'Join the platform in its first year', icon: Zap, points: 30, category: 'profile' },
   { id: 'top_reviewer', name: 'Top Reviewer', description: 'Write 10+ detailed reviews', icon: Trophy, points: 80, category: 'community' },
   { id: 'helpful_voter', name: 'Helpful Voter', description: 'Mark 10+ reviews as helpful', icon: Award, points: 25, category: 'community' },
+  // Community badges
+  { id: 'first_post', name: 'Conversation Starter', description: 'Create your first community post', icon: MessageSquare, points: 15, category: 'community' },
+  { id: 'active_poster', name: 'Active Contributor', description: 'Create 5+ community posts', icon: MessageSquare, points: 40, category: 'community' },
+  { id: 'first_reply', name: 'Helping Hand', description: 'Reply to a community post', icon: MessageSquare, points: 10, category: 'community' },
+  { id: 'reply_streak', name: 'Discussion Leader', description: 'Write 10+ community replies', icon: MessageSquare, points: 50, category: 'community' },
+  { id: 'community_voter', name: 'Community Voter', description: 'Vote on 10+ community posts or replies', icon: Award, points: 20, category: 'community' },
+  { id: 'community_champion', name: 'Community Champion', description: 'Create 10+ posts and 20+ replies', icon: Trophy, points: 100, category: 'community' },
 ];
 
 // ── Buyer Mission Definitions ──
@@ -57,6 +64,9 @@ export const BUYER_MISSIONS: BuyerMissionDef[] = [
   { id: 'save_5_projects', title: 'Build Your Shortlist', description: 'Save 5 projects to your list', target: 5, points: 20, type: 'milestone' },
   { id: 'view_10_devs', title: 'Do Your Research', description: 'View 10 developer profiles', target: 10, points: 25, type: 'milestone' },
   { id: 'verify_purchase', title: 'Get Verified', description: 'Submit a purchase receipt for verification', target: 1, points: 40, type: 'milestone' },
+  { id: 'create_3_posts', title: 'Join the Community', description: 'Create 3 community posts', target: 3, points: 25, type: 'milestone' },
+  { id: 'reply_5_threads', title: 'Share Your Knowledge', description: 'Reply to 5 community threads', target: 5, points: 20, type: 'milestone' },
+  { id: 'vote_10_times', title: 'Be Heard', description: 'Vote on 10 community posts or replies', target: 10, points: 15, type: 'milestone' },
 ];
 
 // ── Buyer Profile Completion ──
@@ -110,6 +120,9 @@ export interface BuyerGamificationInput {
   hasVerifiedPurchase: boolean;
   helpfulVotes: number;
   joinedDate: Date;
+  communityPosts: number;
+  communityReplies: number;
+  communityVotes: number;
 }
 
 export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
@@ -125,6 +138,13 @@ export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
   if (input.reportsUnlocked >= 3) earned.push('deep_diver');
   if (input.helpfulVotes >= 10) earned.push('helpful_voter');
   if (input.joinedDate.getFullYear() <= 2026) earned.push('early_bird');
+  // Community badges
+  if (input.communityPosts >= 1) earned.push('first_post');
+  if (input.communityPosts >= 5) earned.push('active_poster');
+  if (input.communityReplies >= 1) earned.push('first_reply');
+  if (input.communityReplies >= 10) earned.push('reply_streak');
+  if (input.communityVotes >= 10) earned.push('community_voter');
+  if (input.communityPosts >= 10 && input.communityReplies >= 20) earned.push('community_champion');
 
   return earned;
 }
@@ -154,6 +174,9 @@ export function calcBuyerMissionProgress(input: BuyerGamificationInput): BuyerMi
       case 'save_5_projects': current = Math.min(input.projectsSaved, m.target); break;
       case 'view_10_devs': current = Math.min(input.developersViewed, m.target); break;
       case 'verify_purchase': current = input.hasVerifiedPurchase ? 1 : 0; break;
+      case 'create_3_posts': current = Math.min(input.communityPosts, m.target); break;
+      case 'reply_5_threads': current = Math.min(input.communityReplies, m.target); break;
+      case 'vote_10_times': current = Math.min(input.communityVotes, m.target); break;
     }
     return { mission: m, current, completed: current >= m.target };
   });

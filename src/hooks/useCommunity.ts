@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 
 export type CommunityPostCategory = 'discussion' | 'question' | 'tip' | 'experience' | 'poll';
 
@@ -247,6 +248,8 @@ export function useCommunityActions() {
       .select()
       .single();
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
+    // Track engagement for gamification
+    trackBuyerEngagement(user.id, 'community_posts');
     return data;
   };
 
@@ -258,6 +261,8 @@ export function useCommunityActions() {
       .select()
       .single();
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
+    // Track engagement for gamification
+    trackBuyerEngagement(user.id, 'community_replies');
     return data;
   };
 
@@ -286,6 +291,8 @@ export function useCommunityActions() {
       if (postId) insertData.post_id = postId;
       if (replyId) insertData.reply_id = replyId;
       await supabase.from("community_votes").insert(insertData);
+      // Track engagement for gamification
+      trackBuyerEngagement(user.id, 'community_votes');
       // Increment upvotes
       if (postId) {
         const { data: post } = await supabase.from("community_posts").select("upvotes").eq("id", postId).single();

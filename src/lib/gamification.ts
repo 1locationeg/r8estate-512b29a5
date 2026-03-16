@@ -74,6 +74,9 @@ export const BADGES: BadgeDef[] = [
   { id: 'verified_biz', name: 'Verified Business', description: 'Upload a business license', icon: FileText, points: 50, category: 'trust' },
   { id: 'superstar', name: 'Superstar', description: 'Reach 4.5+ average rating', icon: Trophy, points: 100, category: 'trust' },
   { id: 'early_adopter', name: 'Early Adopter', description: 'Join the platform in its first year', icon: Zap, points: 40, category: 'profile' },
+  // Community badges for businesses
+  { id: 'community_engaged', name: 'Community Engaged', description: 'Participate in 3+ community discussions', icon: Users, points: 30, category: 'engagement' },
+  { id: 'community_leader', name: 'Community Leader', description: 'Create 5+ community posts and 10+ replies', icon: Trophy, points: 60, category: 'engagement' },
 ];
 
 // ── Mission Definitions ──
@@ -156,6 +159,8 @@ export interface GamificationInput {
   teamCount: number;
   hasLicense: boolean;
   joinedDate: Date;
+  communityPosts: number;
+  communityReplies: number;
 }
 
 export function calcEarnedBadges(input: GamificationInput): string[] {
@@ -173,6 +178,9 @@ export function calcEarnedBadges(input: GamificationInput): string[] {
 
   // Early adopter: joined before 2027
   if (input.joinedDate.getFullYear() <= 2026) earned.push('early_adopter');
+  // Community badges
+  if ((input.communityPosts + input.communityReplies) >= 3) earned.push('community_engaged');
+  if (input.communityPosts >= 5 && input.communityReplies >= 10) earned.push('community_leader');
 
   return earned;
 }

@@ -1,6 +1,6 @@
 import { supabase } from '@/integrations/supabase/client';
 
-type EngagementField = 'developers_viewed' | 'projects_saved' | 'reports_unlocked' | 'helpful_votes';
+type EngagementField = 'developers_viewed' | 'projects_saved' | 'reports_unlocked' | 'helpful_votes' | 'community_posts' | 'community_replies' | 'community_votes';
 
 /**
  * Increment a buyer engagement counter by 1.
