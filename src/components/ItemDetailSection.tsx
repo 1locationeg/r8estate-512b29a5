@@ -49,6 +49,9 @@ import {
   ThumbsUp,
   Share2,
   Sparkles,
+  Bookmark,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
@@ -56,6 +59,9 @@ import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { useReviews } from "@/hooks/useReviews";
+import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
