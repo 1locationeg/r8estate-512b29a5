@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText } from 'lucide-react';
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -776,6 +776,7 @@ const BuyerDashboard = () => {
     { icon: <Search className="w-4 h-4" />, label: 'Research Board', path: '/directory' },
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
+    { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/buyer/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/buyer/notification-preferences' },
     { icon: <User className="w-4 h-4" />, label: 'Account Details', path: '/buyer/settings' },

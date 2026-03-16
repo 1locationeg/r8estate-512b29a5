@@ -166,6 +166,135 @@ export type Database = {
         }
         Relationships: []
       }
+      community_posts: {
+        Row: {
+          body: string
+          category: Database["public"]["Enums"]["community_post_category"]
+          created_at: string
+          developer_id: string | null
+          id: string
+          is_pinned: boolean
+          reply_count: number
+          title: string
+          updated_at: string
+          upvotes: number
+          user_id: string
+        }
+        Insert: {
+          body: string
+          category?: Database["public"]["Enums"]["community_post_category"]
+          created_at?: string
+          developer_id?: string | null
+          id?: string
+          is_pinned?: boolean
+          reply_count?: number
+          title: string
+          updated_at?: string
+          upvotes?: number
+          user_id: string
+        }
+        Update: {
+          body?: string
+          category?: Database["public"]["Enums"]["community_post_category"]
+          created_at?: string
+          developer_id?: string | null
+          id?: string
+          is_pinned?: boolean
+          reply_count?: number
+          title?: string
+          updated_at?: string
+          upvotes?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
+      community_replies: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          parent_reply_id: string | null
+          post_id: string
+          upvotes: number
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          parent_reply_id?: string | null
+          post_id: string
+          upvotes?: number
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          parent_reply_id?: string | null
+          post_id?: string
+          upvotes?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_replies_parent_reply_id_fkey"
+            columns: ["parent_reply_id"]
+            isOneToOne: false
+            referencedRelation: "community_replies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_replies_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      community_votes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string | null
+          reply_id: string | null
+          user_id: string
+          vote_type: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reply_id?: string | null
+          user_id: string
+          vote_type?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string | null
+          reply_id?: string | null
+          user_id?: string
+          vote_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_votes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "community_votes_reply_id_fkey"
+            columns: ["reply_id"]
+            isOneToOne: false
+            referencedRelation: "community_replies"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       followed_businesses: {
         Row: {
           business_id: string
@@ -630,6 +759,12 @@ export type Database = {
     Enums: {
       admin_permission_level: "super_admin" | "admin" | "editor" | "view_only"
       app_role: "user" | "buyer" | "developer" | "admin"
+      community_post_category:
+        | "discussion"
+        | "question"
+        | "tip"
+        | "experience"
+        | "poll"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -759,6 +894,13 @@ export const Constants = {
     Enums: {
       admin_permission_level: ["super_admin", "admin", "editor", "view_only"],
       app_role: ["user", "buyer", "developer", "admin"],
+      community_post_category: [
+        "discussion",
+        "question",
+        "tip",
+        "experience",
+        "poll",
+      ],
     },
   },
 } as const

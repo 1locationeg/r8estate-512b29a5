@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Menu, LayoutPanelTop, Sparkles } from "lucide-react";
+import { MessageSquare, LayoutGrid, Menu, Users, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "./MobileNav";
@@ -22,7 +22,7 @@ export const BottomNav = () => {
   const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
-  const isPortfolio = location.pathname === "/portfolio";
+  const isCommunity = location.pathname === "/community";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
   return (
@@ -84,21 +84,15 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
           </button>
 
-          {/* Portfolio / My Activity */}
+          {/* Community */}
           <button
-            onClick={() => {
-              if (user) {
-                navigate("/portfolio");
-              } else {
-                navigate("/auth");
-              }
-            }}
+            onClick={() => navigate("/community")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isPortfolio ? "text-primary" : "text-muted-foreground"
+              isCommunity ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <LayoutPanelTop className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.portfolio", "My Hub")}</span>
+            <Users className="h-5 w-5" strokeWidth={isCommunity ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
           </button>
 
           {/* More / Menu */}

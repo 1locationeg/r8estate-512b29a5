@@ -37,6 +37,7 @@ const Install = lazy(() => import("./pages/Install"));
 const Reviews = lazy(() => import("./pages/Reviews"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
 const InsightsPage = lazy(() => import("./pages/InsightsPage"));
+const Community = lazy(() => import("./pages/Community"));
 
 const queryClient = new QueryClient();
 
@@ -83,6 +84,7 @@ const App = () => (
                 <Route path="/install" element={<Install />} />
                 <Route path="/portfolio" element={<Portfolio />} />
                 <Route path="/insights" element={<InsightsPage />} />
+                <Route path="/community" element={<Community />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
