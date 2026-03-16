@@ -12,8 +12,9 @@ import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2
 } from 'lucide-react';
+import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
 import { useBusinessProfile } from '@/hooks/useBusinessProfile';
 import { useGamification } from '@/hooks/useGamification';
@@ -205,43 +206,65 @@ const DevOverview = () => {
   );
 };
 
-const DevReviews = () => (
-  <div>
-    <h2 className="text-2xl font-bold text-foreground mb-4">Reviews Management</h2>
-    <div className="space-y-4">
-      {myReviews.map((r) => (
-        <div key={r.id} className="bg-card border border-border rounded-xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-3">
-              <Avatar className="h-10 w-10">
-                {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                <AvatarFallback className="bg-accent text-accent-foreground text-sm">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="font-semibold text-foreground text-sm">{r.author}</p>
-                <p className="text-xs text-muted-foreground">{r.project} · {r.date}</p>
+const DevReviews = () => {
+  const [socialReview, setSocialReview] = useState<{ author: string; rating: number; comment: string; project?: string } | null>(null);
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-4">Reviews Management</h2>
+      <div className="space-y-4">
+        {myReviews.map((r) => (
+          <div key={r.id} className="bg-card border border-border rounded-xl p-5">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10">
+                  {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
+                  <AvatarFallback className="bg-accent text-accent-foreground text-sm">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="font-semibold text-foreground text-sm">{r.author}</p>
+                  <p className="text-xs text-muted-foreground">{r.project} · {r.date}</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className={`w-4 h-4 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+                ))}
               </div>
             </div>
-            <div className="flex items-center gap-1">
-              {[...Array(5)].map((_, i) => (
-                <Star key={i} className={`w-4 h-4 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
-              ))}
+            <p className="text-sm text-muted-foreground mb-3">{r.comment}</p>
+            <div className="flex items-center gap-2">
+              {r.developerReply ? (
+                <div className="flex-1 p-3 bg-secondary rounded-lg">
+                  <p className="text-xs font-semibold text-primary mb-1">↩ Your Reply</p>
+                  <p className="text-xs text-muted-foreground">{r.developerReply.comment}</p>
+                </div>
+              ) : (
+                <Button size="sm" variant="outline"><MessageSquare className="w-3 h-3 me-1" /> Reply</Button>
+              )}
+              <Button
+                size="sm"
+                variant="outline"
+                onClick={() => setSocialReview({ author: r.author, rating: r.rating, comment: r.comment, project: r.project })}
+                className="gap-1.5"
+              >
+                <Share2 className="w-3 h-3" />
+                Share as Post
+              </Button>
             </div>
           </div>
-          <p className="text-sm text-muted-foreground mb-3">{r.comment}</p>
-          {r.developerReply ? (
-            <div className="p-3 bg-secondary rounded-lg">
-              <p className="text-xs font-semibold text-primary mb-1">↩ Your Reply</p>
-              <p className="text-xs text-muted-foreground">{r.developerReply.comment}</p>
-            </div>
-          ) : (
-            <Button size="sm" variant="outline"><MessageSquare className="w-3 h-3 me-1" /> Reply</Button>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <ReviewToSocialModal
+        open={!!socialReview}
+        onOpenChange={(open) => { if (!open) setSocialReview(null); }}
+        review={socialReview || { author: '', rating: 0, comment: '' }}
+        businessName={myDev.name}
+      />
     </div>
-  </div>
-);
+  );
+};
 
 const DevGallery = () => (
   <div>

@@ -1,48 +1,32 @@
 
 
-## Review → Social Post (Auto-Generate)
+## Make Search Dropdown Items Compact on Mobile
 
-### What this feature does
-When a business receives a review, they can click a button to auto-generate a polished social media post from that review using AI. The generated post is ready to copy/share on Instagram, Twitter/X, LinkedIn, etc. This turns positive reviews into marketing content effortlessly.
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Components
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-**1. New Edge Function: `review-to-social`**
-- Accepts a review (rating, comment, author name, business name) and target platform (instagram, twitter, linkedin, general)
-- Calls Lovable AI (Gemini Flash) with a prompt that transforms the review into a branded social post with emojis, hashtags, and a call-to-action
-- Returns the generated post text, suggested hashtags, and optional image caption
-- Uses existing `LOVABLE_API_KEY` (already configured)
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-**2. New Component: `ReviewToSocialModal`**
-- Modal triggered from review cards in the Business Dashboard (`DevReviews` section)
-- Shows the original review summary at the top
-- Platform selector chips (Instagram, Twitter/X, LinkedIn, General)
-- AI-generated post preview with copy-to-clipboard button
-- "Regenerate" button for a fresh version
-- Character count indicator (280 for Twitter, etc.)
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-**3. Business Dashboard Integration**
-- Add a "Share as Post" button (with a `Share2` icon) next to each review in `DevReviews`
-- Clicking opens `ReviewToSocialModal` pre-filled with that review's data
-- Only visible to business account owners (already gated by dashboard auth)
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-### Technical flow
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-```text
-[Review Card] → "Share as Post" button
-       ↓
-[ReviewToSocialModal] → user picks platform
-       ↓
-supabase.functions.invoke("review-to-social")
-       ↓
-AI generates branded post text
-       ↓
-User previews → copies to clipboard or regenerates
-```
-
-### Files to create/modify
-- **Create** `supabase/functions/review-to-social/index.ts` — AI edge function
-- **Create** `src/components/ReviewToSocialModal.tsx` — modal UI
-- **Modify** `src/pages/DeveloperDashboard.tsx` — add "Share as Post" button to `DevReviews`
-- **Modify** `supabase/config.toml` — add function config with `verify_jwt = false`
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 
