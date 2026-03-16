@@ -230,16 +230,22 @@ export function ReviewsCarousel() {
         </div>
 
         {/* Footer bar */}
-        <div className="mt-1 flex flex-col sm:flex-row items-center justify-center gap-1 sm:gap-2">
+        <div className="mt-2 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 pb-2">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-foreground">
-              {t("reviews.basedOn", {
-                rating: avgRating,
-                count: sortedReviews.length,
-              })}
+            {renderStars(Math.round(Number(avgRating)))}
+            <span className="text-sm font-bold text-foreground">
+              {avgRating}
+            </span>
+            <span className="text-sm text-muted-foreground">
+              ({sortedReviews.length.toLocaleString()})
             </span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
+            <img
+              src={logoOnly}
+              alt="R8ESTATE"
+              className="h-6 md:h-7 w-auto object-contain"
+            />
             <img
               src={logoSlogan}
               alt="R8ESTATE"
