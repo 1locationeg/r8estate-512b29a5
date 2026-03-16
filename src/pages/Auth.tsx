@@ -291,7 +291,7 @@ const Auth = () => {
                     </div>
                     {isBusinessMode && (
                       <div className="space-y-2">
-                        <Label htmlFor="companyName">{t('auth.companyName', 'Company / Developer Name')}</Label>
+                        <Label htmlFor="companyName">{t('auth.companyName', 'Company / Business Name')}</Label>
                         <div className="relative">
                           <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input id="companyName" type="text" placeholder="Your company name" value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="ps-10" />
