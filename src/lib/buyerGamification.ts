@@ -138,6 +138,13 @@ export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
   if (input.reportsUnlocked >= 3) earned.push('deep_diver');
   if (input.helpfulVotes >= 10) earned.push('helpful_voter');
   if (input.joinedDate.getFullYear() <= 2026) earned.push('early_bird');
+  // Community badges
+  if (input.communityPosts >= 1) earned.push('first_post');
+  if (input.communityPosts >= 5) earned.push('active_poster');
+  if (input.communityReplies >= 1) earned.push('first_reply');
+  if (input.communityReplies >= 10) earned.push('reply_streak');
+  if (input.communityVotes >= 10) earned.push('community_voter');
+  if (input.communityPosts >= 10 && input.communityReplies >= 20) earned.push('community_champion');
 
   return earned;
 }
