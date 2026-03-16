@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
   Mail, CheckCircle, TrendingUp, Clock, Shield, AlertTriangle,
-  Building2, Users, MapPin, CalendarDays, Briefcase, Banknote, FolderKanban
+  Building2, Users, MapPin, CalendarDays, Briefcase, Banknote, FolderKanban, MessageCircle
 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
