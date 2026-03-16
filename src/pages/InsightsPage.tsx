@@ -111,7 +111,7 @@ const InsightsPage = () => {
   const [insightRole, setInsightRole] = useState<string>('buyer');
   const [activeTab, setActiveTab] = useState<'insights' | 'categories' | 'trending'>('insights');
 
-  const effectiveRole = role === 'admin' ? 'admin' : role === 'developer' ? 'developer' : 'buyer';
+  const effectiveRole = role === 'admin' ? 'admin' : role === 'business' ? 'business' : 'buyer';
 
   const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;

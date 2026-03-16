@@ -126,7 +126,7 @@ const Auth = () => {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
         }
       } else {
-        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'developer' : 'buyer');
+        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'business' : 'buyer');
         if (error) {
           if (error.message.includes('already registered')) {
             toast({ title: 'Account exists', description: 'An account with this email already exists. Please sign in.', variant: 'destructive' });

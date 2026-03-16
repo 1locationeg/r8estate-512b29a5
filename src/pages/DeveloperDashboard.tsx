@@ -685,25 +685,25 @@ const DeveloperDashboard = () => {
   }, [user, role, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
-  if (!user || (role !== 'developer' && role !== 'admin')) return null;
+  if (!user || (role !== 'business' && role !== 'admin')) return null;
 
-  const subPath = location.pathname.replace('/developer', '').replace('/', '');
+  const subPath = location.pathname.replace('/business', '').replace('/', '');
   const pageTitle = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Dashboard';
 
   const navItems = [
-    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/developer' },
-    { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/developer/profile' },
-    { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/developer/projects' },
-    { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/developer/gamification' },
-    { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/developer/reviews' },
-    { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/developer/gallery' },
-    { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/developer/employees' },
-    { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/developer/categories' },
-    { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/developer/integration' },
+    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/business' },
+    { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/business/profile' },
+    { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/business/projects' },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
+    { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
+    { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
+    { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
+    { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
+    { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/business/integration' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
-    { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/developer/notifications' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/developer/notification-preferences' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/developer/settings' },
+    { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/business/notification-preferences' },
+    { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/business/settings' },
   ];
 
   return (

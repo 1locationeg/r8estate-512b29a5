@@ -768,7 +768,7 @@ const BuyerDashboard = () => {
   }, [user, role, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
-  if (!user || role === 'developer' || role === 'admin') return null;
+  if (!user || role === 'business' || role === 'admin') return null;
 
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/buyer' },

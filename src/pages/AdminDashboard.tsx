@@ -1964,7 +1964,7 @@ const AdminDashboard = () => {
     if (!isLoading) {
       if (!user) navigate('/auth');
       else if (role !== 'admin') {
-        navigate(role === 'developer' ? '/developer' : '/buyer');
+        navigate(role === 'business' ? '/business' : '/buyer');
       }
     }
   }, [user, role, isLoading, navigate]);
