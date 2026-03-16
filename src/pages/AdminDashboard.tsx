@@ -432,7 +432,7 @@ const AdminUsers = () => {
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
-    { value: 'developer', label: 'Developer', color: 'bg-primary/10 text-primary' },
+    { value: 'business', label: 'Business', color: 'bg-primary/10 text-primary' },
     { value: 'admin', label: 'Admin', color: 'bg-brand-red/10 text-brand-red' },
   ];
 
@@ -1964,7 +1964,7 @@ const AdminDashboard = () => {
     if (!isLoading) {
       if (!user) navigate('/auth');
       else if (role !== 'admin') {
-        navigate(role === 'developer' ? '/developer' : '/buyer');
+        navigate(role === 'business' ? '/business' : '/buyer');
       }
     }
   }, [user, role, isLoading, navigate]);

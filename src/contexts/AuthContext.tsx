@@ -4,7 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
 import { registerDevice, markIntentionalLogout, refreshDeviceExpiry } from '@/utils/deviceAuth';
 
-type AppRole = 'user' | 'buyer' | 'developer' | 'admin';
+type AppRole = 'user' | 'buyer' | 'business' | 'admin';
 type AccountTypeIntent = 'buyer' | 'business';
 
 interface Profile {

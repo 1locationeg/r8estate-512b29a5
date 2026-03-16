@@ -41,7 +41,7 @@ const Auth = () => {
   const oauthAccountType = localStorage.getItem('oauth_account_type');
   const isBusinessGoogleCallback = Boolean(oauthAccountType === 'business' && user);
   const requiresBusinessRoleSync = Boolean(
-    isBusinessGoogleCallback && role !== 'developer' && role !== 'admin'
+    isBusinessGoogleCallback && role !== 'business' && role !== 'admin'
   );
 
   useEffect(() => {
@@ -78,7 +78,7 @@ const Auth = () => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       localStorage.removeItem('oauth_account_type');
       if (role === 'admin') navigate('/admin');
-      else if (role === 'developer') navigate('/developer');
+      else if (role === 'business') navigate('/business');
       else navigate('/buyer');
     }
   }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate]);
@@ -126,7 +126,7 @@ const Auth = () => {
           toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
         }
       } else {
-        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'developer' : 'buyer');
+        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'business' : 'buyer');
         if (error) {
           if (error.message.includes('already registered')) {
             toast({ title: 'Account exists', description: 'An account with this email already exists. Please sign in.', variant: 'destructive' });

@@ -37,7 +37,7 @@ const BuyerOverview = () => {
       if (error) throw error;
       await refreshProfile();
       toast.success('Account upgraded to Business! Redirecting to your business dashboard...');
-      setTimeout(() => navigate('/developer'), 1000);
+      setTimeout(() => navigate('/business'), 1000);
     } catch (err: any) {
       toast.error(err.message || 'Failed to upgrade account. Please try again.');
     } finally {
@@ -56,7 +56,7 @@ const BuyerOverview = () => {
       </div>
 
       {/* Register Your Business CTA - only for non-developer users */}
-      {role !== 'developer' && role !== 'admin' && (
+      {role !== 'business' && role !== 'admin' && (
       <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/10">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary rounded-full blur-3xl" />
@@ -757,8 +757,8 @@ const BuyerDashboard = () => {
       return;
     }
 
-    if (role === 'developer') {
-      navigate('/developer');
+    if (role === 'business') {
+      navigate('/business');
       return;
     }
 
@@ -768,7 +768,7 @@ const BuyerDashboard = () => {
   }, [user, role, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
-  if (!user || role === 'developer' || role === 'admin') return null;
+  if (!user || role === 'business' || role === 'admin') return null;
 
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/buyer' },

@@ -51,7 +51,7 @@ const RouteLoader = () => {
   if (path === "/") return <IndexSkeleton />;
   if (path === "/auth") return <AuthSkeleton />;
   if (path.startsWith("/buyer")) return <BuyerDashboardSkeleton />;
-  if (path.startsWith("/developer")) return <DeveloperDashboardSkeleton />;
+  if (path.startsWith("/business")) return <DeveloperDashboardSkeleton />;
   if (path.startsWith("/admin")) return <AdminDashboardSkeleton />;
   if (path === "/directory") return <DeveloperDirectorySkeleton />;
   if (path === "/install") return <InstallSkeleton />;
@@ -78,7 +78,7 @@ const App = () => (
                 <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/reset-password" element={<ResetPassword />} />
                 <Route path="/buyer/*" element={<BuyerDashboard />} />
-                <Route path="/developer/*" element={<DeveloperDashboard />} />
+                <Route path="/business/*" element={<DeveloperDashboard />} />
                 <Route path="/admin/*" element={<AdminDashboard />} />
                 <Route path="/directory" element={<DeveloperDirectory />} />
                 <Route path="/reviews" element={<Reviews />} />

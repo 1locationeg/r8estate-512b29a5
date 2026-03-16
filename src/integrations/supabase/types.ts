@@ -927,7 +927,7 @@ export type Database = {
     }
     Enums: {
       admin_permission_level: "super_admin" | "admin" | "editor" | "view_only"
-      app_role: "user" | "buyer" | "developer" | "admin"
+      app_role: "user" | "buyer" | "business" | "admin"
       community_post_category:
         | "discussion"
         | "question"
@@ -1062,7 +1062,7 @@ export const Constants = {
   public: {
     Enums: {
       admin_permission_level: ["super_admin", "admin", "editor", "view_only"],
-      app_role: ["user", "buyer", "developer", "admin"],
+      app_role: ["user", "buyer", "business", "admin"],
       community_post_category: [
         "discussion",
         "question",

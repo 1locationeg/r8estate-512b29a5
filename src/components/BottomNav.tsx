@@ -15,7 +15,7 @@ export const BottomNav = () => {
 
   const getDashboardRoute = () => {
     if (role === "admin") return "/admin";
-    if (role === "developer") return "/developer";
+    if (role === "business") return "/business";
     return "/buyer";
   };
 

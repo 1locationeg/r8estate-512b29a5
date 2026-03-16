@@ -119,7 +119,7 @@ export const GamificationPanel = () => {
                 <Badge variant="outline" className="text-[10px]">+{missingFields.length - 4} more</Badge>
               )}
             </div>
-            <Button size="sm" className="w-full gap-1.5 bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate('/developer/profile')}>
+            <Button size="sm" className="w-full gap-1.5 bg-accent text-accent-foreground hover:bg-accent/90" onClick={() => navigate('/business/profile')}>
               Complete Your Profile <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </CardContent>
@@ -191,7 +191,7 @@ export const GamificationPanel = () => {
         </CardHeader>
         <CardContent className="space-y-3">
           {missions.map((mp) => (
-            <MissionCard key={mp.mission.id} progress={mp} onAction={() => navigate('/developer/profile')} />
+            <MissionCard key={mp.mission.id} progress={mp} onAction={() => navigate('/business/profile')} />
           ))}
         </CardContent>
       </Card>
