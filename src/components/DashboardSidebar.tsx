@@ -121,6 +121,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         })}
       </nav>
 
+      {/* Mini Leaderboard */}
+      <MiniLeaderboard onNavigate={onNavigate} />
+
       {/* Bottom */}
       <div className="p-3 space-y-2 border-t border-border safe-bottom">
         {bottomAction && (
