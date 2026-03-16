@@ -700,6 +700,51 @@ export type Database = {
         }
         Relationships: []
       }
+      weekly_buyer_engagement: {
+        Row: {
+          community_posts: number
+          community_replies: number
+          community_votes: number
+          created_at: string
+          developers_viewed: number
+          helpful_votes: number
+          id: string
+          projects_saved: number
+          reports_unlocked: number
+          updated_at: string
+          user_id: string
+          week_start: string
+        }
+        Insert: {
+          community_posts?: number
+          community_replies?: number
+          community_votes?: number
+          created_at?: string
+          developers_viewed?: number
+          helpful_votes?: number
+          id?: string
+          projects_saved?: number
+          reports_unlocked?: number
+          updated_at?: string
+          user_id: string
+          week_start?: string
+        }
+        Update: {
+          community_posts?: number
+          community_replies?: number
+          community_votes?: number
+          created_at?: string
+          developers_viewed?: number
+          helpful_votes?: number
+          id?: string
+          projects_saved?: number
+          reports_unlocked?: number
+          updated_at?: string
+          user_id?: string
+          week_start?: string
+        }
+        Relationships: []
+      }
       whatsapp_leads: {
         Row: {
           created_at: string
@@ -767,6 +812,22 @@ export type Database = {
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
+      }
+      get_weekly_leaderboard: {
+        Args: { _limit?: number }
+        Returns: {
+          avatar_url: string
+          community_posts: number
+          community_replies: number
+          community_votes: number
+          developers_viewed: number
+          full_name: string
+          helpful_votes: number
+          projects_saved: number
+          reports_unlocked: number
+          total_points: number
+          user_id: string
+        }[]
       }
       has_role: {
         Args: {
