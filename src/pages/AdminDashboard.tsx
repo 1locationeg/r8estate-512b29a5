@@ -2035,6 +2035,7 @@ const AdminDashboard = () => {
         <Route path="seo" element={<AdminSEO />} />
         <Route path="email-branding" element={<AdminEmailBranding />} />
         <Route path="search-phrases" element={<AdminSearchPhrases />} />
+        <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
         <Route path="settings" element={<AdminSettings />} />
       </Routes>
     </DashboardLayout>
