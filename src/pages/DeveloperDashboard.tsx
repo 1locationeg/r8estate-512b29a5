@@ -734,6 +734,7 @@ const DeveloperDashboard = () => {
         <Route path="categories" element={<DevCategories />} />
         <Route path="integration" element={<DevIntegration />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<DevSettings />} />
       </Routes>
     </DashboardLayout>
