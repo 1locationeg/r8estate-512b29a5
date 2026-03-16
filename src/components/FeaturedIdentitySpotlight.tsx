@@ -45,6 +45,8 @@ export const FeaturedIdentitySpotlight = () => {
   }, [totalPairs]);
 
   const developer = developers[currentIndex];
+  const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
+  const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
   const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
 
