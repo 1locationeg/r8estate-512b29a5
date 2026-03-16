@@ -66,20 +66,20 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Portfolio / Dashboard */}
+          {/* Portfolio / My Activity */}
           <button
             onClick={() => {
               if (user) {
-                navigate(getDashboardRoute());
+                navigate("/portfolio");
               } else {
                 navigate("/auth");
               }
             }}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
-              isDashboard ? "text-primary" : "text-muted-foreground"
+              isPortfolio ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <Briefcase className="h-5 w-5" strokeWidth={isDashboard ? 2.5 : 2} />
+            <Bookmark className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
           </button>
 

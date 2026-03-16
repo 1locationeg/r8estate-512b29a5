@@ -80,6 +80,7 @@ const App = () => (
                 <Route path="/directory" element={<DeveloperDirectory />} />
                 <Route path="/reviews" element={<Reviews />} />
                 <Route path="/install" element={<Install />} />
+                <Route path="/portfolio" element={<Portfolio />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
               </Routes>
