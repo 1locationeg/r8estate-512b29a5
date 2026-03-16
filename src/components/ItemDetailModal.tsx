@@ -5,6 +5,7 @@ import { CompareModal } from "./CompareModal";
 import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { useReviewability } from "@/hooks/useReviewability";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
