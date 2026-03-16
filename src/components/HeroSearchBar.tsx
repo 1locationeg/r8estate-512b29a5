@@ -1,4 +1,4 @@
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from "react";
 import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
