@@ -42,7 +42,7 @@ export function useBuyerGamification() {
         const [engRes, reviewRes, receiptRes] = await Promise.all([
           supabase
             .from('buyer_engagement')
-            .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes')
+            .select('developers_viewed, projects_saved, reports_unlocked, helpful_votes, community_posts, community_replies, community_votes')
             .eq('user_id', user.id)
             .maybeSingle(),
           supabase
