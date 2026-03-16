@@ -6,12 +6,13 @@ import { Button } from '@/components/ui/button';
 import {
   Loader2, TrendingUp, TrendingDown, Minus, AlertTriangle,
   MessageSquare, Users, Building2, BarChart3, Shield, Lightbulb,
-  RefreshCw, Sparkles, ArrowLeft, Clock, Zap
+  RefreshCw, Sparkles, ArrowLeft, Clock, Zap, Star, MapPin,
+  Search, Trophy, Target, Eye
 } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface Insight {
-  category: 'reviews' | 'engagement' | 'businesses' | 'growth' | 'risk' | 'opportunity';
+  category: string;
   title: string;
   summary: string;
   trend: 'up' | 'down' | 'stable' | 'alert';
@@ -36,14 +37,35 @@ interface Snapshot {
   };
 }
 
-const categoryConfig: Record<string, { icon: typeof MessageSquare; color: string; bg: string }> = {
-  reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
-  engagement: { icon: Users, color: 'text-primary', bg: 'bg-primary/10' },
-  businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
-  growth: { icon: BarChart3, color: 'text-accent', bg: 'bg-accent/10' },
-  risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
-  opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+// Role-specific category configs
+const categoryConfigs: Record<string, Record<string, { icon: typeof MessageSquare; color: string; bg: string }>> = {
+  admin: {
+    growth: { icon: BarChart3, color: 'text-accent', bg: 'bg-accent/10' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
+    businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/10' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+  },
+  developer: {
+    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
+    reputation: { icon: Star, color: 'text-accent', bg: 'bg-accent/10' },
+    engagement: { icon: Eye, color: 'text-primary', bg: 'bg-primary/10' },
+    projects: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10' },
+    competition: { icon: Target, color: 'text-destructive', bg: 'bg-destructive/10' },
+  },
+  buyer: {
+    market: { icon: MapPin, color: 'text-primary', bg: 'bg-primary/10' },
+    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10' },
+    deals: { icon: Trophy, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10' },
+    discovery: { icon: Search, color: 'text-primary', bg: 'bg-primary/10' },
+  },
 };
+
+const defaultCat = { icon: Sparkles, color: 'text-muted-foreground', bg: 'bg-secondary' };
 
 const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; label: string }> = {
   up: { icon: TrendingUp, color: 'text-trust-excellent', label: 'Trending Up' },
@@ -52,21 +74,30 @@ const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; labe
   alert: { icon: AlertTriangle, color: 'text-accent', label: 'Needs Attention' },
 };
 
+const roleLabels: Record<string, { label: string; description: string }> = {
+  admin: { label: 'Admin', description: 'Platform health, moderation & growth' },
+  developer: { label: 'Developer', description: 'Reputation, reviews & competitive position' },
+  buyer: { label: 'Buyer', description: 'Market trends, deals & smart decisions' },
+};
+
 const InsightsPage = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, role, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
   const [loading, setLoading] = useState(false);
   const [hasLoaded, setHasLoaded] = useState(false);
   const [cacheInfo, setCacheInfo] = useState<{ cached: boolean; cached_at: string; expires_in_minutes: number } | null>(null);
+  const [insightRole, setInsightRole] = useState<string>('buyer');
+
+  const effectiveRole = role === 'admin' ? 'admin' : role === 'developer' ? 'developer' : 'buyer';
 
   const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;
     setLoading(true);
     try {
       const { data, error } = await supabase.functions.invoke('platform-insights', {
-        body: { forceRefresh },
+        body: { forceRefresh, role: effectiveRole },
       });
       if (error) throw error;
       if (data?.error) {
@@ -74,6 +105,7 @@ const InsightsPage = () => {
       } else {
         setInsights(data.insights || []);
         setSnapshot(data.snapshot || null);
+        setInsightRole(data.role || effectiveRole);
         setCacheInfo({
           cached: data.cached ?? false,
           cached_at: data.cached_at ?? '',
@@ -127,7 +159,9 @@ const InsightsPage = () => {
               <Sparkles className="w-5 h-5 text-primary" />
               AI Insights
             </h1>
-            <p className="text-[10px] text-muted-foreground">Real-time platform intelligence</p>
+            <p className="text-[10px] text-muted-foreground">
+              {roleLabels[effectiveRole]?.description || 'Real-time platform intelligence'}
+            </p>
           </div>
           <Button
             size="sm"
@@ -211,9 +245,13 @@ const InsightsPage = () => {
         {/* Insights Cards */}
         {insights.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">AI-Generated Insights</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              {roleLabels[insightRole]?.label || 'AI'} Insights
+            </h2>
+            <p className="text-xs text-muted-foreground -mt-2">{roleLabels[insightRole]?.description}</p>
             {insights.map((insight, i) => {
-              const cat = categoryConfig[insight.category] || categoryConfig.growth;
+              const roleCats = categoryConfigs[insightRole] || categoryConfigs.buyer;
+              const cat = roleCats[insight.category] || defaultCat;
               const trend = trendConfig[insight.trend] || trendConfig.stable;
               const CatIcon = cat.icon;
               const TrendIcon = trend.icon;
