@@ -21,6 +21,8 @@ const trustCategories = [
 
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categoryPairIndex, setCategoryPairIndex] = useState(0);
