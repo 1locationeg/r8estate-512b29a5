@@ -59,6 +59,17 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
         </DialogHeader>
 
         <div className="space-y-4">
+          {/* Prefilled developer tag */}
+          {prefillDev && (
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 bg-primary/10 border border-primary/30 rounded-full px-3 py-1.5 text-sm">
+                <Building2 className="w-4 h-4 text-primary" />
+                <span className="text-foreground font-medium">{prefillDev.name}</span>
+              </div>
+              <span className="text-xs text-muted-foreground">Discussion will be tagged with this developer</span>
+            </div>
+          )}
+
           {/* Category chips */}
           <div>
             <label className="text-xs font-medium text-muted-foreground mb-2 block">Category</label>
