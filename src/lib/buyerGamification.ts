@@ -120,6 +120,9 @@ export interface BuyerGamificationInput {
   hasVerifiedPurchase: boolean;
   helpfulVotes: number;
   joinedDate: Date;
+  communityPosts: number;
+  communityReplies: number;
+  communityVotes: number;
 }
 
 export function calcBuyerEarnedBadges(input: BuyerGamificationInput): string[] {
