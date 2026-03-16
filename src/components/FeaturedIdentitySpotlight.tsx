@@ -99,7 +99,7 @@ export const FeaturedIdentitySpotlight = () => {
         </div>
 
         {/* Trust Gauge - overlapping banner */}
-        <div className="relative -mt-6 text-center px-4 pb-2">
+        <div className="relative -mt-6 text-center px-4 pb-2 bg-background rounded-b-xl">
           <div className="relative w-36 h-20 md:w-44 md:h-24 mx-auto mb-1">
             <svg viewBox="0 0 200 110" className="w-full h-full">
               <defs>
