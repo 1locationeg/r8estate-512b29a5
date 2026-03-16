@@ -20,6 +20,9 @@ export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [categoryPairIndex, setCategoryPairIndex] = useState(0);
+
+  const totalPairs = Math.ceil(trustCategories.length / 2);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -28,6 +31,13 @@ export const FeaturedIdentitySpotlight = () => {
     }, 8000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCategoryPairIndex((prev) => (prev + 1) % totalPairs);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [totalPairs]);
 
   const developer = developers[currentIndex];
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
@@ -161,8 +171,11 @@ export const FeaturedIdentitySpotlight = () => {
         {/* Trust Categories */}
         <div className="px-4 py-2.5 border-t border-border">
           <h4 className="text-xs font-semibold text-foreground mb-1.5">Trust Categories</h4>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5">
-            {trustCategories.map((cat) => {
+          <div
+            key={categoryPairIndex}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 animate-fade-in"
+          >
+            {trustCategories.slice(categoryPairIndex * 2, categoryPairIndex * 2 + 2).map((cat) => {
               const score = getCategoryScore(cat.key);
               return (
                 <TrustCategoryBar
@@ -172,6 +185,20 @@ export const FeaturedIdentitySpotlight = () => {
                 />
               );
             })}
+          </div>
+          <div className="flex items-center justify-center gap-1.5 mt-2">
+            {Array.from({ length: totalPairs }, (_, i) => (
+              <button
+                key={i}
+                onClick={() => setCategoryPairIndex(i)}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  i === categoryPairIndex
+                    ? "bg-primary scale-125"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                }`}
+                aria-label={`Show category pair ${i + 1}`}
+              />
+            ))}
           </div>
         </div>
 
