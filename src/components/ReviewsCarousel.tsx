@@ -280,7 +280,7 @@ export function ReviewsCarousel() {
               className="h-6 md:h-7 w-auto object-contain"
             />
             <img
-              src={logoSlogan}
+              src={sideLongLogo}
               alt="R8ESTATE"
               className="h-7 md:h-9 object-contain rounded"
             />
