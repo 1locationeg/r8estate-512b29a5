@@ -29,7 +29,8 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const hasExpiredRef = useRef(false);
 
   // Device that has logged in before is NOT a guest — skip timer entirely
-  const deviceWasRegistered = localStorage.getItem(DEVICE_REGISTERED_KEY) === '1';
+  // Uses fingerprinted token with expiry; intentional logout still shows gate
+  const { registered: deviceWasRegistered } = checkDeviceRegistered();
   const isGuest = !isLoading && !user && !deviceWasRegistered;
 
   const clearTimer = useCallback(() => {
