@@ -49,6 +49,9 @@ import {
   ThumbsUp,
   Share2,
   Sparkles,
+  Bookmark,
+  UserPlus,
+  UserCheck,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
@@ -56,6 +59,9 @@ import { ShareMenu } from "./ShareMenu";
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { useReviews } from "@/hooks/useReviews";
+import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
@@ -116,10 +122,14 @@ const getCategoryBannerStyle = (category: SearchCategory) => {
 
 export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => {
   const { t, i18n } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { dbReviews, refetch: refetchReviews } = useReviews(item?.id);
+  const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(item?.id || "", item?.category || "item");
+  const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(item?.id || "");
 
   const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
     if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
@@ -515,8 +525,38 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         {/* Quick Business Stats Bar */}
         {renderQuickStats(item)}
 
+        {/* Save & Follow Actions */}
+        <div className="flex items-center gap-2 mt-4">
+          <Button
+            variant={isSaved ? "default" : "outline"}
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              if (!user) { navigate("/auth"); return; }
+              toggleSave(item.name, item.image);
+            }}
+            disabled={saveLoading}
+          >
+            <Bookmark className={`w-4 h-4 ${isSaved ? "fill-primary-foreground" : ""}`} />
+            {isSaved ? t("common.saved", "Saved") : t("common.save", "Save")}
+          </Button>
+          <Button
+            variant={isFollowing ? "default" : "outline"}
+            size="sm"
+            className="gap-2"
+            onClick={() => {
+              if (!user) { navigate("/auth"); return; }
+              toggleFollow(item.name);
+            }}
+            disabled={followLoading}
+          >
+            {isFollowing ? <UserCheck className="w-4 h-4" /> : <UserPlus className="w-4 h-4" />}
+            {isFollowing ? t("common.following", "Following") : t("common.follow", "Follow")}
+          </Button>
+        </div>
+
         {/* Action Buttons (Trustpilot style) */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="flex flex-wrap gap-2 mt-3">
           <Button size="sm" className="gap-2" onClick={() => setIsReviewModalOpen(true)}>
             <PenLine className="w-4 h-4" />
             {t("search.writeReview")}

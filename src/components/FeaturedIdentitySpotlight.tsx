@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Star, Shield, MessageSquare, ChevronRight } from "lucide-react";
+import { Star, Shield, MessageSquare, ChevronRight, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
 import { TrustCategoryBar } from "./TrustCategoryBar";
 import { getRatingColorClass } from "@/lib/ratingColors";
+import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
@@ -18,6 +21,8 @@ const trustCategories = [
 
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categoryPairIndex, setCategoryPairIndex] = useState(0);
@@ -40,6 +45,8 @@ export const FeaturedIdentitySpotlight = () => {
   }, [totalPairs]);
 
   const developer = developers[currentIndex];
+  const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
+  const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
   const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
 
@@ -97,7 +104,33 @@ export const FeaturedIdentitySpotlight = () => {
               <h3 className="text-lg md:text-xl font-bold text-primary-foreground text-center">
                 {developer.name}
               </h3>
-              <div className="absolute right-0">
+              <div className="absolute right-0 flex items-center gap-1">
+                <button
+                  onClick={() => {
+                    if (!user) { navigate("/auth"); return; }
+                    toggleSave(developer.name, developer.logo);
+                  }}
+                  disabled={saveLoading}
+                  className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
+                  title={isSaved ? "Remove from saved" : "Save"}
+                >
+                  <Bookmark className={`h-3.5 w-3.5 ${isSaved ? "fill-primary-foreground text-primary-foreground" : "text-primary-foreground/70"}`} />
+                </button>
+                <button
+                  onClick={() => {
+                    if (!user) { navigate("/auth"); return; }
+                    toggleFollow(developer.name);
+                  }}
+                  disabled={followLoading}
+                  className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
+                  title={isFollowing ? "Unfollow" : "Follow"}
+                >
+                  {isFollowing ? (
+                    <UserCheck className="h-3.5 w-3.5 text-primary-foreground" />
+                  ) : (
+                    <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
+                  )}
+                </button>
                 <ShareMenu title={developer.name} iconOnly />
               </div>
             </div>
