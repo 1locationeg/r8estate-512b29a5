@@ -215,20 +215,14 @@ export function ReviewsCarousel() {
                     {renderStars(review.rating)}
                   </div>
 
-                  {/* Title */}
-                  <h3 className="font-semibold text-sm text-foreground">
-                    {review.comment.slice(0, 60)}
-                    {review.comment.length > 60 ? "…" : ""}
-                  </h3>
-
-                  {/* Comment */}
+                  {/* Comment — 2 lines max with inline "more" */}
                   <div className="relative">
-                    <p className={`text-xs text-muted-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
+                    <p className={`text-sm text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
                       {review.comment}
                       {!isExpanded && isLong && (
                         <button
                           onClick={() => toggleExpand(review.id)}
-                          className="text-xs font-medium text-primary hover:underline ml-1 inline"
+                          className="text-sm font-semibold text-primary hover:underline ml-1 inline"
                         >
                           {isRTL ? "…المزيد" : "…more"}
                         </button>
