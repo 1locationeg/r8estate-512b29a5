@@ -46,7 +46,7 @@ export const BottomNav = () => {
           {/* Categories / Directory */}
           <button
             onClick={() => navigate("/directory")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isDirectory ? "text-primary" : "text-muted-foreground"
             }`}
           >
