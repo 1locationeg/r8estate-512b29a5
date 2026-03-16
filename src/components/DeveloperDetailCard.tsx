@@ -1,4 +1,4 @@
-import { Star, Mic, Download, GitCompare } from "lucide-react";
+import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
@@ -14,6 +14,8 @@ import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
 import { cn } from "@/lib/utils";
+import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
+import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
 import {
   Select,
@@ -36,10 +38,13 @@ export const DeveloperDetailCard = ({
 }: DeveloperDetailCardProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const { isSaved, toggle: toggleSave } = useSavedItem(developer.id, "developer");
+  const { isFollowing, toggle: toggleFollow } = useFollowBusiness(developer.id);
 
   // Track developer view
   useEffect(() => {
@@ -143,7 +148,22 @@ export const DeveloperDetailCard = ({
       {/* Header with Developer Info */}
       <div className="p-4 md:p-6 text-center">
         <div className="flex items-center justify-between mb-4">
-          <div className="w-8" /> {/* Spacer */}
+          <div className="flex gap-1">
+            <button
+              onClick={() => { if (!user) { navigate("/auth"); return; } toggleSave(developer.name, developer.logo); }}
+              className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+              title={isSaved ? "Remove from saved" : "Save"}
+            >
+              <Bookmark className={`w-4 h-4 ${isSaved ? "fill-accent text-accent" : "text-foreground"}`} />
+            </button>
+            <button
+              onClick={() => { if (!user) { navigate("/auth"); return; } toggleFollow(developer.name); }}
+              className="p-2 rounded-lg bg-secondary hover:bg-secondary/80 transition-colors"
+              title={isFollowing ? "Unfollow" : "Follow"}
+            >
+              {isFollowing ? <UserCheck className="w-4 h-4 text-primary" /> : <UserPlus className="w-4 h-4 text-foreground" />}
+            </button>
+          </div>
           <h2 className="text-lg md:text-xl font-bold text-foreground">
             {developer.name}
           </h2>
