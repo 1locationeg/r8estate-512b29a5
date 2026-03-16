@@ -291,6 +291,8 @@ export function useCommunityActions() {
       if (postId) insertData.post_id = postId;
       if (replyId) insertData.reply_id = replyId;
       await supabase.from("community_votes").insert(insertData);
+      // Track engagement for gamification
+      trackBuyerEngagement(user.id, 'community_votes');
       // Increment upvotes
       if (postId) {
         const { data: post } = await supabase.from("community_posts").select("upvotes").eq("id", postId).single();
