@@ -19,6 +19,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
   const navigate = useNavigate();
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
+  const { trackClick, startLinger, cancelLinger } = useTrackInterest();
 
   const handleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -32,10 +33,17 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
     toggleFollow(developer.name);
   };
 
+  const handleCardClick = () => {
+    trackClick(developer.id, developer.name);
+    onClick();
+  };
+
   return (
     <Card
       className="p-6 hover:shadow-xl transition-all duration-300 border-border hover:border-primary/50 cursor-pointer relative"
-      onClick={onClick}
+      onClick={handleCardClick}
+      onMouseEnter={() => startLinger(developer.id, developer.name)}
+      onMouseLeave={() => cancelLinger(developer.id)}
     >
       {/* Action buttons */}
       <div className="absolute top-2 right-2 flex gap-1">

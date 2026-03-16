@@ -132,6 +132,14 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
 
+  // Track implicit interest when item detail is opened
+  const { trackClick } = useTrackInterest();
+  useEffect(() => {
+    if (item?.id) {
+      trackClick(item.id, item.name);
+    }
+  }, [item?.id]);
+
   const handleWriteReview = () => {
     if (!isReviewable) {
       setIsReviewBlockedOpen(true);
