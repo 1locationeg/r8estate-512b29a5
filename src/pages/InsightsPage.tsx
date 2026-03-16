@@ -218,7 +218,7 @@ const InsightsPage = () => {
             <Sparkles className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
             <h3 className="font-semibold text-foreground mb-1">No Insights Available</h3>
             <p className="text-sm text-muted-foreground mb-4">Try refreshing to generate fresh insights.</p>
-            <Button onClick={fetchInsights}>
+            <Button onClick={() => fetchInsights(false)}>
               <RefreshCw className="w-4 h-4 me-1" /> Generate Insights
             </Button>
           </div>
