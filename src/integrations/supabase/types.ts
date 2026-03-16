@@ -152,6 +152,30 @@ export type Database = {
         }
         Relationships: []
       }
+      followed_businesses: {
+        Row: {
+          business_id: string
+          business_name: string
+          created_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          business_id: string
+          business_name: string
+          created_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          business_id?: string
+          business_name?: string
+          created_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       guest_feedback: {
         Row: {
           created_at: string
@@ -400,6 +424,36 @@ export type Database = {
           rating?: number
           title?: string | null
           unit_type?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_items: {
+        Row: {
+          created_at: string
+          id: string
+          item_id: string
+          item_image: string | null
+          item_name: string
+          item_type: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          item_id: string
+          item_image?: string | null
+          item_name: string
+          item_type: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          item_id?: string
+          item_image?: string | null
+          item_name?: string
+          item_type?: string
           user_id?: string
         }
         Relationships: []

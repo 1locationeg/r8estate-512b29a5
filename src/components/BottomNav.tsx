@@ -1,7 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Menu, Briefcase } from "lucide-react";
-// Reviews icon replaces Home
+import { MessageSquare, LayoutGrid, Menu, Bookmark } from "lucide-react";
 import { useState } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { MobileNav } from "./MobileNav";
@@ -22,6 +21,7 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
+  const isPortfolio = location.pathname === "/portfolio";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
   return (
@@ -66,20 +66,20 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Portfolio / Dashboard */}
+          {/* Portfolio / My Activity */}
           <button
             onClick={() => {
               if (user) {
-                navigate(getDashboardRoute());
+                navigate("/portfolio");
               } else {
                 navigate("/auth");
               }
             }}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[60px] py-1 transition-colors ${
-              isDashboard ? "text-primary" : "text-muted-foreground"
+              isPortfolio ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <Briefcase className="h-5 w-5" strokeWidth={isDashboard ? 2.5 : 2} />
+            <Bookmark className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
           </button>
 
