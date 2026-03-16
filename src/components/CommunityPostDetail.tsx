@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ArrowBigUp, MessageCircle, ArrowLeft, Send, CornerDownRight, Share2, Flag, ThumbsUp, Heart, Smile, Bookmark } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,7 @@ import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
+import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
 
@@ -47,113 +48,135 @@ interface Props {
   onRefetch: () => void;
 }
 
-const EngagementToolbar = ({ 
-  onReply, 
-  onVote, 
-  voted,
+// Reaction pills display
+const ReactionPills = ({ reactions, onToggle }: { reactions: ReactionSummary[]; onToggle: (emoji: string) => void }) => {
+  if (!reactions.length) return null;
+  return (
+    <div className="flex items-center gap-1 flex-wrap mt-1.5">
+      {reactions.map((r) => (
+        <button
+          key={r.emoji}
+          onClick={(e) => { e.stopPropagation(); onToggle(r.emoji); }}
+          className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[11px] border transition-colors ${
+            r.user_reacted
+              ? 'border-primary/30 bg-primary/10 text-primary'
+              : 'border-border bg-secondary/50 text-muted-foreground hover:border-primary/20'
+          }`}
+        >
+          <span>{r.emoji}</span>
+          <span className="font-medium">{r.count}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const EngagementToolbar = ({
+  onReply,
+  targetId,
+  targetType,
   shareTitle,
   shareUrl,
-  compact = false 
-}: { 
-  onReply?: () => void; 
-  onVote: () => void; 
-  voted: boolean;
+  compact = false,
+}: {
+  onReply?: () => void;
+  targetId: string;
+  targetType: 'post' | 'reply';
   shareTitle: string;
   shareUrl?: string;
   compact?: boolean;
 }) => {
   const [showEmojis, setShowEmojis] = useState(false);
-  const [selectedReaction, setSelectedReaction] = useState<string | null>(null);
-
-  const handleReaction = (emoji: string) => {
-    setSelectedReaction(selectedReaction === emoji ? null : emoji);
-    setShowEmojis(false);
-    toast({ title: `Reacted with ${emoji}`, duration: 1500 });
-  };
+  const { reactions, toggleReaction } = useReactions(targetId, targetType);
 
   const handleFlag = () => {
     toast({ title: "Reported", description: "Thank you for helping keep our community safe.", duration: 2000 });
   };
 
+  const totalReactions = reactions.reduce((sum, r) => sum + r.count, 0);
+  const userHasReacted = reactions.some(r => r.user_reacted);
+
   return (
-    <div className={`flex items-center gap-1 ${compact ? 'mt-1.5' : 'mt-3 pt-3 border-t border-border'}`}>
-      {/* Like / React */}
-      <div className="relative">
-        <button
-          onClick={onVote}
-          onMouseEnter={() => setShowEmojis(true)}
-          onMouseLeave={() => setShowEmojis(false)}
-          className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-colors ${
-            voted || selectedReaction
-              ? 'text-primary bg-primary/10 font-medium'
-              : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-          }`}
-        >
-          {selectedReaction ? (
-            <span className="text-sm">{selectedReaction}</span>
-          ) : (
-            <ThumbsUp className="w-3.5 h-3.5" fill={voted ? "currentColor" : "none"} />
-          )}
-          <span>{voted || selectedReaction ? 'Liked' : 'Like'}</span>
-        </button>
-        {showEmojis && (
-          <div
+    <div className={compact ? 'mt-1.5' : 'mt-3 pt-3 border-t border-border'}>
+      {/* Reaction pills */}
+      <ReactionPills reactions={reactions} onToggle={toggleReaction} />
+
+      {/* Action buttons */}
+      <div className={`flex items-center gap-1 ${reactions.length ? 'mt-1.5' : ''}`}>
+        {/* Like / React */}
+        <div className="relative">
+          <button
+            onClick={() => toggleReaction("👍")}
             onMouseEnter={() => setShowEmojis(true)}
             onMouseLeave={() => setShowEmojis(false)}
-            className="absolute -top-10 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-lg"
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs transition-colors ${
+              userHasReacted
+                ? 'text-primary bg-primary/10 font-medium'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+            }`}
           >
-            {reactionEmojis.map((r) => (
-              <button
-                key={r.emoji}
-                onClick={(e) => { e.stopPropagation(); handleReaction(r.emoji); }}
-                className="hover:scale-125 transition-transform p-0.5 text-base"
-                title={r.label}
-              >
-                {r.emoji}
-              </button>
-            ))}
-          </div>
-        )}
-      </div>
+            <ThumbsUp className="w-3.5 h-3.5" fill={userHasReacted ? "currentColor" : "none"} />
+            <span>{totalReactions > 0 ? totalReactions : 'Like'}</span>
+          </button>
+          {showEmojis && (
+            <div
+              onMouseEnter={() => setShowEmojis(true)}
+              onMouseLeave={() => setShowEmojis(false)}
+              className="absolute -top-10 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-lg"
+            >
+              {reactionEmojis.map((r) => (
+                <button
+                  key={r.emoji}
+                  onClick={(e) => { e.stopPropagation(); toggleReaction(r.emoji); setShowEmojis(false); }}
+                  className="hover:scale-125 transition-transform p-0.5 text-base"
+                  title={r.label}
+                >
+                  {r.emoji}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
-      {/* Comment */}
-      {onReply && (
+        {/* Comment */}
+        {onReply && (
+          <button
+            onClick={onReply}
+            className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
+          >
+            <MessageCircle className="w-3.5 h-3.5" />
+            <span>Comment</span>
+          </button>
+        )}
+
+        {/* Share */}
+        <ShareMenu
+          title={shareTitle}
+          url={shareUrl}
+          iconOnly={false}
+          variant="ghost"
+          size="sm"
+          className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-primary gap-1 font-normal"
+        />
+
+        {/* Bookmark */}
         <button
-          onClick={onReply}
+          onClick={() => toast({ title: "Saved!", description: "Post bookmarked.", duration: 1500 })}
           className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
         >
-          <MessageCircle className="w-3.5 h-3.5" />
-          <span>Comment</span>
+          <Bookmark className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Save</span>
         </button>
-      )}
 
-      {/* Share */}
-      <ShareMenu
-        title={shareTitle}
-        url={shareUrl}
-        iconOnly={false}
-        variant="ghost"
-        size="sm"
-        className="h-auto px-2 py-1 text-xs text-muted-foreground hover:text-primary gap-1 font-normal"
-      />
-
-      {/* Bookmark */}
-      <button
-        onClick={() => toast({ title: "Saved!", description: "Post bookmarked.", duration: 1500 })}
-        className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-primary hover:bg-primary/5 transition-colors"
-      >
-        <Bookmark className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Save</span>
-      </button>
-
-      {/* Flag */}
-      <button
-        onClick={handleFlag}
-        className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors ml-auto"
-      >
-        <Flag className="w-3.5 h-3.5" />
-        <span className="hidden sm:inline">Report</span>
-      </button>
+        {/* Flag */}
+        <button
+          onClick={handleFlag}
+          className="flex items-center gap-1 px-2 py-1 rounded-md text-xs text-muted-foreground hover:text-destructive hover:bg-destructive/5 transition-colors ml-auto"
+        >
+          <Flag className="w-3.5 h-3.5" />
+          <span className="hidden sm:inline">Report</span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -182,7 +205,6 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
 
   const ReplyComposer = ({ parentReplyId }: { parentReplyId?: string | null }) => (
     <div className={`${parentReplyId ? 'ml-8 mt-2' : ''}`}>
-      {/* Commenting as indicator */}
       {user && (
         <div className="flex items-center gap-1.5 mb-2">
           <Avatar className="h-4 w-4">
@@ -222,12 +244,12 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
             <span className="text-[10px] text-muted-foreground">{timeAgo(reply.created_at)}</span>
           </div>
           <p className="text-sm text-foreground leading-relaxed">{reply.body}</p>
-          
+
           {/* Engagement toolbar for replies */}
           <EngagementToolbar
             onReply={!isNested ? () => setReplyingTo(replyingTo === reply.id ? null : reply.id) : undefined}
-            onVote={() => onVoteReply(reply.id)}
-            voted={!!reply.user_voted}
+            targetId={reply.id}
+            targetType="reply"
             shareTitle={reply.body.slice(0, 60)}
             compact
           />
@@ -240,7 +262,6 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
 
   return (
     <div className="space-y-4">
-      {/* Back button */}
       <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
         <ArrowLeft className="w-4 h-4" /> Back to Community
       </button>
@@ -278,8 +299,8 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
                 setReplyingTo(null);
                 document.querySelector<HTMLTextAreaElement>('textarea')?.focus();
               }}
-              onVote={onVotePost}
-              voted={!!post.user_voted}
+              targetId={post.id}
+              targetType="post"
               shareTitle={post.title}
             />
           </div>
