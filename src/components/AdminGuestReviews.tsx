@@ -13,9 +13,10 @@ import {
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import {
-  Loader2, Search, CheckCircle, Ban, Star, UserCheck, Clock, Trash2,
+  Loader2, Search, CheckCircle, Ban, Star, UserCheck, Clock, Trash2, Share2,
 } from "lucide-react";
 import { getRatingColorClass } from "@/lib/ratingColors";
+import { ReviewToSocialModal } from "@/components/ReviewToSocialModal";
 
 interface GuestReview {
   id: string;
