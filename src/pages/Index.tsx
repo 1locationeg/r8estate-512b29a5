@@ -16,6 +16,7 @@ import { MobileNav } from "@/components/MobileNav";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
+import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
