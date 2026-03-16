@@ -144,7 +144,7 @@ export function ReviewsCarousel() {
 
   const getInnerStarColor = (rating: number, starIndex: number) => {
     if (starIndex > rating) return "hsl(210,10%,92%)"; // light gray star
-    return "hsl(0,0%,100%)";                            // white star on navy
+    return "hsl(43,90%,52%)";                           // gold star on navy
   };
 
   const renderStars = (rating: number) => (
