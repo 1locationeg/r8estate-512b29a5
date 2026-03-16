@@ -209,27 +209,39 @@ export function ReviewsCarousel() {
           >
             {sortedReviews.map((review) => {
               const dev = developers.find((d) => d.id === review.developerId);
+              const isExpanded = expandedIds.has(review.id);
+              const isLong = review.comment.length > 120;
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[85vw] sm:w-[280px] md:w-[300px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[85vw] sm:w-[300px] md:w-[340px] bg-card border border-border rounded-xl p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  {/* Stars + Title */}
+                  {/* Stars */}
                   <div className="flex items-center gap-2">
                     {renderStars(review.rating)}
                   </div>
-                  <h3 className="font-semibold text-sm text-foreground line-clamp-1">
-                    {review.comment.slice(0, 50)}
-                    {review.comment.length > 50 ? "…" : ""}
+
+                  {/* Title */}
+                  <h3 className="font-semibold text-sm text-foreground">
+                    {review.comment.slice(0, 60)}
+                    {review.comment.length > 60 ? "…" : ""}
                   </h3>
 
                   {/* Comment */}
-                  <p className="text-xs text-muted-foreground line-clamp-2 leading-snug flex-1">
+                  <p className={`text-xs text-muted-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-3" : ""}`}>
                     {review.comment}
                   </p>
+                  {isLong && (
+                    <button
+                      onClick={() => toggleExpand(review.id)}
+                      className="text-xs font-medium text-primary hover:underline self-start"
+                    >
+                      {isExpanded ? (isRTL ? "أقل" : "Show less") : (isRTL ? "المزيد" : "Read more")}
+                    </button>
+                  )}
 
                   {/* Author + time */}
-                  <div className="flex items-center justify-between pt-1 border-t border-border">
+                  <div className="flex items-center justify-between pt-2 border-t border-border mt-auto">
                     <div className="flex items-center gap-2">
                       {review.avatar && (
                         <img
