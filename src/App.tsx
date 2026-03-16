@@ -36,6 +36,7 @@ const NotFound = lazy(() => import("./pages/NotFound"));
 const Install = lazy(() => import("./pages/Install"));
 const Reviews = lazy(() => import("./pages/Reviews"));
 const Portfolio = lazy(() => import("./pages/Portfolio"));
+const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 
 const queryClient = new QueryClient();
 
