@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.review-analysis]
 verify_jwt = false
+
+[functions.review-to-social]
+verify_jwt = false
