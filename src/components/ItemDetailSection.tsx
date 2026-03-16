@@ -49,6 +49,7 @@ import {
   ExternalLink,
   CheckCircle2,
   MessageSquare,
+  MessageCircle,
   ThumbsUp,
   Share2,
   Sparkles,
