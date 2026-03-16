@@ -216,7 +216,10 @@ export function ReviewsCarousel() {
             onTouchEnd={() => setTimeout(() => setIsPaused(false), 3000)}
           >
             {sortedReviews.map((review) => {
-              const dev = developers.find((d) => d.id === review.developerId);
+              const mockDev = developers.find((d) => d.id === review.developerId);
+              const dbBiz = businessLogos.find((b) => b.id === review.developerId);
+              const bizName = dbBiz?.name || mockDev?.name || "";
+              const bizLogo = dbBiz?.logo || mockDev?.logo || "";
               const isExpanded = expandedIds.has(review.id);
               const isLong = review.comment.length > 120;
               return (
@@ -252,21 +255,27 @@ export function ReviewsCarousel() {
                     )}
                   </div>
 
-                  {/* Author + time */}
+                  {/* Business profile + Author + time */}
                   <div className="flex items-center justify-between pt-2 border-t border-border mt-auto">
-                    <div className="flex items-center gap-2">
-                      {review.avatar && (
+                    <div className="flex items-center gap-2 min-w-0">
+                      {bizLogo ? (
                         <img
-                          src={review.avatar}
-                          alt={review.author}
-                          className="w-6 h-6 rounded-full object-cover"
+                          src={bizLogo}
+                          alt={bizName}
+                          className="w-6 h-6 rounded-full object-cover shrink-0 border border-border"
                         />
+                      ) : (
+                        <div className="w-6 h-6 rounded-full bg-muted shrink-0 flex items-center justify-center">
+                          <span className="text-[10px] font-bold text-muted-foreground">
+                            {bizName.charAt(0) || "?"}
+                          </span>
+                        </div>
                       )}
-                      <span className="text-xs font-medium text-foreground">
-                        {review.author}
+                      <span className="text-xs font-medium text-foreground truncate">
+                        {bizName || review.author}
                       </span>
                     </div>
-                    <span className="text-[10px] text-muted-foreground">
+                    <span className="text-[10px] text-muted-foreground shrink-0">
                       {getRelativeTime(review.date, i18n.language)}
                     </span>
                   </div>
