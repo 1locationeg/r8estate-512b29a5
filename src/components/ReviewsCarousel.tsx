@@ -228,17 +228,27 @@ export function ReviewsCarousel() {
                   </h3>
 
                   {/* Comment */}
-                  <p className={`text-xs text-muted-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-3" : ""}`}>
-                    {review.comment}
-                  </p>
-                  {isLong && (
-                    <button
-                      onClick={() => toggleExpand(review.id)}
-                      className="text-xs font-medium text-primary hover:underline self-start"
-                    >
-                      {isExpanded ? (isRTL ? "أقل" : "Show less") : (isRTL ? "المزيد" : "Read more")}
-                    </button>
-                  )}
+                  <div className="relative">
+                    <p className={`text-xs text-muted-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
+                      {review.comment}
+                      {!isExpanded && isLong && (
+                        <button
+                          onClick={() => toggleExpand(review.id)}
+                          className="text-xs font-medium text-primary hover:underline ml-1 inline"
+                        >
+                          {isRTL ? "…المزيد" : "…more"}
+                        </button>
+                      )}
+                    </p>
+                    {isExpanded && isLong && (
+                      <button
+                        onClick={() => toggleExpand(review.id)}
+                        className="text-xs font-medium text-primary hover:underline mt-1"
+                      >
+                        {isRTL ? "أقل" : "Show less"}
+                      </button>
+                    )}
+                  </div>
 
                   {/* Author + time */}
                   <div className="flex items-center justify-between pt-2 border-t border-border mt-auto">
