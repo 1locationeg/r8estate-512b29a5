@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import logoOnly from "@/assets/logo-only.png";
@@ -127,31 +127,35 @@ export function ReviewsCarousel() {
     el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
   };
 
-  // Brand-inspired: navy house bg with gold star for high, muted navy for mid, red-tinted for low
-  const getStarBgColor = (rating: number, starIndex: number) => {
-    if (starIndex > rating) return "bg-[hsl(210,12%,82%)]"; // gray empty
-    // Color varies by overall rating level
-    if (rating >= 4) return "bg-[hsl(207,76%,21%)]";  // navy (brand primary)
-    if (rating === 3) return "bg-[hsl(43,90%,52%)]";  // gold (brand accent)
-    if (rating === 2) return "bg-[hsl(30,90%,55%)]";  // orange
-    return "bg-[hsl(0,70%,50%)]";                      // red
+  const getHouseColor = (rating: number, starIndex: number) => {
+    if (starIndex > rating) return "hsl(210,12%,82%)"; // gray
+    if (rating >= 4) return "hsl(207,76%,21%)";  // navy
+    if (rating === 3) return "hsl(43,90%,52%)";  // gold
+    if (rating === 2) return "hsl(30,90%,55%)";  // orange
+    return "hsl(0,70%,50%)";                      // red
   };
 
-  const getStarFill = (rating: number, starIndex: number) => {
-    if (starIndex > rating) return "fill-white/60 text-white/60";
-    if (rating >= 4) return "fill-[hsl(43,90%,52%)] text-[hsl(43,90%,52%)]"; // gold star on navy
-    return "fill-white text-white";
+  const getInnerStarColor = (rating: number, starIndex: number) => {
+    if (starIndex > rating) return "hsl(0,0%,96%)";
+    if (rating >= 4) return "hsl(43,90%,52%)"; // gold on navy
+    return "hsl(0,0%,100%)";
   };
 
   const renderStars = (rating: number) => (
     <div className="flex gap-1">
       {[1, 2, 3, 4, 5].map((i) => (
-        <div
-          key={i}
-          className={`w-8 h-8 rounded-[4px] flex items-center justify-center ${getStarBgColor(rating, i)}`}
-        >
-          <Star className={`w-5 h-5 ${getStarFill(rating, i)}`} />
-        </div>
+        <svg key={i} width="36" height="36" viewBox="0 0 100 100" className="flex-shrink-0">
+          {/* House shape */}
+          <path
+            d="M50 8 L90 40 L90 85 Q90 92 83 92 L17 92 Q10 92 10 85 L10 40 Z"
+            fill={getHouseColor(rating, i)}
+          />
+          {/* Star inside */}
+          <polygon
+            points="50,30 58,48 78,48 62,60 68,78 50,67 32,78 38,60 22,48 42,48"
+            fill={getInnerStarColor(rating, i)}
+          />
+        </svg>
       ))}
     </div>
   );
