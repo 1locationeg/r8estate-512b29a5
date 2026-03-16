@@ -17,6 +17,9 @@ interface EngagementData {
   projects_saved: number;
   reports_unlocked: number;
   helpful_votes: number;
+  community_posts: number;
+  community_replies: number;
+  community_votes: number;
 }
 
 export function useBuyerGamification() {
