@@ -106,10 +106,13 @@ export function useBuyerGamification() {
       communityPosts: engagement?.community_posts ?? 0,
       communityReplies: engagement?.community_replies ?? 0,
       communityVotes: engagement?.community_votes ?? 0,
+      currentStreak: streakData?.current_streak ?? 0,
+      longestStreak: streakData?.longest_streak ?? 0,
+      streakBonusPoints: streakData?.streak_bonus_points ?? 0,
     };
 
     const earnedIds = calcBuyerEarnedBadges(input);
-    const totalPoints = calcBuyerTotalPoints(earnedIds, profileCompletion);
+    const totalPoints = calcBuyerTotalPoints(earnedIds, profileCompletion, input.streakBonusPoints);
     const currentTier = getBuyerTier(totalPoints);
     const nextTier = getNextBuyerTier(totalPoints);
     const missions = calcBuyerMissionProgress(input);
@@ -129,6 +132,9 @@ export function useBuyerGamification() {
       lockedBadges,
       missions,
       allBadges: BUYER_BADGES,
+      currentStreak: input.currentStreak,
+      longestStreak: input.longestStreak,
+      streakBonusPoints: input.streakBonusPoints,
     };
-  }, [profile, isLoading, reviewCount, engagement, hasVerifiedPurchase]);
+  }, [profile, isLoading, reviewCount, engagement, hasVerifiedPurchase, streakData]);
 }
