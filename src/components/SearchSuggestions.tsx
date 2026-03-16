@@ -22,6 +22,16 @@ interface SearchSuggestionsProps {
   className?: string;
 }
 
+const categoryFilters: { key: SearchCategory | 'all'; icon: React.ReactNode; label: string; color: string }[] = [
+  { key: 'all', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'All', color: 'bg-primary/10 text-primary border-primary/20' },
+  { key: 'developers', icon: <Building2 className="w-3.5 h-3.5" />, label: 'Developers', color: 'bg-blue-500/10 text-blue-600 border-blue-500/20' },
+  { key: 'projects', icon: <Home className="w-3.5 h-3.5" />, label: 'Projects', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
+  { key: 'locations', icon: <MapPin className="w-3.5 h-3.5" />, label: 'Locations', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
+  { key: 'brokers', icon: <Users className="w-3.5 h-3.5" />, label: 'Brokers', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  { key: 'units', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'Units', color: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
+  { key: 'apps', icon: <Smartphone className="w-3.5 h-3.5" />, label: 'Apps', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' },
+];
+
 const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   developers: <Building2 className="w-4 h-4" />,
   projects: <Home className="w-4 h-4" />,
@@ -51,6 +61,7 @@ export const SearchSuggestions = ({
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
   const [aiCorrection, setAiCorrection] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<SearchCategory | 'all'>('all');
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { trackSearch } = useTrackInterest();
 
@@ -58,6 +69,11 @@ export const SearchSuggestions = ({
     trackSearch(item.id, item.name);
     onSelect(item);
   };
+
+  // Reset category filter when query changes
+  useEffect(() => {
+    setActiveCategory('all');
+  }, [query]);
 
   // Debounced AI autocomplete
   useEffect(() => {
@@ -418,6 +434,43 @@ export const SearchSuggestions = ({
           )}
         </div>
       )}
+
+      {/* Visual Category Filter Chips */}
+      <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border px-3 py-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {categoryFilters.map((cf) => {
+            const count = groupedToRender
+              ? cf.key === 'all'
+                ? categoryOrder.reduce((sum, cat) => sum + (groupedToRender[cat]?.length || 0), 0)
+                : groupedToRender[cf.key]?.length || 0
+              : 0;
+            if (cf.key !== 'all' && count === 0) return null;
+            return (
+              <button
+                key={cf.key}
+                onClick={() => setActiveCategory(cf.key)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap shrink-0",
+                  activeCategory === cf.key
+                    ? `${cf.color} border-current/30 shadow-sm`
+                    : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary"
+                )}
+              >
+                {cf.icon}
+                <span>{cf.label}</span>
+                {count > 0 && (
+                  <span className={cn(
+                    "ml-0.5 text-[10px] font-bold min-w-[16px] h-4 flex items-center justify-center rounded-full",
+                    activeCategory === cf.key ? "bg-current/10" : "bg-muted"
+                  )}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
       
       {/* Recent & Popular Header (when no query) */}
       {!query.trim() && (() => {
@@ -442,26 +495,30 @@ export const SearchSuggestions = ({
                 ))}
               </div>
             )}
-            <div className="px-4 py-3 border-b border-border">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("search.popular")}
+            {activeCategory === 'all' && (
+              <div className="px-4 py-3 border-b border-border">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {t("search.popular")}
+                </div>
               </div>
-            </div>
+            )}
           </>
         );
       })()}
       
       {/* Category Sections */}
       <div className="divide-y divide-border/50">
-        {groupedToRender && categoryOrder.map((cat) => {
-          const items = groupedToRender[cat] || [];
-          if (items.length === 0) return null;
-          
-          const labelKey = `search.${cat}` as const;
-          const label = t(labelKey);
-          
-          return renderCategorySection(cat, items, label);
-        })}
+        {groupedToRender && categoryOrder
+          .filter((cat) => activeCategory === 'all' || cat === activeCategory)
+          .map((cat) => {
+            const items = groupedToRender[cat] || [];
+            if (items.length === 0) return null;
+            
+            const labelKey = `search.${cat}` as const;
+            const label = t(labelKey);
+            
+            return renderCategorySection(cat, items, label);
+          })}
       </div>
     </div>
   );
