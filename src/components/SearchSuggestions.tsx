@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search } from "lucide-react";
+import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search, TrendingUp, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
@@ -472,11 +472,51 @@ export const SearchSuggestions = ({
         </div>
       </div>
       
-      {/* Recent & Popular Header (when no query) */}
+      {/* Trending + Recent & Popular Header (when no query) */}
       {!query.trim() && (() => {
         const history = getSearchHistory();
+        const trendingSearches = [
+          { term: "Palm Hills", icon: Flame, hot: true },
+          { term: "New Cairo", icon: TrendingUp, hot: false },
+          { term: "Mountain View", icon: TrendingUp, hot: false },
+          { term: "Marassi", icon: Flame, hot: true },
+          { term: "Zed East", icon: TrendingUp, hot: false },
+          { term: "Hyde Park", icon: TrendingUp, hot: false },
+          { term: "Sodic", icon: Flame, hot: true },
+          { term: "6th October", icon: TrendingUp, hot: false },
+        ];
         return (
           <>
+            {/* Trending Searches */}
+            <div className="border-b border-border px-3 py-2.5">
+              <div className="flex items-center gap-1.5 mb-2">
+                <Flame className="w-3.5 h-3.5 text-destructive" />
+                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
+                  {t("search.trending", "Trending Now")}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-1.5">
+                {trendingSearches.map((trend) => {
+                  const TIcon = trend.icon;
+                  return (
+                    <button
+                      key={trend.term}
+                      onClick={() => onCorrection(trend.term)}
+                      className={cn(
+                        "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
+                        trend.hot
+                          ? "bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20"
+                          : "bg-secondary text-foreground border border-border hover:bg-secondary/80"
+                      )}
+                    >
+                      <TIcon className="w-3 h-3" />
+                      {trend.term}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+
             {history.length > 0 && (
               <div className="border-b border-border">
                 <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
