@@ -41,7 +41,7 @@ const Auth = () => {
   const oauthAccountType = localStorage.getItem('oauth_account_type');
   const isBusinessGoogleCallback = Boolean(oauthAccountType === 'business' && user);
   const requiresBusinessRoleSync = Boolean(
-    isBusinessGoogleCallback && role !== 'developer' && role !== 'admin'
+    isBusinessGoogleCallback && role !== 'business' && role !== 'admin'
   );
 
   useEffect(() => {
