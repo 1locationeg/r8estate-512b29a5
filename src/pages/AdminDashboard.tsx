@@ -1917,6 +1917,18 @@ const AdminBusiness = () => {
                 />
               </div>
 
+              {/* Reviewable Toggle */}
+              <div className="sm:col-span-2 flex items-center justify-between p-3 rounded-lg border border-border bg-muted/30">
+                <div>
+                  <p className="text-sm font-medium text-foreground">Allow Reviews</p>
+                  <p className="text-xs text-muted-foreground">Users can submit reviews for this business</p>
+                </div>
+                <Switch
+                  checked={editData.is_reviewable ?? true}
+                  onCheckedChange={(checked) => setEditData({ ...editData, is_reviewable: checked })}
+                />
+              </div>
+
               <div className="sm:col-span-2">
                 <label className="block text-xs font-medium text-muted-foreground mb-1">Specialties (comma-separated)</label>
                 <input
