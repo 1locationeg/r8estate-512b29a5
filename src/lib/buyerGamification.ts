@@ -46,6 +46,11 @@ export const BUYER_BADGES: BuyerBadgeDef[] = [
   { id: 'reply_streak', name: 'Discussion Leader', description: 'Write 10+ community replies', icon: MessageSquare, points: 50, category: 'community' },
   { id: 'community_voter', name: 'Community Voter', description: 'Vote on 10+ community posts or replies', icon: Award, points: 20, category: 'community' },
   { id: 'community_champion', name: 'Community Champion', description: 'Create 10+ posts and 20+ replies', icon: Trophy, points: 100, category: 'community' },
+  // Streak badges
+  { id: 'streak_3', name: 'On Fire', description: '3-day activity streak', icon: Zap, points: 10, category: 'engagement' },
+  { id: 'streak_7', name: 'Week Warrior', description: '7-day activity streak', icon: Zap, points: 25, category: 'engagement' },
+  { id: 'streak_14', name: 'Unstoppable', description: '14-day activity streak', icon: Zap, points: 50, category: 'engagement' },
+  { id: 'streak_30', name: 'Streak Legend', description: '30-day activity streak', icon: Trophy, points: 100, category: 'engagement' },
 ];
 
 // ── Buyer Mission Definitions ──
