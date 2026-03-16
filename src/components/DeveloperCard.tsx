@@ -21,6 +21,12 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
   const navigate = useNavigate();
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
+  const { trackClick, startLinger, cancelLinger } = useTrackInterest();
+
+  const handleCardClick = () => {
+    trackClick(developer.id, developer.name);
+    onClick?.();
+  };
 
   const handleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
