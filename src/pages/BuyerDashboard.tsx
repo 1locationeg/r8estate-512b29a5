@@ -37,7 +37,7 @@ const BuyerOverview = () => {
       if (error) throw error;
       await refreshProfile();
       toast.success('Account upgraded to Business! Redirecting to your business dashboard...');
-      setTimeout(() => navigate('/developer'), 1000);
+      setTimeout(() => navigate('/business'), 1000);
     } catch (err: any) {
       toast.error(err.message || 'Failed to upgrade account. Please try again.');
     } finally {
