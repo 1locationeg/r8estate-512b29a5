@@ -178,6 +178,9 @@ export function calcEarnedBadges(input: GamificationInput): string[] {
 
   // Early adopter: joined before 2027
   if (input.joinedDate.getFullYear() <= 2026) earned.push('early_adopter');
+  // Community badges
+  if ((input.communityPosts + input.communityReplies) >= 3) earned.push('community_engaged');
+  if (input.communityPosts >= 5 && input.communityReplies >= 10) earned.push('community_leader');
 
   return earned;
 }
