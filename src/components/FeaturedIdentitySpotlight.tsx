@@ -83,12 +83,12 @@ export const FeaturedIdentitySpotlight = () => {
             backgroundSize: '16px 16px'
           }} />
           <div className="relative">
-            <div className="flex items-center justify-end mb-1">
+            <div className="flex items-center justify-center gap-2">
+              <h3 className="text-lg md:text-xl font-bold text-primary-foreground">
+                {developer.name}
+              </h3>
               <ShareMenu title={developer.name} iconOnly />
             </div>
-            <h3 className="text-lg md:text-xl font-bold text-primary-foreground">
-              {developer.name}
-            </h3>
             {developer.verified && (
               <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/15 backdrop-blur-sm rounded-full text-[11px] font-semibold text-primary-foreground mt-1.5">
                 <Shield className="w-3 h-3" />
