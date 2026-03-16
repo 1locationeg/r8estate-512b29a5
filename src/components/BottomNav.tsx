@@ -20,7 +20,7 @@ export const BottomNav = () => {
     return "/buyer";
   };
 
-  const isHome = location.pathname === "/";
+  const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
   const isDashboard = location.pathname.startsWith("/buyer") || location.pathname.startsWith("/developer") || location.pathname.startsWith("/admin");
 
