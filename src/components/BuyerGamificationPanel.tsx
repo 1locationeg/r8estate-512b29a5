@@ -14,6 +14,7 @@ export const BuyerGamificationPanel = () => {
   const {
     isLoading, currentTier, totalPoints, nextTier, pointsToNext,
     missions, earnedBadges, lockedBadges, profileCompletion, missingFields,
+    currentStreak, longestStreak, streakBonusPoints,
   } = useBuyerGamification();
 
   const confettiTrigger = useConfettiTrigger(
