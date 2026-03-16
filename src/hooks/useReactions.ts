@@ -73,12 +73,12 @@ export function useReactions(targetId: string | undefined, targetType: 'post' | 
         .eq('emoji', emoji);
     } else {
       // Add reaction
-      const insertData: Record<string, string> = {
+      const insertData = {
         user_id: user.id,
         emoji,
+        ...(targetType === 'post' ? { post_id: targetId } : { reply_id: targetId }),
       };
-      insertData[column] = targetId;
-      await supabase.from('community_reactions').insert(insertData);
+      await supabase.from('community_reactions').insert([insertData]);
     }
 
     fetchReactions();

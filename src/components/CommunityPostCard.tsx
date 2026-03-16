@@ -1,9 +1,11 @@
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Share2, Flag, Bookmark } from "lucide-react";
+import { useState, useMemo } from "react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { toast } from "@/hooks/use-toast";
+import { useReactions, useBulkReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 const categoryConfig: Record<string, { label: string; className: string }> = {
@@ -13,6 +15,14 @@ const categoryConfig: Record<string, { label: string; className: string }> = {
   experience: { label: "Experience", className: "bg-amber-500/10 text-amber-600 border-amber-200" },
   poll: { label: "Poll", className: "bg-purple-500/10 text-purple-600 border-purple-200" },
 };
+
+const reactionEmojis = [
+  { emoji: "👍", label: "Like" },
+  { emoji: "❤️", label: "Love" },
+  { emoji: "😂", label: "Haha" },
+  { emoji: "😮", label: "Wow" },
+  { emoji: "😢", label: "Sad" },
+];
 
 function timeAgo(dateStr: string) {
   const diff = Date.now() - new Date(dateStr).getTime();
@@ -25,6 +35,29 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString();
 }
 
+// Reaction pills
+const ReactionPills = ({ reactions, onToggle }: { reactions: ReactionSummary[]; onToggle: (emoji: string) => void }) => {
+  if (!reactions.length) return null;
+  return (
+    <div className="flex items-center gap-1 flex-wrap mt-1">
+      {reactions.map((r) => (
+        <button
+          key={r.emoji}
+          onClick={(e) => { e.stopPropagation(); onToggle(r.emoji); }}
+          className={`flex items-center gap-0.5 px-1.5 py-0.5 rounded-full text-[10px] border transition-colors ${
+            r.user_reacted
+              ? 'border-primary/30 bg-primary/10 text-primary'
+              : 'border-border bg-secondary/50 text-muted-foreground hover:border-primary/20'
+          }`}
+        >
+          <span>{r.emoji}</span>
+          <span className="font-medium">{r.count}</span>
+        </button>
+      ))}
+    </div>
+  );
+};
+
 interface Props {
   post: CommunityPost;
   onClick: () => void;
@@ -33,6 +66,11 @@ interface Props {
 
 export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
   const cat = categoryConfig[post.category] || categoryConfig.discussion;
+  const [showEmojis, setShowEmojis] = useState(false);
+  const { reactions, toggleReaction } = useReactions(post.id, 'post');
+
+  const totalReactions = reactions.reduce((sum, r) => sum + r.count, 0);
+  const userHasReacted = reactions.some(r => r.user_reacted);
 
   return (
     <div className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-primary/30 transition-all group">
@@ -87,19 +125,46 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
         </div>
       </button>
 
+      {/* Reaction pills */}
+      <div className="ml-10">
+        <ReactionPills reactions={reactions} onToggle={toggleReaction} />
+      </div>
+
       {/* Engagement toolbar */}
-      <div className="flex items-center gap-1 mt-3 pt-2.5 border-t border-border ml-10">
-        <button
-          onClick={(e) => { e.stopPropagation(); onVote(); }}
-          className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] transition-colors ${
-            post.user_voted
-              ? 'text-primary bg-primary/10 font-medium'
-              : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
-          }`}
-        >
-          <ThumbsUp className="w-3 h-3" fill={post.user_voted ? "currentColor" : "none"} />
-          <span>{post.user_voted ? 'Liked' : 'Like'}</span>
-        </button>
+      <div className="flex items-center gap-1 mt-2 pt-2.5 border-t border-border ml-10">
+        <div className="relative">
+          <button
+            onClick={(e) => { e.stopPropagation(); toggleReaction("👍"); }}
+            onMouseEnter={() => setShowEmojis(true)}
+            onMouseLeave={() => setShowEmojis(false)}
+            className={`flex items-center gap-1 px-2 py-1 rounded-md text-[11px] transition-colors ${
+              userHasReacted
+                ? 'text-primary bg-primary/10 font-medium'
+                : 'text-muted-foreground hover:text-primary hover:bg-primary/5'
+            }`}
+          >
+            <ThumbsUp className="w-3 h-3" fill={userHasReacted ? "currentColor" : "none"} />
+            <span>{totalReactions > 0 ? totalReactions : 'Like'}</span>
+          </button>
+          {showEmojis && (
+            <div
+              onMouseEnter={() => setShowEmojis(true)}
+              onMouseLeave={() => setShowEmojis(false)}
+              className="absolute -top-10 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-lg"
+            >
+              {reactionEmojis.map((r) => (
+                <button
+                  key={r.emoji}
+                  onClick={(e) => { e.stopPropagation(); toggleReaction(r.emoji); setShowEmojis(false); }}
+                  className="hover:scale-125 transition-transform p-0.5 text-base"
+                  title={r.label}
+                >
+                  {r.emoji}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
 
         <button
           onClick={onClick}
