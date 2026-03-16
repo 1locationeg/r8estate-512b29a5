@@ -5,9 +5,10 @@ type EngagementField = 'developers_viewed' | 'projects_saved' | 'reports_unlocke
 /**
  * Increment a buyer engagement counter by 1.
  * Creates the row if it doesn't exist yet.
+ * Also increments the weekly engagement table for leaderboard.
  */
 export async function trackBuyerEngagement(userId: string, field: EngagementField) {
-  // Try to fetch existing row
+  // All-time tracking
   const { data } = await supabase
     .from('buyer_engagement')
     .select('id, ' + field)
@@ -25,4 +26,39 @@ export async function trackBuyerEngagement(userId: string, field: EngagementFiel
       .from('buyer_engagement')
       .insert({ user_id: userId, [field]: 1 });
   }
+
+  // Weekly tracking
+  trackWeeklyEngagement(userId, field);
+}
+
+async function trackWeeklyEngagement(userId: string, field: EngagementField) {
+  const weekStart = getWeekStart();
+
+  const { data } = await supabase
+    .from('weekly_buyer_engagement')
+    .select('id, ' + field)
+    .eq('user_id', userId)
+    .eq('week_start', weekStart)
+    .maybeSingle();
+
+  if (data) {
+    const currentVal = (data as Record<string, any>)[field] ?? 0;
+    await supabase
+      .from('weekly_buyer_engagement')
+      .update({ [field]: currentVal + 1 })
+      .eq('id', (data as any).id);
+  } else {
+    await supabase
+      .from('weekly_buyer_engagement')
+      .insert({ user_id: userId, [field]: 1, week_start: weekStart });
+  }
+}
+
+function getWeekStart(): string {
+  const now = new Date();
+  const day = now.getUTCDay();
+  const diff = now.getUTCDate() - day + (day === 0 ? -6 : 1); // Monday
+  const monday = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), diff));
+  monday.setUTCHours(0, 0, 0, 0);
+  return monday.toISOString();
 }

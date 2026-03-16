@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Trophy, Medal, Crown, ArrowLeft, MessageSquare, Reply, ThumbsUp, Eye, Heart, Flame } from "lucide-react";
+import { Trophy, Medal, Crown, ArrowLeft, MessageSquare, Reply, ThumbsUp, Eye, Heart, Flame, Calendar, Clock } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -38,18 +38,22 @@ const Leaderboard = () => {
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [tab, setTab] = useState<"points" | "posts" | "replies">("points");
+  const [period, setPeriod] = useState<"week" | "alltime">("week");
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
       setLoading(true);
-      const { data, error } = await supabase.rpc("get_leaderboard", { _limit: 50 });
+      const rpcName = period === "week" ? "get_weekly_leaderboard" : "get_leaderboard";
+      const { data, error } = await supabase.rpc(rpcName, { _limit: 50 });
       if (!error && data) {
         setEntries(data as LeaderboardEntry[]);
+      } else {
+        setEntries([]);
       }
       setLoading(false);
     };
     fetchLeaderboard();
-  }, []);
+  }, [period]);
 
   const sorted = [...entries].sort((a, b) => {
     if (tab === "posts") return b.community_posts - a.community_posts;
@@ -72,6 +76,11 @@ const Leaderboard = () => {
   const currentUserRank = user
     ? sorted.findIndex((e) => e.user_id === user.id) + 1
     : 0;
+
+  // Calculate days until reset (next Monday)
+  const now = new Date();
+  const dayOfWeek = now.getUTCDay();
+  const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek);
 
   return (
     <div className="min-h-screen bg-background">
@@ -103,7 +112,7 @@ const Leaderboard = () => {
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         {/* Hero */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-6">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/15 mb-4">
             <Trophy className="w-8 h-8 text-accent" />
           </div>
@@ -112,6 +121,41 @@ const Leaderboard = () => {
             Top contributors making the community better for everyone
           </p>
         </div>
+
+        {/* Period Toggle */}
+        <div className="flex items-center justify-center gap-1 mb-6">
+          <button
+            onClick={() => setPeriod("week")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              period === "week"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "bg-secondary text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Calendar className="w-4 h-4" />
+            This Week
+          </button>
+          <button
+            onClick={() => setPeriod("alltime")}
+            className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium transition-all ${
+              period === "alltime"
+                ? "bg-primary text-primary-foreground shadow-sm"
+                : "bg-secondary text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Clock className="w-4 h-4" />
+            All Time
+          </button>
+        </div>
+
+        {/* Weekly reset countdown */}
+        {period === "week" && (
+          <div className="text-center mb-4">
+            <span className="text-[11px] text-muted-foreground bg-secondary/70 px-3 py-1 rounded-full">
+              ⏱ Resets in {daysUntilMonday} day{daysUntilMonday !== 1 ? "s" : ""}
+            </span>
+          </div>
+        )}
 
         {/* Current user rank card */}
         {user && currentUserRank > 0 && (
@@ -122,7 +166,7 @@ const Leaderboard = () => {
             <div className="flex-1">
               <p className="text-sm font-semibold text-foreground">Your Rank</p>
               <p className="text-xs text-muted-foreground">
-                {sorted[currentUserRank - 1]?.total_points ?? 0} total points
+                {sorted[currentUserRank - 1]?.total_points ?? 0} {period === "week" ? "weekly" : "total"} points
               </p>
             </div>
             <div className="text-right">
@@ -134,7 +178,7 @@ const Leaderboard = () => {
           </div>
         )}
 
-        {/* Tabs */}
+        {/* Sort Tabs */}
         <Tabs value={tab} onValueChange={(v) => setTab(v as typeof tab)} className="mb-6">
           <TabsList className="w-full grid grid-cols-3">
             <TabsTrigger value="points" className="gap-1.5 text-xs">
@@ -159,7 +203,9 @@ const Leaderboard = () => {
         ) : sorted.length === 0 ? (
           <div className="text-center py-16 space-y-3">
             <Trophy className="w-10 h-10 text-muted-foreground/30 mx-auto" />
-            <p className="text-muted-foreground text-sm">No contributors yet. Be the first!</p>
+            <p className="text-muted-foreground text-sm">
+              {period === "week" ? "No activity this week yet. Be the first!" : "No contributors yet. Be the first!"}
+            </p>
           </div>
         ) : (
           <div className="space-y-2">
