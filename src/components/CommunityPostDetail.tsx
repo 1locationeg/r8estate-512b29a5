@@ -72,6 +72,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               <AvatarFallback className="text-[8px] bg-secondary">{reply.author_name?.charAt(0)}</AvatarFallback>
             </Avatar>
             <span className="text-xs font-medium text-foreground">{reply.author_name}</span>
+            <UserTierBadge userId={reply.user_id} />
             <span className="text-[10px] text-muted-foreground">{timeAgo(reply.created_at)}</span>
           </div>
           <p className="text-sm text-foreground leading-relaxed">{reply.body}</p>
