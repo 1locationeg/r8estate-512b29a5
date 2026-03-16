@@ -434,6 +434,43 @@ export const SearchSuggestions = ({
           )}
         </div>
       )}
+
+      {/* Visual Category Filter Chips */}
+      <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border px-3 py-2">
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+          {categoryFilters.map((cf) => {
+            const count = groupedToRender
+              ? cf.key === 'all'
+                ? categoryOrder.reduce((sum, cat) => sum + (groupedToRender[cat]?.length || 0), 0)
+                : groupedToRender[cf.key]?.length || 0
+              : 0;
+            if (cf.key !== 'all' && count === 0) return null;
+            return (
+              <button
+                key={cf.key}
+                onClick={() => setActiveCategory(cf.key)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1.5 rounded-full text-xs font-medium border transition-all whitespace-nowrap shrink-0",
+                  activeCategory === cf.key
+                    ? `${cf.color} border-current/30 shadow-sm`
+                    : "bg-secondary/50 text-muted-foreground border-transparent hover:bg-secondary"
+                )}
+              >
+                {cf.icon}
+                <span>{cf.label}</span>
+                {count > 0 && (
+                  <span className={cn(
+                    "ml-0.5 text-[10px] font-bold min-w-[16px] h-4 flex items-center justify-center rounded-full",
+                    activeCategory === cf.key ? "bg-current/10" : "bg-muted"
+                  )}>
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </div>
       
       {/* Recent & Popular Header (when no query) */}
       {!query.trim() && (() => {
@@ -458,26 +495,30 @@ export const SearchSuggestions = ({
                 ))}
               </div>
             )}
-            <div className="px-4 py-3 border-b border-border">
-              <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-                {t("search.popular")}
+            {activeCategory === 'all' && (
+              <div className="px-4 py-3 border-b border-border">
+                <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                  {t("search.popular")}
+                </div>
               </div>
-            </div>
+            )}
           </>
         );
       })()}
       
       {/* Category Sections */}
       <div className="divide-y divide-border/50">
-        {groupedToRender && categoryOrder.map((cat) => {
-          const items = groupedToRender[cat] || [];
-          if (items.length === 0) return null;
-          
-          const labelKey = `search.${cat}` as const;
-          const label = t(labelKey);
-          
-          return renderCategorySection(cat, items, label);
-        })}
+        {groupedToRender && categoryOrder
+          .filter((cat) => activeCategory === 'all' || cat === activeCategory)
+          .map((cat) => {
+            const items = groupedToRender[cat] || [];
+            if (items.length === 0) return null;
+            
+            const labelKey = `search.${cat}` as const;
+            const label = t(labelKey);
+            
+            return renderCategorySection(cat, items, label);
+          })}
       </div>
     </div>
   );
