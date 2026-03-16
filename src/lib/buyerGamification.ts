@@ -64,6 +64,9 @@ export const BUYER_MISSIONS: BuyerMissionDef[] = [
   { id: 'save_5_projects', title: 'Build Your Shortlist', description: 'Save 5 projects to your list', target: 5, points: 20, type: 'milestone' },
   { id: 'view_10_devs', title: 'Do Your Research', description: 'View 10 developer profiles', target: 10, points: 25, type: 'milestone' },
   { id: 'verify_purchase', title: 'Get Verified', description: 'Submit a purchase receipt for verification', target: 1, points: 40, type: 'milestone' },
+  { id: 'create_3_posts', title: 'Join the Community', description: 'Create 3 community posts', target: 3, points: 25, type: 'milestone' },
+  { id: 'reply_5_threads', title: 'Share Your Knowledge', description: 'Reply to 5 community threads', target: 5, points: 20, type: 'milestone' },
+  { id: 'vote_10_times', title: 'Be Heard', description: 'Vote on 10 community posts or replies', target: 10, points: 15, type: 'milestone' },
 ];
 
 // ── Buyer Profile Completion ──
