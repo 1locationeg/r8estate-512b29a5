@@ -243,9 +243,13 @@ const InsightsPage = () => {
         {/* Insights Cards */}
         {insights.length > 0 && (
           <div className="space-y-3">
-            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">AI-Generated Insights</h2>
+            <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider">
+              {roleLabels[insightRole]?.label || 'AI'} Insights
+            </h2>
+            <p className="text-xs text-muted-foreground -mt-2">{roleLabels[insightRole]?.description}</p>
             {insights.map((insight, i) => {
-              const cat = categoryConfig[insight.category] || categoryConfig.growth;
+              const roleCats = categoryConfigs[insightRole] || categoryConfigs.buyer;
+              const cat = roleCats[insight.category] || defaultCat;
               const trend = trendConfig[insight.trend] || trendConfig.stable;
               const CatIcon = cat.icon;
               const TrendIcon = trend.icon;
