@@ -39,6 +39,8 @@ const AdminGuestReviews = () => {
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<"all" | "unclaimed" | "claimed">("all");
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [socialReview, setSocialReview] = useState<{ author: string; rating: number; comment: string; project?: string } | null>(null);
+  const [socialBizName, setSocialBizName] = useState("");
 
   const fetchReviews = async () => {
     setLoading(true);
