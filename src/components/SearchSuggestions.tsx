@@ -6,6 +6,7 @@ import { performSearch, getPopularItems, type SearchItem, type SearchCategory } 
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { getSearchHistory } from "@/lib/searchHistory";
 import { supabase } from "@/integrations/supabase/client";
+import { useTrackInterest } from "@/hooks/useTrackInterest";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { Button } from "./ui/button";
