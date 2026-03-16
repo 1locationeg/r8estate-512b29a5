@@ -370,6 +370,9 @@ const Index = () => {
               <div className="w-full max-w-3xl px-4">
                 <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
               </div>
+              <div className="w-full max-w-3xl px-4 mt-4">
+                <CommunityHighlights />
+              </div>
             </>
             }
 
