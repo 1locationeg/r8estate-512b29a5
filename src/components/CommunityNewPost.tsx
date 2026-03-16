@@ -24,17 +24,18 @@ interface Props {
   prefillDeveloper?: string;
 }
 
-export const CommunityNewPost = ({ open, onOpenChange, onCreated }: Props) => {
+export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDeveloper }: Props) => {
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<CommunityPostCategory>("question");
   const [submitting, setSubmitting] = useState(false);
   const { createPost } = useCommunityActions();
+  const prefillDev = prefillDeveloper ? developers.find(d => d.id === prefillDeveloper) : null;
 
   const handleSubmit = async () => {
     if (!title.trim() || !body.trim()) return;
     setSubmitting(true);
-    const result = await createPost(title.trim(), body.trim(), category);
+    const result = await createPost(title.trim(), body.trim(), category, prefillDev?.id);
     if (result) {
       setTitle("");
       setBody("");
@@ -43,6 +44,11 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated }: Props) => {
       onCreated();
     }
     setSubmitting(false);
+  };
+
+  const clearPrefill = () => {
+    // This just clears the UI - the actual prefill is handled in onOpenChange
+    // We don't have direct access to modify URL here, so we rely on parent
   };
 
   return (
