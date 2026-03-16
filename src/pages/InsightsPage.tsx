@@ -81,7 +81,7 @@ const roleLabels: Record<string, { label: string; description: string }> = {
 };
 
 const InsightsPage = () => {
-  const { user, isLoading: authLoading } = useAuth();
+  const { user, role, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [insights, setInsights] = useState<Insight[]>([]);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
