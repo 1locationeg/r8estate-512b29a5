@@ -159,7 +159,9 @@ const InsightsPage = () => {
               <Sparkles className="w-5 h-5 text-primary" />
               AI Insights
             </h1>
-            <p className="text-[10px] text-muted-foreground">Real-time platform intelligence</p>
+            <p className="text-[10px] text-muted-foreground">
+              {roleLabels[effectiveRole]?.description || 'Real-time platform intelligence'}
+            </p>
           </div>
           <Button
             size="sm"
