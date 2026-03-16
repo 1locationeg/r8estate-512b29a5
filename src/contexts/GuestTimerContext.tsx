@@ -138,6 +138,17 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
 
 export function useGuestTimer() {
   const ctx = useContext(GuestTimerContext);
-  if (!ctx) throw new Error('useGuestTimer must be used within GuestTimerProvider');
+  if (!ctx) {
+    // Return safe defaults if used outside provider (e.g. during HMR or lazy load)
+    return {
+      secondsLeft: 0,
+      isExpired: false,
+      isGuest: false,
+      dismissExpiredModal: () => {},
+      expiredModalOpen: false,
+      grantBonusTime: () => {},
+      hasBonusBeenUsed: false,
+    } as GuestTimerContextType;
+  }
   return ctx;
 }
