@@ -91,6 +91,9 @@ export function useBuyerGamification() {
       hasVerifiedPurchase,
       helpfulVotes: engagement?.helpful_votes ?? 0,
       joinedDate: profile?.created_at ? new Date(profile.created_at) : new Date(),
+      communityPosts: engagement?.community_posts ?? 0,
+      communityReplies: engagement?.community_replies ?? 0,
+      communityVotes: engagement?.community_votes ?? 0,
     };
 
     const earnedIds = calcBuyerEarnedBadges(input);

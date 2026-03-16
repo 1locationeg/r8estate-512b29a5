@@ -174,6 +174,9 @@ export function calcBuyerMissionProgress(input: BuyerGamificationInput): BuyerMi
       case 'save_5_projects': current = Math.min(input.projectsSaved, m.target); break;
       case 'view_10_devs': current = Math.min(input.developersViewed, m.target); break;
       case 'verify_purchase': current = input.hasVerifiedPurchase ? 1 : 0; break;
+      case 'create_3_posts': current = Math.min(input.communityPosts, m.target); break;
+      case 'reply_5_threads': current = Math.min(input.communityReplies, m.target); break;
+      case 'vote_10_times': current = Math.min(input.communityVotes, m.target); break;
     }
     return { mission: m, current, completed: current >= m.target };
   });
