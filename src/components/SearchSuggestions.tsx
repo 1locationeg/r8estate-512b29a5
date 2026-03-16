@@ -52,6 +52,12 @@ export const SearchSuggestions = ({
   const [aiCorrection, setAiCorrection] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const { trackSearch } = useTrackInterest();
+
+  const handleSelect = (item: SearchItem) => {
+    trackSearch(item.id, item.name);
+    onSelect(item);
+  };
 
   // Debounced AI autocomplete
   useEffect(() => {
