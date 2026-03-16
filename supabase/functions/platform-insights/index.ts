@@ -6,8 +6,69 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-supabase-client-platform, x-supabase-client-platform-version, x-supabase-client-runtime, x-supabase-client-runtime-version",
 };
 
-const CACHE_KEY = "platform_insights_cache";
 const CACHE_TTL_MS = 6 * 60 * 60 * 1000; // 6 hours
+
+function getCacheKey(role: string) {
+  return `platform_insights_cache_${role}`;
+}
+
+function getSystemPrompt(role: string) {
+  const base = `You are the AI analytics engine for R8ESTATE, an Egyptian off-plan real estate review platform.
+You will receive a JSON snapshot of REAL platform data. Analyze it and return EXACTLY 6 insight cards using tool calling.
+Each insight should be data-driven, actionable, and specific with real numbers from the data.
+
+For each insight provide:
+- category (one of the allowed categories below)
+- title (short, punchy, max 8 words)
+- summary (1-2 sentences with specific numbers from the data)
+- trend: "up" | "down" | "stable" | "alert"
+- metric_label (e.g. "Reviews This Month")
+- metric_value (the actual number or percentage)`;
+
+  if (role === "admin") {
+    return `${base}
+
+You are generating insights for a PLATFORM ADMINISTRATOR. Focus on operational health, moderation needs, and growth metrics.
+Categories (use exactly these):
+- "growth": User/review/business growth trajectories and registration trends
+- "risk": Low review coverage, rating anomalies, moderation gaps, security concerns
+- "businesses": Developer/project profiles, completeness, hierarchy health, parent-child ratios
+- "reviews": Review volume, quality trends, moderation queue, guest vs authenticated ratios
+- "engagement": Platform-wide buyer activity, saved projects, report usage, retention signals
+- "opportunity": Revenue potential, feature gaps, untapped markets, partnership ideas`;
+  }
+
+  if (role === "developer") {
+    return `${base}
+
+You are generating insights for a DEVELOPER/PROJECT MANAGER who manages real estate projects. Focus on their reputation, review sentiment, and competitive positioning.
+Categories (use exactly these):
+- "reviews": Review volume and sentiment trends for projects, response rates, recent feedback themes
+- "reputation": Trust score factors, rating distribution, how they compare to platform averages
+- "engagement": How many buyers are viewing/saving their projects, report unlock rates
+- "projects": Project portfolio health, child project coverage, reviewability status
+- "opportunity": Ways to improve ratings, get more reviews, attract buyers, optimize listings
+- "competition": Market positioning relative to platform averages and top performers`;
+  }
+
+  // Default: buyer
+  return `${base}
+
+You are generating insights for a BUYER exploring off-plan real estate. Focus on market trends, deal quality, and smart buying decisions.
+Categories (use exactly these):
+- "market": Market trends, pricing signals, hot locations, demand patterns in Egypt
+- "reviews": Review trends across developers, what buyers are saying, sentiment shifts
+- "deals": Best-reviewed projects, high-value opportunities, payment plan trends
+- "risk": Developers with low reviews, rating red flags, projects to watch carefully
+- "engagement": Your activity compared to other buyers, saved items trends, community participation
+- "discovery": Underrated developers, new projects, trending searches, emerging areas`;
+}
+
+function getAllowedCategories(role: string): string[] {
+  if (role === "admin") return ["growth", "risk", "businesses", "reviews", "engagement", "opportunity"];
+  if (role === "developer") return ["reviews", "reputation", "engagement", "projects", "opportunity", "competition"];
+  return ["market", "reviews", "deals", "risk", "engagement", "discovery"];
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -41,21 +102,36 @@ serve(async (req) => {
     const userId = claimsData.claims.sub as string;
     const serviceClient = createClient(supabaseUrl, serviceRoleKey);
 
-    // Parse request body for force refresh flag
+    // Parse request body
     let forceRefresh = false;
+    let requestedRole = "buyer";
     try {
       const body = await req.json();
       forceRefresh = body?.forceRefresh === true;
+      if (body?.role && ["buyer", "developer", "admin"].includes(body.role)) {
+        requestedRole = body.role;
+      }
     } catch {
-      // No body or invalid JSON — that's fine
+      // No body
     }
+
+    // Verify user actually has the requested role (security)
+    if (requestedRole === "admin") {
+      const { data: hasAdmin } = await serviceClient.rpc("has_role", { _user_id: userId, _role: "admin" });
+      if (!hasAdmin) requestedRole = "buyer";
+    } else if (requestedRole === "developer") {
+      const { data: hasDev } = await serviceClient.rpc("has_role", { _user_id: userId, _role: "developer" });
+      if (!hasDev) requestedRole = "buyer";
+    }
+
+    const cacheKey = getCacheKey(requestedRole);
 
     // Check cache first
     if (!forceRefresh) {
       const { data: cached } = await serviceClient
         .from("platform_settings")
         .select("value, updated_at")
-        .eq("key", CACHE_KEY)
+        .eq("key", cacheKey)
         .maybeSingle();
 
       if (cached) {
@@ -65,6 +141,7 @@ serve(async (req) => {
             const cachedData = JSON.parse(cached.value);
             return new Response(JSON.stringify({
               ...cachedData,
+              role: requestedRole,
               cached: true,
               cached_at: cached.updated_at,
               expires_in_minutes: Math.round((CACHE_TTL_MS - cacheAge) / 60000),
@@ -72,13 +149,13 @@ serve(async (req) => {
               headers: { ...corsHeaders, "Content-Type": "application/json" },
             });
           } catch {
-            // Invalid cache, regenerate
+            // Invalid cache
           }
         }
       }
     }
 
-    // Check usage limits (only counted when actually calling AI)
+    // Check usage limits
     const now = new Date();
     const startOfDay = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
     const { data: settings } = await serviceClient
@@ -98,7 +175,7 @@ serve(async (req) => {
     }
     await serviceClient.from("ai_usage").insert({ user_id: userId, function_name: "platform-insights", tokens_used: 1 });
 
-    // Gather real platform data
+    // Gather platform data
     const thirtyDaysAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString();
 
     const [
@@ -175,25 +252,8 @@ serve(async (req) => {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
-    const systemPrompt = `You are the AI analytics engine for R8ESTATE, an Egyptian off-plan real estate review platform.
-
-You will receive a JSON snapshot of REAL platform data. Analyze it and return EXACTLY 6 insight cards as a JSON array using tool calling.
-
-Each insight should be data-driven, actionable, and specific. Categories:
-- "reviews": Review volume, quality trends, sentiment
-- "engagement": Buyer activity, saved projects, report usage
-- "businesses": Developer/project profiles, completeness, hierarchy
-- "growth": User/review growth trajectories
-- "risk": Low review coverage, rating anomalies, gaps
-- "opportunity": Untapped potential, recommendations
-
-For each insight provide:
-- category (one of above)
-- title (short, punchy, max 8 words)
-- summary (1-2 sentences with specific numbers from the data)
-- trend: "up" | "down" | "stable" | "alert"
-- metric_label (e.g. "Reviews This Month")
-- metric_value (the actual number or percentage)`;
+    const systemPrompt = getSystemPrompt(requestedRole);
+    const allowedCategories = getAllowedCategories(requestedRole);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -205,14 +265,14 @@ For each insight provide:
         model: "google/gemini-3-flash-preview",
         messages: [
           { role: "system", content: systemPrompt },
-          { role: "user", content: `Here is the current platform data snapshot:\n${JSON.stringify(platformSnapshot, null, 2)}\n\nGenerate 6 insight cards.` },
+          { role: "user", content: `Here is the current platform data snapshot:\n${JSON.stringify(platformSnapshot, null, 2)}\n\nGenerate 6 insight cards for a ${requestedRole} user.` },
         ],
         tools: [
           {
             type: "function",
             function: {
               name: "return_insights",
-              description: "Return exactly 6 AI-generated insight cards based on real platform data.",
+              description: `Return exactly 6 AI-generated insight cards for a ${requestedRole} user based on real platform data.`,
               parameters: {
                 type: "object",
                 properties: {
@@ -221,7 +281,7 @@ For each insight provide:
                     items: {
                       type: "object",
                       properties: {
-                        category: { type: "string", enum: ["reviews", "engagement", "businesses", "growth", "risk", "opportunity"] },
+                        category: { type: "string", enum: allowedCategories },
                         title: { type: "string" },
                         summary: { type: "string" },
                         trend: { type: "string", enum: ["up", "down", "stable", "alert"] },
@@ -272,27 +332,28 @@ For each insight provide:
     const insights = JSON.parse(toolCall.function.arguments);
     const resultPayload = { insights: insights.insights, snapshot: platformSnapshot };
 
-    // Store in cache
+    // Store in role-specific cache
     const cacheValue = JSON.stringify(resultPayload);
     const { data: existing } = await serviceClient
       .from("platform_settings")
       .select("id")
-      .eq("key", CACHE_KEY)
+      .eq("key", cacheKey)
       .maybeSingle();
 
     if (existing) {
       await serviceClient
         .from("platform_settings")
         .update({ value: cacheValue, updated_at: new Date().toISOString() })
-        .eq("key", CACHE_KEY);
+        .eq("key", cacheKey);
     } else {
       await serviceClient
         .from("platform_settings")
-        .insert({ key: CACHE_KEY, value: cacheValue });
+        .insert({ key: cacheKey, value: cacheValue });
     }
 
     return new Response(JSON.stringify({
       ...resultPayload,
+      role: requestedRole,
       cached: false,
       cached_at: new Date().toISOString(),
       expires_in_minutes: Math.round(CACHE_TTL_MS / 60000),
