@@ -44,9 +44,19 @@ export const DeveloperDetailCard = ({
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
+  const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isSaved, toggle: toggleSave } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow } = useFollowBusiness(developer.id);
+  const { isReviewable, parentName, childProjects } = useReviewability(developer.id);
+
+  const handleWriteReview = () => {
+    if (!isReviewable) {
+      setIsReviewBlockedOpen(true);
+      return;
+    }
+    setIsReviewModalOpen(true);
+  };
 
   // Track developer view
   useEffect(() => {
