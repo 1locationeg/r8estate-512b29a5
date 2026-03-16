@@ -159,6 +159,8 @@ export interface GamificationInput {
   teamCount: number;
   hasLicense: boolean;
   joinedDate: Date;
+  communityPosts: number;
+  communityReplies: number;
 }
 
 export function calcEarnedBadges(input: GamificationInput): string[] {
