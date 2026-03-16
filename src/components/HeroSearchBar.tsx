@@ -28,6 +28,29 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
   const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
   const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
   const [isListening, setIsListening] = useState(false);
+  const [placeholderIndex, setPlaceholderIndex] = useState(0);
+  const [placeholderVisible, setPlaceholderVisible] = useState(true);
+
+  const trustPhrases = useMemo(() => [
+    t("hero.searchPlaceholder"),
+    "Find AI-verified developers you can trust ✦",
+    "Every review is real — zero fake ratings",
+    "Compare developers side by side instantly",
+    "Your trusted gateway to Egypt's real estate",
+    "Discover top-rated projects backed by data",
+  ], [t]);
+
+  useEffect(() => {
+    if (query || isFocused) return;
+    const interval = setInterval(() => {
+      setPlaceholderVisible(false);
+      setTimeout(() => {
+        setPlaceholderIndex((prev) => (prev + 1) % trustPhrases.length);
+        setPlaceholderVisible(true);
+      }, 400);
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [query, isFocused, trustPhrases.length]);
   const inputRef = useRef<HTMLInputElement>(null);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
   const recognitionRef = useRef<any>(null);
