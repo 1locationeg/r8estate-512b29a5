@@ -49,6 +49,7 @@ import {
   ExternalLink,
   CheckCircle2,
   MessageSquare,
+  MessageCircle,
   ThumbsUp,
   Share2,
   Sparkles,
@@ -593,6 +594,15 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsCompareOpen(true)}>
             <GitCompare className="w-4 h-4" />
             {t("itemDetail.compareItem")}
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => navigate(`/community?newPost=true&developer=${item.id}`)}
+          >
+            <MessageCircle className="w-4 h-4" />
+            Ask Community
           </Button>
           <ShareMenu
             title={item.name}

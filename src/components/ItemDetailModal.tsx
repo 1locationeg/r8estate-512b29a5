@@ -5,6 +5,7 @@ import { CompareModal } from "./CompareModal";
 import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { useReviewability } from "@/hooks/useReviewability";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import {
   Dialog,
   DialogContent,
@@ -24,6 +25,7 @@ import {
   Award, 
   PenLine, 
   Mic, 
+  MessageCircle,
   FileDown, 
   GitCompare,
   Building2,
@@ -133,6 +135,7 @@ const getTierIcon = (tier: string) => {
 
 export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activeFilter, setActiveFilter] = useState<number | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
@@ -330,6 +333,18 @@ export const ItemDetailModal = ({ item, open, onClose }: ItemDetailModalProps) =
             <Button variant="outline" size="sm" className="gap-2" onClick={() => setIsCompareOpen(true)}>
               <GitCompare className="w-4 h-4" />
               {t("itemDetail.compareItem")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2"
+              onClick={() => {
+                onClose();
+                navigate(`/community?newPost=true&developer=${item?.id}`);
+              }}
+            >
+              <MessageCircle className="w-4 h-4" />
+              Ask Community
             </Button>
           </div>
 

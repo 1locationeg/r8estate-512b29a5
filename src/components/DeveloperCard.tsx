@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Star, MapPin, Building, Bookmark, UserPlus, UserCheck } from "lucide-react";
+import { Star, MapPin, Building, Bookmark, UserPlus, UserCheck, MessageCircle } from "lucide-react";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { TrustBadge } from "./TrustBadge";
@@ -114,9 +114,21 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
         </div>
       </div>
 
-      <button className="w-full py-2 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm md:text-base">
-        {t("common.viewAll").replace(" →", "")}
-      </button>
+      <div className="flex gap-2">
+        <button className="flex-1 py-2 md:py-2.5 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm md:text-base">
+          {t("common.viewAll").replace(" →", "")}
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            navigate(`/community?newPost=true&developer=${developer.id}`);
+          }}
+          className="px-3 py-2 md:py-2.5 border border-border rounded-lg text-muted-foreground hover:text-primary hover:border-primary/30 transition-colors"
+          title="Ask the community"
+        >
+          <MessageCircle className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
+      </div>
     </Card>
   );
 };
