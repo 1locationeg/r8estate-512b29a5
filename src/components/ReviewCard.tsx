@@ -87,6 +87,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                 <TierIcon className="w-3 h-3" />
                 {tierConfig.label}
               </Badge>
+              {analysis && <SentimentBadge analysis={analysis} compact />}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">
               {review.project} • {developer?.name}
