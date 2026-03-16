@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 
 export interface Notification {
   id: string;
@@ -58,6 +59,14 @@ export const useNotifications = () => {
           const newNotif = payload.new as unknown as Notification;
           setNotifications((prev) => [newNotif, ...prev]);
           setUnreadCount((prev) => prev + 1);
+
+          // Show a real-time toast for review notifications
+          if (newNotif.type === "review") {
+            toast(newNotif.title, {
+              description: newNotif.message,
+              duration: 6000,
+            });
+          }
         }
       )
       .subscribe();
