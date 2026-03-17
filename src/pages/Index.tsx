@@ -109,7 +109,7 @@ const Index = () => {
 
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col safe-x overflow-x-hidden w-full max-w-full" style={{ paddingTop: 'max(50px, env(safe-area-inset-top, 0px))' }}>
+    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col overflow-x-hidden w-full max-w-full">
       {/* Header */}
       <header className="bg-background shadow-sm border-b border-border">
         <div className="container mx-auto px-3 py-0.5 flex items-center justify-between">

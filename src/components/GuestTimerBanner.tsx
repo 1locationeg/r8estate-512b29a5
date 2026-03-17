@@ -21,7 +21,7 @@ export function GuestTimerBanner() {
     <div
       className={`
         fixed top-0 left-0 right-0 z-[9999] flex items-center justify-between px-4 pb-2.5
-        pt-[max(0.625rem,env(safe-area-inset-top))]
+        pt-[max(0.625rem,env(safe-area-inset-top))] safe-x
         transition-all duration-700
         ${isUrgent
           ? 'bg-gradient-to-r from-red-600 via-red-500 to-orange-500'
