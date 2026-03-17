@@ -1,32 +1,23 @@
 
 
-## Make Search Dropdown Items Compact on Mobile
+## Plan: Tighten Logo Spacing & Force Tagline Single Line
 
-### Changes to `src/components/SearchSuggestions.tsx`
+**Changes across 2 files:**
 
-**1. Reduce item padding and spacing on mobile**
-- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
-- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
+### 1. `src/pages/Index.tsx` (lines 117-131)
+- Increase negative margin on logo icon from `-mr-1` to `-mr-2 md:-mr-3` to close the gap between symbol and text
+- Reduce gap between brand name and tagline by adding `-mt-0.5` or `gap-0` and tighter `leading-none`
+- Add `whitespace-nowrap` to tagline span so it never wraps on any screen size
 
-**2. Shrink logos on mobile**
-- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
-- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
+### 2. `src/components/DashboardHeader.tsx` (lines 35-48)
+- Increase negative margin on logo icon from `-mr-0.5` to `-mr-1.5`
+- Add `whitespace-nowrap` to tagline span
+- Tighten vertical spacing between brand name and tagline
 
-**3. Compact star ratings on mobile**
-- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
-- Reduce rating text size: `text-xs md:text-sm`
+**Also check and update the same pattern in:**
+- `src/components/Footer.tsx`
+- `src/components/MobileNav.tsx`
+- `src/components/BottomNav.tsx`
 
-**4. Compact action buttons on mobile**
-- Reduce action row margin: `mt-2 md:mt-2.5`
-- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
-- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
-- Use smaller button heights on mobile: `h-6 md:h-7`
-
-**5. Reduce dropdown max height on mobile**
-- Change container max-height: `max-h-[320px] md:max-h-[400px]`
-
-### Technical Details
-- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
-- No new dependencies or components needed
-- Only `src/components/SearchSuggestions.tsx` is modified
+These components currently lack the tagline but have the logo — will add tagline with same tight spacing for consistency, or just tighten existing spacing if tagline is absent.
 
