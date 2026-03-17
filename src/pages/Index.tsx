@@ -125,7 +125,7 @@ const Index = () => {
                 <span className="text-primary">ESTATE</span>
               </span>
               <span className="text-[8px] md:text-[10px] text-muted-foreground tracking-wide">
-                Real Reviews · Real Estate
+                Real Reviews * Real Estate
               </span>
             </div>
           </button>
