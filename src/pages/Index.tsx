@@ -119,7 +119,7 @@ const Index = () => {
             className="inline-flex items-center gap-0.5 hover:opacity-80 transition-opacity"
             aria-label="Return to home">
             
-            <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 md:h-20 md:w-20 object-contain" />
+            <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 md:h-20 md:w-20 object-contain mx-0" />
             <span className="inline-flex text-lg md:text-xl font-extrabold leading-none">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
