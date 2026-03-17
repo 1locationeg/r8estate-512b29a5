@@ -186,6 +186,13 @@
   }
 }
 
+/* Fixed elements need to account for safe area independently since #root padding doesn't affect them */
+@supports (top: env(safe-area-inset-top)) {
+  .fixed-safe-top {
+    top: env(safe-area-inset-top, 0px);
+  }
+}
+
 /* Prevent text selection on interactive elements on mobile */
 @layer utilities {
   .select-none-mobile {
