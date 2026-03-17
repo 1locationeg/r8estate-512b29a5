@@ -130,16 +130,7 @@ const Index = () => {
             </div>
           </button>
 
-          {/* Buyer / Business Toggle */}
-          <ViewToggle
-            onViewChange={(view) => {
-              setUserMode(view);
-              setSelectedDeveloperId(null);
-              setSpecialViewItem(null);
-              setActiveView(null);
-              setShowIndustryCategories(false);
-            }} />
-          
+
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1">
