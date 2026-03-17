@@ -130,6 +130,15 @@ const Index = () => {
             </div>
           </button>
 
+          {/* Business Toggle */}
+          <ViewToggle
+            onViewChange={(view) => {
+              setUserMode(view);
+              setSelectedDeveloperId(null);
+              setSpecialViewItem(null);
+              setActiveView(null);
+              setShowIndustryCategories(false);
+            }} />
 
 
           {/* Mobile compact actions */}
