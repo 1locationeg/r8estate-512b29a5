@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Bell, Check, CheckCheck, Trash2, Megaphone, MessageSquare, TrendingUp, Star, Filter, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useNotifications, Notification } from "@/hooks/useNotifications";
+import { getNotificationLink } from "@/components/NotificationBell";
 import { formatDistanceToNow } from "date-fns";
 
 const typeConfig: Record<string, { icon: React.ReactNode; label: string; color: string }> = {
@@ -17,6 +18,7 @@ const typeConfig: Record<string, { icon: React.ReactNode; label: string; color: 
 const ALL_TYPES = ["all", "announcement", "review", "review_status", "trust_score", "general"] as const;
 
 export const NotificationsPage = () => {
+  const navigate = useNavigate();
   const { notifications, unreadCount, loading, markAsRead, markAllAsRead, deleteNotification } =
     useNotifications();
   const [activeFilter, setActiveFilter] = useState<string>("all");
@@ -30,6 +32,14 @@ export const NotificationsPage = () => {
     acc[n.type] = (acc[n.type] || 0) + 1;
     return acc;
   }, {});
+
+  const handleNotificationClick = (n: Notification) => {
+    const link = getNotificationLink(n);
+    if (link) {
+      if (!n.is_read) markAsRead(n.id);
+      navigate(link);
+    }
+  };
 
   return (
     <div>
@@ -115,13 +125,15 @@ export const NotificationsPage = () => {
           {filtered.map((n) => {
             const config = typeConfig[n.type] || typeConfig.general;
             const timeAgo = formatDistanceToNow(new Date(n.created_at), { addSuffix: true });
+            const link = getNotificationLink(n);
 
             return (
               <div
                 key={n.id}
+                onClick={() => handleNotificationClick(n)}
                 className={`p-4 flex items-start gap-4 transition-colors ${
-                  !n.is_read ? "bg-primary/5" : "hover:bg-secondary/30"
-                }`}
+                  link ? "cursor-pointer" : ""
+                } ${!n.is_read ? "bg-primary/5" : "hover:bg-secondary/30"}`}
               >
                 {/* Icon */}
                 <div
@@ -158,7 +170,7 @@ export const NotificationsPage = () => {
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-1 shrink-0">
+                <div className="flex items-center gap-1 shrink-0" onClick={(e) => e.stopPropagation()}>
                   {!n.is_read && (
                     <Button
                       variant="ghost"
