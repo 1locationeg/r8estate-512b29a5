@@ -974,6 +974,7 @@ const AdminSpotlight = () => {
 const AdminNotifications = () => {
   const [title, setTitle] = useState('');
   const [message, setMessage] = useState('');
+  const [link, setLink] = useState('');
   const [sending, setSending] = useState(false);
 
   const handleBroadcast = async () => {
@@ -982,11 +983,13 @@ const AdminNotifications = () => {
       return;
     }
     setSending(true);
+    const metadata: Record<string, any> = {};
+    if (link.trim()) metadata.link = link.trim();
     const { error } = await supabase.rpc('broadcast_notification' as any, {
       _type: 'announcement',
       _title: title.trim(),
       _message: message.trim(),
-      _metadata: {},
+      _metadata: metadata,
     });
     setSending(false);
     if (error) {
@@ -995,6 +998,7 @@ const AdminNotifications = () => {
       toast.success('Notification sent to all users!');
       setTitle('');
       setMessage('');
+      setLink('');
     }
   };
 
@@ -1023,6 +1027,17 @@ const AdminNotifications = () => {
             placeholder="Write your notification message..."
             className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 resize-none"
           />
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-foreground mb-1">Link (optional)</label>
+          <input
+            type="text"
+            value={link}
+            onChange={(e) => setLink(e.target.value)}
+            placeholder="e.g. /community or /reviews"
+            className="w-full px-3 py-2 rounded-lg border border-border bg-background text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+          />
+          <p className="text-xs text-muted-foreground mt-1">Users will be redirected here when clicking the notification.</p>
         </div>
         <Button onClick={handleBroadcast} disabled={sending || !title.trim() || !message.trim()}>
           {sending ? 'Sending...' : 'Send to All Users'}
