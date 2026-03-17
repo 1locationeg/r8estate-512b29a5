@@ -22,9 +22,9 @@ export default defineConfig(({ mode }) => ({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
       },
       manifest: {
-        name: "R8estate",
-        short_name: "R8estate",
-        description: "The reputation platform for off-plan real estate. Verified reviews, trust scores, and developer ratings.",
+        name: "R8ESTATE – Real Reviews · Real Estate",
+        short_name: "R8ESTATE",
+        description: "Real Reviews · Real Estate — The reputation platform for off-plan real estate. Verified reviews, trust scores, and developer ratings.",
         theme_color: "#0a3d62",
         background_color: "#ffffff",
         display: "standalone",
