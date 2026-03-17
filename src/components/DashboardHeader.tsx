@@ -32,10 +32,19 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
 
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-shrink-0"
+            className="flex items-center gap-0 hover:opacity-80 transition-opacity flex-shrink-0"
             aria-label="Return to home"
           >
-            <img src={logoIcon} alt="R8ESTATE" className="h-7 w-auto object-contain" />
+            <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain -mr-0.5" />
+            <div className="flex flex-col leading-none">
+              <span className="inline-flex text-sm font-extrabold leading-none">
+                <span className="text-brand-red">R8</span>
+                <span className="text-primary">ESTATE</span>
+              </span>
+              <span className="text-[7px] text-muted-foreground tracking-wide">
+                Real Reviews · Real Estate
+              </span>
+            </div>
           </button>
 
           <div className="min-w-0">
