@@ -829,7 +829,7 @@ export const WriteReviewModal = ({
                   ) : (
                     <Camera className="w-3.5 h-3.5" />
                   )}
-                  {isReceiptUploading ? "Uploading..." : "Scan Receipt"}
+                  {isReceiptUploading ? t("form.uploading") : t("form.scan_receipt")}
                 </Button>
               </div>
 
