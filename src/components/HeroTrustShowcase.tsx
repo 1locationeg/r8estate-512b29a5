@@ -42,7 +42,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubailand",
     developer: "SandStone Properties",
     rating: 1.5,
-    comment: "\"Delivery was delayed by 18 months with no communication. The finishing quality was far below what was shown in the brochure. Very disappointing experience overall.\"",
+    comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
     dimensions: [
       { label: "Delivery", value: "18mo late", positive: false },
       { label: "Build quality", value: "Poor", positive: false },
@@ -58,7 +58,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubai Marina",
     developer: "Gulf Developments",
     rating: 3,
-    comment: "\"The apartment itself is decent and the location is great, but there were several snag issues that took months to resolve. Communication could be much better.\"",
+    comment: "\"Decent apartment, great location — but several snag issues took months to fix. Communication needs improvement.\"",
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
       { label: "Build quality", value: "Average", positive: false },
@@ -74,7 +74,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubai Creek Harbour",
     developer: "Emaar Properties",
     rating: 4.5,
-    comment: "\"Excellent build quality and delivered right on schedule. The community amenities exceeded our expectations. Would definitely buy from them again.\"",
+    comment: "\"Excellent build quality, delivered on schedule. Community amenities exceeded expectations. Would buy again.\"",
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
       { label: "Build quality", value: "Excellent", positive: true },
@@ -90,7 +90,7 @@ const scenarios: ReviewScenario[] = [
     location: "Palm Jumeirah",
     developer: "Nakheel",
     rating: 5,
-    comment: "\"Absolutely world-class. Every detail was perfect — from the handover process to the after-sales support. They went above and beyond at every step.\"",
+    comment: "\"Absolutely world-class. Every detail perfect — from handover to after-sales. Above and beyond.\"",
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
       { label: "Build quality", value: "Premium", positive: true },
@@ -442,7 +442,7 @@ export const HeroTrustShowcase = () => {
               rowsVisible >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <p className="text-xs md:text-sm text-foreground/80 italic leading-relaxed">
+            <p className="text-xs md:text-sm text-foreground/80 italic leading-relaxed line-clamp-3">
               {scenario.comment}
             </p>
           </div>
