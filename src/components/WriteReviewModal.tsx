@@ -450,7 +450,7 @@ export const WriteReviewModal = ({
       }
     } catch (e) {
       console.error("Review submission error:", e);
-      toast({ title: "Submission error", description: "Could not submit review. Please try again.", variant: "destructive" });
+      toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
     } finally {
       setIsUploading(false);
     }
