@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Trophy, Star, PartyPopper } from 'lucide-react';
+import { CheckCircle2, Trophy, Star, PartyPopper, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConfettiCelebration } from '@/components/ConfettiCelebration';
+import { useNavigate } from 'react-router-dom';
 
 interface ReviewSuccessOverlayProps {
   open: boolean;
