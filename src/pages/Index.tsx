@@ -399,6 +399,7 @@ const Index = () => {
                       </button>);
 
                 })}
+                  <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
               </div>
 
