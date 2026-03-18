@@ -500,7 +500,20 @@ export const WriteReviewModal = ({
     setContent((prev) => (prev ? `${prev} ${text}` : text));
   };
 
-  if (!open) return null;
+  if (!open && !showSuccessOverlay) return null;
+
+  // Success celebration overlay for authenticated users
+  if (showSuccessOverlay) {
+    return (
+      <ReviewSuccessOverlay
+        open={showSuccessOverlay}
+        onClose={() => setShowSuccessOverlay(false)}
+        isFirstReview={successIsFirst}
+        developerName={developerName}
+        rating={successRating}
+      />
+    );
+  }
 
   // Post-submit account prompt for guests
   if (showAccountPrompt && isGuest) {
