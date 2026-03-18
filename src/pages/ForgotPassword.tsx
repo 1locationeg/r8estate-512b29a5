@@ -56,16 +56,7 @@ const ForgotPassword = () => {
               className="flex items-center justify-center gap-3 mb-6 mx-auto hover:opacity-80 transition-opacity"
               aria-label="Return to home"
             >
-              <img src={logoIcon} alt="R8ESTATE" className="h-12 w-12 object-contain -mr-1.5" />
-              <div className="flex flex-col leading-none gap-0">
-                <span className="inline-flex text-xl font-extrabold leading-none">
-                  <span className="text-brand-red">R8</span>
-                  <span className="text-primary">ESTATE</span>
-                </span>
-                <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                  Real Reviews · Real Estate
-                </span>
-              </div>
+              <BrandLogo size="md" />
             </button>
 
             {isSent ? (
