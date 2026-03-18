@@ -76,7 +76,7 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       onClick={onClick}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex items-center gap-3 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden className={`relative flex items-center gap-3 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden`}`}
+      className={`relative flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden`}
     >
       {/* Icon on the side */}
       <div className="w-10 h-10 rounded-lg bg-secondary flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
