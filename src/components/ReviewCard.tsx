@@ -15,23 +15,23 @@ interface ReviewCardProps {
   analysis?: ReviewAnalysis;
 }
 
-const getTierConfig = (tier: ReviewerTier) => {
+const getTierConfig = (tier: ReviewerTier, t: (key: string) => string) => {
   switch (tier) {
     case "gold":
       return {
-        label: "Gold",
+        label: t("review.tier_gold"),
         icon: Trophy,
         className: "bg-accent text-accent-foreground border-accent",
       };
     case "silver":
       return {
-        label: "Silver",
+        label: t("review.tier_silver"),
         icon: Medal,
         className: "bg-muted text-muted-foreground border-muted-foreground/30",
       };
     case "bronze":
       return {
-        label: "Bronze",
+        label: t("review.tier_bronze"),
         icon: Award,
         className: "bg-orange-100 text-orange-700 border-orange-300 dark:bg-orange-900/30 dark:text-orange-400 dark:border-orange-700",
       };
