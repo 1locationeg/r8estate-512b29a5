@@ -90,6 +90,7 @@ const scenarios: ReviewScenario[] = [
     score: 97,
     reviewer: "Omar J.",
     initial: "O",
+    avatar: "https://i.pravatar.cc/80?img=53",
     project: "Palm Signature Villa",
     location: "Palm Jumeirah",
     developer: "Nakheel",
