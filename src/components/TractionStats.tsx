@@ -30,7 +30,7 @@ const stats = [
 ];
 
 export function TractionStats() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
