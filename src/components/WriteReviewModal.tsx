@@ -53,12 +53,12 @@ interface WriteReviewModalProps {
   onReviewSubmitted?: () => void;
 }
 
-const EXPERIENCE_TYPES = [
-  "Buyer",
-  "Agent",
-  "Investor",
-  "Construction Professional",
-  "Family Member",
+const EXPERIENCE_TYPES_KEYS = [
+  "form.exp_buyer",
+  "form.exp_agent",
+  "form.exp_investor",
+  "form.exp_construction",
+  "form.exp_family",
 ];
 
 const EMOJI_QUICK = ["👍", "👎", "⭐", "🏠", "💰", "🔑", "📋", "✅", "❌", "🏗️", "😊", "😤"];
@@ -160,7 +160,7 @@ export const WriteReviewModal = ({
       if (data.emojis) setAiEmojis(data.emojis);
       if (data.keywords) setAiKeywords(data.keywords);
     } catch (e) {
-      toast({ title: "AI unavailable", description: "Could not get suggestions. Try again.", variant: "destructive" });
+      toast({ title: t("form.ai_unavailable"), description: t("form.ai_unavailable_desc"), variant: "destructive" });
     } finally {
       setIsAiLoading(false);
     }
@@ -181,10 +181,10 @@ export const WriteReviewModal = ({
       if (error) throw error;
       if (data.enhanced) {
         setContent(data.enhanced);
-        toast({ title: "✨ Review enhanced", description: data.changes || "Your review has been improved." });
+        toast({ title: t("form.review_enhanced"), description: data.changes || t("form.review_enhanced_desc") });
       }
     } catch (e) {
-      toast({ title: "Enhancement failed", description: "Could not enhance text.", variant: "destructive" });
+      toast({ title: t("form.enhance_failed"), description: t("form.enhance_failed_desc"), variant: "destructive" });
     } finally {
       setIsEnhancing(false);
     }
@@ -205,7 +205,7 @@ export const WriteReviewModal = ({
         stream.getTracks().forEach((track) => track.stop());
 
         if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-          toast({ title: "🎙️ Processing voice...", description: "Converting speech to text..." });
+          toast({ title: t("form.voice_processing"), description: t("form.voice_converting") });
         }
 
         try {
@@ -216,7 +216,7 @@ export const WriteReviewModal = ({
             }
           }
         } catch {
-          toast({ title: "Voice processing", description: "Transcription complete. You can enhance with AI.", variant: "default" });
+          toast({ title: t("form.voice_processing"), description: t("form.voice_done"), variant: "default" });
         }
       };
 
@@ -247,9 +247,9 @@ export const WriteReviewModal = ({
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
-      toast({ title: "🎙️ Recording...", description: "Speak your review. Click stop when done." });
+      toast({ title: t("form.recording"), description: t("form.recording_desc") });
     } catch {
-      toast({ title: "Microphone error", description: "Please allow microphone access.", variant: "destructive" });
+      toast({ title: t("form.mic_error"), description: t("form.mic_error_desc"), variant: "destructive" });
     }
   };
 
@@ -297,7 +297,7 @@ export const WriteReviewModal = ({
     if (!file) return;
 
     if (!user) {
-      toast({ title: "Sign in required", description: "Please sign in to scan a receipt.", variant: "destructive" });
+      toast({ title: t("form.sign_in_required"), description: t("form.sign_in_receipt"), variant: "destructive" });
       return;
     }
 
@@ -329,13 +329,13 @@ export const WriteReviewModal = ({
       const preview = URL.createObjectURL(file);
       setAttachments((prev) => [...prev, { file, preview, type: "receipt" }]);
 
-      toast({
-        title: "📸 Receipt captured!",
-        description: "Your receipt has been submitted for admin verification.",
-      });
+       toast({
+         title: t("form.receipt_captured"),
+         description: t("form.receipt_captured_desc"),
+       });
     } catch (err) {
       console.error("Receipt upload error:", err);
-      toast({ title: "Upload failed", description: "Could not upload receipt. Please try again.", variant: "destructive" });
+      toast({ title: t("form.upload_failed"), description: t("form.upload_failed_desc"), variant: "destructive" });
     } finally {
       setIsReceiptUploading(false);
       e.target.value = "";
@@ -345,12 +345,12 @@ export const WriteReviewModal = ({
   // Submit — guest or authenticated
   const handleSubmit = async () => {
     if (rating === 0) {
-      toast({ title: "Rating required", description: "Please select a star rating.", variant: "destructive" });
-      return;
+       toast({ title: t("form.rating_required"), description: t("form.rating_required_desc"), variant: "destructive" });
+       return;
     }
     if (!content.trim()) {
-      toast({ title: "Review required", description: "Please write your review.", variant: "destructive" });
-      return;
+       toast({ title: t("form.review_required"), description: t("form.review_required_desc"), variant: "destructive" });
+       return;
     }
 
     setIsUploading(true);
@@ -375,10 +375,10 @@ export const WriteReviewModal = ({
 
         setGuestReviewId((data as any).id);
         setShowAccountPrompt(true);
-        toast({
-          title: "✅ Review submitted!",
-          description: `Your review for ${developerName} has been submitted. Create an account to track it!`,
-        });
+         toast({
+           title: t("form.review_submitted"),
+           description: t("form.review_submitted_guest", { name: developerName }),
+         });
       } else {
         // Authenticated submit — existing flow
         const uploadedUrls: string[] = [];
@@ -430,17 +430,17 @@ export const WriteReviewModal = ({
 
         if (isFirstReview) {
           setFirstReviewCelebration(true);
-          toast({
-            title: "🏆 First Review Badge Earned!",
-            description: "You've earned the 'First Review' badge and +25 points! Keep sharing your experiences.",
-            duration: 6000,
+           toast({
+             title: t("form.first_review_badge"),
+             description: t("form.first_review_badge_desc"),
+             duration: 6000,
           });
           setTimeout(() => setFirstReviewCelebration(false), 4000);
         } else {
-          toast({
-            title: "✅ Review submitted!",
-            description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
-          });
+           toast({
+             title: t("form.review_submitted"),
+             description: t("form.review_submitted_auth", { name: developerName, hasVerification: verificationFiles.length > 0 }),
+           });
         }
 
         resetForm();
@@ -449,7 +449,7 @@ export const WriteReviewModal = ({
       }
     } catch (e) {
       console.error("Review submission error:", e);
-      toast({ title: "Submission error", description: "Could not submit review. Please try again.", variant: "destructive" });
+      toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
     } finally {
       setIsUploading(false);
     }
@@ -458,11 +458,11 @@ export const WriteReviewModal = ({
   // Handle account creation after guest review
   const handleGuestSignup = async () => {
     if (!signupEmail || !signupPassword) {
-      toast({ title: "Required fields", description: "Please fill in email and password.", variant: "destructive" });
+      toast({ title: t("form.fields_required"), description: t("form.fields_required_desc"), variant: "destructive" });
       return;
     }
     if (signupPassword.length < 6) {
-      toast({ title: "Password too short", description: "Password must be at least 6 characters.", variant: "destructive" });
+      toast({ title: t("form.password_short"), description: t("form.password_short_desc"), variant: "destructive" });
       return;
     }
 
@@ -471,9 +471,9 @@ export const WriteReviewModal = ({
       const { error } = await signUp(signupEmail, signupPassword, signupName || guestName || undefined);
       if (error) {
         if (error.message.includes("already registered")) {
-          toast({ title: "Account exists", description: "An account with this email already exists. Please sign in.", variant: "destructive" });
+          toast({ title: t("form.account_exists"), description: t("form.account_exists_desc"), variant: "destructive" });
         } else {
-          toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
+          toast({ title: t("form.signup_failed"), description: error.message, variant: "destructive" });
         }
         return;
       }
@@ -484,17 +484,17 @@ export const WriteReviewModal = ({
         localStorage.setItem("r8_pending_claim_review", guestReviewId);
       }
 
-      toast({
-        title: "🎉 Account created!",
-        description: "Please check your email to verify your account. Your review will be linked automatically.",
-        duration: 6000,
-      });
+       toast({
+         title: t("form.account_created"),
+         description: t("form.account_created_desc"),
+         duration: 6000,
+       });
 
       resetForm();
       onReviewSubmitted?.();
       onOpenChange(false);
     } catch (e) {
-      toast({ title: "Error", description: "Could not create account.", variant: "destructive" });
+      toast({ title: t("common.error"), description: t("form.account_error"), variant: "destructive" });
     } finally {
       setIsSigningUp(false);
     }
@@ -589,7 +589,7 @@ export const WriteReviewModal = ({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="p-4 md:p-6 pb-0">
           <DialogTitle className="text-lg md:text-xl font-bold text-foreground">
-            Write a Review {developerName && `for ${developerName}`}
+            Write a Review {developerName && t("form.for_developer", { name: developerName })}
           </DialogTitle>
           {isGuest && (
             <p className="text-xs text-muted-foreground mt-1">
@@ -613,7 +613,7 @@ export const WriteReviewModal = ({
 
           {/* Star Rating */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-2 block">Your Rating *</label>
+             <label className="text-sm font-medium text-foreground mb-2 block">{t("form.your_rating")} *</label>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
@@ -646,22 +646,22 @@ export const WriteReviewModal = ({
           {!isGuest && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Experience Type</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.experience_type")}</label>
                 <Select value={experienceType} onValueChange={setExperienceType}>
-                  <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("form.select_type")} /></SelectTrigger>
                   <SelectContent>
-                    {EXPERIENCE_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    {EXPERIENCE_TYPES_KEYS.map((key) => (
+                      <SelectItem key={key} value={key}>{t(key)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Unit Type</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.unit_type")}</label>
                 <Input
                   value={unitType}
                   onChange={(e) => setUnitType(e.target.value)}
-                  placeholder="e.g., 2BR Apartment, Villa..."
+                  placeholder={t("form.unit_type_placeholder")}
                 />
               </div>
             </div>
@@ -669,19 +669,19 @@ export const WriteReviewModal = ({
 
           {/* Review Title */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Review Title</label>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Summarize your experience..."
-              maxLength={100}
-            />
+             <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.review_title")}</label>
+             <Input
+               value={title}
+               onChange={(e) => setTitle(e.target.value)}
+               placeholder={t("form.review_title_placeholder")}
+               maxLength={100}
+             />
           </div>
 
           {/* Review Content with AI toolbar — AI only for authenticated */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-medium text-foreground">Your Review *</label>
+              <label className="text-sm font-medium text-foreground">{t("form.your_review")} *</label>
               {!isGuest && (
                 <div className="flex items-center gap-1">
                   <Button
@@ -692,7 +692,7 @@ export const WriteReviewModal = ({
                     onClick={isRecording ? stopRecording : startRecording}
                   >
                     {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                    {isRecording ? "Stop" : "Voice"}
+                    {isRecording ? t("form.stop") : t("form.voice")}
                   </Button>
 
                   <Button
@@ -704,7 +704,7 @@ export const WriteReviewModal = ({
                     disabled={isAiLoading}
                   >
                     {isAiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                    AI Suggest
+                     {t("form.ai_suggest")}
                   </Button>
 
                   <Button
@@ -716,7 +716,7 @@ export const WriteReviewModal = ({
                     disabled={isEnhancing || !content.trim()}
                   >
                     {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-accent" />}
-                    Enhance
+                     {t("form.enhance")}
                   </Button>
                 </div>
               )}
@@ -725,7 +725,7 @@ export const WriteReviewModal = ({
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Share your experience... What was good? What could be better? Would you recommend?"
+              placeholder={t("form.review_placeholder")}
               rows={isGuest ? 4 : 5}
               className="resize-none"
             />
@@ -749,7 +749,7 @@ export const WriteReviewModal = ({
           {!isGuest && aiSuggestions.length > 0 && (
             <div className="bg-secondary/50 rounded-lg p-3 space-y-2">
               <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">
-                <Sparkles className="w-3 h-3" /> AI Suggestions — click to add
+                <Sparkles className="w-3 h-3" /> {t("form.ai_suggestions_click")}
               </p>
               <div className="space-y-1.5">
                 {aiSuggestions.map((s, i) => (
@@ -783,8 +783,8 @@ export const WriteReviewModal = ({
           {/* Attachments — authenticated only */}
           {!isGuest && (
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
-                <Paperclip className="w-4 h-4" /> Attachments
+               <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
+                 <Paperclip className="w-4 h-4" /> {t("form.attachments")}
               </label>
               <div className="flex flex-wrap gap-2 mb-2">
                 <Button
@@ -794,7 +794,7 @@ export const WriteReviewModal = ({
                   className="h-9 gap-1.5 text-xs"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <ImageIcon className="w-3.5 h-3.5" /> Photos
+                  <ImageIcon className="w-3.5 h-3.5" /> {t("form.photos")}
                 </Button>
                 <Button
                   type="button"
@@ -809,7 +809,7 @@ export const WriteReviewModal = ({
                     }
                   }}
                 >
-                  <FileText className="w-3.5 h-3.5" /> Documents
+                  <FileText className="w-3.5 h-3.5" /> {t("form.documents")}
                 </Button>
                 <Button
                   type="button"
@@ -828,7 +828,7 @@ export const WriteReviewModal = ({
                   ) : (
                     <Camera className="w-3.5 h-3.5" />
                   )}
-                  {isReceiptUploading ? "Uploading..." : "Scan Receipt"}
+                  {isReceiptUploading ? t("form.uploading") : t("form.scan_receipt")}
                 </Button>
               </div>
 
@@ -878,12 +878,12 @@ export const WriteReviewModal = ({
           {/* Verification Section — authenticated only */}
           {!isGuest && (
             <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
-              <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-accent" /> Purchase Verification
-                <Badge variant="secondary" className="text-[10px] ml-1">Optional</Badge>
+               <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
+                 <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification")}
+                 <Badge variant="secondary" className="text-[10px] ml-1">{t("form.optional")}</Badge>
               </label>
-              <p className="text-xs text-muted-foreground mb-2">
-                Upload proof of purchase (receipt, contract, payment confirmation) to get a <strong>Verified Buyer</strong> badge on your review.
+               <p className="text-xs text-muted-foreground mb-2">
+                 {t("form.verification_desc")}
               </p>
               <Button
                 type="button"
@@ -892,7 +892,7 @@ export const WriteReviewModal = ({
                 className="h-9 gap-1.5 text-xs"
                 onClick={() => verificationInputRef.current?.click()}
               >
-                <Receipt className="w-3.5 h-3.5" /> Upload Verification
+                <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification")}
               </Button>
               <input
                 ref={verificationInputRef}
@@ -928,7 +928,7 @@ export const WriteReviewModal = ({
                 onChange={(e) => setIsAnonymous(e.target.checked)}
                 className="rounded border-border"
               />
-              <span className="text-sm text-foreground">Post anonymously</span>
+              <span className="text-sm text-foreground">{t("form.post_anonymously")}</span>
             </label>
           )}
 
@@ -937,21 +937,21 @@ export const WriteReviewModal = ({
 
           {/* Submit */}
           <div className="flex items-center justify-end gap-2 pt-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+             <Button variant="outline" onClick={() => onOpenChange(false)}>
+               {t("form.cancel")}
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={isUploading || rating === 0 || !content.trim()}
               className="gap-1.5 min-h-[44px]"
             >
-              {isUploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
-                </>
-              ) : (
-                "Submit Review"
-              )}
+               {isUploading ? (
+                 <>
+                   <Loader2 className="w-4 h-4 animate-spin" /> {t("form.submitting")}
+                 </>
+               ) : (
+                 t("form.submit_review")
+               )}
             </Button>
           </div>
         </div>

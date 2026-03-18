@@ -6,19 +6,7 @@ import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-
-const STATS = [
-  { icon: MessageSquare, value: '50K+', label: 'Verified Reviews' },
-  { icon: Building2, value: '1,200+', label: 'Companies Rated' },
-  { icon: Users, value: '100K+', label: 'Active Users' },
-  { icon: Star, value: '4.8★', label: 'Platform Trust Score' },
-];
-
-const FEEDBACK_TYPES = [
-  { value: 'value_found', label: 'What I found valuable' },
-  { value: 'advice', label: "What I'd improve" },
-  { value: 'general', label: 'General feedback' },
-];
+import { useTranslation } from 'react-i18next';
 
 function getOrCreateSessionId(): string {
   const key = 'r8estate_guest_session';
@@ -31,6 +19,7 @@ function getOrCreateSessionId(): string {
 }
 
 export function GuestTimerExpiredModal() {
+  const { t } = useTranslation();
   const { expiredModalOpen, dismissExpiredModal, isGuest, grantBonusTime, hasBonusBeenUsed } = useGuestTimer();
   const navigate = useNavigate();
 
@@ -42,6 +31,19 @@ export function GuestTimerExpiredModal() {
   const [submitting, setSubmitting] = useState(false);
 
   if (!isGuest) return null;
+
+  const STATS = [
+    { icon: MessageSquare, value: '50K+', label: t("guest.stat_reviews") },
+    { icon: Building2, value: '1,200+', label: t("guest.stat_companies") },
+    { icon: Users, value: '100K+', label: t("guest.stat_users") },
+    { icon: Star, value: '4.8★', label: t("guest.stat_trust") },
+  ];
+
+  const FEEDBACK_TYPES = [
+    { value: 'value_found', label: t("guest.feedback_valuable") },
+    { value: 'advice', label: t("guest.feedback_improve") },
+    { value: 'general', label: t("guest.feedback_general") },
+  ];
 
   const handleSignUp = () => {
     dismissExpiredModal();
@@ -55,11 +57,11 @@ export function GuestTimerExpiredModal() {
 
   const handleSubmitFeedback = async () => {
     if (rating === 0) {
-      toast.error('Please select a star rating');
+      toast.error(t("form.rating_required_desc"));
       return;
     }
     if (feedbackText.trim().length < 10) {
-      toast.error('Please write at least 10 characters of feedback');
+      toast.error(t("guest.feedback_min_chars"));
       return;
     }
 
@@ -74,11 +76,11 @@ export function GuestTimerExpiredModal() {
     setSubmitting(false);
 
     if (error) {
-      toast.error('Failed to submit feedback. Please try again.');
+      toast.error(t("guest.feedback_error"));
       return;
     }
 
-    toast.success('Thank you! Enjoy 2 extra minutes of browsing.');
+    toast.success(t("guest.feedback_success"));
     setShowFeedbackForm(false);
     setRating(0);
     setFeedbackText('');
@@ -92,7 +94,6 @@ export function GuestTimerExpiredModal() {
         onEscapeKeyDown={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        {/* Header gradient */}
         <div className="bg-gradient-to-br from-orange-500 via-red-500 to-rose-600 px-6 pt-8 pb-10 text-white text-center relative">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,white,transparent)]" />
           <div className="relative">
@@ -100,15 +101,14 @@ export function GuestTimerExpiredModal() {
               <Clock className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl font-extrabold mb-2 leading-tight">
-              Your Free Preview Has Ended
+              {t("guest.preview_ended")}
             </h2>
             <p className="text-white/85 text-sm leading-relaxed max-w-xs mx-auto">
-              You've explored the platform! Create a free account to continue browsing with unlimited access.
+              {t("guest.preview_ended_desc")}
             </p>
           </div>
         </div>
 
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-px bg-border mx-0">
           {STATS.map(({ icon: Icon, value, label }) => (
             <div key={label} className="bg-background flex flex-col items-center justify-center py-4 px-3">
@@ -119,7 +119,6 @@ export function GuestTimerExpiredModal() {
           ))}
         </div>
 
-        {/* Bonus feedback section */}
         {!hasBonusBeenUsed && (
           <div className="px-5 pt-4">
             {!showFeedbackForm ? (
@@ -128,13 +127,12 @@ export function GuestTimerExpiredModal() {
                 className="w-full flex items-center justify-center gap-2 bg-accent/60 hover:bg-accent text-accent-foreground font-semibold py-3 rounded-xl transition-all duration-200 text-sm border border-border"
               >
                 <Gift className="w-4 h-4 text-primary" />
-                Share feedback & get 2 extra minutes free
+                {t("guest.share_feedback_bonus")}
               </button>
             ) : (
               <div className="space-y-3 bg-muted/40 rounded-xl p-4 border border-border">
-                <p className="text-xs font-semibold text-foreground">Rate your experience & share your thoughts</p>
+                <p className="text-xs font-semibold text-foreground">{t("guest.rate_experience")}</p>
 
-                {/* Star rating */}
                 <div className="flex items-center gap-1">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button
@@ -156,26 +154,24 @@ export function GuestTimerExpiredModal() {
                   ))}
                 </div>
 
-                {/* Type chips */}
                 <div className="flex flex-wrap gap-1.5">
-                  {FEEDBACK_TYPES.map((t) => (
+                  {FEEDBACK_TYPES.map((ft) => (
                     <button
-                      key={t.value}
-                      onClick={() => setFeedbackType(t.value)}
+                      key={ft.value}
+                      onClick={() => setFeedbackType(ft.value)}
                       className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
-                        feedbackType === t.value
+                        feedbackType === ft.value
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-background text-muted-foreground border-border hover:border-primary/40'
                       }`}
                     >
-                      {t.label}
+                      {ft.label}
                     </button>
                   ))}
                 </div>
 
-                {/* Text */}
                 <Textarea
-                  placeholder="Tell us what you think... (min 10 characters)"
+                  placeholder={t("guest.feedback_placeholder")}
                   value={feedbackText}
                   onChange={(e) => setFeedbackText(e.target.value)}
                   className="min-h-[70px] text-sm resize-none"
@@ -192,7 +188,7 @@ export function GuestTimerExpiredModal() {
                   ) : (
                     <>
                       <Send className="w-4 h-4" />
-                      Submit & Get 2 Extra Minutes
+                      {t("guest.submit_bonus")}
                     </>
                   )}
                 </button>
@@ -201,41 +197,25 @@ export function GuestTimerExpiredModal() {
           </div>
         )}
 
-        {/* CTAs */}
         <div className="p-5 flex flex-col gap-3 bg-background">
           <button
             onClick={handleSignUp}
-            className="
-              w-full flex items-center justify-center gap-2
-              bg-gradient-to-r from-orange-500 to-red-500
-              hover:from-orange-600 hover:to-red-600
-              text-white font-bold py-3.5 rounded-xl
-              shadow-lg shadow-orange-500/30 hover:shadow-orange-500/40
-              transition-all duration-200 active:scale-[0.98]
-              text-sm
-            "
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/40 transition-all duration-200 active:scale-[0.98] text-sm"
           >
-            <span>Sign Up Free — Continue Exploring</span>
+            <span>{t("guest.signup_continue")}</span>
             <ArrowRight className="w-4 h-4" />
           </button>
 
           <button
             onClick={handleLogin}
-            className="
-              w-full flex items-center justify-center gap-2
-              border border-border hover:border-primary/40
-              text-foreground hover:text-primary
-              font-semibold py-3 rounded-xl
-              transition-all duration-200 active:scale-[0.98]
-              text-sm bg-muted/40 hover:bg-muted/60
-            "
+            className="w-full flex items-center justify-center gap-2 border border-border hover:border-primary/40 text-foreground hover:text-primary font-semibold py-3 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm bg-muted/40 hover:bg-muted/60"
           >
             <LogIn className="w-4 h-4" />
-            Already have an account? Log In
+            {t("guest.already_have_account")}
           </button>
 
           <p className="text-center text-xs text-muted-foreground">
-            Free forever · No credit card required
+            {t("guest.free_forever")}
           </p>
         </div>
       </DialogContent>

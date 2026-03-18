@@ -164,9 +164,9 @@ const MobileNavSheet = ({
                     <span className="text-brand-red">R8</span>
                     <span className="text-primary">ESTATE</span>
                   </span>
-                  <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                    Real Reviews · Real Estate
-                  </span>
+                   <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
+                     {t("footer.brandTagline")}
+                   </span>
                 </div>
               </button>
               <LanguageSwitcher />
@@ -183,9 +183,9 @@ const MobileNavSheet = ({
                   </AvatarFallback>
                 </Avatar>
                 <div className="flex-1 min-w-0">
-                  <p className="font-medium text-foreground truncate">{profile?.full_name || "User"}</p>
+                  <p className="font-medium text-foreground truncate">{profile?.full_name || t("nav.user_fallback")}</p>
                   <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-                  <p className="text-xs text-primary capitalize">{role || "Buyer"}</p>
+                  <p className="text-xs text-primary capitalize">{role || t("nav.role_buyer")}</p>
                 </div>
               </div>
             </div>
@@ -211,7 +211,7 @@ const MobileNavSheet = ({
               <>
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigate(getDashboardRoute()); onOpenChange(false); }}>
                   <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
+                   {t("nav.dashboard")}
                 </Button>
                 <Button variant="ghost" className="w-full justify-start gap-2 text-destructive hover:text-destructive" onClick={() => { onSignOut(); onOpenChange(false); }}>
                   <LogOut className="w-4 h-4" />
@@ -221,9 +221,9 @@ const MobileNavSheet = ({
             ) : isLoading ? (
               <div className="h-10 w-full rounded-lg bg-muted animate-pulse" />
             ) : isReturningDevice ? (
-              <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
-                {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
-              </Button>
+               <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
+                 {returningDeviceEmail ? t("nav.continue_as", { name: returningDeviceEmail.split('@')[0] }) : t("nav.continue_to_account")}
+               </Button>
             ) : (
               <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
                 {t("common.signIn")}

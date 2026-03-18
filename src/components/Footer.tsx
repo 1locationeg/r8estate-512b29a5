@@ -21,7 +21,7 @@ export const Footer = () => {
                 <span className="text-primary">ESTATE</span>
               </span>
               <span className="text-[7px] md:text-[8px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                Real Reviews · Real Estate
+                {t("footer.brandTagline")}
               </span>
             </div>
           </div>

@@ -433,7 +433,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
         return (
           <div className="mt-3 w-full overflow-hidden overflow-x-hidden">
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 text-left">
-              {isRTL ? "المميزة" : "Featured"}
+              {t("hero.featured")}
             </h3>
             <div className="relative">
               <div
