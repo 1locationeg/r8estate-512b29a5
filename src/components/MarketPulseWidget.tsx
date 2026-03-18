@@ -17,6 +17,65 @@ const trendConfig = {
   alert: { Icon: AlertTriangle, label: "Watch", color: "text-accent", border: "border-accent/40", bg: "from-accent/20 to-accent/5", glow: "shadow-accent/20", iconColor: "text-accent" },
 };
 
+function parseNumeric(val: string): { num: number; prefix: string; suffix: string } | null {
+  const match = val.match(/^([^\d]*?)([\d,.]+)(.*)$/);
+  if (!match) return null;
+  return { prefix: match[1], num: parseFloat(match[2].replace(/,/g, "")), suffix: match[3] };
+}
+
+function useCountUp(target: number, duration = 1200, trigger: number) {
+  const [value, setValue] = useState(0);
+  const prevTrigger = useRef(trigger);
+
+  useEffect(() => {
+    if (trigger === prevTrigger.current && value !== 0) return;
+    prevTrigger.current = trigger;
+
+    let raf: number;
+    const startTime = performance.now();
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(eased * target));
+      if (progress < 1) raf = requestAnimationFrame(animate);
+    };
+    raf = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(raf);
+  }, [target, duration, trigger]);
+
+  return value;
+}
+
+function AnimatedValue({ raw, colorClass }: { raw: string; colorClass: string }) {
+  const parsed = parseNumeric(raw);
+  const [trigger, setTrigger] = useState(0);
+  const prevRaw = useRef(raw);
+
+  useEffect(() => {
+    if (raw !== prevRaw.current) {
+      prevRaw.current = raw;
+      setTrigger((t) => t + 1);
+    }
+  }, [raw]);
+
+  const animatedNum = useCountUp(parsed?.num ?? 0, 1200, trigger);
+
+  if (!parsed) {
+    return <span className={`text-2xl md:text-3xl font-black leading-none ${colorClass} tracking-tight`}>{raw}</span>;
+  }
+
+  const formatted = parsed.num >= 1000
+    ? animatedNum.toLocaleString()
+    : String(animatedNum);
+
+  return (
+    <span className={`text-2xl md:text-3xl font-black leading-none ${colorClass} tracking-tight`}>
+      {parsed.prefix}{formatted}{parsed.suffix}
+    </span>
+  );
+}
+
 export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   const { user, role } = useAuth();
   const [insights, setInsights] = useState<InsightData[]>([]);
@@ -69,7 +128,6 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   };
 
   const cfg = trendConfig[current.trend];
-  const TrendIcon = cfg.Icon;
 
   return (
     <button
@@ -84,9 +142,7 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       </div>
 
       <div className={`transition-opacity duration-300 w-full flex flex-col items-center ${fading ? "opacity-0" : "opacity-100"}`}>
-        <span className={`text-2xl md:text-3xl font-black leading-none ${cfg.color} tracking-tight`}>
-          {current.metric_value}
-        </span>
+        <AnimatedValue raw={current.metric_value} colorClass={cfg.color} />
         <span className="text-[10px] text-muted-foreground leading-snug mt-1">
           {cfg.label}
         </span>
