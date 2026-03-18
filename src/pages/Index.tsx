@@ -75,12 +75,12 @@ const Index = () => {
     return '/buyer';
   };
 
-  const switchToBusinessView = () => {
-    setUserMode("industry");
-    setSelectedDeveloperId(null);
-    setSpecialViewItem(null);
-    setActiveView(null);
-    setShowIndustryCategories(false);
+  const handleBusinessClick = () => {
+    if (user && role === 'business') {
+      navigate('/business');
+    } else {
+      navigate('/auth?type=business');
+    }
   };
 
   const switchToBuyerView = () => {
