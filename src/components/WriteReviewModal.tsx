@@ -247,7 +247,7 @@ export const WriteReviewModal = ({
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
-      toast({ title: "🎙️ Recording...", description: "Speak your review. Click stop when done." });
+      toast({ title: t("form.recording"), description: t("form.recording_desc") });
     } catch {
       toast({ title: "Microphone error", description: "Please allow microphone access.", variant: "destructive" });
     }
