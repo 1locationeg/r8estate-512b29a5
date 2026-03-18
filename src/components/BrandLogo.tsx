@@ -47,7 +47,7 @@ export const BrandLogo = ({
   const config = sizeConfig[size];
 
   return (
-    <div className={cn("inline-flex items-center gap-0", className)}>
+    <div dir="ltr" className={cn("inline-flex items-center gap-0", className)}>
       <img
         src={logoIcon}
         alt="R8ESTATE"
