@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { formatDate } from "@/utils/formatArabic";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
