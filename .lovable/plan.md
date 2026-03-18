@@ -1,56 +1,32 @@
 
 
-## Interactive Hero: Gauge + Review Card Focal Point
+## Make Search Dropdown Items Compact on Mobile
 
-### Concept
-Replace the current auto-cycling gauge with an interactive hero where the **review card is the focal point**, overlapping and driven by the gauge score. The gauge sets the emotional tone; the review card explains *why* the needle landed there. Users can interact via a slider and preset buttons.
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### New Component: `HeroTrustShowcase`
-A single new component replacing `HeroTrustGauge` in the hero section, containing:
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-**1. Gauge (top layer)**
-- Same semicircular gauge with red→amber→green gradient arc, needle with elastic bounce animation, pulse ring at needle base
-- On initial load: needle sweeps from 0 to the first score with a spring/overshoot easing
-- Score badge pops in with scale animation after needle settles
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-**2. Review Card (overlapping the gauge)**
-- Slides up from below, overlapping the gauge bottom ~30% so they share the same visual frame
-- Content tied to the current score via preset review scenarios:
-  - **25** (Low): negative review — delays, poor quality, "Slow" response tag
-  - **55** (Mid): mixed review — decent but issues, "Average" tags
-  - **88** (High): positive review — on time, great quality (matches the uploaded reference image style)
-  - **97** (Elite): exceptional review — exceeded expectations
-- Card structure (inspired by reference image):
-  - Verified Buyer badge + project/location
-  - Reviewer avatar, name, tier, star rating, date
-  - Quoted review text in italics
-  - Dimension score pills (e.g., "On time / Delivery", "Excellent / Build quality", "As shown / Brochure", "Slow / Response")
-  - Footer: developer logo + name + Trust Score badge
-- Each row staggers in with a 50ms delay for sequential reveal animation
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-**3. Interactive Controls (below the card)**
-- **Slider**: drag to set score 0–100; needle, score number, color, label, and review card all update in real time
-- **Preset buttons**: 25 / 55 / 88 / 97 — tap to jump to key trust scenarios
-- **Replay button**: restarts the full entrance animation (gauge sweep + card slide-up + stagger)
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-**4. Score-to-Review Mapping**
-- Define 4 review scenarios as data objects with: score, reviewer name, avatar initial, project, developer, rating, comment, dimension tags, trust label
-- Slider snaps to nearest scenario content, or interpolates the gauge visually while showing the closest scenario's review
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-### Changes to `Index.tsx`
-- Replace `<HeroTrustGauge />` with `<HeroTrustShowcase />`
-- Remove the old "TRUST METER" label (now integrated into the component)
-- Keep everything else (tagline, search bar, trust strip) below as-is
-
-### Animation Details
-- Gauge entrance: 1.2s cubic-bezier overshoot for needle, 0.8s arc fill left-to-right
-- Review card: 0.6s slide-up + fade-in, starts 0.4s after gauge settles
-- Row stagger: each row delays 80ms (badge → reviewer → quote → dimensions → footer)
-- Slider interaction: immediate needle rotation + score color transition, review card crossfades to matching scenario
-- Preset tap: 0.8s animated transition to target score + card swap
-
-### Files
-- **Create** `src/components/HeroTrustShowcase.tsx` — the full interactive hero component
-- **Edit** `src/pages/Index.tsx` — swap `HeroTrustGauge` for `HeroTrustShowcase`
-- **Keep** `src/components/HeroTrustGauge.tsx` — preserved but no longer used in hero
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 

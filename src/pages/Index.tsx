@@ -6,7 +6,7 @@ import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotligh
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
 
-import { HeroTrustGauge } from "@/components/HeroTrustGauge";
+import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
@@ -280,14 +280,8 @@ const Index = () => {
             }} />
                
                <div className="relative text-center">
-                 <p className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em] text-muted-foreground mb-1">
-                   {t("hero.trustMeter")}
-                 </p>
-
-                 {/* Hero Trust Meter Gauge - Live Animated */}
-                 <div className="mt-0">
-                   <HeroTrustGauge />
-                 </div>
+                  {/* Interactive Trust Showcase — Gauge + Review Card */}
+                  <HeroTrustShowcase />
 
                  {/* Mode-specific Tagline */}
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
