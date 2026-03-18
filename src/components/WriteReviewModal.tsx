@@ -497,7 +497,7 @@ export const WriteReviewModal = ({
       onReviewSubmitted?.();
       onOpenChange(false);
     } catch (e) {
-      toast({ title: "Error", description: "Could not create account.", variant: "destructive" });
+      toast({ title: t("common.error"), description: t("form.account_error"), variant: "destructive" });
     } finally {
       setIsSigningUp(false);
     }
