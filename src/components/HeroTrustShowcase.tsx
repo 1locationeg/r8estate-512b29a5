@@ -374,13 +374,13 @@ export const HeroTrustShowcase = () => {
           {/* Labels */}
           <text x="12" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">0</text>
           <text x="182" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">100</text>
-          <text x="100" y="119" textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))" fontWeight="900" letterSpacing="0.25em" opacity="0.6">
+          <text x="100" y="115" textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))" fontWeight="900" letterSpacing="0.25em" opacity="0.6">
             TRUST SCORE
           </text>
         </svg>
 
         {/* Center score */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-5">
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-7">
           <span className="text-3xl md:text-4xl font-black tabular-nums leading-none transition-colors duration-300" style={{ color }}>
             {displayScore}
           </span>
@@ -389,7 +389,7 @@ export const HeroTrustShowcase = () => {
 
       {/* ── Review Card ── */}
       <div
-        className={`relative mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all min-h-[180px] ${
+        className={`relative -mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all min-h-[180px] ${
           transitioning ? "opacity-40" : "opacity-100"
         }`}
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
