@@ -54,6 +54,24 @@ const Index = () => {
     return developers.find((d) => d.id === selectedDeveloperId) || null;
   }, [selectedDeveloperId]);
 
+  // Post-email-verification: detect fresh login on homepage and offer dashboard redirect
+  useEffect(() => {
+    if (!user || isLoading || !role) return;
+    // Check URL hash for email verification callback (type=signup or type=recovery)
+    const hash = window.location.hash;
+    if (hash.includes('type=signup') || hash.includes('type=magiclink')) {
+      // Clear hash
+      window.history.replaceState(null, '', window.location.pathname);
+      toast({
+        title: t("common.emailVerified", "Email verified! 🎉"),
+        description: t("common.welcomeRedirect", "Welcome to R8ESTATE! Redirecting to your dashboard..."),
+        duration: 3000,
+      });
+      setTimeout(() => navigate(getDashboardRoute()), 1500);
+      return;
+    }
+  }, [user, isLoading, role]);
+
   // Auto-scroll to detail section when item is selected
   useEffect(() => {
     if (specialViewItem || selectedDeveloper) {
