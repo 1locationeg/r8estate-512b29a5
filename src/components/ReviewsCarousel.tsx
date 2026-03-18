@@ -6,6 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { formatNumber } from "@/utils/formatArabic";
 import { BrandLogo } from "@/components/BrandLogo";
 
+
 interface CarouselReview {
   id: string;
   author: string;
