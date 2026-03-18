@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, ChevronDown, ChevronUp } from 'lucide-react';
-import logoIcon from '@/assets/logo-icon.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { Footer } from '@/components/Footer';
 import { TrustSignals } from '@/components/TrustSignals';
 import { z } from 'zod';
@@ -194,16 +194,7 @@ const Auth = () => {
               className="flex items-center justify-center gap-3 mb-6 mx-auto hover:opacity-80 transition-opacity"
               aria-label="Return to home"
             >
-              <img src={logoIcon} alt="R8ESTATE" className="h-12 w-12 object-contain -mr-1.5" />
-              <div className="flex flex-col leading-none gap-0">
-                <span className="inline-flex text-xl font-extrabold leading-none">
-                  <span className="text-brand-red">R8</span>
-                  <span className="text-primary">ESTATE</span>
-                </span>
-                <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                  Real Reviews · Real Estate
-                </span>
-              </div>
+              <BrandLogo size="md" />
             </button>
 
             {/* Title */}

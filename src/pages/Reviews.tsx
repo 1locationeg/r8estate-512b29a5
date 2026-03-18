@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const Reviews = () => {
   const { t } = useTranslation();
@@ -89,16 +89,7 @@ const Reviews = () => {
       <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={logoIcon} alt="R8ESTATE" className="h-8 w-8 object-contain -mr-1" />
-            <div className="flex flex-col leading-none gap-0">
-              <span className="inline-flex text-sm font-extrabold leading-none">
-                <span className="text-brand-red">R8</span>
-                <span className="text-primary">ESTATE</span>
-              </span>
-              <span className="text-[6px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                Real Reviews · Real Estate
-              </span>
-            </div>
+            <BrandLogo size="xs" />
           </div>
           <Button
             size="sm"

@@ -5,7 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
-import logoIcon from '@/assets/logo-icon.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { LogOut } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -56,17 +56,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
         >
-          <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain -mr-1.5" />
-          <div className="flex flex-col leading-none gap-0">
-            <span className="inline-flex text-lg font-extrabold leading-none">
-              <span className="text-brand-red">R8</span>
-              <span className="text-primary">ESTATE</span>
-            </span>
-            <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-              Real Reviews · Real Estate
-            </span>
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">{portalLabel}</span>
-          </div>
+          <BrandLogo size="sm" subtitle={portalLabel} />
         </div>
       </div>
 

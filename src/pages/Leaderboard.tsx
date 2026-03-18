@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -99,16 +99,7 @@ const Leaderboard = () => {
               onClick={() => navigate("/")}
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-              <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain -mr-1.5" />
-              <div className="flex flex-col leading-none gap-0">
-                <span className="inline-flex text-lg font-extrabold leading-none">
-                  <span className="text-brand-red">R8</span>
-                  <span className="text-primary">ESTATE</span>
-                </span>
-                <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                  Real Reviews · Real Estate
-                </span>
-              </div>
+              <BrandLogo size="sm" />
             </button>
           </div>
           <LanguageSwitcher />

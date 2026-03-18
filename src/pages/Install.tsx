@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Download, Smartphone, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Footer } from "@/components/Footer";
 
 interface BeforeInstallPromptEvent extends Event {
@@ -48,16 +48,7 @@ const Install = () => {
         </button>
 
         <div className="flex items-center justify-center gap-3">
-          <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 object-contain -mr-1.5" />
-          <div className="flex flex-col leading-none gap-0">
-            <span className="inline-flex text-2xl font-extrabold leading-none">
-              <span className="text-brand-red">R8</span>
-              <span className="text-primary">ESTATE</span>
-            </span>
-            <span className="text-[8px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-              Real Reviews · Real Estate
-            </span>
-          </div>
+          <BrandLogo size="lg" />
         </div>
 
         {isInstalled ? (

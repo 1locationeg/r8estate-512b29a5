@@ -23,6 +23,7 @@ import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, A
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { BrandLogo } from "@/components/BrandLogo";
 import logoIcon from "@/assets/logo-icon.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -162,16 +163,7 @@ const Index = () => {
             onClick={() => navigate('/')}
             className="inline-flex items-center gap-0 hover:opacity-80 transition-opacity"
             aria-label="Return to home">
-            <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 md:h-20 md:w-20 object-contain -mr-2 md:-mr-3" />
-            <div className="flex flex-col leading-none gap-0">
-              <span className="inline-flex text-lg md:text-xl font-extrabold leading-none">
-                <span className="text-brand-red">R8</span>
-                <span className="text-primary">ESTATE</span>
-              </span>
-              <span className="text-[8px] md:text-[10px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                Real Reviews · Real Estate
-              </span>
-            </div>
+            <BrandLogo size="hero" />
           </button>
 
           {/* Desktop view toggle */}
