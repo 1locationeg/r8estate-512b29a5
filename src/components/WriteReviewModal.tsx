@@ -459,7 +459,7 @@ export const WriteReviewModal = ({
   // Handle account creation after guest review
   const handleGuestSignup = async () => {
     if (!signupEmail || !signupPassword) {
-      toast({ title: "Required fields", description: "Please fill in email and password.", variant: "destructive" });
+      toast({ title: t("form.fields_required"), description: t("form.fields_required_desc"), variant: "destructive" });
       return;
     }
     if (signupPassword.length < 6) {
