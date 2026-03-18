@@ -430,10 +430,10 @@ export const WriteReviewModal = ({
 
         if (isFirstReview) {
           setFirstReviewCelebration(true);
-          toast({
-            title: "🏆 First Review Badge Earned!",
-            description: "You've earned the 'First Review' badge and +25 points! Keep sharing your experiences.",
-            duration: 6000,
+           toast({
+             title: t("form.first_review_badge"),
+             description: t("form.first_review_badge_desc"),
+             duration: 6000,
           });
           setTimeout(() => setFirstReviewCelebration(false), 4000);
         } else {
