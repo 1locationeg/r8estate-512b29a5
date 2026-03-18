@@ -62,7 +62,6 @@ const scenarios: ReviewScenario[] = [
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
       { label: "Build quality", value: "Average", positive: false },
-      { label: "Brochure match", value: "Close", positive: true },
       { label: "Response", value: "Slow", positive: false },
     ],
     trustLabel: "Mixed",
