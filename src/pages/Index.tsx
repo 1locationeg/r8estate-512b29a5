@@ -299,9 +299,16 @@ const Index = () => {
                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
                          {t("hero.tagline")}
                        </p>
-                       <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                         {t("hero.taglineHighlight")}
-                       </p>
+                        <div className="flex items-center justify-center gap-3 mt-1">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground">
+                            <Shield className="w-3.5 h-3.5 text-verified" />
+                            {t("hero.benefit_zero_risk")}
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground">
+                            <CheckCircle className="w-3.5 h-3.5 text-accent" />
+                            {t("hero.benefit_confident")}
+                          </span>
+                        </div>
                      </> :
                 <>
                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
