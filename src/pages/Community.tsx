@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy, Edit3, ImageIcon, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,22 +13,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 import { Loader2 } from "lucide-react";
 
-const categoryFilters: { value: CommunityPostCategory | undefined; label: string }[] = [
-  { value: undefined, label: "All" },
-  { value: "question", label: "❓ Questions" },
-  { value: "discussion", label: "💬 Discussions" },
-  { value: "tip", label: "💡 Tips" },
-  { value: "experience", label: "📖 Experiences" },
-  { value: "poll", label: "📊 Polls" },
-];
-
-const sortOptions = [
-  { value: 'trending' as const, label: "Trending", icon: TrendingUp },
-  { value: 'newest' as const, label: "Newest", icon: Clock },
-  { value: 'discussed' as const, label: "Most Discussed", icon: MessageCircle },
-];
-
 const Community = () => {
+  const { t } = useTranslation();
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const { user, profile } = useAuth();
@@ -43,6 +30,21 @@ const Community = () => {
   const { toggleVote } = useCommunityActions();
 
   const displayName = profile?.full_name || user?.email?.split('@')[0] || 'User';
+
+  const categoryFilters: { value: CommunityPostCategory | undefined; label: string }[] = [
+    { value: undefined, label: t("community.all", "All") },
+    { value: "question", label: `❓ ${t("community.questions", "Questions")}` },
+    { value: "discussion", label: `💬 ${t("community.discussions", "Discussions")}` },
+    { value: "tip", label: `💡 ${t("community.tips", "Tips")}` },
+    { value: "experience", label: `📖 ${t("community.experiences", "Experiences")}` },
+    { value: "poll", label: `📊 ${t("community.polls", "Polls")}` },
+  ];
+
+  const sortOptions = [
+    { value: 'trending' as const, label: t("community.trending", "Trending"), icon: TrendingUp },
+    { value: 'newest' as const, label: t("community.newest", "Newest"), icon: Clock },
+    { value: 'discussed' as const, label: t("community.mostDiscussed", "Most Discussed"), icon: MessageCircle },
+  ];
 
   useEffect(() => {
     const postParam = searchParams.get("post");
@@ -132,7 +134,7 @@ const Community = () => {
               }}
               className="flex-1 bg-secondary hover:bg-secondary/80 rounded-full px-4 py-2.5 text-sm text-muted-foreground text-left transition-colors"
             >
-              What's on your mind, {user ? displayName.split(' ')[0] : 'Guest'}?
+              {t("community.whatsOnYourMind", "What's on your mind, {{name}}?", { name: user ? displayName.split(' ')[0] : t("community.guest", "Guest") })}
             </button>
           </div>
           <div className="border-t border-border mt-3 pt-3 flex items-center justify-around">
@@ -144,7 +146,7 @@ const Community = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
             >
               <Edit3 className="w-4 h-4 text-primary" />
-              <span>Discussion</span>
+              <span>{t("community.discussion", "Discussion")}</span>
             </button>
             <button
               onClick={() => {
@@ -154,7 +156,7 @@ const Community = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
             >
               <MessageCircle className="w-4 h-4 text-emerald-500" />
-              <span>Question</span>
+              <span>{t("community.question", "Question")}</span>
             </button>
             <button
               onClick={() => {
@@ -164,7 +166,7 @@ const Community = () => {
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
             >
               <BarChart3 className="w-4 h-4 text-purple-500" />
-              <span>Poll</span>
+              <span>{t("community.poll", "Poll")}</span>
             </button>
           </div>
         </div>
@@ -176,7 +178,7 @@ const Community = () => {
             <div className="flex items-center gap-2 bg-primary/10 border border-primary/20 rounded-lg px-3 py-2 text-xs">
               <Users className="w-3.5 h-3.5 text-primary flex-shrink-0" />
               <span className="text-foreground font-medium">
-                Showing discussions about <span className="text-primary">{dev?.name || 'this developer'}</span>
+                {t("community.showingAbout", "Showing discussions about")} <span className="text-primary">{dev?.name || t("community.thisDeveloper", "this developer")}</span>
               </span>
               <button
                 onClick={() => { const p = new URLSearchParams(searchParams); p.delete("developer"); setSearchParams(p); }}
@@ -192,7 +194,7 @@ const Community = () => {
         <div className="relative">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
-            placeholder="Search community..."
+            placeholder={t("community.searchPlaceholder", "Search community...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-9 h-10 text-sm rounded-full bg-card border-border"
@@ -236,7 +238,7 @@ const Community = () => {
             ))}
             <div className="ml-auto flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Users className="w-3 h-3" />
-              <span>{posts.length} posts</span>
+              <span>{t("community.postsCount", "{{count}} posts", { count: posts.length })}</span>
             </div>
           </div>
         </div>
@@ -249,7 +251,7 @@ const Community = () => {
         ) : filteredPosts.length === 0 ? (
           <div className="bg-card border border-border rounded-lg shadow-sm text-center py-16 space-y-3">
             <MessageCircle className="w-10 h-10 text-muted-foreground/30 mx-auto" />
-            <p className="text-muted-foreground text-sm">No posts yet. Start the conversation!</p>
+            <p className="text-muted-foreground text-sm">{t("community.noPosts", "No posts yet. Start the conversation!")}</p>
             <Button
               size="sm"
               onClick={() => {
@@ -257,7 +259,7 @@ const Community = () => {
                 setShowNewPost(true);
               }}
             >
-              Create the first post
+              {t("community.createFirst", "Create the first post")}
             </Button>
           </div>
         ) : (

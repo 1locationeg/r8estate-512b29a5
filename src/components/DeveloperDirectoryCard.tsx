@@ -51,7 +51,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           onClick={handleSave}
           disabled={saveLoading}
           className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
-          title={isSaved ? "Remove from saved" : "Save"}
+          title={isSaved ? t("common.removeSaved", "Remove from saved") : t("common.save", "Save")}
         >
           <Bookmark className={`h-4 w-4 ${isSaved ? "fill-accent text-accent" : "text-muted-foreground"}`} />
         </button>
@@ -59,7 +59,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           onClick={handleFollow}
           disabled={followLoading}
           className="p-1.5 rounded-full bg-background/80 backdrop-blur-sm hover:bg-background transition-colors"
-          title={isFollowing ? "Unfollow" : "Follow"}
+          title={isFollowing ? t("common.unfollow", "Unfollow") : t("common.follow", "Follow")}
         >
           {isFollowing ? (
             <UserCheck className="h-4 w-4 text-primary" />
@@ -70,15 +70,12 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
       </div>
 
       <div className="flex flex-col items-center text-center space-y-4">
-        {/* Logo */}
         <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
           <img src={developer.logo} alt={developer.name} className="w-full h-full object-cover" />
         </div>
 
-        {/* Developer Name */}
         <h3 className="text-xl font-bold text-foreground">{developer.name}</h3>
 
-        {/* Sentiment Score */}
         <div className="w-full">
           <p className="text-sm text-muted-foreground mb-2">{t("developers.publicSentimentScore")}</p>
           <div className="flex items-center justify-center gap-2">
@@ -89,14 +86,12 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           </div>
         </div>
 
-        {/* Unclaimed Profile Badge */}
         {!developer.isClaimed && (
           <Badge variant="outline" className="bg-accent/10 text-accent border-accent">
             {t("developers.unclaimedProfile")}
           </Badge>
         )}
 
-        {/* Ask the community link */}
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -105,7 +100,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           className="flex items-center gap-1.5 text-xs text-muted-foreground hover:text-primary transition-colors mt-1"
         >
           <MessageCircle className="w-3.5 h-3.5" />
-          <span>Ask the community</span>
+          <span>{t("community.askCommunity", "Ask the community")}</span>
         </button>
       </div>
     </Card>

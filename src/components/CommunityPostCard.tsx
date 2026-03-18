@@ -1,4 +1,5 @@
 import { useState, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -8,26 +9,10 @@ import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
-const categoryConfig: Record<string, { label: string; className: string }> = {
-  question: { label: "Question", className: "bg-blue-500/10 text-blue-600 border-blue-200" },
-  discussion: { label: "Discussion", className: "bg-primary/10 text-primary border-primary/20" },
-  tip: { label: "Tip", className: "bg-emerald-500/10 text-emerald-600 border-emerald-200" },
-  experience: { label: "Experience", className: "bg-amber-500/10 text-amber-600 border-amber-200" },
-  poll: { label: "Poll", className: "bg-purple-500/10 text-purple-600 border-purple-200" },
-};
-
-const reactionEmojis = [
-  { emoji: "👍", label: "Like" },
-  { emoji: "❤️", label: "Love" },
-  { emoji: "😂", label: "Haha" },
-  { emoji: "😮", label: "Wow" },
-  { emoji: "😢", label: "Sad" },
-];
-
-function timeAgo(dateStr: string) {
+function timeAgo(dateStr: string, t: (key: string, fallback: string) => string) {
   const diff = Date.now() - new Date(dateStr).getTime();
   const mins = Math.floor(diff / 60000);
-  if (mins < 1) return "Just now";
+  if (mins < 1) return t("community.justNow", "Just now");
   if (mins < 60) return `${mins}m`;
   const hrs = Math.floor(mins / 60);
   if (hrs < 24) return `${hrs}h`;
@@ -38,27 +23,13 @@ function timeAgo(dateStr: string) {
   return new Date(dateStr).toLocaleDateString();
 }
 
-// Reaction summary row
-const ReactionSummaryRow = ({ reactions, onToggle }: { reactions: ReactionSummary[]; onToggle: (emoji: string) => void }) => {
-  const totalReactions = reactions.reduce((sum, r) => sum + r.count, 0);
-  if (totalReactions === 0) return null;
-  
-  // Show top 3 emoji icons
-  const topEmojis = reactions.slice(0, 3);
-
-  return (
-    <div className="flex items-center justify-between px-4 py-1.5 text-xs text-muted-foreground">
-      <div className="flex items-center gap-1">
-        <div className="flex -space-x-0.5">
-          {topEmojis.map((r) => (
-            <span key={r.emoji} className="text-sm">{r.emoji}</span>
-          ))}
-        </div>
-        <span className="ml-1">{totalReactions}</span>
-      </div>
-    </div>
-  );
-};
+const reactionEmojis = [
+  { emoji: "👍", label: "Like" },
+  { emoji: "❤️", label: "Love" },
+  { emoji: "😂", label: "Haha" },
+  { emoji: "😮", label: "Wow" },
+  { emoji: "😢", label: "Sad" },
+];
 
 interface Props {
   post: CommunityPost;
@@ -67,6 +38,15 @@ interface Props {
 }
 
 export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
+  const { t } = useTranslation();
+  const categoryConfig: Record<string, { label: string; className: string }> = {
+    question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
+    discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
+    tip: { label: t("community.tip", "Tip"), className: "bg-emerald-500/10 text-emerald-600 border-emerald-200" },
+    experience: { label: t("community.experience", "Experience"), className: "bg-amber-500/10 text-amber-600 border-amber-200" },
+    poll: { label: t("community.poll", "Poll"), className: "bg-purple-500/10 text-purple-600 border-purple-200" },
+  };
+
   const cat = categoryConfig[post.category] || categoryConfig.discussion;
   const [showEmojis, setShowEmojis] = useState(false);
   const { reactions, toggleReaction } = useReactions(post.id, 'post');
@@ -76,7 +56,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
 
   return (
     <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-      {/* Author header — Facebook style */}
+      {/* Author header */}
       <div className="flex items-center gap-3 px-4 pt-3 pb-2">
         <Avatar className="h-10 w-10 ring-2 ring-border">
           <AvatarImage src={post.author_avatar} />
@@ -88,7 +68,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
             <UserTierBadge userId={post.user_id} />
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            <span>{timeAgo(post.created_at)}</span>
+            <span>{timeAgo(post.created_at, t)}</span>
             <span>·</span>
             <Globe className="w-3 h-3" />
             <span>·</span>
@@ -108,7 +88,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
         </button>
       </div>
 
-      {/* Post body — clickable */}
+      {/* Post body */}
       <button onClick={onClick} className="w-full text-left px-4 pb-3">
         <h3 className="font-semibold text-[15px] text-foreground leading-snug mb-1">
           {post.title}
@@ -117,7 +97,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
           {post.body}
         </p>
         {post.reply_count === 0 && post.category === 'question' && (
-          <p className="text-xs text-primary font-medium mt-2">Be the first to answer!</p>
+          <p className="text-xs text-primary font-medium mt-2">{t("community.beFirstAnswer", "Be the first to answer!")}</p>
         )}
       </button>
 
@@ -138,11 +118,11 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
         <div className="flex items-center gap-3">
           {post.reply_count > 0 && (
             <button onClick={onClick} className="hover:underline">
-              {post.reply_count} comment{post.reply_count !== 1 ? 's' : ''}
+              {t("community.commentCount", "{{count}} comment", { count: post.reply_count })}{post.reply_count !== 1 ? 's' : ''}
             </button>
           )}
           {post.upvotes > 0 && (
-            <span>{post.upvotes} upvote{post.upvotes !== 1 ? 's' : ''}</span>
+            <span>{t("community.upvoteCount", "{{count}} upvote", { count: post.upvotes })}{post.upvotes !== 1 ? 's' : ''}</span>
           )}
         </div>
       </div>
@@ -150,7 +130,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
       {/* Divider */}
       <div className="mx-4 border-t border-border" />
 
-      {/* Action bar — Facebook style */}
+      {/* Action bar */}
       <div className="flex items-center px-2 py-1">
         {/* Like with emoji picker */}
         <div className="relative flex-1">
@@ -165,7 +145,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
             }`}
           >
             <ThumbsUp className="w-4 h-4" fill={userHasReacted ? "currentColor" : "none"} />
-            <span>{userHasReacted ? 'Liked' : 'Like'}</span>
+            <span>{userHasReacted ? t("community.liked", "Liked") : t("community.like", "Like")}</span>
           </button>
           {showEmojis && (
             <div
@@ -193,7 +173,7 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
           className="flex items-center justify-center gap-1.5 flex-1 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
         >
           <MessageCircle className="w-4 h-4" />
-          <span>Comment</span>
+          <span>{t("community.comment", "Comment")}</span>
         </button>
 
         {/* Share */}
