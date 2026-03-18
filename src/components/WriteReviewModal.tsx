@@ -883,8 +883,8 @@ export const WriteReviewModal = ({
                  <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification")}
                  <Badge variant="secondary" className="text-[10px] ml-1">{t("form.optional")}</Badge>
               </label>
-              <p className="text-xs text-muted-foreground mb-2">
-                Upload proof of purchase (receipt, contract, payment confirmation) to get a <strong>Verified Buyer</strong> badge on your review.
+               <p className="text-xs text-muted-foreground mb-2">
+                 {t("form.verification_desc")}
               </p>
               <Button
                 type="button"
