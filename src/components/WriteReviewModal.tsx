@@ -725,7 +725,7 @@ export const WriteReviewModal = ({
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              placeholder="Share your experience... What was good? What could be better? Would you recommend?"
+              placeholder={t("form.review_placeholder")}
               rows={isGuest ? 4 : 5}
               className="resize-none"
             />
