@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { formatDate } from "@/utils/formatArabic";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
@@ -97,8 +98,8 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-          <div className="relative w-[80px] h-4 md:w-[100px] md:h-5">
+        <div className={`flex items-center gap-1 md:gap-2 flex-shrink-0 ${i18n.language === 'ar' ? 'flex-row-reverse' : ''}`}>
+          <div className={`relative w-[80px] h-4 md:w-[100px] md:h-5 ${i18n.language === 'ar' ? 'transform scale-x-[-1]' : ''}`}>
             <img src={r8Stars} alt="" className="absolute inset-0 w-full h-full object-contain grayscale opacity-25" />
             <img
               src={r8Stars}
@@ -121,14 +122,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       </p>
       <div className="flex items-center justify-between mb-2 md:mb-3">
         <span className="text-[10px] md:text-xs text-muted-foreground">
-          {new Date(review.date).toLocaleDateString(
-            i18n.language === "ar" ? "ar-AE" : "en-US",
-            {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            }
-          )}
+          {formatDate(review.date, i18n.language)}
         </span>
         <button
           onClick={() => navigate(`/community?developer=${review.developerId}`)}
@@ -150,14 +144,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                   {review.developerReply.author}
                 </span>
                 <span className="text-[10px] md:text-xs text-muted-foreground">
-                  {new Date(review.developerReply.date).toLocaleDateString(
-                    i18n.language === "ar" ? "ar-AE" : "en-US",
-                    {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    }
-                  )}
+                  {formatDate(review.developerReply.date, i18n.language)}
                 </span>
               </div>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">

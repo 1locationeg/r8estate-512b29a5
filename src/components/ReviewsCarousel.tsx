@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
+import { formatNumber } from "@/utils/formatArabic";
 import logoOnly from "@/assets/logo-only.png";
 import sideLongLogo from "@/assets/side-long-logo.png";
 
@@ -164,16 +165,20 @@ export function ReviewsCarousel() {
     return "text-primary fill-primary"; // navy for 5 stars
   };
 
-  const renderStars = (rating: number) => (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
-        />
-      ))}
-    </div>
-  );
+  const renderStars = (rating: number) => {
+    const stars = [1, 2, 3, 4, 5];
+    const orderedStars = isRTL ? [...stars].reverse() : stars;
+    return (
+      <div className={`flex gap-0.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        {orderedStars.map((i) => (
+          <Star
+            key={i}
+            className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <section className="w-full py-0 overflow-hidden">
@@ -297,7 +302,7 @@ export function ReviewsCarousel() {
               {avgRating}
             </span>
             <span className="text-sm text-muted-foreground">
-              ({sortedReviews.length.toLocaleString()})
+              ({formatNumber(sortedReviews.length, i18n.language)})
             </span>
           </div>
           <div className="flex items-center gap-1">

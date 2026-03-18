@@ -1,8 +1,13 @@
+import { useTranslation } from "react-i18next";
+import { formatNumber } from "@/utils/formatArabic";
+
 interface TrustScoreProps {
   score: number;
 }
 
 export const TrustScore = ({ score }: TrustScoreProps) => {
+  const { t, i18n } = useTranslation();
+
   const getColor = (score: number) => {
     if (score >= 66) return "text-trust-excellent";
     if (score >= 50) return "text-trust-good";
@@ -10,9 +15,9 @@ export const TrustScore = ({ score }: TrustScoreProps) => {
   };
 
   const getLabel = (score: number) => {
-    if (score >= 66) return "Excellent";
-    if (score >= 50) return "Good";
-    return "Fair";
+    if (score >= 66) return i18n.language === "ar" ? "ممتاز" : "Excellent";
+    if (score >= 50) return i18n.language === "ar" ? "جيد" : "Good";
+    return i18n.language === "ar" ? "مقبول" : "Fair";
   };
 
   return (
@@ -40,12 +45,18 @@ export const TrustScore = ({ score }: TrustScoreProps) => {
           />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <span className={`text-xs md:text-sm font-bold ${getColor(score)}`}>{score}</span>
+          <span className={`text-xs md:text-sm font-bold ${getColor(score)}`}>
+            {formatNumber(score, i18n.language)}
+          </span>
         </div>
       </div>
       <div className="flex flex-col">
-        <span className="text-[10px] md:text-xs text-muted-foreground">TrustScore</span>
-        <span className={`text-xs md:text-sm font-semibold ${getColor(score)}`}>{getLabel(score)}</span>
+        <span className="text-[10px] md:text-xs text-muted-foreground">
+          {t("trustScore.label", "TrustScore")}
+        </span>
+        <span className={`text-xs md:text-sm font-semibold ${getColor(score)}`}>
+          {getLabel(score)}
+        </span>
       </div>
     </div>
   );

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { MessageSquare, Building2, Users, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { formatNumber } from "@/utils/formatArabic";
 
 function useCountUp(target: number, duration = 2000, start = false) {
   const [value, setValue] = useState(0);
@@ -29,7 +30,7 @@ const stats = [
 ];
 
 export function TractionStats() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
 
@@ -60,7 +61,7 @@ export function TractionStats() {
       <div className="flex items-center justify-center">
         {stats.map((s, i) => {
           const Icon = s.icon;
-          const displayVal = s.suffix === "K+" ? `${values[i]}K+` : s.suffix === "%" ? `${values[i]}%` : `${values[i].toLocaleString()}+`;
+          const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
             <div key={s.labelKey} className="contents">
               {/* Divider */}
