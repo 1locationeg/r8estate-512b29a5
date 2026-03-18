@@ -76,45 +76,29 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       onClick={onClick}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex items-center gap-3 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden col-span-2 md:col-span-1`}
+      className={`relative flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden`}
     >
-      {/* Icon on the side */}
-      <div className="w-10 h-10 rounded-lg bg-secondary flex-shrink-0 flex items-center justify-center group-hover:scale-105 transition-transform">
-        <Sparkles className={`w-5 h-5 ${cfg.iconColor}`} />
+      <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Sparkles className={`w-4 h-4 ${cfg.iconColor}`} />
       </div>
 
-      {/* Content */}
-      <div className="flex-1 min-w-0">
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">AI Insights</span>
+      <div className={`transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
+        <span className="text-xs font-bold text-foreground leading-tight block">AI Insights</span>
+        <span className={`text-[10px] text-muted-foreground leading-snug block mt-0.5`}>
+          {current.metric_value} · {cfg.label}
+        </span>
+      </div>
 
-        <div className={`transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-          <span className={`text-xl font-black leading-none ${cfg.color} tracking-tight block mt-0.5`}>
-            {current.metric_value}
-          </span>
-
-          <div className="flex items-center gap-1 mt-1">
-            <TrendIcon className={`w-3.5 h-3.5 ${cfg.color}`} />
-            <span className={`text-[10px] font-bold uppercase tracking-wider ${cfg.color}`}>
-              {cfg.label}
-            </span>
-            <span className="text-[10px] text-muted-foreground truncate">
-              · {current.metric_label}
-            </span>
-          </div>
+      {insights.length > 1 && (
+        <div className="flex gap-0.5 mt-0.5">
+          {insights.map((_, i) => (
+            <span
+              key={i}
+              className={`w-1 h-1 rounded-full transition-colors ${i === activeIdx ? "bg-primary" : "bg-muted-foreground/30"}`}
+            />
+          ))}
         </div>
-
-        {/* Dot indicators */}
-        {insights.length > 1 && (
-          <div className="flex gap-0.5 mt-1.5">
-            {insights.map((_, i) => (
-              <span
-                key={i}
-                className={`w-1 h-1 rounded-full transition-colors ${i === activeIdx ? "bg-primary" : "bg-muted-foreground/30"}`}
-              />
-            ))}
-          </div>
-        )}
-      </div>
+      )}
     </button>
   );
 };

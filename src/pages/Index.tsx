@@ -112,7 +112,11 @@ const Index = () => {
         setTimeout(() => setExternalCategory(null), 100);
         break;
       case 'insights':
-        setShowInsightsModal(true);
+        if (user) {
+          navigate('/insights');
+        } else {
+          navigate('/auth');
+        }
         break;
     }
   };
