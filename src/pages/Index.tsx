@@ -290,7 +290,7 @@ const Index = () => {
                       <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
                     </p>
                    {/* Interactive Trust Showcase — Gauge + Review Card */}
-                   <HeroTrustShowcase />
+                   <div id="trust-showcase"><HeroTrustShowcase /></div>
 
                  {/* Mode-specific Tagline */}
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
@@ -300,14 +300,14 @@ const Index = () => {
                          {t("hero.tagline")}
                        </p>
                         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-1">
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground">
-                            <Shield className="w-3.5 h-3.5 text-verified" />
-                            {t("hero.benefit_zero_risk")}
-                          </span>
-                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground">
-                            <CheckCircle className="w-3.5 h-3.5 text-accent" />
-                            {t("hero.benefit_confident")}
-                          </span>
+                           <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
+                             <Shield className="w-3.5 h-3.5 text-verified" />
+                             {t("hero.benefit_zero_risk")}
+                           </button>
+                           <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
+                             <CheckCircle className="w-3.5 h-3.5 text-accent" />
+                             {t("hero.benefit_confident")}
+                           </button>
                         </div>
                      </> :
                 <>
