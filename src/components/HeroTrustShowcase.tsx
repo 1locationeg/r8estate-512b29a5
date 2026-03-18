@@ -46,7 +46,6 @@ const scenarios: ReviewScenario[] = [
     dimensions: [
       { label: "Delivery", value: "18mo late", positive: false },
       { label: "Build quality", value: "Poor", positive: false },
-      { label: "Brochure match", value: "Misleading", positive: false },
       { label: "Response", value: "No reply", positive: false },
     ],
     trustLabel: "Low Trust",
@@ -63,7 +62,6 @@ const scenarios: ReviewScenario[] = [
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
       { label: "Build quality", value: "Average", positive: false },
-      { label: "Brochure match", value: "Close", positive: true },
       { label: "Response", value: "Slow", positive: false },
     ],
     trustLabel: "Mixed",
@@ -80,7 +78,6 @@ const scenarios: ReviewScenario[] = [
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
       { label: "Build quality", value: "Excellent", positive: true },
-      { label: "Brochure match", value: "As shown", positive: true },
       { label: "Response", value: "Fast", positive: true },
     ],
     trustLabel: "High Trust",
@@ -97,7 +94,6 @@ const scenarios: ReviewScenario[] = [
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
       { label: "Build quality", value: "Premium", positive: true },
-      { label: "Brochure match", value: "Exceeded", positive: true },
       { label: "Response", value: "Instant", positive: true },
     ],
     trustLabel: "Exceptional",
@@ -453,7 +449,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 4: Dimension pills */}
           <div
-            className={`flex flex-wrap gap-1 transition-all duration-300 ${
+            className={`flex flex-nowrap gap-1 overflow-hidden transition-all duration-300 ${
               rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
