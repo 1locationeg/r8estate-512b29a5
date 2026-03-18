@@ -502,20 +502,44 @@ export const HeroTrustShowcase = () => {
       </div>
 
       {/* ── Controls ── */}
-      <div className="hidden">
-        <Slider
-          value={[score]}
-          min={0}
-          max={100}
-          step={1}
-          onValueChange={handleSliderChange}
-        />
-        {presets.map((p) => (
-          <button key={p} onClick={() => handlePreset(p)}>{p}</button>
-        ))}
-        <button onClick={handleReplay} aria-label="Replay animation">
-          <RotateCcw className="w-3.5 h-3.5" />
-        </button>
+      <div className="mt-4 mx-2 md:mx-0 space-y-3">
+        {/* Slider */}
+        <div className="flex items-center gap-3">
+          <span className="text-[10px] font-bold text-muted-foreground w-6 text-right">0</span>
+          <Slider
+            value={[score]}
+            min={0}
+            max={100}
+            step={1}
+            onValueChange={handleSliderChange}
+            className="flex-1"
+          />
+          <span className="text-[10px] font-bold text-muted-foreground w-6">100</span>
+        </div>
+
+        {/* Presets + Replay */}
+        <div className="flex items-center justify-center gap-2">
+          {presets.map((p) => (
+            <button
+              key={p}
+              onClick={() => handlePreset(p)}
+              className={`px-3 py-1.5 rounded-lg text-xs font-bold border transition-all ${
+                score === p
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-secondary text-foreground border-border hover:border-primary/40"
+              }`}
+            >
+              {p}
+            </button>
+          ))}
+          <button
+            onClick={handleReplay}
+            className="p-1.5 rounded-lg border border-border bg-secondary text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all"
+            aria-label="Replay animation"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
     </div>
   );
