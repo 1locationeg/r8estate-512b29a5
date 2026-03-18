@@ -74,7 +74,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubai Creek Harbour",
     developer: "Emaar Properties",
     rating: 4.5,
-    comment: "\"Excellent build quality and delivered right on schedule. The community amenities exceeded our expectations. Would definitely buy from them again.\"",
+    comment: "\"Excellent build quality, delivered on schedule. Community amenities exceeded expectations. Would buy again.\"",
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
       { label: "Build quality", value: "Excellent", positive: true },
