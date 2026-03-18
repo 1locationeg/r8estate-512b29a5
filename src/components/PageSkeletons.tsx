@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-// Skeleton for Home/Index page with search and categories
+// Skeleton for Home/Index page - mirrors actual landing layout
 export const IndexSkeleton = () => (
   <div className="min-h-screen bg-background">
     {/* Header */}
@@ -14,24 +14,59 @@ export const IndexSkeleton = () => (
       </div>
     </div>
 
-    {/* Hero Section */}
-    <div className="px-4 py-12 sm:py-16 lg:py-20">
-      <div className="max-w-3xl mx-auto text-center space-y-6">
-        <Skeleton className="h-12 w-3/4 mx-auto" />
-        <Skeleton className="h-5 w-2/3 mx-auto" />
-        <Skeleton className="h-14 w-full max-w-md mx-auto rounded-lg" />
+    {/* Hero Trust Gauge Area */}
+    <div className="bg-gradient-to-b from-primary to-primary/90 px-4 py-8">
+      <div className="max-w-md mx-auto flex flex-col items-center">
+        {/* Gauge placeholder */}
+        <div className="w-[200px] h-[110px] mb-2 relative">
+          <Skeleton className="w-full h-full rounded-full bg-primary-foreground/10" />
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+            <Skeleton className="h-8 w-12 bg-primary-foreground/15 rounded" />
+          </div>
+        </div>
+        <Skeleton className="h-3 w-24 bg-primary-foreground/10 mb-4" />
+
+        {/* Review card placeholder */}
+        <div className="w-full rounded-xl border border-border/20 bg-card/10 p-3 space-y-2">
+          <div className="flex justify-center">
+            <Skeleton className="h-3 w-36 bg-primary-foreground/10" />
+          </div>
+          <div className="flex items-center gap-2">
+            <Skeleton className="w-7 h-7 rounded-full bg-primary-foreground/10" />
+            <div className="flex-1 space-y-1">
+              <Skeleton className="h-3 w-24 bg-primary-foreground/10" />
+              <Skeleton className="h-2 w-16 bg-primary-foreground/10" />
+            </div>
+          </div>
+          <div className="space-y-1">
+            <Skeleton className="h-2.5 w-full bg-primary-foreground/10" />
+            <Skeleton className="h-2.5 w-4/5 bg-primary-foreground/10" />
+          </div>
+          <div className="flex gap-2">
+            <Skeleton className="h-5 w-16 rounded-full bg-primary-foreground/10" />
+            <Skeleton className="h-5 w-20 rounded-full bg-primary-foreground/10" />
+            <Skeleton className="h-5 w-14 rounded-full bg-primary-foreground/10" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {/* Search bar placeholder */}
+    <div className="px-4 py-4">
+      <div className="max-w-md mx-auto">
+        <Skeleton className="h-12 w-full rounded-xl" />
       </div>
     </div>
 
     {/* Categories Grid */}
     <div className="px-4 pb-12">
       <div className="max-w-6xl mx-auto">
-        <Skeleton className="h-6 w-48 mb-6" />
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div key={i} className="p-4 rounded-xl border border-border bg-card">
-              <Skeleton className="h-10 w-10 rounded-lg mb-3" />
-              <Skeleton className="h-5 w-24" />
+        <Skeleton className="h-5 w-40 mb-4" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="p-3 rounded-xl border border-border bg-card">
+              <Skeleton className="h-8 w-8 rounded-lg mb-2" />
+              <Skeleton className="h-4 w-20" />
             </div>
           ))}
         </div>
@@ -74,20 +109,14 @@ export const DashboardSkeleton = ({ title }: { title: string }) => (
 
     {/* Main Content */}
     <div className="flex-1 flex flex-col overflow-x-hidden">
-      {/* Header */}
       <div className="border-b border-border bg-card px-4 py-3">
         <div className="flex items-center justify-between">
           <Skeleton className="h-6 w-40" />
           <Skeleton className="h-9 w-9 rounded-full" />
         </div>
       </div>
-
-      {/* Content */}
       <main className="p-4 md:p-6 flex-1 space-y-6">
-        {/* Page Title */}
         <Skeleton className="h-7 w-48" />
-
-        {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <div key={i} className="bg-card border border-border rounded-xl p-4 space-y-3">
@@ -97,8 +126,6 @@ export const DashboardSkeleton = ({ title }: { title: string }) => (
             </div>
           ))}
         </div>
-
-        {/* Charts / Lists */}
         <div className="grid lg:grid-cols-2 gap-6">
           <div className="bg-card border border-border rounded-xl p-4 space-y-4">
             <Skeleton className="h-6 w-32" />
@@ -118,8 +145,6 @@ export const DashboardSkeleton = ({ title }: { title: string }) => (
           </div>
         </div>
       </main>
-
-      {/* Footer */}
       <div className="border-t border-border bg-card px-4 py-4">
         <Skeleton className="h-4 w-48 mx-auto" />
       </div>
@@ -135,20 +160,15 @@ export const DeveloperDashboardSkeleton = () => <DashboardSkeleton title="Busine
 // Skeleton for Developer Directory
 export const DeveloperDirectorySkeleton = () => (
   <div className="min-h-screen bg-background">
-    {/* Header */}
     <div className="border-b border-border bg-card px-4 py-3">
       <div className="flex items-center justify-between max-w-7xl mx-auto">
         <Skeleton className="h-8 w-32" />
         <Skeleton className="h-9 w-9 rounded-full" />
       </div>
     </div>
-
-    {/* Content */}
     <div className="max-w-7xl mx-auto px-4 py-8">
       <Skeleton className="h-8 w-64 mb-2" />
       <Skeleton className="h-5 w-96 mb-8" />
-
-      {/* Developer Cards Grid */}
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.from({ length: 6 }).map((_, i) => (
           <div key={i} className="bg-card border border-border rounded-xl p-6 space-y-4">
