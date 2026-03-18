@@ -44,6 +44,7 @@ import { useNavigate } from "react-router-dom";
 import { ConfettiCelebration } from "@/components/ConfettiCelebration";
 import { Trophy } from "lucide-react";
 import { TrustSignals } from "@/components/TrustSignals";
+import { ReviewSuccessOverlay } from "@/components/ReviewSuccessOverlay";
 
 interface WriteReviewModalProps {
   open: boolean;
