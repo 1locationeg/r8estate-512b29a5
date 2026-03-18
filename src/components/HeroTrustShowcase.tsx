@@ -382,16 +382,9 @@ export const HeroTrustShowcase = () => {
         </div>
       </div>
 
-      {/* ── TRUST SCORE label ── */}
-      <div className="text-center mt-0.5 mb-1">
-        <span className="text-[10px] md:text-[11px] font-bold tracking-[0.25em] uppercase text-muted-foreground/60">
-          TRUST SCORE
-        </span>
-      </div>
-
       {/* ── Review Card ── */}
       <div
-        className={`relative mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all ${
+        className={`relative -mt-4 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all ${
           cardVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         } ${transitioning ? "opacity-40" : "opacity-100"}`}
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
