@@ -9,7 +9,7 @@ import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, ChevronDown, ChevronUp } from 'lucide-react';
-import logoIcon from '@/assets/logo-icon.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { Footer } from '@/components/Footer';
 import { TrustSignals } from '@/components/TrustSignals';
 import { z } from 'zod';
