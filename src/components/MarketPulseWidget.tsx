@@ -84,19 +84,19 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       </div>
 
       {/* Cycling content */}
-      <div className={`flex flex-col items-start transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-        <span className={`text-lg font-black leading-none ${cfg.color} tracking-tight`}>
+      <div className={`flex flex-col items-center w-full transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
+        <span className={`text-2xl font-black leading-none ${cfg.color} tracking-tight`}>
           {current.metric_value}
         </span>
 
-        <div className="flex items-center gap-1 mt-0.5">
-          <TrendIcon className={`w-3 h-3 ${cfg.color}`} />
-          <span className={`text-[9px] font-bold uppercase tracking-wider ${cfg.color}`}>
+        <div className="flex items-center gap-1 mt-1">
+          <TrendIcon className={`w-4 h-4 ${cfg.color}`} />
+          <span className={`text-xs font-bold uppercase tracking-wider ${cfg.color}`}>
             {cfg.label}
           </span>
         </div>
 
-        <span className="text-[10px] text-muted-foreground leading-snug truncate max-w-full mt-0.5">
+        <span className="text-[11px] text-muted-foreground leading-snug truncate max-w-full mt-0.5">
           {current.metric_label}
         </span>
       </div>
