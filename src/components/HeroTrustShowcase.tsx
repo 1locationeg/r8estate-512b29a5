@@ -402,7 +402,7 @@ export const HeroTrustShowcase = () => {
               return (
                 <span
                   key={dim.label}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold border ${
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[10px] font-semibold border ${
                     dim.positive
                       ? "bg-trust-excellent/10 text-trust-excellent border-trust-excellent/20"
                       : "bg-destructive/10 text-destructive border-destructive/20"
