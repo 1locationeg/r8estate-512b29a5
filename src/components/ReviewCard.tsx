@@ -122,14 +122,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       </p>
       <div className="flex items-center justify-between mb-2 md:mb-3">
         <span className="text-[10px] md:text-xs text-muted-foreground">
-          {new Date(review.date).toLocaleDateString(
-            i18n.language === "ar" ? "ar-AE" : "en-US",
-            {
-              month: "long",
-              day: "numeric",
-              year: "numeric",
-            }
-          )}
+          {formatDate(review.date, i18n.language)}
         </span>
         <button
           onClick={() => navigate(`/community?developer=${review.developerId}`)}
