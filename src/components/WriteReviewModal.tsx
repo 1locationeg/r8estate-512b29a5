@@ -216,7 +216,7 @@ export const WriteReviewModal = ({
             }
           }
         } catch {
-          toast({ title: "Voice processing", description: "Transcription complete. You can enhance with AI.", variant: "default" });
+          toast({ title: t("form.voice_processing"), description: t("form.voice_done"), variant: "default" });
         }
       };
 
