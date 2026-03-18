@@ -56,13 +56,16 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
         >
-          <img src={logoIcon} alt="R8ESTATE" className="h-10 w-auto" />
-          <div>
-            <h1 className="text-lg font-bold leading-tight">
+          <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain -mr-1.5" />
+          <div className="flex flex-col leading-none gap-0">
+            <span className="inline-flex text-lg font-extrabold leading-none">
               <span className="text-brand-red">R8</span>
               <span className="text-primary">ESTATE</span>
-            </h1>
-            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider">{portalLabel}</span>
+            </span>
+            <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
+              Real Reviews · Real Estate
+            </span>
+            <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">{portalLabel}</span>
           </div>
         </div>
       </div>
