@@ -87,12 +87,12 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-center justify-center gap-1 p-3 md:p-4 rounded-xl border ${style.border} bg-gradient-to-br ${style.bg} hover:shadow-lg ${style.glow} transition-all text-center group overflow-hidden col-span-2 md:col-span-1`}
+      className={`relative flex flex-col items-center justify-center gap-0 p-2 rounded-xl border ${style.border} bg-gradient-to-br ${style.bg} hover:shadow-lg ${style.glow} transition-all text-center group overflow-hidden col-span-2 md:col-span-1`}
     >
       {/* Subtle animated background pulse */}
       <div className={`absolute inset-0 rounded-xl bg-gradient-to-br ${style.bg} opacity-50 animate-pulse pointer-events-none`} />
 
-      {/* Icon */}
+      {/* Icon + label */}
       <div className="relative z-10 flex items-center gap-1.5">
         <Activity className={`w-4 h-4 ${style.text}`} />
         <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
@@ -100,29 +100,21 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
         </span>
       </div>
 
-      {/* Big number */}
-      <div className="relative z-10 flex items-baseline gap-1">
-        <span className={`text-3xl md:text-4xl font-black tabular-nums ${style.text} leading-none`}>
-          {loaded ? pulse.score : "—"}
-        </span>
-        <span className="text-[10px] text-muted-foreground font-medium">/100</span>
-      </div>
-
-      {/* Trend pill */}
-      <div className="relative z-10 flex items-center gap-1 px-2 py-0.5 rounded-full bg-background/60 backdrop-blur-sm">
-        <TrendIcon className={`w-3 h-3 ${style.text}`} />
-        <span className={`text-[10px] font-bold ${style.text}`}>
+      {/* Trend icon + label */}
+      <div className="relative z-10 flex items-center gap-1 mt-0.5">
+        <TrendIcon className={`w-4 h-4 ${style.text}`} />
+        <span className={`text-xs font-bold ${style.text}`}>
           {trendLabels[pulse.trend]}
         </span>
       </div>
 
       {/* Descriptive text */}
-      <span className="relative z-10 text-[10px] text-muted-foreground leading-snug">
+      <span className="relative z-10 text-[10px] text-muted-foreground leading-tight mt-0.5">
         {pulse.detail}
       </span>
 
       {/* Sparkle decoration */}
-      <Sparkles className="absolute top-2 right-2 w-3 h-3 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
+      <Sparkles className="absolute top-1.5 right-1.5 w-3 h-3 text-muted-foreground/30 group-hover:text-primary/50 transition-colors" />
     </button>
   );
 };
