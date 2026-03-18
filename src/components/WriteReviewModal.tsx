@@ -441,7 +441,6 @@ export const WriteReviewModal = ({
              title: t("form.review_submitted"),
              description: t("form.review_submitted_auth", { name: developerName, hasVerification: verificationFiles.length > 0 }),
            });
-          });
         }
 
         resetForm();
