@@ -704,7 +704,7 @@ export const WriteReviewModal = ({
                     disabled={isAiLoading}
                   >
                     {isAiLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                    AI Suggest
+                     {t("form.ai_suggest")}
                   </Button>
 
                   <Button
