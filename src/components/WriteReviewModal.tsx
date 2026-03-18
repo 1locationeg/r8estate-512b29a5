@@ -472,7 +472,7 @@ export const WriteReviewModal = ({
       const { error } = await signUp(signupEmail, signupPassword, signupName || guestName || undefined);
       if (error) {
         if (error.message.includes("already registered")) {
-          toast({ title: "Account exists", description: "An account with this email already exists. Please sign in.", variant: "destructive" });
+          toast({ title: t("form.account_exists"), description: t("form.account_exists_desc"), variant: "destructive" });
         } else {
           toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
         }
