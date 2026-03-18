@@ -437,9 +437,10 @@ export const WriteReviewModal = ({
           });
           setTimeout(() => setFirstReviewCelebration(false), 4000);
         } else {
-          toast({
-            title: "✅ Review submitted!",
-            description: `Your review for ${developerName} has been submitted successfully.${verificationFiles.length > 0 ? " Verification documents are under review." : ""}`,
+           toast({
+             title: t("form.review_submitted"),
+             description: t("form.review_submitted_auth", { name: developerName, hasVerification: verificationFiles.length > 0 }),
+           });
           });
         }
 
