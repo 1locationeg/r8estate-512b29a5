@@ -82,6 +82,8 @@ const Index = () => {
     setSpecialViewItem(null);
     setActiveView(null);
     setShowIndustryCategories(false);
+    setTogglePulse(true);
+    setTimeout(() => setTogglePulse(false), 2000);
   };
 
   const switchToBuyerView = () => {
@@ -90,6 +92,8 @@ const Index = () => {
     setSpecialViewItem(null);
     setActiveView(null);
     setShowIndustryCategories(false);
+    setTogglePulse(true);
+    setTimeout(() => setTogglePulse(false), 2000);
   };
 
   const handleQuickAction = (actionKey: string) => {
