@@ -299,7 +299,7 @@ const Index = () => {
                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
                          {t("hero.tagline")}
                        </p>
-                        <div className="flex items-center justify-center gap-3 mt-1">
+                        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-1">
                           <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground">
                             <Shield className="w-3.5 h-3.5 text-verified" />
                             {t("hero.benefit_zero_risk")}
