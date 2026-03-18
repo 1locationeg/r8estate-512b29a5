@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 
 export const Footer = () => {
