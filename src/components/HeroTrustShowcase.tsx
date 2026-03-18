@@ -229,7 +229,11 @@ export const HeroTrustShowcase = () => {
 
   useEffect(() => {
     runEntrance();
-    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
   }, [runEntrance]);
 
   // ── Interactive score animation ──
