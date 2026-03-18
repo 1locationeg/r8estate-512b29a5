@@ -17,6 +17,7 @@ import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
+import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2, User } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
