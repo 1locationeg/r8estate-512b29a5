@@ -24,6 +24,7 @@ interface ReviewScenario {
   score: number;
   reviewer: string;
   initial: string;
+  avatar: string;
   project: string;
   location: string;
   developer: string;
