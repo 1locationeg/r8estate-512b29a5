@@ -42,7 +42,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubailand",
     developer: "SandStone Properties",
     rating: 1.5,
-    comment: "\"Delivery was delayed by 18 months with no communication. The finishing quality was far below what was shown in the brochure. Very disappointing experience overall.\"",
+    comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
     dimensions: [
       { label: "Delivery", value: "18mo late", positive: false },
       { label: "Build quality", value: "Poor", positive: false },
