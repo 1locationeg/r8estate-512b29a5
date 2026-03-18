@@ -929,7 +929,7 @@ export const WriteReviewModal = ({
                 onChange={(e) => setIsAnonymous(e.target.checked)}
                 className="rounded border-border"
               />
-              <span className="text-sm text-foreground">Post anonymously</span>
+              <span className="text-sm text-foreground">{t("form.post_anonymously")}</span>
             </label>
           )}
 
