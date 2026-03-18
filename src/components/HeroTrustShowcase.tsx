@@ -138,7 +138,7 @@ export const HeroTrustShowcase = () => {
   const animRef = useRef<number | null>(null);
   const cycleIdxRef = useRef(2); // start at scenario index 2 (score 88)
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const runEntranceRef = useRef<(() => void) | null>(null);
   const entranceTarget = 88;
 
   // ── Auto-cycle logic ──
