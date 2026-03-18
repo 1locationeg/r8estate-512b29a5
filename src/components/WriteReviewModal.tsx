@@ -692,7 +692,7 @@ export const WriteReviewModal = ({
                     onClick={isRecording ? stopRecording : startRecording}
                   >
                     {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
-                    {isRecording ? "Stop" : "Voice"}
+                    {isRecording ? t("form.stop") : t("form.voice")}
                   </Button>
 
                   <Button
