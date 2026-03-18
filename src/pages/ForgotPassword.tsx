@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { ArrowLeft, Mail, Loader2, CheckCircle } from 'lucide-react';
-import logoIcon from '@/assets/logo-icon.png';
+import { BrandLogo } from '@/components/BrandLogo';
 import { Footer } from '@/components/Footer';
 
 const ForgotPassword = () => {
