@@ -205,7 +205,7 @@ export const WriteReviewModal = ({
         stream.getTracks().forEach((track) => track.stop());
 
         if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-          toast({ title: "🎙️ Processing voice...", description: "Converting speech to text..." });
+          toast({ title: t("form.voice_processing"), description: t("form.voice_converting") });
         }
 
         try {
