@@ -353,7 +353,7 @@ export const HeroTrustShowcase = () => {
             }`}
           >
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-primary-foreground"
+              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground"
               style={{ backgroundColor: color }}
             >
               {scenario.initial}
