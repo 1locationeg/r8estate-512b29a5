@@ -181,7 +181,7 @@ export const WriteReviewModal = ({
       if (error) throw error;
       if (data.enhanced) {
         setContent(data.enhanced);
-        toast({ title: "✨ Review enhanced", description: data.changes || "Your review has been improved." });
+        toast({ title: t("form.review_enhanced"), description: data.changes || t("form.review_enhanced_desc") });
       }
     } catch (e) {
       toast({ title: "Enhancement failed", description: "Could not enhance text.", variant: "destructive" });
