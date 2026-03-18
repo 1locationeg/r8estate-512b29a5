@@ -58,7 +58,7 @@ const scenarios: ReviewScenario[] = [
     location: "Dubai Marina",
     developer: "Gulf Developments",
     rating: 3,
-    comment: "\"The apartment itself is decent and the location is great, but there were several snag issues that took months to resolve. Communication could be much better.\"",
+    comment: "\"Decent apartment, great location — but several snag issues took months to fix. Communication needs improvement.\"",
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
       { label: "Build quality", value: "Average", positive: false },
