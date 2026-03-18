@@ -17,6 +17,8 @@ const Reviews = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showMineOnly = searchParams.get("mine") === "true";
   const [dbReviews, setDbReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<ReviewFilterType>("all");
