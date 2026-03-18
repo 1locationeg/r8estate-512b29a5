@@ -146,19 +146,44 @@ const Index = () => {
             </div>
           </button>
 
-          <div className="hidden md:flex shrink-0">
-            <ViewToggle onViewChange={() => switchToBusinessView()} />
+          {/* Desktop view toggle */}
+          <div className="hidden md:block shrink-0">
+            {userMode === "buyers" ? (
+              <button
+                onClick={switchToBusinessView}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all">
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Business</span>
+              </button>
+            ) : (
+              <button
+                onClick={switchToBuyerView}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all">
+                <User className="w-3.5 h-3.5" />
+                <span>Buyer</span>
+              </button>
+            )}
           </div>
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1 shrink-0">
-            <button
-              onClick={switchToBusinessView}
-              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
-              aria-label="Switch to business view">
-              <Building2 className="w-3.5 h-3.5" />
-              <span>Business</span>
-            </button>
+            {userMode === "buyers" ? (
+              <button
+                onClick={switchToBusinessView}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all"
+                aria-label="Switch to business view">
+                <Building2 className="w-3.5 h-3.5" />
+                <span>Business</span>
+              </button>
+            ) : (
+              <button
+                onClick={switchToBuyerView}
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+                aria-label="Switch to buyer view">
+                <User className="w-3.5 h-3.5" />
+                <span>Buyer</span>
+              </button>
+            )}
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
