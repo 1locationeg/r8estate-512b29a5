@@ -124,8 +124,8 @@ const Index = () => {
   const quickActions = [
   { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
   { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
-  { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
-  ];
+  { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" }];
+
 
 
   const verifiedBadges = [
@@ -287,7 +287,7 @@ const Index = () => {
                 <div className="relative text-center">
                     {/* Platform descriptor */}
                     <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-3 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-                      <span className="pb-1 border-b-2 border-accent/60 font-semibold border-dashed border-0">{t('hero.platformDescriptor')}</span>
+                      <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
                     </p>
                    {/* Interactive Trust Showcase — Gauge + Review Card */}
                    <HeroTrustShowcase />
