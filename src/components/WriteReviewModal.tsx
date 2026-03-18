@@ -810,7 +810,7 @@ export const WriteReviewModal = ({
                     }
                   }}
                 >
-                  <FileText className="w-3.5 h-3.5" /> Documents
+                  <FileText className="w-3.5 h-3.5" /> {t("form.documents")}
                 </Button>
                 <Button
                   type="button"
