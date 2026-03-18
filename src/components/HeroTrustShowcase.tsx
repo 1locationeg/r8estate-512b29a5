@@ -139,6 +139,7 @@ export const HeroTrustShowcase = () => {
   const cycleIdxRef = useRef(2); // start at scenario index 2 (score 88)
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const runEntranceRef = useRef<(() => void) | null>(null);
   const entranceTarget = 88;
 
   // ── Auto-cycle logic ──
@@ -146,6 +147,21 @@ export const HeroTrustShowcase = () => {
     if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
     cycleIntervalRef.current = setInterval(() => {
       cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarios.length;
+      
+      // After a full cycle, trigger a subtle replay instead of continuing
+      if (cycleIdxRef.current === 0) {
+        if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+        cycleIntervalRef.current = null;
+        // Brief pause then replay entrance
+        setTimeout(() => {
+          if (animRef.current) cancelAnimationFrame(animRef.current);
+          if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+          cycleIdxRef.current = 2;
+          runEntranceRef.current?.();
+        }, 800);
+        return;
+      }
+
       const nextScore = scenarios[cycleIdxRef.current].score;
       // Crossfade: fade out, swap, fade in
       setTransitioning(true);
@@ -227,6 +243,8 @@ export const HeroTrustShowcase = () => {
     };
     animRef.current = requestAnimationFrame(step);
   }, []);
+
+  runEntranceRef.current = runEntrance;
 
   useEffect(() => {
     runEntrance();
