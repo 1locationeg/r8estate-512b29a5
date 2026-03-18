@@ -431,8 +431,8 @@ export const HeroTrustShowcase = () => {
                     />
                   ))}
                 </div>
+                <span className="text-[10px] text-muted-foreground">2 weeks ago</span>
               </div>
-              <span className="text-[10px] text-muted-foreground">2 weeks ago</span>
             </div>
           </div>
 
