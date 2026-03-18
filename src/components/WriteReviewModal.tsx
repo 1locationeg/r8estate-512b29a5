@@ -463,7 +463,7 @@ export const WriteReviewModal = ({
       return;
     }
     if (signupPassword.length < 6) {
-      toast({ title: "Password too short", description: "Password must be at least 6 characters.", variant: "destructive" });
+      toast({ title: t("form.password_short"), description: t("form.password_short_desc"), variant: "destructive" });
       return;
     }
 
