@@ -172,23 +172,30 @@ const Index = () => {
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1 shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all"
-                aria-label="Switch to business view">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Business</span>
-              </button>
-            ) : (
+            <div className="inline-flex items-center p-0.5 bg-secondary rounded-full">
               <button
                 onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full font-semibold text-xs transition-all ${
+                  userMode === "buyers"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground"
+                }`}
                 aria-label="Switch to buyer view">
-                <User className="w-3.5 h-3.5" />
+                <User className="w-3 h-3" />
                 <span>Buyer</span>
               </button>
-            )}
+              <button
+                onClick={switchToBusinessView}
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full font-semibold text-xs transition-all ${
+                  userMode === "industry"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground"
+                }`}
+                aria-label="Switch to business view">
+                <Building2 className="w-3 h-3" />
+                <span>Business</span>
+              </button>
+            </div>
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
