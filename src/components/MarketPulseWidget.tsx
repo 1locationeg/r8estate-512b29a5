@@ -82,10 +82,12 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
         <Sparkles className={`w-4 h-4 ${cfg.iconColor}`} />
       </div>
 
-      <div className={`transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-        <span className="text-xs font-bold text-foreground leading-tight block">AI Insights</span>
-        <span className={`text-[10px] text-muted-foreground leading-snug block mt-0.5`}>
-          {current.metric_value} · {cfg.label}
+      <div className={`transition-opacity duration-300 w-full flex flex-col items-center ${fading ? "opacity-0" : "opacity-100"}`}>
+        <span className={`text-2xl md:text-3xl font-black leading-none ${cfg.color} tracking-tight`}>
+          {current.metric_value}
+        </span>
+        <span className="text-[10px] text-muted-foreground leading-snug mt-1">
+          {cfg.label}
         </span>
       </div>
 
