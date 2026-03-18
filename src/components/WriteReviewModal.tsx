@@ -489,8 +489,6 @@ export const WriteReviewModal = ({
          description: t("form.account_created_desc"),
          duration: 6000,
        });
-        duration: 6000,
-      });
 
       resetForm();
       onReviewSubmitted?.();
