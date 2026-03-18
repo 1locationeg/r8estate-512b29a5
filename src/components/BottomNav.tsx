@@ -212,7 +212,7 @@ const MobileNavSheet = ({
               <>
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigate(getDashboardRoute()); onOpenChange(false); }}>
                   <LayoutDashboard className="w-4 h-4" />
-                  Dashboard
+                   {t("nav.dashboard")}
                 </Button>
                 <Button variant="ghost" className="w-full justify-start gap-2 text-destructive hover:text-destructive" onClick={() => { onSignOut(); onOpenChange(false); }}>
                   <LogOut className="w-4 h-4" />
