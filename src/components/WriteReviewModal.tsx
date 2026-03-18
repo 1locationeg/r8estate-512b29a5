@@ -485,9 +485,11 @@ export const WriteReviewModal = ({
         localStorage.setItem("r8_pending_claim_review", guestReviewId);
       }
 
-      toast({
-        title: "🎉 Account created!",
-        description: "Please check your email to verify your account. Your review will be linked automatically.",
+       toast({
+         title: t("form.account_created"),
+         description: t("form.account_created_desc"),
+         duration: 6000,
+       });
         duration: 6000,
       });
 
