@@ -160,7 +160,7 @@ export const WriteReviewModal = ({
       if (data.emojis) setAiEmojis(data.emojis);
       if (data.keywords) setAiKeywords(data.keywords);
     } catch (e) {
-      toast({ title: "AI unavailable", description: "Could not get suggestions. Try again.", variant: "destructive" });
+      toast({ title: t("form.ai_unavailable"), description: t("form.ai_unavailable_desc"), variant: "destructive" });
     } finally {
       setIsAiLoading(false);
     }
