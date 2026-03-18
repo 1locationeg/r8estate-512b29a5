@@ -98,8 +98,8 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 md:gap-2 flex-shrink-0">
-          <div className="relative w-[80px] h-4 md:w-[100px] md:h-5">
+        <div className={`flex items-center gap-1 md:gap-2 flex-shrink-0 ${i18n.language === 'ar' ? 'flex-row-reverse' : ''}`}>
+          <div className={`relative w-[80px] h-4 md:w-[100px] md:h-5 ${i18n.language === 'ar' ? 'transform scale-x-[-1]' : ''}`}>
             <img src={r8Stars} alt="" className="absolute inset-0 w-full h-full object-contain grayscale opacity-25" />
             <img
               src={r8Stars}
