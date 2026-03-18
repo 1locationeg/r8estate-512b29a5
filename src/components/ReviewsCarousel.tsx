@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
+import { formatNumber } from "@/utils/formatArabic";
 import logoOnly from "@/assets/logo-only.png";
 import sideLongLogo from "@/assets/side-long-logo.png";
 
