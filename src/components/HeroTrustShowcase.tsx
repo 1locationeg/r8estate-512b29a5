@@ -409,16 +409,19 @@ export const HeroTrustShowcase = () => {
               rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <div
-              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground"
-              style={{ backgroundColor: color }}
-            >
-              {scenario.initial}
-            </div>
+            <img
+              src={scenario.avatar}
+              alt={scenario.reviewer}
+              className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+            />
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
-                <BadgeCheck className="w-4 h-4 text-trust-excellent fill-trust-excellent flex-shrink-0" />
+                {/* Facebook-style verified badge */}
+                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L14.09 4.26L17 3.29L17.47 6.29L20.39 7.1L19.42 10L21.68 12L19.42 14L20.39 16.9L17.47 17.71L17 20.71L14.09 19.74L12 22L9.91 19.74L7 20.71L6.53 17.71L3.61 16.9L4.58 14L2.32 12L4.58 10L3.61 7.1L6.53 6.29L7 3.29L9.91 4.26L12 2Z" fill="#1877F2"/>
+                  <path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
                 <div className="flex items-center gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
