@@ -61,7 +61,7 @@ export function TractionStats() {
       <div className="flex items-center justify-center">
         {stats.map((s, i) => {
           const Icon = s.icon;
-          const displayVal = s.suffix === "K+" ? `${values[i]}K+` : s.suffix === "%" ? `${values[i]}%` : `${values[i].toLocaleString()}+`;
+          const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
             <div key={s.labelKey} className="contents">
               {/* Divider */}
