@@ -389,9 +389,9 @@ export const HeroTrustShowcase = () => {
 
       {/* ── Review Card ── */}
       <div
-        className={`relative mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all ${
-          cardVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        } ${transitioning ? "opacity-40" : "opacity-100"}`}
+        className={`relative mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all min-h-[180px] ${
+          transitioning ? "opacity-40" : "opacity-100"
+        }`}
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
       >
         <div className="p-3 space-y-1.5">
