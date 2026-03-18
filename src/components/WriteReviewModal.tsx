@@ -249,7 +249,7 @@ export const WriteReviewModal = ({
       setIsRecording(true);
       toast({ title: t("form.recording"), description: t("form.recording_desc") });
     } catch {
-      toast({ title: "Microphone error", description: "Please allow microphone access.", variant: "destructive" });
+      toast({ title: t("form.mic_error"), description: t("form.mic_error_desc"), variant: "destructive" });
     }
   };
 
