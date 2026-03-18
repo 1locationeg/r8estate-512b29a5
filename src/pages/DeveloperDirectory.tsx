@@ -7,7 +7,7 @@ import { DeveloperDetailModal } from "@/components/DeveloperDetailModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Footer } from "@/components/Footer";
 import { Developer } from "@/data/mockData";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 import { ArrowLeft } from "lucide-react";
 
 const DeveloperDirectory = () => {
