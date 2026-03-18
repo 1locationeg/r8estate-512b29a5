@@ -893,7 +893,7 @@ export const WriteReviewModal = ({
                 className="h-9 gap-1.5 text-xs"
                 onClick={() => verificationInputRef.current?.click()}
               >
-                <Receipt className="w-3.5 h-3.5" /> Upload Verification
+                <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification")}
               </Button>
               <input
                 ref={verificationInputRef}
