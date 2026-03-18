@@ -133,8 +133,56 @@ export const HeroTrustShowcase = () => {
   const [phase, setPhase] = useState<"entrance" | "interactive">("entrance");
   const [cardVisible, setCardVisible] = useState(false);
   const [rowsVisible, setRowsVisible] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
   const animRef = useRef<number | null>(null);
+  const cycleIdxRef = useRef(2); // start at scenario index 2 (score 88)
+  const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const entranceTarget = 88;
+
+  // ── Auto-cycle logic ──
+  const startCycling = useCallback(() => {
+    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    cycleIntervalRef.current = setInterval(() => {
+      cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarios.length;
+      const nextScore = scenarios[cycleIdxRef.current].score;
+      // Crossfade: fade out, swap, fade in
+      setTransitioning(true);
+      setTimeout(() => {
+        setScore(nextScore);
+        // Animate needle
+        const startVal = displayScore;
+        const startTime = performance.now();
+        const duration = 800;
+        const step = (now: number) => {
+          const elapsed = now - startTime;
+          const t = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const current = Math.round(startVal + (nextScore - startVal) * eased);
+          setDisplayScore(current);
+          if (t < 1) {
+            animRef.current = requestAnimationFrame(step);
+          } else {
+            setDisplayScore(nextScore);
+          }
+        };
+        if (animRef.current) cancelAnimationFrame(animRef.current);
+        animRef.current = requestAnimationFrame(step);
+        setTimeout(() => setTransitioning(false), 50);
+      }, 200);
+    }, 4000);
+  }, [displayScore]);
+
+  const pauseCycling = useCallback(() => {
+    if (cycleIntervalRef.current) {
+      clearInterval(cycleIntervalRef.current);
+      cycleIntervalRef.current = null;
+    }
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      startCycling();
+    }, 6000);
+  }, [startCycling]);
 
   // ── Entrance animation ──
   const runEntrance = useCallback(() => {
