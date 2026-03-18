@@ -646,22 +646,22 @@ export const WriteReviewModal = ({
           {!isGuest && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Experience Type</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.experience_type")}</label>
                 <Select value={experienceType} onValueChange={setExperienceType}>
-                  <SelectTrigger><SelectValue placeholder="Select type..." /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("form.select_type")} /></SelectTrigger>
                   <SelectContent>
-                    {EXPERIENCE_TYPES.map((type) => (
-                      <SelectItem key={type} value={type}>{type}</SelectItem>
+                    {EXPERIENCE_TYPES_KEYS.map((key) => (
+                      <SelectItem key={key} value={key}>{t(key)}</SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium text-foreground mb-1.5 block">Unit Type</label>
+                <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.unit_type")}</label>
                 <Input
                   value={unitType}
                   onChange={(e) => setUnitType(e.target.value)}
-                  placeholder="e.g., 2BR Apartment, Villa..."
+                  placeholder={t("form.unit_type_placeholder")}
                 />
               </div>
             </div>
