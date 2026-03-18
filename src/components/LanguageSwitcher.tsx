@@ -1,43 +1,36 @@
 import { useTranslation } from 'react-i18next';
-import { Globe } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 
 export const LanguageSwitcher = () => {
   const { i18n } = useTranslation();
+  const isAr = i18n.language === 'ar';
 
-  const changeLanguage = (lng: string) => {
+  const switchTo = (lng: string) => {
+    if (i18n.language === lng) return;
     i18n.changeLanguage(lng);
-    localStorage.setItem('language', lng);
-    document.documentElement.dir = lng === 'ar' ? 'rtl' : 'ltr';
-    document.documentElement.lang = lng;
   };
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-secondary transition-colors focus:outline-none">
-        <span className="text-sm font-semibold text-foreground">
-          {i18n.language === 'ar' ? 'ع' : 'EN'}
-        </span>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuItem
-          onClick={() => changeLanguage('en')}
-          className={`cursor-pointer ${i18n.language === 'en' ? 'bg-primary/10' : ''}`}
-        >
-          🇬🇧 English
-        </DropdownMenuItem>
-        <DropdownMenuItem
-          onClick={() => changeLanguage('ar')}
-          className={`cursor-pointer ${i18n.language === 'ar' ? 'bg-primary/10' : ''}`}
-        >
-          ع
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <div className="inline-flex items-center rounded-full border border-border bg-card/50 overflow-hidden text-xs font-bold">
+      <button
+        onClick={() => switchTo('ar')}
+        className={`px-2.5 py-1.5 transition-colors ${
+          isAr
+            ? 'bg-[#1B3A5C] text-white'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+      >
+        AR
+      </button>
+      <button
+        onClick={() => switchTo('en')}
+        className={`px-2.5 py-1.5 transition-colors ${
+          !isAr
+            ? 'bg-[#1B3A5C] text-white'
+            : 'text-muted-foreground hover:text-foreground'
+        }`}
+      >
+        EN
+      </button>
+    </div>
   );
 };
