@@ -76,7 +76,7 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       onClick={onClick}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden col-span-2 md:col-span-1`}
+      className={`relative flex flex-col items-center gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-center group overflow-hidden col-span-2 md:col-span-1`}
     >
       {/* Icon matching sibling card style */}
       <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
@@ -84,19 +84,19 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       </div>
 
       {/* Cycling content */}
-      <div className={`flex flex-col items-start transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-        <span className={`text-lg font-black leading-none ${cfg.color} tracking-tight`}>
+      <div className={`flex flex-col items-center w-full transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
+        <span className={`text-2xl font-black leading-none ${cfg.color} tracking-tight`}>
           {current.metric_value}
         </span>
 
-        <div className="flex items-center gap-1 mt-0.5">
-          <TrendIcon className={`w-3 h-3 ${cfg.color}`} />
-          <span className={`text-[9px] font-bold uppercase tracking-wider ${cfg.color}`}>
+        <div className="flex items-center gap-1 mt-1">
+          <TrendIcon className={`w-4 h-4 ${cfg.color}`} />
+          <span className={`text-xs font-bold uppercase tracking-wider ${cfg.color}`}>
             {cfg.label}
           </span>
         </div>
 
-        <span className="text-[10px] text-muted-foreground leading-snug truncate max-w-full mt-0.5">
+        <span className="text-[11px] text-muted-foreground leading-snug truncate max-w-full mt-0.5">
           {current.metric_label}
         </span>
       </div>
