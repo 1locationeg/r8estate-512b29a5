@@ -133,8 +133,56 @@ export const HeroTrustShowcase = () => {
   const [phase, setPhase] = useState<"entrance" | "interactive">("entrance");
   const [cardVisible, setCardVisible] = useState(false);
   const [rowsVisible, setRowsVisible] = useState(0);
+  const [transitioning, setTransitioning] = useState(false);
   const animRef = useRef<number | null>(null);
+  const cycleIdxRef = useRef(2); // start at scenario index 2 (score 88)
+  const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const entranceTarget = 88;
+
+  // ── Auto-cycle logic ──
+  const startCycling = useCallback(() => {
+    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    cycleIntervalRef.current = setInterval(() => {
+      cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarios.length;
+      const nextScore = scenarios[cycleIdxRef.current].score;
+      // Crossfade: fade out, swap, fade in
+      setTransitioning(true);
+      setTimeout(() => {
+        setScore(nextScore);
+        // Animate needle
+        const startVal = displayScore;
+        const startTime = performance.now();
+        const duration = 800;
+        const step = (now: number) => {
+          const elapsed = now - startTime;
+          const t = Math.min(elapsed / duration, 1);
+          const eased = 1 - Math.pow(1 - t, 3);
+          const current = Math.round(startVal + (nextScore - startVal) * eased);
+          setDisplayScore(current);
+          if (t < 1) {
+            animRef.current = requestAnimationFrame(step);
+          } else {
+            setDisplayScore(nextScore);
+          }
+        };
+        if (animRef.current) cancelAnimationFrame(animRef.current);
+        animRef.current = requestAnimationFrame(step);
+        setTimeout(() => setTransitioning(false), 50);
+      }, 200);
+    }, 4000);
+  }, [displayScore]);
+
+  const pauseCycling = useCallback(() => {
+    if (cycleIntervalRef.current) {
+      clearInterval(cycleIntervalRef.current);
+      cycleIntervalRef.current = null;
+    }
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    resumeTimeoutRef.current = setTimeout(() => {
+      startCycling();
+    }, 6000);
+  }, [startCycling]);
 
   // ── Entrance animation ──
   const runEntrance = useCallback(() => {
@@ -169,7 +217,10 @@ export const HeroTrustShowcase = () => {
           for (let i = 1; i <= 5; i++) {
             setTimeout(() => setRowsVisible(i), i * 80);
           }
-          setTimeout(() => setPhase("interactive"), 600);
+          setTimeout(() => {
+            setPhase("interactive");
+            startCycling();
+          }, 600);
         }, 400);
       }
     };
@@ -178,7 +229,11 @@ export const HeroTrustShowcase = () => {
 
   useEffect(() => {
     runEntrance();
-    return () => { if (animRef.current) cancelAnimationFrame(animRef.current); };
+    return () => {
+      if (animRef.current) cancelAnimationFrame(animRef.current);
+      if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+      if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    };
   }, [runEntrance]);
 
   // ── Interactive score animation ──
@@ -209,14 +264,19 @@ export const HeroTrustShowcase = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
     setScore(val);
     setDisplayScore(val);
+    pauseCycling();
   };
 
   const handlePreset = (val: number) => {
     animateToScore(val);
+    pauseCycling();
   };
 
   const handleReplay = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
+    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    cycleIdxRef.current = 2;
     runEntrance();
   };
 
@@ -322,12 +382,19 @@ export const HeroTrustShowcase = () => {
         </div>
       </div>
 
-      {/* ── Review Card (overlaps gauge bottom) ── */}
+      {/* ── TRUST SCORE label ── */}
+      <div className="text-center mt-0.5 mb-1">
+        <span className="text-[10px] md:text-[11px] font-bold tracking-[0.25em] uppercase text-muted-foreground/60">
+          TRUST SCORE
+        </span>
+      </div>
+
+      {/* ── Review Card ── */}
       <div
-        className={`relative -mt-2 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all duration-600 ${
+        className={`relative mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all ${
           cardVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
-        }`}
-        style={{ transitionDuration: "600ms" }}
+        } ${transitioning ? "opacity-40" : "opacity-100"}`}
+        style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
       >
         <div className="p-3 space-y-1.5">
           {/* Row 1: Verified badge + project */}

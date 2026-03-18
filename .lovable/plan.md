@@ -1,42 +1,32 @@
 
 
-## Auto-Cycling Reviews + Visible "TRUST SCORE" Label
+## Make Search Dropdown Items Compact on Mobile
 
-### Problems
-1. The gauge and review card are static after entrance — they should auto-cycle through all 4 scenarios every 4 seconds (giving enough time to read each review).
-2. The "TRUST SCORE" text inside the SVG is hidden behind the review card overlap (`-mt-2` still covers it).
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Changes to `src/components/HeroTrustShowcase.tsx`
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-**1. Auto-cycle through scenarios every 4 seconds**
-- Add a `useEffect` with `setInterval` that cycles through scenario indices (0→1→2→3→0...).
-- Each cycle calls `animateToScore(scenarios[nextIdx].score)` so the needle sweeps and the review card content updates.
-- The interval pauses when the user interacts (slider drag or preset click) and resumes 6 seconds after the last interaction via a `userInteracted` ref + timeout.
-- 4 seconds per scenario gives enough reading time while keeping it dynamic.
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-**2. Show "TRUST SCORE" label clearly**
-- Move the "TRUST SCORE" text **outside** the SVG, rendered as a styled `<span>` between the gauge and the review card.
-- Change the card margin from `-mt-2` to `mt-1` so it no longer overlaps the label.
-- Style: small caps, tracking-widest, muted color, centered — consistent with existing design.
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-**3. Crossfade review content on scenario change**
-- Add a brief opacity transition (200ms fade-out, swap content, 200ms fade-in) when the scenario changes, using a `transitioning` state boolean.
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-### Implementation Detail
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-```
-[Gauge SVG]
-   ↓ (no overlap)
-"TRUST SCORE" label (outside SVG, as HTML span)
-   ↓ mt-1
-[Review Card — cycles every 4s]
-   ↓
-[Slider + Presets + Replay]
-```
-
-Auto-cycle logic:
-- `cycleIdxRef` tracks current scenario index
-- On interval tick: increment index, animate to that scenario's score
-- On user interaction: clear interval, set 6s resume timeout
-- On replay: restart from scenario 0
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 
