@@ -164,8 +164,9 @@ const MobileNavSheet = ({
                     <span className="text-brand-red">R8</span>
                     <span className="text-primary">ESTATE</span>
                   </span>
-                  <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
-                    Real Reviews · Real Estate
+                   <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
+                     {t("footer.brandTagline")}
+                   </span>
                   </span>
                 </div>
               </button>
