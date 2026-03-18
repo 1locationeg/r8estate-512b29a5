@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { reviews as mockReviews, Review, ReviewerTier } from "@/data/mockData";
 import { ReviewCard } from "@/components/ReviewCard";
