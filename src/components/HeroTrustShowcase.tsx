@@ -40,9 +40,9 @@ const scenarios: ReviewScenario[] = [
     reviewer: "Ahmed K.",
     initial: "A",
     avatar: "https://i.pravatar.cc/80?img=12",
-    project: "Desert View Residences",
-    location: "Dubailand",
-    developer: "SandStone Properties",
+    project: "Galleria 40",
+    location: "New Cairo",
+    developer: "Ora Developers",
     rating: 1.5,
     comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
     dimensions: [
@@ -57,11 +57,11 @@ const scenarios: ReviewScenario[] = [
     reviewer: "Sarah M.",
     initial: "S",
     avatar: "https://i.pravatar.cc/80?img=5",
-    project: "Marina Heights",
-    location: "Dubai Marina",
-    developer: "Gulf Developments",
+    project: "Open Air Mall",
+    location: "New Cairo",
+    developer: "Marakez",
     rating: 3,
-    comment: "\"Decent apartment, great location — but several snag issues took months to fix. Communication needs improvement.\"",
+    comment: "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
       { label: "Build quality", value: "Average", positive: false },
@@ -74,11 +74,11 @@ const scenarios: ReviewScenario[] = [
     reviewer: "Fatima Al-R.",
     initial: "F",
     avatar: "https://i.pravatar.cc/80?img=9",
-    project: "Creek Horizon",
-    location: "Dubai Creek Harbour",
-    developer: "Emaar Properties",
+    project: "Mivida",
+    location: "New Cairo",
+    developer: "Emaar Misr",
     rating: 4.5,
-    comment: "\"Excellent build quality, delivered on schedule. Community amenities exceeded expectations. Would buy again.\"",
+    comment: "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
       { label: "Build quality", value: "Excellent", positive: true },
@@ -91,11 +91,11 @@ const scenarios: ReviewScenario[] = [
     reviewer: "Omar J.",
     initial: "O",
     avatar: "https://i.pravatar.cc/80?img=53",
-    project: "Palm Signature Villa",
-    location: "Palm Jumeirah",
-    developer: "Nakheel",
+    project: "Mountain View iCity",
+    location: "New Cairo",
+    developer: "Mountain View",
     rating: 5,
-    comment: "\"Absolutely world-class. Every detail perfect — from handover to after-sales. Above and beyond.\"",
+    comment: "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\"",
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
       { label: "Build quality", value: "Premium", positive: true },
@@ -391,14 +391,14 @@ export const HeroTrustShowcase = () => {
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
       >
         <div className="p-3 space-y-1.5">
-          {/* Row 1: Project location */}
+          {/* Row 1: Project location - centered & bold */}
           <div
-            className={`flex items-center gap-2 transition-all duration-300 ${
+            className={`flex justify-center transition-all duration-300 ${
               rowsVisible >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
+            <span className="text-xs md:text-sm font-bold text-foreground flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-primary" />
               {scenario.project} · {scenario.location}
             </span>
           </div>
