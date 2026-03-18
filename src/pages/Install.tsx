@@ -48,11 +48,16 @@ const Install = () => {
         </button>
 
         <div className="flex items-center justify-center gap-3">
-          <img src={logoIcon} alt="R8ESTATE" className="h-20 w-auto" />
-          <span className="text-3xl font-extrabold">
-            <span className="text-brand-red">R8</span>
-            <span className="text-primary">ESTATE</span>
-          </span>
+          <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 object-contain -mr-1.5" />
+          <div className="flex flex-col leading-none gap-0">
+            <span className="inline-flex text-2xl font-extrabold leading-none">
+              <span className="text-brand-red">R8</span>
+              <span className="text-primary">ESTATE</span>
+            </span>
+            <span className="text-[8px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
+              Real Reviews · Real Estate
+            </span>
+          </div>
         </div>
 
         {isInstalled ? (
