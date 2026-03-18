@@ -165,16 +165,20 @@ export function ReviewsCarousel() {
     return "text-primary fill-primary"; // navy for 5 stars
   };
 
-  const renderStars = (rating: number) => (
-    <div className="flex gap-0.5">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Star
-          key={i}
-          className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
-        />
-      ))}
-    </div>
-  );
+  const renderStars = (rating: number) => {
+    const stars = [1, 2, 3, 4, 5];
+    const orderedStars = isRTL ? [...stars].reverse() : stars;
+    return (
+      <div className={`flex gap-0.5 ${isRTL ? 'flex-row-reverse' : ''}`}>
+        {orderedStars.map((i) => (
+          <Star
+            key={i}
+            className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
+          />
+        ))}
+      </div>
+    );
+  };
 
   return (
     <section className="w-full py-0 overflow-hidden">
