@@ -279,9 +279,13 @@ const Index = () => {
               backgroundSize: '20px 20px'
             }} />
                
-               <div className="relative text-center">
-                  {/* Interactive Trust Showcase — Gauge + Review Card */}
-                  <HeroTrustShowcase />
+                <div className="relative text-center">
+                   {/* Platform descriptor */}
+                   <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground/70 font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+                     {t('hero.platformDescriptor')}
+                   </p>
+                   {/* Interactive Trust Showcase — Gauge + Review Card */}
+                   <HeroTrustShowcase />
 
                  {/* Mode-specific Tagline */}
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
