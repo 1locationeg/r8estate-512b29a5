@@ -244,6 +244,8 @@ export const HeroTrustShowcase = () => {
     animRef.current = requestAnimationFrame(step);
   }, []);
 
+  runEntranceRef.current = runEntrance;
+
   useEffect(() => {
     runEntrance();
     return () => {
