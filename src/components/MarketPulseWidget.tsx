@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { TrendingUp, TrendingDown, Minus, AlertTriangle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,10 +11,10 @@ interface InsightData {
 }
 
 const trendConfig = {
-  up: { Icon: TrendingUp, label: "Rising", color: "text-trust-excellent", border: "border-trust-excellent/40", bg: "from-trust-excellent/20 to-trust-excellent/5", glow: "shadow-trust-excellent/20" },
-  down: { Icon: TrendingDown, label: "Cooling", color: "text-destructive", border: "border-destructive/40", bg: "from-destructive/20 to-destructive/5", glow: "shadow-destructive/20" },
-  stable: { Icon: Minus, label: "Steady", color: "text-muted-foreground", border: "border-border", bg: "from-secondary/40 to-secondary/10", glow: "shadow-muted/10" },
-  alert: { Icon: AlertTriangle, label: "Watch", color: "text-accent", border: "border-accent/40", bg: "from-accent/20 to-accent/5", glow: "shadow-accent/20" },
+  up: { Icon: TrendingUp, label: "Rising", color: "text-trust-excellent", border: "border-trust-excellent/40", bg: "from-trust-excellent/20 to-trust-excellent/5", glow: "shadow-trust-excellent/20", iconColor: "text-trust-excellent" },
+  down: { Icon: TrendingDown, label: "Cooling", color: "text-destructive", border: "border-destructive/40", bg: "from-destructive/20 to-destructive/5", glow: "shadow-destructive/20", iconColor: "text-destructive" },
+  stable: { Icon: Minus, label: "Steady", color: "text-muted-foreground", border: "border-border", bg: "from-secondary/40 to-secondary/10", glow: "shadow-muted/10", iconColor: "text-muted-foreground" },
+  alert: { Icon: AlertTriangle, label: "Watch", color: "text-accent", border: "border-accent/40", bg: "from-accent/20 to-accent/5", glow: "shadow-accent/20", iconColor: "text-accent" },
 };
 
 export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
@@ -23,6 +23,7 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   const [activeIdx, setActiveIdx] = useState(0);
   const [fading, setFading] = useState(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const hoveredRef = useRef(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -47,10 +48,10 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
     fetchData();
   }, [user, role]);
 
-  // Cycle through insights every 4s
   useEffect(() => {
     if (insights.length <= 1) return;
     intervalRef.current = setInterval(() => {
+      if (hoveredRef.current) return;
       setFading(true);
       setTimeout(() => {
         setActiveIdx((prev) => (prev + 1) % insights.length);
@@ -73,19 +74,21 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-center justify-center gap-0.5 p-2 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-center group overflow-hidden col-span-2 md:col-span-1`}
+      onMouseEnter={() => { hoveredRef.current = true; }}
+      onMouseLeave={() => { hoveredRef.current = false; }}
+      className={`relative flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden col-span-2 md:col-span-1`}
     >
-      {/* Big bold AI icon */}
-      <Sparkles className={`w-5 h-5 ${cfg.color} drop-shadow-sm`} strokeWidth={2.5} />
+      {/* Icon matching sibling card style */}
+      <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
+        <Sparkles className={`w-4 h-4 ${cfg.iconColor}`} />
+      </div>
 
       {/* Cycling content */}
-      <div className={`flex flex-col items-center transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-        {/* Big metric number */}
+      <div className={`flex flex-col items-start transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
         <span className={`text-lg font-black leading-none ${cfg.color} tracking-tight`}>
           {current.metric_value}
         </span>
 
-        {/* Trend icon + compact word */}
         <div className="flex items-center gap-1 mt-0.5">
           <TrendIcon className={`w-3 h-3 ${cfg.color}`} />
           <span className={`text-[9px] font-bold uppercase tracking-wider ${cfg.color}`}>
@@ -93,15 +96,14 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
           </span>
         </div>
 
-        {/* Label */}
-        <span className="text-[8px] text-muted-foreground leading-tight truncate max-w-full">
+        <span className="text-[10px] text-muted-foreground leading-snug truncate max-w-full mt-0.5">
           {current.metric_label}
         </span>
       </div>
 
       {/* Dot indicators */}
       {insights.length > 1 && (
-        <div className="flex gap-0.5 mt-0.5">
+        <div className="flex gap-0.5">
           {insights.map((_, i) => (
             <span
               key={i}
