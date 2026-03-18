@@ -126,7 +126,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-
+  useEffect(() => {
     let isMounted = true;
 
     // Set up auth state listener FIRST
