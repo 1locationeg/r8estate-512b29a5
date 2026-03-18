@@ -1,12 +1,14 @@
 import { useNavigate } from 'react-router-dom';
 import { Clock, X, Zap } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
+import { useTranslation } from 'react-i18next';
 
 function pad(n: number) {
   return String(n).padStart(2, '0');
 }
 
 export function GuestTimerBanner() {
+  const { t } = useTranslation();
   const { secondsLeft, isGuest, isExpired } = useGuestTimer();
   const navigate = useNavigate();
 
@@ -14,8 +16,8 @@ export function GuestTimerBanner() {
 
   const minutes = Math.floor(secondsLeft / 60);
   const seconds = secondsLeft % 60;
-  const isUrgent = secondsLeft <= 60; // last minute = red
-  const isCritical = secondsLeft <= 20; // last 20s = pulsing
+  const isUrgent = secondsLeft <= 60;
+  const isCritical = secondsLeft <= 20;
 
   return (
     <div
@@ -30,15 +32,13 @@ export function GuestTimerBanner() {
         ${isCritical ? 'animate-pulse' : ''}
       `}
     >
-      {/* Left: icon + label */}
       <div className="flex items-center gap-2 text-white">
         <Clock className="w-4 h-4 shrink-0" />
         <span className="text-xs sm:text-sm font-semibold whitespace-nowrap">
-          Free Preview
+          {t("guest.free_preview")}
         </span>
       </div>
 
-      {/* Center: countdown */}
       <div className="flex items-center gap-3">
         <span
           className={`
@@ -61,13 +61,12 @@ export function GuestTimerBanner() {
           "
         >
           <Zap className="w-3.5 h-3.5 fill-orange-500" />
-          Sign Up Free
+          {t("guest.sign_up_free")}
         </button>
       </div>
 
-      {/* Right: remaining label */}
       <div className="hidden sm:block text-white/80 text-xs font-medium text-right">
-        {isUrgent ? '⚡ Almost expired!' : 'remaining'}
+        {isUrgent ? t("guest.almost_expired") : t("guest.remaining")}
       </div>
     </div>
   );

@@ -30,10 +30,10 @@ export const ReviewBlockedModal = ({
             </div>
             <div>
               <DialogTitle className="text-lg">
-                Project-Level Reviews Only
+                {t("review.project_level_only")}
               </DialogTitle>
               <DialogDescription className="mt-1">
-                Reviews for individual projects help buyers make better decisions
+                {t("review.project_level_desc")}
               </DialogDescription>
             </div>
           </div>
@@ -42,14 +42,14 @@ export const ReviewBlockedModal = ({
         <div className="space-y-4 mt-2">
           <p className="text-sm text-muted-foreground">
             {parentName
-              ? `We're currently collecting reviews for ${parentName}'s individual projects and compounds. Please select a project below to share your experience.`
-              : `This entity is currently accepting reviews at the project level only. Please select a specific project to review.`}
+              ? t("review.select_project_parent", { name: parentName })
+              : t("review.select_project_generic")}
           </p>
 
           {childProjects.length > 0 ? (
             <div className="space-y-2">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                Available Projects
+                {t("review.available_projects")}
               </p>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {childProjects.map((project) => (
@@ -72,7 +72,7 @@ export const ReviewBlockedModal = ({
             <div className="text-center py-4 bg-muted/50 rounded-lg">
               <Building2 className="w-8 h-8 text-muted-foreground mx-auto mb-2" />
               <p className="text-sm text-muted-foreground">
-                No projects listed yet. Check back soon!
+                {t("review.no_projects_yet")}
               </p>
             </div>
           )}
@@ -82,7 +82,7 @@ export const ReviewBlockedModal = ({
             className="w-full"
             onClick={() => onOpenChange(false)}
           >
-            Close
+            {t("form.close")}
           </Button>
         </div>
       </DialogContent>
