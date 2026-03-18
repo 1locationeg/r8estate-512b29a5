@@ -136,41 +136,99 @@
         </div>
       </div>
       <div class="boot-hero">
-        <!-- Gauge placeholder -->
+        <!-- Gauge matching HeroTrustGauge -->
         <div class="boot-gauge">
           <svg viewBox="0 0 200 120" fill="none">
+            <defs>
+              <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="hsl(0,72%,51%)"/>
+                <stop offset="16%" stop-color="hsl(20,80%,50%)"/>
+                <stop offset="33%" stop-color="hsl(40,90%,50%)"/>
+                <stop offset="50%" stop-color="hsl(48,96%,53%)"/>
+                <stop offset="75%" stop-color="hsl(80,60%,45%)"/>
+                <stop offset="100%" stop-color="hsl(142,71%,45%)"/>
+              </linearGradient>
+              <filter id="bGlow"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+            <!-- Tick marks -->
+            <line x1="24" y1="100" x2="20" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+            <line x1="27" y1="73" x2="23" y2="71" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="42" y1="49" x2="38" y2="46" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="65" y1="30" x2="62" y2="27" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="100" y1="12" x2="100" y2="16" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+            <line x1="135" y1="30" x2="138" y2="27" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="158" y1="49" x2="162" y2="46" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="173" y1="73" x2="177" y2="71" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+            <line x1="176" y1="100" x2="180" y2="100" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
             <!-- Background arc -->
-            <path d="M 15 105 A 85 85 0 0 1 185 105" stroke="rgba(255,255,255,0.08)" stroke-width="10" fill="none" stroke-linecap="round"/>
-            <!-- Partial filled arc -->
-            <path d="M 15 105 A 85 85 0 0 1 185 105" stroke="hsl(142, 71%, 45%)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="267" stroke-dashoffset="35" class="boot-shimmer"/>
+            <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="rgba(255,255,255,0.08)" stroke-width="14" fill="none" stroke-linecap="round"/>
+            <!-- Filled arc (88%) -->
+            <path d="M 10 100 A 90 90 0 0 1 190 100" stroke="url(#bgGrad)" stroke-width="14" fill="none" stroke-linecap="round" stroke-dasharray="248 283" filter="url(#bGlow)"/>
+            <!-- Needle at 88% position (angle ≈ 338.4° → cos/sin) -->
+            <circle cx="160" cy="30" r="9" fill="#0d2137" stroke="hsl(142,71%,45%)" stroke-width="3"/>
+            <polygon points="-4,5 4,5 0,-7" fill="hsl(142,71%,45%)" transform="translate(160,30) rotate(68)"/>
+            <!-- Verified check -->
+            <circle cx="160" cy="14" r="6" fill="hsl(142,71%,45%)"/>
+            <polyline points="157.5,14 159.5,16 163,12" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Labels -->
+            <text x="12" y="113" font-size="8" fill="rgba(255,255,255,0.4)" font-weight="600">0</text>
+            <text x="182" y="113" font-size="8" fill="rgba(255,255,255,0.4)" font-weight="600">100</text>
+            <text x="100" y="119" text-anchor="middle" font-size="9" fill="rgba(255,255,255,0.5)" font-weight="900" letter-spacing="0.25em">TRUST SCORE</text>
           </svg>
-          <div class="boot-score boot-shimmer">88</div>
+          <div class="boot-score boot-pulse">88</div>
         </div>
-        <div class="boot-label">TRUST SCORE</div>
 
-        <!-- Static review card skeleton -->
+        <!-- Static review card (Mivida / score 88 scenario) -->
         <div class="boot-card">
-          <div class="boot-row" style="justify-content:center;">
-            <div class="boot-pill" style="width:140px;"></div>
+          <div class="boot-card-header">
+            <span>
+              <svg class="pin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+              Mivida · New Cairo
+            </span>
           </div>
-          <div class="boot-row">
-            <div class="boot-circle"></div>
-            <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
-              <div class="boot-pill" style="width:100px;"></div>
-              <div class="boot-pill" style="width:60px;"></div>
+          <div class="boot-reviewer">
+            <div class="boot-avatar">F</div>
+            <div>
+              <span class="boot-reviewer-name">Fatima Al-R.</span>
+              <svg class="boot-verified" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2L14.09 4.26L17 3.29L17.47 6.29L20.39 7.1L19.42 10L21.68 12L19.42 14L20.39 16.9L17.47 17.71L17 20.71L14.09 19.74L12 22L9.91 19.74L7 20.71L6.53 17.71L3.61 16.9L4.58 14L2.32 12L4.58 10L3.61 7.1L6.53 6.29L7 3.29L9.91 4.26L12 2Z" fill="#1877F2"/>
+                <path d="M9.5 12.5L11 14L15 10" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <span class="boot-stars">
+                <svg class="boot-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="boot-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="boot-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="boot-star" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                <svg class="boot-star-empty" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              </span>
+              <span class="boot-time">2 weeks ago</span>
             </div>
           </div>
-          <div style="margin-bottom:8px;">
-            <div class="boot-pill" style="width:100%;height:8px;margin-bottom:4px;"></div>
-            <div class="boot-pill" style="width:80%;height:8px;"></div>
+          <div class="boot-quote">"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful."</div>
+          <div class="boot-pills">
+            <span class="boot-pill boot-pill-good">
+              <span class="boot-pill-label">Delivery</span>
+              <span class="boot-pill-val">On time</span>
+            </span>
+            <span class="boot-pill boot-pill-good">
+              <span class="boot-pill-label">Build quality</span>
+              <span class="boot-pill-val">Excellent</span>
+            </span>
+            <span class="boot-pill boot-pill-good">
+              <span class="boot-pill-label">Response</span>
+              <span class="boot-pill-val">Fast</span>
+            </span>
           </div>
-          <div class="boot-row" style="gap:6px;">
-            <div class="boot-pill" style="width:60px;height:20px;border-radius:10px;"></div>
-            <div class="boot-pill" style="width:70px;height:20px;border-radius:10px;"></div>
-            <div class="boot-pill" style="width:55px;height:20px;border-radius:10px;"></div>
+          <div class="boot-footer">
+            <span class="boot-dev">
+              <svg class="boot-dev-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01M16 6h.01M12 6h.01M8 10h.01M16 10h.01M12 10h.01M8 14h.01M16 14h.01M12 14h.01"/></svg>
+              Emaar Misr
+            </span>
+            <span class="boot-trust-badge">High Trust · 88</span>
           </div>
         </div>
       </div>
+    </div>
     </div>
 
     <div id="root"></div>
