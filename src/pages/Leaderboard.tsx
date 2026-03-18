@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface LeaderboardEntry {
   user_id: string;
