@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { NotificationBell } from '@/components/NotificationBell';
-import logoIcon from '@/assets/logo-icon.png';
+import { BrandLogo } from '@/components/BrandLogo';
 
 interface DashboardHeaderProps {
   title: string;
