@@ -348,7 +348,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 2: Reviewer info */}
           <div
-            className={`flex items-center gap-3 transition-all duration-300 ${
+            className={`flex items-center gap-2 transition-all duration-300 ${
               rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
