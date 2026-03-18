@@ -297,7 +297,7 @@ export const WriteReviewModal = ({
     if (!file) return;
 
     if (!user) {
-      toast({ title: "Sign in required", description: "Please sign in to scan a receipt.", variant: "destructive" });
+      toast({ title: t("form.sign_in_required"), description: t("form.sign_in_receipt"), variant: "destructive" });
       return;
     }
 
