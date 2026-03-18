@@ -391,14 +391,14 @@ export const HeroTrustShowcase = () => {
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
       >
         <div className="p-3 space-y-1.5">
-          {/* Row 1: Project location */}
+          {/* Row 1: Project location - centered & bold */}
           <div
-            className={`flex items-center gap-2 transition-all duration-300 ${
+            className={`flex justify-center transition-all duration-300 ${
               rowsVisible >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <span className="text-[10px] text-muted-foreground flex items-center gap-1">
-              <MapPin className="w-3 h-3" />
+            <span className="text-xs md:text-sm font-bold text-foreground flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-primary" />
               {scenario.project} · {scenario.location}
             </span>
           </div>
