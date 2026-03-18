@@ -474,7 +474,7 @@ export const WriteReviewModal = ({
         if (error.message.includes("already registered")) {
           toast({ title: t("form.account_exists"), description: t("form.account_exists_desc"), variant: "destructive" });
         } else {
-          toast({ title: "Sign up failed", description: error.message, variant: "destructive" });
+          toast({ title: t("form.signup_failed"), description: error.message, variant: "destructive" });
         }
         return;
       }
