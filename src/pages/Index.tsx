@@ -175,15 +175,15 @@ const Index = () => {
             {userMode === "buyers" ? (
               <button
                 onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10"
                 aria-label="Switch to business view">
-                <Building2 className="w-3.5 h-3.5" />
+                <Building2 className="w-3.5 h-3.5 text-primary" />
                 <span>Business</span>
               </button>
             ) : (
               <button
                 onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+                className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}
                 aria-label="Switch to buyer view">
                 <User className="w-3.5 h-3.5" />
                 <span>Buyer</span>
