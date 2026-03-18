@@ -1,4 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -32,6 +33,7 @@ interface DashboardSidebarProps {
 }
 
 const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
@@ -88,10 +90,10 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
             <p className="text-sm font-bold text-foreground truncate max-w-full">{profile?.full_name || 'User'}</p>
             <p className="text-[11px] text-muted-foreground mt-0.5">
               <span className="inline-block me-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
-              Member since{' '}
+              {t("dashboard.memberSince", "Member since")}{' '}
               {profile?.created_at
                 ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                : 'Recently'}
+                : t("dashboard.recently", "Recently")}
             </p>
           </div>
         )}
@@ -143,7 +145,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
         >
           <LogOut className="w-4 h-4" />
-          Sign Out
+          {t("common.signOut", "Sign Out")}
         </button>
       </div>
     </div>
