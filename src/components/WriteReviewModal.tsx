@@ -938,8 +938,8 @@ export const WriteReviewModal = ({
 
           {/* Submit */}
           <div className="flex items-center justify-end gap-2 pt-2">
-            <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+             <Button variant="outline" onClick={() => onOpenChange(false)}>
+               {t("form.cancel")}
             </Button>
             <Button
               onClick={handleSubmit}
