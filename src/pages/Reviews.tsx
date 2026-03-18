@@ -111,6 +111,28 @@ const Reviews = () => {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-4 space-y-5">
+        {/* Mine / All toggle */}
+        {user && (
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant={showMineOnly ? "default" : "outline"}
+              className="rounded-full text-xs"
+              onClick={() => setSearchParams(showMineOnly ? {} : { mine: "true" })}
+            >
+              My Reviews
+            </Button>
+            <Button
+              size="sm"
+              variant={!showMineOnly ? "default" : "outline"}
+              className="rounded-full text-xs"
+              onClick={() => setSearchParams({})}
+            >
+              All Reviews
+            </Button>
+          </div>
+        )}
+
         {/* Stats */}
         <div className="flex items-center justify-around text-center">
           <div>
