@@ -145,6 +145,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
               setProfile(profileData);
               setRole(roleData);
             }
+
+            // Claim any pending guest review after login/signup verification
+            claimPendingGuestReview(session.user.id);
           }, 0);
         } else {
           setProfile(null);
