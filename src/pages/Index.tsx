@@ -286,40 +286,41 @@ const Index = () => {
                
                 <div className="relative text-center">
                     {/* Platform descriptor */}
-                    <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-3 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-                      <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
-                    </p>
-                   {/* Interactive Trust Showcase — Gauge + Review Card */}
-                   <div id="trust-showcase"><HeroTrustShowcase /></div>
+                     <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+                       <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
+                     </p>
 
-                 {/* Mode-specific Tagline */}
-                 <div className="mt-1 mb-0 max-w-3xl mx-auto">
-                   {userMode === "buyers" ?
-                <>
-                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
-                         {t("hero.tagline")}
-                       </p>
-                        <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-1">
-                           <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
-                             <Shield className="w-3.5 h-3.5 text-verified" />
-                             {t("hero.benefit_zero_risk")}
-                           </button>
-                           <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
-                             <CheckCircle className="w-3.5 h-3.5 text-accent" />
-                             {t("hero.benefit_confident")}
-                           </button>
-                        </div>
-                     </> :
-                <>
-                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                         {t("hero.industryTitle1")}
-                       </p>
-                       <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                         {t("hero.industryTitle2")}
-                       </p>
-                     </>
-                }
-                 </div>
+                  {/* Hero Tagline — Claim ABOVE the gauge */}
+                  <div className="mb-3 max-w-3xl mx-auto">
+                    {userMode === "buyers" ?
+                 <>
+                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
+                          {t("hero.tagline")}
+                        </p>
+                         <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-1.5">
+                            <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
+                              <Shield className="w-3.5 h-3.5 text-verified" />
+                              {t("hero.benefit_zero_risk")}
+                            </button>
+                            <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
+                              <CheckCircle className="w-3.5 h-3.5 text-accent" />
+                              {t("hero.benefit_confident")}
+                            </button>
+                         </div>
+                      </> :
+                 <>
+                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                          {t("hero.industryTitle1")}
+                        </p>
+                        <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
+                          {t("hero.industryTitle2")}
+                        </p>
+                      </>
+                 }
+                  </div>
+
+                    {/* Interactive Trust Showcase — Gauge as Proof */}
+                    <div id="trust-showcase"><HeroTrustShowcase /></div>
                </div>
              </div>
 
