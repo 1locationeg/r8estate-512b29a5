@@ -280,10 +280,10 @@ const Index = () => {
             }} />
                
                 <div className="relative text-center">
-                   {/* Platform descriptor */}
-                   <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground/70 font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-                     {t('hero.platformDescriptor')}
-                   </p>
+                    {/* Platform descriptor */}
+                    <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-3 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+                      <span className="pb-1 border-b-2 border-accent/60">{t('hero.platformDescriptor')}</span>
+                    </p>
                    {/* Interactive Trust Showcase — Gauge + Review Card */}
                    <HeroTrustShowcase />
 
