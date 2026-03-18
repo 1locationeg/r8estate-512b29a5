@@ -90,7 +90,7 @@ const scenarios: ReviewScenario[] = [
     location: "Palm Jumeirah",
     developer: "Nakheel",
     rating: 5,
-    comment: "\"Absolutely world-class. Every detail was perfect — from the handover process to the after-sales support. They went above and beyond at every step.\"",
+    comment: "\"Absolutely world-class. Every detail perfect — from handover to after-sales. Above and beyond.\"",
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
       { label: "Build quality", value: "Premium", positive: true },
