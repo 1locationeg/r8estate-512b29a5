@@ -63,14 +63,16 @@ export const BrandLogo = ({
           <span className="text-brand-red">R8</span>
           <span className="text-primary">ESTATE</span>
         </span>
-        <span
-          className={cn(
-            "text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5",
-            config.tagline
-          )}
-        >
-          {tagline}
-        </span>
+        {tagline && (
+          <span
+            className={cn(
+              "text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5",
+              config.tagline
+            )}
+          >
+            {tagline}
+          </span>
+        )}
         {subtitle && (
           <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">
             {subtitle}
