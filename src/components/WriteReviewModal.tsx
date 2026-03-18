@@ -349,8 +349,8 @@ export const WriteReviewModal = ({
        return;
     }
     if (!content.trim()) {
-      toast({ title: "Review required", description: "Please write your review.", variant: "destructive" });
-      return;
+       toast({ title: t("form.review_required"), description: t("form.review_required_desc"), variant: "destructive" });
+       return;
     }
 
     setIsUploading(true);
