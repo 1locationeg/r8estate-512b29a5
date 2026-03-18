@@ -502,7 +502,7 @@ export const HeroTrustShowcase = () => {
       </div>
 
       {/* ── Controls ── */}
-      <div className="mt-4 mx-2 md:mx-0 space-y-3">
+      <div className="mt-4 mx-2 md:mx-0 space-y-1">
         {/* Slider */}
         <div className="flex items-center gap-3">
           <span className="text-[10px] font-bold text-muted-foreground w-6 text-right">0</span>
@@ -515,6 +515,25 @@ export const HeroTrustShowcase = () => {
             className="flex-1"
           />
           <span className="text-[10px] font-bold text-muted-foreground w-6">100</span>
+        </div>
+        {/* Preset markers */}
+        <div className="flex items-center gap-3">
+          <span className="w-6" />
+          <div className="flex-1 relative h-4">
+            {presets.map((p) => (
+              <button
+                key={p}
+                onClick={() => handlePreset(p)}
+                className={`absolute -translate-x-1/2 text-[9px] font-bold transition-colors ${
+                  score === p ? "text-primary" : "text-muted-foreground hover:text-foreground"
+                }`}
+                style={{ left: `${p}%` }}
+              >
+                {p}
+              </button>
+            ))}
+          </div>
+          <span className="w-6" />
         </div>
 
       </div>
