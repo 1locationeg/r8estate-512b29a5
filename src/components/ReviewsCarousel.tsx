@@ -222,9 +222,18 @@ export function ReviewsCarousel() {
                   key={review.id}
                   className="snap-start shrink-0 w-[85vw] sm:w-[300px] md:w-[340px] bg-card border border-border rounded-xl p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
                 >
-                  {/* Stars */}
+                  {/* Stars + New badge */}
                   <div className="flex items-center gap-2">
                     {renderStars(review.rating)}
+                    {(() => {
+                      const diffMs = Date.now() - new Date(review.date).getTime();
+                      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+                      return diffDays <= 3 ? (
+                        <span className="ml-auto px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground animate-pulse">
+                          {isRTL ? "جديد" : "New"}
+                        </span>
+                      ) : null;
+                    })()}
                   </div>
 
                   {/* Comment — 2 lines max with inline "more" */}
