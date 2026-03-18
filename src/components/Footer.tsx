@@ -23,7 +23,6 @@ export const Footer = () => {
               <span className="text-[7px] md:text-[8px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
                 {t("footer.brandTagline")}
               </span>
-              </span>
             </div>
           </div>
           <p className="text-xs md:text-sm text-muted-foreground text-center">
