@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Slider } from "@/components/ui/slider";
-import { Star, ShieldCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle } from "lucide-react";
+import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle } from "lucide-react";
 
 // ── Score color logic ──
 const getScoreColor = (s: number) => {
