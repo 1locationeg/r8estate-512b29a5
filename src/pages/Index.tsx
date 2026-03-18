@@ -121,7 +121,7 @@ const Index = () => {
   { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
   { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" },
   { key: 'legal', icon: Scale, title: t("hero.qaLegal"), desc: t("hero.qaLegalDesc"), color: "text-brand-red" },
-  { key: 'insights', icon: LineChart, title: t("hero.qaInsights"), desc: t("hero.qaInsightsDesc"), color: "text-primary" }];
+  ];
 
 
   const verifiedBadges = [
