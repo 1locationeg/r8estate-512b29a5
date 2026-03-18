@@ -167,7 +167,6 @@ const MobileNavSheet = ({
                    <span className="text-[7px] text-muted-foreground tracking-wide whitespace-nowrap -mt-0.5">
                      {t("footer.brandTagline")}
                    </span>
-                  </span>
                 </div>
               </button>
               <LanguageSwitcher />
