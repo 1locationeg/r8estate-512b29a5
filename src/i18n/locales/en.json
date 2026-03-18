@@ -459,5 +459,17 @@
     "claimDescription": "Create an account to track your review, earn badges, and edit it later.",
     "creatingAccount": "Creating account...",
     "skipForNow": "Skip for now"
-  }
+  },
+  "nav_search": "Search reviews",
+  "nav_business": "Register your business",
+  "nav_write_review": "Write a Review",
+  "hero_headline": "The truth about off-plan real estate. From people who actually bought.",
+  "hero_sub": "Verified reviews from real buyers. Not ads.",
+  "search_placeholder_dev": "Search for a developer or project",
+  "search_placeholder_broker": "Search for a broker or lawyer",
+  "write_review_nudge": "Bought recently? Share your experience →",
+  "verified_badge": "Verified Review",
+  "read_reviews": "Read Reviews",
+  "stars_label": "out of 5",
+  "reviews_count": "{{count}} verified reviews"
 }

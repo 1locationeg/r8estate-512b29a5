@@ -459,5 +459,17 @@
     "claimDescription": "أنشئ حسابًا لتتبع مراجعتك، واكسب شارات، وعدّلها لاحقًا.",
     "creatingAccount": "جارِ إنشاء الحساب...",
     "skipForNow": "تخطي الآن"
-  }
+  },
+  "nav_search": "ابحث عن تقييمات",
+  "nav_business": "سجّل شركتك",
+  "nav_write_review": "اكتب تقييم",
+  "hero_headline": "الحقيقة عن العقارات على الخريطة. من ناس اشتروا فعلاً.",
+  "hero_sub": "تقييمات موثّقة من مشترين حقيقيين. مش إعلانات.",
+  "search_placeholder_dev": "ابحث عن مطوّر أو مشروع",
+  "search_placeholder_broker": "ابحث عن وسيط أو محامي",
+  "write_review_nudge": "اشتريت مؤخراً؟ شارك تجربتك ←",
+  "verified_badge": "تقييم موثّق",
+  "read_reviews": "اقرأ التقييمات",
+  "stars_label": "من 5",
+  "reviews_count": "{{count}} تقييم موثّق"
 }
