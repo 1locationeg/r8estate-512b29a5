@@ -335,7 +335,7 @@ export const WriteReviewModal = ({
        });
     } catch (err) {
       console.error("Receipt upload error:", err);
-      toast({ title: "Upload failed", description: "Could not upload receipt. Please try again.", variant: "destructive" });
+      toast({ title: t("form.upload_failed"), description: t("form.upload_failed_desc"), variant: "destructive" });
     } finally {
       setIsReceiptUploading(false);
       e.target.value = "";
