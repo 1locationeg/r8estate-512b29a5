@@ -186,7 +186,7 @@ const MobileNavSheet = ({
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground truncate">{profile?.full_name || t("nav.user_fallback")}</p>
                   <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-                  <p className="text-xs text-primary capitalize">{role || "Buyer"}</p>
+                  <p className="text-xs text-primary capitalize">{role || t("nav.role_buyer")}</p>
                 </div>
               </div>
             </div>
