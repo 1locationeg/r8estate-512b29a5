@@ -418,7 +418,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 5: Footer — developer + trust badge */}
           <div
-            className={`flex items-center justify-between pt-2 border-t border-border transition-all duration-300 ${
+            className={`flex items-center justify-between pt-1.5 border-t border-border transition-all duration-300 ${
               rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
