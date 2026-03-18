@@ -146,44 +146,56 @@ const Index = () => {
             </div>
           </button>
 
-          {/* Desktop view toggle */}
-          <div className="hidden md:block shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Business</span>
-              </button>
-            ) : (
-              <button
-                onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all">
-                <User className="w-3.5 h-3.5" />
-                <span>Buyer</span>
-              </button>
-            )}
+          {/* Desktop view toggle - pill switcher */}
+          <div className="hidden md:flex items-center shrink-0 p-0.5 bg-secondary rounded-full">
+            <button
+              onClick={switchToBuyerView}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                userMode === "buyers"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}>
+              <User className="w-3.5 h-3.5" />
+              <span>Buyer</span>
+            </button>
+            <button
+              onClick={switchToBusinessView}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                userMode === "industry"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}>
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Business</span>
+            </button>
           </div>
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1 shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all"
-                aria-label="Switch to business view">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Business</span>
-              </button>
-            ) : (
+            <div className="inline-flex items-center p-0.5 bg-secondary rounded-full">
               <button
                 onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full font-semibold text-xs transition-all ${
+                  userMode === "buyers"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground"
+                }`}
                 aria-label="Switch to buyer view">
-                <User className="w-3.5 h-3.5" />
+                <User className="w-3 h-3" />
                 <span>Buyer</span>
               </button>
-            )}
+              <button
+                onClick={switchToBusinessView}
+                className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-full font-semibold text-xs transition-all ${
+                  userMode === "industry"
+                    ? "bg-primary text-primary-foreground shadow-md"
+                    : "text-muted-foreground"
+                }`}
+                aria-label="Switch to business view">
+                <Building2 className="w-3 h-3" />
+                <span>Business</span>
+              </button>
+            </div>
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
@@ -483,13 +495,21 @@ const Index = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                
-                  Claim Your Business Profile
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {role === 'business' || role === 'admin' ? (
+                  <button
+                    onClick={() => navigate(getDashboardRoute())}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                    <LayoutDashboard className="w-4 h-4" />
+                    Go to Dashboard
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate('/auth?type=business')}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                    Claim Your Business Profile
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setShowIndustryCategories((prev) => !prev);
@@ -498,7 +518,6 @@ const Index = () => {
                     }, 100);
                   }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
-                
                   Browse Categories   
                 </button>
               </div>
