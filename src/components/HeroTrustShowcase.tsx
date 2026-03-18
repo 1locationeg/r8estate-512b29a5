@@ -324,12 +324,12 @@ export const HeroTrustShowcase = () => {
 
       {/* ── Review Card (overlaps gauge bottom) ── */}
       <div
-        className={`relative -mt-6 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all duration-600 ${
+        className={`relative -mt-2 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all duration-600 ${
           cardVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
         style={{ transitionDuration: "600ms" }}
       >
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-1.5">
           {/* Row 1: Verified badge + project */}
           <div
             className={`flex items-center gap-2 transition-all duration-300 ${
