@@ -1,23 +1,32 @@
 
 
-## Make Review Card More Compact & Shift Down to Reveal "TRUST SCORE"
+## Make Search Dropdown Items Compact on Mobile
 
-### Problem
-The review card overlaps too much of the gauge, hiding the "TRUST SCORE" label. The card also has too much internal spacing.
+### Changes to `src/components/SearchSuggestions.tsx`
 
-### Changes to `src/components/HeroTrustShowcase.tsx`
+**1. Reduce item padding and spacing on mobile**
+- Change item container padding from `px-4 py-3.5` to `px-3 py-2.5 md:px-4 md:py-3.5`
+- Reduce gap in the main button row from `gap-4` to `gap-2.5 md:gap-4`
 
-**1. Reduce card overlap** — change `-mt-6` to `-mt-2` so the card sits lower, revealing the "TRUST SCORE" text beneath the gauge.
+**2. Shrink logos on mobile**
+- Change logo size from `w-11 h-11` to `w-9 h-9 md:w-11 md:h-11`
+- Reduce verification badge size proportionally: `w-4 h-4 md:w-5 md:h-5` with smaller check icon
 
-**2. Compact card padding and spacing** — change `p-4 space-y-3` to `p-3 space-y-1.5` for tighter internal layout.
+**3. Compact star ratings on mobile**
+- Reduce star icon size: `w-3 h-3 md:w-4 md:h-4`
+- Reduce rating text size: `text-xs md:text-sm`
 
-**3. Shrink reviewer avatar** — from `w-9 h-9` to `w-7 h-7` with smaller text.
+**4. Compact action buttons on mobile**
+- Reduce action row margin: `mt-2 md:mt-2.5`
+- Reduce left offset for actions: `ms-[46px] md:ms-[60px]`
+- Hide text labels ("Write Review", "Compare") on mobile, showing only icons
+- Use smaller button heights on mobile: `h-6 md:h-7`
 
-**4. Reduce reviewer row gap** — from `gap-3` to `gap-2`.
+**5. Reduce dropdown max height on mobile**
+- Change container max-height: `max-h-[320px] md:max-h-[400px]`
 
-**5. Compact dimension pills** — reduce `gap-1.5` to `gap-1`, pill padding from `px-2 py-1` to `px-1.5 py-0.5`.
-
-**6. Reduce footer top padding** — from `pt-2` to `pt-1.5`.
-
-All changes are within the review card section (lines ~326–441).
+### Technical Details
+- All changes are responsive using Tailwind breakpoint prefixes (`md:`)
+- No new dependencies or components needed
+- Only `src/components/SearchSuggestions.tsx` is modified
 

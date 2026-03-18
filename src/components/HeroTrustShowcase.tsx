@@ -324,12 +324,12 @@ export const HeroTrustShowcase = () => {
 
       {/* ── Review Card (overlaps gauge bottom) ── */}
       <div
-        className={`relative -mt-6 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all duration-600 ${
+        className={`relative -mt-2 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all duration-600 ${
           cardVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"
         }`}
         style={{ transitionDuration: "600ms" }}
       >
-        <div className="p-4 space-y-3">
+        <div className="p-3 space-y-1.5">
           {/* Row 1: Verified badge + project */}
           <div
             className={`flex items-center gap-2 transition-all duration-300 ${
@@ -348,12 +348,12 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 2: Reviewer info */}
           <div
-            className={`flex items-center gap-3 transition-all duration-300 ${
+            className={`flex items-center gap-2 transition-all duration-300 ${
               rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
             <div
-              className="w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold text-primary-foreground"
+              className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold text-primary-foreground"
               style={{ backgroundColor: color }}
             >
               {scenario.initial}
@@ -393,7 +393,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 4: Dimension pills */}
           <div
-            className={`flex flex-wrap gap-1.5 transition-all duration-300 ${
+            className={`flex flex-wrap gap-1 transition-all duration-300 ${
               rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
@@ -402,7 +402,7 @@ export const HeroTrustShowcase = () => {
               return (
                 <span
                   key={dim.label}
-                  className={`inline-flex items-center gap-1 px-2 py-1 rounded-lg text-[10px] font-semibold border ${
+                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[10px] font-semibold border ${
                     dim.positive
                       ? "bg-trust-excellent/10 text-trust-excellent border-trust-excellent/20"
                       : "bg-destructive/10 text-destructive border-destructive/20"
@@ -418,7 +418,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 5: Footer — developer + trust badge */}
           <div
-            className={`flex items-center justify-between pt-2 border-t border-border transition-all duration-300 ${
+            className={`flex items-center justify-between pt-1.5 border-t border-border transition-all duration-300 ${
               rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
