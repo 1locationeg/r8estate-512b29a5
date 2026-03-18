@@ -23,6 +23,7 @@ import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, A
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { BrandLogo } from "@/components/BrandLogo";
 import logoIcon from "@/assets/logo-icon.png";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {

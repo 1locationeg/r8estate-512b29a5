@@ -125,6 +125,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { LogOut, LayoutDashboard } from "lucide-react";
 import { LanguageSwitcher } from "./LanguageSwitcher";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const MobileNavSheet = ({
   open,
