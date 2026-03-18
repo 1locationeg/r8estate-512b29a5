@@ -129,16 +129,23 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
                 </Button>
               </>
             ) : (
-              <Button
-                className="w-full"
-                onClick={() => {
-                  navigate("/auth");
-                  setOpen(false);
-                }}
-                disabled={isLoading}
-              >
-                {isLoading ? t("common.signingIn") : t("common.signIn")}
-              </Button>
+              isLoading ? (
+                <div className="h-10 w-full rounded-lg bg-muted animate-pulse" />
+              ) : isReturningDevice ? (
+                <Button
+                  className="w-full"
+                  onClick={() => { navigate("/auth"); setOpen(false); }}
+                >
+                  {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
+                </Button>
+              ) : (
+                <Button
+                  className="w-full"
+                  onClick={() => { navigate("/auth"); setOpen(false); }}
+                >
+                  {t("common.signIn")}
+                </Button>
+              )
             )}
           </div>
         </div>
