@@ -795,7 +795,7 @@ export const WriteReviewModal = ({
                   className="h-9 gap-1.5 text-xs"
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  <ImageIcon className="w-3.5 h-3.5" /> Photos
+                  <ImageIcon className="w-3.5 h-3.5" /> {t("form.photos")}
                 </Button>
                 <Button
                   type="button"
