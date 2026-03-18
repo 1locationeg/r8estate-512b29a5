@@ -134,8 +134,8 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           onClick={() => navigate(`/community?developer=${review.developerId}`)}
           className="flex items-center gap-1 text-[10px] md:text-xs text-primary hover:text-primary/80 font-medium transition-colors"
         >
-          <Users className="w-3 h-3" />
-          Discuss this
+           <Users className="w-3 h-3" />
+           {t("review.discuss_this")}
         </button>
       </div>
 
