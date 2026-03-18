@@ -4,8 +4,7 @@ import { ChevronLeft, ChevronRight, Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import { formatNumber } from "@/utils/formatArabic";
-import logoOnly from "@/assets/logo-only.png";
-import sideLongLogo from "@/assets/side-long-logo.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface CarouselReview {
   id: string;
@@ -305,18 +304,7 @@ export function ReviewsCarousel() {
               ({formatNumber(sortedReviews.length, i18n.language)})
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <img
-              src={logoOnly}
-              alt="R8ESTATE"
-              className="h-4 sm:h-6 md:h-7 w-auto object-contain"
-            />
-            <img
-              src={sideLongLogo}
-              alt="R8ESTATE"
-              className="h-5 sm:h-7 md:h-9 object-contain rounded"
-            />
-          </div>
+          <BrandLogo size="xs" />
         </div>
       </div>
     </section>
