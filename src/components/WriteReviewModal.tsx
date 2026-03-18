@@ -946,11 +946,13 @@ export const WriteReviewModal = ({
               disabled={isUploading || rating === 0 || !content.trim()}
               className="gap-1.5 min-h-[44px]"
             >
-              {isUploading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Submitting...
-                </>
-              ) : (
+               {isUploading ? (
+                 <>
+                   <Loader2 className="w-4 h-4 animate-spin" /> {t("form.submitting")}
+                 </>
+               ) : (
+                 t("form.submit_review")
+               )}
                 "Submit Review"
               )}
             </Button>
