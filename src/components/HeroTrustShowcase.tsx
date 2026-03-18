@@ -413,7 +413,7 @@ export const HeroTrustShowcase = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
-                <ShieldCheck className="w-4 h-4 text-verified fill-verified/20 flex-shrink-0" />
+                <BadgeCheck className="w-4 h-4 text-trust-excellent fill-trust-excellent flex-shrink-0" />
                 <div className="flex items-center gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
