@@ -64,7 +64,7 @@ export function ReviewsCarousel() {
         setLiveReviews(
           data.map((r) => ({
             id: r.id,
-            author: r.is_anonymous ? (isRTL ? "مستخدم مجهول" : "Anonymous") : r.author_name,
+            author: r.is_anonymous ? t("review.anonymous") : r.author_name,
             rating: r.rating,
             date: new Date(r.created_at).toISOString().split("T")[0],
             comment: r.comment,
