@@ -105,7 +105,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  useEffect(() => {
+  // Claim a guest review that was submitted before signup
+  const claimPendingGuestReview = async (userId: string) => {
+    const pendingReviewId = localStorage.getItem('r8_pending_claim_review');
+    if (!pendingReviewId) return;
+
+    try {
+      const { error } = await supabase
+        .from('guest_reviews')
+        .update({ claimed_by: userId, is_claimed: true })
+        .eq('id', pendingReviewId);
+
+      if (!error) {
+        console.log('Successfully claimed guest review:', pendingReviewId);
+      }
+    } catch (e) {
+      console.error('Failed to claim guest review:', e);
+    } finally {
+      localStorage.removeItem('r8_pending_claim_review');
+    }
+  };
+
+
     let isMounted = true;
 
     // Set up auth state listener FIRST
