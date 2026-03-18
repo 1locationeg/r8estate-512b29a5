@@ -6,7 +6,7 @@ import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotligh
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
 
-import { HeroTrustGauge } from "@/components/HeroTrustGauge";
+import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
 import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
