@@ -879,9 +879,9 @@ export const WriteReviewModal = ({
           {/* Verification Section — authenticated only */}
           {!isGuest && (
             <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
-              <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-accent" /> Purchase Verification
-                <Badge variant="secondary" className="text-[10px] ml-1">Optional</Badge>
+               <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
+                 <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification")}
+                 <Badge variant="secondary" className="text-[10px] ml-1">{t("form.optional")}</Badge>
               </label>
               <p className="text-xs text-muted-foreground mb-2">
                 Upload proof of purchase (receipt, contract, payment confirmation) to get a <strong>Verified Buyer</strong> badge on your review.
