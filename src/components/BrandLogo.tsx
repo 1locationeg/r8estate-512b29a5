@@ -53,7 +53,7 @@ export const BrandLogo = ({
         alt="R8ESTATE"
         className={cn("object-contain", config.img)}
       />
-      <div className="flex flex-col leading-none gap-0">
+      <div className="flex flex-col leading-none gap-0" style={{ fontFamily: "'Montserrat', sans-serif" }}>
         <span
           className={cn(
             "inline-flex font-extrabold leading-none",
