@@ -260,14 +260,19 @@ export const HeroTrustShowcase = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
     setScore(val);
     setDisplayScore(val);
+    pauseCycling();
   };
 
   const handlePreset = (val: number) => {
     animateToScore(val);
+    pauseCycling();
   };
 
   const handleReplay = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
+    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
+    cycleIdxRef.current = 2;
     runEntrance();
   };
 
