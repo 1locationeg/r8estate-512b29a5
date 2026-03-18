@@ -386,16 +386,12 @@ export const HeroTrustShowcase = () => {
         style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
       >
         <div className="p-3 space-y-1.5">
-          {/* Row 1: Verified badge + project */}
+          {/* Row 1: Project location */}
           <div
             className={`flex items-center gap-2 transition-all duration-300 ${
               rowsVisible >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-verified/10 border border-verified text-[10px] font-bold text-verified-foreground">
-              <ShieldCheck className="w-3 h-3 text-verified fill-verified" />
-              Verified Buyer
-            </span>
             <span className="text-[10px] text-muted-foreground flex items-center gap-1">
               <MapPin className="w-3 h-3" />
               {scenario.project} · {scenario.location}
@@ -417,6 +413,7 @@ export const HeroTrustShowcase = () => {
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2">
                 <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
+                <ShieldCheck className="w-4 h-4 text-verified fill-verified/20 flex-shrink-0" />
                 <div className="flex items-center gap-0.5">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star
