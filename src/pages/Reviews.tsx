@@ -45,7 +45,8 @@ const Reviews = () => {
             project: r.experience_type || "General",
             comment: r.comment,
             verified: r.is_verified,
-          }));
+            userId: r.user_id,
+          } as Review & { userId: string }));
           setDbReviews(mapped);
         }
       } catch (err) {
