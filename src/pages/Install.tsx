@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Download, Smartphone, CheckCircle, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 import { Footer } from "@/components/Footer";
 
 interface BeforeInstallPromptEvent extends Event {
