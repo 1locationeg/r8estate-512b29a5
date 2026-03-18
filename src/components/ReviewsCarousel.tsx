@@ -247,7 +247,6 @@ export function ReviewsCarousel() {
                          >
                            {t("review.more")}
                          </button>
-                        </button>
                       )}
                     </p>
                     {isExpanded && isLong && (
