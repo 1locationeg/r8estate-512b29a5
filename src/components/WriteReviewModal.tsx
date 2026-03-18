@@ -613,7 +613,7 @@ export const WriteReviewModal = ({
 
           {/* Star Rating */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-2 block">Your Rating *</label>
+             <label className="text-sm font-medium text-foreground mb-2 block">{t("form.your_rating")} *</label>
             <div className="flex items-center gap-1">
               {[1, 2, 3, 4, 5].map((star) => (
                 <button
