@@ -77,6 +77,9 @@ export const WriteReviewModal = ({
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [firstReviewCelebration, setFirstReviewCelebration] = useState(false);
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+  const [successIsFirst, setSuccessIsFirst] = useState(false);
+  const [successRating, setSuccessRating] = useState(5);
 
   // Guest vs authenticated mode
   const isGuest = !user;
