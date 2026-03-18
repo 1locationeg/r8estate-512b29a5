@@ -716,7 +716,7 @@ export const WriteReviewModal = ({
                     disabled={isEnhancing || !content.trim()}
                   >
                     {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-accent" />}
-                    Enhance
+                     {t("form.enhance")}
                   </Button>
                 </div>
               )}
