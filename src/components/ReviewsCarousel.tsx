@@ -244,8 +244,9 @@ export function ReviewsCarousel() {
                         <button
                           onClick={() => toggleExpand(review.id)}
                           className="text-sm font-semibold text-primary hover:underline ml-1 inline"
-                        >
-                          {isRTL ? "…المزيد" : "…more"}
+                         >
+                           {t("review.more")}
+                         </button>
                         </button>
                       )}
                     </p>
