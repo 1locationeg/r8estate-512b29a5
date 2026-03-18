@@ -784,8 +784,8 @@ export const WriteReviewModal = ({
           {/* Attachments — authenticated only */}
           {!isGuest && (
             <div>
-              <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
-                <Paperclip className="w-4 h-4" /> Attachments
+               <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
+                 <Paperclip className="w-4 h-4" /> {t("form.attachments")}
               </label>
               <div className="flex flex-wrap gap-2 mb-2">
                 <Button
