@@ -145,8 +145,22 @@
   }
 
   /* Arabic font when RTL is active */
-  body.rtl {
+  body.rtl,
+  :root[lang="ar"] body {
     font-family: 'Cairo', sans-serif;
+    font-size: 15px;
+    line-height: 1.8;
+  }
+
+  :root[lang="ar"] h1,
+  :root[lang="ar"] h2,
+  :root[lang="ar"] h3 {
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  :root[lang="ar"] * {
+    word-spacing: 0.05em;
   }
 
   /* Fluid typography scaling */
