@@ -59,10 +59,14 @@ const Reviews = () => {
 
   // Combine DB reviews with mock reviews, dedup by id
   const allReviews = useMemo(() => {
+    if (showMineOnly && user) {
+      // When viewing "My Reviews", only show DB reviews by this user
+      return dbReviews.filter((r) => (r as any).userId === user.id);
+    }
     const dbIds = new Set(dbReviews.map((r) => r.id));
     const uniqueMock = mockReviews.filter((r) => !dbIds.has(r.id));
     return [...dbReviews, ...uniqueMock];
-  }, [dbReviews]);
+  }, [dbReviews, showMineOnly, user]);
 
   const filteredReviews = useMemo(() => {
     if (activeFilter === "all") return allReviews;
