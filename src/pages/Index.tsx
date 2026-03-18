@@ -495,13 +495,21 @@ const Index = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                
-                  Claim Your Business Profile
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                {role === 'business' || role === 'admin' ? (
+                  <button
+                    onClick={() => navigate(getDashboardRoute())}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                    <LayoutDashboard className="w-4 h-4" />
+                    Go to Dashboard
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => navigate('/auth?type=business')}
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                    Claim Your Business Profile
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setShowIndustryCategories((prev) => !prev);
@@ -510,7 +518,6 @@ const Index = () => {
                     }, 100);
                   }}
                   className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
-                
                   Browse Categories   
                 </button>
               </div>
