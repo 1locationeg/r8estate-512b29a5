@@ -29,9 +29,116 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@R8ESTATE" />
     <meta name="twitter:image" content="https://mcekdnvxeblikixmfyni.supabase.co/storage/v1/object/public/og-assets/og-preview.png" />
+
+    <!-- Boot shell styles - renders instantly before JS -->
+    <style>
+      html, body { margin: 0; padding: 0; background: #0a3d62; min-height: 100vh; }
+      #boot-shell {
+        position: fixed; inset: 0; z-index: 9999;
+        background: linear-gradient(135deg, #0a3d62 0%, #0d4f7e 100%);
+        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+        padding-top: env(safe-area-inset-top, 0px);
+        font-family: 'Montserrat', system-ui, sans-serif;
+        transition: opacity 0.4s ease-out;
+      }
+      #boot-shell.fade-out { opacity: 0; pointer-events: none; }
+      .boot-header {
+        width: 100%; padding: 12px 16px;
+        display: flex; align-items: center; justify-content: space-between;
+      }
+      .boot-brand {
+        font-size: 18px; font-weight: 800; letter-spacing: -0.5px;
+      }
+      .boot-brand .r8 { color: #ed1b40; }
+      .boot-brand .estate { color: #fff; }
+      .boot-hero { 
+        flex: 1; display: flex; flex-direction: column; align-items: center; 
+        justify-content: center; width: 100%; max-width: 420px; padding: 0 16px;
+        margin-top: -40px;
+      }
+      /* Static gauge placeholder */
+      .boot-gauge {
+        width: 200px; height: 110px; position: relative; margin-bottom: 8px;
+      }
+      .boot-gauge svg { width: 100%; height: 100%; }
+      .boot-score {
+        position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+        font-size: 32px; font-weight: 900; color: hsl(142, 71%, 45%);
+        font-variant-numeric: tabular-nums;
+      }
+      .boot-label {
+        font-size: 8px; font-weight: 900; letter-spacing: 0.25em;
+        color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 12px;
+      }
+      /* Static review card placeholder */
+      .boot-card {
+        width: 100%; border-radius: 12px; padding: 14px;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      }
+      .boot-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+      .boot-pill {
+        height: 10px; border-radius: 5px; background: rgba(255,255,255,0.08);
+      }
+      .boot-circle {
+        width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,0.1); flex-shrink: 0;
+      }
+      .boot-shimmer {
+        animation: bootShimmer 1.8s ease-in-out infinite;
+      }
+      @keyframes bootShimmer {
+        0%, 100% { opacity: 0.5; }
+        50% { opacity: 1; }
+      }
+    </style>
   </head>
 
   <body>
+    <!-- Boot shell: visible instantly, removed after React mounts -->
+    <div id="boot-shell">
+      <div class="boot-header">
+        <span class="boot-brand"><span class="r8">R8</span><span class="estate">ESTATE</span></span>
+        <div style="display:flex;gap:6px;">
+          <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.1);"></div>
+        </div>
+      </div>
+      <div class="boot-hero">
+        <!-- Gauge placeholder -->
+        <div class="boot-gauge">
+          <svg viewBox="0 0 200 120" fill="none">
+            <!-- Background arc -->
+            <path d="M 15 105 A 85 85 0 0 1 185 105" stroke="rgba(255,255,255,0.08)" stroke-width="10" fill="none" stroke-linecap="round"/>
+            <!-- Partial filled arc -->
+            <path d="M 15 105 A 85 85 0 0 1 185 105" stroke="hsl(142, 71%, 45%)" stroke-width="10" fill="none" stroke-linecap="round" stroke-dasharray="267" stroke-dashoffset="35" class="boot-shimmer"/>
+          </svg>
+          <div class="boot-score boot-shimmer">88</div>
+        </div>
+        <div class="boot-label">TRUST SCORE</div>
+
+        <!-- Static review card skeleton -->
+        <div class="boot-card">
+          <div class="boot-row" style="justify-content:center;">
+            <div class="boot-pill" style="width:140px;"></div>
+          </div>
+          <div class="boot-row">
+            <div class="boot-circle"></div>
+            <div style="flex:1;display:flex;flex-direction:column;gap:4px;">
+              <div class="boot-pill" style="width:100px;"></div>
+              <div class="boot-pill" style="width:60px;"></div>
+            </div>
+          </div>
+          <div style="margin-bottom:8px;">
+            <div class="boot-pill" style="width:100%;height:8px;margin-bottom:4px;"></div>
+            <div class="boot-pill" style="width:80%;height:8px;"></div>
+          </div>
+          <div class="boot-row" style="gap:6px;">
+            <div class="boot-pill" style="width:60px;height:20px;border-radius:10px;"></div>
+            <div class="boot-pill" style="width:70px;height:20px;border-radius:10px;"></div>
+            <div class="boot-pill" style="width:55px;height:20px;border-radius:10px;"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

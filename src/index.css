@@ -120,6 +120,8 @@
     overflow-x: hidden;
     width: 100%;
     max-width: 100vw;
+    min-height: 100vh;
+    background-color: hsl(203, 81%, 21%);
     -webkit-text-size-adjust: 100%;
   }
 
