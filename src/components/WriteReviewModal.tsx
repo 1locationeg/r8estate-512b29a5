@@ -53,12 +53,12 @@ interface WriteReviewModalProps {
   onReviewSubmitted?: () => void;
 }
 
-const EXPERIENCE_TYPES = [
-  "Buyer",
-  "Agent",
-  "Investor",
-  "Construction Professional",
-  "Family Member",
+const EXPERIENCE_TYPES_KEYS = [
+  "form.exp_buyer",
+  "form.exp_agent",
+  "form.exp_investor",
+  "form.exp_construction",
+  "form.exp_family",
 ];
 
 const EMOJI_QUICK = ["👍", "👎", "⭐", "🏠", "💰", "🔑", "📋", "✅", "❌", "🏗️", "😊", "😤"];
