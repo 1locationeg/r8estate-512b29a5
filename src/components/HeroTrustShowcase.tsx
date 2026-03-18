@@ -147,27 +147,12 @@ export const HeroTrustShowcase = () => {
     if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
     cycleIntervalRef.current = setInterval(() => {
       cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarios.length;
-      
-      // After a full cycle, trigger a subtle replay instead of continuing
-      if (cycleIdxRef.current === 0) {
-        if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
-        cycleIntervalRef.current = null;
-        // Brief pause then replay entrance
-        setTimeout(() => {
-          if (animRef.current) cancelAnimationFrame(animRef.current);
-          if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
-          cycleIdxRef.current = 2;
-          runEntranceRef.current?.();
-        }, 800);
-        return;
-      }
 
+      // When wrapping back to start, just crossfade like any other transition (no replay reset)
       const nextScore = scenarios[cycleIdxRef.current].score;
-      // Crossfade: fade out, swap, fade in
       setTransitioning(true);
       setTimeout(() => {
         setScore(nextScore);
-        // Animate needle
         const startVal = displayScore;
         const startTime = performance.now();
         const duration = 800;
