@@ -42,6 +42,7 @@ const Index = () => {
   const [specialViewItem, setSpecialViewItem] = useState<any>(null);
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
+  const [togglePulse, setTogglePulse] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const { user, profile, role, signOut, isLoading } = useAuth();
@@ -81,6 +82,8 @@ const Index = () => {
     setSpecialViewItem(null);
     setActiveView(null);
     setShowIndustryCategories(false);
+    setTogglePulse(true);
+    setTimeout(() => setTogglePulse(false), 2000);
   };
 
   const switchToBuyerView = () => {
@@ -89,6 +92,8 @@ const Index = () => {
     setSpecialViewItem(null);
     setActiveView(null);
     setShowIndustryCategories(false);
+    setTogglePulse(true);
+    setTimeout(() => setTogglePulse(false), 2000);
   };
 
   const handleQuickAction = (actionKey: string) => {
@@ -151,14 +156,14 @@ const Index = () => {
             {userMode === "buyers" ? (
               <button
                 onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all">
-                <Building2 className="w-3.5 h-3.5" />
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:shadow-md">
+                <Building2 className="w-3.5 h-3.5 text-primary" />
                 <span>Business</span>
               </button>
             ) : (
               <button
                 onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all">
+                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all hover:shadow-xl hover:scale-105 ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}>
                 <User className="w-3.5 h-3.5" />
                 <span>Buyer</span>
               </button>
@@ -170,15 +175,15 @@ const Index = () => {
             {userMode === "buyers" ? (
               <button
                 onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10"
                 aria-label="Switch to business view">
-                <Building2 className="w-3.5 h-3.5" />
+                <Building2 className="w-3.5 h-3.5 text-primary" />
                 <span>Business</span>
               </button>
             ) : (
               <button
                 onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+                className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}
                 aria-label="Switch to buyer view">
                 <User className="w-3.5 h-3.5" />
                 <span>Buyer</span>
