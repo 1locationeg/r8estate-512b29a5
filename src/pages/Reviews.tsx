@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const Reviews = () => {
   const { t } = useTranslation();
