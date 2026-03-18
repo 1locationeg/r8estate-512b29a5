@@ -73,6 +73,7 @@ const scenarios: ReviewScenario[] = [
     score: 88,
     reviewer: "Fatima Al-R.",
     initial: "F",
+    avatar: "https://i.pravatar.cc/80?img=9",
     project: "Creek Horizon",
     location: "Dubai Creek Harbour",
     developer: "Emaar Properties",
