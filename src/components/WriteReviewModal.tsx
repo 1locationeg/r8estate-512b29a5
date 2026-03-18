@@ -681,7 +681,7 @@ export const WriteReviewModal = ({
           {/* Review Content with AI toolbar — AI only for authenticated */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-sm font-medium text-foreground">Your Review *</label>
+              <label className="text-sm font-medium text-foreground">{t("form.your_review")} *</label>
               {!isGuest && (
                 <div className="flex items-center gap-1">
                   <Button
