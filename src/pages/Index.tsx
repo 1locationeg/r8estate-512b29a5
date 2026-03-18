@@ -290,7 +290,7 @@ const Index = () => {
                       <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
                     </p>
                    {/* Interactive Trust Showcase — Gauge + Review Card */}
-                   <HeroTrustShowcase />
+                   <div id="trust-showcase"><HeroTrustShowcase /></div>
 
                  {/* Mode-specific Tagline */}
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
