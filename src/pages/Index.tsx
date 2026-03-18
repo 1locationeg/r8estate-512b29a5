@@ -83,6 +83,14 @@ const Index = () => {
     setShowIndustryCategories(false);
   };
 
+  const switchToBuyerView = () => {
+    setUserMode("buyers");
+    setSelectedDeveloperId(null);
+    setSpecialViewItem(null);
+    setActiveView(null);
+    setShowIndustryCategories(false);
+  };
+
   const handleQuickAction = (actionKey: string) => {
     switch (actionKey) {
       case 'compare':
