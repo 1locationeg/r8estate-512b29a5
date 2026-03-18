@@ -42,7 +42,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const developer = developers.find((d) => d.id === review.developerId);
-  const tierConfig = getTierConfig(review.tier);
+  const tierConfig = getTierConfig(review.tier, t);
   const TierIcon = tierConfig.icon;
 
   const getInitials = (name: string) => {
