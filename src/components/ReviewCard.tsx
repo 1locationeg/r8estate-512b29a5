@@ -144,14 +144,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                   {review.developerReply.author}
                 </span>
                 <span className="text-[10px] md:text-xs text-muted-foreground">
-                  {new Date(review.developerReply.date).toLocaleDateString(
-                    i18n.language === "ar" ? "ar-AE" : "en-US",
-                    {
-                      month: "short",
-                      day: "numeric",
-                      year: "numeric",
-                    }
-                  )}
+                  {formatDate(review.developerReply.date, i18n.language)}
                 </span>
               </div>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">
