@@ -952,8 +952,6 @@ export const WriteReviewModal = ({
                ) : (
                  t("form.submit_review")
                )}
-                "Submit Review"
-              )}
             </Button>
           </div>
         </div>
