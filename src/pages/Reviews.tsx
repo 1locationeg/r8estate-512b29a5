@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { reviews as mockReviews, Review, ReviewerTier } from "@/data/mockData";
 import { ReviewCard } from "@/components/ReviewCard";
@@ -16,6 +17,8 @@ const Reviews = () => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const showMineOnly = searchParams.get("mine") === "true";
   const [dbReviews, setDbReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<ReviewFilterType>("all");
@@ -42,7 +45,8 @@ const Reviews = () => {
             project: r.experience_type || "General",
             comment: r.comment,
             verified: r.is_verified,
-          }));
+            userId: r.user_id,
+          } as Review & { userId: string }));
           setDbReviews(mapped);
         }
       } catch (err) {
@@ -56,10 +60,14 @@ const Reviews = () => {
 
   // Combine DB reviews with mock reviews, dedup by id
   const allReviews = useMemo(() => {
+    if (showMineOnly && user) {
+      // When viewing "My Reviews", only show DB reviews by this user
+      return dbReviews.filter((r) => (r as any).userId === user.id);
+    }
     const dbIds = new Set(dbReviews.map((r) => r.id));
     const uniqueMock = mockReviews.filter((r) => !dbIds.has(r.id));
     return [...dbReviews, ...uniqueMock];
-  }, [dbReviews]);
+  }, [dbReviews, showMineOnly, user]);
 
   const filteredReviews = useMemo(() => {
     if (activeFilter === "all") return allReviews;
@@ -103,6 +111,28 @@ const Reviews = () => {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-4 space-y-5">
+        {/* Mine / All toggle */}
+        {user && (
+          <div className="flex gap-2">
+            <Button
+              size="sm"
+              variant={showMineOnly ? "default" : "outline"}
+              className="rounded-full text-xs"
+              onClick={() => setSearchParams(showMineOnly ? {} : { mine: "true" })}
+            >
+              My Reviews
+            </Button>
+            <Button
+              size="sm"
+              variant={!showMineOnly ? "default" : "outline"}
+              className="rounded-full text-xs"
+              onClick={() => setSearchParams({})}
+            >
+              All Reviews
+            </Button>
+          </div>
+        )}
+
         {/* Stats */}
         <div className="flex items-center justify-around text-center">
           <div>

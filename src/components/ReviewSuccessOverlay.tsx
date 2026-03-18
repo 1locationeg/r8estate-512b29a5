@@ -96,7 +96,7 @@ export function ReviewSuccessOverlay({
           <Button
             variant="outline"
             className="flex-1 gap-1.5"
-            onClick={() => { onClose(); navigate('/reviews'); }}
+            onClick={() => { onClose(); navigate('/reviews?mine=true'); }}
           >
             <Eye className="w-4 h-4" />
             My Reviews
