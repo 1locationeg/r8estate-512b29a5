@@ -45,7 +45,7 @@ const Index = () => {
   const [togglePulse, setTogglePulse] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
-  const { user, profile, role, signOut, isLoading } = useAuth();
+  const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
 
   const selectedDeveloper = useMemo(() => {
@@ -237,18 +237,29 @@ const Index = () => {
               </DropdownMenu> :
 
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => navigate('/auth?type=business')}
-                disabled={isLoading}
-                className="px-4 lg:px-5 py-2.5 min-h-[44px] border border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-colors disabled:opacity-50 text-sm">
-                Business Login
-              </button>
-              <button
-                onClick={() => navigate('/auth')}
-                disabled={isLoading}
-                className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors disabled:opacity-50 text-sm">
-                {isLoading ? t("common.signingIn") : t("common.signIn")}
-              </button>
+              {isLoading ? (
+                <div className="h-10 w-24 rounded-lg bg-muted animate-pulse" />
+              ) : isReturningDevice ? (
+                <button
+                  onClick={() => navigate('/auth')}
+                  className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm flex items-center gap-2">
+                  <User className="w-4 h-4" />
+                  {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
+                </button>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate('/auth?type=business')}
+                    className="px-4 lg:px-5 py-2.5 min-h-[44px] border border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-colors text-sm">
+                    Business Login
+                  </button>
+                  <button
+                    onClick={() => navigate('/auth')}
+                    className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                    {t("common.signIn")}
+                  </button>
+                </>
+              )}
             </div>
             }
           </div>

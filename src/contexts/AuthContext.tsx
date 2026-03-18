@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User, Session } from '@supabase/supabase-js';
 import { supabase } from '@/integrations/supabase/client';
 import { lovable } from '@/integrations/lovable';
-import { registerDevice, markIntentionalLogout, refreshDeviceExpiry } from '@/utils/deviceAuth';
+import { registerDevice, markIntentionalLogout, refreshDeviceExpiry, checkDeviceRegistered } from '@/utils/deviceAuth';
 
 type AppRole = 'user' | 'buyer' | 'business' | 'admin';
 type AccountTypeIntent = 'buyer' | 'business';
@@ -25,6 +25,10 @@ interface AuthContextType {
   profile: Profile | null;
   role: AppRole | null;
   isLoading: boolean;
+  /** True when no active session but device was previously registered (known device) */
+  isReturningDevice: boolean;
+  /** Email hint from device token for returning-user UX */
+  returningDeviceEmail: string | null;
   signUp: (email: string, password: string, fullName?: string, accountType?: string) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
@@ -41,6 +45,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<Profile | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Returning device state — computed after auth hydration completes
+  const [isReturningDevice, setIsReturningDevice] = useState(false);
+  const [returningDeviceEmail, setReturningDeviceEmail] = useState<string | null>(null);
 
   const fetchUserRole = async (userId: string) => {
     try {
@@ -79,6 +87,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setRole(roleData);
   };
 
+  // Compute returning-device state whenever auth finishes loading
+  const updateReturningDeviceState = (hasSession: boolean) => {
+    if (hasSession) {
+      setIsReturningDevice(false);
+      setReturningDeviceEmail(null);
+      return;
+    }
+    const device = checkDeviceRegistered();
+    if (device.registered && !device.blockedByLogout) {
+      setIsReturningDevice(true);
+      setReturningDeviceEmail(device.email || null);
+    } else {
+      setIsReturningDevice(false);
+      setReturningDeviceEmail(null);
+    }
+  };
+
   useEffect(() => {
     let isMounted = true;
 
@@ -87,23 +112,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       async (event, session) => {
         if (!isMounted) return;
 
-        // Auto-clear on token refresh failure
+        // Only force sign-out on explicit token refresh failure
         if (event === 'TOKEN_REFRESHED' && !session) {
           console.warn('Token refresh failed, clearing stale session');
-          await supabase.auth.signOut();
           setSession(null);
           setUser(null);
           setProfile(null);
           setRole(null);
+          updateReturningDeviceState(false);
           return;
         }
         
         setSession(session);
         setUser(session?.user ?? null);
 
-        // Register device token on login
+        // Register/refresh device token on any valid session
         if (session?.user) {
           registerDevice(session.user.id, session.user.email || '');
+          refreshDeviceExpiry();
         }
 
         // Defer profile/role fetch to avoid deadlock
@@ -123,6 +149,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setProfile(null);
           setRole(null);
         }
+
+        // Update returning-device state after auth change
+        if (isMounted) {
+          updateReturningDeviceState(!!session?.user);
+        }
       }
     );
 
@@ -132,14 +163,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data: { session }, error } = await supabase.auth.getSession();
         if (!isMounted) return;
 
-        // If there's a stale/invalid session, clear it automatically
+        // Only clear on actual errors, not on empty sessions
         if (error) {
-          console.warn('Stale session detected, signing out:', error.message);
-          await supabase.auth.signOut();
+          console.warn('Session retrieval error:', error.message);
+          // Don't aggressively sign out — just treat as no session
           setSession(null);
           setUser(null);
           setProfile(null);
           setRole(null);
+          updateReturningDeviceState(false);
           return;
         }
 
@@ -157,6 +189,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setProfile(profileData);
             setRole(roleData);
           }
+        }
+
+        if (isMounted) {
+          updateReturningDeviceState(!!session?.user);
         }
       } finally {
         if (isMounted) setIsLoading(false);
@@ -197,7 +233,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const signInWithGoogle = async (accountType: AccountTypeIntent = 'buyer') => {
-    // Store intent in localStorage so we can pick it up after OAuth redirect
     localStorage.setItem('oauth_account_type', accountType);
 
     const result = await lovable.auth.signInWithOAuth('google', {
@@ -235,6 +270,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setProfile(null);
     setRole(null);
+    // After explicit logout, device is known but blocked
+    setIsReturningDevice(false);
+    setReturningDeviceEmail(null);
   };
 
   return (
@@ -245,6 +283,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         profile,
         role,
         isLoading,
+        isReturningDevice,
+        returningDeviceEmail,
         signUp,
         signIn,
         signInWithGoogle,
