@@ -76,16 +76,19 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       onClick={onClick}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-start group overflow-hidden`}
+      className={`relative flex flex-col items-center gap-1 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-center group overflow-hidden`}
     >
-      <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
-        <Sparkles className={`w-4 h-4 ${cfg.iconColor}`} />
+      <div className="flex items-center gap-1.5">
+        <Sparkles className={`w-3.5 h-3.5 ${cfg.iconColor}`} />
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">AI Insights</span>
       </div>
 
-      <div className={`transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}>
-        <span className="text-xs font-bold text-foreground leading-tight block">AI Insights</span>
-        <span className={`text-[10px] text-muted-foreground leading-snug block mt-0.5`}>
-          {current.metric_value} · {cfg.label}
+      <div className={`transition-opacity duration-300 w-full flex flex-col items-center ${fading ? "opacity-0" : "opacity-100"}`}>
+        <span className={`text-2xl md:text-3xl font-black leading-none ${cfg.color} tracking-tight`}>
+          {current.metric_value}
+        </span>
+        <span className="text-[10px] text-muted-foreground leading-snug mt-1">
+          {cfg.label}
         </span>
       </div>
 
