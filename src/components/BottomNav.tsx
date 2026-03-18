@@ -139,7 +139,7 @@ const MobileNavSheet = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role, isLoading } = useAuth();
+  const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
 
   const navLinks = [
     { label: t("nav.developers"), href: "/directory" },

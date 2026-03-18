@@ -28,20 +28,9 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasExpiredRef = useRef(false);
 
-  // Device that has logged in before is NOT a guest — skip timer entirely
-  // Even if the user explicitly logged out, the device is still "known"
-  // so we don't punish them with the preview timer again.
-  const isKnownDevice = (() => {
-    try {
-      const raw = localStorage.getItem('r8_device_token');
-      if (!raw) return false;
-      const token = JSON.parse(raw);
-      const fingerprint = btoa(`${navigator.userAgent}|${screen.width}|${screen.height}`).slice(0, 32);
-      return token.fingerprint === fingerprint && token.expiresAt > Date.now();
-    } catch {
-      return false;
-    }
-  })();
+  // Use shared device-auth helper instead of duplicating fingerprint logic
+  const device = checkDeviceRegistered();
+  const isKnownDevice = device.registered || device.blockedByLogout;
   const isGuest = !isLoading && !user && !isKnownDevice;
 
   const clearTimer = useCallback(() => {
@@ -112,16 +101,13 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const grantBonusTime = useCallback(() => {
     if (hasBonusBeenUsed) return;
 
-    // Mark bonus as used
     localStorage.setItem(BONUS_USED_KEY, '1');
     setHasBonusBeenUsed(true);
 
-    // Extend the start time so we get bonus seconds from NOW
     const startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
     const newTotalDuration = elapsed + BONUS_SECONDS;
 
-    // Update the total duration by adjusting start time
     const newStartTime = Date.now() - elapsed * 1000;
     localStorage.setItem(STORAGE_KEY, String(newStartTime));
 
@@ -150,7 +136,6 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
 export function useGuestTimer() {
   const ctx = useContext(GuestTimerContext);
   if (!ctx) {
-    // Return safe defaults if used outside provider (e.g. during HMR or lazy load)
     return {
       secondsLeft: 0,
       isExpired: false,

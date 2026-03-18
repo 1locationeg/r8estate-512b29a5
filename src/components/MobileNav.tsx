@@ -17,7 +17,7 @@ interface MobileNavProps {
 export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role, isLoading } = useAuth();
+  const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const [open, setOpen] = useState(false);
 
   const navLinks = [
