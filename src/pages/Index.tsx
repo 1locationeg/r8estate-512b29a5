@@ -294,9 +294,9 @@ const Index = () => {
                   <div className="mb-3 max-w-3xl mx-auto">
                     {userMode === "buyers" ?
                  <>
-                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
+                    <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent">
                           {t("hero.tagline")}
-                        </p>
+                         </p>
                          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mt-1.5">
                             <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
                               <Shield className="w-3.5 h-3.5 text-verified" />
