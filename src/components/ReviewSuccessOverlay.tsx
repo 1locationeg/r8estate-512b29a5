@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Trophy, Star, PartyPopper } from 'lucide-react';
+import { CheckCircle2, Trophy, Star, PartyPopper, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConfettiCelebration } from '@/components/ConfettiCelebration';
+import { useNavigate } from 'react-router-dom';
 
 interface ReviewSuccessOverlayProps {
   open: boolean;
@@ -20,6 +21,7 @@ export function ReviewSuccessOverlay({
 }: ReviewSuccessOverlayProps) {
   const [showContent, setShowContent] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
@@ -89,10 +91,20 @@ export function ReviewSuccessOverlay({
           </div>
         )}
 
-        {/* CTA */}
-        <Button onClick={onClose} className="w-full mt-2">
-          Continue
-        </Button>
+        {/* CTAs */}
+        <div className="flex gap-2 w-full mt-2">
+          <Button
+            variant="outline"
+            className="flex-1 gap-1.5"
+            onClick={() => { onClose(); navigate('/reviews'); }}
+          >
+            <Eye className="w-4 h-4" />
+            My Reviews
+          </Button>
+          <Button onClick={onClose} className="flex-1">
+            Continue
+          </Button>
+        </div>
       </div>
     </div>
   );
