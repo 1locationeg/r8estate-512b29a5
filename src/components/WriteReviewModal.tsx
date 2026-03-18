@@ -431,25 +431,17 @@ export const WriteReviewModal = ({
           .eq("user_id", user.id);
 
         const isFirstReview = totalReviews === 1;
-
-        if (isFirstReview) {
-          setFirstReviewCelebration(true);
-           toast({
-             title: t("form.first_review_badge"),
-             description: t("form.first_review_badge_desc"),
-             duration: 6000,
-          });
-          setTimeout(() => setFirstReviewCelebration(false), 4000);
-        } else {
-           toast({
-             title: t("form.review_submitted"),
-             description: t("form.review_submitted_auth", { name: developerName, hasVerification: verificationFiles.length > 0 }),
-           });
-        }
+        const submittedRating = rating;
 
         resetForm();
-        onReviewSubmitted?.();
         onOpenChange(false);
+
+        // Show success overlay
+        setSuccessRating(submittedRating);
+        setSuccessIsFirst(isFirstReview);
+        setShowSuccessOverlay(true);
+
+        onReviewSubmitted?.();
       }
     } catch (e) {
       console.error("Review submission error:", e);
