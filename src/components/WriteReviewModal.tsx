@@ -345,8 +345,8 @@ export const WriteReviewModal = ({
   // Submit — guest or authenticated
   const handleSubmit = async () => {
     if (rating === 0) {
-      toast({ title: "Rating required", description: "Please select a star rating.", variant: "destructive" });
-      return;
+       toast({ title: t("form.rating_required"), description: t("form.rating_required_desc"), variant: "destructive" });
+       return;
     }
     if (!content.trim()) {
       toast({ title: "Review required", description: "Please write your review.", variant: "destructive" });
