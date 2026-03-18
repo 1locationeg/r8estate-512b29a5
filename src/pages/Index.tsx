@@ -18,7 +18,7 @@ import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2 } from "lucide-react";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -75,6 +75,14 @@ const Index = () => {
     return '/buyer';
   };
 
+  const switchToBusinessView = () => {
+    setUserMode("industry");
+    setSelectedDeveloperId(null);
+    setSpecialViewItem(null);
+    setActiveView(null);
+    setShowIndustryCategories(false);
+  };
+
   const handleQuickAction = (actionKey: string) => {
     switch (actionKey) {
       case 'compare':
@@ -112,7 +120,7 @@ const Index = () => {
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col overflow-x-hidden w-full max-w-full">
       {/* Header */}
       <header className="bg-background shadow-sm border-b border-border">
-        <div className="container mx-auto px-3 py-0.5 flex items-center justify-between">
+        <div className="container mx-auto px-3 py-0.5 flex items-center justify-between gap-2">
           {/* Logo + Brand in header */}
           <button
             onClick={() => navigate('/')}
@@ -130,19 +138,19 @@ const Index = () => {
             </div>
           </button>
 
-          {/* Business Toggle */}
-          <ViewToggle
-            onViewChange={(view) => {
-              setUserMode(view);
-              setSelectedDeveloperId(null);
-              setSpecialViewItem(null);
-              setActiveView(null);
-              setShowIndustryCategories(false);
-            }} />
-
+          <div className="hidden md:flex shrink-0">
+            <ViewToggle onViewChange={() => switchToBusinessView()} />
+          </div>
 
           {/* Mobile compact actions */}
-          <div className="flex md:hidden items-center gap-1">
+          <div className="flex md:hidden items-center gap-1 shrink-0">
+            <button
+              onClick={switchToBusinessView}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all"
+              aria-label="Switch to business view">
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Business</span>
+            </button>
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
@@ -150,7 +158,6 @@ const Index = () => {
               }}
               className="p-2 rounded-lg hover:bg-secondary transition-colors"
               aria-label="Search">
-              
               <Search className="w-5 h-5 text-muted-foreground" />
             </button>
             <LanguageSwitcher />
