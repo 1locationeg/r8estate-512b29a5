@@ -329,10 +329,10 @@ export const WriteReviewModal = ({
       const preview = URL.createObjectURL(file);
       setAttachments((prev) => [...prev, { file, preview, type: "receipt" }]);
 
-      toast({
-        title: "📸 Receipt captured!",
-        description: "Your receipt has been submitted for admin verification.",
-      });
+       toast({
+         title: t("form.receipt_captured"),
+         description: t("form.receipt_captured_desc"),
+       });
     } catch (err) {
       console.error("Receipt upload error:", err);
       toast({ title: "Upload failed", description: "Could not upload receipt. Please try again.", variant: "destructive" });
