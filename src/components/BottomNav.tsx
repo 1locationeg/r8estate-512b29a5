@@ -224,7 +224,6 @@ const MobileNavSheet = ({
                <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
                  {returningDeviceEmail ? t("nav.continue_as", { name: returningDeviceEmail.split('@')[0] }) : t("nav.continue_to_account")}
                </Button>
-              </Button>
             ) : (
               <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
                 {t("common.signIn")}

@@ -252,10 +252,9 @@ export function ReviewsCarousel() {
                     {isExpanded && isLong && (
                       <button
                         onClick={() => toggleExpand(review.id)}
-                       className="text-xs font-medium text-primary hover:underline mt-1"
-                     >
-                       {t("review.show_less")}
-                     </button>
+                        className="text-xs font-medium text-primary hover:underline mt-1"
+                      >
+                        {t("review.show_less")}
                       </button>
                     )}
                   </div>
