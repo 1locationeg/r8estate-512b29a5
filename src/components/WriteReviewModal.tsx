@@ -44,6 +44,7 @@ import { useNavigate } from "react-router-dom";
 import { ConfettiCelebration } from "@/components/ConfettiCelebration";
 import { Trophy } from "lucide-react";
 import { TrustSignals } from "@/components/TrustSignals";
+import { ReviewSuccessOverlay } from "@/components/ReviewSuccessOverlay";
 
 interface WriteReviewModalProps {
   open: boolean;
@@ -76,6 +77,9 @@ export const WriteReviewModal = ({
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [firstReviewCelebration, setFirstReviewCelebration] = useState(false);
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
+  const [successIsFirst, setSuccessIsFirst] = useState(false);
+  const [successRating, setSuccessRating] = useState(5);
 
   // Guest vs authenticated mode
   const isGuest = !user;
@@ -427,25 +431,17 @@ export const WriteReviewModal = ({
           .eq("user_id", user.id);
 
         const isFirstReview = totalReviews === 1;
-
-        if (isFirstReview) {
-          setFirstReviewCelebration(true);
-           toast({
-             title: t("form.first_review_badge"),
-             description: t("form.first_review_badge_desc"),
-             duration: 6000,
-          });
-          setTimeout(() => setFirstReviewCelebration(false), 4000);
-        } else {
-           toast({
-             title: t("form.review_submitted"),
-             description: t("form.review_submitted_auth", { name: developerName, hasVerification: verificationFiles.length > 0 }),
-           });
-        }
+        const submittedRating = rating;
 
         resetForm();
-        onReviewSubmitted?.();
         onOpenChange(false);
+
+        // Show success overlay
+        setSuccessRating(submittedRating);
+        setSuccessIsFirst(isFirstReview);
+        setShowSuccessOverlay(true);
+
+        onReviewSubmitted?.();
       }
     } catch (e) {
       console.error("Review submission error:", e);
@@ -504,7 +500,20 @@ export const WriteReviewModal = ({
     setContent((prev) => (prev ? `${prev} ${text}` : text));
   };
 
-  if (!open) return null;
+  if (!open && !showSuccessOverlay) return null;
+
+  // Success celebration overlay for authenticated users
+  if (showSuccessOverlay) {
+    return (
+      <ReviewSuccessOverlay
+        open={showSuccessOverlay}
+        onClose={() => setShowSuccessOverlay(false)}
+        isFirstReview={successIsFirst}
+        developerName={developerName}
+        rating={successRating}
+      />
+    );
+  }
 
   // Post-submit account prompt for guests
   if (showAccountPrompt && isGuest) {
