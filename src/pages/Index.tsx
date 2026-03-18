@@ -296,7 +296,7 @@ const Index = () => {
                  <div className="mt-1 mb-0 max-w-3xl mx-auto">
                    {userMode === "buyers" ?
                 <>
-                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
+                       <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight font-extrabold">
                          {t("hero.tagline")}
                        </p>
                        <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
