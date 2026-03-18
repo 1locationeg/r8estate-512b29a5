@@ -302,7 +302,7 @@ export function ReviewsCarousel() {
               {avgRating}
             </span>
             <span className="text-sm text-muted-foreground">
-              ({sortedReviews.length.toLocaleString()})
+              ({formatNumber(sortedReviews.length, i18n.language)})
             </span>
           </div>
           <div className="flex items-center gap-1">
