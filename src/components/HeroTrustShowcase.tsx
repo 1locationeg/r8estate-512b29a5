@@ -217,7 +217,10 @@ export const HeroTrustShowcase = () => {
           for (let i = 1; i <= 5; i++) {
             setTimeout(() => setRowsVisible(i), i * 80);
           }
-          setTimeout(() => setPhase("interactive"), 600);
+          setTimeout(() => {
+            setPhase("interactive");
+            startCycling();
+          }, 600);
         }, 400);
       }
     };
