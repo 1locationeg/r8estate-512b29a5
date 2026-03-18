@@ -222,8 +222,9 @@ const MobileNavSheet = ({
             ) : isLoading ? (
               <div className="h-10 w-full rounded-lg bg-muted animate-pulse" />
             ) : isReturningDevice ? (
-              <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
-                {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
+               <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
+                 {returningDeviceEmail ? t("nav.continue_as", { name: returningDeviceEmail.split('@')[0] }) : t("nav.continue_to_account")}
+               </Button>
               </Button>
             ) : (
               <Button className="w-full" onClick={() => { navigate("/auth"); onOpenChange(false); }}>
