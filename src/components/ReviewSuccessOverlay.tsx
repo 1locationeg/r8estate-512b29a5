@@ -21,6 +21,7 @@ export function ReviewSuccessOverlay({
 }: ReviewSuccessOverlayProps) {
   const [showContent, setShowContent] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (open) {
