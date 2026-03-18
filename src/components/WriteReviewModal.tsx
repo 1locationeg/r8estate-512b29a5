@@ -669,13 +669,13 @@ export const WriteReviewModal = ({
 
           {/* Review Title */}
           <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">Review Title</label>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder="Summarize your experience..."
-              maxLength={100}
-            />
+             <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.review_title")}</label>
+             <Input
+               value={title}
+               onChange={(e) => setTitle(e.target.value)}
+               placeholder={t("form.review_title_placeholder")}
+               maxLength={100}
+             />
           </div>
 
           {/* Review Content with AI toolbar — AI only for authenticated */}
