@@ -375,10 +375,10 @@ export const WriteReviewModal = ({
 
         setGuestReviewId((data as any).id);
         setShowAccountPrompt(true);
-        toast({
-          title: "✅ Review submitted!",
-          description: `Your review for ${developerName} has been submitted. Create an account to track it!`,
-        });
+         toast({
+           title: t("form.review_submitted"),
+           description: t("form.review_submitted_guest", { name: developerName }),
+         });
       } else {
         // Authenticated submit — existing flow
         const uploadedUrls: string[] = [];
