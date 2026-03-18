@@ -304,18 +304,7 @@ export function ReviewsCarousel() {
               ({formatNumber(sortedReviews.length, i18n.language)})
             </span>
           </div>
-          <div className="flex items-center gap-1">
-            <img
-              src={logoOnly}
-              alt="R8ESTATE"
-              className="h-4 sm:h-6 md:h-7 w-auto object-contain"
-            />
-            <img
-              src={sideLongLogo}
-              alt="R8ESTATE"
-              className="h-5 sm:h-7 md:h-9 object-contain rounded"
-            />
-          </div>
+          <BrandLogo size="xs" />
         </div>
       </div>
     </section>
