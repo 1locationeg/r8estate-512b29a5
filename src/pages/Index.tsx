@@ -484,12 +484,11 @@ const Index = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                
-                  Claim Your Business Profile
-                  <ArrowRight className="w-4 h-4" />
-                </button>
+                   onClick={() => navigate((role === 'business' || role === 'admin') ? (role === 'admin' ? '/admin' : '/business') : '/auth?type=business')}
+                   className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                   {(role === 'business' || role === 'admin') ? 'Go to Dashboard' : 'Claim Your Business Profile'}
+                   <ArrowRight className="w-4 h-4" />
+                 </button>
                 <button
                   onClick={() => {
                     setShowIndustryCategories((prev) => !prev);
