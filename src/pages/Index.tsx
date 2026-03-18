@@ -146,23 +146,28 @@ const Index = () => {
             </div>
           </button>
 
-          {/* Desktop view toggle */}
-          <div className="hidden md:block shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-secondary text-muted-foreground hover:text-foreground font-semibold text-sm transition-all">
-                <Building2 className="w-3.5 h-3.5" />
-                <span>Business</span>
-              </button>
-            ) : (
-              <button
-                onClick={switchToBuyerView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-md font-semibold text-sm transition-all">
-                <User className="w-3.5 h-3.5" />
-                <span>Buyer</span>
-              </button>
-            )}
+          {/* Desktop view toggle - pill switcher */}
+          <div className="hidden md:flex items-center shrink-0 p-0.5 bg-secondary rounded-full">
+            <button
+              onClick={switchToBuyerView}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                userMode === "buyers"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}>
+              <User className="w-3.5 h-3.5" />
+              <span>Buyer</span>
+            </button>
+            <button
+              onClick={switchToBusinessView}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
+                userMode === "industry"
+                  ? "bg-primary text-primary-foreground shadow-md"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}>
+              <Building2 className="w-3.5 h-3.5" />
+              <span>Business</span>
+            </button>
           </div>
 
           {/* Mobile compact actions */}
