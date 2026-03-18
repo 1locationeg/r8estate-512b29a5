@@ -212,12 +212,13 @@ export const HeroTrustShowcase = () => {
       } else {
         setDisplayScore(entranceTarget);
         setScore(entranceTarget);
-        // Show card after needle settles
+        // Show first row before the card fades in so there's no blank white frame
         setTimeout(() => {
-          setCardVisible(true);
-          // Stagger rows
-          for (let i = 1; i <= 5; i++) {
-            setTimeout(() => setRowsVisible(i), i * 80);
+          setRowsVisible(1);
+          requestAnimationFrame(() => setCardVisible(true));
+          // Stagger remaining rows
+          for (let i = 2; i <= 5; i++) {
+            setTimeout(() => setRowsVisible(i), (i - 1) * 80);
           }
           setTimeout(() => {
             setPhase("interactive");
