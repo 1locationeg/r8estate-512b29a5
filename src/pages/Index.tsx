@@ -153,42 +153,42 @@ const Index = () => {
 
           {/* Desktop view toggle */}
           <div className="hidden md:block shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:shadow-md">
+            {userMode === "buyers" ?
+            <button
+              onClick={switchToBusinessView}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:shadow-md">
                 <Building2 className="w-3.5 h-3.5 text-primary" />
                 <span>Business</span>
-              </button>
-            ) : (
-              <button
-                onClick={switchToBuyerView}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all hover:shadow-xl hover:scale-105 ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}>
+              </button> :
+
+            <button
+              onClick={switchToBuyerView}
+              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all hover:shadow-xl hover:scale-105 ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}>
                 <User className="w-3.5 h-3.5" />
                 <span>Buyer</span>
               </button>
-            )}
+            }
           </div>
 
           {/* Mobile compact actions */}
           <div className="flex md:hidden items-center gap-1 shrink-0">
-            {userMode === "buyers" ? (
-              <button
-                onClick={switchToBusinessView}
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10"
-                aria-label="Switch to business view">
+            {userMode === "buyers" ?
+            <button
+              onClick={switchToBusinessView}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10"
+              aria-label="Switch to business view">
                 <Building2 className="w-3.5 h-3.5 text-primary" />
                 <span>Business</span>
-              </button>
-            ) : (
-              <button
-                onClick={switchToBuyerView}
-                className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}
-                aria-label="Switch to buyer view">
+              </button> :
+
+            <button
+              onClick={switchToBuyerView}
+              className={`inline-flex items-center gap-1.5 px-3 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}
+              aria-label="Switch to buyer view">
                 <User className="w-3.5 h-3.5" />
                 <span>Buyer</span>
               </button>
-            )}
+            }
             <button
               onClick={() => {
                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
@@ -237,29 +237,29 @@ const Index = () => {
               </DropdownMenu> :
 
             <div className="flex items-center gap-2">
-              {isLoading ? (
-                <div className="h-10 w-24 rounded-lg bg-muted animate-pulse" />
-              ) : isReturningDevice ? (
-                <button
-                  onClick={() => navigate('/auth')}
-                  className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm flex items-center gap-2">
+              {isLoading ?
+              <div className="h-10 w-24 rounded-lg bg-muted animate-pulse" /> :
+              isReturningDevice ?
+              <button
+                onClick={() => navigate('/auth')}
+                className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm flex items-center gap-2">
                   <User className="w-4 h-4" />
                   {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
-                </button>
-              ) : (
-                <>
+                </button> :
+
+              <>
                   <button
-                    onClick={() => navigate('/auth?type=business')}
-                    className="px-4 lg:px-5 py-2.5 min-h-[44px] border border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-colors text-sm">
+                  onClick={() => navigate('/auth?type=business')}
+                  className="px-4 lg:px-5 py-2.5 min-h-[44px] border border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-colors text-sm">
                     Business Login
                   </button>
                   <button
-                    onClick={() => navigate('/auth')}
-                    className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                  onClick={() => navigate('/auth')}
+                  className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
                     {t("common.signIn")}
                   </button>
                 </>
-              )}
+              }
             </div>
             }
           </div>
@@ -282,7 +282,7 @@ const Index = () => {
                 <div className="relative text-center">
                     {/* Platform descriptor */}
                     <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-3 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-                      <span className="pb-1 border-b-2 border-accent/60">{t('hero.platformDescriptor')}</span>
+                      <span className="pb-1 border-b-2 border-accent/60 font-semibold border-dashed border-0">{t('hero.platformDescriptor')}</span>
                     </p>
                    {/* Interactive Trust Showcase — Gauge + Review Card */}
                    <HeroTrustShowcase />
@@ -449,15 +449,15 @@ const Index = () => {
           <>
           {/* ── Business / Industry View ── */}
           {/* Back to Buyer View banner for non-business users */}
-          {role !== 'business' && role !== 'admin' && (
+          {role !== 'business' && role !== 'admin' &&
             <button
               onClick={switchToBuyerView}
-              className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors"
-            >
+              className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors">
+              
               <ArrowRight className="w-3.5 h-3.5 rotate-180" />
               Not a business? Switch to Buyer View
             </button>
-          )}
+            }
           <div className="w-full max-w-3xl px-4 mb-4">
               {/* Business Feature Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
@@ -508,9 +508,9 @@ const Index = () => {
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
                 <button
-                   onClick={() => navigate((role === 'business' || role === 'admin') ? (role === 'admin' ? '/admin' : '/business') : '/auth?type=business')}
-                   className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                   {(role === 'business' || role === 'admin') ? 'Go to Dashboard' : 'Claim Your Business Profile'}
+                  onClick={() => navigate(role === 'business' || role === 'admin' ? role === 'admin' ? '/admin' : '/business' : '/auth?type=business')}
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                   {role === 'business' || role === 'admin' ? 'Go to Dashboard' : 'Claim Your Business Profile'}
                    <ArrowRight className="w-4 h-4" />
                  </button>
                 <button
