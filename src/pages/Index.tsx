@@ -336,15 +336,17 @@ const Index = () => {
 
           {/* Value Proposition */}
           {userMode === "buyers" && (
-            <p className="text-sm md:text-base text-muted-foreground text-center max-w-xs mx-auto tracking-wide font-medium mt-3 mb-1 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
+            <p className="text-sm md:text-base text-muted-foreground text-center max-w-xs mx-auto tracking-wide font-medium mt-3 mb-2 animate-[fadeInUp_0.8s_ease-out_0.6s_both]">
               {t("hero.valueProp")}
             </p>
           )}
 
-          {/* Mode-specific Description */}
-          <p className="text-[10px] md:text-sm text-muted-foreground/70 text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug mt-1">
-            {userMode === "buyers" ? t("hero.description") : t("hero.industryDescription")}
-          </p>
+          {/* Industry mode description only */}
+          {userMode === "industry" && (
+            <p className="text-[10px] md:text-sm text-muted-foreground/70 text-center max-w-2xl mb-2 md:mb-4 px-4 leading-snug mt-1">
+              {t("hero.industryDescription")}
+            </p>
+          )}
 
           {userMode === "buyers" ?
           <>
