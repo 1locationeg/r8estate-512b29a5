@@ -147,10 +147,6 @@ const Index = () => {
 
 
 
-  const verifiedBadges = [
-  { label: t("hero.badgeVerifiedDev"), icon: ShieldCheck },
-  { label: t("hero.badgeTrustedBroker"), icon: Shield },
-  { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle }];
 
 
   return (
