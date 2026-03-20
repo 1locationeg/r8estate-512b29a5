@@ -246,7 +246,10 @@
     "badgeVerifiedDev": "✓ مطور موثق",
     "badgeTrustedBroker": "✓ وسيط موثوق",
     "badgeVerifiedBuyer": "✓ مشتري موثق",
-    "featured": "مميز"
+    "featured": "مميز",
+    "joinBuyers": "انضم لأكثر من ١٢٠٠ مشتري راجعوا قبل ما يوقّعوا",
+    "shareExperience": "شارك تجربتك",
+    "checkDeveloper": "تحقق من أي مطور"
   },
   "categories": {
     "units": "الوحدات",
