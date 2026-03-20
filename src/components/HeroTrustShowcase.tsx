@@ -122,7 +122,7 @@ function getClosestScenario(score: number): ReviewScenario {
 
 const dimensionIcons: Record<string, typeof Clock> = {
   Delivery: Clock,
-  "Build quality": Hammer,
+  Quality: Hammer,
   "Brochure match": FileText,
   Response: MessageCircle,
 };
