@@ -64,7 +64,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
-      { label: "Build quality", value: "Average", positive: false },
+      { label: "Quality", value: "Average", positive: false },
       { label: "Response", value: "Slow", positive: false },
     ],
     trustLabel: "Mixed",
