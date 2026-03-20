@@ -47,7 +47,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
     dimensions: [
       { label: "Delivery", value: "18mo late", positive: false },
-      { label: "Build quality", value: "Poor", positive: false },
+      { label: "Quality", value: "Poor", positive: false },
       { label: "Response", value: "No reply", positive: false },
     ],
     trustLabel: "Low Trust",
@@ -64,7 +64,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
     dimensions: [
       { label: "Delivery", value: "3mo late", positive: false },
-      { label: "Build quality", value: "Average", positive: false },
+      { label: "Quality", value: "Average", positive: false },
       { label: "Response", value: "Slow", positive: false },
     ],
     trustLabel: "Mixed",
@@ -81,7 +81,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
-      { label: "Build quality", value: "Excellent", positive: true },
+      { label: "Quality", value: "Excellent", positive: true },
       { label: "Response", value: "Fast", positive: true },
     ],
     trustLabel: "High Trust",
@@ -98,7 +98,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\"",
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
-      { label: "Build quality", value: "Premium", positive: true },
+      { label: "Quality", value: "Premium", positive: true },
       { label: "Response", value: "Instant", positive: true },
     ],
     trustLabel: "Exceptional",
@@ -122,7 +122,7 @@ function getClosestScenario(score: number): ReviewScenario {
 
 const dimensionIcons: Record<string, typeof Clock> = {
   Delivery: Clock,
-  "Build quality": Hammer,
+  Quality: Hammer,
   "Brochure match": FileText,
   Response: MessageCircle,
 };
