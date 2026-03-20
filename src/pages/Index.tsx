@@ -329,7 +329,7 @@ const Index = () => {
                               onClick={() => {
                                 if (user) {
                                   const reviewSection = document.querySelector('[data-hero-search]');
-                                  if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); reviewSection.focus(); }
+                                  if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
                                 } else {
                                   navigate('/auth');
                                 }
