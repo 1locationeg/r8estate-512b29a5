@@ -246,7 +246,10 @@
     "badgeVerifiedDev": "Verified Developer ✓",
     "badgeTrustedBroker": "Trusted Broker ✓",
     "badgeVerifiedBuyer": "Verified Buyer ✓",
-    "featured": "Featured"
+    "featured": "Featured",
+    "joinBuyers": "Join 1,200+ buyers who checked before they signed",
+    "shareExperience": "Share Your Experience",
+    "checkDeveloper": "Check Any Developer"
   },
   "categories": {
     "units": "UNITS",

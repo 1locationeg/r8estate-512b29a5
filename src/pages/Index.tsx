@@ -316,7 +316,38 @@ const Index = () => {
                               <CheckCircle className="w-3.5 h-3.5 text-accent" />
                               {t("hero.benefit_confident")}
                             </button>
-                         </div>
+                          </div>
+
+                          {/* Social proof subtitle */}
+                          <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground italic mt-2.5 mb-1">
+                            {t("hero.joinBuyers")}
+                          </p>
+
+                          {/* CTA Buttons */}
+                          <div className="flex items-center justify-center gap-2.5 sm:gap-3 mt-1">
+                            <button
+                              onClick={() => {
+                                if (user) {
+                                  const reviewSection = document.querySelector('[data-hero-search]');
+                                  if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
+                                } else {
+                                  navigate('/auth');
+                                }
+                              }}
+                              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg border-2 border-primary text-primary font-bold text-xs sm:text-sm transition-all hover:bg-primary/5 hover:shadow-md active:scale-[0.97]"
+                            >
+                              {t("hero.shareExperience")}
+                            </button>
+                            <button
+                              onClick={() => {
+                                const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                                if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+                              }}
+                              className="px-4 sm:px-5 py-2 sm:py-2.5 rounded-lg bg-primary text-primary-foreground font-bold text-xs sm:text-sm shadow-lg transition-all hover:bg-primary/90 hover:shadow-xl active:scale-[0.97]"
+                            >
+                              {t("hero.checkDeveloper")}
+                            </button>
+                          </div>
                       </> :
                  <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
