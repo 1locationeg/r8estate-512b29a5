@@ -81,7 +81,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
     dimensions: [
       { label: "Delivery", value: "On time", positive: true },
-      { label: "Build quality", value: "Excellent", positive: true },
+      { label: "Quality", value: "Excellent", positive: true },
       { label: "Response", value: "Fast", positive: true },
     ],
     trustLabel: "High Trust",
