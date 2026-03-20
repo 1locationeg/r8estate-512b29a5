@@ -1,24 +1,47 @@
 
 
-# Refined Hero CTA Buttons — Lighter, Minimal, Animated
+# Auto-Update PWA Setup
 
-## Problem
-The CTA buttons are visually heavy (bold font, thick borders, solid fills, shadows) making the hero section feel crowded.
+## What This Does
+When you update the app, users who have it installed on their home screen (or open in a browser) will automatically get the latest version — either silently in the background or with a brief "Update available" prompt. No action needed from users.
 
-## Approach
+## How It Works
+A **service worker** runs in the background on users' devices. When you publish a new version, the service worker detects the change and either:
+- Silently updates and applies on next visit, OR
+- Shows a subtle toast saying "New version available" and auto-reloads
 
-### 1. Restyle buttons to be minimal and modern (Index.tsx, lines 317-340)
-- **"Share Your Experience"**: Remove `border-2`, use `border` (1px). Change `font-bold` → `font-medium`. Reduce padding slightly.
-- **"Check Any Developer"**: Remove `shadow-lg`, use subtle `shadow-sm`. Change `font-bold` → `font-semibold`. Use slightly rounded pill shape (`rounded-full`).
-- Both: Use `text-[11px] sm:text-xs` for smaller, cleaner text. Add `backdrop-blur-sm` for glass feel.
-- Social proof text: make it slightly more subtle with `opacity-80`.
+We'll use the **silent auto-reload** approach so users always get the latest without any interaction.
 
-### 2. Add entrance animation without framer-motion
-Since framer-motion isn't installed, use CSS keyframe animation (already have `fade-in` in tailwind config which does translateY(10px) + opacity). Apply `animate-fade-in` with staggered `animation-delay` via inline styles.
+## Technical Plan
 
-### 3. Files to change
-- **`src/pages/Index.tsx`** — Update button classes + add animation classes with staggered delays
+### 1. Install `vite-plugin-pwa` dependency
+Adds service worker generation and manifest support to the build.
 
-### Result
-Clean, airy CTAs with a gentle fade-in+slide-up entrance. No new dependencies needed.
+### 2. Configure `vite.config.ts`
+- Add `VitePWA` plugin with:
+  - `registerType: 'autoUpdate'` — silently updates in background
+  - Web app manifest (name, icons, theme color, display: standalone)
+  - `navigateFallbackDenylist: [/^\/~oauth/]` — protect auth flows
+  - Workbox config with sensible precache limits
+
+### 3. Create `public/manifest.webmanifest`
+- App name: R8ESTATE
+- Icons: existing `pwa-192x192.png` and `pwa-512x512.png`
+- Theme/background colors matching the app
+- `display: standalone`, `start_url: /`
+
+### 4. Update `index.html`
+- Add `<link rel="manifest">` tag
+- Add `<meta name="apple-mobile-web-app-capable">` and related iOS tags
+
+### 5. Add update detection in `src/main.tsx`
+- Register the service worker with auto-update
+- On `controllerchange` event, reload the page so users instantly see new content
+- This means: deploy → user opens app → gets new version automatically
+
+### Files to change
+1. `package.json` — add `vite-plugin-pwa` dependency
+2. `vite.config.ts` — configure PWA plugin
+3. `index.html` — add manifest link + PWA meta tags
+4. `src/main.tsx` — add service worker registration with auto-reload on update
 
