@@ -47,7 +47,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
     dimensions: [
       { label: "Delivery", value: "18mo late", positive: false },
-      { label: "Build quality", value: "Poor", positive: false },
+      { label: "Quality", value: "Poor", positive: false },
       { label: "Response", value: "No reply", positive: false },
     ],
     trustLabel: "Low Trust",
