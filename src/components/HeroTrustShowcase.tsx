@@ -98,7 +98,7 @@ const scenarios: ReviewScenario[] = [
     comment: "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\"",
     dimensions: [
       { label: "Delivery", value: "Early", positive: true },
-      { label: "Build quality", value: "Premium", positive: true },
+      { label: "Quality", value: "Premium", positive: true },
       { label: "Response", value: "Instant", positive: true },
     ],
     trustLabel: "Exceptional",
