@@ -304,10 +304,10 @@ const Index = () => {
                    <div className="mb-1.5 max-w-3xl mx-auto">
                     {userMode === "buyers" ?
                  <>
-                    <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up">
+                    <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
                           {t("hero.tagline_line1")}
                          </p>
-                    <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                    <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
                           {t("hero.tagline_line2")}
                          </p>
 
