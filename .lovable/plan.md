@@ -1,22 +1,59 @@
 
 
-# Shorten Dimension Labels to Single Words
+# Hero CTA: Icon-Only Buttons with Tooltips
 
-## Problem
-The dimension pills ("Build quality", "Delivery", etc.) wrap to two lines because the labels are too long for the pill layout.
+## Current State
+Two text buttons: "Share Your Experience" and "Check Any Developer" — pill-shaped, taking horizontal space.
 
-## Change
-Shorten all `label` values in the `dimensions` arrays across all 4 scenarios in `src/components/HeroTrustShowcase.tsx`:
+## Ideas & Options
 
-- `"Delivery"` → `"Delivery"` (already short, keep)
-- `"Build quality"` → `"Quality"`
-- `"Response"` → `"Response"` (already short, keep)
+### Option A: Glowing Icon Circles (Recommended)
+Two circular icon buttons with a subtle gradient glow ring and tooltip on hover/tap:
 
-This affects lines 50, 66, 83-85, 100-102 — changing `"Build quality"` to `"Quality"` in all 4 scenarios.
+```text
+  [ ✍️ ]    [ 🔍 ]
+   glow      glow
+```
 
-Also update the `dimensionIcons` map (around line 126) if it uses `"Build quality"` as a key — change to `"Quality"`.
+- **"Share Your Experience"** → `Pencil` or `MessageSquarePlus` icon — universally understood as "write/review"
+- **"Check Any Developer"** → `Search` or `ScanSearch` icon — universally understood as "search/investigate"
 
-### File: `src/components/HeroTrustShowcase.tsx`
-- Lines 50, 66, 84, 101: `"Build quality"` → `"Quality"`
-- `dimensionIcons` map: update key from `"Build quality"` to `"Quality"`
+Each button: `w-11 h-11 rounded-full` with a gradient border (primary → brand-red), glass-like `backdrop-blur`, and a soft pulsing glow animation. On hover, a `Tooltip` shows the full label text.
+
+### Option B: Floating Action Pill with Icon + Short Word
+Hybrid — icon with a 1-word label:
+
+```text
+  [ ✍ Review ]    [ 🔎 Search ]
+```
+
+Smaller text, icon-led. Still compact but zero guessing.
+
+### Option C: 3D-style Raised Icons
+Use `box-shadow` layering + gradient fills to create a pseudo-3D raised button effect:
+- Slight `translateY` on hover (lifts up)
+- Multi-layer shadows for depth
+- Gradient icon fill matching brand colors
+
+## Recommendation: Option A + C combined
+Circular icon buttons with 3D depth effect + tooltip. Clean, modern, zero clutter. The icons `MessageSquarePlus` and `ScanSearch` from Lucide are distinctive and self-explanatory.
+
+## Technical Plan
+
+### 1. Update `src/pages/Index.tsx` (lines 320-345)
+- Replace text buttons with two icon-only circular buttons
+- Use `MessageSquarePlus` (share experience) and `ScanSearch` (check developer)
+- Add gradient border via `bg-gradient-to-r from-primary to-brand-red` wrapper trick
+- Add 3D depth: multi-layer `shadow`, `hover:-translate-y-0.5` lift
+- Subtle pulse glow via CSS animation
+- Wrap each in `<Tooltip>` showing the translated label
+
+### 2. Add glow keyframe to `tailwind.config.ts`
+- Add `pulse-glow` keyframe: subtle box-shadow pulse animation
+
+### 3. No translation changes needed
+- Tooltip text reuses existing `hero.shareExperience` and `hero.checkDeveloper` keys
+
+### Result
+Two small, elegant, glowing icon circles that feel premium and AI-modern. Instantly recognizable. Tooltips ensure zero guessing. The 3D lift on hover adds tactile feedback.
 
