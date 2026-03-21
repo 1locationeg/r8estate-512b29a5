@@ -58,7 +58,11 @@ const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
         </span>
       </div>
 
-      <div className="flex items-center justify-between w-full mt-auto">
+      <div className="flex flex-col items-center gap-1.5 w-full mt-auto">
+        <div className="flex items-center gap-1.5 text-primary animate-pulse">
+          <Upload className="w-5 h-5" />
+          <span className="text-[11px] font-bold">{t("hero.contractUploadCta", "Upload yours →")}</span>
+        </div>
         <div className="flex gap-1">
           {terms.map((_, i) => (
             <span
@@ -66,10 +70,6 @@ const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
               className={`w-1 h-1 rounded-full transition-colors duration-300 ${i === activeIdx ? style.dot : "bg-muted-foreground/30"}`}
             />
           ))}
-        </div>
-        <div className="flex items-center gap-1.5 text-primary animate-pulse">
-          <Upload className="w-5 h-5" />
-          <span className="text-[11px] font-bold">{t("hero.contractUploadCta", "Upload yours →")}</span>
         </div>
       </div>
     </button>
