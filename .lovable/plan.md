@@ -1,22 +1,36 @@
 
 
-# Shorten Dimension Labels to Single Words
+# Move "More" Menu to Header, Replace with Portfolio in Bottom Nav
 
-## Problem
-The dimension pills ("Build quality", "Delivery", etc.) wrap to two lines because the labels are too long for the pill layout.
+## Changes
 
-## Change
-Shorten all `label` values in the `dimensions` arrays across all 4 scenarios in `src/components/HeroTrustShowcase.tsx`:
+### 1. `src/components/BottomNav.tsx`
+- **Remove** the "More" button (lines 98-105) and the `MobileNavSheet` trigger/state (`menuOpen`, `setMenuOpen`)
+- **Remove** the `MobileNavSheet` rendering block (lines 109-117)
+- **Remove** the `MobileNavSheet` component definition (lines 122-229) — it stays but moves to be triggered from elsewhere
+- **Add** a "Portfolio" button (using `Briefcase` or `FolderHeart` icon from lucide) that navigates to `/portfolio` (auth-gated: redirect to `/auth` if no user)
+- Place it in the last slot where "More" was
 
-- `"Delivery"` → `"Delivery"` (already short, keep)
-- `"Build quality"` → `"Quality"`
-- `"Response"` → `"Response"` (already short, keep)
+### 2. `src/pages/Index.tsx` (mobile header, ~lines 208-219)
+- **Add** a "More" hamburger menu button (`Menu` icon) to the right of `NotificationBell` in the mobile header actions
+- Wire it to open the `MobileNavSheet` (import and use state)
+- Import `MobileNavSheet` from BottomNav or extract it
 
-This affects lines 50, 66, 83-85, 100-102 — changing `"Build quality"` to `"Quality"` in all 4 scenarios.
+### 3. `src/components/DashboardHeader.tsx`
+- **Add** the same "More" menu button to the right of `NotificationBell` (for mobile only, `md:hidden`)
+- Wire it to open `MobileNavSheet`
 
-Also update the `dimensionIcons` map (around line 126) if it uses `"Build quality"` as a key — change to `"Quality"`.
+### 4. Extract `MobileNavSheet` to shared location
+- Keep the `MobileNavSheet` component in `BottomNav.tsx` but **export** it so `Index.tsx` and `DashboardHeader.tsx` can import it
+- Or move it to its own file for cleanliness
 
-### File: `src/components/HeroTrustShowcase.tsx`
-- Lines 50, 66, 84, 101: `"Build quality"` → `"Quality"`
-- `dimensionIcons` map: update key from `"Build quality"` to `"Quality"`
+### Summary of bottom nav after change:
+```text
+Reviews | Categories | [Logo] | Insights | Community | Portfolio
+```
+
+Header mobile actions after change:
+```text
+[mode toggle] [search] [lang] [bell] [≡ more]
+```
 
