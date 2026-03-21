@@ -488,7 +488,7 @@ const Index = () => {
                       </button>);
 
                 })}
-                  <ContractCheckCard onClick={() => handleQuickAction('legal')} />
+                  <ContractCheckCard onClick={() => setShowContractModal(true)} />
                   <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
               </div>
