@@ -62,6 +62,59 @@ export type Database = {
         }
         Relationships: []
       }
+      business_claims: {
+        Row: {
+          admin_notes: string | null
+          business_mock_id: string | null
+          business_name: string
+          business_profile_id: string | null
+          created_at: string
+          document_url: string | null
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          business_mock_id?: string | null
+          business_name: string
+          business_profile_id?: string | null
+          created_at?: string
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          business_mock_id?: string | null
+          business_name?: string
+          business_profile_id?: string | null
+          created_at?: string
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_claims_business_profile_id_fkey"
+            columns: ["business_profile_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       business_profiles: {
         Row: {
           company_name: string | null

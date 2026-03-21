@@ -23,6 +23,7 @@ import AdminGuestReviews from '@/components/AdminGuestReviews';
 import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
+import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1994,6 +1995,7 @@ const AdminDashboard = () => {
     { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
     { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
+    { icon: <Shield className="w-4 h-4" />, label: 'Claims', path: '/admin/claims' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
     { icon: <Shield className="w-4 h-4" />, label: 'Moderation', path: '/admin/moderation' },
     { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
@@ -2033,6 +2035,7 @@ const AdminDashboard = () => {
         <Route path="users" element={<AdminUsers />} />
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="business" element={<AdminBusiness />} />
+        <Route path="claims" element={<AdminBusinessClaims />} />
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="moderation" element={<AdminModerationQueue />} />
         <Route path="guest-reviews" element={<AdminGuestReviews />} />

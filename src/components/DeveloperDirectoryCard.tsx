@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, UserPlus, UserCheck, MessageCircle } from "lucide-react";
+import { Bookmark, UserPlus, UserCheck, MessageCircle, Shield } from "lucide-react";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
+import { ClaimBusinessModal } from "@/components/ClaimBusinessModal";
 
 interface DeveloperDirectoryCardProps {
   developer: Developer;
@@ -17,6 +19,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [claimOpen, setClaimOpen] = useState(false);
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const { trackClick, startLinger, cancelLinger } = useTrackInterest();
@@ -87,9 +90,17 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
         </div>
 
         {!developer.isClaimed && (
-          <Badge variant="outline" className="bg-accent/10 text-accent border-accent">
-            {t("developers.unclaimedProfile")}
-          </Badge>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!user) { navigate("/auth"); return; }
+              setClaimOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-accent text-accent bg-accent/10 hover:bg-accent/20 transition-colors text-xs font-medium"
+          >
+            <Shield className="w-3.5 h-3.5" />
+            {t("developers.claimBusiness", "Claim this business")}
+          </button>
         )}
 
         <button
@@ -103,6 +114,13 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           <span>{t("community.askCommunity", "Ask the community")}</span>
         </button>
       </div>
+
+      <ClaimBusinessModal
+        open={claimOpen}
+        onClose={() => setClaimOpen(false)}
+        businessName={developer.name}
+        businessId={developer.id}
+      />
     </Card>
   );
 };
