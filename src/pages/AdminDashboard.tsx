@@ -23,6 +23,7 @@ import AdminGuestReviews from '@/components/AdminGuestReviews';
 import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
+import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
