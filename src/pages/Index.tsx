@@ -22,6 +22,7 @@ import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu } from "lucide-react";
 import ContractCheckCard from "@/components/ContractCheckCard";
+import ContractUploadModal from "@/components/ContractUploadModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
@@ -51,6 +52,7 @@ const Index = () => {
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [showContractModal, setShowContractModal] = useState(false);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
 
@@ -486,7 +488,7 @@ const Index = () => {
                       </button>);
 
                 })}
-                  <ContractCheckCard onClick={() => handleQuickAction('legal')} />
+                  <ContractCheckCard onClick={() => setShowContractModal(true)} />
                   <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
               </div>
@@ -660,6 +662,7 @@ const Index = () => {
         getDashboardRoute={getDashboardRoute}
       />
 
+      <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
 
     </div>);
