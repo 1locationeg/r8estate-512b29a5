@@ -1,12 +1,14 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Developer } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bookmark, UserPlus, UserCheck, MessageCircle } from "lucide-react";
+import { Bookmark, UserPlus, UserCheck, MessageCircle, Shield } from "lucide-react";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
+import { ClaimBusinessModal } from "@/components/ClaimBusinessModal";
 
 interface DeveloperDirectoryCardProps {
   developer: Developer;
