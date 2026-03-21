@@ -13,13 +13,14 @@ import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { MobileNav } from "@/components/MobileNav";
+import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu } from "lucide-react";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
@@ -48,6 +49,7 @@ const Index = () => {
   const [togglePulse, setTogglePulse] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
 
@@ -216,6 +218,13 @@ const Index = () => {
             </button>
             <LanguageSwitcher />
             <NotificationBell />
+            <button
+              onClick={() => setMoreMenuOpen(true)}
+              className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden"
+              aria-label="More menu"
+            >
+              <Menu className="w-4 h-4 text-muted-foreground" />
+            </button>
           </div>
 
           {/* Desktop Actions */}
@@ -642,6 +651,13 @@ const Index = () => {
       {/* Quick Action Modals */}
       <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
       <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
+
+      <MobileNavSheet
+        open={moreMenuOpen}
+        onOpenChange={setMoreMenuOpen}
+        onSignOut={handleSignOut}
+        getDashboardRoute={getDashboardRoute}
+      />
 
       <Footer />
 
