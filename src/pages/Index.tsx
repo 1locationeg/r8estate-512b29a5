@@ -49,6 +49,7 @@ const Index = () => {
   const [togglePulse, setTogglePulse] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
+  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
 
