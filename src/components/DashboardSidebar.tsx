@@ -147,13 +147,22 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
 export const DashboardSidebar = (props: DashboardSidebarProps) => {
   const isControlled = typeof props.mobileOpen === 'boolean' && typeof props.onMobileOpenChange === 'function';
-  if (!isControlled) return null;
 
   return (
-    <Sheet open={props.mobileOpen} onOpenChange={props.onMobileOpenChange}>
-      <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
-        <SidebarContent {...props} onNavigate={() => props.onMobileOpenChange!(false)} />
-      </SheetContent>
-    </Sheet>
+    <>
+      {/* Desktop: permanent sidebar */}
+      <aside className="hidden md:flex w-[260px] flex-shrink-0 h-screen sticky top-0 overflow-y-auto border-e border-border">
+        <SidebarContent {...props} />
+      </aside>
+
+      {/* Mobile: Sheet drawer */}
+      {isControlled && (
+        <Sheet open={props.mobileOpen} onOpenChange={props.onMobileOpenChange}>
+          <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
+            <SidebarContent {...props} onNavigate={() => props.onMobileOpenChange!(false)} />
+          </SheetContent>
+        </Sheet>
+      )}
+    </>
   );
 };
