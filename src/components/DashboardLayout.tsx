@@ -14,14 +14,14 @@ export const DashboardLayout = ({ children, title, breadcrumb, sidebarProps }: D
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-background flex flex-col overflow-x-hidden w-full">
+    <div className="min-h-screen bg-background flex overflow-x-hidden w-full">
       <DashboardSidebar
         {...sidebarProps}
         mobileOpen={sidebarOpen}
         onMobileOpenChange={setSidebarOpen}
       />
 
-      <div className="flex-1 flex flex-col overflow-x-hidden">
+      <div className="flex-1 flex flex-col overflow-x-hidden min-w-0">
         <DashboardHeader
           title={title}
           breadcrumb={breadcrumb}
