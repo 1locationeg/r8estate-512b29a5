@@ -19,7 +19,8 @@ import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2, User } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, Scale, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch } from "lucide-react";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
@@ -316,33 +317,54 @@ const Index = () => {
                              {t("hero.joinBuyers")}
                            </p>
 
-                           {/* CTA Buttons */}
-                           <div className="flex items-center justify-center gap-2.5 sm:gap-3 mt-1">
-                             <button
-                               onClick={() => {
-                                 if (user) {
-                                   const reviewSection = document.querySelector('[data-hero-search]');
-                                   if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
-                                 } else {
-                                   navigate('/auth');
-                                 }
-                               }}
-                               className="animate-fade-in-up px-4 sm:px-5 py-1.5 sm:py-2 rounded-full border border-primary/60 text-primary font-medium text-[11px] sm:text-xs backdrop-blur-sm transition-all hover:bg-primary/5 hover:border-primary active:scale-[0.97]"
-                               style={{ animationDelay: '200ms' }}
-                             >
-                               {t("hero.shareExperience")}
-                             </button>
-                             <button
-                               onClick={() => {
-                                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                                 if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
-                               }}
-                               className="animate-fade-in-up px-4 sm:px-5 py-1.5 sm:py-2 rounded-full bg-primary text-primary-foreground font-semibold text-[11px] sm:text-xs shadow-sm transition-all hover:bg-primary/90 hover:shadow-md active:scale-[0.97]"
-                               style={{ animationDelay: '300ms' }}
-                             >
-                               {t("hero.checkDeveloper")}
-                             </button>
-                           </div>
+                            {/* CTA Icon Buttons */}
+                            <TooltipProvider delayDuration={200}>
+                              <div className="flex items-center justify-center gap-4 sm:gap-5 mt-1">
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() => {
+                                        if (user) {
+                                          const reviewSection = document.querySelector('[data-hero-search]');
+                                          if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
+                                        } else {
+                                          navigate('/auth');
+                                        }
+                                      }}
+                                      className="animate-fade-in-up w-11 h-11 rounded-full bg-gradient-to-br from-primary via-brand-red to-accent p-[1.5px] shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.25),0_2px_4px_-1px_hsl(var(--primary)/0.1)] hover:-translate-y-0.5 hover:shadow-lg transition-all animate-pulse-glow"
+                                      style={{ animationDelay: '200ms' }}
+                                    >
+                                      <div className="w-full h-full rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                                        <MessageSquarePlus className="w-5 h-5 text-primary" />
+                                      </div>
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="bottom" className="text-xs font-medium">
+                                    {t("hero.shareExperience")}
+                                  </TooltipContent>
+                                </Tooltip>
+
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <button
+                                      onClick={() => {
+                                        const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                                        if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+                                      }}
+                                      className="animate-fade-in-up w-11 h-11 rounded-full bg-gradient-to-br from-primary via-brand-red to-accent p-[1.5px] shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.25),0_2px_4px_-1px_hsl(var(--primary)/0.1)] hover:-translate-y-0.5 hover:shadow-lg transition-all animate-pulse-glow"
+                                      style={{ animationDelay: '300ms' }}
+                                    >
+                                      <div className="w-full h-full rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
+                                        <ScanSearch className="w-5 h-5 text-primary" />
+                                      </div>
+                                    </button>
+                                  </TooltipTrigger>
+                                  <TooltipContent side="bottom" className="text-xs font-medium">
+                                    {t("hero.checkDeveloper")}
+                                  </TooltipContent>
+                                </Tooltip>
+                              </div>
+                            </TooltipProvider>
                       </> :
                  <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
