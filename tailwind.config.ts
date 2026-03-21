@@ -121,6 +121,7 @@ export default {
         "marquee-rtl": "marquee-rtl 30s linear infinite",
         "bounce-in": "bounce-in 0.6s ease-out",
         "shimmer": "shimmer 3s ease-in-out infinite",
+        "pulse-glow": "pulse-glow 3s ease-in-out infinite",
       },
     },
   },
