@@ -620,6 +620,9 @@ export type Database = {
           is_anonymous: boolean
           is_verified: boolean
           rating: number
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
           title: string | null
           unit_type: string | null
           user_id: string
@@ -636,6 +639,9 @@ export type Database = {
           is_anonymous?: boolean
           is_verified?: boolean
           rating: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           title?: string | null
           unit_type?: string | null
           user_id: string
@@ -652,6 +658,9 @@ export type Database = {
           is_anonymous?: boolean
           is_verified?: boolean
           rating?: number
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
           title?: string | null
           unit_type?: string | null
           user_id?: string
