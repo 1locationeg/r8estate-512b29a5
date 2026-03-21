@@ -1995,6 +1995,7 @@ const AdminDashboard = () => {
     { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
     { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
+    { icon: <Shield className="w-4 h-4" />, label: 'Claims', path: '/admin/claims' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
     { icon: <Shield className="w-4 h-4" />, label: 'Moderation', path: '/admin/moderation' },
     { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
