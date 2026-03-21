@@ -1,36 +1,53 @@
 
 
-# Move "More" Menu to Header, Replace with Portfolio in Bottom Nav
+# Transform "Legal Advisory" Card into Interactive Contract Checker
 
-## Changes
+## The Idea
+Replace the static "Legal Advisory" card with an interactive "Contract Check" card that has a flip animation. The front shows a compelling CTA ("Upload Your Contract"), and the back shows a sample contract health preview with red/green indicators — creating curiosity and engagement without requiring the user to actually upload yet.
 
-### 1. `src/components/BottomNav.tsx`
-- **Remove** the "More" button (lines 98-105) and the `MobileNavSheet` trigger/state (`menuOpen`, `setMenuOpen`)
-- **Remove** the `MobileNavSheet` rendering block (lines 109-117)
-- **Remove** the `MobileNavSheet` component definition (lines 122-229) — it stays but moves to be triggered from elsewhere
-- **Add** a "Portfolio" button (using `Briefcase` or `FolderHeart` icon from lucide) that navigates to `/portfolio` (auth-gated: redirect to `/auth` if no user)
-- Place it in the last slot where "More" was
+## How It Works
 
-### 2. `src/pages/Index.tsx` (mobile header, ~lines 208-219)
-- **Add** a "More" hamburger menu button (`Menu` icon) to the right of `NotificationBell` in the mobile header actions
-- Wire it to open the `MobileNavSheet` (import and use state)
-- Import `MobileNavSheet` from BottomNav or extract it
+### Front of card (default view):
+- Icon: `FileSearch` (contract scanning vibe)
+- Title: "Check Your Contract" / "راجع عقدك"
+- Subtitle: "Spot risky clauses instantly" / "اكتشف البنود الخطرة فورًا"
+- Subtle pulse animation on the icon to draw attention
 
-### 3. `src/components/DashboardHeader.tsx`
-- **Add** the same "More" menu button to the right of `NotificationBell` (for mobile only, `md:hidden`)
-- Wire it to open `MobileNavSheet`
+### Back of card (flips on hover/tap):
+- A mini "contract health" preview showing 3 sample terms:
+  - `✓ Payment Plan` — green dot
+  - `⚠ Penalty Clause` — red dot  
+  - `✓ Handover Date` — green dot
+- Small CTA: "Upload yours →"
+- This teaser makes users curious to try the real feature
 
-### 4. Extract `MobileNavSheet` to shared location
-- Keep the `MobileNavSheet` component in `BottomNav.tsx` but **export** it so `Index.tsx` and `DashboardHeader.tsx` can import it
-- Or move it to its own file for cleanliness
+### On click:
+- Opens a modal or navigates to a dedicated contract checker page (future feature)
+- For now, shows a toast/modal saying "Coming Soon — Upload your contract to get a full AI review"
 
-### Summary of bottom nav after change:
-```text
-Reviews | Categories | [Logo] | Insights | Community | Portfolio
-```
+## Technical Plan
 
-Header mobile actions after change:
-```text
-[mode toggle] [search] [lang] [bell] [≡ more]
-```
+### 1. Create `src/components/ContractCheckCard.tsx` (new file)
+- CSS 3D flip card using `perspective`, `rotateY(180deg)`, `backface-visibility: hidden`
+- Front: icon + title + subtitle (matches quickAction card style)
+- Back: 3 sample term rows with green/red dots + "Upload yours" CTA
+- Auto-flips every 6s OR flips on hover/tap
+- On click: triggers the `handleQuickAction('legal')` callback
+
+### 2. Update `src/pages/Index.tsx` (lines 146-149)
+- Remove `legal` from `quickActions` array
+- In the grid (lines 471-490), render `<ContractCheckCard />` as the 3rd card slot instead of the generic quickAction button
+
+### 3. Update `src/i18n/locales/en.json`
+- Change `qaLegal` → "Check Your Contract"
+- Change `qaLegalDesc` → "Spot risky clauses instantly"
+- Add `hero.contractFront`, `hero.contractBack` keys for flip card content
+- Add sample term labels: `hero.contractTermOk1`, `hero.contractTermRisk`, `hero.contractTermOk2`
+
+### 4. Update `src/i18n/locales/ar.json`
+- Same keys in Arabic: "راجع عقدك", "اكتشف البنود الخطرة فورًا"
+- Arabic sample terms
+
+### Result
+A card that visually stands out from the other quick actions via its flip animation, showing a teaser of red/green contract health indicators. This creates immediate curiosity ("what does MY contract look like?") and drives engagement deeper into the platform.
 
