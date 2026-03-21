@@ -22,6 +22,7 @@ import AdminEmailBranding from '@/components/AdminEmailBranding';
 import AdminGuestReviews from '@/components/AdminGuestReviews';
 import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
+import AdminModerationQueue from '@/components/AdminModerationQueue';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
