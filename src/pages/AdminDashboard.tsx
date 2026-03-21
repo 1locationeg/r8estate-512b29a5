@@ -1991,34 +1991,74 @@ const AdminDashboard = () => {
   if (!user || role !== 'admin') return null;
 
   const navItems = [
-    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/admin' },
-    { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
-    { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
-    { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
-    { icon: <Shield className="w-4 h-4" />, label: 'Claims', path: '/admin/claims' },
-    { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
-    { icon: <Shield className="w-4 h-4" />, label: 'Moderation', path: '/admin/moderation' },
-    { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
-    { icon: <Bot className="w-4 h-4" />, label: 'AI Reviewer', path: '/admin/ai-reviewer' },
-    { icon: <Zap className="w-4 h-4" />, label: 'AI Usage', path: '/admin/ai-usage' },
-    { icon: <PenTool className="w-4 h-4" />, label: 'AI Review Writer', path: '/admin/ai-review-writer' },
-    { icon: <Sparkles className="w-4 h-4" />, label: 'Spotlight', path: '/admin/spotlight' },
-    { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
-    { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
-    { icon: <CreditCard className="w-4 h-4" />, label: 'Pricing Plans', path: '/admin/pricing' },
-    { icon: <Receipt className="w-4 h-4" />, label: 'Subscriptions', path: '/admin/subscriptions' },
-    { icon: <DollarSign className="w-4 h-4" />, label: 'Transactions', path: '/admin/transactions' },
-    { icon: <FolderTree className="w-4 h-4" />, label: 'Categories', path: '/admin/categories' },
-    { icon: <Navigation className="w-4 h-4" />, label: 'Navigation', path: '/admin/navigation' },
-    { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
-    { icon: <Layout className="w-4 h-4" />, label: 'Sections', path: '/admin/sections' },
-    { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
-    { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
-    { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
-    { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
-    { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
-    { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
+    {
+      label: 'Overview',
+      items: [
+        { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/admin' },
+        { icon: <BarChart3 className="w-4 h-4" />, label: 'Analytics', path: '/admin/analytics' },
+        { icon: <MessageSquareHeart className="w-4 h-4" />, label: 'Feedback', path: '/admin/feedback' },
+      ],
+    },
+    {
+      label: 'Users & Businesses',
+      items: [
+        { icon: <Users className="w-4 h-4" />, label: 'Users', path: '/admin/users' },
+        { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
+        { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
+        { icon: <Shield className="w-4 h-4" />, label: 'Claims', path: '/admin/claims' },
+      ],
+    },
+    {
+      label: 'Reviews & Moderation',
+      items: [
+        { icon: <MessageSquare className="w-4 h-4" />, label: 'Reviews', path: '/admin/reviews' },
+        { icon: <Shield className="w-4 h-4" />, label: 'Moderation', path: '/admin/moderation' },
+        { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
+        { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
+      ],
+    },
+    {
+      label: 'AI Tools',
+      items: [
+        { icon: <Bot className="w-4 h-4" />, label: 'AI Reviewer', path: '/admin/ai-reviewer' },
+        { icon: <PenTool className="w-4 h-4" />, label: 'AI Review Writer', path: '/admin/ai-review-writer' },
+        { icon: <Zap className="w-4 h-4" />, label: 'AI Usage', path: '/admin/ai-usage' },
+      ],
+    },
+    {
+      label: 'Content',
+      items: [
+        { icon: <Sparkles className="w-4 h-4" />, label: 'Spotlight', path: '/admin/spotlight' },
+        { icon: <FolderTree className="w-4 h-4" />, label: 'Categories', path: '/admin/categories' },
+        { icon: <Navigation className="w-4 h-4" />, label: 'Navigation', path: '/admin/navigation' },
+        { icon: <Layout className="w-4 h-4" />, label: 'Sections', path: '/admin/sections' },
+        { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
+      ],
+    },
+    {
+      label: 'Communications',
+      items: [
+        { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
+        { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
+        { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
+        { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
+      ],
+    },
+    {
+      label: 'Finance',
+      items: [
+        { icon: <CreditCard className="w-4 h-4" />, label: 'Pricing Plans', path: '/admin/pricing' },
+        { icon: <Receipt className="w-4 h-4" />, label: 'Subscriptions', path: '/admin/subscriptions' },
+        { icon: <DollarSign className="w-4 h-4" />, label: 'Transactions', path: '/admin/transactions' },
+      ],
+    },
+    {
+      label: 'Settings',
+      items: [
+        { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
+        { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
+      ],
+    },
   ];
 
   return (
