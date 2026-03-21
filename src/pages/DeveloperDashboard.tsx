@@ -24,6 +24,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
+import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -720,6 +721,7 @@ const DeveloperDashboard = () => {
     { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/business/projects' },
     { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
+    { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
@@ -754,6 +756,7 @@ const DeveloperDashboard = () => {
         <Route path="projects" element={<DevProjects />} />
         <Route path="gamification" element={<GamificationPanel />} />
         <Route path="reviews" element={<DevReviews />} />
+        <Route path="request-review" element={<WhatsAppReviewRequest />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
