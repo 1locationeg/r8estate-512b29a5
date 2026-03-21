@@ -6,81 +6,73 @@ interface ContractCheckCardProps {
   onClick: () => void;
 }
 
+const terms = [
+  { key: "hero.contractTermOk1", fallback: "Payment Plan", status: "ok" as const },
+  { key: "hero.contractTermRisk", fallback: "Penalty Clause", status: "risk" as const },
+  { key: "hero.contractTermWarn", fallback: "Handover Date", status: "warn" as const },
+];
+
+const statusStyles = {
+  ok: { dot: "bg-green-500", text: "text-green-600", border: "border-green-500/30", icon: "text-green-500" },
+  risk: { dot: "bg-red-500", text: "text-red-600 font-semibold", border: "border-red-500/30", icon: "text-red-500" },
+  warn: { dot: "bg-amber-500", text: "text-amber-600", border: "border-amber-500/30", icon: "text-amber-500" },
+};
+
 const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
   const { t } = useTranslation();
-  const [flipped, setFlipped] = useState(false);
+  const [activeIdx, setActiveIdx] = useState(0);
+  const [fading, setFading] = useState(false);
 
-  // Auto-flip every 6s
   useEffect(() => {
-    const interval = setInterval(() => setFlipped((f) => !f), 6000);
+    const interval = setInterval(() => {
+      setFading(true);
+      setTimeout(() => {
+        setActiveIdx((i) => (i + 1) % terms.length);
+        setFading(false);
+      }, 300);
+    }, 3000);
     return () => clearInterval(interval);
   }, []);
 
+  const current = terms[activeIdx];
+  const style = statusStyles[current.status];
+
   return (
-    <div
-      className="relative h-full cursor-pointer"
-      style={{ perspective: "600px" }}
+    <button
       onClick={onClick}
-      onMouseEnter={() => setFlipped(true)}
-      onMouseLeave={() => setFlipped(false)}
+      className={`relative h-full w-full flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border bg-card text-start transition-colors duration-300 cursor-pointer ${style.border}`}
     >
+      <div className="flex items-center gap-1.5">
+        <FileSearch className={`w-4 h-4 transition-colors duration-300 ${style.icon}`} />
+        <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
+          {t("hero.contractHealthTitle", "Contract Health")}
+        </span>
+      </div>
+
       <div
-        className="relative w-full h-full transition-transform duration-500"
-        style={{
-          transformStyle: "preserve-3d",
-          transform: flipped ? "rotateY(180deg)" : "rotateY(0deg)",
-        }}
+        className={`flex items-center gap-2 transition-opacity duration-300 ${fading ? "opacity-0" : "opacity-100"}`}
       >
-        {/* Front */}
-        <div
-          className="absolute inset-0 flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card text-start group"
-          style={{ backfaceVisibility: "hidden" }}
-        >
-          <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center animate-pulse-glow">
-            <FileSearch className="w-4 h-4 text-brand-red" />
-          </div>
-          <span className="text-xs font-bold text-foreground leading-tight">
-            {t("hero.qaLegal", "Check Your Contract")}
-          </span>
-          <span className="text-[10px] text-muted-foreground leading-snug">
-            {t("hero.qaLegalDesc", "Spot risky clauses instantly")}
-          </span>
+        <span className={`w-2 h-2 rounded-full shrink-0 ${style.dot}`} />
+        <span className={`text-xs leading-tight transition-colors duration-300 ${style.text}`}>
+          {t(current.key, current.fallback)}
+        </span>
+      </div>
+
+      <div className="flex items-center justify-between w-full mt-auto">
+        <div className="flex gap-1">
+          {terms.map((_, i) => (
+            <span
+              key={i}
+              className={`w-1 h-1 rounded-full transition-colors duration-300 ${i === activeIdx ? style.dot : "bg-muted-foreground/30"}`}
+            />
+          ))}
         </div>
-
-        {/* Back */}
-        <div
-          className="absolute inset-0 flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-primary/20 bg-card text-start"
-          style={{
-            backfaceVisibility: "hidden",
-            transform: "rotateY(180deg)",
-          }}
-        >
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider mb-0.5">
-            {t("hero.contractHealthTitle", "Contract Health")}
-          </span>
-
-          <div className="flex flex-col gap-1 w-full">
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
-              <span className="text-[10px] text-foreground">{t("hero.contractTermOk1", "Payment Plan")}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 shrink-0" />
-              <span className="text-[10px] text-foreground font-medium">{t("hero.contractTermRisk", "Penalty Clause")}</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 shrink-0" />
-              <span className="text-[10px] text-foreground">{t("hero.contractTermOk2", "Handover Date")}</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-1 mt-auto text-primary">
-            <Upload className="w-3 h-3" />
-            <span className="text-[10px] font-semibold">{t("hero.contractUploadCta", "Upload yours →")}</span>
-          </div>
+        <div className="flex items-center gap-1 text-primary">
+          <Upload className="w-3 h-3" />
+          <span className="text-[10px] font-semibold">{t("hero.contractUploadCta", "Upload yours →")}</span>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
 
