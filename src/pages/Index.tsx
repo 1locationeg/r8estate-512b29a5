@@ -216,6 +216,13 @@ const Index = () => {
             </button>
             <LanguageSwitcher />
             <NotificationBell />
+            <button
+              onClick={() => setMoreMenuOpen(true)}
+              className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden"
+              aria-label="More menu"
+            >
+              <Menu className="w-4 h-4 text-muted-foreground" />
+            </button>
           </div>
 
           {/* Desktop Actions */}
