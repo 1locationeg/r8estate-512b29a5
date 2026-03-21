@@ -1,28 +1,34 @@
 
 
-# Contract Check Card — Cycling Status Display
+# Expressive Status Icons — Bigger, Centered, Label Below
 
-## What Changes
-Replace the flip-card approach with a **cycling indicator** like the Market Pulse Widget. The card shows one contract term at a time, fading between them every 3 seconds, each color-coded:
+## Problem
+The current cycling indicator uses tiny 2px colored dots that don't visually express the status meaning. The user wants meaningful icons (e.g., a warning triangle for risk) displayed larger and centered, with the term label underneath.
 
-- 🟢 **Green** term: "Payment Plan" — text and dot in green
-- 🔴 **Red** term: "Penalty Clause" — text and dot in red  
-- 🟡 **Yellow** term: "Handover Date" — text and dot in amber/yellow
+## Changes
 
-Each term cycles with a fade transition, showing a colored dot + colored text + the `FileSearch` icon tinted to match. Small dot indicators at the bottom show which term is active (like the Market Pulse Widget).
+### File: `src/components/ContractCheckCard.tsx`
 
-## Technical Plan
+1. **Import expressive icons**: Add `CheckCircle2`, `AlertTriangle`, `AlertCircle` from lucide-react
+2. **Update terms array** to include an icon per status:
+   - `ok` → `CheckCircle2` (green checkmark)
+   - `risk` → `AlertTriangle` (red warning triangle)
+   - `warn` → `AlertCircle` (amber alert circle)
+3. **Redesign the middle section**: Replace the small dot + inline text with a centered layout:
+   - Large icon (`w-7 h-7`) centered, colored per status
+   - Term label below the icon, centered, colored per status
+4. **Keep**: Header row (FileSearch + "Contract Health"), bottom CTA (Upload), and dot pagination
 
-### File: `src/components/ContractCheckCard.tsx` — full rewrite
+### Layout after change:
+```text
+🔍 Contract Health          ← header stays
 
-Remove the 3D flip logic entirely. Replace with:
+      ⚠️                    ← large icon, centered
+   Penalty Clause           ← label below, centered, colored
 
-1. Define an array of contract terms, each with: `label`, `status` (ok/risk/warning), and corresponding color classes (green/red/amber)
-2. `activeIdx` state cycling every 3s with a 300ms fade transition (same pattern as MarketPulseWidget)
-3. Layout: top has the `FileSearch` icon + "Contract Health" label, middle shows the current term with its colored dot and colored text, bottom has dot indicators + "Upload yours →" CTA
-4. Border color shifts to match the current term's status color
+  📤 Upload yours →         ← CTA stays
+      • • •                 ← dots stay
+```
 
-### File: `src/i18n/locales/en.json` + `ar.json`
-- Add `hero.contractTermWarn` key: "Handover Date" / "تاريخ التسليم" (for yellow/warning status)
-- Existing keys reused for green and red terms
+### No other files change.
 
