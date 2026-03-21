@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useEffect, useState, useMemo } from 'react';
-import { useNavigate, Routes, Route } from 'react-router-dom';
+import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -24,6 +24,7 @@ import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
 import AdminBusinessClaims from '@/components/AdminBusinessClaims';
+import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -1976,6 +1977,7 @@ const AdminBusiness = () => {
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user, role, isLoading } = useAuth();
 
   useEffect(() => {
@@ -2068,38 +2070,45 @@ const AdminDashboard = () => {
       sidebarProps={{
         navItems,
         portalLabel: 'Admin',
+        showMiniLeaderboard: false,
       }}
     >
-      <Routes>
-        <Route index element={<AdminOverview />} />
-        <Route path="users" element={<AdminUsers />} />
-        <Route path="developers" element={<AdminDevelopers />} />
-        <Route path="business" element={<AdminBusiness />} />
-        <Route path="claims" element={<AdminBusinessClaims />} />
-        <Route path="reviews" element={<AdminReviewMod />} />
-        <Route path="moderation" element={<AdminModerationQueue />} />
-        <Route path="guest-reviews" element={<AdminGuestReviews />} />
-        <Route path="ai-reviewer" element={<AdminAIReviewer />} />
-        <Route path="ai-review-writer" element={<AdminAIReviewWriter />} />
-        <Route path="ai-usage" element={<AdminAIUsage />} />
-        <Route path="spotlight" element={<AdminSpotlight />} />
-        <Route path="notifications" element={<AdminNotifications />} />
-        <Route path="whatsapp" element={<AdminWhatsApp />} />
-        <Route path="pricing" element={<AdminPricing />} />
-        <Route path="subscriptions" element={<AdminSubscriptions />} />
-        <Route path="transactions" element={<AdminTransactions />} />
-        <Route path="categories" element={<AdminCategories />} />
-        <Route path="navigation" element={<AdminNavigation />} />
-        <Route path="newsletter" element={<AdminNewsletter />} />
-        <Route path="sections" element={<AdminSections />} />
-        <Route path="analytics" element={<AdminAnalytics />} />
-        <Route path="feedback" element={<AdminFeedback />} />
-        <Route path="seo" element={<AdminSEO />} />
-        <Route path="email-branding" element={<AdminEmailBranding />} />
-        <Route path="search-phrases" element={<AdminSearchPhrases />} />
-        <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
-        <Route path="settings" element={<AdminSettings />} />
-      </Routes>
+      <div className="space-y-4">
+        {location.pathname === '/admin' && (
+          <MiniLeaderboard variant="compact" className="w-full lg:ml-auto lg:max-w-sm" />
+        )}
+
+        <Routes>
+          <Route index element={<AdminOverview />} />
+          <Route path="users" element={<AdminUsers />} />
+          <Route path="developers" element={<AdminDevelopers />} />
+          <Route path="business" element={<AdminBusiness />} />
+          <Route path="claims" element={<AdminBusinessClaims />} />
+          <Route path="reviews" element={<AdminReviewMod />} />
+          <Route path="moderation" element={<AdminModerationQueue />} />
+          <Route path="guest-reviews" element={<AdminGuestReviews />} />
+          <Route path="ai-reviewer" element={<AdminAIReviewer />} />
+          <Route path="ai-review-writer" element={<AdminAIReviewWriter />} />
+          <Route path="ai-usage" element={<AdminAIUsage />} />
+          <Route path="spotlight" element={<AdminSpotlight />} />
+          <Route path="notifications" element={<AdminNotifications />} />
+          <Route path="whatsapp" element={<AdminWhatsApp />} />
+          <Route path="pricing" element={<AdminPricing />} />
+          <Route path="subscriptions" element={<AdminSubscriptions />} />
+          <Route path="transactions" element={<AdminTransactions />} />
+          <Route path="categories" element={<AdminCategories />} />
+          <Route path="navigation" element={<AdminNavigation />} />
+          <Route path="newsletter" element={<AdminNewsletter />} />
+          <Route path="sections" element={<AdminSections />} />
+          <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="feedback" element={<AdminFeedback />} />
+          <Route path="seo" element={<AdminSEO />} />
+          <Route path="email-branding" element={<AdminEmailBranding />} />
+          <Route path="search-phrases" element={<AdminSearchPhrases />} />
+          <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
+          <Route path="settings" element={<AdminSettings />} />
+        </Routes>
+      </div>
     </DashboardLayout>
   );
 };

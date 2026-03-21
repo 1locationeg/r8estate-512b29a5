@@ -36,13 +36,14 @@ interface DashboardSidebarProps {
   };
   mobileOpen?: boolean;
   onMobileOpenChange?: (open: boolean) => void;
+  showMiniLeaderboard?: boolean;
 }
 
 function isNavGroups(items: NavItem[] | NavGroup[]): items is NavGroup[] {
   return items.length > 0 && 'items' in items[0];
 }
 
-const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate }: DashboardSidebarProps & { onNavigate?: () => void }) => {
+const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNavigate, showMiniLeaderboard = true }: DashboardSidebarProps & { onNavigate?: () => void }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
@@ -98,7 +99,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   };
 
   return (
-    <div className="h-full flex flex-col bg-card text-foreground border-e border-border">
+    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-card text-foreground border-e border-border">
       {/* Brand */}
       <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}
@@ -142,7 +143,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
+      <nav className="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto">
         {grouped ? (
           (navItems as NavGroup[]).map((group) => {
             const isOpen = openGroups[group.label] ?? false;
@@ -173,7 +174,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </nav>
 
       {/* Mini Leaderboard */}
-      <MiniLeaderboard onNavigate={onNavigate} />
+      {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} />}
 
       {/* Bottom */}
       <div className="p-3 space-y-2 border-t border-border safe-bottom">
@@ -207,7 +208,7 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
   return (
     <>
       {/* Desktop: permanent sidebar */}
-      <aside className="hidden md:flex w-[260px] flex-shrink-0 h-screen sticky top-0 overflow-y-auto border-e border-border">
+      <aside className="hidden md:flex w-[260px] flex-shrink-0 h-screen sticky top-0 overflow-hidden border-e border-border">
         <SidebarContent {...props} />
       </aside>
 

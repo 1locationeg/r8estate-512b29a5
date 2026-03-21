@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getBuyerTier } from "@/lib/buyerGamification";
+import { cn } from "@/lib/utils";
 
 interface LeaderboardEntry {
   user_id: string;
@@ -13,7 +14,13 @@ interface LeaderboardEntry {
   total_points: number;
 }
 
-export const MiniLeaderboard = ({ onNavigate }: { onNavigate?: () => void }) => {
+interface MiniLeaderboardProps {
+  onNavigate?: () => void;
+  variant?: "default" | "compact";
+  className?: string;
+}
+
+export const MiniLeaderboard = ({ onNavigate, variant = "default", className }: MiniLeaderboardProps) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [entries, setEntries] = useState<LeaderboardEntry[]>([]);
@@ -42,15 +49,24 @@ export const MiniLeaderboard = ({ onNavigate }: { onNavigate?: () => void }) => 
 
   if (loading) return null;
 
+  const isCompact = variant === "compact";
+
   // Show top 3 + current user if not in top 3
-  const top3 = entries.slice(0, 3);
+  const topEntries = entries.slice(0, isCompact ? 2 : 3);
   const userEntry = user ? entries.find((e) => e.user_id === user.id) : null;
   const showUserSeparately = userRank > 3 && userEntry;
   const isEmpty = entries.length === 0;
 
   return (
-    <div className="mx-3 mb-2 bg-secondary/50 border border-border rounded-xl p-3">
-      <div className="flex items-center justify-between mb-2">
+    <div
+      className={cn(
+        isCompact
+          ? "bg-card border border-border rounded-xl p-3 shadow-sm"
+          : "mx-3 mb-2 bg-secondary/50 border border-border rounded-xl p-3",
+        className
+      )}
+    >
+      <div className={cn("flex items-center justify-between", isCompact ? "mb-2" : "mb-2")}>
         <div className="flex items-center gap-1.5">
           <Trophy className="w-3.5 h-3.5 text-accent" />
           <span className="text-[11px] font-semibold text-foreground">Leaderboard</span>
@@ -62,29 +78,29 @@ export const MiniLeaderboard = ({ onNavigate }: { onNavigate?: () => void }) => 
           }}
           className="text-[10px] text-primary font-medium flex items-center gap-0.5 hover:underline"
         >
-          View All <ChevronRight className="w-3 h-3" />
+          {isCompact ? "See More" : "View All"} <ChevronRight className="w-3 h-3" />
         </button>
       </div>
 
       {/* Period toggle */}
-      <div className="flex gap-1 mb-2.5">
+      <div className={cn("flex gap-1", isCompact ? "mb-2" : "mb-2.5")}>
         <button
           onClick={() => setPeriod("week")}
-          className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${
+          className={`flex items-center gap-1 rounded-md text-[10px] font-medium transition-colors ${
             period === "week"
               ? "bg-primary text-primary-foreground"
               : "bg-card text-muted-foreground hover:text-foreground"
-          }`}
+          } ${isCompact ? "px-1.5 py-1" : "px-2 py-1"}`}
         >
           <Calendar className="w-2.5 h-2.5" /> This Week
         </button>
         <button
           onClick={() => setPeriod("alltime")}
-          className={`flex items-center gap-1 px-2 py-1 rounded-md text-[10px] font-medium transition-colors ${
+          className={`flex items-center gap-1 rounded-md text-[10px] font-medium transition-colors ${
             period === "alltime"
               ? "bg-primary text-primary-foreground"
               : "bg-card text-muted-foreground hover:text-foreground"
-          }`}
+          } ${isCompact ? "px-1.5 py-1" : "px-2 py-1"}`}
         >
           <Clock className="w-2.5 h-2.5" /> All Time
         </button>
@@ -95,23 +111,23 @@ export const MiniLeaderboard = ({ onNavigate }: { onNavigate?: () => void }) => 
           {period === "week" ? "No activity this week yet" : "No contributors yet"}
         </p>
       ) : (
-        <div className="space-y-1.5">
-          {top3.map((entry, i) => {
+        <div className={cn("space-y-1.5", isCompact && "space-y-1") }>
+          {topEntries.map((entry, i) => {
             const tier = getBuyerTier(entry.total_points);
             const isCurrentUser = user?.id === entry.user_id;
             return (
               <div
                 key={entry.user_id}
-                className={`flex items-center gap-2 px-2 py-1.5 rounded-lg transition-colors ${
+                className={`flex items-center gap-2 rounded-lg transition-colors ${
                   isCurrentUser ? "bg-primary/10 border border-primary/20" : ""
-                }`}
+                } ${isCompact ? "px-2 py-1" : "px-2 py-1.5"}`}
               >
-                <span className={`w-5 text-center text-[11px] font-bold ${
+                <span className={`text-center text-[11px] font-bold ${isCompact ? "w-4" : "w-5"} ${
                   i === 0 ? "text-accent" : "text-muted-foreground"
                 }`}>
                   {i + 1}
                 </span>
-                <Avatar className="h-6 w-6">
+                <Avatar className={isCompact ? "h-5 w-5" : "h-6 w-6"}>
                   <AvatarImage src={entry.avatar_url || undefined} />
                   <AvatarFallback className="bg-primary text-primary-foreground text-[9px]">
                     {entry.full_name.charAt(0)}
@@ -127,7 +143,27 @@ export const MiniLeaderboard = ({ onNavigate }: { onNavigate?: () => void }) => 
             );
           })}
 
-          {showUserSeparately && (
+          {isCompact && (
+            <button
+              onClick={() => {
+                navigate("/leaderboard");
+                onNavigate?.();
+              }}
+              className="w-full rounded-lg border border-dashed border-border bg-secondary/40 px-2 py-1.5 text-left"
+            >
+              <div className="flex items-center justify-between gap-2">
+                <div>
+                  <p className="text-[10px] font-semibold text-foreground">
+                    {userRank > 0 ? `You’re #${userRank} right now` : "Track the full ranking live"}
+                  </p>
+                  <p className="text-[9px] text-muted-foreground">Open the full board to compare trends and weekly movement.</p>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-primary flex-shrink-0" />
+              </div>
+            </button>
+          )}
+
+          {!isCompact && showUserSeparately && (
             <>
               <div className="flex items-center gap-1 px-2">
                 <div className="flex-1 border-t border-dashed border-border" />
