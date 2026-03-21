@@ -24,6 +24,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
+import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 
 // Use first developer as "my business"
 const myDev = developers[0];
