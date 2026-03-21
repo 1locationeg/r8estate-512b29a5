@@ -22,7 +22,8 @@ const Reviews = () => {
   const [dbReviews, setDbReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<ReviewFilterType>("all");
-  const [writeModalOpen, setWriteModalOpen] = useState(false);
+  const writeReviewParam = searchParams.get("writeReview") === "true";
+  const [writeModalOpen, setWriteModalOpen] = useState(writeReviewParam);
 
   useEffect(() => {
     const fetchAllReviews = async () => {

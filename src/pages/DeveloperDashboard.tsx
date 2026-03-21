@@ -756,6 +756,7 @@ const DeveloperDashboard = () => {
         <Route path="projects" element={<DevProjects />} />
         <Route path="gamification" element={<GamificationPanel />} />
         <Route path="reviews" element={<DevReviews />} />
+        <Route path="request-review" element={<WhatsAppReviewRequest />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
