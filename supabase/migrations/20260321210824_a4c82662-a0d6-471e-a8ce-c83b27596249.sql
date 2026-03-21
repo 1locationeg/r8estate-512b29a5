@@ -1,0 +1,1 @@
+ALTER TABLE public.reviews ALTER COLUMN status SET DEFAULT 'pending';
