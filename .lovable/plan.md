@@ -1,34 +1,15 @@
 
 
-# Expressive Status Icons — Bigger, Centered, Label Below
+# Fix Logo Visibility on Offline Page
 
 ## Problem
-The current cycling indicator uses tiny 2px colored dots that don't visually express the status meaning. The user wants meaningful icons (e.g., a warning triangle for risk) displayed larger and centered, with the term label underneath.
+The logo icon in `public/offline.html` has poor contrast against the dark navy background — it's barely visible in the screenshot.
 
-## Changes
+## Solution
+Add a CSS filter to the logo icon to make it bright/white, ensuring it stands out against the dark background. Since this is a static HTML file (no React), we can't swap the image — but we can use CSS `filter: brightness(0) invert(1)` to make it white, or add a subtle light glow/drop-shadow behind it.
 
-### File: `src/components/ContractCheckCard.tsx`
+**Approach:** Add `filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)) brightness(1.3)` to `.logo-icon` to brighten it and add a soft white glow. If the icon has dark parts, use `filter: brightness(0) invert(1)` to make it fully white.
 
-1. **Import expressive icons**: Add `CheckCircle2`, `AlertTriangle`, `AlertCircle` from lucide-react
-2. **Update terms array** to include an icon per status:
-   - `ok` → `CheckCircle2` (green checkmark)
-   - `risk` → `AlertTriangle` (red warning triangle)
-   - `warn` → `AlertCircle` (amber alert circle)
-3. **Redesign the middle section**: Replace the small dot + inline text with a centered layout:
-   - Large icon (`w-7 h-7`) centered, colored per status
-   - Term label below the icon, centered, colored per status
-4. **Keep**: Header row (FileSearch + "Contract Health"), bottom CTA (Upload), and dot pagination
-
-### Layout after change:
-```text
-🔍 Contract Health          ← header stays
-
-      ⚠️                    ← large icon, centered
-   Penalty Clause           ← label below, centered, colored
-
-  📤 Upload yours →         ← CTA stays
-      • • •                 ← dots stay
-```
-
-### No other files change.
+### File: `public/offline.html` (line 31)
+- Update `.logo-icon` CSS to add `filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.3))` — this forces the icon white and adds a subtle glow for visibility.
 
