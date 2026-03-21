@@ -721,6 +721,7 @@ const DeveloperDashboard = () => {
     { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/business/projects' },
     { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
+    { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
