@@ -90,9 +90,17 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
         </div>
 
         {!developer.isClaimed && (
-          <Badge variant="outline" className="bg-accent/10 text-accent border-accent">
-            {t("developers.unclaimedProfile")}
-          </Badge>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              if (!user) { navigate("/auth"); return; }
+              setClaimOpen(true);
+            }}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-accent text-accent bg-accent/10 hover:bg-accent/20 transition-colors text-xs font-medium"
+          >
+            <Shield className="w-3.5 h-3.5" />
+            {t("developers.claimBusiness", "Claim this business")}
+          </button>
         )}
 
         <button
@@ -106,6 +114,13 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
           <span>{t("community.askCommunity", "Ask the community")}</span>
         </button>
       </div>
+
+      <ClaimBusinessModal
+        open={claimOpen}
+        onClose={() => setClaimOpen(false)}
+        businessName={developer.name}
+        businessId={developer.id}
+      />
     </Card>
   );
 };
