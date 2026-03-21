@@ -662,6 +662,7 @@ const Index = () => {
         getDashboardRoute={getDashboardRoute}
       />
 
+      <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
 
     </div>);
