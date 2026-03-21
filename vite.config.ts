@@ -38,7 +38,7 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
-        navigateFallback: "/offline.html",
+        navigateFallback: "/index.html",
         navigateFallbackDenylist: [/^\/~oauth/],
         maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
         runtimeCaching: [
@@ -61,6 +61,8 @@ export default defineConfig(({ mode }) => ({
             },
           },
         ],
+        // Serve offline.html when the network is truly unavailable
+        offlineGoogleAnalytics: false,
       },
     }),
   ].filter(Boolean),
