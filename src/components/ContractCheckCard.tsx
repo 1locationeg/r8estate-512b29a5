@@ -67,9 +67,9 @@ const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
             />
           ))}
         </div>
-        <div className="flex items-center gap-1 text-primary">
-          <Upload className="w-3 h-3" />
-          <span className="text-[10px] font-semibold">{t("hero.contractUploadCta", "Upload yours →")}</span>
+        <div className="flex items-center gap-1.5 text-primary animate-pulse">
+          <Upload className="w-5 h-5" />
+          <span className="text-[11px] font-bold">{t("hero.contractUploadCta", "Upload yours →")}</span>
         </div>
       </div>
     </button>
