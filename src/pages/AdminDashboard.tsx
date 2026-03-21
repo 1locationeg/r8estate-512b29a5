@@ -2035,6 +2035,7 @@ const AdminDashboard = () => {
         <Route path="users" element={<AdminUsers />} />
         <Route path="developers" element={<AdminDevelopers />} />
         <Route path="business" element={<AdminBusiness />} />
+        <Route path="claims" element={<AdminBusinessClaims />} />
         <Route path="reviews" element={<AdminReviewMod />} />
         <Route path="moderation" element={<AdminModerationQueue />} />
         <Route path="guest-reviews" element={<AdminGuestReviews />} />
