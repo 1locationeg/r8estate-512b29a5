@@ -19,6 +19,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [claimOpen, setClaimOpen] = useState(false);
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const { trackClick, startLinger, cancelLinger } = useTrackInterest();
