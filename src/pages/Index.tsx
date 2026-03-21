@@ -652,6 +652,13 @@ const Index = () => {
       <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
       <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
 
+      <MobileNavSheet
+        open={moreMenuOpen}
+        onOpenChange={setMoreMenuOpen}
+        onSignOut={handleSignOut}
+        getDashboardRoute={getDashboardRoute}
+      />
+
       <Footer />
 
     </div>);
