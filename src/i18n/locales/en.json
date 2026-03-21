@@ -247,6 +247,7 @@
     "contractTermOk1": "Payment Plan",
     "contractTermRisk": "Penalty Clause",
     "contractTermOk2": "Handover Date",
+    "contractTermWarn": "Handover Date",
     "contractUploadCta": "Upload yours →",
     "qaInsights": "Insights",
     "qaInsightsDesc": "AI-powered market analysis",
