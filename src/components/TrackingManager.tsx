@@ -78,9 +78,13 @@ const TRACKERS: TrackerConfig[] = [
  * Dynamically loads all enabled tracking scripts based on platform_settings.
  */
 export const TrackingManager = () => {
+  const { consent } = useCookieConsent();
   const [settings, setSettings] = useState<Record<string, string>>({});
 
   useEffect(() => {
+    // Only fetch settings if user accepted cookies
+    if (consent !== "accepted") return;
+
     const load = async () => {
       const keys = TRACKERS.flatMap((t) => [t.key, t.idKey]);
       const { data } = await supabase
@@ -94,10 +98,10 @@ export const TrackingManager = () => {
       }
     };
     load();
-  }, []);
+  }, [consent]);
 
   useEffect(() => {
-    if (!Object.keys(settings).length) return;
+    if (consent !== "accepted" || !Object.keys(settings).length) return;
 
     TRACKERS.forEach((tracker) => {
       const enabled = settings[tracker.key] === "true";
@@ -112,14 +116,13 @@ export const TrackingManager = () => {
       TRACKERS.forEach((tracker) => {
         const el = document.getElementById(tracker.scriptId);
         if (el) el.remove();
-        // Clean up GA4 inline script too
         if (tracker.scriptId === "ga4-script") {
           const inline = document.getElementById("ga4-inline");
           if (inline) inline.remove();
         }
       });
     };
-  }, [settings]);
+  }, [settings, consent]);
 
   return null;
 };
