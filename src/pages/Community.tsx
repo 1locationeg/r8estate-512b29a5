@@ -120,6 +120,10 @@ const Community = () => {
   return (
     <div className="min-h-screen bg-muted/50">
       <div className="max-w-[680px] mx-auto px-4 py-4 space-y-3">
+        {/* Logo → Home */}
+        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
+          <BrandLogo size="xs" />
+        </button>
 
         {/* "What's on your mind?" composer card — Facebook style */}
         <div className="bg-card border border-border rounded-lg shadow-sm p-4">
