@@ -29,6 +29,7 @@ const Auth = () => {
   const isBusinessMode = searchParams.get('type') === 'business';
   const [accountType, setAccountType] = useState<AccountType>(isBusinessMode ? 'business' : 'buyer');
   const [step, setStep] = useState<Step>('social');
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncingBusinessRole, setIsSyncingBusinessRole] = useState(false);
