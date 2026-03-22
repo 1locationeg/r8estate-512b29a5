@@ -16,6 +16,8 @@ interface LaunchCardProps {
   phases?: any[];
   ratings?: any[];
   onRate?: () => void;
+  isSelected?: boolean;
+  onToggleCompare?: (id: string) => void;
 }
 
 function useCountdown(targetDate: string | null) {
