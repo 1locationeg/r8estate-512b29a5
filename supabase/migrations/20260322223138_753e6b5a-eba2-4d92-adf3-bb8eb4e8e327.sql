@@ -1,0 +1,1 @@
+ALTER TABLE public.deals ADD COLUMN price numeric NULL, ADD COLUMN down_payment_percent numeric NULL;

@@ -477,8 +477,10 @@ export type Database = {
           created_at: string
           deal_type: Database["public"]["Enums"]["deal_type"]
           description: string
+          down_payment_percent: number | null
           headline: string
           id: string
+          price: number | null
           rating_count: number | null
           reviewed_at: string | null
           reviewed_by: string | null
@@ -495,8 +497,10 @@ export type Database = {
           created_at?: string
           deal_type?: Database["public"]["Enums"]["deal_type"]
           description: string
+          down_payment_percent?: number | null
           headline: string
           id?: string
+          price?: number | null
           rating_count?: number | null
           reviewed_at?: string | null
           reviewed_by?: string | null
@@ -513,8 +517,10 @@ export type Database = {
           created_at?: string
           deal_type?: Database["public"]["Enums"]["deal_type"]
           description?: string
+          down_payment_percent?: number | null
           headline?: string
           id?: string
+          price?: number | null
           rating_count?: number | null
           reviewed_at?: string | null
           reviewed_by?: string | null
