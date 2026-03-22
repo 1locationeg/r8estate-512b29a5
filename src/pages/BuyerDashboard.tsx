@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { MVP_MODE } from '@/lib/mvpMode';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
