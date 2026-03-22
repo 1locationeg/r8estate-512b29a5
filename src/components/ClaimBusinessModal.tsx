@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Upload, Loader2, CheckCircle, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
 
 interface ClaimBusinessModalProps {
   open: boolean;
