@@ -49,7 +49,7 @@ export const ReviewMotivatorFloat = ({
   const badgeName = reviewBadge?.name ?? "Review Badge";
 
   return (
-    <div className="fixed bottom-6 left-6 z-40 flex flex-col items-start gap-2 mb-16 md:mb-0">
+    <div className="fixed bottom-20 md:bottom-6 left-6 z-40 flex flex-col items-start gap-2">
       {/* Expanded popover card */}
       {expanded && (
         <div
