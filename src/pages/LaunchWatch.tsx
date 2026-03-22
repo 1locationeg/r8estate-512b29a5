@@ -431,6 +431,8 @@ const LaunchWatch = () => {
                 phases={allPhases.filter((p: any) => p.launch_id === launch.id)}
                 ratings={allRatings.filter((r: any) => r.launch_id === launch.id)}
                 onRate={() => setRatingLaunchId(launch.id)}
+                isSelected={compareIds.includes(launch.id)}
+                onToggleCompare={toggleCompare}
               />
             ))}
           </div>
