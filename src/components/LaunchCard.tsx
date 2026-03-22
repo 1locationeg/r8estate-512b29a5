@@ -315,7 +315,18 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
             {isWatched ? <BookmarkCheck className="w-3.5 h-3.5 text-primary" /> : <Bookmark className="w-3.5 h-3.5" />}
             {isWatched ? "Watching" : "Watch this launch"}
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 ml-auto">
+          {onToggleCompare && (
+            <Button
+              variant={isSelected ? "default" : "outline"}
+              size="sm"
+              className={`text-xs gap-1 ml-auto ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
+              onClick={() => onToggleCompare(launch.id)}
+            >
+              <GitCompare className="w-3 h-3" />
+              {isSelected ? "Selected" : "Compare"}
+            </Button>
+          )}
+          <Button variant="ghost" size="icon" className="h-7 w-7">
             <Share2 className="w-3.5 h-3.5" />
           </Button>
         </div>
