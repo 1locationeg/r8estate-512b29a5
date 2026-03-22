@@ -78,7 +78,7 @@ const App = () => (
           <Toaster />
           <Sonner />
           <DynamicMeta />
-          <MouseflowTracker />
+          <TrackingManager />
           <BrowserRouter>
             <GuestTimerBanner />
             <GuestTimerExpiredModal />
