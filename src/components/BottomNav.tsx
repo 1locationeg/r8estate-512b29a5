@@ -11,10 +11,9 @@ export const BottomNav = () => {
   const { user } = useAuth();
 
   const isReviews = location.pathname === "/reviews";
+  const isDealWatch = location.pathname === "/deal-watch";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
-  const isCommunity = location.pathname === "/community";
-  const isPortfolio = location.pathname === "/portfolio";
 
   return (
     <>
