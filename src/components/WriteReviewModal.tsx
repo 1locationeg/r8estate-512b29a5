@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
