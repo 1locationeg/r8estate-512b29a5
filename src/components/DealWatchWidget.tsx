@@ -36,7 +36,7 @@ export const DealWatchWidget = () => {
         .order("created_at", { ascending: false })
         .limit(6);
 
-      const items = (data as DealHighlight[]) || [];
+      const items = ((data as unknown) as DealHighlight[]) || [];
       if (items.length === 0) {
         // Fallback showcase headlines
         setDeals([
