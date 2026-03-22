@@ -25,7 +25,7 @@ import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
 import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 import AdminDealModeration from '@/components/AdminDealModeration';
-import AdminMouseflow from '@/components/AdminMouseflow';
+import AdminTracking from '@/components/AdminTracking';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
@@ -2061,7 +2061,7 @@ const AdminDashboard = () => {
       label: 'Settings',
       items: [
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
-        { icon: <Activity className="w-4 h-4" />, label: 'Mouseflow', path: '/admin/mouseflow' },
+        { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
     },
@@ -2111,7 +2111,7 @@ const AdminDashboard = () => {
           <Route path="search-phrases" element={<AdminSearchPhrases />} />
           <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
           <Route path="deal-moderation" element={<AdminDealModeration />} />
-          <Route path="mouseflow" element={<AdminMouseflow />} />
+          <Route path="tracking" element={<AdminTracking />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
