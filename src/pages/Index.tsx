@@ -434,6 +434,11 @@ const Index = () => {
                 </div>
               </div>
 
+              {/* Live Activity Feed */}
+              <div className="mb-3">
+                <LiveActivityFeed />
+              </div>
+
               {/* Category Links + Special View Grid */}
               <HeroCategoryLinks
               activeView={activeView}
