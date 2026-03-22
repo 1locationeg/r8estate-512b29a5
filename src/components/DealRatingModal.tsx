@@ -25,6 +25,7 @@ export const DealRatingModal = ({ dealId, dealHeadline, open, onClose, onSuccess
   const [reviewText, setReviewText] = useState("");
   const [isVerifiedBuyer, setIsVerifiedBuyer] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   const handleSubmit = async () => {
     if (!user || stars === 0) return;
