@@ -104,9 +104,11 @@ export const DealRatingModal = ({ dealId, dealHeadline, open, onClose, onSuccess
             </Label>
           </div>
 
+          <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
           <Button
             className="w-full"
-            disabled={stars === 0 || loading}
+            disabled={stars === 0 || loading || !disclaimerAgreed}
             onClick={handleSubmit}
           >
             {loading ? "Submitting..." : "Submit Rating"}

@@ -364,7 +364,11 @@ const Auth = () => {
                     )}
                   </div>
 
-                  <Button type="submit" className="w-full h-11 text-sm font-semibold" disabled={isLoading}>
+                  {isNewUser && (
+                    <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+                  )}
+
+                  <Button type="submit" className="w-full h-11 text-sm font-semibold" disabled={isLoading || (isNewUser && !disclaimerAgreed)}>
                     {isLoading ? (
                       <><Loader2 className="w-4 h-4 me-2 animate-spin" />{isNewUser ? t('auth.creating', 'Creating...') : t('auth.signingIn', 'Signing in...')}</>
                     ) : (
