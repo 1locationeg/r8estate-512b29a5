@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Sparkles, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Sparkles, Tag } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
