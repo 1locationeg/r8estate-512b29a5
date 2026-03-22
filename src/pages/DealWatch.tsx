@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Tag, Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DealCard } from "@/components/DealCard";
+import { BrandLogo } from "@/components/BrandLogo";
 import { supabase } from "@/integrations/supabase/client";
 
 const dealTypeOptions = [
@@ -21,6 +23,7 @@ const sortOptions = [
 ];
 
 const DealWatch = () => {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dealType, setDealType] = useState("all");
@@ -57,7 +60,10 @@ const DealWatch = () => {
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         {/* Header */}
-        <div className="space-y-1">
+        <div className="space-y-2">
+          <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
+            <BrandLogo size="xs" />
+          </button>
           <div className="flex items-center gap-2">
             <Tag className="w-6 h-6 text-primary" />
             <h1 className="text-2xl font-bold text-foreground">Deal Watch</h1>
