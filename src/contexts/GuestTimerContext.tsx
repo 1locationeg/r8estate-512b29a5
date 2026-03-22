@@ -30,8 +30,8 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
 
   // Use shared device-auth helper instead of duplicating fingerprint logic
   const device = checkDeviceRegistered();
-  const isKnownDevice = device.registered || device.blockedByLogout;
-  const isGuest = !isLoading && !user && !isKnownDevice;
+  // Only suppress guest timer for actively registered devices, NOT for logged-out devices
+  const isGuest = !isLoading && !user && !device.registered;
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {
