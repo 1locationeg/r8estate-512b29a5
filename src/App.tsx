@@ -13,7 +13,7 @@ import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
-import { MouseflowTracker } from "@/components/MouseflowTracker";
+import { TrackingManager } from "@/components/TrackingManager";
 import {
   IndexSkeleton,
   AuthSkeleton,
