@@ -437,6 +437,38 @@ export type Database = {
           },
         ]
       }
+      deal_votes: {
+        Row: {
+          created_at: string
+          deal_id: string
+          id: string
+          user_id: string
+          vote: boolean
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          id?: string
+          user_id: string
+          vote: boolean
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          id?: string
+          user_id?: string
+          vote?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_votes_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           admin_notes: string | null
