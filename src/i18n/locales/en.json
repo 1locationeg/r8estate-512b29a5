@@ -1,4 +1,10 @@
 {
+  "cookies": {
+    "title": "We value your privacy",
+    "description": "We use cookies and similar technologies to improve your experience, analyze traffic, and personalize content. You can choose to accept or decline non-essential cookies.",
+    "accept": "Accept All",
+    "reject": "Essential Only"
+  },
   "itemDetail": {
     "voiceReview": "Voice Review",
     "downloadReport": "Download Report",
