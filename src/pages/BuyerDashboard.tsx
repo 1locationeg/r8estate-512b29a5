@@ -805,11 +805,13 @@ const BuyerDashboard = () => {
 
 
   return (
-    <DashboardLayout
-      title="Buyer Dashboard"
-      breadcrumb="Buyer > Dashboard"
-      sidebarProps={{ navItems, portalLabel: 'Buyer' }}
-    >
+    <>
+      <WelcomeGiftOverlay />
+      <DashboardLayout
+        title="Buyer Dashboard"
+        breadcrumb="Buyer > Dashboard"
+        sidebarProps={{ navItems, portalLabel: 'Buyer' }}
+      >
       <Routes>
         <Route index element={<BuyerOverview />} />
         <Route path="reviews" element={<BuyerReviews />} />
