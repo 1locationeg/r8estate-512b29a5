@@ -116,9 +116,25 @@ export const DealWatchWidget = () => {
 
       {/* Deal headline ticker */}
       <div className={`transition-all duration-300 w-full flex flex-col items-center ${fading ? "opacity-0 translate-y-1" : "opacity-100 translate-y-0"}`}>
-        <span className="text-sm md:text-base font-extrabold leading-tight text-foreground tracking-tight line-clamp-2 px-1">
-          {current.headline}
-        </span>
+        {(() => {
+          const match = current.headline.match(/^([\d.,]+\s*%?)/);
+          if (match) {
+            const num = match[1].trim();
+            const rest = current.headline.slice(match[0].length).trim();
+            return (
+              <>
+                <span className={`text-2xl md:text-3xl font-black leading-none tracking-tight ${iconColor}`}>{num}</span>
+                <span className="text-[10px] md:text-xs text-muted-foreground leading-snug mt-0.5 line-clamp-1 px-1">{rest}</span>
+              </>
+            );
+          }
+          return (
+            <>
+              <span className={`text-lg md:text-xl font-black leading-tight tracking-tight ${iconColor}`}>{current.headline.split(" ").slice(0, 2).join(" ")}</span>
+              <span className="text-[10px] md:text-xs text-muted-foreground leading-snug mt-0.5 line-clamp-1 px-1">{current.headline.split(" ").slice(2).join(" ")}</span>
+            </>
+          );
+        })()}
       </div>
 
       {/* Progress bar / dots */}
