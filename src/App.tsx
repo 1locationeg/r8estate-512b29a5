@@ -14,6 +14,8 @@ import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
 import { TrackingManager } from "@/components/TrackingManager";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import {
   IndexSkeleton,
   AuthSkeleton,
@@ -73,44 +75,47 @@ const RouteLoader = () => {
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <AuthProvider>
-        <GuestTimerProvider>
-          <Toaster />
-          <Sonner />
-          <DynamicMeta />
-          <TrackingManager />
-          <BrowserRouter>
-            <GuestTimerBanner />
-            <GuestTimerExpiredModal />
-            <Suspense fallback={<RouteLoader />}>
-              <Routes>
-                <Route path="/" element={<Index />} />
-                <Route path="/auth" element={<Auth />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
-                <Route path="/reset-password" element={<ResetPassword />} />
-                <Route path="/buyer/*" element={<BuyerDashboard />} />
-                <Route path="/business/*" element={<DeveloperDashboard />} />
-                <Route path="/admin/*" element={<AdminDashboard />} />
-                <Route path="/directory" element={<DeveloperDirectory />} />
-                <Route path="/reviews" element={<Reviews />} />
-                <Route path="/install" element={<Install />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/insights" element={<InsightsPage />} />
-                <Route path="/community" element={<Community />} />
-                <Route path="/leaderboard" element={<Leaderboard />} />
-                <Route path="/deal-watch" element={<DealWatch />} />
-                {/* Legacy /developer redirects */}
-                <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
-                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </Suspense>
-            <BottomNav />
-            <PWAInstallBanner />
-            <FloatingChatFAB />
-          </BrowserRouter>
-        </GuestTimerProvider>
-      </AuthProvider>
+      <CookieConsentProvider>
+        <AuthProvider>
+          <GuestTimerProvider>
+            <Toaster />
+            <Sonner />
+            <DynamicMeta />
+            <TrackingManager />
+            <BrowserRouter>
+              <GuestTimerBanner />
+              <GuestTimerExpiredModal />
+              <Suspense fallback={<RouteLoader />}>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
+                  <Route path="/reset-password" element={<ResetPassword />} />
+                  <Route path="/buyer/*" element={<BuyerDashboard />} />
+                  <Route path="/business/*" element={<DeveloperDashboard />} />
+                  <Route path="/admin/*" element={<AdminDashboard />} />
+                  <Route path="/directory" element={<DeveloperDirectory />} />
+                  <Route path="/reviews" element={<Reviews />} />
+                  <Route path="/install" element={<Install />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/insights" element={<InsightsPage />} />
+                  <Route path="/community" element={<Community />} />
+                  <Route path="/leaderboard" element={<Leaderboard />} />
+                  <Route path="/deal-watch" element={<DealWatch />} />
+                  {/* Legacy /developer redirects */}
+                  <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
+                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </Suspense>
+              <BottomNav />
+              <PWAInstallBanner />
+              <FloatingChatFAB />
+              <CookieConsentBanner />
+            </BrowserRouter>
+          </GuestTimerProvider>
+        </AuthProvider>
+      </CookieConsentProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
