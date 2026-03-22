@@ -27,6 +27,8 @@ import DevProjects from '@/components/DevProjects';
 import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 import { DealSubmitForm } from '@/components/DealSubmitForm';
 import { LaunchSubmitForm } from '@/components/LaunchSubmitForm';
+import { MyDeals } from '@/components/MyDeals';
+import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 // Use first developer as "my business"
 const myDev = developers[0];
