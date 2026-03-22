@@ -2137,6 +2137,7 @@ const AdminDashboard = () => {
           <Route path="search-phrases" element={<AdminSearchPhrases />} />
           <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
           <Route path="deal-moderation" element={<AdminDealModeration />} />
+          <Route path="launch-moderation" element={<AdminLaunchModeration />} />
           <Route path="tracking" element={<AdminTracking />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
