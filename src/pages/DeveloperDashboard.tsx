@@ -80,6 +80,11 @@ const DevOverview = () => {
 
   return (
     <div>
+      {/* Onboarding Wizard */}
+      <div className="mb-6">
+        <OnboardingWizard />
+      </div>
+
       {/* Business Profile Header */}
       <BusinessProfileHeader
         company={companyData}

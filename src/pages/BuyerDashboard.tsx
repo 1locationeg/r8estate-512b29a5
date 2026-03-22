@@ -792,6 +792,8 @@ const BuyerDashboard = () => {
     { icon: <Building2 className="w-4 h-4" />, label: 'Products I Use', path: '/buyer/saved' },
     { icon: <Search className="w-4 h-4" />, label: 'Research Board', path: '/directory' },
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
+    { icon: <Bookmark className="w-4 h-4" />, label: 'Search Alerts', path: '/buyer/search-alerts' },
+    { icon: <Gift className="w-4 h-4" />, label: 'Invite Friends', path: '/buyer/referrals' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
