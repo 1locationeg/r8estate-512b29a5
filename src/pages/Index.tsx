@@ -1,6 +1,4 @@
 import { useState, useMemo, useEffect } from "react";
-import { GuidedTour } from "@/components/GuidedTour";
-import { MVP_MODE } from "@/lib/mvpMode";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
@@ -496,9 +494,9 @@ const Index = () => {
                       </button>);
 
                 })}
-                  {!MVP_MODE && <DealWatchWidget />}
+                  <DealWatchWidget />
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
-                  {!MVP_MODE && <MarketPulseWidget onClick={() => handleQuickAction('insights')} />}
+                  <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
               </div>
 
@@ -529,11 +527,9 @@ const Index = () => {
               <div className="w-full max-w-3xl px-4">
                 <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
               </div>
-              {!MVP_MODE && (
-                <div className="w-full max-w-3xl px-4 mt-4">
-                  <CommunityHighlights />
-                </div>
-              )}
+              <div className="w-full max-w-3xl px-4 mt-4">
+                <CommunityHighlights />
+              </div>
             </>
             }
 
@@ -675,7 +671,6 @@ const Index = () => {
 
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
-      <GuidedTour />
 
     </div>);
 

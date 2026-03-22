@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerGamification } from "@/hooks/useBuyerGamification";
 import { cn } from "@/lib/utils";
-import { MVP_MODE } from "@/lib/mvpMode";
 
 interface ReviewMotivatorFloatProps {
   onWriteReview: () => void;
@@ -25,7 +24,7 @@ export const ReviewMotivatorFloat = ({
 
   // 3-second entrance delay
   useEffect(() => {
-    if (dismissed || isReviewModalOpen || MVP_MODE) {
+    if (dismissed || isReviewModalOpen) {
       setVisible(false);
       return;
     }
@@ -41,7 +40,7 @@ export const ReviewMotivatorFloat = ({
     return () => clearTimeout(timer);
   }, [visible]);
 
-  if (MVP_MODE || dismissed || isReviewModalOpen || !visible) return null;
+  if (dismissed || isReviewModalOpen || !visible) return null;
 
   const reviewBadge = lockedBadges.find(
     (b) => b.id === "first_review" || b.id === "review_pro"
