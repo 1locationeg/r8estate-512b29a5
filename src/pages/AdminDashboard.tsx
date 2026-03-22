@@ -1764,18 +1764,22 @@ const AdminBusiness = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-card border border-border rounded-xl p-4 text-center">
           <p className="text-2xl font-extrabold text-foreground">{businesses.length}</p>
           <p className="text-xs text-muted-foreground">Total Businesses</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
-          <p className="text-2xl font-extrabold text-trust-excellent">{businesses.filter(b => getCompletionPercent(b) === 100).length}</p>
-          <p className="text-xs text-muted-foreground">Complete Profiles</p>
+          <p className="text-2xl font-extrabold text-primary">{businesses.filter(b => !b.parent_id).length}</p>
+          <p className="text-xs text-muted-foreground">Parent Companies</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
-          <p className="text-2xl font-extrabold text-accent">{businesses.filter(b => getCompletionPercent(b) < 100).length}</p>
-          <p className="text-xs text-muted-foreground">Incomplete Profiles</p>
+          <p className="text-2xl font-extrabold text-accent">{businesses.filter(b => b.parent_id).length}</p>
+          <p className="text-xs text-muted-foreground">Child Projects</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-trust-excellent">{businesses.filter(b => getCompletionPercent(b) === 100).length}</p>
+          <p className="text-xs text-muted-foreground">Complete Profiles</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
           <p className="text-2xl font-extrabold text-foreground">{businesses.filter(b => b.license_url).length}</p>
