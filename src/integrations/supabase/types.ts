@@ -636,6 +636,212 @@ export type Database = {
         }
         Relationships: []
       }
+      launch_phases: {
+        Row: {
+          id: string
+          launch_id: string
+          phase_number: number
+          price_per_m2: number
+          started_at: string
+          units_in_phase: number | null
+        }
+        Insert: {
+          id?: string
+          launch_id: string
+          phase_number: number
+          price_per_m2: number
+          started_at?: string
+          units_in_phase?: number | null
+        }
+        Update: {
+          id?: string
+          launch_id?: string
+          phase_number?: number
+          price_per_m2?: number
+          started_at?: string
+          units_in_phase?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launch_phases_launch_id_fkey"
+            columns: ["launch_id"]
+            isOneToOne: false
+            referencedRelation: "launches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      launch_ratings: {
+        Row: {
+          buyer_type: Database["public"]["Enums"]["launch_buyer_type"]
+          buyer_verified: boolean
+          created_at: string
+          id: string
+          launch_id: string
+          review_text: string | null
+          stars_developer_transparency: number
+          stars_location_value: number
+          stars_overall: number
+          stars_payment_terms: number
+          stars_price_fairness: number
+          user_id: string
+        }
+        Insert: {
+          buyer_type?: Database["public"]["Enums"]["launch_buyer_type"]
+          buyer_verified?: boolean
+          created_at?: string
+          id?: string
+          launch_id: string
+          review_text?: string | null
+          stars_developer_transparency: number
+          stars_location_value: number
+          stars_overall: number
+          stars_payment_terms: number
+          stars_price_fairness: number
+          user_id: string
+        }
+        Update: {
+          buyer_type?: Database["public"]["Enums"]["launch_buyer_type"]
+          buyer_verified?: boolean
+          created_at?: string
+          id?: string
+          launch_id?: string
+          review_text?: string | null
+          stars_developer_transparency?: number
+          stars_location_value?: number
+          stars_overall?: number
+          stars_payment_terms?: number
+          stars_price_fairness?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launch_ratings_launch_id_fkey"
+            columns: ["launch_id"]
+            isOneToOne: false
+            referencedRelation: "launches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      launch_watchlist: {
+        Row: {
+          created_at: string
+          id: string
+          launch_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          launch_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          launch_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launch_watchlist_launch_id_fkey"
+            columns: ["launch_id"]
+            isOneToOne: false
+            referencedRelation: "launches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      launches: {
+        Row: {
+          admin_notes: string | null
+          business_id: string
+          created_at: string
+          current_phase: number
+          current_price_per_m2: number | null
+          delivery_date: string | null
+          down_payment_pct: number | null
+          id: string
+          installment_years: number | null
+          is_verified: boolean
+          launch_date: string | null
+          launch_type: Database["public"]["Enums"]["launch_type"]
+          location_compound: string | null
+          location_district: string
+          project_name: string
+          reservation_date: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["launch_status"]
+          total_units: number
+          unit_types: string[] | null
+          units_remaining: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          business_id: string
+          created_at?: string
+          current_phase?: number
+          current_price_per_m2?: number | null
+          delivery_date?: string | null
+          down_payment_pct?: number | null
+          id?: string
+          installment_years?: number | null
+          is_verified?: boolean
+          launch_date?: string | null
+          launch_type?: Database["public"]["Enums"]["launch_type"]
+          location_compound?: string | null
+          location_district: string
+          project_name: string
+          reservation_date?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["launch_status"]
+          total_units?: number
+          unit_types?: string[] | null
+          units_remaining?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          business_id?: string
+          created_at?: string
+          current_phase?: number
+          current_price_per_m2?: number | null
+          delivery_date?: string | null
+          down_payment_pct?: number | null
+          id?: string
+          installment_years?: number | null
+          is_verified?: boolean
+          launch_date?: string | null
+          launch_type?: Database["public"]["Enums"]["launch_type"]
+          location_compound?: string | null
+          location_district?: string
+          project_name?: string
+          reservation_date?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["launch_status"]
+          total_units?: number
+          unit_types?: string[] | null
+          units_remaining?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "launches_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           announcement_notifications: boolean
@@ -1275,6 +1481,9 @@ export type Database = {
         | "early_access"
         | "exclusive_units"
         | "other"
+      launch_buyer_type: "reserver" | "purchaser" | "attendee" | "observer"
+      launch_status: "upcoming" | "reservations_open" | "active" | "sold_out"
+      launch_type: "new_project" | "new_phase" | "relaunch"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1419,6 +1628,9 @@ export const Constants = {
         "exclusive_units",
         "other",
       ],
+      launch_buyer_type: ["reserver", "purchaser", "attendee", "observer"],
+      launch_status: ["upcoming", "reservations_open", "active", "sold_out"],
+      launch_type: ["new_project", "new_phase", "relaunch"],
     },
   },
 } as const
