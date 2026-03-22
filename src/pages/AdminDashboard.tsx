@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -25,6 +25,7 @@ import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
 import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 import AdminDealModeration from '@/components/AdminDealModeration';
+import AdminLaunchModeration from '@/components/AdminLaunchModeration';
 import AdminTracking from '@/components/AdminTracking';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
@@ -2044,6 +2045,7 @@ const AdminDashboard = () => {
         { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
         { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
         { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
+        { icon: <Rocket className="w-4 h-4" />, label: 'Launch Moderation', path: '/admin/launch-moderation' },
       ],
     },
     {
@@ -2135,6 +2137,7 @@ const AdminDashboard = () => {
           <Route path="search-phrases" element={<AdminSearchPhrases />} />
           <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
           <Route path="deal-moderation" element={<AdminDealModeration />} />
+          <Route path="launch-moderation" element={<AdminLaunchModeration />} />
           <Route path="tracking" element={<AdminTracking />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>

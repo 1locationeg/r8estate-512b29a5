@@ -27,6 +27,8 @@ import DevProjects from '@/components/DevProjects';
 import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 import { DealSubmitForm } from '@/components/DealSubmitForm';
 import { LaunchSubmitForm } from '@/components/LaunchSubmitForm';
+import { MyDeals } from '@/components/MyDeals';
+import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -730,7 +732,9 @@ const DeveloperDashboard = () => {
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
     { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
     { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
+    { icon: <Tag className="w-4 h-4" />, label: 'My Deals', path: '/business/my-deals' },
     { icon: <Rocket className="w-4 h-4" />, label: 'Submit Launch', path: '/business/submit-launch' },
+    { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
@@ -767,7 +771,9 @@ const DeveloperDashboard = () => {
         <Route path="reviews" element={<DevReviews />} />
         <Route path="request-review" element={<WhatsAppReviewRequest />} />
         <Route path="submit-deal" element={<DealSubmitForm />} />
+        <Route path="my-deals" element={<MyDeals />} />
         <Route path="submit-launch" element={<LaunchSubmitForm />} />
+        <Route path="my-launches" element={<MyLaunches />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
