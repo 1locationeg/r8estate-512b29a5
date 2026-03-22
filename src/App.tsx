@@ -40,6 +40,7 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 const Community = lazy(() => import("./pages/Community"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const DealWatch = lazy(() => import("./pages/DealWatch"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
