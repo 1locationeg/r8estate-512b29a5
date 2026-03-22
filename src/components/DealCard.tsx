@@ -121,10 +121,13 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
           )}
         </div>
 
-        {/* Deal type pill */}
-        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary font-medium">
-          {dealTypeLabels[deal.deal_type] || deal.deal_type}
-        </Badge>
+        {/* Deal type pill + verdict */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary font-medium">
+            {dealTypeLabels[deal.deal_type] || deal.deal_type}
+          </Badge>
+          <DealVerdictBadge avgRating={avgRating} ratingCount={deal.rating_count} dealType={deal.deal_type} />
+        </div>
 
         {/* Headline */}
         <h3 className="font-bold text-base text-foreground leading-tight">{deal.headline}</h3>
