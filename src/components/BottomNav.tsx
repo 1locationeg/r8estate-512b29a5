@@ -32,15 +32,15 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
 
-          {/* Categories / Directory */}
+          {/* Deal Watch */}
           <button
-            onClick={() => navigate("/directory")}
+            onClick={() => navigate("/deal-watch")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isDirectory ? "text-primary" : "text-muted-foreground"
+              isDealWatch ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
+            <Tag className="h-5 w-5" strokeWidth={isDealWatch ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">Deals</span>
           </button>
 
           {/* Center Brand Button */}
