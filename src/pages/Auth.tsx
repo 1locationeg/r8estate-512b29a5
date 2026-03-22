@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { Footer } from '@/components/Footer';
+import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
