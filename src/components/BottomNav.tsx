@@ -56,21 +56,15 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Insights */}
+          {/* Directory */}
           <button
-            onClick={() => {
-              if (user) {
-                navigate("/insights");
-              } else {
-                navigate("/auth");
-              }
-            }}
+            onClick={() => navigate("/directory")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isInsights ? "text-primary" : "text-muted-foreground"
+              isDirectory ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
+            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
           </button>
 
           {/* Portfolio */}
