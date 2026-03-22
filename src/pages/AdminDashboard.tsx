@@ -2018,6 +2018,7 @@ const AdminDashboard = () => {
         { icon: <Shield className="w-4 h-4" />, label: 'Moderation', path: '/admin/moderation' },
         { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
         { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
+        { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
       ],
     },
     {
