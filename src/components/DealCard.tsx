@@ -31,6 +31,9 @@ interface DealCardProps {
     };
   };
   onRated?: () => void;
+  compareMode?: boolean;
+  isSelected?: boolean;
+  onToggleCompare?: (id: string) => void;
 }
 
 const dealTypeLabels: Record<string, string> = {
