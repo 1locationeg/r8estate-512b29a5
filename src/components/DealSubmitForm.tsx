@@ -85,12 +85,14 @@ export const DealSubmitForm = () => {
         headline: headline.trim(),
         description: description.trim(),
         deal_type: dealType,
+        price: price ? parseFloat(price) : null,
+        down_payment_percent: downPayment ? parseFloat(downPayment) : null,
         valid_until: validUntil ? format(validUntil, "yyyy-MM-dd") : null,
         tags,
       } as any);
       if (error) throw error;
       toast.success("Deal submitted for review!");
-      setHeadline(""); setDescription(""); setDealType(""); setValidUntil(undefined); setTags([]); setAgreed(false);
+      setHeadline(""); setDescription(""); setDealType(""); setPrice(""); setDownPayment(""); setValidUntil(undefined); setTags([]); setAgreed(false);
       // Refresh
       const { data: deals } = await supabase
         .from("deals" as any)
