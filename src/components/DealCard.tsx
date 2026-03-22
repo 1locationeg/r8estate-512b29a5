@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Star, Share2, Flame, Clock } from "lucide-react";
+import { Star, Share2, Flame, Clock, Scale } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { getStarColorClass } from "@/lib/ratingColors";
 import { DealRatingModal } from "./DealRatingModal";
+import { DealVotePoll } from "./DealVotePoll";
+import { DealVerdictBadge } from "./DealVerdictBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
