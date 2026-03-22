@@ -14,6 +14,9 @@ import { toast } from 'sonner';
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { BuyerGamificationPanel } from '@/components/BuyerGamificationPanel';
 import { NotificationPreferences } from '@/components/NotificationPreferences';
+import { OnboardingWizard } from '@/components/OnboardingWizard';
+import { ReferralWidget } from '@/components/ReferralWidget';
+import { SavedSearchWidget } from '@/components/SavedSearchWidget';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
