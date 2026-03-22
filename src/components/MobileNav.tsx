@@ -48,7 +48,7 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
                 className="inline-flex items-center gap-0 hover:opacity-80 transition-opacity"
                 aria-label="Return to home"
               >
-                <BrandLogo size="sm" />
+                <BrandLogo size="hero" />
               </button>
               <LanguageSwitcher />
             </div>

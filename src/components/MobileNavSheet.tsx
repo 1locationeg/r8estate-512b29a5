@@ -42,7 +42,7 @@ export const MobileNavSheet = ({
                 onClick={() => { navigate("/"); onOpenChange(false); }}
                 className="inline-flex items-center gap-0 hover:opacity-80 transition-opacity"
               >
-                <BrandLogo size="sm" />
+                <BrandLogo size="hero" />
               </button>
               <LanguageSwitcher />
             </div>

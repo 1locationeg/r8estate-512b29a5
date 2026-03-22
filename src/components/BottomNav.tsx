@@ -52,8 +52,8 @@ export const BottomNav = () => {
             }}
             className="flex items-center justify-center -mt-4 relative"
           >
-            <div className="h-11 w-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-3 ring-background overflow-hidden">
-              <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain scale-125" />
+            <div className="h-16 w-16 rounded-full bg-white shadow-lg flex items-center justify-center ring-3 ring-background overflow-hidden">
+              <img src={logoIcon} alt="R8ESTATE" className="h-14 w-14 object-contain scale-125" />
             </div>
           </button>
 

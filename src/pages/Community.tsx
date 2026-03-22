@@ -122,7 +122,7 @@ const Community = () => {
       <div className="max-w-[680px] mx-auto px-4 py-4 space-y-3">
         {/* Logo → Home */}
         <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-          <BrandLogo size="xs" />
+          <BrandLogo size="hero" />
         </button>
 
         {/* "What's on your mind?" composer card — Facebook style */}

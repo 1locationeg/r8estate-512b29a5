@@ -47,7 +47,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
               className="flex items-center gap-0 hover:opacity-80 transition-opacity flex-shrink-0"
               aria-label="Return to home"
             >
-              <BrandLogo size="xs" />
+              <BrandLogo size="hero" />
             </button>
 
             <div className="min-w-0">

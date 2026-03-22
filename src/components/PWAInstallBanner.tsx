@@ -73,7 +73,7 @@ export const PWAInstallBanner = () => {
       <div className="bg-primary text-primary-foreground px-4 py-4 shadow-2xl rounded-t-2xl mx-2 mb-0 md:mx-auto md:max-w-md">
         {/* Header row */}
         <div className="flex items-center gap-3 mb-2">
-          <img src={logoIcon} alt="R8estate" className="h-10 w-10 object-contain flex-shrink-0 rounded-lg" />
+          <img src={logoIcon} alt="R8estate" className="h-14 w-14 object-contain flex-shrink-0 rounded-lg" />
           <div className="flex-1 min-w-0">
             <p className="text-sm font-bold truncate">Install R8estate</p>
             <p className="text-xs opacity-70">No App Store needed · Free · Instant</p>

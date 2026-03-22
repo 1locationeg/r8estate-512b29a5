@@ -14,7 +14,7 @@ export const Footer = () => {
       <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-0">
-            <BrandLogo size="sm" className="hover:scale-105 transition-transform duration-200" />
+            <BrandLogo size="hero" className="hover:scale-105 transition-transform duration-200" />
           </div>
           <p className="text-xs md:text-sm text-muted-foreground text-center">
             {t("footer.copyright")}
