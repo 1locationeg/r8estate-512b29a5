@@ -21,6 +21,7 @@ const sortOptions = [
 ];
 
 const DealWatch = () => {
+  const navigate = useNavigate();
   const [deals, setDeals] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [dealType, setDealType] = useState("all");
