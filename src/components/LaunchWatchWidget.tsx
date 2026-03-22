@@ -85,7 +85,7 @@ export const LaunchWatchWidget = () => {
 
       <div className="flex items-center gap-1.5">
         <Rocket className="w-4 h-4 text-primary transition-transform group-hover:scale-110" />
-        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Launch Watch</span>
+        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">Launch Watch</span>
         <span className="flex items-center gap-1 bg-destructive text-destructive-foreground text-[7px] font-bold px-1.5 py-0.5 rounded-full leading-none">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive-foreground opacity-75" />
