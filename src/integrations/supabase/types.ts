@@ -667,6 +667,39 @@ export type Database = {
         }
         Relationships: []
       }
+      onboarding_progress: {
+        Row: {
+          completed_at: string | null
+          created_at: string
+          id: string
+          is_dismissed: boolean
+          role: string
+          steps_completed: string[] | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_dismissed?: boolean
+          role?: string
+          steps_completed?: string[] | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          created_at?: string
+          id?: string
+          is_dismissed?: boolean
+          role?: string
+          steps_completed?: string[] | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       platform_settings: {
         Row: {
           id: string
@@ -763,6 +796,74 @@ export type Database = {
         }
         Relationships: []
       }
+      referrals: {
+        Row: {
+          converted_at: string | null
+          created_at: string
+          id: string
+          points_awarded: number
+          referral_code: string
+          referred_id: string | null
+          referrer_id: string
+          status: string
+        }
+        Insert: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referral_code: string
+          referred_id?: string | null
+          referrer_id: string
+          status?: string
+        }
+        Update: {
+          converted_at?: string | null
+          created_at?: string
+          id?: string
+          points_awarded?: number
+          referral_code?: string
+          referred_id?: string | null
+          referrer_id?: string
+          status?: string
+        }
+        Relationships: []
+      }
+      review_replies: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          review_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          review_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          review_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "review_replies_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       reviews: {
         Row: {
           attachment_urls: string[] | null
@@ -849,6 +950,36 @@ export type Database = {
           item_image?: string | null
           item_name?: string
           item_type?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      saved_searches: {
+        Row: {
+          created_at: string
+          filters: Json | null
+          id: string
+          last_notified_at: string | null
+          notify_enabled: boolean
+          query: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          filters?: Json | null
+          id?: string
+          last_notified_at?: string | null
+          notify_enabled?: boolean
+          query: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          filters?: Json | null
+          id?: string
+          last_notified_at?: string | null
+          notify_enabled?: boolean
+          query?: string
           user_id?: string
         }
         Relationships: []

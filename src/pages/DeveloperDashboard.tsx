@@ -26,6 +26,7 @@ import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
 import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 import { DealSubmitForm } from '@/components/DealSubmitForm';
+import { OnboardingWizard } from '@/components/OnboardingWizard';
 // Use first developer as "my business"
 const myDev = developers[0];
 const myReviews = reviews.filter(r => r.developerId === myDev.id);
@@ -79,6 +80,11 @@ const DevOverview = () => {
 
   return (
     <div>
+      {/* Onboarding Wizard */}
+      <div className="mb-6">
+        <OnboardingWizard />
+      </div>
+
       {/* Business Profile Header */}
       <BusinessProfileHeader
         company={companyData}

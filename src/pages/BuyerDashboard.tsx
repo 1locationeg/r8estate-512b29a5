@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy } from 'lucide-react';
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -14,6 +14,9 @@ import { toast } from 'sonner';
 import { NotificationsPage } from '@/components/NotificationsPage';
 import { BuyerGamificationPanel } from '@/components/BuyerGamificationPanel';
 import { NotificationPreferences } from '@/components/NotificationPreferences';
+import { OnboardingWizard } from '@/components/OnboardingWizard';
+import { ReferralWidget } from '@/components/ReferralWidget';
+import { SavedSearchWidget } from '@/components/SavedSearchWidget';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -48,11 +51,16 @@ const BuyerOverview = () => {
   return (
     <div>
       {/* Welcome */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold text-foreground">
           Welcome back, {profile?.full_name?.split(' ')[0] || 'there'}!
         </h2>
         <p className="text-muted-foreground text-sm">Continue your search for the perfect developer</p>
+      </div>
+
+      {/* Onboarding Wizard */}
+      <div className="mb-6">
+        <OnboardingWizard />
       </div>
 
       {/* Register Your Business CTA - only for non-developer users */}
@@ -141,37 +149,46 @@ const BuyerOverview = () => {
           </div>
         </div>
 
-        {/* Latest Reviews */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground">Latest Reviews</h3>
-            <button className="text-xs text-accent font-semibold hover:underline" onClick={() => navigate('/buyer/reviews')}>View All →</button>
-          </div>
-          <div className="space-y-3">
-            {recentReviews.map((r) => (
-              <div key={r.id} className="bg-card border border-border rounded-xl p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="h-8 w-8">
-                    {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                    <AvatarFallback className="text-[10px] bg-accent text-accent-foreground">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
-                    <p className="text-[10px] text-muted-foreground">{r.date}</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold">{r.rating}.0</span>
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
-                      ))}
+        {/* Sidebar widgets */}
+        <div className="space-y-4">
+          {/* Latest Reviews */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-foreground">Latest Reviews</h3>
+              <button className="text-xs text-accent font-semibold hover:underline" onClick={() => navigate('/buyer/reviews')}>View All →</button>
+            </div>
+            <div className="space-y-3">
+              {recentReviews.map((r) => (
+                <div key={r.id} className="bg-card border border-border rounded-xl p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Avatar className="h-8 w-8">
+                      {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
+                      <AvatarFallback className="text-[10px] bg-accent text-accent-foreground">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
+                      <p className="text-[10px] text-muted-foreground">{r.date}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-bold">{r.rating}.0</span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{r.comment}</p>
                 </div>
-                <p className="text-xs text-muted-foreground line-clamp-2">{r.comment}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* Referral Widget */}
+          <ReferralWidget />
+
+          {/* Saved Search Alerts */}
+          <SavedSearchWidget />
         </div>
       </div>
     </div>
@@ -775,6 +792,8 @@ const BuyerDashboard = () => {
     { icon: <Building2 className="w-4 h-4" />, label: 'Products I Use', path: '/buyer/saved' },
     { icon: <Search className="w-4 h-4" />, label: 'Research Board', path: '/directory' },
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
+    { icon: <Bookmark className="w-4 h-4" />, label: 'Search Alerts', path: '/buyer/search-alerts' },
+    { icon: <Gift className="w-4 h-4" />, label: 'Invite Friends', path: '/buyer/referrals' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
@@ -794,6 +813,8 @@ const BuyerDashboard = () => {
         <Route index element={<BuyerOverview />} />
         <Route path="reviews" element={<BuyerReviews />} />
         <Route path="saved" element={<BuyerSaved />} />
+        <Route path="search-alerts" element={<SavedSearchWidget />} />
+        <Route path="referrals" element={<ReferralWidget />} />
         <Route path="achievements" element={<BuyerGamificationPanel />} />
         <Route path="notifications" element={<NotificationsPage />} />
         <Route path="notification-preferences" element={<NotificationPreferences />} />
