@@ -1,4 +1,4 @@
-import { FileSearch, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
+import { Scale, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 
