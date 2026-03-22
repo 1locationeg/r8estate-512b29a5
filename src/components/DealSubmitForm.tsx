@@ -177,12 +177,7 @@ export const DealSubmitForm = () => {
           )}
         </div>
 
-        <div className="flex items-start gap-2">
-          <Checkbox id="terms" checked={agreed} onCheckedChange={(v) => setAgreed(!!v)} className="mt-0.5" />
-          <Label htmlFor="terms" className="text-xs leading-relaxed">
-            I confirm this is a real offer and not a paid promotion. R8ESTATE may verify and remove deals that violate guidelines.
-          </Label>
-        </div>
+        <DisclaimerCheckbox checked={agreed} onCheckedChange={setAgreed} />
 
         <Button onClick={handleSubmit} disabled={loading || !headline.trim() || !description.trim() || !dealType || !agreed} className="w-full">
           {loading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Submitting...</> : "Submit for Review"}
