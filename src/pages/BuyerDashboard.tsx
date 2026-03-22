@@ -149,37 +149,46 @@ const BuyerOverview = () => {
           </div>
         </div>
 
-        {/* Latest Reviews */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground">Latest Reviews</h3>
-            <button className="text-xs text-accent font-semibold hover:underline" onClick={() => navigate('/buyer/reviews')}>View All →</button>
-          </div>
-          <div className="space-y-3">
-            {recentReviews.map((r) => (
-              <div key={r.id} className="bg-card border border-border rounded-xl p-3">
-                <div className="flex items-center gap-2 mb-2">
-                  <Avatar className="h-8 w-8">
-                    {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                    <AvatarFallback className="text-[10px] bg-accent text-accent-foreground">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
-                    <p className="text-[10px] text-muted-foreground">{r.date}</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold">{r.rating}.0</span>
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
-                      ))}
+        {/* Sidebar widgets */}
+        <div className="space-y-4">
+          {/* Latest Reviews */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-foreground">Latest Reviews</h3>
+              <button className="text-xs text-accent font-semibold hover:underline" onClick={() => navigate('/buyer/reviews')}>View All →</button>
+            </div>
+            <div className="space-y-3">
+              {recentReviews.map((r) => (
+                <div key={r.id} className="bg-card border border-border rounded-xl p-3">
+                  <div className="flex items-center gap-2 mb-2">
+                    <Avatar className="h-8 w-8">
+                      {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
+                      <AvatarFallback className="text-[10px] bg-accent text-accent-foreground">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
+                      <p className="text-[10px] text-muted-foreground">{r.date}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-bold">{r.rating}.0</span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`w-3 h-3 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+                        ))}
+                      </div>
                     </div>
                   </div>
+                  <p className="text-xs text-muted-foreground line-clamp-2">{r.comment}</p>
                 </div>
-                <p className="text-xs text-muted-foreground line-clamp-2">{r.comment}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
+
+          {/* Referral Widget */}
+          <ReferralWidget />
+
+          {/* Saved Search Alerts */}
+          <SavedSearchWidget />
         </div>
       </div>
     </div>
