@@ -2061,6 +2061,7 @@ const AdminDashboard = () => {
       label: 'Settings',
       items: [
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
+        { icon: <Activity className="w-4 h-4" />, label: 'Mouseflow', path: '/admin/mouseflow' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
     },
