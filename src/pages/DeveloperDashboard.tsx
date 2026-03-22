@@ -25,7 +25,7 @@ import { NotificationsPage } from '@/components/NotificationsPage';
 import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
 import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
-
+import { DealSubmitForm } from '@/components/DealSubmitForm';
 // Use first developer as "my business"
 const myDev = developers[0];
 const myReviews = reviews.filter(r => r.developerId === myDev.id);
@@ -722,6 +722,7 @@ const DeveloperDashboard = () => {
     { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
     { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
+    { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
@@ -757,6 +758,7 @@ const DeveloperDashboard = () => {
         <Route path="gamification" element={<GamificationPanel />} />
         <Route path="reviews" element={<DevReviews />} />
         <Route path="request-review" element={<WhatsAppReviewRequest />} />
+        <Route path="submit-deal" element={<DealSubmitForm />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />

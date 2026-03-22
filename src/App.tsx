@@ -40,6 +40,7 @@ const Portfolio = lazy(() => import("./pages/Portfolio"));
 const InsightsPage = lazy(() => import("./pages/InsightsPage"));
 const Community = lazy(() => import("./pages/Community"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
+const DealWatch = lazy(() => import("./pages/DealWatch"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -95,6 +96,7 @@ const App = () => (
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/deal-watch" element={<DealWatch />} />
                 {/* Legacy /developer redirects */}
                 <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

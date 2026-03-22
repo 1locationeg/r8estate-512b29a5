@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Sparkles, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Sparkles, Tag } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
@@ -11,10 +11,9 @@ export const BottomNav = () => {
   const { user } = useAuth();
 
   const isReviews = location.pathname === "/reviews";
+  const isDealWatch = location.pathname === "/deal-watch";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
-  const isCommunity = location.pathname === "/community";
-  const isPortfolio = location.pathname === "/portfolio";
 
   return (
     <>
@@ -33,15 +32,15 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
 
-          {/* Categories / Directory */}
+          {/* Deal Watch */}
           <button
-            onClick={() => navigate("/directory")}
+            onClick={() => navigate("/deal-watch")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isDirectory ? "text-primary" : "text-muted-foreground"
+              isDealWatch ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
+            <Tag className="h-5 w-5" strokeWidth={isDealWatch ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">Deals</span>
           </button>
 
           {/* Center Brand Button */}
@@ -55,6 +54,17 @@ export const BottomNav = () => {
             <div className="h-11 w-11 rounded-full bg-white shadow-lg flex items-center justify-center ring-3 ring-background overflow-hidden">
               <img src={logoIcon} alt="R8ESTATE" className="h-10 w-10 object-contain scale-125" />
             </div>
+          </button>
+
+          {/* Directory */}
+          <button
+            onClick={() => navigate("/directory")}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+              isDirectory ? "text-primary" : "text-muted-foreground"
+            }`}
+          >
+            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
           </button>
 
           {/* Insights */}
@@ -72,23 +82,6 @@ export const BottomNav = () => {
           >
             <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
-          </button>
-
-          {/* Portfolio */}
-          <button
-            onClick={() => {
-              if (user) {
-                navigate("/portfolio");
-              } else {
-                navigate("/auth");
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isPortfolio ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
           </button>
         </div>
       </nav>
