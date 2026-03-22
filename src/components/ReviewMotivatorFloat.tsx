@@ -17,6 +17,7 @@ export const ReviewMotivatorFloat = ({
   isReviewModalOpen = false,
 }: ReviewMotivatorFloatProps) => {
   const { user } = useAuth();
+  if (MVP_MODE) return null;
   const [dismissed, setDismissed] = useState(false);
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
