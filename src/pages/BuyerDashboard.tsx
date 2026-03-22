@@ -51,11 +51,16 @@ const BuyerOverview = () => {
   return (
     <div>
       {/* Welcome */}
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold text-foreground">
           Welcome back, {profile?.full_name?.split(' ')[0] || 'there'}!
         </h2>
         <p className="text-muted-foreground text-sm">Continue your search for the perfect developer</p>
+      </div>
+
+      {/* Onboarding Wizard */}
+      <div className="mb-6">
+        <OnboardingWizard />
       </div>
 
       {/* Register Your Business CTA - only for non-developer users */}
