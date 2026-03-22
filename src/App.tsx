@@ -96,6 +96,7 @@ const App = () => (
                 <Route path="/insights" element={<InsightsPage />} />
                 <Route path="/community" element={<Community />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/deal-watch" element={<DealWatch />} />
                 {/* Legacy /developer redirects */}
                 <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

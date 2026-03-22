@@ -67,21 +67,21 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
           </button>
 
-          {/* Portfolio */}
+          {/* Insights */}
           <button
             onClick={() => {
               if (user) {
-                navigate("/portfolio");
+                navigate("/insights");
               } else {
                 navigate("/auth");
               }
             }}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isPortfolio ? "text-primary" : "text-muted-foreground"
+              isInsights ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
+            <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
           </button>
         </div>
       </nav>
