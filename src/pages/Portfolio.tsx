@@ -20,7 +20,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import logoIcon from "@/assets/logo-icon.png";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface SavedItem {
   id: string;
@@ -338,7 +338,7 @@ const Portfolio = () => {
             </p>
           </div>
           <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-            <img src={logoIcon} alt="R8ESTATE" className="h-8 w-8 object-contain opacity-60" />
+            <BrandLogo size="sm" />
           </button>
         </div>
 

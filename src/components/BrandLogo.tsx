@@ -12,9 +12,9 @@ interface BrandLogoProps {
 
 const sizeConfig = {
   xs: {
-    img: "h-8 w-8 -mr-1",
-    text: "text-sm",
-    tagline: "text-[6px]",
+    img: "h-10 w-10 -mr-1.5",
+    text: "text-lg",
+    tagline: "text-[7px]",
   },
   sm: {
     img: "h-10 w-10 -mr-1.5",
@@ -22,8 +22,8 @@ const sizeConfig = {
     tagline: "text-[7px]",
   },
   md: {
-    img: "h-12 w-12 -mr-1.5",
-    text: "text-xl",
+    img: "h-10 w-10 -mr-1.5",
+    text: "text-lg",
     tagline: "text-[7px]",
   },
   lg: {
