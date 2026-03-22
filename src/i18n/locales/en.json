@@ -776,5 +776,15 @@
     "agreePrefix": "I have read and agree to the",
     "agreeLinkText": "Platform Disclaimer",
     "close": "Close"
+  },
+  "welcome": {
+    "giftTitle": "Welcome Gift! 🎁",
+    "giftSubtitle": "You've earned 5 bonus points just for joining!",
+    "points": "points",
+    "giftMessage": "Start exploring, writing reviews, and engaging with the community to earn more points and climb the leaderboard!",
+    "perkReviews": "Write reviews",
+    "perkLeaderboard": "Climb ranks",
+    "viewLeaderboard": "View Leaderboard",
+    "exploreLater": "Explore Later"
   }
 }
