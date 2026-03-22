@@ -79,21 +79,20 @@ export const LaunchWatchWidget = () => {
   return (
     <button
       onClick={() => navigate("/launch-watch")}
-      className="relative flex flex-col items-center gap-1.5 p-3 md:p-4 rounded-xl border ring-1 ring-primary/20 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent hover:shadow-lg transition-all text-center group overflow-hidden"
+      className="relative flex flex-col items-center gap-1.5 p-3 pt-4 md:p-4 md:pt-5 rounded-xl border ring-1 ring-primary/20 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent hover:shadow-lg transition-all text-center group overflow-hidden"
     >
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
-
-      <span className="absolute top-1.5 right-1.5 flex items-center gap-1 bg-destructive text-destructive-foreground text-[8px] font-bold px-1.5 py-0.5 rounded-full">
-        <span className="relative flex h-1.5 w-1.5">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive-foreground opacity-75" />
-          <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-destructive-foreground" />
-        </span>
-        LIVE
-      </span>
 
       <div className="flex items-center gap-1.5">
         <Rocket className="w-4 h-4 text-primary transition-transform group-hover:scale-110" />
         <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Launch Watch</span>
+        <span className="flex items-center gap-1 bg-destructive text-destructive-foreground text-[7px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive-foreground opacity-75" />
+            <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-destructive-foreground" />
+          </span>
+          LIVE
+        </span>
       </div>
 
       <span className="text-2xl md:text-3xl font-black leading-none tracking-tight text-primary transition-all">
@@ -101,7 +100,6 @@ export const LaunchWatchWidget = () => {
       </span>
       <span className="text-[10px] md:text-xs text-muted-foreground leading-snug transition-all">{current.label}</span>
 
-      {/* Dots indicator */}
       <div className="flex gap-1 mt-0.5">
         {stats.map((_, i) => (
           <span key={i} className={`h-1 rounded-full transition-all ${i === activeIdx ? "w-3 bg-primary" : "w-1 bg-muted-foreground/30"}`} />
