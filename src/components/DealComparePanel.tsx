@@ -16,13 +16,14 @@ interface CompareDeal {
   valid_until: string | null;
   created_at: string;
   tags: string[];
+  price?: number | null;
+  down_payment_percent?: number | null;
   business_profiles?: {
     id: string;
     company_name: string | null;
     logo_url: string | null;
     specialties: string[] | null;
   };
-  // vote data injected
   yesVotes?: number;
   noVotes?: number;
 }
