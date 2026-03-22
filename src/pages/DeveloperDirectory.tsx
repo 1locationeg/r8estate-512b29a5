@@ -33,7 +33,7 @@ const DeveloperDirectory = () => {
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
               aria-label="Return to home"
             >
-              <BrandLogo size="sm" />
+              <BrandLogo size="hero" />
             </button>
           </div>
           <LanguageSwitcher />

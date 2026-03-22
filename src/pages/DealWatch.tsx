@@ -62,7 +62,7 @@ const DealWatch = () => {
         {/* Header */}
         <div className="space-y-2">
           <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-            <BrandLogo size="xs" />
+            <BrandLogo size="hero" />
           </button>
           <div className="flex items-center gap-2">
             <Tag className="w-6 h-6 text-primary" />

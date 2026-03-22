@@ -99,7 +99,7 @@ const Leaderboard = () => {
               onClick={() => navigate("/")}
               className="flex items-center gap-2 hover:opacity-80 transition-opacity"
             >
-              <BrandLogo size="sm" />
+              <BrandLogo size="hero" />
             </button>
           </div>
           <LanguageSwitcher />

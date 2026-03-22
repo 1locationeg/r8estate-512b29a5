@@ -91,7 +91,7 @@ const Reviews = () => {
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-              <BrandLogo size="xs" />
+              <BrandLogo size="hero" />
             </button>
           </div>
           <Button

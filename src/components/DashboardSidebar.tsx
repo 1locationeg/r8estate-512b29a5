@@ -106,7 +106,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
         >
-          <BrandLogo size="sm" subtitle={portalLabel} />
+          <BrandLogo size="hero" subtitle={portalLabel} />
         </div>
       </div>
 

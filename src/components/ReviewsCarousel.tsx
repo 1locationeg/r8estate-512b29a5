@@ -305,7 +305,7 @@ export function ReviewsCarousel() {
               ({formatNumber(sortedReviews.length, i18n.language)})
             </span>
           </div>
-          <BrandLogo size="xs" tagline="" />
+          <BrandLogo size="hero" tagline="" />
         </div>
       </div>
     </section>
