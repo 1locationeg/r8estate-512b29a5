@@ -170,8 +170,22 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
           )}
         </div>
 
+        {/* Community poll */}
+        <DealVotePoll dealId={deal.id} />
+
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1">
+          {compareMode && onToggleCompare && (
+            <Button
+              variant={isSelected ? "secondary" : "outline"}
+              size="sm"
+              className="text-xs gap-1"
+              onClick={() => onToggleCompare(deal.id)}
+            >
+              <Scale className="w-3 h-3" />
+              {isSelected ? "Selected" : "Compare"}
+            </Button>
+          )}
           <Button
             size="sm"
             onClick={() => {
