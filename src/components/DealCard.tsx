@@ -23,6 +23,8 @@ interface DealCardProps {
     rating_count: number;
     valid_until: string | null;
     created_at: string;
+    price?: number | null;
+    down_payment_percent?: number | null;
     business_profiles?: {
       id: string;
       company_name: string | null;
