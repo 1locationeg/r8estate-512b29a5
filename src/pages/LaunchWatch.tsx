@@ -57,6 +57,15 @@ const LaunchWatch = () => {
   const [businessFilter, setBusinessFilter] = useState("all");
   const [ratingLaunchId, setRatingLaunchId] = useState<string | null>(null);
   const [stats, setStats] = useState({ active: 0, thisMonth: 0, totalRatings: 0 });
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) { toast.info("You can compare up to 3 launches"); return prev; }
+      return [...prev, id];
+    });
+  };
 
   // Fallback dummy launches for demo
   const dummyLaunches = [
