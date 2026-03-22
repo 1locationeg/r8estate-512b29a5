@@ -786,5 +786,17 @@
     "perkLeaderboard": "Climb ranks",
     "viewLeaderboard": "View Leaderboard",
     "exploreLater": "Explore Later"
+  },
+  "tour": {
+    "welcome": { "title": "Welcome to R8ESTATE!", "desc": "Your trusted platform for real estate reviews and insights. Let us show you around in 30 seconds." },
+    "search": { "title": "Search & Explore", "desc": "Search developers, projects, and locations. Browse categories to find exactly what you need." },
+    "reviews": { "title": "Read & Write Reviews", "desc": "See real buyer experiences and trust scores. Sign up to write your own reviews and earn points." },
+    "trust": { "title": "Trust Scores & Insights", "desc": "Every developer has a trust score based on verified reviews. Compare developers side by side." },
+    "business": { "title": "For Businesses", "desc": "Claim your business profile, respond to reviews, and showcase your projects to thousands of buyers." },
+    "signup": { "title": "Join & Earn Rewards", "desc": "Create a free account to save favorites, track developers, write reviews, and earn gamification points!" },
+    "prev": "Back",
+    "next": "Next",
+    "skip": "Skip",
+    "getStarted": "Get Started"
   }
 }

@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { GuidedTour } from "@/components/GuidedTour";
 import { MVP_MODE } from "@/lib/mvpMode";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -674,6 +675,7 @@ const Index = () => {
 
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
+      <GuidedTour />
 
     </div>);
 
