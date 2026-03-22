@@ -27,6 +27,7 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
   const [uploading, setUploading] = useState(false);
   const [documentUrl, setDocumentUrl] = useState('');
   const [notes, setNotes] = useState('');
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
