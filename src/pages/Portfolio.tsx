@@ -338,7 +338,7 @@ const Portfolio = () => {
             </p>
           </div>
           <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-            <img src={logoIcon} alt="R8ESTATE" className="h-8 w-8 object-contain opacity-60" />
+            <BrandLogo size="sm" />
           </button>
         </div>
 

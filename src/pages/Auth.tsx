@@ -200,7 +200,7 @@ const Auth = () => {
               className="flex items-center justify-center mx-auto mb-4 hover:opacity-80 transition-opacity"
               aria-label="Return to home"
             >
-              <BrandLogo size="md" />
+              <BrandLogo size="hero" />
             </button>
 
             {/* ===== STEP 1: Social + Email ===== */}

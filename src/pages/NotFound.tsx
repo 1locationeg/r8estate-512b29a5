@@ -19,7 +19,7 @@ const NotFound = () => {
           className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           aria-label="Return to home"
         >
-          <BrandLogo size="md" />
+          <BrandLogo size="hero" />
         </button>
         <div className="text-center">
           <h1 className="mb-4 text-4xl font-bold">404</h1>

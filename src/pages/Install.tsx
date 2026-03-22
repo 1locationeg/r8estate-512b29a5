@@ -48,7 +48,7 @@ const Install = () => {
         </button>
 
         <div className="flex items-center justify-center gap-3">
-          <BrandLogo size="lg" />
+          <BrandLogo size="hero" />
         </div>
 
         {isInstalled ? (

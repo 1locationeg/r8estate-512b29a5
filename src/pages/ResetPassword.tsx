@@ -79,7 +79,7 @@ const ResetPassword = () => {
               className="flex items-center justify-center gap-3 mb-6 mx-auto hover:opacity-80 transition-opacity"
               aria-label="Return to home"
             >
-              <BrandLogo size="md" />
+              <BrandLogo size="hero" />
             </button>
 
             {isSuccess ? (
