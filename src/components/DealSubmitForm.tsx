@@ -141,6 +141,17 @@ export const DealSubmitForm = () => {
           </Select>
         </div>
 
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Price (EGP)</Label>
+            <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. 2500000" min="0" />
+          </div>
+          <div>
+            <Label>Down Payment %</Label>
+            <Input type="number" value={downPayment} onChange={(e) => setDownPayment(e.target.value)} placeholder="e.g. 10" min="0" max="100" />
+          </div>
+        </div>
+
         <div>
           <Label>Description</Label>
           <Textarea value={description} onChange={(e) => setDescription(e.target.value.slice(0, 300))} placeholder="Describe the deal..." maxLength={300} rows={3} />
