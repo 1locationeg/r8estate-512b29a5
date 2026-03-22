@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -25,6 +25,7 @@ import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
 import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 import AdminDealModeration from '@/components/AdminDealModeration';
+import AdminMouseflow from '@/components/AdminMouseflow';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
@@ -2060,6 +2061,7 @@ const AdminDashboard = () => {
       label: 'Settings',
       items: [
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
+        { icon: <Activity className="w-4 h-4" />, label: 'Mouseflow', path: '/admin/mouseflow' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
     },
@@ -2109,6 +2111,7 @@ const AdminDashboard = () => {
           <Route path="search-phrases" element={<AdminSearchPhrases />} />
           <Route path="fraud-detection" element={<AdminFakeReviewDetection />} />
           <Route path="deal-moderation" element={<AdminDealModeration />} />
+          <Route path="mouseflow" element={<AdminMouseflow />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
