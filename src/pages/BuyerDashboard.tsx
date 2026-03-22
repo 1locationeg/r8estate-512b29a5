@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from 'react';
+import { MVP_MODE } from '@/lib/mvpMode';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
@@ -788,7 +789,7 @@ const BuyerDashboard = () => {
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || role === 'business' || role === 'admin') return null;
 
-  const navItems = [
+  const allNavItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/buyer' },
     { icon: <Building2 className="w-4 h-4" />, label: 'Products I Use', path: '/buyer/saved' },
     { icon: <Search className="w-4 h-4" />, label: 'Research Board', path: '/directory' },
@@ -796,12 +797,16 @@ const BuyerDashboard = () => {
     { icon: <Bookmark className="w-4 h-4" />, label: 'Search Alerts', path: '/buyer/search-alerts' },
     { icon: <Gift className="w-4 h-4" />, label: 'Invite Friends', path: '/buyer/referrals' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
-    { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
-    { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
+    { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community', mvpHidden: true },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard', mvpHidden: true },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/buyer/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/buyer/notification-preferences' },
     { icon: <User className="w-4 h-4" />, label: 'Account Details', path: '/buyer/settings' },
   ];
+
+  const navItems = MVP_MODE
+    ? allNavItems.filter((item) => !(item as any).mvpHidden)
+    : allNavItems;
 
 
   return (

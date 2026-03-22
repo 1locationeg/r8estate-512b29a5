@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { MVP_MODE } from "@/lib/mvpMode";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
@@ -494,9 +495,9 @@ const Index = () => {
                       </button>);
 
                 })}
-                  <DealWatchWidget />
+                  {!MVP_MODE && <DealWatchWidget />}
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
-                  <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
+                  {!MVP_MODE && <MarketPulseWidget onClick={() => handleQuickAction('insights')} />}
                 </div>
               </div>
 
@@ -527,9 +528,11 @@ const Index = () => {
               <div className="w-full max-w-3xl px-4">
                 <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
               </div>
-              <div className="w-full max-w-3xl px-4 mt-4">
-                <CommunityHighlights />
-              </div>
+              {!MVP_MODE && (
+                <div className="w-full max-w-3xl px-4 mt-4">
+                  <CommunityHighlights />
+                </div>
+              )}
             </>
             }
 
