@@ -1,4 +1,4 @@
-import { FileSearch, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
+import { Scale, Upload, CheckCircle2, AlertTriangle, AlertCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 
@@ -44,7 +44,7 @@ const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
       className={`relative h-full w-full flex flex-col items-center gap-1 p-3 md:p-4 rounded-xl border bg-card text-center transition-colors duration-300 cursor-pointer ${style.border}`}
     >
       <div className="flex items-center gap-1.5">
-        <FileSearch className={`w-4 h-4 transition-colors duration-300 ${style.headerIcon}`} />
+        <Scale className={`w-4 h-4 transition-colors duration-300 ${style.headerIcon}`} />
         <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider">
           {t("hero.contractHealthTitle", "Contract Health")}
         </span>
