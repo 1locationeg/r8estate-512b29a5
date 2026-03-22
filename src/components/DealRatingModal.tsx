@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 
 interface DealRatingModalProps {
   dealId: string;
@@ -24,6 +25,7 @@ export const DealRatingModal = ({ dealId, dealHeadline, open, onClose, onSuccess
   const [reviewText, setReviewText] = useState("");
   const [isVerifiedBuyer, setIsVerifiedBuyer] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   const handleSubmit = async () => {
     if (!user || stars === 0) return;
@@ -102,9 +104,11 @@ export const DealRatingModal = ({ dealId, dealHeadline, open, onClose, onSuccess
             </Label>
           </div>
 
+          <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
           <Button
             className="w-full"
-            disabled={stars === 0 || loading}
+            disabled={stars === 0 || loading || !disclaimerAgreed}
             onClick={handleSubmit}
           >
             {loading ? "Submitting..." : "Submit Rating"}

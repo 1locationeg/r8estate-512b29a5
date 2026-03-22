@@ -9,6 +9,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Shield, Upload, Loader2, CheckCircle, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
 
 interface ClaimBusinessModalProps {
   open: boolean;
@@ -26,6 +27,7 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
   const [uploading, setUploading] = useState(false);
   const [documentUrl, setDocumentUrl] = useState('');
   const [notes, setNotes] = useState('');
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -170,9 +172,11 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
               />
             </div>
 
+            <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
             <Button
               onClick={handleSubmit}
-              disabled={loading || !documentUrl}
+              disabled={loading || !documentUrl || !disclaimerAgreed}
               className="w-full"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Shield className="w-4 h-4 mr-2" />}

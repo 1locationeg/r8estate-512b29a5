@@ -1,4 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from "react";
+import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -101,6 +102,7 @@ export const WriteReviewModal = ({
   const [unitType, setUnitType] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [guestName, setGuestName] = useState("");
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   // AI state
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
@@ -944,6 +946,9 @@ export const WriteReviewModal = ({
           {/* Trust signals for guests */}
           {isGuest && <TrustSignals compact />}
 
+          {/* Disclaimer */}
+          <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
           {/* Submit */}
           <div className="flex items-center justify-end gap-2 pt-2">
              <Button variant="outline" onClick={() => onOpenChange(false)}>
@@ -951,7 +956,7 @@ export const WriteReviewModal = ({
             </Button>
             <Button
               onClick={handleSubmit}
-              disabled={isUploading || rating === 0 || !content.trim()}
+              disabled={isUploading || rating === 0 || !content.trim() || !disclaimerAgreed}
               className="gap-1.5 min-h-[44px]"
             >
                {isUploading ? (

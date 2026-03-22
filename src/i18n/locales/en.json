@@ -738,5 +738,43 @@
   "verified_badge": "Verified Review",
   "read_reviews": "Read Reviews",
   "stars_label": "out of 5",
-  "reviews_count": "{{count}} verified reviews"
+  "reviews_count": "{{count}} verified reviews",
+  "disclaimer": {
+    "title": "Disclaimer – R8 Platform",
+    "lastUpdated": "Last updated: 2026-02-27",
+    "intro": "R8 platform operates as a neutral technology intermediary that enables users to publish and share their personal experiences related to real estate projects. The platform does not create reviews, does not endorse their content, and does not confirm the validity of any claims made therein.",
+    "sections": [
+      {
+        "heading": "Nature of Content",
+        "content": "All published reviews and opinions express the views of their authors only, and do not represent an opinion, recommendation, or endorsement by the platform."
+      },
+      {
+        "heading": "No Advisory Services",
+        "content": "Published content does not constitute legal, financial, technical, or investment advice. The user bears full responsibility for their decisions."
+      },
+      {
+        "heading": "Limitation of Liability",
+        "content": "To the maximum extent permitted by law, the platform is not liable for any direct or indirect losses arising from reliance on reviews or published content."
+      },
+      {
+        "heading": "No Legal Verification",
+        "content": "Where reviews are supported by documents, the platform performs a formal review only and does not legally verify the authenticity of documents or claims."
+      },
+      {
+        "heading": "Disputes",
+        "content": "The platform is not a party to any dispute arising between users and companies, and its role is limited to hosting content and allowing the right of reply."
+      },
+      {
+        "heading": "External Links",
+        "content": "The platform may contain links to external websites and is not responsible for the content or policies of those websites."
+      },
+      {
+        "heading": "Updates",
+        "content": "The platform reserves the right to modify this disclaimer at any time by publishing the updated version."
+      }
+    ],
+    "agreePrefix": "I have read and agree to the",
+    "agreeLinkText": "Platform Disclaimer",
+    "close": "Close"
+  }
 }

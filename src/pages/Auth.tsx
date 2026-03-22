@@ -10,6 +10,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { Footer } from '@/components/Footer';
+import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -28,6 +29,7 @@ const Auth = () => {
   const isBusinessMode = searchParams.get('type') === 'business';
   const [accountType, setAccountType] = useState<AccountType>(isBusinessMode ? 'business' : 'buyer');
   const [step, setStep] = useState<Step>('social');
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
   const [isNewUser, setIsNewUser] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSyncingBusinessRole, setIsSyncingBusinessRole] = useState(false);
@@ -362,7 +364,11 @@ const Auth = () => {
                     )}
                   </div>
 
-                  <Button type="submit" className="w-full h-11 text-sm font-semibold" disabled={isLoading}>
+                  {isNewUser && (
+                    <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+                  )}
+
+                  <Button type="submit" className="w-full h-11 text-sm font-semibold" disabled={isLoading || (isNewUser && !disclaimerAgreed)}>
                     {isLoading ? (
                       <><Loader2 className="w-4 h-4 me-2 animate-spin" />{isNewUser ? t('auth.creating', 'Creating...') : t('auth.signingIn', 'Signing in...')}</>
                     ) : (
