@@ -149,8 +149,7 @@ const Index = () => {
     }
   };
 
-  const quickActions = [
-  { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" }];
+  const quickActions: { key: string; icon: typeof GitCompare; title: string; desc: string; color: string }[] = [];
 
 
 
