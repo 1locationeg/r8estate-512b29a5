@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBuyerGamification } from "@/hooks/useBuyerGamification";
 import { cn } from "@/lib/utils";
+import { MVP_MODE } from "@/lib/mvpMode";
 
 interface ReviewMotivatorFloatProps {
   onWriteReview: () => void;
