@@ -449,6 +449,15 @@ const LaunchWatch = () => {
           onSuccess={() => { setRatingLaunchId(null); fetchData(); }}
         />
       )}
+
+      {/* Compare panel */}
+      <LaunchComparePanel
+        launches={launches}
+        selectedIds={compareIds}
+        onToggleSelect={toggleCompare}
+        onClear={() => setCompareIds([])}
+        allRatings={allRatings}
+      />
     </div>
   );
 };
