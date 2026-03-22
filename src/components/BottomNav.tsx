@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MessageSquare, LayoutGrid, Users, Sparkles, Briefcase } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { MVP_MODE } from "@/lib/mvpMode";
 import logoIcon from "@/assets/logo-icon.png";
 
 export const BottomNav = () => {
@@ -13,7 +14,6 @@ export const BottomNav = () => {
   const isReviews = location.pathname === "/reviews";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
-  const isCommunity = location.pathname === "/community";
   const isPortfolio = location.pathname === "/portfolio";
 
   return (
@@ -57,39 +57,59 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Insights */}
-          <button
-            onClick={() => {
-              if (user) {
-                navigate("/insights");
-              } else {
-                navigate("/auth");
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isInsights ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
-          </button>
+          {/* Insights — hidden in MVP mode, replaced with Portfolio for balance */}
+          {!MVP_MODE ? (
+            <button
+              onClick={() => {
+                if (user) {
+                  navigate("/insights");
+                } else {
+                  navigate("/auth");
+                }
+              }}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+                isInsights ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Sparkles className="h-5 w-5" strokeWidth={isInsights ? 2.5 : 2} />
+              <span className="text-[10px] font-medium">{t("nav.insights", "Insights")}</span>
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                if (user) {
+                  navigate("/portfolio");
+                } else {
+                  navigate("/auth");
+                }
+              }}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+                isPortfolio ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
+              <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
+            </button>
+          )}
 
-          {/* Portfolio */}
-          <button
-            onClick={() => {
-              if (user) {
-                navigate("/portfolio");
-              } else {
-                navigate("/auth");
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isPortfolio ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
-          </button>
+          {/* Portfolio — only show when not in MVP mode (since we moved it above) */}
+          {!MVP_MODE && (
+            <button
+              onClick={() => {
+                if (user) {
+                  navigate("/portfolio");
+                } else {
+                  navigate("/auth");
+                }
+              }}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+                isPortfolio ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
+              <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
+            </button>
+          )}
         </div>
       </nav>
     </>
