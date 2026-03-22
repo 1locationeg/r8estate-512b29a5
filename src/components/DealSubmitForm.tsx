@@ -13,6 +13,7 @@ import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 import { toast } from "sonner";
 
 const dealTypes = [
