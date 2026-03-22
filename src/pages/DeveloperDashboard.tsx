@@ -13,7 +13,7 @@ import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket
 } from 'lucide-react';
 import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
@@ -26,6 +26,7 @@ import { NotificationPreferences } from '@/components/NotificationPreferences';
 import DevProjects from '@/components/DevProjects';
 import { WhatsAppReviewRequest } from '@/components/WhatsAppReviewRequest';
 import { DealSubmitForm } from '@/components/DealSubmitForm';
+import { LaunchSubmitForm } from '@/components/LaunchSubmitForm';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -729,6 +730,7 @@ const DeveloperDashboard = () => {
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
     { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
     { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
+    { icon: <Rocket className="w-4 h-4" />, label: 'Submit Launch', path: '/business/submit-launch' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
@@ -765,6 +767,7 @@ const DeveloperDashboard = () => {
         <Route path="reviews" element={<DevReviews />} />
         <Route path="request-review" element={<WhatsAppReviewRequest />} />
         <Route path="submit-deal" element={<DealSubmitForm />} />
+        <Route path="submit-launch" element={<LaunchSubmitForm />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />

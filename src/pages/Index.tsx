@@ -20,6 +20,7 @@ import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
+import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu } from "lucide-react";
@@ -495,6 +496,7 @@ const Index = () => {
 
                 })}
                   <DealWatchWidget />
+                  <LaunchWatchWidget />
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
                   <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
