@@ -47,7 +47,7 @@ const statusConfig: Record<string, { bg: string; label: string }> = {
   sold_out: { bg: "bg-muted-foreground", label: "Sold Out" },
 };
 
-export const LaunchCard = ({ launch, phases = [], ratings = [], onRate }: LaunchCardProps) => {
+export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelected, onToggleCompare }: LaunchCardProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showPhases, setShowPhases] = useState(false);
