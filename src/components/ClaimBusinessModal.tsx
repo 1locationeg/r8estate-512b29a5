@@ -172,9 +172,11 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
               />
             </div>
 
+            <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
             <Button
               onClick={handleSubmit}
-              disabled={loading || !documentUrl}
+              disabled={loading || !documentUrl || !disclaimerAgreed}
               className="w-full"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : <Shield className="w-4 h-4 mr-2" />}
