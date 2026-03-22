@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { BrandLogo } from "@/components/BrandLogo";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy, Edit3, ImageIcon, BarChart3 } from "lucide-react";
