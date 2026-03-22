@@ -15,7 +15,7 @@ export const LiveActivityFeed = () => {
   const { t } = useTranslation();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [visibleIdx, setVisibleIdx] = useState(0);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     fetchRecentActivity();
