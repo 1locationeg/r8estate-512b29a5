@@ -1,34 +1,44 @@
 
 
-# Unify All Logos to BrandLogo Component
+# Unify All Logos to Homepage Size
 
 ## Problem
-Logo appears in different sizes and formats across the platform — some pages use the `BrandLogo` component with varying sizes (`xs`, `sm`, `md`, `lg`, `hero`), while others use raw `logoIcon` images with inconsistent dimensions. The user wants all logos unified to match the selected homepage logo's dimensions and style.
+Despite previous unification attempts, logos still render at different sizes across pages. Some use `size="xs"` (Reviews, DealWatch, Community, Insights, DashboardHeader, ReviewsCarousel), others `size="sm"` (Portfolio, Footer, Leaderboard, Directory, Sidebar, MobileNav), and only a few match the homepage `size="hero"`. Raw `logoIcon` images in BottomNav and PWAInstallBanner also differ.
 
-## Approach
-Standardize all logo instances to use the `BrandLogo` component consistently, and unify the sizing so there are only two contexts: **header/nav** (compact) and **hero/splash** (large). Replace all raw `logoIcon` usages with `BrandLogo`.
+## Solution
+Change every `<BrandLogo>` instance across the entire platform to `size="hero"` — matching the exact homepage logo dimensions (`h-14 w-14`, scaling to `h-20 w-20` on desktop).
 
-### Size Standardization
-- **Nav/header contexts** (dashboard header, footer, mobile nav, sidebar, bottom nav, page headers): all use `size="sm"` (h-10 w-10 icon, text-lg)
-- **Hero/splash contexts** (homepage hero, auth page, install page, 404 page): all use `size="hero"` (h-14/h-20 icon)
-- Remove usage of `xs` and `md` sizes — they create inconsistency
+## Files to Update
 
-### File Changes
+### Navigation/Page Headers (change `xs` → `hero`)
+1. **`src/components/DashboardHeader.tsx`** — line 50
+2. **`src/pages/Reviews.tsx`** — line 94
+3. **`src/pages/DealWatch.tsx`** — line 65
+4. **`src/pages/Community.tsx`** — line 125
+5. **`src/pages/InsightsPage.tsx`** — line 185
+6. **`src/components/ReviewsCarousel.tsx`** — line 308
 
-1. **`src/components/BrandLogo.tsx`** — Update `xs` config to match `sm` dimensions (h-10 w-10) so even if `xs` is used somewhere it matches. Remove size fragmentation.
+### Navigation (change `sm` → `hero`)
+7. **`src/pages/Portfolio.tsx`** — line 341
+8. **`src/components/Footer.tsx`** — line 17
+9. **`src/pages/Leaderboard.tsx`** — line 102
+10. **`src/pages/DeveloperDirectory.tsx`** — line 36
+11. **`src/components/DashboardSidebar.tsx`** — line 109
+12. **`src/components/MobileNavSheet.tsx`** — line 45
+13. **`src/components/MobileNav.tsx`** — line 51
 
-2. **`src/components/DashboardHeader.tsx`** — Change `size="xs"` → `size="sm"`
+### Raw `logoIcon` replacements
+14. **`src/components/BottomNav.tsx`** — Replace raw `<img>` (line 56) with dimensions matching hero size (`h-14 w-14`)
+15. **`src/components/PWAInstallBanner.tsx`** — Replace raw `<img>` (line 76) with dimensions matching hero size (`h-14 w-14`)
 
-3. **`src/pages/Auth.tsx`** — Change `size="md"` → `size="hero"` (splash context)
+### Already correct (no change needed)
+- `src/pages/Index.tsx` — `hero` ✓
+- `src/pages/Auth.tsx` — `hero` ✓
+- `src/pages/NotFound.tsx` — `hero` ✓
+- `src/pages/Install.tsx` — `hero` ✓
+- `src/pages/ForgotPassword.tsx` — `hero` ✓
+- `src/pages/ResetPassword.tsx` — `hero` ✓
 
-4. **`src/pages/NotFound.tsx`** — Change `size="md"` → `size="hero"` (splash context)
-
-5. **`src/pages/Portfolio.tsx`** — Replace raw `logoIcon` img with `<BrandLogo size="sm" />`
-
-6. **`src/components/BottomNav.tsx`** — Replace raw `logoIcon` img with the logo icon from `BrandLogo`'s asset, keeping the circular wrapper but using consistent `h-10 w-10` sizing (already matches)
-
-7. **`src/components/PWAInstallBanner.tsx`** — Replace raw `logoIcon` img with `<BrandLogo size="sm" tagline="" />` or keep icon-only but at consistent `h-10 w-10` (already matches)
-
-### Result
-Every logo across the platform will render at one of two consistent sizes with the same component, eliminating visual fragmentation between pages.
+## Result
+Every logo instance across the entire platform — headers, footers, sidebars, mobile nav, bottom nav, page headers — will render at the exact same dimensions as the homepage logo.
 
