@@ -75,6 +75,17 @@ export function useBuyerGamification() {
           setEngagement({ developers_viewed: 0, projects_saved: 0, reports_unlocked: 0, helpful_votes: 0, community_posts: 0, community_replies: 0, community_votes: 0 });
         }
 
+        // Award 5 welcome bonus points for new users (first time streak init)
+        if (!streakRes.data) {
+          await supabase.from('user_streaks').insert({
+            user_id: user.id,
+            current_streak: 1,
+            longest_streak: 1,
+            streak_bonus_points: 5,
+          });
+          setStreakData({ current_streak: 1, longest_streak: 1, streak_bonus_points: 5 });
+        }
+
         setStreakData(streakRes.data as StreakData | null);
         setReviewCount(reviewRes.count ?? 0);
         setHasVerifiedPurchase((receiptRes.count ?? 0) > 0);

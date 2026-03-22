@@ -17,6 +17,7 @@ import { NotificationPreferences } from '@/components/NotificationPreferences';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { ReferralWidget } from '@/components/ReferralWidget';
 import { SavedSearchWidget } from '@/components/SavedSearchWidget';
+import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -804,11 +805,13 @@ const BuyerDashboard = () => {
 
 
   return (
-    <DashboardLayout
-      title="Buyer Dashboard"
-      breadcrumb="Buyer > Dashboard"
-      sidebarProps={{ navItems, portalLabel: 'Buyer' }}
-    >
+    <>
+      <WelcomeGiftOverlay />
+      <DashboardLayout
+        title="Buyer Dashboard"
+        breadcrumb="Buyer > Dashboard"
+        sidebarProps={{ navItems, portalLabel: 'Buyer' }}
+      >
       <Routes>
         <Route index element={<BuyerOverview />} />
         <Route path="reviews" element={<BuyerReviews />} />
@@ -820,7 +823,8 @@ const BuyerDashboard = () => {
         <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<BuyerProfile />} />
       </Routes>
-    </DashboardLayout>
+      </DashboardLayout>
+    </>
   );
 };
 
