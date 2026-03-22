@@ -730,6 +730,7 @@ const DeveloperDashboard = () => {
     { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
     { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
     { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
+    { icon: <Rocket className="w-4 h-4" />, label: 'Submit Launch', path: '/business/submit-launch' },
     { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
