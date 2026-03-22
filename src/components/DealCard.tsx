@@ -23,6 +23,8 @@ interface DealCardProps {
     rating_count: number;
     valid_until: string | null;
     created_at: string;
+    price?: number | null;
+    down_payment_percent?: number | null;
     business_profiles?: {
       id: string;
       company_name: string | null;
@@ -131,6 +133,20 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
 
         {/* Headline */}
         <h3 className="font-bold text-base text-foreground leading-tight">{deal.headline}</h3>
+
+        {/* Price & Down Payment */}
+        {(deal.price || deal.down_payment_percent) && (
+          <div className="flex items-center gap-3 text-sm">
+            {deal.price && (
+              <span className="font-semibold text-foreground">{Number(deal.price).toLocaleString()} EGP</span>
+            )}
+            {deal.down_payment_percent && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0 border-emerald-400/50 text-emerald-700 font-semibold">
+                {Number(deal.down_payment_percent)}% Down
+              </Badge>
+            )}
+          </div>
+        )}
 
         {/* Description */}
         <p className="text-sm text-muted-foreground leading-relaxed">

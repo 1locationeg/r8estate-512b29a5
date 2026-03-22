@@ -35,6 +35,8 @@ export const DealSubmitForm = () => {
   const [headline, setHeadline] = useState("");
   const [description, setDescription] = useState("");
   const [dealType, setDealType] = useState("");
+  const [price, setPrice] = useState("");
+  const [downPayment, setDownPayment] = useState("");
   const [validUntil, setValidUntil] = useState<Date>();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
@@ -83,12 +85,14 @@ export const DealSubmitForm = () => {
         headline: headline.trim(),
         description: description.trim(),
         deal_type: dealType,
+        price: price ? parseFloat(price) : null,
+        down_payment_percent: downPayment ? parseFloat(downPayment) : null,
         valid_until: validUntil ? format(validUntil, "yyyy-MM-dd") : null,
         tags,
       } as any);
       if (error) throw error;
       toast.success("Deal submitted for review!");
-      setHeadline(""); setDescription(""); setDealType(""); setValidUntil(undefined); setTags([]); setAgreed(false);
+      setHeadline(""); setDescription(""); setDealType(""); setPrice(""); setDownPayment(""); setValidUntil(undefined); setTags([]); setAgreed(false);
       // Refresh
       const { data: deals } = await supabase
         .from("deals" as any)
@@ -135,6 +139,17 @@ export const DealSubmitForm = () => {
               ))}
             </SelectContent>
           </Select>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3">
+          <div>
+            <Label>Price (EGP)</Label>
+            <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} placeholder="e.g. 2500000" min="0" />
+          </div>
+          <div>
+            <Label>Down Payment %</Label>
+            <Input type="number" value={downPayment} onChange={(e) => setDownPayment(e.target.value)} placeholder="e.g. 10" min="0" max="100" />
+          </div>
         </div>
 
         <div>

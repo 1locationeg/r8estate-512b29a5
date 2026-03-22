@@ -16,13 +16,14 @@ interface CompareDeal {
   valid_until: string | null;
   created_at: string;
   tags: string[];
+  price?: number | null;
+  down_payment_percent?: number | null;
   business_profiles?: {
     id: string;
     company_name: string | null;
     logo_url: string | null;
     specialties: string[] | null;
   };
-  // vote data injected
   yesVotes?: number;
   noVotes?: number;
 }
@@ -154,6 +155,38 @@ export const DealComparePanel = ({ deals, selectedIds, onToggleSelect, onClear }
                       </Badge>
                     </td>
                   ))}
+                </tr>
+
+                {/* Price */}
+                <tr className="border-b">
+                  <td className="py-2 px-2 text-xs text-muted-foreground">Price</td>
+                  {selected.map((d) => (
+                    <td key={d.id} className="py-2 px-2 text-center text-xs font-medium text-foreground">
+                      {d.price ? `${Number(d.price).toLocaleString()} EGP` : "—"}
+                    </td>
+                  ))}
+                </tr>
+
+                {/* Down Payment */}
+                <tr className="border-b bg-muted/30">
+                  <td className="py-2 px-2 text-xs text-muted-foreground">Down Payment</td>
+                  {selected.map((d) => {
+                    const pct = d.down_payment_percent ? Number(d.down_payment_percent) : null;
+                    const bestDown = Math.min(...selected.map((s) => s.down_payment_percent ? Number(s.down_payment_percent) : Infinity));
+                    const isBest = pct !== null && pct === bestDown && selected.filter(s => s.down_payment_percent != null).length > 1;
+                    return (
+                      <td key={d.id} className="py-2 px-2 text-center">
+                        {pct !== null ? (
+                          <span className={`text-xs font-bold ${isBest ? "text-emerald-600" : "text-foreground"}`}>
+                            {pct}%
+                            {d.price ? <span className="block text-[10px] font-normal text-muted-foreground">{Math.round(Number(d.price) * pct / 100).toLocaleString()} EGP</span> : null}
+                          </span>
+                        ) : (
+                          <span className="text-[10px] text-muted-foreground">—</span>
+                        )}
+                      </td>
+                    );
+                  })}
                 </tr>
 
                 {/* Rating */}
