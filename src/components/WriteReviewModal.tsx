@@ -102,6 +102,7 @@ export const WriteReviewModal = ({
   const [unitType, setUnitType] = useState("");
   const [isAnonymous, setIsAnonymous] = useState(false);
   const [guestName, setGuestName] = useState("");
+  const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
 
   // AI state
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
