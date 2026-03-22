@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { MVP_MODE } from "@/lib/mvpMode";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
