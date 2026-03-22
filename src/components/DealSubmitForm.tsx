@@ -35,6 +35,8 @@ export const DealSubmitForm = () => {
   const [headline, setHeadline] = useState("");
   const [description, setDescription] = useState("");
   const [dealType, setDealType] = useState("");
+  const [price, setPrice] = useState("");
+  const [downPayment, setDownPayment] = useState("");
   const [validUntil, setValidUntil] = useState<Date>();
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
