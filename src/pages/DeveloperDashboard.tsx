@@ -13,7 +13,7 @@ import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket
 } from 'lucide-react';
 import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
