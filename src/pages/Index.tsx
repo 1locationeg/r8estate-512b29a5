@@ -675,6 +675,7 @@ const Index = () => {
 
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
+      <GuidedTour />
 
     </div>);
 
