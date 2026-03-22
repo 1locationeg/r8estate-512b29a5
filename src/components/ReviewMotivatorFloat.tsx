@@ -17,7 +17,6 @@ export const ReviewMotivatorFloat = ({
   isReviewModalOpen = false,
 }: ReviewMotivatorFloatProps) => {
   const { user } = useAuth();
-  if (MVP_MODE) return null;
   const [dismissed, setDismissed] = useState(false);
   const [visible, setVisible] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -26,7 +25,7 @@ export const ReviewMotivatorFloat = ({
 
   // 3-second entrance delay
   useEffect(() => {
-    if (dismissed || isReviewModalOpen) {
+    if (dismissed || isReviewModalOpen || MVP_MODE) {
       setVisible(false);
       return;
     }
@@ -42,7 +41,7 @@ export const ReviewMotivatorFloat = ({
     return () => clearTimeout(timer);
   }, [visible]);
 
-  if (dismissed || isReviewModalOpen || !visible) return null;
+  if (MVP_MODE || dismissed || isReviewModalOpen || !visible) return null;
 
   const reviewBadge = lockedBadges.find(
     (b) => b.id === "first_review" || b.id === "review_pro"
