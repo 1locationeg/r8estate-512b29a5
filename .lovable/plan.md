@@ -1,31 +1,34 @@
 
 
-# Add Dummy Deals for Testing & Ensure User Visibility
+# Unify All Logos to BrandLogo Component
 
-## Overview
-Insert sample verified deals into the database so the Deal Watch widget and page display real data. The widget and `/deal-watch` page already show verified deals to all users — the issue is just that there are no deals in the database yet.
+## Problem
+Logo appears in different sizes and formats across the platform — some pages use the `BrandLogo` component with varying sizes (`xs`, `sm`, `md`, `lg`, `hero`), while others use raw `logoIcon` images with inconsistent dimensions. The user wants all logos unified to match the selected homepage logo's dimensions and style.
 
-## Changes
+## Approach
+Standardize all logo instances to use the `BrandLogo` component consistently, and unify the sizing so there are only two contexts: **header/nav** (compact) and **hero/splash** (large). Replace all raw `logoIcon` usages with `BrandLogo`.
 
-### 1. Insert Dummy Deals (Database)
-Use the insert tool to add 4-5 sample deals with `status = 'verified'` directly into the `deals` table. These need a valid `business_id` (from `business_profiles`) and `user_id`.
+### Size Standardization
+- **Nav/header contexts** (dashboard header, footer, mobile nav, sidebar, bottom nav, page headers): all use `size="sm"` (h-10 w-10 icon, text-lg)
+- **Hero/splash contexts** (homepage hero, auth page, install page, 404 page): all use `size="hero"` (h-14/h-20 icon)
+- Remove usage of `xs` and `md` sizes — they create inconsistency
 
-**Approach**: First query existing `business_profiles` to get real IDs. If none exist, create a dummy business profile first, then insert deals referencing it.
+### File Changes
 
-Sample deals:
-- "8% Down Payment + 8-Year Installment" (payment_plan)
-- "15% Early Bird Discount - New Cairo" (discount)
-- "Priority Access to Phase 2 Units" (early_access)
-- "Exclusive Penthouse Collection" (exclusive_units)
+1. **`src/components/BrandLogo.tsx`** — Update `xs` config to match `sm` dimensions (h-10 w-10) so even if `xs` is used somewhere it matches. Remove size fragmentation.
 
-Each deal will have: headline, description, deal_type, tags, `status = 'verified'`, and some preset `avg_rating` / `rating_count` values so the widget shows meaningful numbers.
+2. **`src/components/DashboardHeader.tsx`** — Change `size="xs"` → `size="sm"`
 
-### 2. No Frontend Changes Needed
-The `DealWatchWidget` on the homepage already fetches verified deals and displays stats. The `/deal-watch` page already lists verified deals publicly. Both work for anonymous and authenticated users. The widget is already in the quick actions grid on the homepage, visible to everyone.
+3. **`src/pages/Auth.tsx`** — Change `size="md"` → `size="hero"` (splash context)
 
-## Technical Details
-- Query `business_profiles` for an existing `id` and `user_id`
-- If no profiles exist, insert a test business profile first
-- Insert 4-5 deals with varied types, tags, ratings
-- Insert a few `deal_ratings` to make the rating aggregation realistic
+4. **`src/pages/NotFound.tsx`** — Change `size="md"` → `size="hero"` (splash context)
+
+5. **`src/pages/Portfolio.tsx`** — Replace raw `logoIcon` img with `<BrandLogo size="sm" />`
+
+6. **`src/components/BottomNav.tsx`** — Replace raw `logoIcon` img with the logo icon from `BrandLogo`'s asset, keeping the circular wrapper but using consistent `h-10 w-10` sizing (already matches)
+
+7. **`src/components/PWAInstallBanner.tsx`** — Replace raw `logoIcon` img with `<BrandLogo size="sm" tagline="" />` or keep icon-only but at consistent `h-10 w-10` (already matches)
+
+### Result
+Every logo across the platform will render at one of two consistent sizes with the same component, eliminating visual fragmentation between pages.
 
