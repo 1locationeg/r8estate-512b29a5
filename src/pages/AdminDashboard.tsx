@@ -24,6 +24,7 @@ import AdminSearchPhrases from '@/components/AdminSearchPhrases';
 import AdminFakeReviewDetection from '@/components/AdminFakeReviewDetection';
 import AdminModerationQueue from '@/components/AdminModerationQueue';
 import AdminBusinessClaims from '@/components/AdminBusinessClaims';
+import AdminDealModeration from '@/components/AdminDealModeration';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
