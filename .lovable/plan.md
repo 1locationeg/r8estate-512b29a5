@@ -1,44 +1,23 @@
 
 
-# Unify All Logos to Homepage Size
+# Reposition FloatingChatFAB to Avoid Overlap
 
 ## Problem
-Despite previous unification attempts, logos still render at different sizes across pages. Some use `size="xs"` (Reviews, DealWatch, Community, Insights, DashboardHeader, ReviewsCarousel), others `size="sm"` (Portfolio, Footer, Leaderboard, Directory, Sidebar, MobileNav), and only a few match the homepage `size="hero"`. Raw `logoIcon` images in BottomNav and PWAInstallBanner also differ.
+The FloatingChatFAB (chat bubble button) is fixed at `bottom-6 end-6` with `mb-16 md:mb-0`, which can overlap the BottomNav on mobile and the ReviewMotivatorFloat on the left. Similarly, the ReviewMotivatorFloat sits at `bottom-6 left-6` and can cover page content.
 
 ## Solution
-Change every `<BrandLogo>` instance across the entire platform to `size="hero"` — matching the exact homepage logo dimensions (`h-14 w-14`, scaling to `h-20 w-20` on desktop).
+Move both floating elements so they sit **above** the BottomNav on mobile and don't overlap page content:
 
-## Files to Update
+### 1. `src/components/FloatingChatFAB.tsx`
+- Change positioning from `bottom-6 mb-16 md:mb-0` to `bottom-20 md:bottom-6` — this places it clearly above the h-12 BottomNav on mobile, and at normal position on desktop where there's no BottomNav.
+- Remove the `mb-16` hack and use direct bottom offset instead.
 
-### Navigation/Page Headers (change `xs` → `hero`)
-1. **`src/components/DashboardHeader.tsx`** — line 50
-2. **`src/pages/Reviews.tsx`** — line 94
-3. **`src/pages/DealWatch.tsx`** — line 65
-4. **`src/pages/Community.tsx`** — line 125
-5. **`src/pages/InsightsPage.tsx`** — line 185
-6. **`src/components/ReviewsCarousel.tsx`** — line 308
+### 2. `src/components/ReviewMotivatorFloat.tsx`
+- Same fix: change `bottom-6 mb-16 md:mb-0` to `bottom-20 md:bottom-6` on the container.
 
-### Navigation (change `sm` → `hero`)
-7. **`src/pages/Portfolio.tsx`** — line 341
-8. **`src/components/Footer.tsx`** — line 17
-9. **`src/pages/Leaderboard.tsx`** — line 102
-10. **`src/pages/DeveloperDirectory.tsx`** — line 36
-11. **`src/components/DashboardSidebar.tsx`** — line 109
-12. **`src/components/MobileNavSheet.tsx`** — line 45
-13. **`src/components/MobileNav.tsx`** — line 51
-
-### Raw `logoIcon` replacements
-14. **`src/components/BottomNav.tsx`** — Replace raw `<img>` (line 56) with dimensions matching hero size (`h-14 w-14`)
-15. **`src/components/PWAInstallBanner.tsx`** — Replace raw `<img>` (line 76) with dimensions matching hero size (`h-14 w-14`)
-
-### Already correct (no change needed)
-- `src/pages/Index.tsx` — `hero` ✓
-- `src/pages/Auth.tsx` — `hero` ✓
-- `src/pages/NotFound.tsx` — `hero` ✓
-- `src/pages/Install.tsx` — `hero` ✓
-- `src/pages/ForgotPassword.tsx` — `hero` ✓
-- `src/pages/ResetPassword.tsx` — `hero` ✓
+### 3. Hide on dashboard pages
+- Both FABs already render globally in App.tsx. They should avoid overlapping dashboard sidebars/content. Add a route check to hide them on `/buyer-dashboard`, `/business-dashboard`, `/admin-dashboard` paths (the dashboards have their own layouts). This is optional but prevents overlap in those contexts.
 
 ## Result
-Every logo instance across the entire platform — headers, footers, sidebars, mobile nav, bottom nav, page headers — will render at the exact same dimensions as the homepage logo.
+The chat FAB and review motivator will always float above the BottomNav on mobile and in clear space on desktop, never covering interactive content beneath them.
 
