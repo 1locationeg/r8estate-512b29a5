@@ -8,6 +8,7 @@ import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 
 interface DealRatingModalProps {
   dealId: string;
