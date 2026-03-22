@@ -52,7 +52,7 @@ function isHot(ratingCount: number) {
   return ratingCount >= 10;
 }
 
-export const DealCard = ({ deal, onRated }: DealCardProps) => {
+export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompare }: DealCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const { user } = useAuth();
