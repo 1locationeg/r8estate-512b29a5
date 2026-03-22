@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Tag, Search, Loader2 } from "lucide-react";
+import { Tag, Search, Loader2, Scale } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DealCard } from "@/components/DealCard";
+import { DealComparePanel } from "@/components/DealComparePanel";
 import { BrandLogo } from "@/components/BrandLogo";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -29,6 +31,9 @@ const DealWatch = () => {
   const [dealType, setDealType] = useState("all");
   const [sort, setSort] = useState("top");
   const [search, setSearch] = useState("");
+  const [compareMode, setCompareMode] = useState(false);
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+  const [voteData, setVoteData] = useState<Record<string, { yes: number; no: number }>>({});
 
   const fetchDeals = async () => {
     setLoading(true);
@@ -46,8 +51,28 @@ const DealWatch = () => {
     else query = query.order("rating_count", { ascending: false });
 
     const { data } = await query;
-    setDeals((data as any[]) || []);
+    const dealsList = (data as any[]) || [];
+    setDeals(dealsList);
     setLoading(false);
+
+    // Fetch vote data for all deals
+    if (dealsList.length > 0) {
+      const ids = dealsList.map((d: any) => d.id);
+      const { data: votes } = await supabase
+        .from("deal_votes" as any)
+        .select("deal_id, vote")
+        .in("deal_id", ids) as any;
+
+      if (votes) {
+        const map: Record<string, { yes: number; no: number }> = {};
+        votes.forEach((v: any) => {
+          if (!map[v.deal_id]) map[v.deal_id] = { yes: 0, no: 0 };
+          if (v.vote) map[v.deal_id].yes++;
+          else map[v.deal_id].no++;
+        });
+        setVoteData(map);
+      }
+    }
   };
 
   useEffect(() => { fetchDeals(); }, [dealType, sort]);
@@ -55,6 +80,21 @@ const DealWatch = () => {
   const filtered = search
     ? deals.filter((d) => d.headline?.toLowerCase().includes(search.toLowerCase()) || d.description?.toLowerCase().includes(search.toLowerCase()))
     : deals;
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) return prev;
+      return [...prev, id];
+    });
+  };
+
+  // Enrich deals with vote data for comparison
+  const enrichedDeals = filtered.map((d) => ({
+    ...d,
+    yesVotes: voteData[d.id]?.yes || 0,
+    noVotes: voteData[d.id]?.no || 0,
+  }));
 
   return (
     <div className="min-h-screen bg-background">
@@ -69,7 +109,7 @@ const DealWatch = () => {
             <h1 className="text-2xl font-bold text-foreground">Deal Watch</h1>
             <Badge className="bg-accent/20 text-accent-foreground border-accent text-[10px]">Beta</Badge>
           </div>
-          <p className="text-sm text-muted-foreground">The market's best offers — rated by buyers</p>
+          <p className="text-sm text-muted-foreground">The market's best offers — rated by buyers. Is this deal actually good, or are you being played?</p>
         </div>
 
         {/* Filters */}
@@ -96,6 +136,19 @@ const DealWatch = () => {
             </SelectContent>
           </Select>
 
+          <Button
+            variant={compareMode ? "default" : "outline"}
+            size="sm"
+            className="h-9 text-xs gap-1"
+            onClick={() => {
+              setCompareMode(!compareMode);
+              if (compareMode) setCompareIds([]);
+            }}
+          >
+            <Scale className="w-3.5 h-3.5" />
+            {compareMode ? "Exit Compare" : "Compare Deals"}
+          </Button>
+
           <div className="relative flex-1 min-w-[150px]">
             <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
             <Input
@@ -106,6 +159,16 @@ const DealWatch = () => {
             />
           </div>
         </div>
+
+        {/* Compare panel */}
+        {compareMode && (
+          <DealComparePanel
+            deals={enrichedDeals}
+            selectedIds={compareIds}
+            onToggleSelect={toggleCompare}
+            onClear={() => setCompareIds([])}
+          />
+        )}
 
         {/* Content */}
         {loading ? (
@@ -121,7 +184,14 @@ const DealWatch = () => {
         ) : (
           <div className="space-y-4">
             {filtered.map((deal) => (
-              <DealCard key={deal.id} deal={deal} onRated={fetchDeals} />
+              <DealCard
+                key={deal.id}
+                deal={deal}
+                onRated={fetchDeals}
+                compareMode={compareMode}
+                isSelected={compareIds.includes(deal.id)}
+                onToggleCompare={toggleCompare}
+              />
             ))}
           </div>
         )}

@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { Star, Share2, Flame, Clock } from "lucide-react";
+import { Star, Share2, Flame, Clock, Scale } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { getStarColorClass } from "@/lib/ratingColors";
 import { DealRatingModal } from "./DealRatingModal";
+import { DealVotePoll } from "./DealVotePoll";
+import { DealVerdictBadge } from "./DealVerdictBadge";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -28,6 +31,9 @@ interface DealCardProps {
     };
   };
   onRated?: () => void;
+  compareMode?: boolean;
+  isSelected?: boolean;
+  onToggleCompare?: (id: string) => void;
 }
 
 const dealTypeLabels: Record<string, string> = {
@@ -46,7 +52,7 @@ function isHot(ratingCount: number) {
   return ratingCount >= 10;
 }
 
-export const DealCard = ({ deal, onRated }: DealCardProps) => {
+export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompare }: DealCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const { user } = useAuth();
@@ -115,10 +121,13 @@ export const DealCard = ({ deal, onRated }: DealCardProps) => {
           )}
         </div>
 
-        {/* Deal type pill */}
-        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary font-medium">
-          {dealTypeLabels[deal.deal_type] || deal.deal_type}
-        </Badge>
+        {/* Deal type pill + verdict */}
+        <div className="flex items-center gap-1.5 flex-wrap">
+          <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary font-medium">
+            {dealTypeLabels[deal.deal_type] || deal.deal_type}
+          </Badge>
+          <DealVerdictBadge avgRating={avgRating} ratingCount={deal.rating_count} dealType={deal.deal_type} />
+        </div>
 
         {/* Headline */}
         <h3 className="font-bold text-base text-foreground leading-tight">{deal.headline}</h3>
@@ -161,8 +170,22 @@ export const DealCard = ({ deal, onRated }: DealCardProps) => {
           )}
         </div>
 
+        {/* Community poll */}
+        <DealVotePoll dealId={deal.id} />
+
         {/* Actions */}
         <div className="flex items-center gap-2 pt-1">
+          {compareMode && onToggleCompare && (
+            <Button
+              variant={isSelected ? "secondary" : "outline"}
+              size="sm"
+              className="text-xs gap-1"
+              onClick={() => onToggleCompare(deal.id)}
+            >
+              <Scale className="w-3 h-3" />
+              {isSelected ? "Selected" : "Compare"}
+            </Button>
+          )}
           <Button
             size="sm"
             onClick={() => {
