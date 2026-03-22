@@ -155,6 +155,13 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           </div>
         </div>
       )}
+
+      {/* Business Reply Form (visible to business/admin users) */}
+      {!review.developerReply && (
+        <div className="mt-2">
+          <ReviewReplyForm reviewId={review.id} />
+        </div>
+      )}
     </Card>
   );
 };
