@@ -22,7 +22,7 @@ export const FloatingChatFAB = () => {
 
   return (
     <>
-      <div ref={menuRef} className="fixed bottom-6 md:bottom-6 end-6 z-50 flex flex-col items-end gap-3 mb-16 md:mb-0">
+      <div ref={menuRef} className="fixed bottom-20 md:bottom-6 end-6 z-50 flex flex-col items-end gap-3">
         {/* Menu options */}
         {menuOpen && !activeChat && (
           <div className="flex flex-col gap-2 animate-in fade-in slide-in-from-bottom-4 duration-200">
