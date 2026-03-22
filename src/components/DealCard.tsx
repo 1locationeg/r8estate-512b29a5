@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Star, Share2, ChevronDown, ChevronUp } from "lucide-react";
+import { Star, Share2, Flame, Clock } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,6 +38,14 @@ const dealTypeLabels: Record<string, string> = {
   other: "Other",
 };
 
+function isNew(created: string) {
+  return (Date.now() - new Date(created).getTime()) < 7 * 24 * 60 * 60 * 1000;
+}
+
+function isHot(ratingCount: number) {
+  return ratingCount >= 10;
+}
+
 export const DealCard = ({ deal, onRated }: DealCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [showRating, setShowRating] = useState(false);
@@ -46,36 +54,71 @@ export const DealCard = ({ deal, onRated }: DealCardProps) => {
   const biz = deal.business_profiles;
   const avgRating = Number(deal.avg_rating) || 0;
   const isExpired = deal.valid_until && new Date(deal.valid_until) < new Date();
+  const hot = isHot(deal.rating_count);
+  const fresh = isNew(deal.created_at);
 
   return (
     <>
-      <div className="bg-card border border-border rounded-xl shadow-sm p-4 space-y-3">
-        {/* Top row */}
+      <div
+        className={`relative bg-card border rounded-xl shadow-sm p-4 space-y-3 transition-all duration-300 hover:shadow-md hover:-translate-y-0.5 overflow-hidden ${
+          hot
+            ? "border-orange-400/60 ring-1 ring-orange-400/20"
+            : fresh
+            ? "border-accent/50 ring-1 ring-accent/15"
+            : "border-border"
+        }`}
+      >
+        {/* Heat / freshness ribbon */}
+        {hot && (
+          <div className="absolute -top-px -right-px">
+            <div className="bg-gradient-to-bl from-orange-500 to-red-500 text-white text-[9px] font-bold px-3 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1 animate-pulse">
+              <Flame className="w-3 h-3" /> POPULAR
+            </div>
+          </div>
+        )}
+        {!hot && fresh && (
+          <div className="absolute -top-px -right-px">
+            <div className="bg-gradient-to-bl from-accent to-yellow-500 text-primary text-[9px] font-bold px-3 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1">
+              <Clock className="w-3 h-3" /> JUST IN
+            </div>
+          </div>
+        )}
+
+        {/* Top row — business identity */}
         <div className="flex items-center gap-2 flex-wrap">
-          <Avatar className="h-8 w-8">
+          <Avatar className="h-8 w-8 ring-2 ring-primary/10">
             {biz?.logo_url && <AvatarImage src={biz.logo_url} />}
             <AvatarFallback className="bg-primary text-primary-foreground text-xs">
               {(biz?.company_name || "B")[0]}
             </AvatarFallback>
           </Avatar>
-          <span className="font-semibold text-sm text-foreground">{biz?.company_name || "Business"}</span>
+          <div className="flex flex-col">
+            <span className="font-semibold text-sm text-foreground leading-tight">
+              {biz?.company_name || "Business"}
+            </span>
+            <span className="text-[10px] text-muted-foreground leading-tight">
+              Submitted by business
+            </span>
+          </div>
           {biz?.specialties?.[0] && (
-            <Badge className="bg-primary text-accent text-[10px] px-1.5 py-0">
+            <Badge className="bg-primary text-accent text-[10px] px-1.5 py-0 ml-auto">
               {biz.specialties[0]}
             </Badge>
           )}
-          <Badge variant="outline" className="bg-accent/20 text-accent-foreground border-accent text-[10px] px-1.5 py-0">
-            Submitted by business
-          </Badge>
           {deal.status === "verified" && (
             <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-300 text-[10px] px-1.5 py-0">
-              Verified
+              ✓ Verified
             </Badge>
           )}
           {isExpired && (
             <Badge variant="destructive" className="text-[10px] px-1.5 py-0">Expired</Badge>
           )}
         </div>
+
+        {/* Deal type pill */}
+        <Badge variant="outline" className="text-[10px] px-2 py-0.5 border-primary/30 text-primary font-medium">
+          {dealTypeLabels[deal.deal_type] || deal.deal_type}
+        </Badge>
 
         {/* Headline */}
         <h3 className="font-bold text-base text-foreground leading-tight">{deal.headline}</h3>
@@ -111,6 +154,11 @@ export const DealCard = ({ deal, onRated }: DealCardProps) => {
           </div>
           <span className="text-sm font-medium text-foreground">{avgRating.toFixed(1)}</span>
           <span className="text-xs text-muted-foreground">({deal.rating_count} ratings)</span>
+          {hot && (
+            <span className="text-[10px] text-orange-600 font-semibold ml-1 flex items-center gap-0.5">
+              <Flame className="w-3 h-3" /> Trending
+            </span>
+          )}
         </div>
 
         {/* Actions */}
@@ -121,7 +169,11 @@ export const DealCard = ({ deal, onRated }: DealCardProps) => {
               if (!user) { navigate("/auth"); return; }
               setShowRating(true);
             }}
-            className="bg-primary text-primary-foreground text-xs"
+            className={`text-xs ${
+              hot
+                ? "bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white"
+                : "bg-primary text-primary-foreground"
+            }`}
           >
             Rate this deal
           </Button>
