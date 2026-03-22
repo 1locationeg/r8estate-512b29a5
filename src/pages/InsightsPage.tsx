@@ -11,6 +11,7 @@ import {
   Search, Trophy, Target, Eye, Flame, Award, Layers, Lock,
   Crown, ArrowRight, ChevronRight, Gem
 } from 'lucide-react';
+import { BrandLogo } from '@/components/BrandLogo';
 import { toast } from 'sonner';
 
 interface Insight {
