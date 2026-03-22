@@ -496,6 +496,7 @@ const Index = () => {
 
                 })}
                   <DealWatchWidget />
+                  <LaunchWatchWidget />
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
                   <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
