@@ -1764,18 +1764,22 @@ const AdminBusiness = () => {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
         <div className="bg-card border border-border rounded-xl p-4 text-center">
           <p className="text-2xl font-extrabold text-foreground">{businesses.length}</p>
           <p className="text-xs text-muted-foreground">Total Businesses</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
-          <p className="text-2xl font-extrabold text-trust-excellent">{businesses.filter(b => getCompletionPercent(b) === 100).length}</p>
-          <p className="text-xs text-muted-foreground">Complete Profiles</p>
+          <p className="text-2xl font-extrabold text-primary">{businesses.filter(b => !b.parent_id).length}</p>
+          <p className="text-xs text-muted-foreground">Parent Companies</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
-          <p className="text-2xl font-extrabold text-accent">{businesses.filter(b => getCompletionPercent(b) < 100).length}</p>
-          <p className="text-xs text-muted-foreground">Incomplete Profiles</p>
+          <p className="text-2xl font-extrabold text-accent">{businesses.filter(b => b.parent_id).length}</p>
+          <p className="text-xs text-muted-foreground">Child Projects</p>
+        </div>
+        <div className="bg-card border border-border rounded-xl p-4 text-center">
+          <p className="text-2xl font-extrabold text-trust-excellent">{businesses.filter(b => getCompletionPercent(b) === 100).length}</p>
+          <p className="text-xs text-muted-foreground">Complete Profiles</p>
         </div>
         <div className="bg-card border border-border rounded-xl p-4 text-center">
           <p className="text-2xl font-extrabold text-foreground">{businesses.filter(b => b.license_url).length}</p>
@@ -1797,10 +1801,10 @@ const AdminBusiness = () => {
             <thead>
               <tr className="bg-muted/50 text-left">
                 <th className="p-3 font-semibold text-muted-foreground">Business</th>
+                <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Type</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden md:table-cell">Location</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">Contact</th>
                 <th className="p-3 font-semibold text-muted-foreground">Profile</th>
-                <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Registered</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Reviews</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden lg:table-cell">License</th>
               </tr>
@@ -1808,10 +1812,12 @@ const AdminBusiness = () => {
             <tbody>
               {filtered.map((b) => {
                 const completion = getCompletionPercent(b);
+                const isChild = !!b.parent_id;
+                const parentBiz = isChild ? businesses.find((p: any) => p.id === b.parent_id) : null;
                 return (
                   <tr key={b.id} className="border-t border-border hover:bg-muted/30 transition-colors cursor-pointer" onClick={() => openDetail(b)}>
                     <td className="p-3">
-                      <div className="flex items-center gap-3">
+                      <div className={`flex items-center gap-3 ${isChild ? 'ps-4' : ''}`}>
                         <Avatar className="h-9 w-9">
                           {b.logo_url && <img src={b.logo_url} alt="" className="w-full h-full object-cover rounded-full" />}
                           <AvatarFallback className="text-xs bg-primary/10 text-primary">
@@ -1823,6 +1829,24 @@ const AdminBusiness = () => {
                           <p className="text-[10px] text-muted-foreground">{b.email || 'No email'}</p>
                         </div>
                       </div>
+                    </td>
+                    <td className="p-3 hidden sm:table-cell">
+                      {isChild ? (
+                        <div>
+                          <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-accent/15 text-accent">
+                            <FolderTree className="w-3 h-3" /> Project
+                          </span>
+                          {parentBiz && (
+                            <p className="text-[10px] text-muted-foreground mt-0.5 truncate max-w-[120px]">
+                              ↳ {parentBiz.company_name || 'Parent'}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium bg-primary/10 text-primary">
+                          <Building2 className="w-3 h-3" /> Parent
+                        </span>
+                      )}
                     </td>
                     <td className="p-3 text-foreground hidden md:table-cell">
                       <span className="text-xs">{b.location || '—'}</span>
