@@ -14,6 +14,8 @@ import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
 import { TrackingManager } from "@/components/TrackingManager";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import {
   IndexSkeleton,
   AuthSkeleton,
