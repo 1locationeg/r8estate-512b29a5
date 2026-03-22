@@ -17,6 +17,7 @@ import { NotificationPreferences } from '@/components/NotificationPreferences';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { ReferralWidget } from '@/components/ReferralWidget';
 import { SavedSearchWidget } from '@/components/SavedSearchWidget';
+import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
