@@ -10,8 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LaunchCard } from "@/components/LaunchCard";
 import { LaunchRatingModal } from "@/components/LaunchRatingModal";
+import { LaunchComparePanel } from "@/components/LaunchComparePanel";
 import { BrandLogo } from "@/components/BrandLogo";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const statusFilters = [
   { value: "all", label: "All" },
