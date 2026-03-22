@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
-import { Star, Share2, Eye, Rocket, ChevronDown, ChevronUp, Bookmark, BookmarkCheck } from "lucide-react";
+import { Star, Share2, Eye, Rocket, ChevronDown, ChevronUp, Bookmark, BookmarkCheck, GitCompare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -16,6 +16,8 @@ interface LaunchCardProps {
   phases?: any[];
   ratings?: any[];
   onRate?: () => void;
+  isSelected?: boolean;
+  onToggleCompare?: (id: string) => void;
 }
 
 function useCountdown(targetDate: string | null) {
@@ -45,7 +47,7 @@ const statusConfig: Record<string, { bg: string; label: string }> = {
   sold_out: { bg: "bg-muted-foreground", label: "Sold Out" },
 };
 
-export const LaunchCard = ({ launch, phases = [], ratings = [], onRate }: LaunchCardProps) => {
+export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelected, onToggleCompare }: LaunchCardProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showPhases, setShowPhases] = useState(false);
@@ -313,7 +315,18 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate }: Launch
             {isWatched ? <BookmarkCheck className="w-3.5 h-3.5 text-primary" /> : <Bookmark className="w-3.5 h-3.5" />}
             {isWatched ? "Watching" : "Watch this launch"}
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 ml-auto">
+          {onToggleCompare && (
+            <Button
+              variant={isSelected ? "default" : "outline"}
+              size="sm"
+              className={`text-xs gap-1 ml-auto ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
+              onClick={() => onToggleCompare(launch.id)}
+            >
+              <GitCompare className="w-3 h-3" />
+              {isSelected ? "Selected" : "Compare"}
+            </Button>
+          )}
+          <Button variant="ghost" size="icon" className="h-7 w-7">
             <Share2 className="w-3.5 h-3.5" />
           </Button>
         </div>

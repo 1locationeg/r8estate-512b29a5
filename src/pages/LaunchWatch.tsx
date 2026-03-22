@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Rocket, Search, Loader2, Filter } from "lucide-react";
+import { Rocket, Search, Loader2, Filter, GitCompare } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -10,8 +10,10 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { LaunchCard } from "@/components/LaunchCard";
 import { LaunchRatingModal } from "@/components/LaunchRatingModal";
+import { LaunchComparePanel } from "@/components/LaunchComparePanel";
 import { BrandLogo } from "@/components/BrandLogo";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 const statusFilters = [
   { value: "all", label: "All" },
@@ -55,6 +57,15 @@ const LaunchWatch = () => {
   const [businessFilter, setBusinessFilter] = useState("all");
   const [ratingLaunchId, setRatingLaunchId] = useState<string | null>(null);
   const [stats, setStats] = useState({ active: 0, thisMonth: 0, totalRatings: 0 });
+  const [compareIds, setCompareIds] = useState<string[]>([]);
+
+  const toggleCompare = (id: string) => {
+    setCompareIds((prev) => {
+      if (prev.includes(id)) return prev.filter((x) => x !== id);
+      if (prev.length >= 3) { toast.info("You can compare up to 3 launches"); return prev; }
+      return [...prev, id];
+    });
+  };
 
   // Fallback dummy launches for demo
   const dummyLaunches = [
@@ -420,6 +431,8 @@ const LaunchWatch = () => {
                 phases={allPhases.filter((p: any) => p.launch_id === launch.id)}
                 ratings={allRatings.filter((r: any) => r.launch_id === launch.id)}
                 onRate={() => setRatingLaunchId(launch.id)}
+                isSelected={compareIds.includes(launch.id)}
+                onToggleCompare={toggleCompare}
               />
             ))}
           </div>
@@ -436,6 +449,15 @@ const LaunchWatch = () => {
           onSuccess={() => { setRatingLaunchId(null); fetchData(); }}
         />
       )}
+
+      {/* Compare panel */}
+      <LaunchComparePanel
+        launches={launches}
+        selectedIds={compareIds}
+        onToggleSelect={toggleCompare}
+        onClear={() => setCompareIds([])}
+        allRatings={allRatings}
+      />
     </div>
   );
 };
