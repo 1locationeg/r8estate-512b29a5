@@ -37,6 +37,7 @@ const Auth = () => {
   const [companyName, setCompanyName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<{ email?: string; password?: string }>({});
+  const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
 
   const oauthAccountType = localStorage.getItem('oauth_account_type');
   const isBusinessGoogleCallback = Boolean(oauthAccountType === 'business' && user);
