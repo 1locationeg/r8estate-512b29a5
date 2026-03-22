@@ -399,6 +399,109 @@ export type Database = {
           },
         ]
       }
+      deal_ratings: {
+        Row: {
+          created_at: string
+          deal_id: string
+          id: string
+          is_verified_buyer: boolean | null
+          review_text: string | null
+          stars: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          deal_id: string
+          id?: string
+          is_verified_buyer?: boolean | null
+          review_text?: string | null
+          stars: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          deal_id?: string
+          id?: string
+          is_verified_buyer?: boolean | null
+          review_text?: string | null
+          stars?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deal_ratings_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      deals: {
+        Row: {
+          admin_notes: string | null
+          avg_rating: number | null
+          business_id: string
+          created_at: string
+          deal_type: Database["public"]["Enums"]["deal_type"]
+          description: string
+          headline: string
+          id: string
+          rating_count: number | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["deal_status"]
+          tags: string[] | null
+          updated_at: string
+          user_id: string
+          valid_until: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          avg_rating?: number | null
+          business_id: string
+          created_at?: string
+          deal_type?: Database["public"]["Enums"]["deal_type"]
+          description: string
+          headline: string
+          id?: string
+          rating_count?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["deal_status"]
+          tags?: string[] | null
+          updated_at?: string
+          user_id: string
+          valid_until?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          avg_rating?: number | null
+          business_id?: string
+          created_at?: string
+          deal_type?: Database["public"]["Enums"]["deal_type"]
+          description?: string
+          headline?: string
+          id?: string
+          rating_count?: number | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["deal_status"]
+          tags?: string[] | null
+          updated_at?: string
+          user_id?: string
+          valid_until?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "deals_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       followed_businesses: {
         Row: {
           business_id: string
@@ -996,6 +1099,13 @@ export type Database = {
         | "tip"
         | "experience"
         | "poll"
+      deal_status: "pending" | "verified" | "rejected"
+      deal_type:
+        | "payment_plan"
+        | "discount"
+        | "early_access"
+        | "exclusive_units"
+        | "other"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1131,6 +1241,14 @@ export const Constants = {
         "tip",
         "experience",
         "poll",
+      ],
+      deal_status: ["pending", "verified", "rejected"],
+      deal_type: [
+        "payment_plan",
+        "discount",
+        "early_access",
+        "exclusive_units",
+        "other",
       ],
     },
   },
