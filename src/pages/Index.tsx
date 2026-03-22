@@ -19,6 +19,7 @@ import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
+import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { developers } from "@/data/mockData";
 import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu } from "lucide-react";
 import ContractCheckCard from "@/components/ContractCheckCard";
@@ -147,8 +148,7 @@ const Index = () => {
   };
 
   const quickActions = [
-  { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" },
-  { key: 'topRated', icon: Award, title: t("hero.qaTopRated"), desc: t("hero.qaTopRatedDesc"), color: "text-accent" }];
+  { key: 'compare', icon: GitCompare, title: t("hero.qaCompare"), desc: t("hero.qaCompareDesc"), color: "text-primary" }];
 
 
 
@@ -488,6 +488,7 @@ const Index = () => {
                       </button>);
 
                 })}
+                  <DealWatchWidget />
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
                   <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
                 </div>
