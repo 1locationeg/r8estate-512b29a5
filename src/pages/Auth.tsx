@@ -49,6 +49,11 @@ const Auth = () => {
     if (searchParams.get('type') === 'business') setAccountType('business');
   }, [searchParams]);
 
+  useEffect(() => {
+    supabase.from('platform_settings').select('value').eq('key', 'whatsapp_number').maybeSingle()
+      .then(({ data }) => { if (data?.value) setWhatsappNumber(data.value); });
+  }, []);
+
   const promoteToBusinessRole = async () => {
     const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
     if (error) throw error;
