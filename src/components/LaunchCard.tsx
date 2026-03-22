@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
-import { Star, Share2, Eye, Rocket, ChevronDown, ChevronUp, Bookmark, BookmarkCheck } from "lucide-react";
+import { Star, Share2, Eye, Rocket, ChevronDown, ChevronUp, Bookmark, BookmarkCheck, GitCompare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
