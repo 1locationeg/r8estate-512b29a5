@@ -823,7 +823,8 @@ const BuyerDashboard = () => {
         <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<BuyerProfile />} />
       </Routes>
-    </DashboardLayout>
+      </DashboardLayout>
+    </>
   );
 };
 
