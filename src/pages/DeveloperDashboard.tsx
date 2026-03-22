@@ -771,7 +771,9 @@ const DeveloperDashboard = () => {
         <Route path="reviews" element={<DevReviews />} />
         <Route path="request-review" element={<WhatsAppReviewRequest />} />
         <Route path="submit-deal" element={<DealSubmitForm />} />
+        <Route path="my-deals" element={<MyDeals />} />
         <Route path="submit-launch" element={<LaunchSubmitForm />} />
+        <Route path="my-launches" element={<MyLaunches />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
