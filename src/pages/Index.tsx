@@ -460,7 +460,7 @@ const Index = () => {
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
             <>
-              <FeaturedIdentitySpotlight className="py-0" />
+              <FeaturedIdentitySpotlight />
               <div className="w-full max-w-3xl px-4">
                 <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
               </div>
