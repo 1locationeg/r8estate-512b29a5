@@ -184,67 +184,71 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-3 flex flex-col gap-0.5 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30"
+                  className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] bg-primary text-primary-foreground"
                 >
-                  {/* Decorative quote icon */}
-                  <Quote className="absolute top-2 right-2 w-6 h-6 text-primary/[0.07] rotate-180" />
+                  {/* Left content */}
+                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                    {/* Business badge + stars row */}
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-accent text-accent-foreground truncate max-w-[120px]">
+                        {bizName || review.author}
+                      </span>
+                      {renderStars(review.rating)}
+                    </div>
 
-                  {/* New badge */}
-                  {isNew && (
-                    <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground animate-pulse tracking-wider">
-                      {isRTL ? "جديد" : "New"}
-                    </span>
-                  )}
-
-                  {/* Rating row */}
-                  <div className="flex items-center gap-1.5">
-                    {renderStars(review.rating)}
-                    <span className="text-[11px] font-semibold text-primary/80">
-                      {getRatingLabel(review.rating)}
-                    </span>
-                  </div>
-
-                  {/* Comment */}
-                  <div className="min-h-0">
-                    <p className={`text-[12px] text-foreground/90 leading-[1.4] line-clamp-3 ${isExpanded ? "!line-clamp-none" : ""}`}>
-                      {review.comment}
+                    {/* Quote text */}
+                    <p className={`text-[13px] font-medium leading-[1.45] mt-1 line-clamp-3 ${isExpanded ? "!line-clamp-none" : ""}`}>
+                      &ldquo;{review.comment}&rdquo;
                     </p>
                     {isLong && (
                       <button
                         onClick={() => toggleExpand(review.id)}
-                        className="text-[11px] font-semibold text-primary hover:underline mt-0.5"
+                        className="text-[10px] font-semibold text-accent hover:underline self-start"
                       >
                         {isExpanded ? (isRTL ? "أقل" : "Less") : (isRTL ? "المزيد" : "More")}
                       </button>
                     )}
+
+                    {/* Author info */}
+                    <div className="flex flex-col mt-auto">
+                      <span className="text-[11px] font-bold text-primary-foreground/90 truncate">
+                        {review.author}
+                      </span>
+                      <span className="text-[9px] text-primary-foreground/60">
+                        {isRTL ? "مراجع على" : "Reviewer on"} R8ESTATE · {getRelativeTime(review.date, i18n.language)}
+                      </span>
+                    </div>
                   </div>
 
-                  {/* Author footer */}
-                  <div className="flex items-center justify-between mt-auto">
-                    <div className="flex items-center gap-2 min-w-0">
+                  {/* Right avatar circle */}
+                  <div className="flex-shrink-0 flex items-center">
+                    <div className="w-16 h-16 rounded-full border-[3px] border-accent/60 overflow-hidden bg-primary-foreground/10 flex items-center justify-center relative">
                       {bizLogo ? (
                         <img
                           src={bizLogo}
                           alt={bizName}
-                          className="w-6 h-6 rounded-full object-cover shrink-0 border-2 border-primary/20 shadow-sm"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-primary/10 shrink-0 flex items-center justify-center shadow-sm">
-                          <span className="text-[10px] font-bold text-primary">
-                            {bizName.charAt(0) || "?"}
-                          </span>
-                        </div>
+                        <span className="text-lg font-bold text-primary-foreground/70">
+                          {(review.author || bizName || "?").charAt(0).toUpperCase()}
+                        </span>
                       )}
-                      <div className="flex flex-col min-w-0">
-                        <span className="text-[11px] font-semibold text-foreground truncate leading-tight">
-                          {bizName || review.author}
-                        </span>
-                        <span className="text-[9px] text-muted-foreground leading-tight">
-                          {getRelativeTime(review.date, i18n.language)}
-                        </span>
+                      {/* Verified tick */}
+                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
+                        <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
+                          <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
+                        </svg>
                       </div>
                     </div>
                   </div>
+
+                  {/* New badge */}
+                  {isNew && (
+                    <span className="absolute top-2 right-2 px-2 py-0.5 text-[8px] font-bold uppercase rounded-full bg-accent text-accent-foreground animate-pulse tracking-wider">
+                      {isRTL ? "جديد" : "New"}
+                    </span>
+                  )}
                 </div>
               );
             })}
