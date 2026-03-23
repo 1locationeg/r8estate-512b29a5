@@ -412,7 +412,7 @@ const Index = () => {
 
 
               {/* Quick Actions Grid */}
-              <div className="w-full max-w-3xl px-4 mb-4">
+              <div className="w-full max-w-3xl px-4 mb-4 py-[5px]">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                   {quickActions.map((action) => {
                   const Icon = action.icon;
