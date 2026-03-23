@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Share2, Copy, Check, MessageCircle } from "lucide-react";
+import { Forward, Copy, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -86,7 +86,7 @@ export const ShareMenu = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant={variant} size={size} className={className}>
-          <Share2 className="w-4 h-4 text-current" />
+          <Forward className="w-4 h-4 text-current" />
           {!iconOnly && <span>{t("share.share")}</span>}
         </Button>
       </PopoverTrigger>
@@ -111,7 +111,7 @@ export const ShareMenu = ({
               onClick={handleNativeShare}
               className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm hover:bg-secondary transition-colors text-start"
             >
-              <Share2 className="w-4 h-4 text-muted-foreground" />
+              <Forward className="w-4 h-4 text-muted-foreground" />
               <span>{t("share.moreOptions")}</span>
             </button>
           )}
