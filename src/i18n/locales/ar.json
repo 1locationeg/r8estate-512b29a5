@@ -160,7 +160,8 @@
     "save": "حفظ",
     "saved": "محفوظ",
     "unfollow": "إلغاء المتابعة",
-    "welcomeRedirect": "أهلاً بعودتك! جاري التحويل..."
+    "welcomeRedirect": "أهلاً بعودتك! جاري التحويل...",
+    "close": "إغلاق"
   },
   "trustScore": {
     "label": "درجة الثقة",
@@ -316,7 +317,8 @@
     "headquarters": "المقر الرئيسي",
     "projectsLabel": "المشاريع",
     "registeredUsers": "المستخدمين المسجلين",
-    "years": "سنوات"
+    "years": "سنوات",
+    "claimBusiness": "استلم هذا النشاط"
   },
   "trust": {
     "categories": "فئات الثقة",
@@ -357,7 +359,11 @@
     "totalReviews": "إجمالي التقييمات",
     "useful": "مفيد",
     "userReviews": "تقييمات المستخدمين",
-    "verified": "موثق"
+    "verified": "موثق",
+    "myReviews": "تقييماتي",
+    "allReviews": "كل التقييمات",
+    "anonymousUser": "مستخدم مجهول",
+    "general": "عام"
   },
   "actions": {
     "downloadReport": "تحميل التقرير",
@@ -498,13 +504,28 @@
     "requestNewLink": "طلب رابط جديد",
     "passwordMin": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
     "passwordMismatch": "كلمات المرور غير متطابقة",
-    "error": "خطأ"
+    "error": "خطأ",
+    "change": "تغيير",
+    "changeEmail": "تغيير البريد",
+    "continueEmail": "متابعة",
+    "createOrSign": "أنشئ حسابك",
+    "creating": "جارٍ الإنشاء...",
+    "emailPlaceholder": "name@email.com",
+    "logIn": "سجّل الدخول",
+    "orContinueWith": "أو تابع عبر",
+    "signingIn": "جارٍ تسجيل الدخول..."
   },
   "trustSignals": {
     "reviewProtected": "مراجعتك محمية",
     "encrypted": "تشفير 256-بت",
     "noSpam": "لن نرسل لك رسائل مزعجة",
-    "anonymousOption": "خيار المراجعة المجهولة متاح"
+    "anonymousOption": "خيار المراجعة المجهولة متاح",
+    "short": {
+      "protected": "محمي",
+      "encrypted": "مشفّر",
+      "noSpam": "بدون إزعاج",
+      "anonymous": "مجهول"
+    }
   },
   "guestReview": {
     "noAccountNeeded": "لا حاجة لحساب — شارك تجربتك بحرية",
@@ -836,5 +857,39 @@
     "perkLeaderboard": "تسلق الترتيب",
     "viewLeaderboard": "عرض لوحة المتصدرين",
     "exploreLater": "استكشف لاحقاً"
+  },
+  "contractModal": {
+    "title": "فحص العقد",
+    "description": "ارفع عقدك عشان نوضح البنود الخطِرة والجزاءات غير العادلة والبنود الناقصة.",
+    "uploadHint": "PDF أو DOCX أو صورة واضحة للعقد",
+    "comingSoon": "قريبًا",
+    "whatYouGet": "هتشوف إيه",
+    "feature1": "البنود الآمنة واضحة",
+    "feature2": "البنود الخطِرة عليها تنبيه",
+    "feature3": "تنبيه للبنود المبهمة أو الناقصة"
+  },
+  "onboarding": {
+    "title": "ابدأ هنا",
+    "completeToast": "🎉 كده إنت جاهز.",
+    "buyer": {
+      "completeProfileLabel": "كمّل بروفايلك",
+      "completeProfileDescription": "أضف اسمك واهتماماتك",
+      "browseDirectoryLabel": "استكشف الدليل",
+      "browseDirectoryDescription": "شوف الأنشطة والمطورين",
+      "writeReviewLabel": "اكتب أول تقييم",
+      "writeReviewDescription": "شارك تجربتك مع الناس",
+      "joinCommunityLabel": "ادخل المجتمع",
+      "joinCommunityDescription": "اسأل وشارك نصايحك"
+    },
+    "business": {
+      "completeProfileLabel": "جهّز بروفايل النشاط",
+      "completeProfileDescription": "أضف بيانات الشركة واللوجو",
+      "addProjectLabel": "أضف أول مشروع",
+      "addProjectDescription": "ورّي المشترين شغلك",
+      "submitDealLabel": "أضف عرض",
+      "submitDealDescription": "انشر عرض يقدر المشتري يقارنه",
+      "requestReviewLabel": "اطلب تقييم",
+      "requestReviewDescription": "ادعُ المشترين يقيّموا نشاطك"
+    }
   }
 }
