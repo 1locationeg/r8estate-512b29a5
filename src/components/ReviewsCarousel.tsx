@@ -144,7 +144,7 @@ export function ReviewsCarousel() {
       } else {
         el.scrollBy({ left: isRTL ? -cardWidth - 16 : cardWidth + 16, behavior: "smooth" });
       }
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [isPaused, isRTL]);
 
