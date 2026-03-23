@@ -207,6 +207,8 @@ const InsightsPage = () => {
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
             {t('insights.refresh')}
           </Button>
+        </div>
+      </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
         {/* Cache Banner */}
