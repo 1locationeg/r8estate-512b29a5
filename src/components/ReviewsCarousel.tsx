@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import { formatNumber } from "@/utils/formatArabic";
