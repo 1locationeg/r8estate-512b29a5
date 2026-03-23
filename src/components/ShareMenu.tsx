@@ -86,7 +86,7 @@ export const ShareMenu = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant={variant} size={size} className={className}>
-          <Share2 className="w-4 h-4 text-primary-foreground/90" />
+          <Share2 className="w-4 h-4 text-current" />
           {!iconOnly && <span>{t("share.share")}</span>}
         </Button>
       </PopoverTrigger>
