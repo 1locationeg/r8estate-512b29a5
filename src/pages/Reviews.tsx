@@ -38,12 +38,12 @@ const Reviews = () => {
           const mapped: Review[] = data.map((r: any) => ({
             id: r.id,
             developerId: r.developer_id,
-            author: r.is_anonymous ? "Anonymous User" : r.author_name,
+            author: r.is_anonymous ? t("reviews.anonymousUser", "Anonymous user") : r.author_name,
             profileVerified: r.is_verified,
             tier: "bronze" as ReviewerTier,
             rating: r.rating,
             date: new Date(r.created_at).toISOString().split("T")[0],
-            project: r.experience_type || "General",
+            project: r.experience_type || t("reviews.general", "General"),
             comment: r.comment,
             verified: r.is_verified,
             userId: r.user_id,
@@ -57,7 +57,7 @@ const Reviews = () => {
       }
     };
     fetchAllReviews();
-  }, []);
+  }, [t]);
 
   // Combine DB reviews with mock reviews, dedup by id
   const allReviews = useMemo(() => {
@@ -120,7 +120,7 @@ const Reviews = () => {
               className="rounded-full text-xs"
               onClick={() => setSearchParams(showMineOnly ? {} : { mine: "true" })}
             >
-              My Reviews
+              {t("reviews.myReviews", "My Reviews")}
             </Button>
             <Button
               size="sm"
@@ -128,7 +128,7 @@ const Reviews = () => {
               className="rounded-full text-xs"
               onClick={() => setSearchParams({})}
             >
-              All Reviews
+              {t("reviews.allReviews", "All Reviews")}
             </Button>
           </div>
         )}

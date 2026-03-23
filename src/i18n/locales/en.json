@@ -160,7 +160,8 @@
     "save": "Save",
     "saved": "Saved",
     "unfollow": "Unfollow",
-    "welcomeRedirect": "Welcome back! Redirecting..."
+    "welcomeRedirect": "Welcome back! Redirecting...",
+    "close": "Close"
   },
   "trustScore": {
     "label": "Trust Score",
@@ -316,7 +317,8 @@
     "headquarters": "Headquarters",
     "projectsLabel": "Projects",
     "registeredUsers": "Registered Users",
-    "years": "years"
+    "years": "years",
+    "claimBusiness": "Claim this business"
   },
   "trust": {
     "categories": "Trust Categories",
@@ -357,7 +359,11 @@
     "totalReviews": "Total Reviews",
     "useful": "Useful",
     "userReviews": "User Reviews",
-    "verified": "Verified"
+    "verified": "Verified",
+    "myReviews": "My Reviews",
+    "allReviews": "All Reviews",
+    "anonymousUser": "Anonymous user",
+    "general": "General"
   },
   "actions": {
     "downloadReport": "Download Report",
@@ -498,13 +504,28 @@
     "requestNewLink": "Request new link",
     "passwordMin": "Password must be at least 6 characters",
     "passwordMismatch": "Passwords do not match",
-    "error": "Error"
+    "error": "Error",
+    "change": "Change",
+    "changeEmail": "Change email",
+    "continueEmail": "Continue",
+    "createOrSign": "Create an account",
+    "creating": "Creating...",
+    "emailPlaceholder": "name@email.com",
+    "logIn": "Log In",
+    "orContinueWith": "or continue with",
+    "signingIn": "Signing in..."
   },
   "trustSignals": {
     "reviewProtected": "Your review is protected",
     "encrypted": "256-bit encrypted",
     "noSpam": "We never spam",
-    "anonymousOption": "Anonymous option available"
+    "anonymousOption": "Anonymous option available",
+    "short": {
+      "protected": "Protected",
+      "encrypted": "Encrypted",
+      "noSpam": "No spam",
+      "anonymous": "Anonymous"
+    }
   },
   "guestReview": {
     "noAccountNeeded": "No account needed — share your experience freely",
@@ -793,5 +814,39 @@
     "perkLeaderboard": "Climb ranks",
     "viewLeaderboard": "View Leaderboard",
     "exploreLater": "Explore Later"
+  },
+  "contractModal": {
+    "title": "Contract Health Check",
+    "description": "Upload your contract to spot risky clauses, unfair penalties, and missing terms.",
+    "uploadHint": "PDF, DOCX, or a clear photo of your contract",
+    "comingSoon": "Coming soon",
+    "whatYouGet": "What you'll get",
+    "feature1": "Safe clauses highlighted clearly",
+    "feature2": "Risky terms flagged for review",
+    "feature3": "Warnings for vague or missing terms"
+  },
+  "onboarding": {
+    "title": "Getting started",
+    "completeToast": "🎉 You're all set.",
+    "buyer": {
+      "completeProfileLabel": "Complete your profile",
+      "completeProfileDescription": "Add your name and preferences",
+      "browseDirectoryLabel": "Explore the directory",
+      "browseDirectoryDescription": "Browse businesses and developers",
+      "writeReviewLabel": "Write your first review",
+      "writeReviewDescription": "Share your experience with others",
+      "joinCommunityLabel": "Join the community",
+      "joinCommunityDescription": "Ask questions and share tips"
+    },
+    "business": {
+      "completeProfileLabel": "Set up your business profile",
+      "completeProfileDescription": "Add your company details and logo",
+      "addProjectLabel": "Add your first project",
+      "addProjectDescription": "Show buyers what you are building",
+      "submitDealLabel": "Submit a deal",
+      "submitDealDescription": "Post an offer for buyers to compare",
+      "requestReviewLabel": "Request a review",
+      "requestReviewDescription": "Invite buyers to review your business"
+    }
   }
 }
