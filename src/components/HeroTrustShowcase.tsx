@@ -509,9 +509,25 @@ export const HeroTrustShowcase = () => {
 
       {/* ── Controls ── */}
       <div className="mt-4 mx-2 md:mx-0 space-y-1">
+        {/* Motivating hint */}
+        {!hasInteracted && phase === "interactive" && (
+          <div className="flex items-center justify-center gap-1.5 animate-pulse mb-1">
+            <Hand className="w-3.5 h-3.5 text-primary animate-bounce" style={{ animationDuration: '1.5s' }} />
+            <span className="text-[10px] font-semibold text-primary">
+              Drag to check any developer's trust level
+            </span>
+          </div>
+        )}
+        {hasInteracted && (
+          <div className="flex items-center justify-center mb-1">
+            <span className="text-[10px] font-medium text-muted-foreground">
+              {displayScore >= 66 ? "✅ High trust — safe to proceed" : displayScore >= 40 ? "⚠️ Moderate — do your research" : "🚨 Low trust — proceed with caution"}
+            </span>
+          </div>
+        )}
         {/* Slider */}
         <div className="flex items-center gap-3">
-          <span className="text-[10px] font-bold text-muted-foreground w-6 text-right">0</span>
+          <span className="text-[10px] font-bold text-destructive w-6 text-right">0</span>
           <Slider
             value={[score]}
             min={0}
@@ -520,7 +536,7 @@ export const HeroTrustShowcase = () => {
             onValueChange={handleSliderChange}
             className="flex-1"
           />
-          <span className="text-[10px] font-bold text-muted-foreground w-6">100</span>
+          <span className="text-[10px] font-bold text-trust-excellent w-6">100</span>
         </div>
         {/* Preset markers */}
         <div className="flex items-center gap-3">
@@ -541,7 +557,6 @@ export const HeroTrustShowcase = () => {
           </div>
           <span className="w-6" />
         </div>
-
       </div>
     </div>
   );
