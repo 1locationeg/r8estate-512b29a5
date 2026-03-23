@@ -270,6 +270,7 @@ export const HeroTrustShowcase = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
     setScore(val);
     setDisplayScore(val);
+    setHasInteracted(true);
     pauseCycling();
   };
 
