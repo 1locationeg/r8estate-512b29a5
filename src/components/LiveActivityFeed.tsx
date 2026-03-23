@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { Star, Tag, MessageSquare, TrendingUp, Users } from "lucide-react";
 
 interface ActivityItem {
@@ -9,10 +10,12 @@ interface ActivityItem {
   text: string;
   icon: React.ReactNode;
   timestamp: string;
+  link?: string;
 }
 
 export const LiveActivityFeed = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [activities, setActivities] = useState<ActivityItem[]>([]);
   const [visibleIdx, setVisibleIdx] = useState(0);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -32,7 +35,6 @@ export const LiveActivityFeed = () => {
   const fetchRecentActivity = async () => {
     const items: ActivityItem[] = [];
 
-    // Recent approved reviews
     const { data: reviews } = await supabase
       .from("reviews")
       .select("id, author_name, developer_name, rating, created_at")
@@ -48,11 +50,11 @@ export const LiveActivityFeed = () => {
           text: `${r.author_name} rated ${r.developer_name || "a business"} ${r.rating}/5`,
           icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />,
           timestamp: r.created_at,
+          link: "/reviews",
         });
       });
     }
 
-    // Recent verified deals
     const { data: deals } = await supabase
       .from("deals")
       .select("id, headline, created_at")
@@ -68,11 +70,11 @@ export const LiveActivityFeed = () => {
           text: `New deal: "${d.headline.slice(0, 40)}${d.headline.length > 40 ? "..." : ""}"`,
           icon: <Tag className="w-3.5 h-3.5 text-verified" />,
           timestamp: d.created_at,
+          link: "/deal-watch",
         });
       });
     }
 
-    // Recent community posts
     const { data: posts } = await supabase
       .from("community_posts")
       .select("id, title, created_at")
@@ -87,19 +89,18 @@ export const LiveActivityFeed = () => {
           text: `New discussion: "${p.title.slice(0, 40)}${p.title.length > 40 ? "..." : ""}"`,
           icon: <MessageSquare className="w-3.5 h-3.5 text-primary" />,
           timestamp: p.created_at,
+          link: "/community",
         });
       });
     }
 
-    // Sort by timestamp desc
     items.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
 
-    // Add fallback if no real data
     if (items.length === 0) {
       items.push(
         { id: "f1", type: "signup", text: "New buyers are joining the platform", icon: <Users className="w-3.5 h-3.5 text-primary" />, timestamp: new Date().toISOString() },
-        { id: "f2", type: "review", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString() },
-        { id: "f3", type: "deal", text: "New deals from verified businesses", icon: <TrendingUp className="w-3.5 h-3.5 text-verified" />, timestamp: new Date().toISOString() },
+        { id: "f2", type: "review", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/reviews" },
+        { id: "f3", type: "deal", text: "New deals from verified businesses", icon: <TrendingUp className="w-3.5 h-3.5 text-verified" />, timestamp: new Date().toISOString(), link: "/deal-watch" },
       );
     }
 
@@ -123,7 +124,10 @@ export const LiveActivityFeed = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
-      <div className="flex items-center gap-2 py-2 px-3 rounded-full bg-secondary/50 border border-border overflow-hidden">
+      <div
+        className="flex items-center gap-2 py-2 px-3 rounded-full bg-secondary/50 border border-border overflow-hidden cursor-pointer hover:bg-secondary/70 transition-colors"
+        onClick={() => current.link && navigate(current.link)}
+      >
         <span className="relative flex h-2 w-2 flex-shrink-0">
           <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-verified opacity-75" />
           <span className="relative inline-flex rounded-full h-2 w-2 bg-verified" />
