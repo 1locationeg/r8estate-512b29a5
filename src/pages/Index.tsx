@@ -223,10 +223,9 @@ const Index = () => {
             <NotificationBell />
             <button
               onClick={() => setMoreMenuOpen(true)}
-              className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden"
+              className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden ms-0.5"
               aria-label="More menu">
-              
-              <Menu className="w-4 h-4 text-muted-foreground" />
+              <Menu className="w-5 h-5 text-foreground" />
             </button>
           </div>
 

@@ -210,7 +210,12 @@
     "dashboard": "لوحة التحكم",
     "insights": "رؤى",
     "role_buyer": "مشتري",
-    "user_fallback": "مستخدم"
+    "user_fallback": "مستخدم",
+    "businesses": "الشركات",
+    "blog": "المدونة",
+    "signUp": "إنشاء حساب",
+    "forBusinesses": "للشركات",
+    "language": "العربية"
   },
   "hero": {
     "platformDescriptor": "منصة مصر لتقييم العقارات",
