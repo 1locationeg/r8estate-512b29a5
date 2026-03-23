@@ -184,7 +184,7 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-3 flex flex-col gap-1 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30 border border-border/60 shadow-sm hover:shadow-lg hover:border-primary/20"
+                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-3 flex flex-col gap-0.5 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30"
                 >
                   {/* Decorative quote icon */}
                   <Quote className="absolute top-2 right-2 w-6 h-6 text-primary/[0.07] rotate-180" />
