@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +9,7 @@ import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
-import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
+import { useReactions } from "@/hooks/useReactions";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
 import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
@@ -36,49 +36,36 @@ function timeAgo(dateStr: string, t: (key: string, fallback: string) => string) 
   return new Date(dateStr).toLocaleDateString();
 }
 
-interface Props {
-  post: CommunityPost;
-  replies: CommunityReply[];
-  onBack: () => void;
-  onVotePost: () => void;
-  onVoteReply: (replyId: string) => void;
-  onRefetch: () => void;
-}
+// ── Extracted stable components ──
 
-export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch }: Props) => {
+const CommentComposer = ({
+  parentReplyId,
+  autoFocus,
+  replyText,
+  onReplyTextChange,
+  onSubmit,
+  submitting,
+  displayName,
+  avatarUrl,
+  user,
+  postTitle,
+  postBody,
+}: {
+  parentReplyId?: string | null;
+  autoFocus?: boolean;
+  replyText: string;
+  onReplyTextChange: (val: string) => void;
+  onSubmit: () => void;
+  submitting: boolean;
+  displayName: string;
+  avatarUrl?: string;
+  user: any;
+  postTitle: string;
+  postBody: string;
+}) => {
   const { t } = useTranslation();
-  const [replyText, setReplyText] = useState("");
-  const [replyingTo, setReplyingTo] = useState<string | null>(null);
-  const [submitting, setSubmitting] = useState(false);
-  const { createReply } = useCommunityActions();
-  const { user, profile } = useAuth();
 
-  const categoryConfig: Record<string, { label: string; className: string }> = {
-    question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
-    discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
-    tip: { label: t("community.tip", "Tip"), className: "bg-emerald-500/10 text-emerald-600 border-emerald-200" },
-    experience: { label: t("community.experience", "Experience"), className: "bg-amber-500/10 text-amber-600 border-amber-200" },
-    poll: { label: t("community.poll", "Poll"), className: "bg-purple-500/10 text-purple-600 border-purple-200" },
-  };
-
-  const cat = categoryConfig[post.category] || categoryConfig.discussion;
-
-  const displayName = profile?.full_name || user?.email?.split('@')[0] || t("community.anonymous", "Anonymous");
-  const avatarUrl = profile?.avatar_url || undefined;
-
-  const handleSubmitReply = async () => {
-    if (!replyText.trim()) return;
-    setSubmitting(true);
-    const result = await createReply(post.id, replyText.trim(), replyingTo || undefined);
-    if (result) {
-      setReplyText("");
-      setReplyingTo(null);
-      onRefetch();
-    }
-    setSubmitting(false);
-  };
-
-  const CommentComposer = ({ parentReplyId, autoFocus }: { parentReplyId?: string | null; autoFocus?: boolean }) => (
+  return (
     <div className={`flex items-start gap-2 ${parentReplyId ? 'ml-12 mt-2' : 'px-4 py-3'}`}>
       <Avatar className="h-8 w-8 mt-0.5 flex-shrink-0">
         <AvatarImage src={avatarUrl} />
@@ -92,23 +79,23 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
         )}
         {!parentReplyId && user && (
           <CommunityAiReplySuggestions
-            postTitle={post.title}
-            postBody={post.body}
-            onSelectReply={(text) => setReplyText(text)}
+            postTitle={postTitle}
+            postBody={postBody}
+            onSelectReply={(text) => onReplyTextChange(text)}
           />
         )}
         <div className="flex gap-2">
           <div className="flex-1 relative">
             <Textarea
               value={replyText}
-              onChange={(e) => setReplyText(e.target.value)}
+              onChange={(e) => onReplyTextChange(e.target.value)}
               placeholder={t("community.writeComment", "Write a comment...")}
               autoFocus={autoFocus}
               className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 focus-visible:ring-1"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
-                  handleSubmitReply();
+                  onSubmit();
                 }
               }}
             />
@@ -116,7 +103,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
           <Button
             size="icon"
             variant="ghost"
-            onClick={handleSubmitReply}
+            onClick={onSubmit}
             disabled={submitting || !replyText.trim()}
             className="h-10 w-10 rounded-full text-primary self-end flex-shrink-0"
           >
@@ -126,8 +113,40 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
       </div>
     </div>
   );
+};
 
-  const CommentItem = ({ reply, isNested }: { reply: CommunityReply; isNested?: boolean }) => (
+const CommentItem = ({
+  reply,
+  isNested,
+  replyingTo,
+  setReplyingTo,
+  replyText,
+  onReplyTextChange,
+  onSubmit,
+  submitting,
+  displayName,
+  avatarUrl,
+  user,
+  postTitle,
+  postBody,
+}: {
+  reply: CommunityReply;
+  isNested?: boolean;
+  replyingTo: string | null;
+  setReplyingTo: (id: string | null) => void;
+  replyText: string;
+  onReplyTextChange: (val: string) => void;
+  onSubmit: () => void;
+  submitting: boolean;
+  displayName: string;
+  avatarUrl?: string;
+  user: any;
+  postTitle: string;
+  postBody: string;
+}) => {
+  const { t } = useTranslation();
+
+  return (
     <div className={`${isNested ? 'ml-12' : ''} py-1`}>
       <div className="flex items-start gap-2">
         <Avatar className={`${isNested ? 'h-6 w-6' : 'h-8 w-8'} mt-0.5 flex-shrink-0`}>
@@ -142,7 +161,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
             </div>
             <p className="text-sm text-foreground leading-relaxed break-words">{reply.body}</p>
           </div>
-          
+
           <div className="flex items-center gap-3 px-2 mt-0.5">
             <span className="text-[11px] text-muted-foreground">{timeAgo(reply.created_at, t)}</span>
             <InlineReactionButton targetId={reply.id} targetType="reply" />
@@ -158,102 +177,42 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
         </div>
       </div>
 
-      {reply.children?.map(child => <CommentItem key={child.id} reply={child} isNested />)}
-      {replyingTo === reply.id && <CommentComposer parentReplyId={reply.id} autoFocus />}
-    </div>
-  );
-
-  return (
-    <div className="space-y-3">
-      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-        <ArrowLeft className="w-4 h-4" /> {t("community.backToCommunity", "Back to Community")}
-      </button>
-
-      <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-        <div className="flex items-center gap-3 px-4 pt-3 pb-2">
-          <Avatar className="h-10 w-10 ring-2 ring-border">
-            <AvatarImage src={post.author_avatar} />
-            <AvatarFallback className="text-sm bg-secondary font-semibold">{post.author_name?.charAt(0)}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="font-semibold text-sm text-foreground">{post.author_name}</span>
-              <UserTierBadge userId={post.user_id} />
-            </div>
-            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
-              <span>{timeAgo(post.created_at, t)}</span>
-              <span>·</span>
-              <Globe className="w-3 h-3" />
-              <span>·</span>
-              <Badge variant="outline" className={`text-[9px] px-1 py-0 leading-tight ${cat.className}`}>
-                {cat.label}
-              </Badge>
-            </div>
-          </div>
-          <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
-        </div>
-
-        <div className="px-4 pb-3">
-          <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{post.body}</p>
-        </div>
-
-        <PostReactionSummary postId={post.id} replyCount={post.reply_count} />
-        <div className="mx-4 border-t border-border" />
-
-        <div className="flex items-center px-2 py-1">
-          <PostLikeButton postId={post.id} />
-          <button
-            onClick={() => {
-              setReplyingTo(null);
-              document.querySelector<HTMLTextAreaElement>('textarea')?.focus();
-            }}
-            className="flex items-center justify-center gap-1.5 flex-1 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
-          >
-            <MessageCircle className="w-4 h-4" />
-            <span>{t("community.comment", "Comment")}</span>
-          </button>
-          <div className="flex-1 flex justify-center">
-            <ShareMenu
-              title={post.title}
-              iconOnly={false}
-              variant="ghost"
-              size="sm"
-              className="w-full justify-center h-auto py-2 text-sm font-medium text-muted-foreground hover:bg-secondary gap-1.5"
-            />
-          </div>
-        </div>
-
-        <div className="mx-4 border-t border-border" />
-        {!replyingTo && <CommentComposer />}
-      </div>
-
-      {replies.length > 0 && (
-        <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-          <div className="px-4 py-3 border-b border-border">
-            <h3 className="text-sm font-semibold text-foreground">
-              {t("community.commentCount", "{{count}} comment", { count: post.reply_count })}{post.reply_count !== 1 ? 's' : ''}
-            </h3>
-          </div>
-          <div className="px-4 py-2 space-y-1">
-            {replies.map(reply => <CommentItem key={reply.id} reply={reply} />)}
-          </div>
-        </div>
-      )}
-
-      {replies.length === 0 && (
-        <div className="bg-card border border-border rounded-lg p-8 text-center shadow-sm">
-          <MessageCircle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
-          <p className="text-muted-foreground text-sm">{t("community.noComments", "No comments yet. Be the first to comment!")}</p>
-        </div>
+      {reply.children?.map(child => (
+        <CommentItem
+          key={child.id}
+          reply={child}
+          isNested
+          replyingTo={replyingTo}
+          setReplyingTo={setReplyingTo}
+          replyText={replyText}
+          onReplyTextChange={onReplyTextChange}
+          onSubmit={onSubmit}
+          submitting={submitting}
+          displayName={displayName}
+          avatarUrl={avatarUrl}
+          user={user}
+          postTitle={postTitle}
+          postBody={postBody}
+        />
+      ))}
+      {replyingTo === reply.id && (
+        <CommentComposer
+          parentReplyId={reply.id}
+          autoFocus
+          replyText={replyText}
+          onReplyTextChange={onReplyTextChange}
+          onSubmit={onSubmit}
+          submitting={submitting}
+          displayName={displayName}
+          avatarUrl={avatarUrl}
+          user={user}
+          postTitle={postTitle}
+          postBody={postBody}
+        />
       )}
     </div>
   );
 };
-
-// Extracted components
 
 const PostReactionSummary = ({ postId, replyCount }: { postId: string; replyCount: number }) => {
   const { t } = useTranslation();
@@ -359,6 +318,167 @@ const InlineReactionButton = ({ targetId, targetType }: { targetId: string; targ
               {r.emoji}
             </button>
           ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+// ── Main component ──
+
+interface Props {
+  post: CommunityPost;
+  replies: CommunityReply[];
+  onBack: () => void;
+  onVotePost: () => void;
+  onVoteReply: (replyId: string) => void;
+  onRefetch: () => void;
+}
+
+export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch }: Props) => {
+  const { t } = useTranslation();
+  const [replyText, setReplyText] = useState("");
+  const [replyingTo, setReplyingTo] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const { createReply } = useCommunityActions();
+  const { user, profile } = useAuth();
+
+  const categoryConfig: Record<string, { label: string; className: string }> = {
+    question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
+    discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
+    tip: { label: t("community.tip", "Tip"), className: "bg-emerald-500/10 text-emerald-600 border-emerald-200" },
+    experience: { label: t("community.experience", "Experience"), className: "bg-amber-500/10 text-amber-600 border-amber-200" },
+    poll: { label: t("community.poll", "Poll"), className: "bg-purple-500/10 text-purple-600 border-purple-200" },
+  };
+
+  const cat = categoryConfig[post.category] || categoryConfig.discussion;
+  const displayName = profile?.full_name || user?.email?.split('@')[0] || t("community.anonymous", "Anonymous");
+  const avatarUrl = profile?.avatar_url || undefined;
+
+  const handleSubmitReply = useCallback(async () => {
+    if (!replyText.trim()) return;
+    setSubmitting(true);
+    const result = await createReply(post.id, replyText.trim(), replyingTo || undefined);
+    if (result) {
+      setReplyText("");
+      setReplyingTo(null);
+      onRefetch();
+    }
+    setSubmitting(false);
+  }, [replyText, replyingTo, post.id, createReply, onRefetch]);
+
+  return (
+    <div className="space-y-3">
+      <button onClick={onBack} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
+        <ArrowLeft className="w-4 h-4" /> {t("community.backToCommunity", "Back to Community")}
+      </button>
+
+      <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+        <div className="flex items-center gap-3 px-4 pt-3 pb-2">
+          <Avatar className="h-10 w-10 ring-2 ring-border">
+            <AvatarImage src={post.author_avatar} />
+            <AvatarFallback className="text-sm bg-secondary font-semibold">{post.author_name?.charAt(0)}</AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-1.5">
+              <span className="font-semibold text-sm text-foreground">{post.author_name}</span>
+              <UserTierBadge userId={post.user_id} />
+            </div>
+            <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
+              <span>{timeAgo(post.created_at, t)}</span>
+              <span>·</span>
+              <Globe className="w-3 h-3" />
+              <span>·</span>
+              <Badge variant="outline" className={`text-[9px] px-1 py-0 leading-tight ${cat.className}`}>
+                {cat.label}
+              </Badge>
+            </div>
+          </div>
+          <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
+            <MoreHorizontal className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="px-4 pb-3">
+          <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
+          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{post.body}</p>
+        </div>
+
+        <PostReactionSummary postId={post.id} replyCount={post.reply_count} />
+        <div className="mx-4 border-t border-border" />
+
+        <div className="flex items-center px-2 py-1">
+          <PostLikeButton postId={post.id} />
+          <button
+            onClick={() => {
+              setReplyingTo(null);
+              document.querySelector<HTMLTextAreaElement>('textarea')?.focus();
+            }}
+            className="flex items-center justify-center gap-1.5 flex-1 py-2 rounded-md text-sm font-medium text-muted-foreground hover:bg-secondary transition-colors"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span>{t("community.comment", "Comment")}</span>
+          </button>
+          <div className="flex-1 flex justify-center">
+            <ShareMenu
+              title={post.title}
+              iconOnly={false}
+              variant="ghost"
+              size="sm"
+              className="w-full justify-center h-auto py-2 text-sm font-medium text-muted-foreground hover:bg-secondary gap-1.5"
+            />
+          </div>
+        </div>
+
+        <div className="mx-4 border-t border-border" />
+        {!replyingTo && (
+          <CommentComposer
+            replyText={replyText}
+            onReplyTextChange={setReplyText}
+            onSubmit={handleSubmitReply}
+            submitting={submitting}
+            displayName={displayName}
+            avatarUrl={avatarUrl}
+            user={user}
+            postTitle={post.title}
+            postBody={post.body}
+          />
+        )}
+      </div>
+
+      {replies.length > 0 && (
+        <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+          <div className="px-4 py-3 border-b border-border">
+            <h3 className="text-sm font-semibold text-foreground">
+              {t("community.commentCount", "{{count}} comment", { count: post.reply_count })}{post.reply_count !== 1 ? 's' : ''}
+            </h3>
+          </div>
+          <div className="px-4 py-2 space-y-1">
+            {replies.map(reply => (
+              <CommentItem
+                key={reply.id}
+                reply={reply}
+                replyingTo={replyingTo}
+                setReplyingTo={setReplyingTo}
+                replyText={replyText}
+                onReplyTextChange={setReplyText}
+                onSubmit={handleSubmitReply}
+                submitting={submitting}
+                displayName={displayName}
+                avatarUrl={avatarUrl}
+                user={user}
+                postTitle={post.title}
+                postBody={post.body}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {replies.length === 0 && (
+        <div className="bg-card border border-border rounded-lg p-8 text-center shadow-sm">
+          <MessageCircle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
+          <p className="text-muted-foreground text-sm">{t("community.noComments", "No comments yet. Be the first to comment!")}</p>
         </div>
       )}
     </div>
