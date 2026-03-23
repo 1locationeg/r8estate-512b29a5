@@ -186,25 +186,7 @@ export function ReviewsCarousel() {
 
         {/* Carousel */}
         <div className="relative group">
-          {/* Nav buttons */}
-          {canScrollLeft && (
-            <button
-              onClick={() => scroll("left")}
-              className="absolute top-1/2 -translate-y-1/2 z-10 bg-background/90 backdrop-blur-sm border border-border rounded-full shadow-lg p-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 start-0 md:-start-3"
-              aria-label="Scroll left"
-            >
-              <ChevronLeft className="w-5 h-5 text-foreground" />
-            </button>
-          )}
-          {canScrollRight && (
-            <button
-              onClick={() => scroll("right")}
-              className="absolute top-1/2 -translate-y-1/2 z-10 bg-background/90 backdrop-blur-sm border border-border rounded-full shadow-lg p-2 min-w-[44px] min-h-[44px] flex items-center justify-center transition-opacity opacity-70 hover:opacity-100 end-0 md:-end-3"
-              aria-label="Scroll right"
-            >
-              <ChevronRight className="w-5 h-5 text-foreground" />
-            </button>
-          )}
+          {/* Removed nav arrows — auto-scroll handles motion */}
 
           <div
             ref={scrollRef}
