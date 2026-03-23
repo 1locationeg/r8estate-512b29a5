@@ -43,7 +43,6 @@ const Index = () => {
   const [togglePulse, setTogglePulse] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
-  const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
@@ -150,139 +149,14 @@ const Index = () => {
 
   return (
     <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col overflow-x-hidden w-full max-w-full">
-      {/* Header */}
-      <header className="bg-background shadow-sm border-b border-border">
-        <div className="container mx-auto px-3 py-0.5 flex items-center justify-between gap-2">
-          {/* Logo + Brand in header */}
-          <button
-            onClick={() => navigate('/')}
-            className="inline-flex items-center gap-0 hover:opacity-80 transition-opacity"
-            aria-label="Return to home">
-            <BrandLogo size="hero" />
-          </button>
-
-          {/* Desktop view toggle */}
-          <div className="hidden md:block shrink-0">
-            {userMode === "buyers" ?
-            <button
-              onClick={switchToBusinessView}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary/30 bg-secondary text-foreground font-semibold text-sm transition-all hover:border-primary/60 hover:bg-primary/10 hover:shadow-md">
-                <Building2 className="w-3.5 h-3.5 text-primary" />
-                <span>Business</span>
-              </button> :
-
-            <button
-              onClick={switchToBuyerView}
-              className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full border-2 border-primary bg-primary text-primary-foreground shadow-lg font-semibold text-sm transition-all hover:shadow-xl hover:scale-105 ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}>
-                <User className="w-3.5 h-3.5" />
-                <span>Buyer</span>
-              </button>
-            }
-          </div>
-
-          {/* Mobile compact actions */}
-          <div className="flex md:hidden items-center gap-0.5 shrink-0">
-            {userMode === "buyers" ?
-            <button
-              onClick={switchToBusinessView}
-              className="inline-flex items-center gap-1 px-2 py-1.5 rounded-full border border-primary/30 bg-secondary text-foreground font-semibold text-[11px] transition-all hover:border-primary/60 hover:bg-primary/10"
-              aria-label="Switch to business view">
-                <Building2 className="w-3 h-3 text-primary" />
-                <span className="hidden min-[360px]:inline">Business</span>
-              </button> :
-
-            <button
-              onClick={switchToBuyerView}
-              className={`inline-flex items-center gap-1 px-2 py-1.5 rounded-full border border-primary bg-primary text-primary-foreground shadow-md font-semibold text-[11px] transition-all ${togglePulse ? 'animate-[pulse_0.6s_ease-in-out_3]' : ''}`}
-              aria-label="Switch to buyer view">
-                <User className="w-3 h-3" />
-                <span className="hidden min-[360px]:inline">Buyer</span>
-              </button>
-            }
-            <button
-              onClick={() => {
-                const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                if (searchInput) {searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });searchInput.focus();}
-              }}
-              className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
-              aria-label="Search">
-              <Search className="w-4 h-4 text-muted-foreground" />
-            </button>
-            <LanguageSwitcher />
-            <NotificationBell />
-            <button
-              onClick={() => setMoreMenuOpen(true)}
-              className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden ms-0.5"
-              aria-label="More menu">
-              <Menu className="w-5 h-5 text-foreground" />
-            </button>
-          </div>
-
-          {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
-            <LanguageSwitcher />
-            <NotificationBell />
-            {user ?
-            <DropdownMenu>
-                <DropdownMenuTrigger className="focus:outline-none">
-                  <Avatar className="h-10 w-10 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
-                    <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.full_name || "User"} />
-                    <AvatarFallback className="bg-primary text-primary-foreground">
-                      {profile?.full_name?.charAt(0) || user.email?.charAt(0) || "U"}
-                    </AvatarFallback>
-                  </Avatar>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-56">
-                  <DropdownMenuLabel>
-                    <div className="flex flex-col">
-                      <span className="font-medium">{profile?.full_name || 'User'}</span>
-                      <span className="text-xs text-muted-foreground">{user.email}</span>
-                      <span className="text-xs text-primary mt-1 capitalize">{role || 'Buyer'}</span>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={() => navigate(getDashboardRoute())} className="cursor-pointer">
-                    <LayoutDashboard className="w-4 h-4 me-2" />
-                    Dashboard
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={handleSignOut} className="text-destructive cursor-pointer">
-                    <LogOut className="w-4 h-4 me-2" />
-                    {t("common.signOut")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu> :
-
-            <div className="flex items-center gap-2">
-              {isLoading ?
-              <div className="h-10 w-24 rounded-lg bg-muted animate-pulse" /> :
-              isReturningDevice ?
-              <button
-                onClick={() => navigate('/auth')}
-                className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm flex items-center gap-2">
-                  <User className="w-4 h-4" />
-                  {returningDeviceEmail ? `Continue as ${returningDeviceEmail.split('@')[0]}` : 'Continue to Account'}
-                </button> :
-
-              <>
-                  <button
-                  onClick={() => navigate('/auth?type=business')}
-                  className="px-4 lg:px-5 py-2.5 min-h-[44px] border border-primary text-primary rounded-lg font-semibold hover:bg-primary/5 transition-colors text-sm">
-                    Business Login
-                  </button>
-                  <button
-                  onClick={() => navigate('/auth')}
-                  className="px-4 lg:px-5 py-2.5 min-h-[44px] bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                    {t("common.signIn")}
-                  </button>
-                </>
-              }
-            </div>
-            }
-          </div>
-
-
-        </div>
-      </header>
+      <Navbar
+        userMode={userMode}
+        onSwitchToBusinessView={switchToBusinessView}
+        onSwitchToBuyerView={switchToBuyerView}
+        togglePulse={togglePulse}
+        onSignOut={handleSignOut}
+        getDashboardRoute={getDashboardRoute}
+      />
 
       {/* Hero Section */}
       <section className="flex-1 flex flex-col bg-background">
