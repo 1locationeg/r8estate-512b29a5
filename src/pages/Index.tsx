@@ -364,24 +364,13 @@ const Index = () => {
               </div>
 
 
-              {/* AI Trust Strip */}
-              <div className="w-full max-w-3xl px-4 mb-3">
-                <div className="flex items-center justify-center gap-3 md:gap-6 py-2.5 px-4 rounded-xl bg-primary text-primary-foreground overflow-x-auto scrollbar-hide">
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
-                    <ShieldCheck className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
-                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.aiVerifiedReviews")}</span>
-                  </div>
-                  <div className="w-px h-4 bg-primary-foreground/20 flex-shrink-0" />
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
-                    <Database className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
-                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.realBuyerData")}</span>
-                  </div>
-                  <div className="w-px h-4 bg-primary-foreground/20 flex-shrink-0" />
-                  <div className="flex items-center gap-1.5 whitespace-nowrap">
-                    <Ban className="w-3.5 h-3.5 flex-shrink-0 opacity-80" />
-                    <span className="text-[10px] md:text-xs font-semibold">{t("hero.zeroFakeReviews")}</span>
-                  </div>
-                </div>
+              {/* Trust Strip — minimal */}
+              <div className="flex items-center justify-center gap-4 mb-3 text-muted-foreground">
+                <span className="text-[10px] md:text-xs font-semibold tracking-wide">✓ Verified Reviews</span>
+                <span className="text-[10px] md:text-xs opacity-30">·</span>
+                <span className="text-[10px] md:text-xs font-semibold tracking-wide">✓ Real Buyers</span>
+                <span className="text-[10px] md:text-xs opacity-30">·</span>
+                <span className="text-[10px] md:text-xs font-semibold tracking-wide">✓ No Fakes</span>
               </div>
 
               {/* Live Activity Feed */}
