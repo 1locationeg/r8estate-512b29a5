@@ -75,7 +75,7 @@ const Index = () => {
       toast({
         title: t("common.emailVerified", "Email verified! 🎉"),
         description: t("common.welcomeRedirect", "Welcome to R8ESTATE! Redirecting to your dashboard..."),
-        duration: 3000,
+        duration: 3000
       });
       setTimeout(() => navigate(getDashboardRoute()), 1500);
       return;
@@ -149,7 +149,7 @@ const Index = () => {
     }
   };
 
-  const quickActions: { key: string; icon: typeof GitCompare; title: string; desc: string; color: string }[] = [];
+  const quickActions: {key: string;icon: typeof GitCompare;title: string;desc: string;color: string;}[] = [];
 
 
 
@@ -224,8 +224,8 @@ const Index = () => {
             <button
               onClick={() => setMoreMenuOpen(true)}
               className="p-1.5 rounded-lg hover:bg-secondary transition-colors md:hidden"
-              aria-label="More menu"
-            >
+              aria-label="More menu">
+              
               <Menu className="w-4 h-4 text-muted-foreground" />
             </button>
           </div>
@@ -316,7 +316,7 @@ const Index = () => {
                   {/* Hero Tagline — Claim ABOVE the gauge */}
                    <div className="mb-1.5 max-w-3xl mx-auto">
                     {userMode === "buyers" ?
-                 <>
+                <>
                     <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
                           {t("hero.tagline_line1")}
                          </p>
@@ -328,18 +328,18 @@ const Index = () => {
                            <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                              Join 1,200+ buyers who{' '}
                              <button
-                               onClick={() => {
-                                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                                 if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
-                               }}
-                               className="font-semibold text-foreground underline underline-offset-2 decoration-foreground/60 hover:decoration-primary hover:text-primary transition-colors"
-                             >
+                      onClick={() => {
+                        const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                        if (searchInput) {searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });searchInput.focus();}
+                      }}
+                      className="text-foreground underline underline-offset-2 decoration-foreground/60 hover:decoration-primary hover:text-primary transition-colors font-bold">
+                      
                                checked before they signed
                              </button>
 .
                            </p>
                       </> :
-                 <>
+                <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
                           {t("hero.industryTitle1")}
                         </p>
@@ -347,7 +347,7 @@ const Index = () => {
                           {t("hero.industryTitle2")}
                         </p>
                       </>
-                 }
+                }
                   </div>
 
                     {/* Interactive Trust Showcase — Gauge as Proof */}
@@ -628,8 +628,8 @@ const Index = () => {
         open={moreMenuOpen}
         onOpenChange={setMoreMenuOpen}
         onSignOut={handleSignOut}
-        getDashboardRoute={getDashboardRoute}
-      />
+        getDashboardRoute={getDashboardRoute} />
+      
 
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
       <Footer />
