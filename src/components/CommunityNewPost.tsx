@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, Zap, TrendingUp } from "lucide-react";
+import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, Zap, TrendingUp, Megaphone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { CommunityPostCategory } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
+import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 
 interface Props {
