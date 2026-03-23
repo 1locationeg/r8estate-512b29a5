@@ -336,19 +336,7 @@ const Index = () => {
                              >
                                checked before they signed
                              </button>
-                             {' '}— or{' '}
-                              <button
-                                onClick={() => {
-                                  if (user) {
-                                    navigate('/reviews?writeReview=true');
-                                  } else {
-                                    navigate('/auth');
-                                  }
-                                }}
-                                className="font-semibold text-muted-foreground/70 underline decoration-dashed underline-offset-2 decoration-muted-foreground/40 hover:text-primary hover:decoration-primary transition-colors"
-                              >
-                                share your story
-                              </button>.
+.
                            </p>
                       </> :
                  <>
