@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -88,20 +89,8 @@ const categoryConfigs: Record<string, Record<string, { icon: typeof MessageSquar
 
 const defaultCat = { icon: Sparkles, color: 'text-muted-foreground', bg: 'bg-secondary', gradient: 'from-secondary to-secondary/50' };
 
-const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; label: string; bgPill: string }> = {
-  up: { icon: TrendingUp, color: 'text-trust-excellent', label: '↑ Rising', bgPill: 'bg-trust-excellent/10' },
-  down: { icon: TrendingDown, color: 'text-destructive', label: '↓ Declining', bgPill: 'bg-destructive/10' },
-  stable: { icon: Minus, color: 'text-muted-foreground', label: '— Stable', bgPill: 'bg-secondary' },
-  alert: { icon: AlertTriangle, color: 'text-accent', label: '⚠ Alert', bgPill: 'bg-accent/10' },
-};
-
-const roleLabels: Record<string, { label: string; description: string; emoji: string }> = {
-  admin: { label: 'Admin', description: 'Platform health, moderation & growth', emoji: '🛡️' },
-  developer: { label: 'Developer', description: 'Reputation, reviews & competitive position', emoji: '🏗️' },
-  buyer: { label: 'Buyer', description: 'Market trends, deals & smart decisions', emoji: '🏠' },
-};
-
 const InsightsPage = () => {
+  const { t } = useTranslation();
   const { user, role, isLoading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [insights, setInsights] = useState<Insight[]>([]);
@@ -113,6 +102,19 @@ const InsightsPage = () => {
   const [activeTab, setActiveTab] = useState<'insights' | 'categories' | 'trending'>('insights');
 
   const effectiveRole = role === 'admin' ? 'admin' : role === 'business' ? 'business' : 'buyer';
+
+  const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; label: string; bgPill: string }> = {
+    up: { icon: TrendingUp, color: 'text-trust-excellent', label: t('insights.trendUp', '↑ Rising'), bgPill: 'bg-trust-excellent/10' },
+    down: { icon: TrendingDown, color: 'text-destructive', label: t('insights.trendDown', '↓ Declining'), bgPill: 'bg-destructive/10' },
+    stable: { icon: Minus, color: 'text-muted-foreground', label: t('insights.trendStable', '— Stable'), bgPill: 'bg-secondary' },
+    alert: { icon: AlertTriangle, color: 'text-accent', label: t('insights.trendAlert', '⚠ Alert'), bgPill: 'bg-accent/10' },
+  };
+
+  const roleLabels: Record<string, { label: string; description: string; emoji: string }> = {
+    admin: { label: t('insights.roleAdmin'), description: t('insights.roleAdminDesc'), emoji: '🛡️' },
+    developer: { label: t('insights.roleDeveloper'), description: t('insights.roleDeveloperDesc'), emoji: '🏗️' },
+    buyer: { label: t('insights.roleBuyer'), description: t('insights.roleBuyerDesc'), emoji: '🏠' },
+  };
 
   const fetchInsights = async (forceRefresh = false) => {
     if (!user) return;
@@ -135,14 +137,14 @@ const InsightsPage = () => {
         });
         setHasLoaded(true);
         if (data.cached) {
-          toast.info('Showing cached insights');
+          toast.info(t('insights.showingCached'));
         } else {
-          toast.success('Fresh insights generated');
+          toast.success(t('insights.freshGenerated'));
         }
       }
     } catch (err: any) {
       console.error('Insights error:', err);
-      toast.error('Failed to load insights');
+      toast.error(t('insights.failedToLoad'));
     } finally {
       setLoading(false);
     }
