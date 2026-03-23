@@ -408,20 +408,8 @@ const Index = () => {
                 setTimeout(() => setExternalCategory(null), 100);
               }} />
             
-              {/* Verified Badge Row */}
-              <div className="w-full max-w-3xl px-4 mt-3 mb-2">
-                <div className="flex items-center justify-center gap-2 overflow-x-auto scrollbar-hide">
-                  {verifiedBadges.map((badge) => {
-                  const Icon = badge.icon;
-                  return (
-                    <span key={badge.label} className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full border border-primary/15 bg-primary/[0.04] text-[10px] md:text-xs font-semibold text-primary whitespace-nowrap">
-                        <Icon className="w-3 h-3" />
-                        {badge.label}
-                      </span>);
 
-                })}
-                </div>
-              </div>
+
 
               {/* Quick Actions Grid */}
               <div className="w-full max-w-3xl px-4 mb-4">
