@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -64,6 +64,14 @@ const CommentComposer = ({
   postBody: string;
 }) => {
   const { t } = useTranslation();
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  const quickEmojis = ["😀", "😂", "❤️", "🔥", "👏", "💯", "🙌", "😍", "🤔", "👀", "🎉", "💪", "😎", "🏠", "🏗️", "📍"];
+
+  const insertEmoji = (emoji: string) => {
+    onReplyTextChange(replyText + emoji);
+    setShowEmojiPicker(false);
+  };
 
   return (
     <div className={`flex items-start gap-2 ${parentReplyId ? 'ml-12 mt-2' : 'px-4 py-3'}`}>
@@ -91,7 +99,7 @@ const CommentComposer = ({
               onChange={(e) => onReplyTextChange(e.target.value)}
               placeholder={t("community.writeComment", "Write a comment...")}
               autoFocus={autoFocus}
-              className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 focus-visible:ring-1"
+              className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 pr-10 focus-visible:ring-1"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -99,16 +107,63 @@ const CommentComposer = ({
                 }
               }}
             />
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={onSubmit}
+              disabled={submitting || !replyText.trim()}
+              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-primary flex-shrink-0"
+            >
+              <Send className="w-3.5 h-3.5" />
+            </Button>
           </div>
-          <Button
-            size="icon"
-            variant="ghost"
-            onClick={onSubmit}
-            disabled={submitting || !replyText.trim()}
-            className="h-10 w-10 rounded-full text-primary self-end flex-shrink-0"
+        </div>
+        {/* Emoji toolbar */}
+        <div className="flex items-center gap-0.5 mt-1 relative">
+          <button
+            type="button"
+            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+            className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+            title={t("community.emoji", "Emoji")}
           >
-            <Send className="w-4 h-4" />
-          </Button>
+            <Smile className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors opacity-50 cursor-not-allowed"
+            title={t("community.photo", "Photo")}
+          >
+            <Image className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors opacity-50 cursor-not-allowed"
+            title={t("community.gif", "GIF")}
+          >
+            <span className="text-[10px] font-bold leading-none">GIF</span>
+          </button>
+          <button
+            type="button"
+            className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors opacity-50 cursor-not-allowed"
+            title={t("community.sticker", "Sticker")}
+          >
+            <Sticker className="w-4 h-4" />
+          </button>
+
+          {showEmojiPicker && (
+            <div className="absolute bottom-full left-0 mb-1 z-50 bg-card border border-border rounded-xl shadow-xl p-2 grid grid-cols-8 gap-1 w-[220px]">
+              {quickEmojis.map((emoji) => (
+                <button
+                  key={emoji}
+                  type="button"
+                  onClick={() => insertEmoji(emoji)}
+                  className="text-lg hover:scale-125 transition-transform p-0.5 rounded hover:bg-secondary"
+                >
+                  {emoji}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
