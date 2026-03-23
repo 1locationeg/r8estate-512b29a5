@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -444,43 +444,38 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
             postBody={post.body}
           />
         )}
+
+        {replies.length > 0 && (
+          <>
+            <div className="mx-4 border-t border-border" />
+            <div className="px-4 py-2 space-y-1">
+              {replies.map(reply => (
+                <CommentItem
+                  key={reply.id}
+                  reply={reply}
+                  replyingTo={replyingTo}
+                  setReplyingTo={setReplyingTo}
+                  replyText={replyText}
+                  onReplyTextChange={setReplyText}
+                  onSubmit={handleSubmitReply}
+                  submitting={submitting}
+                  displayName={displayName}
+                  avatarUrl={avatarUrl}
+                  user={user}
+                  postTitle={post.title}
+                  postBody={post.body}
+                />
+              ))}
+            </div>
+          </>
+        )}
+
+        {replies.length === 0 && (
+          <div className="px-4 pb-4 pt-2 text-center">
+            <p className="text-muted-foreground text-xs">{t("community.noComments", "No comments yet. Be the first to comment!")}</p>
+          </div>
+        )}
       </div>
-
-      {replies.length > 0 && (
-        <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
-          <div className="px-4 py-3 border-b border-border">
-            <h3 className="text-sm font-semibold text-foreground">
-              {t("community.commentCount", "{{count}} comment", { count: post.reply_count })}{post.reply_count !== 1 ? 's' : ''}
-            </h3>
-          </div>
-          <div className="px-4 py-2 space-y-1">
-            {replies.map(reply => (
-              <CommentItem
-                key={reply.id}
-                reply={reply}
-                replyingTo={replyingTo}
-                setReplyingTo={setReplyingTo}
-                replyText={replyText}
-                onReplyTextChange={setReplyText}
-                onSubmit={handleSubmitReply}
-                submitting={submitting}
-                displayName={displayName}
-                avatarUrl={avatarUrl}
-                user={user}
-                postTitle={post.title}
-                postBody={post.body}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-
-      {replies.length === 0 && (
-        <div className="bg-card border border-border rounded-lg p-8 text-center shadow-sm">
-          <MessageCircle className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
-          <p className="text-muted-foreground text-sm">{t("community.noComments", "No comments yet. Be the first to comment!")}</p>
-        </div>
-      )}
     </div>
   );
 };
