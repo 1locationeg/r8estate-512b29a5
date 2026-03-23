@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Star, MessageSquarePlus } from "lucide-react";
+import { Star, MessageSquarePlus, Building2 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useNavigate } from "react-router-dom";
 
@@ -11,6 +11,9 @@ import avatar4 from "@/assets/testimonial-4.jpg";
 import avatar5 from "@/assets/testimonial-5.jpg";
 import avatar6 from "@/assets/testimonial-6.jpg";
 import avatar7 from "@/assets/testimonial-7.jpg";
+import brandLogo1 from "@/assets/brand-logo-1.jpg";
+import brandLogo2 from "@/assets/brand-logo-2.jpg";
+import brandLogo3 from "@/assets/brand-logo-3.jpg";
 
 interface CuratedTestimonial {
   id: string;
@@ -23,10 +26,11 @@ interface CuratedTestimonial {
   commentAr: string;
   avatar: string;
   stage: "awareness" | "consideration" | "decision";
+  isBusiness?: boolean;
 }
 
 const TESTIMONIALS: CuratedTestimonial[] = [
-  // Awareness Stage
+  // Awareness — Individual
   {
     id: "t1",
     author: "Ahmed Mostafa",
@@ -34,24 +38,26 @@ const TESTIMONIALS: CuratedTestimonial[] = [
     role: "First-time Investor",
     roleAr: "مستثمر لأول مرة",
     rating: 5,
-    comment: "I was tired of glossy brochures that didn't match reality. R8estate showed the 'behind-the-scenes' risks no salesperson would ever mention.",
-    commentAr: "كنت زهقت من البروشورات اللامعة اللي مش بتطابق الواقع. R8estate وريتني المخاطر اللي مفيش سمسار هيقولها.",
+    comment: "I was tired of glossy brochures that didn't match reality. R8ESTATE showed the 'behind-the-scenes' risks no salesperson would ever mention.",
+    commentAr: "كنت زهقت من البروشورات اللامعة اللي مش بتطابق الواقع. R8ESTATE وريتني المخاطر اللي مفيش سمسار هيقولها.",
     avatar: avatar1,
     stage: "awareness",
   },
+  // Awareness — Business
   {
-    id: "t2",
-    author: "Nadia El-Sayed",
-    authorAr: "نادية السيد",
-    role: "Property Analyst",
-    roleAr: "محللة عقارية",
+    id: "t8",
+    author: "Coldwell Realty",
+    authorAr: "كولدويل ريالتي",
+    role: "Licensed Brokerage Firm",
+    roleAr: "شركة وساطة مرخصة",
     rating: 5,
-    comment: "I saw the R8estate Audit checklists. It changed how I view off-plan projects entirely.",
-    commentAr: "لما شفت قوائم تدقيق R8estate، غيّرت نظرتي تماماً لمشاريع الأوف بلان.",
-    avatar: avatar2,
+    comment: "R8ESTATE's transparency tools helped us build client trust from the first meeting. Our conversion rate jumped 40% since we started sharing R8ESTATE reports.",
+    commentAr: "أدوات الشفافية في R8ESTATE ساعدتنا نبني ثقة العميل من أول لقاء. معدل التحويل زاد ٤٠٪ من وقت ما بدأنا نشارك تقارير R8ESTATE.",
+    avatar: brandLogo1,
     stage: "awareness",
+    isBusiness: true,
   },
-  // Consideration Stage
+  // Consideration — Individual
   {
     id: "t3",
     author: "Karim Abdel-Fattah",
@@ -59,24 +65,53 @@ const TESTIMONIALS: CuratedTestimonial[] = [
     role: "Real Estate Investor",
     roleAr: "مستثمر عقاري",
     rating: 5,
-    comment: "I was torn between two New Capital projects. R8estate's verified reviews revealed delivery delays in one that the salesperson 'forgot' to mention. Saved me millions.",
-    commentAr: "كنت محتار بين مشروعين في العاصمة. تقييمات R8estate كشفت تأخير تسليم في واحد فيهم السمسار 'نسي' يقوله. وفّرت عليا ملايين.",
+    comment: "I was torn between two New Capital projects. R8ESTATE's verified reviews revealed delivery delays in one that the salesperson 'forgot' to mention. Saved me millions.",
+    commentAr: "كنت محتار بين مشروعين في العاصمة. تقييمات R8ESTATE كشفت تأخير تسليم في واحد فيهم السمسار 'نسي' يقوله. وفّرت عليا ملايين.",
     avatar: avatar3,
     stage: "consideration",
   },
+  // Consideration — Business
   {
-    id: "t4",
-    author: "Sara Hassan",
-    authorAr: "سارة حسن",
-    role: "Investment Fund Manager",
-    roleAr: "مديرة صندوق استثمار",
+    id: "t9",
+    author: "Palm Hills Developments",
+    authorAr: "بالم هيلز للتطوير",
+    role: "Leading Developer",
+    roleAr: "مطور رائد",
     rating: 5,
-    comment: "We use R8estate as our primary due diligence tool. The 'Integrity Score' is now a mandatory part of our investment committee's approval process.",
-    commentAr: "بنستخدم R8estate كأداة العناية الواجبة الأساسية. 'مؤشر النزاهة' بقى جزء إلزامي من عملية الموافقة.",
-    avatar: avatar4,
+    comment: "We listed on R8ESTATE to prove our commitment to transparency. Genuine buyer reviews on our projects boosted pre-sales by 25%. The platform speaks truth.",
+    commentAr: "سجّلنا في R8ESTATE عشان نثبت التزامنا بالشفافية. تقييمات المشترين الحقيقية رفعت مبيعاتنا المبكرة ٢٥٪. المنصة بتقول الحقيقة.",
+    avatar: brandLogo2,
     stage: "consideration",
+    isBusiness: true,
   },
-  // Decision Stage
+  // Awareness — Individual
+  {
+    id: "t2",
+    author: "Nadia El-Sayed",
+    authorAr: "نادية السيد",
+    role: "Property Analyst",
+    roleAr: "محللة عقارية",
+    rating: 5,
+    comment: "I saw the R8ESTATE Audit checklists. It changed how I view off-plan projects entirely.",
+    commentAr: "لما شفت قوائم تدقيق R8ESTATE، غيّرت نظرتي تماماً لمشاريع الأوف بلان.",
+    avatar: avatar2,
+    stage: "awareness",
+  },
+  // Consideration — Business
+  {
+    id: "t10",
+    author: "Delta Capital Advisory",
+    authorAr: "دلتا كابيتال",
+    role: "Investment Advisory",
+    roleAr: "استشارات استثمارية",
+    rating: 5,
+    comment: "We use R8ESTATE as our primary due diligence tool. The 'Integrity Score' is now a mandatory part of our investment committee's approval process.",
+    commentAr: "بنستخدم R8ESTATE كأداة العناية الواجبة الأساسية. 'مؤشر النزاهة' بقى جزء إلزامي من عملية الموافقة.",
+    avatar: brandLogo3,
+    stage: "consideration",
+    isBusiness: true,
+  },
+  // Decision — Individual
   {
     id: "t5",
     author: "Hesham Nabil",
@@ -84,11 +119,12 @@ const TESTIMONIALS: CuratedTestimonial[] = [
     role: "Homebuyer",
     roleAr: "مشتري منزل",
     rating: 5,
-    comment: "I signed my contract today with total peace of mind. R8estate's final audit gave me the leverage I needed to negotiate better terms with the developer.",
-    commentAr: "وقّعت عقدي النهارده وأنا مطمن تماماً. تدقيق R8estate اداني قوة تفاوض مع المطور.",
+    comment: "I signed my contract today with total peace of mind. R8ESTATE's final audit gave me the leverage I needed to negotiate better terms with the developer.",
+    commentAr: "وقّعت عقدي النهارده وأنا مطمن تماماً. تدقيق R8ESTATE اداني قوة تفاوض مع المطور.",
     avatar: avatar5,
     stage: "decision",
   },
+  // Decision — Individual
   {
     id: "t6",
     author: "Omar Farouk",
@@ -96,11 +132,12 @@ const TESTIMONIALS: CuratedTestimonial[] = [
     role: "Overseas Buyer",
     roleAr: "مشتري من الخارج",
     rating: 5,
-    comment: "Buying from abroad is terrifying. R8estate acted as my eyes on the ground. I wouldn't have transferred the funds without their verification.",
-    commentAr: "الشراء من بره مرعب. R8estate كانت عيني على الأرض. ماكنتش هحوّل الفلوس من غير التحقق بتاعهم.",
+    comment: "Buying from abroad is terrifying. R8ESTATE acted as my eyes on the ground. I wouldn't have transferred the funds without their verification.",
+    commentAr: "الشراء من بره مرعب. R8ESTATE كانت عيني على الأرض. ماكنتش هحوّل الفلوس من غير التحقق بتاعهم.",
     avatar: avatar6,
     stage: "decision",
   },
+  // Decision — Individual
   {
     id: "t7",
     author: "Fatma El-Adly",
@@ -108,15 +145,15 @@ const TESTIMONIALS: CuratedTestimonial[] = [
     role: "Real Estate Pro — 15 Years",
     roleAr: "خبيرة عقارات — ١٥ سنة",
     rating: 5,
-    comment: "I've been in this industry for 15 years. R8estate is the only platform I trust to give my clients the raw, unpolished truth before they commit.",
-    commentAr: "في المجال ده من ١٥ سنة. R8estate هي المنصة الوحيدة اللي بثق فيها تدي عملائي الحقيقة قبل ما يلتزموا.",
+    comment: "I've been in this industry for 15 years. R8ESTATE is the only platform I trust to give my clients the raw, unpolished truth before they commit.",
+    commentAr: "في المجال ده من ١٥ سنة. R8ESTATE هي المنصة الوحيدة اللي بثق فيها تدي عملائي الحقيقة قبل ما يلتزموا.",
     avatar: avatar7,
     stage: "decision",
   },
 ];
 
 export function ReviewsCarousel() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
@@ -155,7 +192,15 @@ export function ReviewsCarousel() {
     );
   };
 
-  const stageBadge = (stage: string) => {
+  const stageBadge = (stage: string, isBusiness?: boolean) => {
+    if (isBusiness) {
+      return (
+        <span className="px-2 py-0.5 text-[8px] font-bold rounded-full uppercase tracking-wider bg-primary/10 text-primary flex items-center gap-1">
+          <Building2 className="w-2.5 h-2.5" />
+          {isRTL ? "شركة" : "Business"}
+        </span>
+      );
+    }
     const labels: Record<string, { en: string; ar: string; className: string }> = {
       awareness: { en: "Discovery", ar: "اكتشاف", className: "bg-accent/15 text-accent-foreground" },
       consideration: { en: "Validation", ar: "تحقق", className: "bg-primary/15 text-primary" },
@@ -199,7 +244,7 @@ export function ReviewsCarousel() {
                 {/* Content */}
                 <div className="flex flex-col gap-1 flex-1 min-w-0 relative z-10">
                   <div className="flex items-center gap-2 flex-wrap">
-                    {stageBadge(item.stage)}
+                    {stageBadge(item.stage, item.isBusiness)}
                     {renderStars(item.rating)}
                   </div>
 
@@ -219,20 +264,27 @@ export function ReviewsCarousel() {
 
                 {/* Avatar */}
                 <div className="flex-shrink-0 flex items-center relative z-10">
-                  <div className="w-16 h-16 rounded-full border-[3px] border-primary/30 overflow-hidden bg-muted flex items-center justify-center relative shadow-md">
+                  <div className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center relative shadow-md ${item.isBusiness ? "border-[3px] border-accent/40 bg-white p-1" : "border-[3px] border-primary/30 bg-muted"}`}>
                     <img
                       src={item.avatar}
                       alt={isRTL ? item.authorAr : item.author}
-                      className="w-full h-full object-cover"
+                      className={`object-cover ${item.isBusiness ? "w-[85%] h-[85%] object-contain rounded-full" : "w-full h-full"}`}
                       loading="lazy"
                       width={64}
                       height={64}
                     />
-                    <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
-                      <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
-                        <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
-                      </svg>
-                    </div>
+                    {!item.isBusiness && (
+                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
+                        <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
+                          <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
+                        </svg>
+                      </div>
+                    )}
+                    {item.isBusiness && (
+                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
+                        <Building2 className="w-2.5 h-2.5 text-accent-foreground" />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
