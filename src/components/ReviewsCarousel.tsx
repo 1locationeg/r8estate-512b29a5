@@ -173,7 +173,7 @@ export function ReviewsCarousel() {
         {orderedStars.map((i) => (
           <Star
             key={i}
-            className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
+            className={`w-3 h-3 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
           />
         ))}
       </div>
