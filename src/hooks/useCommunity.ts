@@ -54,12 +54,13 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
       query = query.eq("developer_id", developerId);
     }
 
+    // Always sort pinned posts first, then by selected sort
     if (sortBy === 'newest') {
-      query = query.order("created_at", { ascending: false });
+      query = query.order("is_pinned", { ascending: false }).order("created_at", { ascending: false });
     } else if (sortBy === 'discussed') {
-      query = query.order("reply_count", { ascending: false });
+      query = query.order("is_pinned", { ascending: false }).order("reply_count", { ascending: false });
     } else {
-      query = query.order("upvotes", { ascending: false }).order("created_at", { ascending: false });
+      query = query.order("is_pinned", { ascending: false }).order("upvotes", { ascending: false }).order("created_at", { ascending: false });
     }
 
     query = query.limit(50);
@@ -305,5 +306,18 @@ export function useCommunityActions() {
     }
   };
 
-  return { createPost, createReply, toggleVote };
+  const togglePin = async (postId: string, currentlyPinned: boolean) => {
+    if (!user) { toast({ title: "Sign in required", variant: "destructive" }); return; }
+    const { error } = await supabase
+      .from("community_posts")
+      .update({ is_pinned: !currentlyPinned })
+      .eq("id", postId);
+    if (error) {
+      toast({ title: "Error", description: error.message, variant: "destructive" });
+    } else {
+      toast({ title: currentlyPinned ? "Post unpinned" : "Post pinned to top" });
+    }
+  };
+
+  return { createPost, createReply, toggleVote, togglePin };
 }
