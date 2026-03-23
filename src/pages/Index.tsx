@@ -324,59 +324,33 @@ const Index = () => {
                           {t("hero.tagline_line2")}
                          </p>
 
-                           {/* Social proof subtitle */}
-                           <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 italic mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                             {t("hero.joinBuyers")}
+                           {/* Social proof CTA text */}
+                           <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                             Join 1,200+ buyers who{' '}
+                             <button
+                               onClick={() => {
+                                 const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
+                                 if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
+                               }}
+                               className="font-semibold text-foreground underline underline-offset-2 decoration-foreground/60 hover:decoration-primary hover:text-primary transition-colors"
+                             >
+                               checked before they signed
+                             </button>
+                             {' '}— or{' '}
+                             <button
+                               onClick={() => {
+                                 if (user) {
+                                   const reviewSection = document.querySelector('[data-hero-search]');
+                                   if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
+                                 } else {
+                                   navigate('/auth');
+                                 }
+                               }}
+                               className="font-semibold text-muted-foreground/70 underline decoration-dashed underline-offset-2 decoration-muted-foreground/40 hover:text-primary hover:decoration-primary transition-colors"
+                             >
+                               share your own story
+                             </button>.
                            </p>
-
-                            {/* CTA Icon Buttons */}
-                            <TooltipProvider delayDuration={200}>
-                              <div className="flex items-center justify-center gap-4 sm:gap-5 mt-1">
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      onClick={() => {
-                                        if (user) {
-                                          const reviewSection = document.querySelector('[data-hero-search]');
-                                          if (reviewSection) { reviewSection.scrollIntoView({ behavior: 'smooth', block: 'center' }); (reviewSection as HTMLElement).focus(); }
-                                        } else {
-                                          navigate('/auth');
-                                        }
-                                      }}
-                                      className="animate-fade-in-up w-11 h-11 rounded-full bg-gradient-to-br from-primary via-brand-red to-accent p-[1.5px] shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.25),0_2px_4px_-1px_hsl(var(--primary)/0.1)] hover:-translate-y-0.5 hover:shadow-lg transition-all animate-pulse-glow"
-                                      style={{ animationDelay: '200ms' }}
-                                    >
-                                      <div className="w-full h-full rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                                        <MessageSquarePlus className="w-5 h-5 text-primary" />
-                                      </div>
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent side="bottom" className="text-xs font-medium">
-                                    {t("hero.shareExperience")}
-                                  </TooltipContent>
-                                </Tooltip>
-
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <button
-                                      onClick={() => {
-                                        const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                                        if (searchInput) { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); searchInput.focus(); }
-                                      }}
-                                      className="animate-fade-in-up w-11 h-11 rounded-full bg-gradient-to-br from-primary via-brand-red to-accent p-[1.5px] shadow-[0_4px_12px_-2px_hsl(var(--primary)/0.25),0_2px_4px_-1px_hsl(var(--primary)/0.1)] hover:-translate-y-0.5 hover:shadow-lg transition-all animate-pulse-glow"
-                                      style={{ animationDelay: '300ms' }}
-                                    >
-                                      <div className="w-full h-full rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center">
-                                        <ScanSearch className="w-5 h-5 text-primary" />
-                                      </div>
-                                    </button>
-                                  </TooltipTrigger>
-                                  <TooltipContent side="bottom" className="text-xs font-medium">
-                                    {t("hero.checkDeveloper")}
-                                  </TooltipContent>
-                                </Tooltip>
-                              </div>
-                            </TooltipProvider>
                       </> :
                  <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
