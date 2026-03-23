@@ -600,7 +600,7 @@ export const WriteReviewModal = ({
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
         <DialogHeader className="p-4 md:p-6 pb-0">
           <DialogTitle className="text-lg md:text-xl font-bold text-foreground">
-            Write a Review {developerName && t("form.for_developer", { name: developerName })}
+            {t("nav_write_review")} {developerName && t("form.for_developer", { name: developerName })}
           </DialogTitle>
           {isGuest && (
             <p className="text-xs text-muted-foreground mt-1">
