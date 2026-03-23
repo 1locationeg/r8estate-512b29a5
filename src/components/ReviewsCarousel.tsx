@@ -144,7 +144,7 @@ export function ReviewsCarousel() {
       } else {
         el.scrollBy({ left: isRTL ? -cardWidth - 16 : cardWidth + 16, behavior: "smooth" });
       }
-    }, 5000);
+    }, 4000);
     return () => clearInterval(interval);
   }, [isPaused, isRTL]);
 
@@ -173,7 +173,7 @@ export function ReviewsCarousel() {
         {orderedStars.map((i) => (
           <Star
             key={i}
-            className={`w-4 h-4 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
+            className={`w-3 h-3 flex-shrink-0 ${i <= rating ? getStarColor(rating) : "text-muted stroke-muted-foreground/30 fill-none"}`}
           />
         ))}
       </div>
@@ -225,7 +225,7 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[85vw] sm:w-[300px] md:w-[340px] bg-card border border-border rounded-xl p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[78vw] sm:w-[260px] md:w-[290px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1.5 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Stars + New badge */}
                   <div className="flex items-center gap-2">
@@ -243,7 +243,7 @@ export function ReviewsCarousel() {
 
                   {/* Comment — 2 lines max with inline "more" */}
                   <div className="relative">
-                    <p className={`text-sm text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
+                    <p className={`text-xs text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
                       {review.comment}
                       {!isExpanded && isLong && (
                         <button
@@ -265,17 +265,17 @@ export function ReviewsCarousel() {
                   </div>
 
                   {/* Business profile + Author + time */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border mt-auto">
-                    <div className="flex items-center gap-2 min-w-0">
+                  <div className="flex items-center justify-between pt-1.5 mt-auto">
+                    <div className="flex items-center gap-1.5 min-w-0">
                       {bizLogo ? (
                         <img
                           src={bizLogo}
                           alt={bizName}
-                          className="w-6 h-6 rounded-full object-cover shrink-0 border border-border"
+                          className="w-5 h-5 rounded-full object-cover shrink-0 border border-border"
                         />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-muted shrink-0 flex items-center justify-center">
-                          <span className="text-[10px] font-bold text-muted-foreground">
+                        <div className="w-5 h-5 rounded-full bg-muted shrink-0 flex items-center justify-center">
+                          <span className="text-[9px] font-bold text-muted-foreground">
                             {bizName.charAt(0) || "?"}
                           </span>
                         </div>
