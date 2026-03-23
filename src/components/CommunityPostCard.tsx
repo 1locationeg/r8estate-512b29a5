@@ -38,14 +38,16 @@ interface Props {
   post: CommunityPost;
   onClick: () => void;
   onVote: () => void;
+  onTogglePin?: (postId: string, currentlyPinned: boolean) => void;
 }
 
-export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
+export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const isOwnPost = user?.id === post.user_id;
+  const isAdmin = role === 'admin';
   const categoryConfig: Record<string, { label: string; className: string }> = {
     question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
     discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
