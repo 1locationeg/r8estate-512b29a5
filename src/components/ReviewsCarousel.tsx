@@ -254,21 +254,21 @@ export function ReviewsCarousel() {
             })}
 
             {/* CTA card — motivate engagement */}
-            <div className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/[0.04] to-accent/[0.06] hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+            <div className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-accent/40 bg-primary/90 text-primary-foreground hover:border-accent/70 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
               onClick={() => navigate("/reviews")}
             >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <MessageSquarePlus className="w-6 h-6 text-primary" />
+              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
+                <MessageSquarePlus className="w-6 h-6 text-accent" />
               </div>
-              <p className="text-sm font-bold text-foreground text-center">
+              <p className="text-sm font-bold text-primary-foreground text-center">
                 {isRTL ? "شاركنا تجربتك" : "Share your story."}
               </p>
-              <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-[180px]">
+              <p className="text-[11px] text-primary-foreground/60 text-center leading-relaxed max-w-[180px]">
                 {isRTL
                   ? "ساعد مشترين آخرين باتخاذ قرارات أفضل"
                   : "Help other buyers make smarter decisions"}
               </p>
-              <span className="text-[11px] font-semibold text-primary hover:underline">
+              <span className="text-[11px] font-semibold text-accent hover:underline">
                 {isRTL ? "اكتب تقييم →" : "Write a review →"}
               </span>
             </div>
