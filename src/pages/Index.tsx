@@ -23,24 +23,13 @@ import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu, Sparkles, Fingerprint } from "lucide-react";
+import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint } from "lucide-react";
 import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { NotificationBell } from "@/components/NotificationBell";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { BrandLogo } from "@/components/BrandLogo";
-import logoIcon from "@/assets/logo-icon.png";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger } from
-"@/components/ui/dropdown-menu";
+import { Navbar } from "@/components/Navbar";
 
 const Index = () => {
   const { t } = useTranslation();
