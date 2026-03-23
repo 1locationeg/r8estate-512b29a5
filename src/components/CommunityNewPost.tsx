@@ -116,9 +116,20 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
 
     const result = await createPost(title.trim(), finalBody, category, prefillDev?.id);
     if (result) {
+      // Broadcast notification to all users if admin toggled it
+      if (isAdmin && notifyAll && result.id) {
+        await supabase.rpc("broadcast_notification", {
+          _title: `📢 ${title.trim()}`,
+          _message: isPoll ? "New poll in community — share your vote!" : (body.trim().slice(0, 100) || "New discussion in community"),
+          _type: "announcement",
+          _metadata: JSON.stringify({ link: `/community?post=${result.id}` }),
+        });
+      }
+
       setTitle(""); setBody(""); setCategory("question");
       setPollOptions(["", ""]); setAllowOther(false);
       setTitleSuggestions([]); setEngagementTip("");
+      setNotifyAll(false);
       onOpenChange(false);
       onCreated();
     }
