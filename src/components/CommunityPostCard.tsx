@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
+import { PollDisplay } from "@/components/PollDisplay";
 import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost } from "@/hooks/useCommunity";
