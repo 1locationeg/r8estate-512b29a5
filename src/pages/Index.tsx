@@ -380,7 +380,7 @@ const Index = () => {
                   {/* Pill 3 */}
                   <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
                     <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">No Fake </span>
+                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">Real Experts</span>
                   </div>
                 </div>
               </div>
