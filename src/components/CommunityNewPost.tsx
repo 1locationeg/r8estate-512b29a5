@@ -23,10 +23,13 @@ interface Props {
 
 export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDeveloper }: Props) => {
   const { t } = useTranslation();
+  const { role } = useAuth();
+  const isAdmin = role === 'admin';
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<CommunityPostCategory>("question");
   const [submitting, setSubmitting] = useState(false);
+  const [notifyAll, setNotifyAll] = useState(false);
   const { createPost } = useCommunityActions();
   const prefillDev = prefillDeveloper ? developers.find(d => d.id === prefillDeveloper) : null;
 
