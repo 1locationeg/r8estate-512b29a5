@@ -243,7 +243,7 @@ export function ReviewsCarousel() {
 
                   {/* Comment — 2 lines max with inline "more" */}
                   <div className="relative">
-                    <p className={`text-sm text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
+                    <p className={`text-xs text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
                       {review.comment}
                       {!isExpanded && isLong && (
                         <button
