@@ -370,7 +370,7 @@ const Index = () => {
                   {/* Pill 1 */}
                   <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-orange-400 shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">AI-verified reviews</span>
+                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">verified reviews</span>
                   </div>
                   {/* Pill 2 */}
                   <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
