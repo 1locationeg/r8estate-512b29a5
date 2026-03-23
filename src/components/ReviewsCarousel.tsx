@@ -266,16 +266,16 @@ export function ReviewsCarousel() {
 
                   {/* Business profile + Author + time */}
                   <div className="flex items-center justify-between pt-1.5 mt-auto">
-                    <div className="flex items-center gap-2 min-w-0">
+                    <div className="flex items-center gap-1.5 min-w-0">
                       {bizLogo ? (
                         <img
                           src={bizLogo}
                           alt={bizName}
-                          className="w-6 h-6 rounded-full object-cover shrink-0 border border-border"
+                          className="w-5 h-5 rounded-full object-cover shrink-0 border border-border"
                         />
                       ) : (
-                        <div className="w-6 h-6 rounded-full bg-muted shrink-0 flex items-center justify-center">
-                          <span className="text-[10px] font-bold text-muted-foreground">
+                        <div className="w-5 h-5 rounded-full bg-muted shrink-0 flex items-center justify-center">
+                          <span className="text-[9px] font-bold text-muted-foreground">
                             {bizName.charAt(0) || "?"}
                           </span>
                         </div>
