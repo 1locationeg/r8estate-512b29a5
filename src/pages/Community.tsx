@@ -10,6 +10,7 @@ import { CommunityPostCard } from "@/components/CommunityPostCard";
 import { CommunityPostDetail } from "@/components/CommunityPostDetail";
 import { CommunityNewPost } from "@/components/CommunityNewPost";
 import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory } from "@/hooks/useCommunity";
+import { CommunityEngagementNudge } from "@/components/CommunityEngagementNudge";
 import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 import { Loader2 } from "lucide-react";
@@ -269,13 +270,18 @@ const Community = () => {
           </div>
         ) : (
           <div className="space-y-3">
-            {filteredPosts.map(post => (
-              <CommunityPostCard
-                key={post.id}
-                post={post}
-                onClick={() => handleSelectPost(post.id)}
-                onVote={() => handleVotePost(post.id)}
-              />
+            {filteredPosts.map((post, idx) => (
+              <div key={post.id}>
+                <CommunityPostCard
+                  post={post}
+                  onClick={() => handleSelectPost(post.id)}
+                  onVote={() => handleVotePost(post.id)}
+                />
+                {/* Engagement nudges after every 3rd post */}
+                {idx === 2 && <CommunityEngagementNudge variant="referral" />}
+                {idx === 5 && <CommunityEngagementNudge variant="review" />}
+                {idx === 8 && <CommunityEngagementNudge variant="share" />}
+              </div>
             ))}
           </div>
         )}

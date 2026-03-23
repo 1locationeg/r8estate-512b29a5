@@ -12,6 +12,7 @@ import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
+import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
 
 const reactionEmojis = [
   { emoji: "👍", label: "Like" },
@@ -88,6 +89,13 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
           <p className="text-[11px] text-muted-foreground mb-1">
             {t("community.commentingAs", "Commenting as")} <span className="font-medium">{displayName}</span>
           </p>
+        )}
+        {!parentReplyId && user && (
+          <CommunityAiReplySuggestions
+            postTitle={post.title}
+            postBody={post.body}
+            onSelectReply={(text) => setReplyText(text)}
+          />
         )}
         <div className="flex gap-2">
           <div className="flex-1 relative">
