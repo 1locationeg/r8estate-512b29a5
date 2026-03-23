@@ -1,11 +1,11 @@
-import { useRef, useState, useEffect, useCallback, useMemo } from "react";
+import { useRef, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Star } from "lucide-react";
+import { Star, Quote, MessageSquarePlus } from "lucide-react";
 import { reviews as mockReviews, developers } from "@/data/mockData";
 import { supabase } from "@/integrations/supabase/client";
 import { formatNumber } from "@/utils/formatArabic";
 import { BrandLogo } from "@/components/BrandLogo";
-
+import { useNavigate } from "react-router-dom";
 
 interface CarouselReview {
   id: string;
@@ -22,6 +22,7 @@ interface BusinessLogo {
   name: string;
   logo: string;
 }
+
 function getRelativeTime(dateStr: string, lang: string) {
   const now = new Date();
   const date = new Date(dateStr);
@@ -36,10 +37,9 @@ export function ReviewsCarousel() {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.language === "ar";
   const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const navigate = useNavigate();
 
   const toggleExpand = (id: string) => {
     setExpandedIds(prev => {
@@ -52,7 +52,6 @@ export function ReviewsCarousel() {
   const [liveReviews, setLiveReviews] = useState<CarouselReview[]>([]);
   const [businessLogos, setBusinessLogos] = useState<BusinessLogo[]>([]);
 
-  // Fetch live reviews and business profiles
   useEffect(() => {
     const fetchReviews = async () => {
       const { data } = await supabase
@@ -60,7 +59,6 @@ export function ReviewsCarousel() {
         .select("id, author_name, is_anonymous, rating, created_at, comment, developer_id")
         .order("created_at", { ascending: false })
         .limit(20);
-
       if (data) {
         setLiveReviews(
           data.map((r) => ({
@@ -74,7 +72,6 @@ export function ReviewsCarousel() {
         );
       }
     };
-
     const fetchBusinessLogos = async () => {
       const { data } = await supabase
         .from("business_profiles")
@@ -89,12 +86,10 @@ export function ReviewsCarousel() {
         );
       }
     };
-
     fetchReviews();
     fetchBusinessLogos();
   }, [isRTL]);
 
-  // Merge live DB reviews with mock, dedup by id, latest first
   const allReviews: CarouselReview[] = [...liveReviews];
   if (allReviews.length < 12) {
     const liveIds = new Set(liveReviews.map((r) => r.id));
@@ -112,23 +107,6 @@ export function ReviewsCarousel() {
   const avgRating = sortedReviews.length
     ? (sortedReviews.reduce((s, r) => s + r.rating, 0) / sortedReviews.length).toFixed(1)
     : "0";
-
-  const updateScrollState = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    const absScroll = Math.abs(scrollLeft);
-    setCanScrollLeft(absScroll > 2);
-    setCanScrollRight(absScroll + clientWidth < scrollWidth - 2);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    el.addEventListener("scroll", updateScrollState, { passive: true });
-    updateScrollState();
-    return () => el.removeEventListener("scroll", updateScrollState);
-  }, [updateScrollState]);
 
   // Auto-scroll
   useEffect(() => {
@@ -148,21 +126,12 @@ export function ReviewsCarousel() {
     return () => clearInterval(interval);
   }, [isPaused, isRTL]);
 
-  const scroll = (dir: "left" | "right") => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const cardWidth = el.querySelector("div")?.offsetWidth ?? 280;
-    const amount = dir === "left" ? -(cardWidth + 16) : cardWidth + 16;
-    el.scrollBy({ left: isRTL ? -amount : amount, behavior: "smooth" });
-  };
-
-  // Star color based on satisfaction level
   const getStarColor = (rating: number) => {
     if (rating <= 1) return "text-red-500 fill-red-500";
     if (rating <= 2) return "text-orange-500 fill-orange-500";
     if (rating <= 3) return "text-yellow-500 fill-yellow-500";
     if (rating <= 4) return "text-green-500 fill-green-500";
-    return "text-primary fill-primary"; // navy for 5 stars
+    return "text-primary fill-primary";
   };
 
   const renderStars = (rating: number) => {
@@ -180,17 +149,21 @@ export function ReviewsCarousel() {
     );
   };
 
+  const getRatingLabel = (rating: number) => {
+    if (rating >= 5) return isRTL ? "ممتاز" : "Excellent";
+    if (rating >= 4) return isRTL ? "جيد جداً" : "Great";
+    if (rating >= 3) return isRTL ? "جيد" : "Good";
+    if (rating >= 2) return isRTL ? "مقبول" : "Fair";
+    return isRTL ? "ضعيف" : "Poor";
+  };
+
   return (
     <section className="w-full py-0 overflow-hidden">
       <div className="max-w-6xl mx-auto px-2">
-
-        {/* Carousel */}
         <div className="relative group">
-          {/* Removed nav arrows — auto-scroll handles motion */}
-
           <div
             ref={scrollRef}
-            className="flex gap-2 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-0"
+            className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-1"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
@@ -203,88 +176,110 @@ export function ReviewsCarousel() {
               const bizName = dbBiz?.name || mockDev?.name || "";
               const bizLogo = dbBiz?.logo || mockDev?.logo || "";
               const isExpanded = expandedIds.has(review.id);
-              const isLong = review.comment.length > 120;
+              const isLong = review.comment.length > 100;
+              const diffMs = Date.now() - new Date(review.date).getTime();
+              const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+              const isNew = diffDays <= 3;
+
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[78vw] sm:w-[260px] md:w-[290px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1.5 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30 border border-border/60 shadow-sm hover:shadow-lg hover:border-primary/20"
                 >
-                  {/* Stars + New badge */}
-                  <div className="flex items-center gap-2">
+                  {/* Decorative quote icon */}
+                  <Quote className="absolute top-3 right-3 w-8 h-8 text-primary/[0.07] rotate-180" />
+
+                  {/* New badge */}
+                  {isNew && (
+                    <span className="absolute top-2.5 left-2.5 px-2 py-0.5 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground animate-pulse tracking-wider">
+                      {isRTL ? "جديد" : "New"}
+                    </span>
+                  )}
+
+                  {/* Rating row */}
+                  <div className="flex items-center gap-2 mt-1">
                     {renderStars(review.rating)}
-                    {(() => {
-                      const diffMs = Date.now() - new Date(review.date).getTime();
-                      const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-                      return diffDays <= 3 ? (
-                        <span className="ml-auto px-1.5 py-0.5 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground animate-pulse">
-                          {isRTL ? "جديد" : "New"}
-                        </span>
-                      ) : null;
-                    })()}
+                    <span className="text-[11px] font-semibold text-primary/80">
+                      {getRatingLabel(review.rating)}
+                    </span>
                   </div>
 
-                  {/* Comment — 2 lines max with inline "more" */}
-                  <div className="relative">
-                    <p className={`text-xs text-foreground leading-relaxed ${!isExpanded && isLong ? "line-clamp-2" : ""}`}>
+                  {/* Comment */}
+                  <div className="flex-1 min-h-0">
+                    <p className={`text-[13px] text-foreground/90 leading-[1.6] ${!isExpanded && isLong ? "line-clamp-3" : ""}`}>
                       {review.comment}
-                      {!isExpanded && isLong && (
-                        <button
-                          onClick={() => toggleExpand(review.id)}
-                          className="text-sm font-semibold text-primary hover:underline ml-1 inline"
-                         >
-                           {t("review.more")}
-                         </button>
-                      )}
                     </p>
-                    {isExpanded && isLong && (
+                    {isLong && (
                       <button
                         onClick={() => toggleExpand(review.id)}
-                        className="text-xs font-medium text-primary hover:underline mt-1"
+                        className="text-[11px] font-semibold text-primary hover:underline mt-0.5"
                       >
-                        {t("review.show_less")}
+                        {isExpanded ? (isRTL ? "أقل" : "Less") : (isRTL ? "المزيد" : "More")}
                       </button>
                     )}
                   </div>
 
-                  {/* Business profile + Author + time */}
-                  <div className="flex items-center justify-between pt-1.5 mt-auto">
-                    <div className="flex items-center gap-1.5 min-w-0">
+                  {/* Author footer */}
+                  <div className="flex items-center justify-between pt-2 mt-auto border-t border-border/40">
+                    <div className="flex items-center gap-2 min-w-0">
                       {bizLogo ? (
                         <img
                           src={bizLogo}
                           alt={bizName}
-                          className="w-5 h-5 rounded-full object-cover shrink-0 border border-border"
+                          className="w-6 h-6 rounded-full object-cover shrink-0 border-2 border-primary/20 shadow-sm"
                         />
                       ) : (
-                        <div className="w-5 h-5 rounded-full bg-muted shrink-0 flex items-center justify-center">
-                          <span className="text-[9px] font-bold text-muted-foreground">
+                        <div className="w-6 h-6 rounded-full bg-primary/10 shrink-0 flex items-center justify-center shadow-sm">
+                          <span className="text-[10px] font-bold text-primary">
                             {bizName.charAt(0) || "?"}
                           </span>
                         </div>
                       )}
-                      <span className="text-xs font-medium text-foreground truncate">
-                        {bizName || review.author}
-                      </span>
+                      <div className="flex flex-col min-w-0">
+                        <span className="text-[11px] font-semibold text-foreground truncate leading-tight">
+                          {bizName || review.author}
+                        </span>
+                        <span className="text-[9px] text-muted-foreground leading-tight">
+                          {getRelativeTime(review.date, i18n.language)}
+                        </span>
+                      </div>
                     </div>
-                    <span className="text-[10px] text-muted-foreground shrink-0">
-                      {getRelativeTime(review.date, i18n.language)}
-                    </span>
                   </div>
                 </div>
               );
             })}
+
+            {/* CTA card — motivate engagement */}
+            <div className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-primary/[0.04] to-accent/[0.06] hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.02]"
+              onClick={() => navigate("/reviews")}
+            >
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageSquarePlus className="w-6 h-6 text-primary" />
+              </div>
+              <p className="text-sm font-bold text-foreground text-center">
+                {isRTL ? "شاركنا تجربتك" : "Share your story."}
+              </p>
+              <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-[180px]">
+                {isRTL
+                  ? "ساعد مشترين آخرين باتخاذ قرارات أفضل"
+                  : "Help other buyers make smarter decisions"}
+              </p>
+              <span className="text-[11px] font-semibold text-primary hover:underline">
+                {isRTL ? "اكتب تقييم →" : "Write a review →"}
+              </span>
+            </div>
           </div>
         </div>
 
         {/* Footer bar */}
-        <div className="mt-2 flex flex-row flex-wrap items-center justify-center gap-1.5 sm:gap-3 pb-2">
-          <div className="flex items-center gap-1 sm:gap-2">
+        <div className="mt-3 flex flex-row flex-wrap items-center justify-center gap-2 sm:gap-3 pb-2">
+          <div className="flex items-center gap-1.5">
             {renderStars(Math.round(Number(avgRating)))}
             <span className="text-sm font-bold text-foreground">
               {avgRating}
             </span>
-            <span className="text-sm text-muted-foreground">
-              ({formatNumber(sortedReviews.length, i18n.language)})
+            <span className="text-xs text-muted-foreground">
+              ({formatNumber(sortedReviews.length, i18n.language)} {isRTL ? "تقييم" : "reviews"})
             </span>
           </div>
           <BrandLogo size="hero" tagline="" />
