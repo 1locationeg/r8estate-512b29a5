@@ -292,7 +292,7 @@ export function ReviewsCarousel() {
 
             {/* CTA card */}
             <div
-              className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
+              className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
               onClick={() => navigate("/reviews")}
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
