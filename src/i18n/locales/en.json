@@ -606,10 +606,15 @@
     "enhance": "Enhance with AI",
     "enhance_failed": "Enhancement failed",
     "enhance_failed_desc": "Could not enhance your review. Please try again.",
+    "exp_agent": "Real Estate Agent",
+    "exp_buyer": "Property Buyer",
+    "exp_construction": "Construction Professional",
+    "exp_family": "Family Member of Buyer",
+    "exp_investor": "Property Investor",
     "experience_type": "Experience type",
     "fields_required": "Required fields",
     "fields_required_desc": "Please fill in all required fields.",
-    "for_developer": "for {{developer}}",
+    "for_developer": "for {{name}}",
     "mic_error": "Microphone error",
     "mic_error_desc": "Could not access your microphone. Please check permissions.",
     "optional": "Optional",
@@ -653,7 +658,9 @@
     "voice": "Voice",
     "voice_converting": "Converting speech...",
     "voice_done": "Voice captured",
-    "voice_processing": "Processing voice..."
+    "voice_processing": "Processing voice...",
+    "your_rating": "Your rating",
+    "your_review": "Your review"
   },
   "review": {
     "anonymous": "Anonymous",
