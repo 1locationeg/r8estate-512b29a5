@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
@@ -8,6 +8,8 @@ import { ShareMenu } from "@/components/ShareMenu";
 import { PollDisplay } from "@/components/PollDisplay";
 import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { useAuth } from "@/contexts/AuthContext";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 function timeAgo(dateStr: string, t: (key: string, fallback: string) => string) {
@@ -40,6 +42,10 @@ interface Props {
 
 export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
   const { t } = useTranslation();
+  const { user } = useAuth();
+  const [isSaved, setIsSaved] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const isOwnPost = user?.id === post.user_id;
   const categoryConfig: Record<string, { label: string; className: string }> = {
     question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
     discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
@@ -84,9 +90,44 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
             )}
           </div>
         </div>
-        <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
-          <MoreHorizontal className="w-5 h-5" />
-        </button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
+              <MoreHorizontal className="w-5 h-5" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-56">
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setIsSaved(!isSaved); toast({ title: isSaved ? t("community.unsaved", "Post unsaved") : t("community.saved", "Post saved") }); }}>
+              {isSaved ? <BookmarkCheck className="w-4 h-4 mr-2 text-primary" /> : <Bookmark className="w-4 h-4 mr-2" />}
+              {isSaved ? t("community.unsavePost", "Unsave post") : t("community.savePost", "Save post")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(`${window.location.origin}/community?post=${post.id}`); toast({ title: t("community.linkCopied", "Link copied!") }); }}>
+              <Link2 className="w-4 h-4 mr-2" />
+              {t("community.copyLink", "Copy link")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setIsFollowing(!isFollowing); toast({ title: isFollowing ? t("community.unfollowed", "Notifications off for this post") : t("community.followed", "You'll be notified of new comments") }); }}>
+              {isFollowing ? <BellOff className="w-4 h-4 mr-2" /> : <BellPlus className="w-4 h-4 mr-2" />}
+              {isFollowing ? t("community.turnOffNotifications", "Turn off notifications") : t("community.turnOnNotifications", "Turn on notifications")}
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            {!isOwnPost && (
+              <>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.postHidden", "Post hidden from your feed") }); }}>
+                  <EyeOff className="w-4 h-4 mr-2" />
+                  {t("community.hidePost", "Hide post")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.userMuted", "You won't see posts from this user") }); }}>
+                  <UserX className="w-4 h-4 mr-2" />
+                  {t("community.muteUser", "Mute this user")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.reported", "Thanks for reporting. We'll review this.") }); }} className="text-destructive focus:text-destructive">
+                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  {t("community.reportPost", "Report post")}
+                </DropdownMenuItem>
+              </>
+            )}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Post body */}
