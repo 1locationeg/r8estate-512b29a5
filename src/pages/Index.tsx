@@ -363,17 +363,6 @@ const Index = () => {
                 <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
               </div>
 
-              {/* Trust Badges — below search */}
-              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-2 md:mb-3">
-                <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
-                  <Shield className="w-3.5 h-3.5 text-verified" />
-                  {t("hero.benefit_zero_risk")}
-                </button>
-                <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
-                  <CheckCircle className="w-3.5 h-3.5 text-accent" />
-                  {t("hero.benefit_confident")}
-                </button>
-              </div>
 
               {/* AI Trust Strip */}
               <div className="w-full max-w-3xl px-4 mb-3">
