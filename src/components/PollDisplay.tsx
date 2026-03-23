@@ -18,6 +18,16 @@ interface PollVote {
   user_id: string;
 }
 
+function parsePollData(body: string): PollData | null {
+  try {
+    const d = JSON.parse(body);
+    if (d && Array.isArray(d.options) && d.options.length >= 2) return d;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
 export const PollDisplay = ({ postId, body }: { postId: string; body: string }) => {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -26,37 +36,31 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
   const [otherText, setOtherText] = useState("");
   const [loading, setLoading] = useState(false);
 
-  let pollData: PollData | null = null;
-  try {
-    pollData = JSON.parse(body);
-  } catch {
-    return <p className="text-sm text-muted-foreground">{body}</p>;
-  }
+  const pollData = parsePollData(body);
 
-  if (!pollData || !pollData.options?.length) {
+  useEffect(() => {
+    if (!pollData) return;
+    const fetchVotes = async () => {
+      const { data } = await supabase
+        .from("poll_votes")
+        .select("option_index, user_id")
+        .eq("post_id", postId);
+      if (data) {
+        setVotes(data);
+        if (user) {
+          const myVote = data.find((v: any) => v.user_id === user.id);
+          setUserVote(myVote ? myVote.option_index : null);
+        }
+      }
+    };
+    fetchVotes();
+  }, [postId, user?.id]);
+
+  if (!pollData) {
     return <p className="text-sm text-muted-foreground">{body}</p>;
   }
 
   const totalVotes = votes.length;
-
-  useEffect(() => {
-    fetchVotes();
-  }, [postId, user]);
-
-  const fetchVotes = async () => {
-    const { data } = await supabase
-      .from("poll_votes")
-      .select("option_index, user_id")
-      .eq("post_id", postId);
-
-    if (data) {
-      setVotes(data);
-      if (user) {
-        const myVote = data.find((v: any) => v.user_id === user.id);
-        setUserVote(myVote ? myVote.option_index : null);
-      }
-    }
-  };
 
   const handleVote = async (optionIndex: number) => {
     if (!user) {
@@ -66,26 +70,29 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
     setLoading(true);
 
     if (userVote !== null) {
-      // Update existing vote
       await supabase
         .from("poll_votes")
         .update({ option_index: optionIndex })
         .eq("post_id", postId)
         .eq("user_id", user.id);
     } else {
-      // Insert new vote
       await supabase
         .from("poll_votes")
         .insert({ post_id: postId, user_id: user.id, option_index: optionIndex });
     }
 
     setUserVote(optionIndex);
-    await fetchVotes();
+    // Refetch
+    const { data } = await supabase
+      .from("poll_votes")
+      .select("option_index, user_id")
+      .eq("post_id", postId);
+    if (data) setVotes(data);
     setLoading(false);
   };
 
   const hasVoted = userVote !== null;
-  const otherIndex = pollData.options.length; // "Other" is always the last index
+  const otherIndex = pollData.options.length;
 
   return (
     <div className="space-y-2 py-1">
@@ -105,7 +112,6 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
                 : "border-border hover:border-primary/30 bg-card"
             }`}
           >
-            {/* Progress bar background */}
             {hasVoted && (
               <div
                 className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-500"
@@ -129,7 +135,6 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
         );
       })}
 
-      {/* "Other" option */}
       {pollData.allowOther && (
         <div className={`rounded-lg border px-3 py-2.5 transition-all ${
           userVote === otherIndex ? "border-primary bg-primary/5" : "border-border bg-card"
@@ -154,7 +159,6 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
         </div>
       )}
 
-      {/* Vote count */}
       <p className="text-[11px] text-muted-foreground pt-0.5">
         {totalVotes} {totalVotes === 1 ? t("community.vote", "vote") : t("community.votes", "votes")}
         {hasVoted && <span className="ml-1">· {t("community.youVoted", "You voted")}</span>}
