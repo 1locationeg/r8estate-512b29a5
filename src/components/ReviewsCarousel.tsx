@@ -265,7 +265,7 @@ export function ReviewsCarousel() {
                   </div>
 
                   {/* Business profile + Author + time */}
-                  <div className="flex items-center justify-between pt-2 border-t border-border mt-auto">
+                  <div className="flex items-center justify-between pt-1.5 mt-auto">
                     <div className="flex items-center gap-2 min-w-0">
                       {bizLogo ? (
                         <img
