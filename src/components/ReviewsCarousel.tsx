@@ -220,7 +220,7 @@ export function ReviewsCarousel() {
                   </div>
 
                   {/* Author footer */}
-                  <div className="flex items-center justify-between pt-1.5 mt-auto border-t border-border/40">
+                  <div className="flex items-center justify-between mt-auto">
                     <div className="flex items-center gap-2 min-w-0">
                       {bizLogo ? (
                         <img
