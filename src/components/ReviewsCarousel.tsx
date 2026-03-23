@@ -96,7 +96,7 @@ export function ReviewsCarousel() {
     const mockFill = mockReviews
       .filter((r) => !liveIds.has(r.id))
       .slice(0, 12 - allReviews.length)
-      .map((r) => ({ id: r.id, author: r.author, rating: r.rating, date: r.date, comment: r.comment, developerId: r.developerId, avatar: (r as any).avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.author)}&backgroundColor=1a3a5c&textColor=ffffff` }));
+      .map((r, idx) => ({ id: r.id, author: r.author, rating: r.rating, date: r.date, comment: r.comment, developerId: r.developerId, avatar: (r as any).avatar || `https://i.pravatar.cc/150?img=${(idx % 70) + 1}` }));
     allReviews.push(...mockFill);
   }
 
@@ -181,7 +181,8 @@ export function ReviewsCarousel() {
               const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
               const isNew = diffDays <= 3;
 
-              const avatarUrl = review.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(review.author || bizName || 'R8')}&backgroundColor=1a3a5c&textColor=ffffff`;
+              const hashCode = review.author ? review.author.split('').reduce((a, c) => a + c.charCodeAt(0), 0) : 0;
+              const avatarUrl = review.avatar || `https://i.pravatar.cc/150?img=${(hashCode % 70) + 1}`;
 
               return (
                 <div
