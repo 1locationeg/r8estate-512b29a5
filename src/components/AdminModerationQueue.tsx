@@ -8,6 +8,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Loader2, CheckCircle, XCircle, Clock, Star, Search, MessageSquare } from 'lucide-react';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
+import { localizeStoredReviewValue } from '@/lib/reviewCopy';
 
 interface ModerationReview {
   id: string;
@@ -28,6 +30,7 @@ interface ModerationReview {
 }
 
 const AdminModerationQueue = () => {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [reviews, setReviews] = useState<ModerationReview[]>([]);
   const [loading, setLoading] = useState(true);
@@ -171,7 +174,7 @@ const AdminModerationQueue = () => {
                       <div className="flex items-center gap-2 flex-wrap mb-1">
                         {statusIcon(review.status)}
                         <span className="font-medium text-sm text-foreground">
-                          {review.is_anonymous ? 'Anonymous' : review.author_name}
+                          {review.is_anonymous ? t('reviews.anonymousUser', 'Anonymous user') : review.author_name}
                         </span>
                         <span className="text-xs text-muted-foreground">→</span>
                         <span className="text-sm text-muted-foreground">{review.developer_name || 'Unknown'}</span>
@@ -192,7 +195,9 @@ const AdminModerationQueue = () => {
                       <p className="text-sm text-muted-foreground line-clamp-3">{review.comment}</p>
                       
                       {review.experience_type && (
-                        <Badge variant="outline" className="mt-2 text-xs">{review.experience_type}</Badge>
+                        <Badge variant="outline" className="mt-2 text-xs">
+                          {localizeStoredReviewValue(review.experience_type, t)}
+                        </Badge>
                       )}
                     </div>
 
