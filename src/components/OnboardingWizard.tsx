@@ -77,7 +77,7 @@ export const OnboardingWizard = () => {
       .eq("user_id", user.id);
 
     if (updated.length >= steps.length) {
-      toast.success("🎉 Onboarding complete! You're all set.");
+      toast.success(t("onboarding.completeToast", "🎉 You're all set."));
     }
   };
 
@@ -93,32 +93,32 @@ export const OnboardingWizard = () => {
   const buyerSteps: OnboardingStep[] = [
     {
       id: "complete_profile",
-      label: "Complete your profile",
-      description: "Add your name and preferences",
+      label: t("onboarding.buyer.completeProfileLabel", "Complete your profile"),
+      description: t("onboarding.buyer.completeProfileDescription", "Add your name and preferences"),
       icon: <User className="w-4 h-4" />,
       action: () => { navigate("/buyer/settings"); markStep("complete_profile"); },
       completed: stepsCompleted.includes("complete_profile") || !!profile?.full_name,
     },
     {
       id: "browse_directory",
-      label: "Explore the directory",
-      description: "Browse businesses and developers",
+      label: t("onboarding.buyer.browseDirectoryLabel", "Explore the directory"),
+      description: t("onboarding.buyer.browseDirectoryDescription", "Browse businesses and developers"),
       icon: <Search className="w-4 h-4" />,
       action: () => { navigate("/directory"); markStep("browse_directory"); },
       completed: stepsCompleted.includes("browse_directory"),
     },
     {
       id: "write_review",
-      label: "Write your first review",
-      description: "Share your experience with others",
+      label: t("onboarding.buyer.writeReviewLabel", "Write your first review"),
+      description: t("onboarding.buyer.writeReviewDescription", "Share your experience with others"),
       icon: <Star className="w-4 h-4" />,
       action: () => { navigate("/reviews"); markStep("write_review"); },
       completed: stepsCompleted.includes("write_review"),
     },
     {
       id: "join_community",
-      label: "Join the community",
-      description: "Ask questions and share tips",
+      label: t("onboarding.buyer.joinCommunityLabel", "Join the community"),
+      description: t("onboarding.buyer.joinCommunityDescription", "Ask questions and share tips"),
       icon: <Sparkles className="w-4 h-4" />,
       action: () => { navigate("/community"); markStep("join_community"); },
       completed: stepsCompleted.includes("join_community"),
@@ -128,32 +128,32 @@ export const OnboardingWizard = () => {
   const businessSteps: OnboardingStep[] = [
     {
       id: "complete_profile",
-      label: "Set up business profile",
-      description: "Add your company details and logo",
+      label: t("onboarding.business.completeProfileLabel", "Set up your business profile"),
+      description: t("onboarding.business.completeProfileDescription", "Add your company details and logo"),
       icon: <Building2 className="w-4 h-4" />,
       action: () => { navigate("/business/profile"); markStep("complete_profile"); },
       completed: stepsCompleted.includes("complete_profile"),
     },
     {
       id: "add_project",
-      label: "Add your first project",
-      description: "Showcase your work to buyers",
+      label: t("onboarding.business.addProjectLabel", "Add your first project"),
+      description: t("onboarding.business.addProjectDescription", "Show buyers what you are building"),
       icon: <Building2 className="w-4 h-4" />,
       action: () => { navigate("/business/projects"); markStep("add_project"); },
       completed: stepsCompleted.includes("add_project"),
     },
     {
       id: "submit_deal",
-      label: "Submit a deal",
-      description: "Post an offer for buyers to rate",
+      label: t("onboarding.business.submitDealLabel", "Submit a deal"),
+      description: t("onboarding.business.submitDealDescription", "Post an offer for buyers to compare"),
       icon: <Tag className="w-4 h-4" />,
       action: () => { navigate("/business/submit-deal"); markStep("submit_deal"); },
       completed: stepsCompleted.includes("submit_deal"),
     },
     {
       id: "request_review",
-      label: "Request a review",
-      description: "Invite buyers to review your business",
+      label: t("onboarding.business.requestReviewLabel", "Request a review"),
+      description: t("onboarding.business.requestReviewDescription", "Invite buyers to review your business"),
       icon: <Star className="w-4 h-4" />,
       action: () => { navigate("/business/request-review"); markStep("request_review"); },
       completed: stepsCompleted.includes("request_review"),
