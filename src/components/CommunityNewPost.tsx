@@ -5,12 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, Zap, TrendingUp } from "lucide-react";
+import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, Zap, TrendingUp, Megaphone } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import type { CommunityPostCategory } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
+import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 
 interface Props {
@@ -22,10 +23,13 @@ interface Props {
 
 export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDeveloper }: Props) => {
   const { t } = useTranslation();
+  const { role } = useAuth();
+  const isAdmin = role === 'admin';
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [category, setCategory] = useState<CommunityPostCategory>("question");
   const [submitting, setSubmitting] = useState(false);
+  const [notifyAll, setNotifyAll] = useState(false);
   const { createPost } = useCommunityActions();
   const prefillDev = prefillDeveloper ? developers.find(d => d.id === prefillDeveloper) : null;
 
@@ -112,9 +116,20 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
 
     const result = await createPost(title.trim(), finalBody, category, prefillDev?.id);
     if (result) {
+      // Broadcast notification to all users if admin toggled it
+      if (isAdmin && notifyAll && result.id) {
+        await supabase.rpc("broadcast_notification", {
+          _title: `📢 ${title.trim()}`,
+          _message: isPoll ? "New poll in community — share your vote!" : (body.trim().slice(0, 100) || "New discussion in community"),
+          _type: "announcement",
+          _metadata: JSON.stringify({ link: `/community?post=${result.id}` }),
+        });
+      }
+
       setTitle(""); setBody(""); setCategory("question");
       setPollOptions(["", ""]); setAllowOther(false);
       setTitleSuggestions([]); setEngagementTip("");
+      setNotifyAll(false);
       onOpenChange(false);
       onCreated();
     }
@@ -279,6 +294,20 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
             </div>
           )}
 
+          {/* Admin: Notify all users toggle */}
+          {isAdmin && (
+            <div className="flex items-center justify-between py-2.5 px-3 rounded-lg bg-amber-500/10 border border-amber-500/20">
+              <div className="flex items-center gap-2">
+                <Megaphone className="w-4 h-4 text-amber-600" />
+                <div>
+                  <p className="text-xs font-medium text-foreground">{t("community.notifyAll", "Notify all users")}</p>
+                  <p className="text-[10px] text-muted-foreground">{t("community.notifyAllDesc", "Send a push notification with a link to this post")}</p>
+                </div>
+              </div>
+              <Switch checked={notifyAll} onCheckedChange={setNotifyAll} />
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} size="sm">{t("community.cancel", "Cancel")}</Button>
@@ -289,7 +318,7 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
               className="gap-1.5"
             >
               {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-              {t("community.post", "Post")}
+              {notifyAll && isAdmin ? t("community.postAndNotify", "Post & Notify") : t("community.post", "Post")}
             </Button>
           </div>
         </div>
