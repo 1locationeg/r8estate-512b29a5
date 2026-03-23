@@ -184,10 +184,10 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-4 flex flex-col gap-2 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30 border border-border/60 shadow-sm hover:shadow-lg hover:border-primary/20"
+                  className="snap-start shrink-0 w-[80vw] sm:w-[270px] md:w-[300px] rounded-xl p-3 flex flex-col gap-1 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.02] bg-gradient-to-br from-card via-card to-muted/30 border border-border/60 shadow-sm hover:shadow-lg hover:border-primary/20"
                 >
                   {/* Decorative quote icon */}
-                  <Quote className="absolute top-3 right-3 w-8 h-8 text-primary/[0.07] rotate-180" />
+                  <Quote className="absolute top-2 right-2 w-6 h-6 text-primary/[0.07] rotate-180" />
 
                   {/* New badge */}
                   {isNew && (
@@ -197,7 +197,7 @@ export function ReviewsCarousel() {
                   )}
 
                   {/* Rating row */}
-                  <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center gap-1.5">
                     {renderStars(review.rating)}
                     <span className="text-[11px] font-semibold text-primary/80">
                       {getRatingLabel(review.rating)}
@@ -205,8 +205,8 @@ export function ReviewsCarousel() {
                   </div>
 
                   {/* Comment */}
-                  <div className="flex-1 min-h-0">
-                    <p className={`text-[13px] text-foreground/90 leading-[1.6] ${!isExpanded && isLong ? "line-clamp-3" : ""}`}>
+                  <div className="min-h-0">
+                    <p className={`text-[12px] text-foreground/90 leading-[1.4] line-clamp-3 ${isExpanded ? "!line-clamp-none" : ""}`}>
                       {review.comment}
                     </p>
                     {isLong && (
@@ -220,7 +220,7 @@ export function ReviewsCarousel() {
                   </div>
 
                   {/* Author footer */}
-                  <div className="flex items-center justify-between pt-2 mt-auto border-t border-border/40">
+                  <div className="flex items-center justify-between pt-1.5 mt-auto border-t border-border/40">
                     <div className="flex items-center gap-2 min-w-0">
                       {bizLogo ? (
                         <img
