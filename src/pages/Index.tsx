@@ -11,9 +11,6 @@ import { HeroCategoryItems } from "@/components/HeroCategoryItems";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { MobileNav } from "@/components/MobileNav";
-import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
@@ -461,11 +458,6 @@ const Index = () => {
       <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
       <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
 
-      <MobileNavSheet
-        open={moreMenuOpen}
-        onOpenChange={setMoreMenuOpen}
-        onSignOut={handleSignOut}
-        getDashboardRoute={getDashboardRoute} />
       
 
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
