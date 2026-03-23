@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
+import { PollDisplay } from "@/components/PollDisplay";
 import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import type { CommunityPost } from "@/hooks/useCommunity";
@@ -89,17 +90,25 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
       </div>
 
       {/* Post body */}
-      <button onClick={onClick} className="w-full text-left px-4 pb-3">
-        <h3 className="font-semibold text-[15px] text-foreground leading-snug mb-1">
-          {post.title}
-        </h3>
-        <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-          {post.body}
-        </p>
-        {post.reply_count === 0 && post.category === 'question' && (
-          <p className="text-xs text-primary font-medium mt-2">{t("community.beFirstAnswer", "Be the first to answer!")}</p>
+      <div className="px-4 pb-3">
+        <button onClick={onClick} className="w-full text-left">
+          <h3 className="font-semibold text-[15px] text-foreground leading-snug mb-1">
+            {post.title}
+          </h3>
+        </button>
+        {post.category === "poll" ? (
+          <PollDisplay postId={post.id} body={post.body} />
+        ) : (
+          <button onClick={onClick} className="w-full text-left">
+            <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
+              {post.body}
+            </p>
+            {post.reply_count === 0 && post.category === 'question' && (
+              <p className="text-xs text-primary font-medium mt-2">{t("community.beFirstAnswer", "Be the first to answer!")}</p>
+            )}
+          </button>
         )}
-      </button>
+      </div>
 
       {/* Reaction + comment count summary */}
       <div className="flex items-center justify-between px-4 py-1.5 text-xs text-muted-foreground">
