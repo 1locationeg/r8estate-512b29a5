@@ -210,7 +210,12 @@
     "dashboard": "Dashboard",
     "insights": "Insights",
     "role_buyer": "Buyer",
-    "user_fallback": "User"
+    "user_fallback": "User",
+    "businesses": "Businesses",
+    "blog": "Blog",
+    "signUp": "Sign up",
+    "forBusinesses": "For Businesses",
+    "language": "English"
   },
   "hero": {
     "platformDescriptor": "EGYPT'S REAL ESTATE REVIEW PLATFORM",
