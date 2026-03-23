@@ -230,7 +230,7 @@ export function ReviewsCarousel() {
             {TESTIMONIALS.map((item) => (
               <div
                 key={item.id}
-                className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
+                className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
                 style={{
                   background: `linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 50%, hsl(var(--card)) 100%)`,
                 }}
