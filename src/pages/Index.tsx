@@ -23,7 +23,7 @@ import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { developers } from "@/data/mockData";
-import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu } from "lucide-react";
+import { LogOut, LayoutDashboard, Search, BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Menu, Sparkles, Fingerprint } from "lucide-react";
 import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
