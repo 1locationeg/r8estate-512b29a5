@@ -215,12 +215,12 @@ export function ReviewsCarousel() {
   };
 
   return (
-    <section className="w-full py-0 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-2">
+    <section className="w-full py-0 overflow-hidden" style={{ paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="relative group">
           <div
             ref={scrollRef}
-            className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-1"
+            className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 px-1"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
@@ -230,7 +230,7 @@ export function ReviewsCarousel() {
             {TESTIMONIALS.map((item) => (
               <div
                 key={item.id}
-                className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
+                className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
                 style={{
                   background: `linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 50%, hsl(var(--card)) 100%)`,
                 }}
@@ -292,7 +292,7 @@ export function ReviewsCarousel() {
 
             {/* CTA card */}
             <div
-              className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
+              className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
               onClick={() => navigate("/reviews")}
             >
               <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
