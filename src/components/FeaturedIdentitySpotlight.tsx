@@ -12,13 +12,13 @@ import { useNavigate } from "react-router-dom";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const trustCategories = [
-  { key: "projectTimeliness", label: "Project Timeliness" },
-  { key: "constructionQuality", label: "Construction Quality" },
-  { key: "developerCommunication", label: "Developer Communication" },
-  { key: "valueForMoney", label: "Value for Money" },
-  { key: "documentationLegality", label: "Documentation & Legality" },
-  { key: "customerService", label: "Customer Service" },
-];
+{ key: "projectTimeliness", label: "Project Timeliness" },
+{ key: "constructionQuality", label: "Construction Quality" },
+{ key: "developerCommunication", label: "Developer Communication" },
+{ key: "valueForMoney", label: "Value for Money" },
+{ key: "documentationLegality", label: "Documentation & Legality" },
+{ key: "customerService", label: "Customer Service" }];
+
 
 export const FeaturedIdentitySpotlight = () => {
   const { t } = useTranslation();
@@ -56,8 +56,8 @@ export const FeaturedIdentitySpotlight = () => {
     return Math.min(99, Math.max(75, (developer.trustScore + hash) % 30 + 75));
   };
 
-  const scoreAngle = (developer.trustScore / 100) * 180;
-  const rad = ((180 - scoreAngle) * Math.PI) / 180;
+  const scoreAngle = developer.trustScore / 100 * 180;
+  const rad = (180 - scoreAngle) * Math.PI / 180;
   const mx = 100 + 80 * Math.cos(rad);
   const my = 100 - 80 * Math.sin(rad);
 
@@ -68,22 +68,22 @@ export const FeaturedIdentitySpotlight = () => {
   };
 
   const renderStars = (rating: number) =>
-    Array.from({ length: 5 }, (_, i) => (
-      <Star
-        key={i}
-        className={`w-4 h-4 ${i < Math.round(rating) ? getRatingColorClass(rating) : "text-muted"}`}
-      />
-    ));
+  Array.from({ length: 5 }, (_, i) =>
+  <Star
+    key={i}
+    className={`w-4 h-4 ${i < Math.round(rating) ? getRatingColorClass(rating) : "text-muted"}`} />
+
+  );
 
   const tierColors: Record<string, string> = {
     gold: "bg-accent text-accent-foreground",
     silver: "bg-muted text-muted-foreground",
-    bronze: "bg-orange-700/20 text-orange-400",
+    bronze: "bg-orange-700/20 text-orange-400"
   };
 
   return (
     <section className="w-full max-w-3xl mx-auto px-4 mt-4 mb-3">
-      <div className="flex items-center justify-between mb-2">
+      <div className="flex items-center justify-between mb-2 py-0">
         <h2 className="text-base md:text-lg font-bold text-foreground">
           Spotlight
         </h2>
@@ -108,39 +108,39 @@ export const FeaturedIdentitySpotlight = () => {
               <div className="absolute right-0 flex items-center gap-1">
                 <button
                   onClick={() => {
-                    if (!user) { navigate("/auth"); return; }
+                    if (!user) {navigate("/auth");return;}
                     toggleSave(developer.name, developer.logo);
                   }}
                   disabled={saveLoading}
                   className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
-                  title={isSaved ? "Remove from saved" : "Save"}
-                >
+                  title={isSaved ? "Remove from saved" : "Save"}>
+                  
                   <Bookmark className={`h-3.5 w-3.5 ${isSaved ? "fill-primary-foreground text-primary-foreground" : "text-primary-foreground/70"}`} />
                 </button>
                 <button
                   onClick={() => {
-                    if (!user) { navigate("/auth"); return; }
+                    if (!user) {navigate("/auth");return;}
                     toggleFollow(developer.name);
                   }}
                   disabled={followLoading}
                   className="p-1.5 rounded-full bg-white/15 backdrop-blur-sm hover:bg-white/25 transition-colors"
-                  title={isFollowing ? "Unfollow" : "Follow"}
-                >
-                  {isFollowing ? (
-                    <UserCheck className="h-3.5 w-3.5 text-primary-foreground" />
-                  ) : (
-                    <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
-                  )}
+                  title={isFollowing ? "Unfollow" : "Follow"}>
+                  
+                  {isFollowing ?
+                  <UserCheck className="h-3.5 w-3.5 text-primary-foreground" /> :
+
+                  <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
+                  }
                 </button>
                 <ShareMenu title={developer.name} iconOnly />
               </div>
             </div>
-            {developer.verified && (
-              <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/15 backdrop-blur-sm rounded-full text-[11px] font-semibold text-primary-foreground mt-1.5">
+            {developer.verified &&
+            <div className="inline-flex items-center gap-1 px-2.5 py-0.5 bg-white/15 backdrop-blur-sm rounded-full text-[11px] font-semibold text-primary-foreground mt-1.5">
                 <Shield className="w-3 h-3" />
                 Verified Identity
               </div>
-            )}
+            }
           </div>
         </div>
 
@@ -160,30 +160,30 @@ export const FeaturedIdentitySpotlight = () => {
                 fill="none"
                 stroke="hsl(var(--muted))"
                 strokeWidth="12"
-                strokeLinecap="round"
-              />
+                strokeLinecap="round" />
+              
               <path
                 d="M 20 100 A 80 80 0 0 1 180 100"
                 fill="none"
                 stroke="url(#spotlightGaugeGrad)"
                 strokeWidth="12"
                 strokeLinecap="round"
-                strokeDasharray={`${(developer.trustScore / 100) * Math.PI * 80} ${Math.PI * 80}`}
-              />
+                strokeDasharray={`${developer.trustScore / 100 * Math.PI * 80} ${Math.PI * 80}`} />
+              
               <circle
                 cx={mx}
                 cy={my}
                 r="7"
                 fill="hsl(var(--card))"
                 stroke={getScoreColor(developer.trustScore)}
-                strokeWidth="3"
-              />
+                strokeWidth="3" />
+              
             </svg>
             <div className="absolute inset-0 flex flex-col items-center justify-end pb-0.5">
               <span
                 className="text-2xl md:text-3xl font-black"
-                style={{ color: getScoreColor(developer.trustScore) }}
-              >
+                style={{ color: getScoreColor(developer.trustScore) }}>
+                
                 {developer.trustScore}
               </span>
               <span className="text-[9px] text-muted-foreground uppercase tracking-wider">
@@ -207,32 +207,32 @@ export const FeaturedIdentitySpotlight = () => {
           <h4 className="text-xs font-semibold text-foreground mb-1.5">Trust Categories</h4>
           <div
             key={categoryPairIndex}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 animate-fade-in"
-          >
+            className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-1.5 animate-fade-in">
+            
             {trustCategories.slice(categoryPairIndex * 2, categoryPairIndex * 2 + 2).map((cat) => {
               const score = getCategoryScore(cat.key);
               return (
                 <TrustCategoryBar
                   key={cat.key}
                   label={cat.label}
-                  percentage={score}
-                />
-              );
+                  percentage={score} />);
+
+
             })}
           </div>
           <div className="flex items-center justify-center gap-1.5 mt-2">
-            {Array.from({ length: totalPairs }, (_, i) => (
-              <button
-                key={i}
-                onClick={() => setCategoryPairIndex(i)}
-                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
-                  i === categoryPairIndex
-                    ? "bg-primary scale-125"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
-                }`}
-                aria-label={`Show category pair ${i + 1}`}
-              />
-            ))}
+            {Array.from({ length: totalPairs }, (_, i) =>
+            <button
+              key={i}
+              onClick={() => setCategoryPairIndex(i)}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+              i === categoryPairIndex ?
+              "bg-primary scale-125" :
+              "bg-muted-foreground/30 hover:bg-muted-foreground/50"}`
+              }
+              aria-label={`Show category pair ${i + 1}`} />
+
+            )}
           </div>
         </div>
 
@@ -244,8 +244,8 @@ export const FeaturedIdentitySpotlight = () => {
           </div>
 
           <div className="space-y-2.5">
-            {displayedReviews.map((review) => (
-              <div key={review.id} className="space-y-1">
+            {displayedReviews.map((review) =>
+            <div key={review.id} className="space-y-1">
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex items-center gap-1.5 min-w-0">
                     <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">
@@ -256,11 +256,11 @@ export const FeaturedIdentitySpotlight = () => {
                         <span className="text-xs font-semibold text-foreground truncate">
                           {review.author}
                         </span>
-                        {review.tier && (
-                          <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
+                        {review.tier &&
+                      <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
                             {review.tier}
                           </span>
-                        )}
+                      }
                       </div>
                       <p className="text-[10px] text-muted-foreground truncate">
                          {localizeStoredReviewValue(review.project, t)} • {review.developerId}
@@ -277,8 +277,8 @@ export const FeaturedIdentitySpotlight = () => {
                 </p>
                 <p className="text-[9px] text-muted-foreground">{review.date}</p>
 
-                {review.developerReply && (
-                  <div className="ms-5 p-2 bg-secondary/50 rounded-md border border-border">
+                {review.developerReply &&
+              <div className="ms-5 p-2 bg-secondary/50 rounded-md border border-border">
                     <div className="flex items-center gap-1 mb-0.5">
                       <MessageSquare className="w-2.5 h-2.5 text-primary" />
                       <span className="text-[10px] font-semibold text-primary">
@@ -292,22 +292,22 @@ export const FeaturedIdentitySpotlight = () => {
                       {review.developerReply.comment}
                     </p>
                   </div>
-                )}
+              }
               </div>
-            ))}
+            )}
           </div>
 
-          {devReviews.length > 2 && (
-            <button
-              onClick={() => setShowAllReviews(!showAllReviews)}
-              className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
-            >
+          {devReviews.length > 2 &&
+          <button
+            onClick={() => setShowAllReviews(!showAllReviews)}
+            className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
+            
               {showAllReviews ? "Show Less" : `View All ${devReviews.length} Reviews`}
               <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showAllReviews ? "rotate-90" : ""}`} />
             </button>
-          )}
+          }
         </div>
       </Card>
-    </section>
-  );
+    </section>);
+
 };
