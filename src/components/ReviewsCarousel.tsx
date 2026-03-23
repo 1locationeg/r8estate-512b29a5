@@ -215,12 +215,12 @@ export function ReviewsCarousel() {
   };
 
   return (
-    <section className="w-full py-0 overflow-hidden">
-      <div className="max-w-6xl mx-auto px-2">
+    <section className="w-full py-0 overflow-hidden" style={{ paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
         <div className="relative group">
           <div
             ref={scrollRef}
-            className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-1"
+            className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 px-1"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
