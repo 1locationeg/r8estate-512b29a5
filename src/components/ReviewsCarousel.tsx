@@ -193,7 +193,7 @@ export function ReviewsCarousel() {
                       <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-accent text-accent-foreground truncate max-w-[120px]">
                         {bizName || review.author}
                       </span>
-                      {renderStars(review.rating)}
+                      {renderStars(review.rating, true)}
                     </div>
 
                     {/* Quote text */}
