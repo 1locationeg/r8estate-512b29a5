@@ -167,9 +167,9 @@ const InsightsPage = () => {
   }
 
   const tabs = [
-    { key: 'insights' as const, label: 'AI Insights', icon: Sparkles },
-    { key: 'categories' as const, label: 'Categories', icon: Layers },
-    { key: 'trending' as const, label: 'Trending', icon: Flame },
+    { key: 'insights' as const, label: t('insights.tabInsights'), icon: Sparkles },
+    { key: 'categories' as const, label: t('insights.tabCategories'), icon: Layers },
+    { key: 'trending' as const, label: t('insights.tabTrending'), icon: Flame },
   ];
 
   const maxCatReviews = Math.max(...(snapshot?.categoryPerformance?.map(c => c.reviewCount) || [1]));
@@ -191,7 +191,7 @@ const InsightsPage = () => {
               <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
                 <Sparkles className="w-4 h-4 text-primary-foreground" />
               </div>
-              AI Insights
+              {t('insights.title')}
             </h1>
             <p className="text-[10px] text-muted-foreground">
               {roleLabels[effectiveRole]?.emoji} {roleLabels[effectiveRole]?.description || 'Real-time platform intelligence'}
@@ -205,10 +205,8 @@ const InsightsPage = () => {
             className="gap-1.5 text-xs"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            Refresh
+            {t('insights.refresh')}
           </Button>
-        </div>
-      </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
         {/* Cache Banner */}
@@ -218,14 +216,14 @@ const InsightsPage = () => {
           }`}>
             <div className="flex items-center gap-2 text-xs">
               {cacheInfo.cached ? (
-                <><Clock className="w-3.5 h-3.5 text-muted-foreground" /><span className="text-muted-foreground">Cached · Refreshes in {cacheInfo.expires_in_minutes}m</span></>
+                <><Clock className="w-3.5 h-3.5 text-muted-foreground" /><span className="text-muted-foreground">{t('insights.cachedRefreshesIn', { minutes: cacheInfo.expires_in_minutes })}</span></>
               ) : (
-                <><Zap className="w-3.5 h-3.5 text-trust-excellent" /><span className="text-trust-excellent font-medium">Fresh insights · Just generated</span></>
+                <><Zap className="w-3.5 h-3.5 text-trust-excellent" /><span className="text-trust-excellent font-medium">{t('insights.freshInsights')}</span></>
               )}
             </div>
             {cacheInfo.cached && (
               <Button size="sm" variant="ghost" onClick={() => fetchInsights(true)} disabled={loading} className="text-[10px] h-7 gap-1 text-primary">
-                <Zap className="w-3 h-3" /> Force Refresh
+                <Zap className="w-3 h-3" /> {t('insights.forceRefresh')}
               </Button>
             )}
           </div>
@@ -235,14 +233,14 @@ const InsightsPage = () => {
         {snapshot && (
           <div>
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
-              <BarChart3 className="w-4 h-4" /> Platform Stats
+              <BarChart3 className="w-4 h-4" /> {t('insights.platformStats')}
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: 'Total Reviews', value: snapshot.totalAuthenticatedReviews + snapshot.totalGuestReviews, icon: MessageSquare, sub: `${snapshot.recentReviews30d} this month`, gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: snapshot.recentReviews7d > 0 ? `+${snapshot.recentReviews7d} this week` : null },
-                { label: 'Avg Rating', value: snapshot.averageRating, icon: Star, sub: `from ${snapshot.totalAuthenticatedReviews} verified`, gradient: 'from-accent/15 via-accent/5 to-transparent', accent: 'text-accent', badge: null },
-                { label: 'Businesses', value: snapshot.totalBusinessProfiles, icon: Building2, sub: `${snapshot.parentDevelopers} devs · ${snapshot.childProjects} projects`, gradient: 'from-trust-excellent/15 via-trust-excellent/5 to-transparent', accent: 'text-trust-excellent', badge: null },
-                { label: 'Active Users', value: snapshot.totalRegisteredUsers, icon: Users, sub: `${snapshot.buyerEngagement.totalViewed} profiles viewed`, gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: null },
+                { label: t('insights.totalReviews'), value: snapshot.totalAuthenticatedReviews + snapshot.totalGuestReviews, icon: MessageSquare, sub: `${snapshot.recentReviews30d} ${t('insights.thisMonth')}`, gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: snapshot.recentReviews7d > 0 ? `+${snapshot.recentReviews7d} ${t('insights.thisWeek')}` : null },
+                { label: t('insights.avgRating'), value: snapshot.averageRating, icon: Star, sub: t('insights.fromVerified', { count: snapshot.totalAuthenticatedReviews }), gradient: 'from-accent/15 via-accent/5 to-transparent', accent: 'text-accent', badge: null },
+                { label: t('insights.businesses'), value: snapshot.totalBusinessProfiles, icon: Building2, sub: t('insights.devsProjects', { devs: snapshot.parentDevelopers, projects: snapshot.childProjects }), gradient: 'from-trust-excellent/15 via-trust-excellent/5 to-transparent', accent: 'text-trust-excellent', badge: null },
+                { label: t('insights.activeUsers'), value: snapshot.totalRegisteredUsers, icon: Users, sub: t('insights.profilesViewed', { count: snapshot.buyerEngagement.totalViewed }), gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: null },
               ].map(s => (
                 <div key={s.label} className={`relative overflow-hidden bg-gradient-to-br ${s.gradient} border border-border rounded-2xl p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group`}>
                   {/* Decorative ring */}
@@ -265,10 +263,10 @@ const InsightsPage = () => {
             {/* Engagement Ring Stats */}
             <div className="mt-3 grid grid-cols-4 gap-2">
               {[
-                { label: 'Viewed', value: snapshot.buyerEngagement.totalViewed, icon: Eye, pct: 100 },
-                { label: 'Saved', value: snapshot.buyerEngagement.totalSaved, icon: Trophy, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalSaved / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
-                { label: 'Reports', value: snapshot.buyerEngagement.totalReports, icon: BarChart3, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalReports / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
-                { label: 'Votes', value: snapshot.buyerEngagement.totalVotes, icon: Award, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalVotes / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
+                { label: t('insights.viewed'), value: snapshot.buyerEngagement.totalViewed, icon: Eye, pct: 100 },
+                { label: t('insights.saved'), value: snapshot.buyerEngagement.totalSaved, icon: Trophy, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalSaved / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
+                { label: t('insights.reports'), value: snapshot.buyerEngagement.totalReports, icon: BarChart3, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalReports / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
+                { label: t('insights.votes'), value: snapshot.buyerEngagement.totalVotes, icon: Award, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalVotes / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
               ].map(e => (
                 <div key={e.label} className="bg-card border border-border rounded-xl p-2.5 text-center group hover:border-primary/30 transition-colors">
                   <e.icon className="w-3.5 h-3.5 text-primary mx-auto mb-1" />
@@ -313,7 +311,7 @@ const InsightsPage = () => {
               </div>
               <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 animate-ping" />
             </div>
-            <p className="text-sm text-muted-foreground">Analyzing platform data with AI...</p>
+            <p className="text-sm text-muted-foreground">{t('insights.analyzing')}</p>
           </div>
         )}
 
