@@ -96,7 +96,7 @@ export function ReviewsCarousel() {
     const mockFill = mockReviews
       .filter((r) => !liveIds.has(r.id))
       .slice(0, 12 - allReviews.length)
-      .map((r) => ({ id: r.id, author: r.author, rating: r.rating, date: r.date, comment: r.comment, developerId: r.developerId, avatar: (r as any).avatar }));
+      .map((r) => ({ id: r.id, author: r.author, rating: r.rating, date: r.date, comment: r.comment, developerId: r.developerId, avatar: (r as any).avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(r.author)}&backgroundColor=1a3a5c&textColor=ffffff` }));
     allReviews.push(...mockFill);
   }
 
@@ -181,29 +181,41 @@ export function ReviewsCarousel() {
               const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
               const isNew = diffDays <= 3;
 
+              const avatarUrl = review.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(review.author || bizName || 'R8')}&backgroundColor=1a3a5c&textColor=ffffff`;
+
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] bg-primary text-primary-foreground"
+                  className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
+                  style={{
+                    background: `linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 50%, hsl(var(--card)) 100%)`,
+                    backgroundSize: '400% 400%',
+                  }}
                 >
+                  {/* Subtle brand pattern overlay */}
+                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
+                    backgroundImage: `radial-gradient(circle at 20% 50%, hsl(var(--primary)) 1px, transparent 1px), radial-gradient(circle at 80% 20%, hsl(var(--accent)) 1px, transparent 1px)`,
+                    backgroundSize: '40px 40px',
+                  }} />
+
                   {/* Left content */}
-                  <div className="flex flex-col gap-1 flex-1 min-w-0">
+                  <div className="flex flex-col gap-1 flex-1 min-w-0 relative z-10">
                     {/* Business badge + stars row */}
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-accent text-accent-foreground truncate max-w-[120px]">
+                      <span className="px-2 py-0.5 text-[9px] font-bold rounded-full bg-primary text-primary-foreground truncate max-w-[120px]">
                         {bizName || review.author}
                       </span>
-                      {renderStars(review.rating, true)}
+                      {renderStars(review.rating)}
                     </div>
 
                     {/* Quote text */}
-                    <p className={`text-[13px] font-medium leading-[1.45] mt-1 line-clamp-3 ${isExpanded ? "!line-clamp-none" : ""}`}>
+                    <p className={`text-[13px] font-medium leading-[1.45] mt-1 text-foreground line-clamp-3 ${isExpanded ? "!line-clamp-none" : ""}`}>
                       &ldquo;{review.comment}&rdquo;
                     </p>
                     {isLong && (
                       <button
                         onClick={() => toggleExpand(review.id)}
-                        className="text-[10px] font-semibold text-accent hover:underline self-start"
+                        className="text-[10px] font-semibold text-primary hover:underline self-start"
                       >
                         {isExpanded ? (isRTL ? "أقل" : "Less") : (isRTL ? "المزيد" : "More")}
                       </button>
@@ -211,29 +223,23 @@ export function ReviewsCarousel() {
 
                     {/* Author info */}
                     <div className="flex flex-col mt-auto">
-                      <span className="text-[11px] font-bold text-primary-foreground/90 truncate">
+                      <span className="text-[11px] font-bold text-foreground truncate">
                         {review.author}
                       </span>
-                      <span className="text-[9px] text-primary-foreground/60">
+                      <span className="text-[9px] text-muted-foreground">
                         {isRTL ? "مراجع على" : "Reviewer on"} R8ESTATE · {getRelativeTime(review.date, i18n.language)}
                       </span>
                     </div>
                   </div>
 
                   {/* Right avatar circle */}
-                  <div className="flex-shrink-0 flex items-center">
-                    <div className="w-16 h-16 rounded-full border-[3px] border-accent/60 overflow-hidden bg-primary-foreground/10 flex items-center justify-center relative">
-                      {bizLogo ? (
-                        <img
-                          src={bizLogo}
-                          alt={bizName}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <span className="text-lg font-bold text-primary-foreground/70">
-                          {(review.author || bizName || "?").charAt(0).toUpperCase()}
-                        </span>
-                      )}
+                  <div className="flex-shrink-0 flex items-center relative z-10">
+                    <div className="w-16 h-16 rounded-full border-[3px] border-primary/30 overflow-hidden bg-muted flex items-center justify-center relative shadow-md">
+                      <img
+                        src={avatarUrl}
+                        alt={review.author}
+                        className="w-full h-full object-cover"
+                      />
                       {/* Verified tick */}
                       <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
                         <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
@@ -245,7 +251,7 @@ export function ReviewsCarousel() {
 
                   {/* New badge */}
                   {isNew && (
-                    <span className="absolute top-2 right-2 px-2 py-0.5 text-[8px] font-bold uppercase rounded-full bg-accent text-accent-foreground animate-pulse tracking-wider">
+                    <span className="absolute top-2 right-2 px-2 py-0.5 text-[8px] font-bold uppercase rounded-full bg-accent text-accent-foreground animate-pulse tracking-wider z-10">
                       {isRTL ? "جديد" : "New"}
                     </span>
                   )}
@@ -254,21 +260,21 @@ export function ReviewsCarousel() {
             })}
 
             {/* CTA card — motivate engagement */}
-            <div className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-accent/40 bg-primary/90 text-primary-foreground hover:border-accent/70 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
+            <div className="snap-start shrink-0 w-[82vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
               onClick={() => navigate("/reviews")}
             >
-              <div className="w-12 h-12 rounded-full bg-accent/20 flex items-center justify-center">
-                <MessageSquarePlus className="w-6 h-6 text-accent" />
+              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                <MessageSquarePlus className="w-6 h-6 text-primary" />
               </div>
-              <p className="text-sm font-bold text-primary-foreground text-center">
+              <p className="text-sm font-bold text-foreground text-center">
                 {isRTL ? "شاركنا تجربتك" : "Share your story."}
               </p>
-              <p className="text-[11px] text-primary-foreground/60 text-center leading-relaxed max-w-[180px]">
+              <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-[180px]">
                 {isRTL
                   ? "ساعد مشترين آخرين باتخاذ قرارات أفضل"
                   : "Help other buyers make smarter decisions"}
               </p>
-              <span className="text-[11px] font-semibold text-accent hover:underline">
+              <span className="text-[11px] font-semibold text-primary hover:underline">
                 {isRTL ? "اكتب تقييم →" : "Write a review →"}
               </span>
             </div>
