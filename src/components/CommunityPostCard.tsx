@@ -38,14 +38,16 @@ interface Props {
   post: CommunityPost;
   onClick: () => void;
   onVote: () => void;
+  onTogglePin?: (postId: string, currentlyPinned: boolean) => void;
 }
 
-export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
+export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props) => {
   const { t } = useTranslation();
-  const { user } = useAuth();
+  const { user, role } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const isOwnPost = user?.id === post.user_id;
+  const isAdmin = role === 'admin';
   const categoryConfig: Record<string, { label: string; className: string }> = {
     question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
     discussion: { label: t("community.discussion", "Discussion"), className: "bg-primary/10 text-primary border-primary/20" },
@@ -62,7 +64,13 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
   const userHasReacted = reactions.some(r => r.user_reacted);
 
   return (
-    <div className="bg-card border border-border rounded-lg overflow-hidden shadow-sm">
+    <div className={`bg-card border rounded-lg overflow-hidden shadow-sm ${post.is_pinned ? 'border-primary/40 ring-1 ring-primary/20' : 'border-border'}`}>
+      {post.is_pinned && (
+        <div className="flex items-center gap-1.5 px-4 py-1.5 bg-primary/5 text-primary text-xs font-medium border-b border-primary/10">
+          <Pin className="w-3 h-3" />
+          {t("community.pinnedPost", "Pinned post")}
+        </div>
+      )}
       {/* Author header */}
       <div className="flex items-center gap-3 px-4 pt-3 pb-2">
         <Avatar className="h-10 w-10 ring-2 ring-border">
@@ -109,6 +117,12 @@ export const CommunityPostCard = ({ post, onClick, onVote }: Props) => {
               {isFollowing ? <BellOff className="w-4 h-4 mr-2" /> : <BellPlus className="w-4 h-4 mr-2" />}
               {isFollowing ? t("community.turnOffNotifications", "Turn off notifications") : t("community.turnOnNotifications", "Turn on notifications")}
             </DropdownMenuItem>
+            {isAdmin && onTogglePin && (
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onTogglePin(post.id, post.is_pinned); }}>
+                <Pin className="w-4 h-4 mr-2" />
+                {post.is_pinned ? t("community.unpinPost", "Unpin post") : t("community.pinPost", "Pin to top")}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             {!isOwnPost && (
               <>

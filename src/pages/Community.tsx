@@ -29,7 +29,12 @@ const Community = () => {
 
   const { posts, loading, refetch } = useCommunityPosts(category, sortBy, developerFilter);
   const { post: detailPost, replies, loading: detailLoading, refetch: refetchDetail } = useCommunityPost(selectedPostId);
-  const { toggleVote } = useCommunityActions();
+  const { toggleVote, togglePin } = useCommunityActions();
+
+  const handleTogglePin = async (postId: string, currentlyPinned: boolean) => {
+    await togglePin(postId, currentlyPinned);
+    refetch();
+  };
 
   const displayName = profile?.full_name || user?.email?.split('@')[0] || 'User';
 
@@ -276,6 +281,7 @@ const Community = () => {
                   post={post}
                   onClick={() => handleSelectPost(post.id)}
                   onVote={() => handleVotePost(post.id)}
+                  onTogglePin={handleTogglePin}
                 />
                 {/* Engagement nudges after every 3rd post */}
                 {idx === 2 && <CommunityEngagementNudge variant="referral" />}
