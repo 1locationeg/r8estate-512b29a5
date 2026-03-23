@@ -225,7 +225,7 @@ export function ReviewsCarousel() {
               return (
                 <div
                   key={review.id}
-                  className="snap-start shrink-0 w-[85vw] sm:w-[300px] md:w-[340px] bg-card border border-border rounded-xl p-4 flex flex-col gap-2 shadow-sm hover:shadow-md transition-shadow"
+                  className="snap-start shrink-0 w-[78vw] sm:w-[260px] md:w-[290px] bg-card border border-border rounded-xl p-3 flex flex-col gap-1.5 shadow-sm hover:shadow-md transition-shadow"
                 >
                   {/* Stars + New badge */}
                   <div className="flex items-center gap-2">
