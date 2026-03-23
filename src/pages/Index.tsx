@@ -364,35 +364,23 @@ const Index = () => {
               </div>
 
 
-               {/* Trust Strip — inspired dark pill cards */}
+               {/* Trust Strip — dark bar with pill items */}
                <div className="w-full max-w-3xl px-4 mb-3">
-                <div
-                  className="relative flex items-center justify-between gap-2 py-2.5 px-3 rounded-2xl overflow-hidden"
-                  style={{ background: `linear-gradient(135deg, hsl(var(--card)/0.6) 0%, hsl(var(--muted)/0.4) 50%, hsl(var(--card)/0.6) 100%)` }}
-                >
-                  {/* Subtle colorful dot pattern */}
-                  <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-                    backgroundImage: `radial-gradient(circle, hsl(var(--primary)/0.8) 0.5px, transparent 0.5px), radial-gradient(circle, hsl(var(--accent)/0.6) 0.5px, transparent 0.5px), radial-gradient(circle, hsl(var(--verified)/0.5) 0.5px, transparent 0.5px)`,
-                    backgroundSize: '24px 24px, 36px 36px, 48px 48px',
-                    backgroundPosition: '0 0, 12px 12px, 6px 18px',
-                  }} />
-
+                <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl" style={{ background: 'hsl(222 47% 11%)' }}>
                   {/* Pill 1 */}
-                  <div className="flex items-center gap-1.5 bg-background/60 backdrop-blur-sm rounded-full py-1.5 px-3 border border-border/20 relative z-10">
-                    <Sparkles className="w-3.5 h-3.5 text-accent/80" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground/70 whitespace-nowrap">AI-verified reviews</span>
+                  <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
+                    <Sparkles className="w-3.5 h-3.5 text-orange-400 shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">AI-verified reviews</span>
                   </div>
-
                   {/* Pill 2 */}
-                  <div className="flex items-center gap-1.5 bg-background/60 backdrop-blur-sm rounded-full py-1.5 px-3 border border-border/20 relative z-10">
-                    <Fingerprint className="w-3.5 h-3.5 text-primary/80" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground/70 whitespace-nowrap">Real buyers only</span>
+                  <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
+                    <Fingerprint className="w-3.5 h-3.5 text-sky-400 shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">Real buyers only</span>
                   </div>
-
                   {/* Pill 3 */}
-                  <div className="flex items-center gap-1.5 bg-background/60 backdrop-blur-sm rounded-full py-1.5 px-3 border border-border/20 relative z-10">
-                    <ShieldCheck className="w-3.5 h-3.5 text-verified/80" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground/70 whitespace-nowrap">Zero risk decision</span>
+                  <div className="flex items-center gap-1.5 bg-white/[0.07] rounded-full py-1.5 px-3 border border-white/[0.08] flex-1 justify-center">
+                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-white/80 whitespace-nowrap">Zero risk decision</span>
                   </div>
                 </div>
               </div>
