@@ -1,9 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import type { Review, ReviewerTier } from '@/data/mockData';
 import { reviews as mockReviews } from '@/data/mockData';
+import { localizeStoredReviewValue } from '@/lib/reviewCopy';
 
 export function useReviews(developerId: string | undefined) {
+  const { t } = useTranslation();
   const [dbReviews, setDbReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -25,12 +28,12 @@ export function useReviews(developerId: string | undefined) {
       const mapped: Review[] = (data || []).map((r: any) => ({
         id: r.id,
         developerId: r.developer_id,
-        author: r.is_anonymous ? 'Anonymous User' : r.author_name,
+        author: r.is_anonymous ? t('reviews.anonymousUser', 'Anonymous user') : r.author_name,
         profileVerified: r.is_verified,
         tier: 'bronze' as ReviewerTier,
         rating: r.rating,
         date: new Date(r.created_at).toISOString().split('T')[0],
-        project: r.experience_type || 'General',
+        project: localizeStoredReviewValue(r.experience_type, t),
         comment: r.comment,
         verified: r.is_verified,
       }));
@@ -41,7 +44,7 @@ export function useReviews(developerId: string | undefined) {
     } finally {
       setLoading(false);
     }
-  }, [developerId]);
+  }, [developerId, t]);
 
   useEffect(() => {
     fetchReviews();

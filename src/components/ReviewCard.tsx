@@ -11,6 +11,7 @@ import { SentimentBadge } from "@/components/SentimentBadge";
 import { ReviewReplyForm } from "@/components/ReviewReplyForm";
 import type { ReviewAnalysis } from "@/hooks/useReviewAnalysis";
 import r8Stars from "@/assets/r8-stars.png";
+import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 interface ReviewCardProps {
   review: Review;
@@ -46,6 +47,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const developer = developers.find((d) => d.id === review.developerId);
   const tierConfig = getTierConfig(review.tier, t);
   const TierIcon = tierConfig.icon;
+  const projectLabel = localizeStoredReviewValue(review.project, t);
 
   const getInitials = (name: string) => {
     return name
@@ -94,7 +96,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
               {analysis && <SentimentBadge analysis={analysis} compact />}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">
-              {review.project} • {developer?.name}
+              {projectLabel} • {developer?.name}
             </div>
           </div>
         </div>
@@ -110,7 +112,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
             />
           </div>
           <ShareMenu
-            title={t("share.shareReview", { item: developer?.name || review.project })}
+            title={t("share.shareReview", { item: developer?.name || projectLabel })}
             description={review.comment.slice(0, 100)}
             size="icon"
             className="w-7 h-7 md:w-8 md:h-8"

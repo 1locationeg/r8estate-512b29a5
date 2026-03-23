@@ -9,6 +9,7 @@ import { getRatingColorClass } from "@/lib/ratingColors";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const trustCategories = [
   { key: "projectTimeliness", label: "Project Timeliness" },
@@ -262,7 +263,7 @@ export const FeaturedIdentitySpotlight = () => {
                         )}
                       </div>
                       <p className="text-[10px] text-muted-foreground truncate">
-                        {review.project} • {review.developerId}
+                         {localizeStoredReviewValue(review.project, t)} • {review.developerId}
                       </p>
                     </div>
                   </div>

@@ -12,6 +12,7 @@ import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { BrandLogo } from "@/components/BrandLogo";
+import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const Reviews = () => {
   const { t } = useTranslation();
@@ -43,7 +44,7 @@ const Reviews = () => {
             tier: "bronze" as ReviewerTier,
             rating: r.rating,
             date: new Date(r.created_at).toISOString().split("T")[0],
-            project: r.experience_type || t("reviews.general", "General"),
+            project: localizeStoredReviewValue(r.experience_type, t),
             comment: r.comment,
             verified: r.is_verified,
             userId: r.user_id,
