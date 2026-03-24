@@ -102,6 +102,15 @@ const App = () => (
   </QueryClientProvider>
 );
 
+// Scroll to top on every route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
