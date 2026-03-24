@@ -1,37 +1,30 @@
 
 
-## Add "For Businesses" Button to Mobile Navbar
+## Plan: Categories Button Opens Full Category Grid with Businesses
 
-Add a compact "For Businesses" CTA button with a right-arrow icon in the **mobile top bar** (the `< md` section of Navbar.tsx), positioned right after the language switcher. Uses the Forest Green business theme.
+### What's happening now
+The "Categories" button in the bottom nav scrolls to `HeroCategoryItems` — a horizontal scrollable tab bar. This isn't what you want.
 
-### What it does
-- Shows a small pill-style button labeled "For Businesses →" using business theme colors (`bg-business`, `border-business-border`, `text-business-foreground`)
-- Navigates to `/auth?type=business` so the user can sign up as business, claim, or upgrade
-- Only visible when the user is **not already a business/admin** (no point showing it to existing business users)
-- Uses `Building2` icon + `ArrowRight` or text arrow
+### What we'll build
+When a user taps "Categories" in the bottom nav, they'll see the **BrowseCategoriesGrid** — a full grid showing all 18 categories (Units, Apps, Shares, Platforms, Brokers, Exhibitions, Channels, Law Firms, Valuation, Training, Auctions, Mortgage, Research, Tax, Management, Leasing, Blockchain, Lands) as cards, with the businesses/items listed under each category.
 
 ### Changes
 
-**File: `src/components/Navbar.tsx`**
-- In the mobile nav section (line ~209, after `<NotificationBell />`), add a "For Businesses" button before the hamburger menu
-- Conditionally hide it if `role === 'business' || role === 'admin'`
-- Compact styling: `text-[10px]` or `text-[11px]`, rounded-full pill, business green colors
+**1. Create a dedicated `/categories` page**
+- New file: `src/pages/Categories.tsx`
+- Renders a clean header with back button + "Categories" title centered
+- Uses the existing `BrowseCategoriesGrid` component
+- When a user taps a sub-item, it navigates back to home and opens the `ItemDetailSection` for that item
+- When a user taps a category header, it navigates home and scrolls to that category in `HeroCategoryItems`
 
-### Technical Details
+**2. Update `BottomNav.tsx`**
+- Change the Categories button to `navigate("/categories")` instead of scrolling to the hero section
+- Highlight it as active when on `/categories`
 
-```tsx
-{/* After NotificationBell, before hamburger menu */}
-{role !== 'business' && role !== 'admin' && (
-  <button
-    onClick={() => navigate("/auth?type=business")}
-    className="inline-flex items-center gap-0.5 px-2 py-1 rounded-full border border-business-border bg-business text-business-foreground font-bold text-[10px] transition-all hover:bg-business/80"
-  >
-    <Building2 className="w-3 h-3 text-business-border" />
-    <span>For Businesses</span>
-    <ArrowRight className="w-3 h-3" />
-  </button>
-)}
-```
+**3. Update `src/App.tsx`**
+- Add route: `/categories` → `Categories` page
 
-Single file edit, no new dependencies needed.
+### Technical details
+- The `BrowseCategoriesGrid` already imports `categories` from `HeroCategoryItems` and renders all 18 segments with their items — we reuse it as-is
+- Navigation from the categories page back to item details uses URL params or navigation state
 
