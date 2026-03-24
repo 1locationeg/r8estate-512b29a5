@@ -381,7 +381,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
                 ?.items.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => handleItemClick(item, activeCategory || undefined)}
+                    onClick={() => handleItemClick(item)}
                     className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
                   >
                     <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-border group-hover:ring-primary/50 transition-all">
