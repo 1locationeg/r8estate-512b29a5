@@ -152,7 +152,7 @@ export function useCommunityPost(postId: string | null) {
     // Author info
     const { data: profile } = await supabase
       .from("profiles")
-      .select("full_name, avatar_url")
+      .select("full_name, avatar_url, email")
       .eq("user_id", postData.user_id)
       .single();
 
@@ -170,7 +170,7 @@ export function useCommunityPost(postId: string | null) {
 
     setPost({
       ...postData,
-      author_name: profile?.full_name || "Anonymous",
+      author_name: profile?.full_name || (profile as any)?.email?.split('@')[0] || "User",
       author_avatar: profile?.avatar_url || undefined,
       user_voted: userVoted,
     } as CommunityPost);
