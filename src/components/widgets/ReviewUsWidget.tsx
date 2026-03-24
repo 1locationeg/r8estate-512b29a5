@@ -5,12 +5,14 @@ interface ReviewUsWidgetProps {
   entityName: string;
   theme?: "dark" | "light";
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
 export const ReviewUsWidget = ({
   entityName,
   theme = "dark",
   ctaUrl = "#",
+  onCtaClick,
 }: ReviewUsWidgetProps) => {
   const isDark = theme === "dark";
   const [hovered, setHovered] = useState(0);
@@ -58,6 +60,7 @@ export const ReviewUsWidget = ({
         href={ctaUrl ? `${ctaUrl}${selected ? `?rating=${selected}` : ""}` : "#"}
         target="_blank"
         rel="noopener noreferrer"
+        onClick={onCtaClick}
         className="block w-full py-2.5 rounded-xl text-sm font-bold transition-colors"
         style={{ backgroundColor: "#fac417", color: "hsl(203,81%,21%)" }}
       >

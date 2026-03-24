@@ -7,6 +7,7 @@ interface MicroBadgeProps {
   isVerified?: boolean;
   theme?: "dark" | "light";
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
 export const MicroBadge = ({
@@ -16,13 +17,14 @@ export const MicroBadge = ({
   isVerified = true,
   theme = "dark",
   ctaUrl,
+  onCtaClick,
 }: MicroBadgeProps) => {
   const isDark = theme === "dark";
   const stars = Math.round(score);
 
   const Wrapper = ctaUrl ? "a" : "div";
   const wrapperProps = ctaUrl
-    ? { href: ctaUrl, target: "_blank", rel: "noopener noreferrer" }
+    ? { href: ctaUrl, target: "_blank", rel: "noopener noreferrer", onClick: onCtaClick }
     : {};
 
   return (

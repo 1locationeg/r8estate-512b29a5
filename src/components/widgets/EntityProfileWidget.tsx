@@ -15,6 +15,7 @@ interface EntityProfileWidgetProps {
   recentReviews?: ReviewSnippet[];
   theme?: "dark" | "light";
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
 export const EntityProfileWidget = ({
@@ -26,6 +27,7 @@ export const EntityProfileWidget = ({
   recentReviews = [],
   theme = "dark",
   ctaUrl,
+  onCtaClick,
 }: EntityProfileWidgetProps) => {
   const isDark = theme === "dark";
   const scorePercent = (score / 5) * 100;
@@ -122,6 +124,7 @@ export const EntityProfileWidget = ({
           href={ctaUrl}
           target="_blank"
           rel="noopener noreferrer"
+          onClick={onCtaClick}
           className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl text-xs font-bold transition-colors"
           style={{ backgroundColor: "#fac417", color: "hsl(203,81%,21%)" }}
         >
