@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -27,6 +27,7 @@ import AdminBusinessClaims from '@/components/AdminBusinessClaims';
 import AdminDealModeration from '@/components/AdminDealModeration';
 import AdminLaunchModeration from '@/components/AdminLaunchModeration';
 import AdminTracking from '@/components/AdminTracking';
+import AdminWidgets from '@/components/AdminWidgets';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
@@ -2064,6 +2065,7 @@ const AdminDashboard = () => {
         { icon: <Navigation className="w-4 h-4" />, label: 'Navigation', path: '/admin/navigation' },
         { icon: <Layout className="w-4 h-4" />, label: 'Sections', path: '/admin/sections' },
         { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
+        { icon: <Code className="w-4 h-4" />, label: 'Widgets', path: '/admin/widgets' },
       ],
     },
     {
@@ -2139,6 +2141,7 @@ const AdminDashboard = () => {
           <Route path="deal-moderation" element={<AdminDealModeration />} />
           <Route path="launch-moderation" element={<AdminLaunchModeration />} />
           <Route path="tracking" element={<AdminTracking />} />
+          <Route path="widgets" element={<AdminWidgets />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
