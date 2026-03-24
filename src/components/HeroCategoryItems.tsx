@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { ItemDetailSection } from "./ItemDetailSection";
 import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
+import { generateAvatar } from "@/lib/avatarUtils";
 
 export interface CategoryItem {
   id: string;

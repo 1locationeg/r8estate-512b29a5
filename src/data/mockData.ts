@@ -1,3 +1,5 @@
+import { generateAvatar } from "@/lib/avatarUtils";
+
 export interface Developer {
   id: string;
   name: string;
