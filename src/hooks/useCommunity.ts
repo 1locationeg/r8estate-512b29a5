@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
+import { showCoinToast } from "@/components/CoinEarnedToast";
 
 export type CommunityPostCategory = 'discussion' | 'question' | 'tip' | 'experience' | 'poll';
 
@@ -251,6 +252,7 @@ export function useCommunityActions() {
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
     // Track engagement for gamification
     trackBuyerEngagement(user.id, 'community_posts');
+    showCoinToast('community_post');
     return data;
   };
 
@@ -264,6 +266,7 @@ export function useCommunityActions() {
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
     // Track engagement for gamification
     trackBuyerEngagement(user.id, 'community_replies');
+    showCoinToast('community_reply');
     return data;
   };
 
@@ -294,6 +297,7 @@ export function useCommunityActions() {
       await supabase.from("community_votes").insert(insertData);
       // Track engagement for gamification
       trackBuyerEngagement(user.id, 'community_votes');
+      showCoinToast('community_vote');
       // Increment upvotes
       if (postId) {
         const { data: post } = await supabase.from("community_posts").select("upvotes").eq("id", postId).single();
