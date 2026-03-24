@@ -64,6 +64,7 @@ export function useTrackInterest() {
   const trackClick = useCallback(
     (entityId: string, entityName?: string | null) => {
       trackInterest(entityId, entityName || null, "click");
+      showCoinToast("developer_view");
     },
     [trackInterest]
   );
