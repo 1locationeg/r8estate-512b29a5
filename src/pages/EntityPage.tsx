@@ -47,6 +47,13 @@ const EntityPage = () => {
           image: item.avatar,
           rating: item.rating,
           reviewCount: item.reviewCount,
+          meta: {
+            likes: item.likes,
+            shares: item.shared,
+            replies: item.replies,
+            trendScore: item.trendScore,
+            launchDate: item.launchDate,
+          },
         };
       }
     }
