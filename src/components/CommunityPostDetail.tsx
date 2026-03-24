@@ -461,8 +461,90 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const { createReply } = useCommunityActions();
+  const { createReply, updatePost } = useCommunityActions();
   const { user, profile } = useAuth();
+
+  // Inline editing state
+  const [isEditing, setIsEditing] = useState(false);
+  const [editTitle, setEditTitle] = useState(post.title);
+  const [editBody, setEditBody] = useState(post.body);
+  const [editImageUrls, setEditImageUrls] = useState<string[]>((post as any).image_urls || []);
+  const [editLinkUrl, setEditLinkUrl] = useState<string>((post as any).link_url || "");
+  const [showEditLink, setShowEditLink] = useState(!!(post as any).link_url);
+  const [editSaving, setEditSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const editBodyRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isOwnPost = user?.id === post.user_id;
+
+  const startEditing = () => {
+    setEditTitle(post.title);
+    setEditBody(post.body);
+    setEditImageUrls((post as any).image_urls || []);
+    setEditLinkUrl((post as any).link_url || "");
+    setShowEditLink(!!(post as any).link_url);
+    setIsEditing(true);
+  };
+
+  const cancelEditing = () => {
+    setIsEditing(false);
+  };
+
+  const insertAtCursor = (text: string) => {
+    const textarea = editBodyRef.current;
+    if (!textarea) { setEditBody(prev => prev + text); return; }
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const newBody = editBody.slice(0, start) + text + editBody.slice(end);
+    setEditBody(newBody);
+    setTimeout(() => { textarea.selectionStart = textarea.selectionEnd = start + text.length; textarea.focus(); }, 0);
+  };
+
+  const wrapSelection = (prefix: string, suffix: string) => {
+    const textarea = editBodyRef.current;
+    if (!textarea) return;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selected = editBody.slice(start, end);
+    const newBody = editBody.slice(0, start) + prefix + selected + suffix + editBody.slice(end);
+    setEditBody(newBody);
+    setTimeout(() => { textarea.selectionStart = start + prefix.length; textarea.selectionEnd = end + prefix.length; textarea.focus(); }, 0);
+  };
+
+  const handleEditImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || !user) return;
+    setUploading(true);
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith("image/") || file.size > 5 * 1024 * 1024) continue;
+      const ext = file.name.split(".").pop() || "jpg";
+      const path = `${user.id}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error } = await supabase.storage.from("community-images").upload(path, file);
+      if (!error) {
+        const { data: urlData } = supabase.storage.from("community-images").getPublicUrl(path);
+        if (urlData?.publicUrl) setEditImageUrls(prev => [...prev, urlData.publicUrl]);
+      }
+    }
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
+  };
+
+  const saveEdit = async () => {
+    if (!editTitle.trim() || !editBody.trim()) return;
+    setEditSaving(true);
+    const result = await updatePost(post.id, {
+      title: editTitle.trim(),
+      body: editBody.trim(),
+      image_urls: editImageUrls,
+      link_url: editLinkUrl.trim() || null,
+    });
+    if (result) {
+      setIsEditing(false);
+      onRefetch();
+    }
+    setEditSaving(false);
+  };
 
   const categoryConfig: Record<string, { label: string; className: string }> = {
     question: { label: t("community.question", "Question"), className: "bg-blue-500/10 text-blue-600 border-blue-200" },
@@ -515,33 +597,142 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               </Badge>
             </div>
           </div>
-          <PostDropdownMenu post={post} user={user} onEdit={onEdit} />
+          {!isEditing && (
+            <PostDropdownMenu post={post} user={user} onEdit={isOwnPost ? () => startEditing() : undefined} />
+          )}
         </div>
 
         <div className="px-4 pb-3">
-          <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
-          <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{post.body}</p>
-          {/* Attached images */}
-          {(post as any).image_urls?.length > 0 && (
-            <div className={`mt-3 grid gap-1.5 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
-              {((post as any).image_urls as string[]).map((url: string, idx: number) => (
-                <div key={idx} className="rounded-lg overflow-hidden border border-border">
-                  <img src={url} alt="" className="w-full max-h-80 object-cover" loading="lazy" />
+          {isEditing ? (
+            <div className="space-y-3">
+              {/* Editable title */}
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                className="text-base font-bold"
+                placeholder={t("community.postTitle", "Post title")}
+              />
+
+              {/* Formatting toolbar */}
+              <div className="flex items-center gap-1 border border-border rounded-lg px-2 py-1 bg-secondary/30">
+                <button onClick={() => wrapSelection("**", "**")} className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground" title="Bold">
+                  <Bold className="w-4 h-4" />
+                </button>
+                <button onClick={() => wrapSelection("_", "_")} className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground" title="Italic">
+                  <Italic className="w-4 h-4" />
+                </button>
+                <button onClick={() => insertAtCursor("\n- ")} className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground" title="List">
+                  <List className="w-4 h-4" />
+                </button>
+                <div className="w-px h-5 bg-border mx-1" />
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <button className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground" title="Emoji">
+                      <Smile className="w-4 h-4" />
+                    </button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-72 p-2" align="start">
+                    <div className="grid grid-cols-8 gap-1">
+                      {EMOJI_GRID.map((emoji) => (
+                        <button key={emoji} onClick={() => insertAtCursor(emoji)} className="text-lg p-1 rounded hover:bg-secondary transition-colors">
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </PopoverContent>
+                </Popover>
+                <button onClick={() => fileInputRef.current?.click()} className="p-1.5 rounded hover:bg-secondary text-muted-foreground hover:text-foreground" title="Image">
+                  <ImageIcon className="w-4 h-4" />
+                </button>
+                <button onClick={() => setShowEditLink(!showEditLink)} className={`p-1.5 rounded hover:bg-secondary transition-colors ${showEditLink ? 'text-primary' : 'text-muted-foreground hover:text-foreground'}`} title="Link">
+                  <Link2 className="w-4 h-4" />
+                </button>
+                <input ref={fileInputRef} type="file" accept="image/*" multiple className="hidden" onChange={handleEditImageUpload} />
+              </div>
+
+              {/* Editable body */}
+              <Textarea
+                ref={editBodyRef}
+                value={editBody}
+                onChange={(e) => setEditBody(e.target.value)}
+                className="min-h-[120px] text-sm"
+                placeholder={t("community.writePost", "Write your post...")}
+              />
+
+              {/* Image previews */}
+              {editImageUrls.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {editImageUrls.map((url, idx) => (
+                    <div key={idx} className="relative rounded-lg overflow-hidden border border-border group">
+                      <img src={url} alt="" className="w-full h-24 object-cover" />
+                      <button
+                        onClick={() => setEditImageUrls(prev => prev.filter((_, i) => i !== idx))}
+                        className="absolute top-1 right-1 p-1 rounded-full bg-background/80 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
+              {uploading && (
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Loader2 className="w-3 h-3 animate-spin" /> Uploading...
+                </div>
+              )}
+
+              {/* Link input */}
+              {showEditLink && (
+                <div className="flex items-center gap-2">
+                  <Link2 className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+                  <Input
+                    value={editLinkUrl}
+                    onChange={(e) => setEditLinkUrl(e.target.value)}
+                    placeholder="https://..."
+                    className="text-sm"
+                  />
+                  <button onClick={() => { setShowEditLink(false); setEditLinkUrl(""); }} className="p-1 text-muted-foreground hover:text-foreground">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
+
+              {/* Save / Cancel */}
+              <div className="flex items-center gap-2 justify-end">
+                <Button variant="ghost" size="sm" onClick={cancelEditing} disabled={editSaving}>
+                  <X className="w-4 h-4 mr-1" /> {t("community.cancel", "Cancel")}
+                </Button>
+                <Button size="sm" onClick={saveEdit} disabled={editSaving || !editTitle.trim() || !editBody.trim()}>
+                  {editSaving ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
+                  {t("community.saveChanges", "Save changes")}
+                </Button>
+              </div>
             </div>
-          )}
-          {/* Attached link */}
-          {(post as any).link_url && (
-            <a
-              href={(post as any).link_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-3 px-3 py-2.5 rounded-lg bg-secondary/50 border border-border text-sm text-primary hover:underline"
-            >
-              <Link2 className="w-4 h-4 flex-shrink-0" />
-              <span className="truncate">{(post as any).link_url}</span>
-            </a>
+          ) : (
+            <>
+              <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
+              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{post.body}</p>
+              {(post as any).image_urls?.length > 0 && (
+                <div className={`mt-3 grid gap-1.5 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+                  {((post as any).image_urls as string[]).map((url: string, idx: number) => (
+                    <div key={idx} className="rounded-lg overflow-hidden border border-border">
+                      <img src={url} alt="" className="w-full max-h-80 object-cover" loading="lazy" />
+                    </div>
+                  ))}
+                </div>
+              )}
+              {(post as any).link_url && (
+                <a
+                  href={(post as any).link_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 mt-3 px-3 py-2.5 rounded-lg bg-secondary/50 border border-border text-sm text-primary hover:underline"
+                >
+                  <Link2 className="w-4 h-4 flex-shrink-0" />
+                  <span className="truncate">{(post as any).link_url}</span>
+                </a>
+              )}
+            </>
           )}
         </div>
 
