@@ -73,12 +73,12 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
     } else {
       // Enrich with author info
       const userIds = [...new Set((data || []).map((p: any) => p.user_id))];
-      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null }> = {};
+      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null; email: string | null }> = {};
       
       if (userIds.length > 0) {
         const { data: profiles } = await supabase
           .from("profiles")
-          .select("user_id, full_name, avatar_url")
+          .select("user_id, full_name, avatar_url, email")
           .in("user_id", userIds);
         if (profiles) {
           profileMap = Object.fromEntries(profiles.map((p: any) => [p.user_id, p]));
@@ -104,7 +104,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
       setPosts(
         (data || []).map((p: any) => ({
           ...p,
-          author_name: profileMap[p.user_id]?.full_name || "Anonymous",
+          author_name: profileMap[p.user_id]?.full_name || profileMap[p.user_id]?.email?.split('@')[0] || "User",
           author_avatar: profileMap[p.user_id]?.avatar_url || undefined,
           user_voted: votedPostIds.has(p.id),
         }))
