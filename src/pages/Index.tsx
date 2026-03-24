@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react"; // unified navbar
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
@@ -31,6 +31,7 @@ import { Navbar } from "@/components/Navbar";
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [userMode, setUserMode] = useState<"buyers" | "industry">("buyers");
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
