@@ -422,19 +422,6 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
       {activeCategoryData && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
           <div className="p-4 md:p-6 space-y-4">
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
-                  {t(activeCategoryData.labelKey)}
-                </p>
-                <h3 className="text-base md:text-lg font-semibold text-foreground">
-                  {isRTL ? "الكيانات داخل هذه الفئة" : "Businesses in this category"}
-                </h3>
-              </div>
-              <div className="inline-flex w-fit items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
-                {activeCategoryData.items.length.toLocaleString(isRTL ? "ar-EG" : "en-US")} {isRTL ? "كيان" : activeCategoryData.items.length === 1 ? "business" : "businesses"}
-              </div>
-            </div>
 
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {activeCategoryData.items.map((item) => (
