@@ -7,7 +7,7 @@ import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
 
 import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
-import { HeroCategoryItems } from "@/components/HeroCategoryItems";
+import { HeroCategoryItems, categories as heroCategoryList } from "@/components/HeroCategoryItems";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
@@ -85,8 +85,7 @@ const Index = () => {
     }
 
     if (typeof state.scrollToCategory === "number") {
-      const { categories } = require("@/components/HeroCategoryItems");
-      const cat = categories[state.scrollToCategory];
+      const cat = heroCategoryList[state.scrollToCategory];
       if (cat) {
         setExternalCategory(cat.labelKey);
         setSpecialViewItem(null);
