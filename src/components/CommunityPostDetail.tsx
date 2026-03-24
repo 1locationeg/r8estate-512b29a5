@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2 } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -388,9 +389,10 @@ interface Props {
   onVotePost: () => void;
   onVoteReply: (replyId: string) => void;
   onRefetch: () => void;
+  onEdit?: (post: CommunityPost) => void;
 }
 
-export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch }: Props) => {
+export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch, onEdit }: Props) => {
   const { t } = useTranslation();
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -449,9 +451,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               </Badge>
             </div>
           </div>
-          <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
+          <PostDropdownMenu post={post} user={user} onEdit={onEdit} />
         </div>
 
         <div className="px-4 pb-3">
