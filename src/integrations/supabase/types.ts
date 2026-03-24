@@ -1446,6 +1446,41 @@ export type Database = {
         }
         Relationships: []
       }
+      widget_analytics: {
+        Row: {
+          created_at: string
+          embed_token: string
+          event_type: string
+          id: string
+          referrer_url: string | null
+          widget_id: string
+        }
+        Insert: {
+          created_at?: string
+          embed_token: string
+          event_type?: string
+          id?: string
+          referrer_url?: string | null
+          widget_id: string
+        }
+        Update: {
+          created_at?: string
+          embed_token?: string
+          event_type?: string
+          id?: string
+          referrer_url?: string | null
+          widget_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "widget_analytics_widget_id_fkey"
+            columns: ["widget_id"]
+            isOneToOne: false
+            referencedRelation: "widget_configs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       widget_configs: {
         Row: {
           created_at: string
