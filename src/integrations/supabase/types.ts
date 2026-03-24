@@ -1009,6 +1009,7 @@ export type Database = {
           budget_range: string | null
           buyer_type: string | null
           created_at: string
+          email: string | null
           full_name: string | null
           id: string
           interests: string[] | null
@@ -1021,6 +1022,7 @@ export type Database = {
           budget_range?: string | null
           buyer_type?: string | null
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           interests?: string[] | null
@@ -1033,6 +1035,7 @@ export type Database = {
           budget_range?: string | null
           buyer_type?: string | null
           created_at?: string
+          email?: string | null
           full_name?: string | null
           id?: string
           interests?: string[] | null
