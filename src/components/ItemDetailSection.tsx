@@ -57,6 +57,7 @@ import {
   Bookmark,
   UserPlus,
   UserCheck,
+  TrendingUp,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { TrustCategoryBar } from "./TrustCategoryBar";
@@ -306,6 +307,19 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           {m.downloads && <DetailRow icon={<Download className="w-4 h-4 text-primary" />} label={t("apps.downloads", "Downloads")} value={m.downloads as string} />}
           {m.monthlyActiveUsers && <DetailRow icon={<Users className="w-4 h-4 text-primary" />} label={t("apps.mau", "Monthly Active Users")} value={m.monthlyActiveUsers as string} />}
           {m.featuredListings && <DetailRow icon={<FolderKanban className="w-4 h-4 text-primary" />} label={t("apps.featuredListings", "Featured Listings")} value={(m.featuredListings as number).toLocaleString()} />}
+        </div>
+      );
+    }
+
+    // Fallback for generic categories (units, categories, etc.)
+    const hasAnyMeta = Object.values(m).some(v => v !== undefined && v !== null);
+    if (hasAnyMeta || currentItem.subtitle) {
+      return (
+        <div className="grid grid-cols-2 gap-4">
+          {currentItem.subtitle && <DetailRow icon={<Layers className="w-4 h-4 text-primary" />} label={t("entity.category", "Category")} value={currentItem.subtitle} />}
+          {m.launchDate && <DetailRow icon={<CalendarDays className="w-4 h-4 text-primary" />} label={t("entity.launchDate", "Launch Date")} value={String(m.launchDate)} />}
+          {m.trendScore && <DetailRow icon={<TrendingUp className="w-4 h-4 text-primary" />} label={t("entity.trendScore", "Trend Score")} value={String(m.trendScore)} />}
+          {m.likes && <DetailRow icon={<ThumbsUp className="w-4 h-4 text-primary" />} label={t("entity.engagement", "Engagement")} value={`${m.likes} ${t("entity.likes", "likes")}`} />}
         </div>
       );
     }
