@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { TrustGaugeMini } from '@/components/TrustGaugeMini';
 import { Progress } from '@/components/ui/progress';
+import { generateAvatar } from '@/lib/avatarUtils';
 
 interface BusinessProfileHeaderProps {
   company: {
@@ -44,7 +45,7 @@ export const BusinessProfileHeader = ({
           {/* Logo / Avatar */}
           <div className="flex-shrink-0">
             <Avatar className="h-20 w-20 rounded-xl border-2 border-border">
-              {company.logo && <AvatarImage src={company.logo} alt={company.name} className="rounded-xl" />}
+              {<AvatarImage src={company.logo || generateAvatar(company.name, "developer")} alt={company.name} className="rounded-xl" />}
               <AvatarFallback className="rounded-xl bg-primary/10 text-primary text-2xl font-bold">
                 {company.name.charAt(0)}
               </AvatarFallback>
