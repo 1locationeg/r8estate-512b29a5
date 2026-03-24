@@ -35,7 +35,15 @@ export const BottomNav = () => {
 
           {/* Categories / Directory */}
           <button
-            onClick={() => navigate("/directory")}
+            onClick={() => {
+              if (location.pathname !== "/") {
+                navigate("/");
+              }
+              setTimeout(() => {
+                const el = document.querySelector('[data-hero-categories]');
+                if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }, 100);
+            }}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
               isDirectory ? "text-primary" : "text-muted-foreground"
             }`}
