@@ -1,4 +1,5 @@
 import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from "react";
+import { useNavigate } from "react-router-dom";
 import { useSearchPhrases } from "@/hooks/useSearchPhrases";
 import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -54,19 +55,19 @@ export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
     setSelectedIndex(-1);
   }, [query]);
 
+  const searchNavigate = useNavigate();
+
   const handleSelect = useCallback((item: SearchItem) => {
-    // Save to search history
     addToSearchHistory(item.name);
-    // Show item detail inline on the page
-    setSelectedItem(item);
     setQuery("");
     setIsFocused(false);
     
-    // Also trigger developer selection for developers
     if (item.category === 'developers') {
       onSelectDeveloper(item.id);
+    } else {
+      searchNavigate(`/entity/${item.id}`);
     }
-  }, [onSelectDeveloper]);
+  }, [onSelectDeveloper, searchNavigate]);
 
   const handleCloseDetail = useCallback(() => {
     setSelectedItem(null);
@@ -363,26 +364,10 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
     return map[labelKey] || 'categories';
   };
 
+  const categoryLinksNavigate = useNavigate();
+
   const handleItemClick = (item: CategoryItem) => {
-    const category = categoryToSearchCategory(item.categoryKey || '');
-    const searchIndex = getSearchIndex();
-    const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
-      || searchIndex.find(si => si.id === item.id)
-      || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
-    if (indexItem) {
-      onSelectItem?.(indexItem);
-    } else {
-      const fallback: SearchItem = {
-        id: item.id,
-        name: isRTL ? item.nameAr : item.nameEn,
-        category: category,
-        image: item.avatar,
-        rating: item.rating,
-        reviewCount: item.reviewCount,
-        meta: { likes: item.likes || 0, shares: item.shares || 0, replies: item.replies || 0 },
-      };
-      onSelectItem?.(fallback);
-    }
+    categoryLinksNavigate(`/entity/${item.id}`);
   };
 
   const getRatingColor = (rating: number) => {
