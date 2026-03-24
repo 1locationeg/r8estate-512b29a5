@@ -16,6 +16,14 @@ import { useReactions } from "@/hooks/useReactions";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
 import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
+import { supabase } from "@/integrations/supabase/client";
+
+const EMOJI_GRID = [
+  "😀", "😂", "😍", "🤔", "👍", "👎", "🔥", "💯",
+  "❤️", "💪", "🎉", "⚠️", "✅", "❌", "🏠", "🏗️",
+  "📊", "💰", "🤝", "👀", "🙏", "💡", "📢", "⭐",
+  "🚀", "🎯", "💎", "🏆", "📝", "🔑", "📍", "🕐",
+];
 
 const reactionEmojis = [
   { emoji: "👍", label: "Like" },
