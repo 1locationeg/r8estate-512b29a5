@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from "react"; // unified navbar
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
@@ -20,6 +20,7 @@ import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
 import { developers } from "@/data/mockData";
+import { getSearchIndex } from "@/data/searchIndex";
 import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint } from "lucide-react";
 import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
@@ -31,6 +32,7 @@ import { Navbar } from "@/components/Navbar";
 const Index = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const location = useLocation();
   const [userMode, setUserMode] = useState<"buyers" | "industry">("buyers");
   const [selectedDeveloperId, setSelectedDeveloperId] = useState<string | null>(null);
   const [activeView, setActiveView] = useState<'bestOf' | 'trending' | 'newLaunches' | null>(null);
@@ -67,7 +69,23 @@ const Index = () => {
     }
   }, [user, isLoading, role]);
 
-  // Auto-scroll to detail section when item is selected
+  // Handle navigation from /categories page — open item detail
+  useEffect(() => {
+    const state = location.state as { openItemId?: string } | null;
+    if (state?.openItemId) {
+      const searchIndex = getSearchIndex();
+      const found = searchIndex.find(si => si.id === state.openItemId);
+      if (found) {
+        setSpecialViewItem(found);
+        setActiveView(null);
+        setSelectedDeveloperId(null);
+      }
+      // Clear state so it doesn't re-trigger
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state]);
+
+
   useEffect(() => {
     if (specialViewItem || selectedDeveloper) {
       setTimeout(() => {
