@@ -330,6 +330,7 @@ const Index = () => {
             }
 
               {/* Category Bar */}
+              <div data-hero-categories>
               <HeroCategoryItems
               onInteraction={() => {setSelectedDeveloperId(null);setSpecialViewItem(null);setActiveView(null);}}
               externalCategory={externalCategory}
