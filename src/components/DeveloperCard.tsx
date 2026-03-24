@@ -9,6 +9,7 @@ import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 interface DeveloperCardProps {
   developer: Developer;
@@ -19,6 +20,8 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { getLogoOverride } = useBusinessLogo();
+  const logoSrc = getLogoOverride(developer.id, developer.name) || developer.logo;
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const { trackClick, startLinger, cancelLinger } = useTrackInterest();
@@ -73,8 +76,8 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
 
       <div className="flex items-start justify-between mb-3 md:mb-4">
         <div className="flex items-center gap-3 md:gap-4">
-          <div className="w-12 h-12 md:w-16 md:h-16 bg-secondary rounded-xl flex items-center justify-center text-2xl md:text-3xl">
-            {developer.logo}
+          <div className="w-12 h-12 md:w-16 md:h-16 bg-secondary rounded-xl flex items-center justify-center overflow-hidden">
+            <img src={logoSrc} alt={developer.name} className="w-full h-full object-cover" />
           </div>
           <div className="min-w-0">
             <h3 className="text-base md:text-xl font-bold text-foreground mb-0.5 md:mb-1 truncate">{developer.name}</h3>
