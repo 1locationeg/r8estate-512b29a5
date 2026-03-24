@@ -65,6 +65,11 @@ export default {
           fair: "hsl(var(--trust-fair))",
         },
         "brand-red": "hsl(var(--brand-red))",
+        business: {
+          DEFAULT: "hsl(var(--business))",
+          foreground: "hsl(var(--business-foreground))",
+          border: "hsl(var(--business-border))",
+        },
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
