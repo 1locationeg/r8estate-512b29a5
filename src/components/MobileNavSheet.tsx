@@ -38,7 +38,7 @@ export const MobileNavSheet = ({
     { label: t("nav.categories"), href: "/directory" },
     { label: t("nav.developers"), href: "#" },
     { label: t("nav.projects"), href: "/reviews" },
-    { label: t("nav.about"), href: "#" },
+    { label: t("nav.businesses"), href: "/directory" },
   ];
 
   const navLinks = user ? userNavLinks : guestNavLinks;
