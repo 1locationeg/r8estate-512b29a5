@@ -1,5 +1,19 @@
 import { Award, Star, Search, Heart, Shield, MessageSquare, Eye, FileText, Zap, Trophy, CheckCircle2 } from 'lucide-react';
 
+// ── Points per action (used for UI display) ──
+export const POINTS_PER_ACTION = {
+  developer_view: 2,
+  project_save: 4,
+  review_write: 25,
+  report_unlock: 10,
+  community_post: 15,
+  community_reply: 10,
+  community_vote: 5,
+  helpful_vote: 3,
+  profile_complete: 30,
+  verified_purchase: 40,
+} as const;
+
 // ── Buyer Tier Definitions ──
 export interface BuyerTier {
   id: string;
