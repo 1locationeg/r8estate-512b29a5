@@ -85,7 +85,6 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
             onError={(e) => { (e.target as HTMLImageElement).src = generateAvatar(developer.name, "developer"); }}
           />
         </div>
-        </div>
 
         <h3 className="text-xl font-bold text-foreground">{developer.name}</h3>
 
