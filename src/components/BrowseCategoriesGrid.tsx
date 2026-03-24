@@ -6,6 +6,7 @@ import { ChevronRight } from "lucide-react";
 interface BrowseCategoriesGridProps {
   onSelectCategory?: (categoryIndex: number) => void;
   onSelectItem?: (item: { id: string; nameEn: string; nameAr: string }) => void;
+  searchQuery?: string;
 }
 
 // Soft pastel backgrounds that cycle through categories — matching R8ESTATE's trust palette
@@ -30,9 +31,19 @@ const categoryColors = [
   "bg-[hsl(40,50%,95%)]",
 ];
 
-export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseCategoriesGridProps) => {
+export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "" }: BrowseCategoriesGridProps) => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
+  const q = searchQuery.toLowerCase().trim();
+
+  const filteredCategories = categories.map((category, originalIndex) => {
+    const categoryName = t(category.labelKey).toLowerCase();
+    const matchingItems = category.items.filter(
+      item => item.nameEn.toLowerCase().includes(q) || item.nameAr.includes(q)
+    );
+    const categoryMatches = categoryName.includes(q);
+    return { category, originalIndex, matchingItems, categoryMatches };
+  }).filter(({ matchingItems, categoryMatches }) => !q || categoryMatches || matchingItems.length > 0);
 
   return (
     <div className="w-full max-w-5xl mx-auto px-4 py-6">
@@ -40,10 +51,17 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseC
         {isRTL ? "استكشف حسب الفئة" : "Explore by category"}
       </h2>
 
+      {q && filteredCategories.length === 0 && (
+        <p className="text-sm text-muted-foreground text-center py-8">
+          {isRTL ? "لا توجد نتائج" : "No results found"}
+        </p>
+      )}
+
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
-        {categories.map((category, index) => {
-          const colorClass = categoryColors[index % categoryColors.length];
+        {filteredCategories.map(({ category, originalIndex, matchingItems, categoryMatches }) => {
+          const colorClass = categoryColors[originalIndex % categoryColors.length];
           const categoryName = t(category.labelKey);
+          const itemsToShow = q && !categoryMatches ? matchingItems : category.items;
 
           return (
             <div
@@ -52,7 +70,7 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseC
             >
               {/* Category Header */}
               <button
-                onClick={() => onSelectCategory?.(index)}
+                onClick={() => onSelectCategory?.(originalIndex)}
                 className={cn(
                   "w-full flex flex-col items-center gap-1.5 px-3 py-4 transition-colors cursor-pointer",
                   colorClass
@@ -68,7 +86,7 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseC
 
               {/* Sub-items List */}
               <div className="px-2 py-2 space-y-0.5">
-                {category.items.slice(0, 4).map((item) => (
+                {itemsToShow.slice(0, 4).map((item) => (
                   <button
                     key={item.id}
                     onClick={() => onSelectItem?.({ id: item.id, nameEn: item.nameEn, nameAr: item.nameAr })}
@@ -81,12 +99,12 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem }: BrowseC
                     <ChevronRight className={cn("w-3 h-3 shrink-0 opacity-40", isRTL && "rotate-180")} />
                   </button>
                 ))}
-                {category.items.length > 4 && (
+                {itemsToShow.length > 4 && (
                   <button
-                    onClick={() => onSelectCategory?.(index)}
+                    onClick={() => onSelectCategory?.(originalIndex)}
                     className="w-full text-[10px] font-medium text-primary hover:text-primary/80 px-2 py-1 transition-colors"
                   >
-                    {isRTL ? `+${category.items.length - 4} المزيد` : `+${category.items.length - 4} more`}
+                    {isRTL ? `+${itemsToShow.length - 4} المزيد` : `+${itemsToShow.length - 4} more`}
                   </button>
                 )}
               </div>
