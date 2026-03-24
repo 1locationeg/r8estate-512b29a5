@@ -1,35 +1,40 @@
 
 
-## Plan: Dedicated Entity/Business Pages
+## Fix: Entity Pages Displaying Inconsistently
 
-### What's needed
-Currently, clicking a business/entity item opens an inline detail section or modal on the homepage. The user wants every entity to have its own URL page (e.g., `/entity/nawy`, `/entity/studio`) so users can navigate directly to any business.
+### Problem
+When navigating to an entity page, some entities show full details (name, header, business details, trust score) while others skip straight to the summary and trust categories. This happens because:
+
+1. Entities found in the **search index** have rich `meta` data (location, employees, capital, etc.) → `renderEntityDetails()` shows content
+2. Entities found only in the **categories list** (e.g. Farida, Studio, Villa) are constructed in `EntityPage.tsx` **without `meta`** → `renderEntityDetails()` returns `null`, skipping that section
+
+### Fix
+
+**Update `EntityPage.tsx`** — when constructing a `SearchItem` from a category item, include the available data (`likes`, `shares`, `replies`, `trendScore`, `launchDate`) as `meta`:
+
+```tsx
+return {
+  id: item.id,
+  name: isRTL ? item.nameAr : item.nameEn,
+  category: categoryToSearchCategory(cat.labelKey),
+  subtitle: t(cat.labelKey),
+  image: item.avatar,
+  rating: item.rating,
+  reviewCount: item.reviewCount,
+  meta: {
+    likes: item.likes,
+    shares: item.shares,
+    replies: item.replies,
+    trendScore: item.trendScore,
+    launchDate: item.launchDate,
+  },
+};
+```
+
+**Additionally**, the `ItemDetailSection` currently only renders entity details for specific categories (`developers`, `projects`, `brokers`, `apps`) that have category-specific fields. For generic categories (`units`, `categories`), it returns `null`. We need to add a fallback details renderer for entities that don't match those specific categories — showing whatever meta is available (e.g. trend score, launch date) and the category/subtitle info, so every entity page has a consistent layout with at least a basic details card.
 
 ### Changes
 
-**1. Create `/entity/:id` page (`src/pages/EntityPage.tsx`)**
-- Takes the entity `id` from URL params
-- Looks up the entity in the search index (`getSearchIndex()`) by ID
-- Also checks `categories` from `HeroCategoryItems` to find items not in the search index (covers all items)
-- Renders a full-page layout: back button header, then the existing `ItemDetailSection` component with the resolved `SearchItem`
-- Shows a "Not Found" state if no entity matches
-
-**2. Add route in `App.tsx`**
-- Add `<Route path="/entity/:id" element={<EntityPage />} />`
-- Lazy-load the new page
-
-**3. Update `BrowseCategoriesGrid.tsx` — navigate to entity page on item click**
-- Instead of calling `onSelectItem` callback, use `navigate(`/entity/${item.id}`)` directly
-- Keep `onSelectItem` as optional override for backward compatibility
-
-**4. Update `HeroCategoryItems.tsx` — item clicks navigate to entity page**
-- When a category item is clicked, navigate to `/entity/${item.id}` instead of opening inline detail
-
-**5. Update `HeroSearchBar.tsx` / `HeroCategoryLinks` — search result clicks navigate to entity page**
-- When selecting a search result that isn't a developer, navigate to `/entity/${item.id}`
-
-### Technical details
-- The `ItemDetailSection` already accepts a `SearchItem` and renders the full trust score, reviews, metrics, and actions — we reuse it as the page body
-- For items that exist in `categories` (HeroCategoryItems) but not in `getSearchIndex()`, we construct a `SearchItem` from the `CategoryItem` data
-- The entity page will include proper back navigation and the standard navbar/bottom nav from the app shell
+1. **`src/pages/EntityPage.tsx`** — Pass `meta` when constructing `SearchItem` from category items
+2. **`src/components/ItemDetailSection.tsx`** — Add a fallback in `renderEntityDetails` for categories not explicitly handled (`units`, `categories`), showing available generic metrics like launch date, trend score, likes, and the category subtitle
 
