@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { showCoinToast } from "@/components/CoinEarnedToast";
 
 type InterestType = "click" | "search" | "linger" | "scroll_stop";
 
