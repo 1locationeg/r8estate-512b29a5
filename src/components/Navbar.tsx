@@ -57,7 +57,7 @@ export const Navbar = ({
 
   return (
     <header className="bg-background shadow-sm border-b border-border">
-      <div className="container mx-auto px-3 py-1 flex items-center justify-between gap-2">
+      <div className="container mx-auto px-3 flex items-center justify-between gap-2 py-0">
         {/* Logo */}
         <button
           onClick={() => navigate("/")}
