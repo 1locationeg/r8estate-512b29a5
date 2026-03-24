@@ -56,6 +56,12 @@ const RedirectDeveloperToBusiness = () => {
 
 const queryClient = new QueryClient();
 
+// Check if current route is an embed route (no chrome)
+const useIsEmbedRoute = () => {
+  const location = useLocation();
+  return location.pathname.startsWith("/embed/");
+};
+
 // Route-aware fallback component
 const RouteLoader = () => {
   const location = useLocation();
@@ -85,44 +91,7 @@ const App = () => (
             <DynamicMeta />
             <TrackingManager />
             <BrowserRouter>
-               <Routes>
-                 {/* Embed route — outside all layout/chrome */}
-                 <Route path="/embed/widget/:token" element={
-                   <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4"><IndexSkeleton /></div>}>
-                     <EmbedWidget />
-                   </Suspense>
-                 } />
-               </Routes>
-               <GuestTimerBanner />
-               <GuestTimerExpiredModal />
-               <Suspense fallback={<RouteLoader />}>
-                 <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/auth" element={<Auth />} />
-                  <Route path="/forgot-password" element={<ForgotPassword />} />
-                  <Route path="/reset-password" element={<ResetPassword />} />
-                  <Route path="/buyer/*" element={<BuyerDashboard />} />
-                  <Route path="/business/*" element={<DeveloperDashboard />} />
-                  <Route path="/admin/*" element={<AdminDashboard />} />
-                  <Route path="/directory" element={<DeveloperDirectory />} />
-                  <Route path="/reviews" element={<Reviews />} />
-                  <Route path="/install" element={<Install />} />
-                  <Route path="/portfolio" element={<Portfolio />} />
-                  <Route path="/insights" element={<InsightsPage />} />
-                  <Route path="/community" element={<Community />} />
-                  <Route path="/leaderboard" element={<Leaderboard />} />
-                  <Route path="/deal-watch" element={<DealWatch />} />
-                  <Route path="/launch-watch" element={<LaunchWatch />} />
-                  {/* Legacy /developer redirects */}
-                  <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </Suspense>
-              <BottomNav />
-              <PWAInstallBanner />
-              <FloatingChatFAB />
-              <CookieConsentBanner />
+              <AppContent />
             </BrowserRouter>
           </GuestTimerProvider>
         </AuthProvider>
@@ -130,5 +99,52 @@ const App = () => (
     </TooltipProvider>
   </QueryClientProvider>
 );
+
+const AppContent = () => {
+  const isEmbed = useIsEmbedRoute();
+
+  if (isEmbed) {
+    return (
+      <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4" />}>
+        <Routes>
+          <Route path="/embed/widget/:token" element={<EmbedWidget />} />
+        </Routes>
+      </Suspense>
+    );
+  }
+
+  return (
+    <>
+      <GuestTimerBanner />
+      <GuestTimerExpiredModal />
+      <Suspense fallback={<RouteLoader />}>
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/buyer/*" element={<BuyerDashboard />} />
+          <Route path="/business/*" element={<DeveloperDashboard />} />
+          <Route path="/admin/*" element={<AdminDashboard />} />
+          <Route path="/directory" element={<DeveloperDirectory />} />
+          <Route path="/reviews" element={<Reviews />} />
+          <Route path="/install" element={<Install />} />
+          <Route path="/portfolio" element={<Portfolio />} />
+          <Route path="/insights" element={<InsightsPage />} />
+          <Route path="/community" element={<Community />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/deal-watch" element={<DealWatch />} />
+          <Route path="/launch-watch" element={<LaunchWatch />} />
+          <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
+      <BottomNav />
+      <PWAInstallBanner />
+      <FloatingChatFAB />
+      <CookieConsentBanner />
+    </>
+  );
+};
 
 export default App;
