@@ -211,23 +211,12 @@ const InsightsPage = () => {
       </div>
 
       <div className="max-w-2xl mx-auto px-4 py-5 space-y-5">
-        {/* Cache Banner */}
-        {cacheInfo && hasLoaded && (
-          <div className={`flex items-center justify-between p-3 rounded-xl border ${
-            cacheInfo.cached ? 'bg-secondary/50 border-border' : 'bg-gradient-to-r from-trust-excellent/5 to-primary/5 border-trust-excellent/20'
-          }`}>
-            <div className="flex items-center gap-2 text-xs">
-              {cacheInfo.cached ? (
-                <><Clock className="w-3.5 h-3.5 text-muted-foreground" /><span className="text-muted-foreground">{t('insights.cachedRefreshesIn', { minutes: cacheInfo.expires_in_minutes })}</span></>
-              ) : (
-                <><Zap className="w-3.5 h-3.5 text-trust-excellent" /><span className="text-trust-excellent font-medium">{t('insights.freshInsights')}</span></>
-              )}
-            </div>
-            {cacheInfo.cached && (
-              <Button size="sm" variant="ghost" onClick={() => fetchInsights(true)} disabled={loading} className="text-[10px] h-7 gap-1 text-primary">
-                <Zap className="w-3 h-3" /> {t('insights.forceRefresh')}
-              </Button>
-            )}
+        {/* Cache auto-refresh (hidden) */}
+        {cacheInfo && hasLoaded && cacheInfo.cached && (
+          <div className="hidden">
+            <Button size="sm" variant="ghost" onClick={() => fetchInsights(true)} disabled={loading}>
+              Force Refresh
+            </Button>
           </div>
         )}
 
