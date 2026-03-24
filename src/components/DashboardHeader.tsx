@@ -7,6 +7,8 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { BrandLogo } from '@/components/BrandLogo';
 import { MobileNavSheet } from '@/components/MobileNavSheet';
 import { useAuth } from '@/contexts/AuthContext';
+import { CoinCounter } from '@/components/CoinCounter';
+import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 
 interface DashboardHeaderProps {
   title: string;
@@ -16,8 +18,10 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHeaderProps) => {
   const navigate = useNavigate();
-  const { role, signOut } = useAuth();
+  const { role, signOut, user } = useAuth();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
+  const isBuyer = role === 'buyer' || role === 'user';
+  const gamification = useBuyerGamification();
 
   const getDashboardRoute = () => {
     if (role === 'admin') return '/admin';
@@ -63,6 +67,9 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+            {isBuyer && user && !gamification.isLoading && (
+              <CoinCounter totalPoints={gamification.totalPoints} />
+            )}
             <LanguageSwitcher />
             <NotificationBell />
             <button
