@@ -1,46 +1,37 @@
 
 
-## Replace Generated Avatars with Real Brand Logos
+## Add "For Businesses" Button to Mobile Navbar
 
-The category items in `HeroCategoryItems.tsx` currently use `generateAvatar()` which produces letter-based SVG avatars. The user wants real brand photos/logos for each entity.
+Add a compact "For Businesses" CTA button with a right-arrow icon in the **mobile top bar** (the `< md` section of Navbar.tsx), positioned right after the language switcher. Uses the Forest Green business theme.
 
-### Approach
-
-Use real logo URLs from each brand's public presence (favicon/logo CDNs like `logo.clearbit.com` or direct brand URLs). This avoids needing to download and store 60+ images locally.
+### What it does
+- Shows a small pill-style button labeled "For Businesses →" using business theme colors (`bg-business`, `border-business-border`, `text-business-foreground`)
+- Navigates to `/auth?type=business` so the user can sign up as business, claim, or upgrade
+- Only visible when the user is **not already a business/admin** (no point showing it to existing business users)
+- Uses `Building2` icon + `ArrowRight` or text arrow
 
 ### Changes
 
-**File: `src/components/HeroCategoryItems.tsx`**
-
-Replace every `generateAvatar("...", "category")` call with a real logo URL for that brand. The mapping will cover all ~65 items across 18 categories:
-
-- **Apps**: Nawy, Farida, Byit, Broker Zone -- real app logos
-- **Shares**: Orascom, Talaat Moustafa, Palm Hills, SODIC -- company logos
-- **Platforms**: Aqarmap, Dubizzle, Property Finder, Property Sorted
-- **Brokers**: The Address, Bold Routes, RE/MAX, RED, Coldwell Banker, Nawy Partners
-- **Exhibitions**: Cityscape, RED Expo, Al-Ahram Expo, The Real Estate
-- **Channels**: Property Insider, Podcast Aqary, Bait Sameh
-- **Law Firms**: Diyaa Eldin, Mashoralaw, Partners Law, ADSERO
-- **Valuation**: JLL, CBRE, Savills
-- **Training**: REIDIN Academy, MIM Academy, PropTech School
-- **Auctions**: Auction House Egypt, Emirates Auction, Al Mal Auctions
-- **Mortgage**: NBE, CIB, Arab Bank
-- **Research**: JLL, Knight Frank, Cushman & Wakefield
-- **Tax**: PwC, KPMG, EY
-- **Management**: CBRE, Hill International, Emaar FM
-- **Leasing**: Better Home, Allsopp & Allsopp, Cluttons
-- **Blockchain**: Propy, RealToken, Brickblock
-- **Lands**: NUCA, Nakheel, Aldar
-- **Units**: These are generic property types (Studio, Villa, etc.) -- will use high-quality stock/icon images from free image sources
-
-Logo source: `https://logo.clearbit.com/{domain}` for companies with known domains, and fallback to `generateAvatar()` for entities without a clear web domain.
-
-For unit types (Studio, Villa, Penthouse, etc.), keep the generated avatars since these are property categories, not brands.
+**File: `src/components/Navbar.tsx`**
+- In the mobile nav section (line ~209, after `<NotificationBell />`), add a "For Businesses" button before the hamburger menu
+- Conditionally hide it if `role === 'business' || role === 'admin'`
+- Compact styling: `text-[10px]` or `text-[11px]`, rounded-full pill, business green colors
 
 ### Technical Details
 
-- Single file edit: `src/components/HeroCategoryItems.tsx`
-- Create a `brandLogos` mapping object at the top of the file for clean organization
-- Replace each `generateAvatar(...)` call with the corresponding URL from the map
-- Keep `generateAvatar` as import for any fallback cases
+```tsx
+{/* After NotificationBell, before hamburger menu */}
+{role !== 'business' && role !== 'admin' && (
+  <button
+    onClick={() => navigate("/auth?type=business")}
+    className="inline-flex items-center gap-0.5 px-2 py-1 rounded-full border border-business-border bg-business text-business-foreground font-bold text-[10px] transition-all hover:bg-business/80"
+  >
+    <Building2 className="w-3 h-3 text-business-border" />
+    <span>For Businesses</span>
+    <ArrowRight className="w-3 h-3" />
+  </button>
+)}
+```
+
+Single file edit, no new dependencies needed.
 
