@@ -45,6 +45,7 @@ const Community = lazy(() => import("./pages/Community"));
 const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
+const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
