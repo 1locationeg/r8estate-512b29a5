@@ -1,11 +1,10 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Star, Heart, Share2, MessageCircle, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { ItemDetailSection } from "./ItemDetailSection";
-import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
+import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
 
 // Brand logo mapping — real logos via Clearbit/direct URLs, fallback to generateAvatar for units
@@ -247,31 +246,23 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const categoryButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   // Sync with external category selection
   useEffect(() => {
     if (externalCategory) {
       setActiveCategory(externalCategory);
-      setSelectedItem(null);
     }
   }, [externalCategory]);
 
-  // Convert CategoryItem to SearchItem for detail view
-  const categoryToSearchCategory = (labelKey: string): SearchCategory => {
-    const map: Record<string, SearchCategory> = {
-      'categories.units': 'units',
-      'categories.apps': 'apps',
-      'categories.shares': 'developers',
-      'categories.platforms': 'apps',
-      'categories.brokers': 'brokers',
-      'categories.exhibitions': 'categories',
-      'categories.channels': 'categories',
-      'categories.lawFirms': 'categories',
-    };
-    return map[labelKey] || 'categories';
-  };
+  const activeCategoryData = useMemo(
+    () => categories.find((category) => category.labelKey === activeCategory) ?? null,
+    [activeCategory],
+  );
 
   const handleItemClick = (item: CategoryItem) => {
     onInteraction?.();
@@ -281,7 +272,6 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   const handleCategoryClick = (labelKey: string) => {
     onInteraction?.();
     setActiveCategory(activeCategory === labelKey ? null : labelKey);
-    setSelectedItem(null);
   };
 
   const formatNumber = (num: number) => {
@@ -289,16 +279,25 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     return num.toString();
   };
 
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const getLocalizedName = useCallback(
+    (item: CategoryItem) => (isRTL ? item.nameAr : item.nameEn),
+    [isRTL],
+  );
+
+  const getScrollPosition = (el: HTMLDivElement) => {
+    const maxScrollLeft = Math.max(el.scrollWidth - el.clientWidth, 0);
+    return el.scrollLeft < 0 ? Math.abs(el.scrollLeft) : el.scrollLeft;
+  };
 
   const updateScrollState = useCallback(() => {
     const el = scrollRef.current;
     if (!el) return;
     const tolerance = 2;
-    setCanScrollLeft(el.scrollLeft > tolerance);
-    setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - tolerance);
+    const currentScroll = getScrollPosition(el);
+    const maxScrollLeft = Math.max(el.scrollWidth - el.clientWidth, 0);
+
+    setCanScrollLeft(currentScroll > tolerance);
+    setCanScrollRight(currentScroll < maxScrollLeft - tolerance);
   }, []);
 
   useEffect(() => {
@@ -311,18 +310,51 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     return () => { el.removeEventListener('scroll', updateScrollState); ro.disconnect(); };
   }, [updateScrollState]);
 
+  useEffect(() => {
+    if (!activeCategory) return;
+
+    categoryButtonRefs.current[activeCategory]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: "center",
+    });
+  }, [activeCategory]);
+
   const scroll = (direction: 'left' | 'right') => {
     const el = scrollRef.current;
     if (!el) return;
-    const amount = el.clientWidth * 0.6;
+    const amount = el.clientWidth * 0.72;
     el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+  };
+
+  const scrollToEdge = (edge: "start" | "end") => {
+    if (categories.length === 0) return;
+
+    const category = edge === "start" ? categories[0] : categories[categories.length - 1];
+
+    categoryButtonRefs.current[category.labelKey]?.scrollIntoView({
+      behavior: "smooth",
+      block: "nearest",
+      inline: edge === "start" ? "start" : "end",
+    });
   };
 
   return (
     <div className="w-full bg-card border-t border-border shadow-lg overflow-x-hidden">
       {/* Category Tabs */}
       <div className="relative flex items-center">
-        {/* Left Arrow */}
+        <button
+          onClick={() => scrollToEdge('start')}
+          disabled={!canScrollLeft}
+          className={cn(
+            "p-2 transition-colors border-e border-border shrink-0",
+            canScrollLeft ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
+          )}
+          aria-label="Scroll to first category"
+        >
+          <ChevronsLeft className="w-4 h-4" />
+        </button>
+
         <button
           onClick={() => scroll('left')}
           disabled={!canScrollLeft}
@@ -342,6 +374,9 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
             {categories.map((cat) => (
               <button
                 key={cat.labelKey}
+                ref={(node) => {
+                  categoryButtonRefs.current[cat.labelKey] = node;
+                }}
                 onClick={() => handleCategoryClick(cat.labelKey)}
                 className={cn(
                   "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
@@ -369,71 +404,99 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
         >
           <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
         </button>
+
+        <button
+          onClick={() => scrollToEdge('end')}
+          disabled={!canScrollRight}
+          className={cn(
+            "p-2 transition-colors border-s border-border shrink-0",
+            canScrollRight ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
+          )}
+          aria-label="Scroll to last category"
+        >
+          <ChevronsRight className="w-4 h-4" />
+        </button>
       </div>
 
-      {/* Category Items Dropdown */}
-      {activeCategory && (
+      {/* Category Businesses */}
+      {activeCategoryData && (
         <div className="border-t border-border bg-background/95 backdrop-blur-sm">
-          <div className="p-4 md:p-6">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3 md:gap-4">
-              {categories
-                .find((c) => c.labelKey === activeCategory)
-                ?.items.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => handleItemClick(item)}
-                    className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
-                  >
-                    <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-border group-hover:ring-primary/50 transition-all">
-                      <AvatarImage src={item.avatar} alt={isRTL ? item.nameAr : item.nameEn} />
-                      <AvatarFallback className="bg-secondary text-xs">
-                        {(isRTL ? item.nameAr : item.nameEn).substring(0, 2)}
+          <div className="p-4 md:p-6 space-y-4">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="text-xs font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+                  {t(activeCategoryData.labelKey)}
+                </p>
+                <h3 className="text-base md:text-lg font-semibold text-foreground">
+                  {isRTL ? "الكيانات داخل هذه الفئة" : "Businesses in this category"}
+                </h3>
+              </div>
+              <div className="inline-flex w-fit items-center rounded-full bg-secondary px-3 py-1 text-xs font-medium text-muted-foreground">
+                {activeCategoryData.items.length.toLocaleString(isRTL ? "ar-EG" : "en-US")} {isRTL ? "كيان" : activeCategoryData.items.length === 1 ? "business" : "businesses"}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+              {activeCategoryData.items.map((item) => (
+                <button
+                  key={item.id}
+                  onClick={() => handleItemClick(item)}
+                  className="group flex w-full flex-col rounded-2xl border border-border bg-card p-4 text-start shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                >
+                  <div className="flex items-start gap-3">
+                    <Avatar className="h-14 w-14 ring-1 ring-border transition-all group-hover:ring-primary/40">
+                      <AvatarImage src={item.avatar} alt={getLocalizedName(item)} />
+                      <AvatarFallback className="bg-secondary text-xs font-semibold">
+                        {getLocalizedName(item).substring(0, 2)}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="text-center">
-                      <p className="text-xs md:text-sm font-medium text-foreground line-clamp-1">
-                        {isRTL ? item.nameAr : item.nameEn}
+
+                    <div className="min-w-0 flex-1 space-y-1">
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="line-clamp-2 text-sm font-semibold text-foreground md:text-base">
+                          {getLocalizedName(item)}
+                        </p>
+                        <div className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-[11px] font-semibold text-foreground">
+                          <Star className={cn("h-3 w-3 fill-current", getRatingColor(item.rating))} />
+                          <span className={getRatingColor(item.rating)}>{item.rating.toFixed(1)}</span>
+                        </div>
+                      </div>
+
+                      <p className="text-xs text-muted-foreground">
+                        {item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")} {isRTL ? "مراجعة" : item.reviewCount === 1 ? "review" : "reviews"}
                       </p>
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        <Star className={cn("w-3 h-3 fill-current", getRatingColor(item.rating))} />
-                        <span className={cn("text-xs font-semibold", getRatingColor(item.rating))}>
-                          {item.rating.toFixed(1)}
-                        </span>
-                        <span className="text-xs text-muted-foreground">
-                          ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
-                        </span>
-                      </div>
-                      
-                      {/* Engagement Stats for regular items too */}
-                      <div className="flex items-center justify-center gap-2 mt-1.5 text-muted-foreground">
-                        <div className="flex items-center gap-0.5">
-                          <Heart className="w-2.5 h-2.5" />
-                          <span className="text-[10px]">{formatNumber(item.likes || 0)}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <Share2 className="w-2.5 h-2.5" />
-                          <span className="text-[10px]">{formatNumber(item.shares || 0)}</span>
-                        </div>
-                        <div className="flex items-center gap-0.5">
-                          <MessageCircle className="w-2.5 h-2.5" />
-                          <span className="text-[10px]">{formatNumber(item.replies || 0)}</span>
-                        </div>
-                      </div>
                     </div>
-                  </button>
-                ))}
+                  </div>
+
+                  <div className="mt-4 grid grid-cols-3 gap-2">
+                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Heart className="h-3 w-3" />
+                        <span className="text-[11px]">{isRTL ? "Likes" : "Likes"}</span>
+                      </div>
+                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.likes || 0)}</p>
+                    </div>
+
+                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <Share2 className="h-3 w-3" />
+                        <span className="text-[11px]">{isRTL ? "Shares" : "Shares"}</span>
+                      </div>
+                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.shares || 0)}</p>
+                    </div>
+
+                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
+                      <div className="flex items-center gap-1 text-muted-foreground">
+                        <MessageCircle className="h-3 w-3" />
+                        <span className="text-[11px]">{isRTL ? "Replies" : "Replies"}</span>
+                      </div>
+                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.replies || 0)}</p>
+                    </div>
+                  </div>
+                </button>
+              ))}
             </div>
           </div>
-        </div>
-      )}
-
-      {/* Item Detail Section - only used as fallback when no parent handler */}
-      {selectedItem && !onSelectItem && (
-        <div className="border-t border-border">
-          <ItemDetailSection
-            item={selectedItem}
-            onClose={() => setSelectedItem(null)}
-          />
         </div>
       )}
     </div>
