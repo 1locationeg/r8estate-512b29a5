@@ -44,7 +44,7 @@ export const developers: Developer[] = [
   {
     id: "palm-hills",
     name: "Palm Hills Developments",
-    logo: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=100&h=100&fit=crop",
+    logo: generateAvatar("Palm Hills Developments", "developer"),
     rating: 4.8,
     reviewCount: 1247,
     trustScore: 96,
@@ -62,7 +62,7 @@ export const developers: Developer[] = [
   {
     id: "emaar-misr",
     name: "Emaar Misr",
-    logo: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?w=100&h=100&fit=crop",
+    logo: generateAvatar("Emaar Misr", "developer"),
     rating: 4.6,
     reviewCount: 892,
     trustScore: 92,
@@ -80,7 +80,7 @@ export const developers: Developer[] = [
   {
     id: "sodic",
     name: "SODIC",
-    logo: "https://images.unsplash.com/photo-1464938050520-ef2571ea41d2?w=100&h=100&fit=crop",
+    logo: generateAvatar("SODIC", "developer"),
     rating: 4.7,
     reviewCount: 634,
     trustScore: 94,
@@ -98,7 +98,7 @@ export const developers: Developer[] = [
   {
     id: "ora-developers",
     name: "Ora Developers",
-    logo: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=100&h=100&fit=crop",
+    logo: generateAvatar("Ora Developers", "developer"),
     rating: 4.5,
     reviewCount: 523,
     trustScore: 89,
@@ -116,7 +116,7 @@ export const developers: Developer[] = [
   {
     id: "tatweer-misr",
     name: "Tatweer Misr",
-    logo: "https://images.unsplash.com/photo-1518684079-3c830dcef090?w=100&h=100&fit=crop",
+    logo: generateAvatar("Tatweer Misr", "developer"),
     rating: 4.4,
     reviewCount: 789,
     trustScore: 87,
@@ -134,7 +134,7 @@ export const developers: Developer[] = [
   {
     id: "mountain-view",
     name: "Mountain View",
-    logo: "https://images.unsplash.com/photo-1565363887715-ae45c0c03dfe?w=100&h=100&fit=crop",
+    logo: generateAvatar("Mountain View", "developer"),
     rating: 4.7,
     reviewCount: 456,
     trustScore: 91,
@@ -152,7 +152,7 @@ export const developers: Developer[] = [
   {
     id: "hyde-park",
     name: "Hyde Park Developments",
-    logo: "https://images.unsplash.com/photo-1582407947304-fd86f028f716?w=100&h=100&fit=crop",
+    logo: generateAvatar("Hyde Park Developments", "developer"),
     rating: 4.6,
     reviewCount: 612,
     trustScore: 90,
