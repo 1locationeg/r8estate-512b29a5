@@ -7,9 +7,10 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
 
-// Brand logo mapping — real logos via Clearbit/direct URLs, fallback to generateAvatar for units
-const brandLogo = (name: string, domain?: string): string =>
-  domain ? `https://logo.clearbit.com/${domain}` : generateAvatar(name, "category");
+// Brand logo mapping — permanent local avatars (no external API dependency)
+// Business owners can override this by uploading their own logo from their profile
+const brandLogo = (name: string, _domain?: string): string =>
+  generateAvatar(name, "category");
 
 export interface CategoryItem {
   id: string;
