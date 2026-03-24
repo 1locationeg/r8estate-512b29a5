@@ -36,8 +36,8 @@ export const BuyerGamificationPanel = () => {
       // Show toast for each newly earned badge
       fresh.forEach((badge) => {
         toast({
-          title: `🏆 Badge Earned: ${badge.name}`,
-          description: `${badge.description} (+${badge.points} pts)`,
+          title: `🪙 Badge Earned: ${badge.name}`,
+          description: `${badge.description} (+${badge.points} coins)`,
         });
       });
     }
@@ -95,8 +95,8 @@ export const BuyerGamificationPanel = () => {
                 <p className="text-sm font-semibold text-foreground">{badge.name}</p>
                 <p className="text-xs text-muted-foreground">{badge.description}</p>
               </div>
-              <Badge className="bg-accent text-accent-foreground text-xs flex-shrink-0">
-                +{badge.points} pts
+              <Badge className="bg-coin/20 text-coin-foreground text-xs flex-shrink-0 gap-1">
+                <Coins className="w-3 h-3 text-coin" />+{badge.points}
               </Badge>
             </div>
           </div>
