@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Star, Trophy, Heart, Share2, MessageCircle, TrendingUp, Rocket, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
@@ -244,6 +245,7 @@ interface HeroCategoryItemsProps {
 
 export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectItem }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
@@ -271,28 +273,9 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     return map[labelKey] || 'categories';
   };
 
-  const handleItemClick = (item: CategoryItem, catKey?: string) => {
+  const handleItemClick = (item: CategoryItem) => {
     onInteraction?.();
-    const category = categoryToSearchCategory(catKey || '');
-    const searchIndex = getSearchIndex();
-    const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
-      || searchIndex.find(si => si.id === item.id)
-      || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
-    const resolvedItem = indexItem || {
-      id: item.id,
-      name: isRTL ? item.nameAr : item.nameEn,
-      category,
-      subtitle: catKey ? t(catKey) : undefined,
-      image: item.avatar,
-      rating: item.rating,
-      reviewCount: item.reviewCount,
-    } as SearchItem;
-    
-    if (onSelectItem) {
-      onSelectItem(resolvedItem);
-    } else {
-      setSelectedItem(resolvedItem);
-    }
+    navigate(`/entity/${item.id}`);
   };
 
   const handleCategoryClick = (labelKey: string) => {
@@ -398,7 +381,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
                 ?.items.map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => handleItemClick(item, activeCategory || undefined)}
+                    onClick={() => handleItemClick(item)}
                     className="flex flex-col items-center gap-2 p-3 rounded-xl bg-card border border-border hover:border-primary/50 hover:shadow-md transition-all group cursor-pointer"
                   >
                     <Avatar className="w-12 h-12 md:w-14 md:h-14 ring-2 ring-border group-hover:ring-primary/50 transition-all">
