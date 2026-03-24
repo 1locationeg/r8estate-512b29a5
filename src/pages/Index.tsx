@@ -339,6 +339,7 @@ const Index = () => {
                 setActiveView(null);
                 setSelectedDeveloperId(null);
               }} />
+              </div>
             
             </> :
 
