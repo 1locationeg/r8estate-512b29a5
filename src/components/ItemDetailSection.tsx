@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react";
+import { generateAvatar } from "@/lib/avatarUtils";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { WriteReviewModal } from "./WriteReviewModal";
@@ -97,10 +98,10 @@ const getCategoryMetricKeys = (category: SearchCategory): string[] => {
 };
 
 const mockReviewerData = [
-  { id: '1', key: 'ahmed', avatar: 'https://randomuser.me/api/portraits/men/32.jpg', tier: 'gold', verified: true },
-  { id: '2', key: 'sara', avatar: 'https://randomuser.me/api/portraits/women/44.jpg', tier: 'silver', verified: true },
-  { id: '3', key: 'omar', avatar: 'https://randomuser.me/api/portraits/men/67.jpg', tier: 'bronze', verified: false },
-  { id: '4', key: 'fatima', avatar: 'https://randomuser.me/api/portraits/women/68.jpg', tier: 'silver', verified: true },
+  { id: '1', key: 'ahmed', avatar: generateAvatar('Ahmed', 'reviewer'), tier: 'gold', verified: true },
+  { id: '2', key: 'sara', avatar: generateAvatar('Sara', 'reviewer'), tier: 'silver', verified: true },
+  { id: '3', key: 'omar', avatar: generateAvatar('Omar', 'reviewer'), tier: 'bronze', verified: false },
+  { id: '4', key: 'fatima', avatar: generateAvatar('Fatima', 'reviewer'), tier: 'silver', verified: true },
 ];
 
 const getTierIcon = (tier: string) => {

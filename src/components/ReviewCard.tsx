@@ -12,6 +12,7 @@ import { ReviewReplyForm } from "@/components/ReviewReplyForm";
 import type { ReviewAnalysis } from "@/hooks/useReviewAnalysis";
 import r8Stars from "@/assets/r8-stars.png";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
+import { generateAvatar } from "@/lib/avatarUtils";
 
 interface ReviewCardProps {
   review: Review;
@@ -65,7 +66,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           {/* Profile Avatar with Verification Badge */}
           <div className="relative flex-shrink-0">
             <Avatar className="w-10 h-10 md:w-12 md:h-12 border-2 border-border">
-              <AvatarImage src={review.avatar} alt={review.author} />
+              <AvatarImage src={review.avatar || generateAvatar(review.author, "reviewer")} alt={review.author} />
               <AvatarFallback className="bg-primary/10 text-primary text-xs md:text-sm font-semibold">
                 {getInitials(review.author)}
               </AvatarFallback>
