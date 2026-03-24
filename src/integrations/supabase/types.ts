@@ -1446,6 +1446,45 @@ export type Database = {
         }
         Relationships: []
       }
+      widget_configs: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          embed_token: string
+          entity_id: string
+          entity_type: string
+          id: string
+          is_active: boolean
+          settings: Json
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          embed_token: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          is_active?: boolean
+          settings?: Json
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          embed_token?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          is_active?: boolean
+          settings?: Json
+          type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -1470,6 +1509,7 @@ export type Database = {
         }
         Returns: undefined
       }
+      generate_embed_token: { Args: never; Returns: string }
       get_leaderboard: {
         Args: { _limit?: number }
         Returns: {
