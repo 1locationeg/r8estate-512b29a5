@@ -136,7 +136,7 @@ const CommentComposer = ({
             className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors opacity-50 cursor-not-allowed"
             title={t("community.photo", "Photo")}
           >
-            <Image className="w-4 h-4" />
+            <ImageIcon className="w-4 h-4" />
           </button>
           <button
             type="button"
