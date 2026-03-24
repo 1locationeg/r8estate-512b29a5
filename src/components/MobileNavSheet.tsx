@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { LogOut, LayoutDashboard, Globe, ChevronDown, Building2 } from "lucide-react";
+import { LogOut, LayoutDashboard, Globe, ChevronDown, Building2, ArrowRight } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -123,6 +123,20 @@ export const MobileNavSheet = ({
                 </PopoverContent>
               </Popover>
             </div>
+
+            {/* For Businesses CTA */}
+            {role !== 'business' && role !== 'admin' && (
+              <div className="mt-3 px-4">
+                <button
+                  onClick={() => { navigate("/auth?type=business"); onOpenChange(false); }}
+                  className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-business-border bg-business text-business-foreground font-bold text-xs transition-all hover:bg-business/80"
+                >
+                  <Building2 className="w-3.5 h-3.5" />
+                  <span>For Businesses</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </nav>
 
           {/* Bottom actions */}

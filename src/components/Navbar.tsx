@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LogOut, LayoutDashboard, Building2, User, Search, Menu, LogIn, UserPlus, ArrowRight } from "lucide-react";
+import { LogOut, LayoutDashboard, Building2, User, Search, Menu, LogIn, UserPlus } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
@@ -208,17 +208,6 @@ export const Navbar = ({
 
           <LanguageSwitcher />
           <NotificationBell />
-
-          {role !== 'business' && role !== 'admin' && (
-            <button
-              onClick={() => navigate("/auth?type=business")}
-              className="inline-flex items-center gap-0.5 px-2 py-1 rounded-full border border-business-border bg-business text-business-foreground font-bold text-[10px] transition-all hover:bg-business/80"
-            >
-              <Building2 className="w-3 h-3" />
-              <span>For Businesses</span>
-              <ArrowRight className="w-3 h-3" />
-            </button>
-          )}
 
           <button
             onClick={() => setMoreMenuOpen(true)}
