@@ -1,6 +1,7 @@
 import { useCallback, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { showCoinToast } from "@/components/CoinEarnedToast";
 
 type InterestType = "click" | "search" | "linger" | "scroll_stop";
 
@@ -63,6 +64,7 @@ export function useTrackInterest() {
   const trackClick = useCallback(
     (entityId: string, entityName?: string | null) => {
       trackInterest(entityId, entityName || null, "click");
+      showCoinToast("developer_view");
     },
     [trackInterest]
   );
