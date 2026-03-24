@@ -9,6 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { ClaimBusinessModal } from "@/components/ClaimBusinessModal";
+import { generateAvatar } from "@/lib/avatarUtils";
 
 interface DeveloperDirectoryCardProps {
   developer: Developer;
@@ -74,7 +75,12 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
 
       <div className="flex flex-col items-center text-center space-y-4">
         <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
-          <img src={developer.logo} alt={developer.name} className="w-full h-full object-cover" />
+          <img
+            src={developer.logo}
+            alt={developer.name}
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.target as HTMLImageElement).src = generateAvatar(developer.name, "developer"); }}
+          />
         </div>
 
         <h3 className="text-xl font-bold text-foreground">{developer.name}</h3>
