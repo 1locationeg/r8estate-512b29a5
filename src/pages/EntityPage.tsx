@@ -49,7 +49,7 @@ const EntityPage = () => {
           reviewCount: item.reviewCount,
           meta: {
             likes: item.likes,
-            shares: item.shared,
+            shares: item.shares,
             replies: item.replies,
             trendScore: item.trendScore,
             launchDate: item.launchDate,
