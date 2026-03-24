@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { Suspense, lazy } from "react";
+import React, { Suspense, lazy } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -102,6 +102,15 @@ const App = () => (
   </QueryClientProvider>
 );
 
+// Scroll to top on every route change
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+  return null;
+};
+
 const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
@@ -117,6 +126,7 @@ const AppContent = () => {
 
   return (
     <>
+      <ScrollToTop />
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>
