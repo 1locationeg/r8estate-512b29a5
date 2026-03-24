@@ -28,14 +28,14 @@ export const MobileNavSheet = ({
 
   const guestNavLinks = [
     { label: t("nav.home"), href: "/" },
-    { label: t("nav.categories"), href: "/directory" },
+    { label: t("nav.categories"), href: "/categories" },
     { label: t("nav.businesses"), href: "/directory" },
     { label: t("nav.blog"), href: "/community" },
   ];
 
   const userNavLinks = [
     { label: t("nav.home"), href: "/" },
-    { label: t("nav.categories"), href: "/directory" },
+    { label: t("nav.categories"), href: "/categories" },
     { label: t("nav.developers"), href: "#" },
     { label: t("nav.projects"), href: "/reviews" },
     { label: t("nav.businesses"), href: "/directory" },
