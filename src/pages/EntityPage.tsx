@@ -1,12 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo, useEffect, useState } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { categories } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 const categoryToSearchCategory = (labelKey: string): SearchCategory => {
   const map: Record<string, SearchCategory> = {
@@ -27,31 +27,9 @@ const EntityPage = () => {
   const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
-  const [logoOverride, setLogoOverride] = useState<string | null>(null);
+  const { getLogoOverride } = useBusinessLogo();
 
-  // Check if business owner has uploaded a custom logo
-  useEffect(() => {
-    if (!id) return;
-    const fetchBusinessLogo = async () => {
-      // Search by company_name matching the entity name (case-insensitive)
-      const { data } = await supabase
-        .from('business_profiles')
-        .select('logo_url, company_name')
-        .not('logo_url', 'is', null)
-        .limit(100);
-      
-      if (data) {
-        const match = data.find(bp => 
-          bp.company_name?.toLowerCase().replace(/\s+/g, '-') === id ||
-          bp.company_name?.toLowerCase() === id
-        );
-        if (match?.logo_url) {
-          setLogoOverride(match.logo_url);
-        }
-      }
-    };
-    fetchBusinessLogo();
-  }, [id]);
+  const logoOverride = id ? getLogoOverride(id) : null;
 
   const entity = useMemo((): SearchItem | null => {
     if (!id) return null;
@@ -60,7 +38,6 @@ const EntityPage = () => {
     const searchIndex = getSearchIndex();
     const fromIndex = searchIndex.find(si => si.id === id);
     if (fromIndex) {
-      // Apply logo override if business owner uploaded one
       if (logoOverride) return { ...fromIndex, image: logoOverride };
       return fromIndex;
     }
