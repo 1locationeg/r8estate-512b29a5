@@ -1,59 +1,77 @@
 
 
-# Apply Forest Green Business Theme Across Platform
+# Coin-Style Points System with Action Rewards and Celebrations
 
-## Summary
-Add a dedicated "business green" color token to the design system, then apply it consistently to every Business-related button, tab, toggle, and CTA across all views (desktop and mobile).
+## Overview
+Add a persistent "coin counter" to the dashboard, show point rewards beside every actionable item, and celebrate completions with confetti + toast notifications — creating a game-like motivation loop throughout the platform.
 
-## Color Spec
-- Fill/Background: `#EAF3DE`
-- Border + Icon: `#3B6D11`
-- Text: `#27500A`
+## What Changes
 
-## Step 1 — Add CSS custom properties
+### 1. Coin Counter Component (`src/components/CoinCounter.tsx`)
+A new reusable component showing the user's total points as animated "coins" — displayed in the dashboard header and sidebar. Uses `useBuyerGamification()` to pull live `totalPoints`. Features a gold coin icon with subtle pulse animation when points change. Compact for header, expanded for sidebar.
 
-In `src/index.css`, add new business color tokens under `:root` (and `.dark`):
+### 2. Dashboard Header — Coin Display
+Add the CoinCounter to `src/components/DashboardHeader.tsx` beside the notification bell. Shows as a compact gold pill: `🪙 125` that links to `/buyer/achievements`.
 
-```css
---business: 93 40% 90%;          /* #EAF3DE */
---business-foreground: 93 66% 17%; /* #27500A */
---business-border: 93 72% 25%;    /* #3B6D11 */
+### 3. Dashboard Sidebar — Coin Display  
+Add an expanded CoinCounter to `src/components/DashboardSidebar.tsx` in the profile card area, showing total coins with current tier emoji and a mini progress bar to next tier.
+
+### 4. Quick Actions with Point Rewards (`src/pages/BuyerDashboard.tsx`)
+Update each Quick Action card to show the points the user can earn:
+- "Search Developers" → `+2 coins per view`
+- "Developer Directory" → `+2 coins per profile`
+- "Saved Projects" → `+4 coins per save`
+
+Each card gets a small gold badge in the corner showing the reward.
+
+### 5. Mission Cards with Coin Rewards
+Update `MissionCard` in `src/components/BuyerGamificationPanel.tsx` to prominently display the coin reward with a gold coin icon: `🪙 +30` beside each mission title, making the reward visually prominent.
+
+### 6. Celebration Toasts on Completion
+Create a `src/components/CoinEarnedToast.tsx` — a reusable celebration toast with coin animation. Integrate it into:
+- **Review submission** (`WriteReviewModal.tsx`) — show `🪙 +25 coins earned!` after submit
+- **Project save** (`useSaveFollow.ts`) — show `🪙 +4 coins!`
+- **Developer profile view** (`useTrackInterest.ts`) — show `🪙 +2 coins!`
+- **Community post/reply** (`useCommunity.ts`) — show `🪙 +15/+10 coins!`
+- **Profile completion** (`BuyerDashboard.tsx` profile save) — show congratulations with total coins
+
+### 7. Nav Item Badges
+In the sidebar nav items (`src/pages/BuyerDashboard.tsx` navItems), add coin hints to key items:
+- "My Reviews" → small `+25/review` label
+- "Community" → small `+15/post` label
+- "Achievements" → show total coins count
+
+### 8. Points Reference Map
+A small constant mapping actions to their point values (derived from the existing badge/mission system) for consistent display across all components:
 ```
-
-And in `tailwind.config.ts`, register them:
+POINTS_PER_ACTION = {
+  developer_view: 2,
+  project_save: 4,
+  review_write: 25,
+  report_unlock: 10,
+  community_post: 15,
+  community_reply: 10,
+  community_vote: 5,
+  helpful_vote: 3,
+}
 ```
-business: "hsl(var(--business))"
-business-foreground: "hsl(var(--business-foreground))"
-business-border: "hsl(var(--business-border))"
-```
-
-## Step 2 — Update all Business UI elements
-
-Files and locations to update:
-
-1. **`src/components/Navbar.tsx`** (3 places)
-   - Line 87-93: Desktop "Business" mode toggle button — change from `border-primary/30 bg-secondary` to `bg-business border-business-border text-business-foreground`
-   - Line 162-168: Desktop "For Businesses" CTA — change from `bg-accent` to `bg-business border border-business-border text-business-foreground`
-   - Line 176-182: Mobile "Business" mode toggle — same green styling
-
-2. **`src/components/ViewToggle.tsx`** (line 21-31)
-   - Active "Business" tab — apply `bg-business border border-business-border text-business-foreground` instead of `bg-primary text-primary-foreground`
-
-3. **`src/components/MobileNavSheet.tsx`** (2 places, lines 151-158 and 168-175)
-   - "For Businesses" buttons — change from `border-primary text-primary` to `border-business-border text-business-foreground bg-business hover:bg-business/80`
-
-4. **`src/pages/BuyerDashboard.tsx`** (lines 67-94)
-   - "Upgrade to Business" CTA card — change gradient and button to use business green tokens
-
-## Step 3 — Icon colors
-
-Wherever `Building2` icon appears alongside these business elements, change from `text-primary` to `text-business-border` (the `#3B6D11` shade) for consistency.
 
 ## Files Modified
-- `src/index.css` — add CSS variables
-- `tailwind.config.ts` — register color tokens
-- `src/components/Navbar.tsx` — 3 button style updates
-- `src/components/ViewToggle.tsx` — active tab style
-- `src/components/MobileNavSheet.tsx` — 2 CTA button styles
-- `src/pages/BuyerDashboard.tsx` — upgrade CTA card
+- `src/components/CoinCounter.tsx` — **new** — animated coin display component
+- `src/components/CoinEarnedToast.tsx` — **new** — celebration toast with coin animation
+- `src/lib/buyerGamification.ts` — add `POINTS_PER_ACTION` constant
+- `src/components/DashboardHeader.tsx` — add coin counter beside notifications
+- `src/components/DashboardSidebar.tsx` — add coin display in profile card
+- `src/pages/BuyerDashboard.tsx` — add coin rewards to quick actions, nav item hints
+- `src/components/BuyerGamificationPanel.tsx` — coin icons on missions and badges
+- `src/components/WriteReviewModal.tsx` — celebration toast after review submit
+- `src/hooks/useSaveFollow.ts` — coin toast on save
+- `src/hooks/useCommunity.ts` — coin toast on post/reply
+- `src/components/ReviewSuccessOverlay.tsx` — update to show coins instead of generic "points"
+
+## Design Approach
+- Gold coin color: `#F5A623` (amber-500) — stands out without clashing with business green or buyer blue
+- Coin icon: Lucide `Coins` icon or a custom `🪙` emoji
+- Animations: CSS `animate-bounce` on earn, `transition-all` on counter increment
+- All celebrations use existing `ConfettiCelebration` + `toast` infrastructure
 
