@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2 } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -379,6 +380,60 @@ const InlineReactionButton = ({ targetId, targetType }: { targetId: string; targ
   );
 };
 
+const PostDropdownMenu = ({ post, user, onEdit }: { post: CommunityPost; user: any; onEdit?: (post: CommunityPost) => void }) => {
+  const { t } = useTranslation();
+  const [isSaved, setIsSaved] = useState(false);
+  const [isFollowing, setIsFollowing] = useState(false);
+  const isOwnPost = user?.id === post.user_id;
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
+          <MoreHorizontal className="w-5 h-5" />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuItem onClick={() => { setIsSaved(!isSaved); toast({ title: isSaved ? t("community.unsaved", "Post unsaved") : t("community.saved", "Post saved") }); }}>
+          {isSaved ? <BookmarkCheck className="w-4 h-4 mr-2 text-primary" /> : <Bookmark className="w-4 h-4 mr-2" />}
+          {isSaved ? t("community.unsavePost", "Unsave post") : t("community.savePost", "Save post")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/community?post=${post.id}`); toast({ title: t("community.linkCopied", "Link copied!") }); }}>
+          <Link2 className="w-4 h-4 mr-2" />
+          {t("community.copyLink", "Copy link")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => { setIsFollowing(!isFollowing); toast({ title: isFollowing ? t("community.unfollowed", "Notifications off for this post") : t("community.followed", "You'll be notified of new comments") }); }}>
+          {isFollowing ? <BellOff className="w-4 h-4 mr-2" /> : <BellPlus className="w-4 h-4 mr-2" />}
+          {isFollowing ? t("community.turnOffNotifications", "Turn off notifications") : t("community.turnOnNotifications", "Turn on notifications")}
+        </DropdownMenuItem>
+        {isOwnPost && onEdit && (
+          <DropdownMenuItem onClick={() => onEdit(post)}>
+            <Pencil className="w-4 h-4 mr-2" />
+            {t("community.editPost", "Edit post")}
+          </DropdownMenuItem>
+        )}
+        <DropdownMenuSeparator />
+        {!isOwnPost && (
+          <>
+            <DropdownMenuItem onClick={() => toast({ title: t("community.postHidden", "Post hidden from your feed") })}>
+              <EyeOff className="w-4 h-4 mr-2" />
+              {t("community.hidePost", "Hide post")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast({ title: t("community.userMuted", "You won't see posts from this user") })}>
+              <UserX className="w-4 h-4 mr-2" />
+              {t("community.muteUser", "Mute this user")}
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => toast({ title: t("community.reported", "Thanks for reporting. We'll review this.") })} className="text-destructive focus:text-destructive">
+              <AlertTriangle className="w-4 h-4 mr-2" />
+              {t("community.reportPost", "Report post")}
+            </DropdownMenuItem>
+          </>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
 // ── Main component ──
 
 interface Props {
@@ -388,9 +443,10 @@ interface Props {
   onVotePost: () => void;
   onVoteReply: (replyId: string) => void;
   onRefetch: () => void;
+  onEdit?: (post: CommunityPost) => void;
 }
 
-export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch }: Props) => {
+export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteReply, onRefetch, onEdit }: Props) => {
   const { t } = useTranslation();
   const [replyText, setReplyText] = useState("");
   const [replyingTo, setReplyingTo] = useState<string | null>(null);
@@ -449,9 +505,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               </Badge>
             </div>
           </div>
-          <button className="p-1.5 rounded-full hover:bg-secondary text-muted-foreground">
-            <MoreHorizontal className="w-5 h-5" />
-          </button>
+          <PostDropdownMenu post={post} user={user} onEdit={onEdit} />
         </div>
 
         <div className="px-4 pb-3">

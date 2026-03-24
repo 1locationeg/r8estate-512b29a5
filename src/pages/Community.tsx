@@ -110,6 +110,7 @@ const Community = () => {
             onVotePost={() => handleVotePost(detailPost.id)}
             onVoteReply={handleVoteReply}
             onRefetch={refetchDetail}
+            onEdit={(p) => { setEditingPost(p); setShowNewPost(true); }}
           />
         </div>
       </div>
