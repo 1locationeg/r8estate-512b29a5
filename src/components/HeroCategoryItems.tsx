@@ -436,62 +436,49 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
               </div>
             </div>
 
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {activeCategoryData.items.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleItemClick(item)}
-                  className="group flex w-full flex-col rounded-2xl border border-border bg-card p-4 text-start shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                  className="group flex w-full flex-col items-center rounded-2xl border border-border bg-card px-3 py-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
                 >
-                  <div className="flex items-start gap-3">
-                    <Avatar className="h-14 w-14 ring-1 ring-border transition-all group-hover:ring-primary/40">
-                      <AvatarImage src={item.avatar} alt={getLocalizedName(item)} />
-                      <AvatarFallback className="bg-secondary text-xs font-semibold">
-                        {getLocalizedName(item).substring(0, 2)}
-                      </AvatarFallback>
-                    </Avatar>
+                  {/* Centered circular avatar */}
+                  <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-2 ring-border transition-all group-hover:ring-primary/40">
+                    <AvatarImage src={item.avatar} alt={getLocalizedName(item)} className="object-cover" />
+                    <AvatarFallback className="bg-secondary text-sm font-bold">
+                      {getLocalizedName(item).substring(0, 2)}
+                    </AvatarFallback>
+                  </Avatar>
 
-                    <div className="min-w-0 flex-1 space-y-1">
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="line-clamp-2 text-sm font-semibold text-foreground md:text-base">
-                          {getLocalizedName(item)}
-                        </p>
-                        <div className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 text-[11px] font-semibold text-foreground">
-                          <Star className={cn("h-3 w-3 fill-current", getRatingColor(item.rating))} />
-                          <span className={getRatingColor(item.rating)}>{item.rating.toFixed(1)}</span>
-                        </div>
-                      </div>
+                  {/* Name */}
+                  <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground md:text-base">
+                    {getLocalizedName(item)}
+                  </p>
 
-                      <p className="text-xs text-muted-foreground">
-                        {item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")} {isRTL ? "مراجعة" : item.reviewCount === 1 ? "review" : "reviews"}
-                      </p>
-                    </div>
+                  {/* Star rating + review count */}
+                  <div className="mt-1.5 flex items-center gap-1.5">
+                    <Star className={cn("h-4 w-4 fill-current", getRatingColor(item.rating))} />
+                    <span className={cn("text-sm font-bold", getRatingColor(item.rating))}>{item.rating.toFixed(1)}</span>
+                    <span className="text-xs text-muted-foreground">
+                      ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
+                    </span>
                   </div>
 
-                  <div className="mt-4 grid grid-cols-3 gap-2">
-                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Heart className="h-3 w-3" />
-                        <span className="text-[11px]">{isRTL ? "Likes" : "Likes"}</span>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.likes || 0)}</p>
-                    </div>
-
-                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Share2 className="h-3 w-3" />
-                        <span className="text-[11px]">{isRTL ? "Shares" : "Shares"}</span>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.shares || 0)}</p>
-                    </div>
-
-                    <div className="rounded-xl bg-secondary/70 px-3 py-2">
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <MessageCircle className="h-3 w-3" />
-                        <span className="text-[11px]">{isRTL ? "Replies" : "Replies"}</span>
-                      </div>
-                      <p className="mt-1 text-sm font-semibold text-foreground">{formatNumber(item.replies || 0)}</p>
-                    </div>
+                  {/* Engagement metrics */}
+                  <div className="mt-3 flex items-center justify-center gap-3 text-muted-foreground">
+                    <span className="flex items-center gap-1 text-xs">
+                      <Heart className="h-3 w-3" />
+                      {formatNumber(item.likes || 0)}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs">
+                      <Share2 className="h-3 w-3" />
+                      {formatNumber(item.shares || 0)}
+                    </span>
+                    <span className="flex items-center gap-1 text-xs">
+                      <MessageCircle className="h-3 w-3" />
+                      {formatNumber(item.replies || 0)}
+                    </span>
                   </div>
                 </button>
               ))}
