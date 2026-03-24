@@ -283,6 +283,7 @@ const Community = () => {
                   onClick={() => handleSelectPost(post.id)}
                   onVote={() => handleVotePost(post.id)}
                   onTogglePin={handleTogglePin}
+                  onEdit={(p) => { setEditingPost(p); setShowNewPost(true); }}
                 />
                 {/* Engagement nudges after every 3rd post */}
                 {idx === 2 && <CommunityEngagementNudge variant="referral" />}
@@ -296,9 +297,10 @@ const Community = () => {
 
       <CommunityNewPost
         open={showNewPost}
-        onOpenChange={setShowNewPost}
+        onOpenChange={(open) => { setShowNewPost(open); if (!open) setEditingPost(null); }}
         onCreated={refetch}
         prefillDeveloper={developerFilter}
+        editPost={editingPost}
       />
     </div>
   );
