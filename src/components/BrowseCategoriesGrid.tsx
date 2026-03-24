@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { categories } from "@/components/HeroCategoryItems";
 import { cn } from "@/lib/utils";
 import { ChevronRight } from "lucide-react";
@@ -33,6 +34,7 @@ const categoryColors = [
 
 export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "" }: BrowseCategoriesGridProps) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const isRTL = i18n.dir() === "rtl";
   const q = searchQuery.toLowerCase().trim();
 
@@ -89,7 +91,7 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
                 {itemsToShow.slice(0, 4).map((item) => (
                   <button
                     key={item.id}
-                    onClick={() => onSelectItem?.({ id: item.id, nameEn: item.nameEn, nameAr: item.nameAr })}
+                    onClick={() => navigate(`/entity/${item.id}`)}
                     className={cn(
                       "w-full flex items-center justify-between gap-1 px-2 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors text-start",
                       isRTL && "flex-row-reverse text-end"

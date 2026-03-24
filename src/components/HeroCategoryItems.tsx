@@ -271,28 +271,9 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     return map[labelKey] || 'categories';
   };
 
-  const handleItemClick = (item: CategoryItem, catKey?: string) => {
+  const handleItemClick = (item: CategoryItem) => {
     onInteraction?.();
-    const category = categoryToSearchCategory(catKey || '');
-    const searchIndex = getSearchIndex();
-    const indexItem = searchIndex.find(si => si.id === item.id && si.category === category)
-      || searchIndex.find(si => si.id === item.id)
-      || searchIndex.find(si => si.name.toLowerCase().includes(item.nameEn.toLowerCase()) && si.category === category);
-    const resolvedItem = indexItem || {
-      id: item.id,
-      name: isRTL ? item.nameAr : item.nameEn,
-      category,
-      subtitle: catKey ? t(catKey) : undefined,
-      image: item.avatar,
-      rating: item.rating,
-      reviewCount: item.reviewCount,
-    } as SearchItem;
-    
-    if (onSelectItem) {
-      onSelectItem(resolvedItem);
-    } else {
-      setSelectedItem(resolvedItem);
-    }
+    navigate(`/entity/${item.id}`);
   };
 
   const handleCategoryClick = (labelKey: string) => {
