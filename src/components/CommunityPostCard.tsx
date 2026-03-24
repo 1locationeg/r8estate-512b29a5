@@ -170,6 +170,29 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             )}
           </button>
         )}
+        {/* Attached images */}
+        {(post as any).image_urls?.length > 0 && (
+          <div className={`mt-2 grid gap-1 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            {((post as any).image_urls as string[]).slice(0, 4).map((url, idx) => (
+              <div key={idx} className="rounded-lg overflow-hidden border border-border cursor-pointer" onClick={onClick}>
+                <img src={url} alt="" className="w-full h-40 object-cover" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Attached link */}
+        {(post as any).link_url && (
+          <a
+            href={(post as any).link_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border text-xs text-primary hover:underline truncate"
+          >
+            <Link2 className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">{(post as any).link_url}</span>
+          </a>
+        )}
       </div>
 
       {/* Reaction + comment count summary */}
