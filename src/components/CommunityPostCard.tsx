@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
@@ -39,9 +39,10 @@ interface Props {
   onClick: () => void;
   onVote: () => void;
   onTogglePin?: (postId: string, currentlyPinned: boolean) => void;
+  onEdit?: (post: CommunityPost) => void;
 }
 
-export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props) => {
+export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }: Props) => {
   const { t } = useTranslation();
   const { user, role } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
@@ -121,6 +122,12 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props)
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onTogglePin(post.id, post.is_pinned); }}>
                 <Pin className="w-4 h-4 mr-2" />
                 {post.is_pinned ? t("community.unpinPost", "Unpin post") : t("community.pinPost", "Pin to top")}
+              </DropdownMenuItem>
+            )}
+            {isOwnPost && onEdit && (
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(post); }}>
+                <Pencil className="w-4 h-4 mr-2" />
+                {t("community.editPost", "Edit post")}
               </DropdownMenuItem>
             )}
             <DropdownMenuSeparator />
