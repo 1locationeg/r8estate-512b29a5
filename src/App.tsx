@@ -84,10 +84,18 @@ const App = () => (
             <DynamicMeta />
             <TrackingManager />
             <BrowserRouter>
-              <GuestTimerBanner />
-              <GuestTimerExpiredModal />
-              <Suspense fallback={<RouteLoader />}>
-                <Routes>
+               <Routes>
+                 {/* Embed route — outside all layout/chrome */}
+                 <Route path="/embed/widget/:token" element={
+                   <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4"><IndexSkeleton /></div>}>
+                     <EmbedWidget />
+                   </Suspense>
+                 } />
+               </Routes>
+               <GuestTimerBanner />
+               <GuestTimerExpiredModal />
+               <Suspense fallback={<RouteLoader />}>
+                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />
                   <Route path="/forgot-password" element={<ForgotPassword />} />
