@@ -1,10 +1,12 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image as ImageIcon, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin, X, Check, Loader2, Bold, Italic, List, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
 import { ShareMenu } from "@/components/ShareMenu";
