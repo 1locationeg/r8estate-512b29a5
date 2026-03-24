@@ -60,34 +60,34 @@ interface Snapshot {
   trendingCompanies: TrendingCompany[];
 }
 
-const categoryConfigs: Record<string, Record<string, { icon: typeof MessageSquare; color: string; bg: string; gradient: string }>> = {
+const categoryConfigs: Record<string, Record<string, { icon: typeof MessageSquare; color: string; bg: string }>> = {
   admin: {
-    growth: { icon: BarChart3, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10', gradient: 'from-destructive/20 to-destructive/5' },
-    businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10', gradient: 'from-trust-excellent/20 to-trust-excellent/5' },
-    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
-    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
+    growth: { icon: BarChart3, color: 'text-primary', bg: 'bg-primary/8' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/8' },
+    businesses: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/8' },
+    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/8' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/8' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/8' },
   },
   developer: {
-    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    reputation: { icon: Star, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    engagement: { icon: Eye, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
-    projects: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10', gradient: 'from-trust-excellent/20 to-trust-excellent/5' },
-    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
-    competition: { icon: Target, color: 'text-destructive', bg: 'bg-destructive/10', gradient: 'from-destructive/20 to-destructive/5' },
+    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/8' },
+    reputation: { icon: Star, color: 'text-accent', bg: 'bg-accent/8' },
+    engagement: { icon: Eye, color: 'text-primary', bg: 'bg-primary/8' },
+    projects: { icon: Building2, color: 'text-trust-excellent', bg: 'bg-trust-excellent/8' },
+    opportunity: { icon: Lightbulb, color: 'text-primary', bg: 'bg-primary/8' },
+    competition: { icon: Target, color: 'text-destructive', bg: 'bg-destructive/8' },
   },
   buyer: {
-    market: { icon: MapPin, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
-    reviews: { icon: MessageSquare, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    deals: { icon: Trophy, color: 'text-trust-excellent', bg: 'bg-trust-excellent/10', gradient: 'from-trust-excellent/20 to-trust-excellent/5' },
-    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/10', gradient: 'from-destructive/20 to-destructive/5' },
-    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/10', gradient: 'from-accent/20 to-accent/5' },
-    discovery: { icon: Search, color: 'text-primary', bg: 'bg-primary/10', gradient: 'from-primary/20 to-primary/5' },
+    market: { icon: MapPin, color: 'text-primary', bg: 'bg-primary/8' },
+    reviews: { icon: MessageSquare, color: 'text-primary', bg: 'bg-primary/8' },
+    deals: { icon: Trophy, color: 'text-trust-excellent', bg: 'bg-trust-excellent/8' },
+    risk: { icon: Shield, color: 'text-destructive', bg: 'bg-destructive/8' },
+    engagement: { icon: Users, color: 'text-accent', bg: 'bg-accent/8' },
+    discovery: { icon: Search, color: 'text-primary', bg: 'bg-primary/8' },
   },
 };
 
-const defaultCat = { icon: Sparkles, color: 'text-muted-foreground', bg: 'bg-secondary', gradient: 'from-secondary to-secondary/50' };
+const defaultCat = { icon: Sparkles, color: 'text-muted-foreground', bg: 'bg-muted' };
 
 const InsightsPage = () => {
   const { t } = useTranslation();
@@ -106,7 +106,7 @@ const InsightsPage = () => {
   const trendConfig: Record<string, { icon: typeof TrendingUp; color: string; label: string; bgPill: string }> = {
     up: { icon: TrendingUp, color: 'text-trust-excellent', label: t('insights.trendUp', '↑ Rising'), bgPill: 'bg-trust-excellent/10' },
     down: { icon: TrendingDown, color: 'text-destructive', label: t('insights.trendDown', '↓ Declining'), bgPill: 'bg-destructive/10' },
-    stable: { icon: Minus, color: 'text-muted-foreground', label: t('insights.trendStable', '— Stable'), bgPill: 'bg-secondary' },
+    stable: { icon: Minus, color: 'text-muted-foreground', label: t('insights.trendStable', '— Stable'), bgPill: 'bg-muted' },
     alert: { icon: AlertTriangle, color: 'text-accent', label: t('insights.trendAlert', '⚠ Alert'), bgPill: 'bg-accent/10' },
   };
 
@@ -180,16 +180,16 @@ const InsightsPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header with gradient accent */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
+      {/* Header — clean, minimal */}
+      <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
           <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
             <BrandLogo size="hero" />
           </button>
           <div className="flex-1">
             <h1 className="text-lg font-bold text-foreground flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary-foreground" />
+              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Sparkles className="w-4 h-4 text-primary" />
               </div>
               {t('insights.title')}
             </h1>
@@ -220,7 +220,7 @@ const InsightsPage = () => {
           </div>
         )}
 
-        {/* ====== PLATFORM STATS — Gradient KPI Cards ====== */}
+        {/* ====== PLATFORM STATS — Clean KPI Cards ====== */}
         {snapshot && (
           <div>
             <h2 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
@@ -228,18 +228,18 @@ const InsightsPage = () => {
             </h2>
             <div className="grid grid-cols-2 gap-3">
               {[
-                { label: t('insights.totalReviews'), value: snapshot.totalAuthenticatedReviews + snapshot.totalGuestReviews, icon: MessageSquare, sub: `${snapshot.recentReviews30d} ${t('insights.thisMonth')}`, gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: snapshot.recentReviews7d > 0 ? `+${snapshot.recentReviews7d} ${t('insights.thisWeek')}` : null },
-                { label: t('insights.avgRating'), value: snapshot.averageRating, icon: Star, sub: t('insights.fromVerified', { count: snapshot.totalAuthenticatedReviews }), gradient: 'from-accent/15 via-accent/5 to-transparent', accent: 'text-accent', badge: null },
-                { label: t('insights.businesses'), value: snapshot.totalBusinessProfiles, icon: Building2, sub: t('insights.devsProjects', { devs: snapshot.parentDevelopers, projects: snapshot.childProjects }), gradient: 'from-trust-excellent/15 via-trust-excellent/5 to-transparent', accent: 'text-trust-excellent', badge: null },
-                { label: t('insights.activeUsers'), value: snapshot.totalRegisteredUsers, icon: Users, sub: t('insights.profilesViewed', { count: snapshot.buyerEngagement.totalViewed }), gradient: 'from-primary/15 via-primary/5 to-transparent', accent: 'text-primary', badge: null },
+                { label: t('insights.totalReviews'), value: snapshot.totalAuthenticatedReviews + snapshot.totalGuestReviews, icon: MessageSquare, sub: `${snapshot.recentReviews30d} ${t('insights.thisMonth')}`, accent: 'text-primary', badge: snapshot.recentReviews7d > 0 ? `+${snapshot.recentReviews7d} ${t('insights.thisWeek')}` : null },
+                { label: t('insights.avgRating'), value: snapshot.averageRating, icon: Star, sub: t('insights.fromVerified', { count: snapshot.totalAuthenticatedReviews }), accent: 'text-accent', badge: null },
+                { label: t('insights.businesses'), value: snapshot.totalBusinessProfiles, icon: Building2, sub: t('insights.devsProjects', { devs: snapshot.parentDevelopers, projects: snapshot.childProjects }), accent: 'text-trust-excellent', badge: null },
+                { label: t('insights.activeUsers'), value: snapshot.totalRegisteredUsers, icon: Users, sub: t('insights.profilesViewed', { count: snapshot.buyerEngagement.totalViewed }), accent: 'text-primary', badge: null },
               ].map(s => (
-                <div key={s.label} className={`relative overflow-hidden bg-gradient-to-br ${s.gradient} border border-border rounded-2xl p-4 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 group`}>
-                  {/* Decorative ring */}
-                  <div className="absolute -top-6 -right-6 w-16 h-16 rounded-full bg-gradient-to-br from-primary/10 to-transparent opacity-50 group-hover:opacity-80 transition-opacity" />
+                <div key={s.label} className="bg-card border border-border/60 rounded-2xl p-4 hover:border-primary/20 hover:shadow-sm transition-all duration-200 group">
                   <div className="flex items-center justify-between mb-2">
-                    <s.icon className={`w-5 h-5 ${s.accent}`} />
+                    <div className="w-8 h-8 rounded-lg bg-muted/60 flex items-center justify-center">
+                      <s.icon className={`w-4 h-4 ${s.accent}`} />
+                    </div>
                     {s.badge && (
-                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-trust-excellent/15 text-trust-excellent font-semibold animate-pulse">
+                      <span className="text-[9px] px-2 py-0.5 rounded-full bg-trust-excellent/10 text-trust-excellent font-semibold">
                         {s.badge}
                       </span>
                     )}
@@ -251,7 +251,7 @@ const InsightsPage = () => {
               ))}
             </div>
 
-            {/* Engagement Ring Stats */}
+            {/* Engagement Stats — minimal bars */}
             <div className="mt-3 grid grid-cols-4 gap-2">
               {[
                 { label: t('insights.viewed'), value: snapshot.buyerEngagement.totalViewed, icon: Eye, pct: 100 },
@@ -259,8 +259,8 @@ const InsightsPage = () => {
                 { label: t('insights.reports'), value: snapshot.buyerEngagement.totalReports, icon: BarChart3, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalReports / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
                 { label: t('insights.votes'), value: snapshot.buyerEngagement.totalVotes, icon: Award, pct: snapshot.buyerEngagement.totalViewed > 0 ? Math.round((snapshot.buyerEngagement.totalVotes / snapshot.buyerEngagement.totalViewed) * 100) : 0 },
               ].map(e => (
-                <div key={e.label} className="bg-card border border-border rounded-xl p-2.5 text-center group hover:border-primary/30 transition-colors">
-                  <e.icon className="w-3.5 h-3.5 text-primary mx-auto mb-1" />
+                <div key={e.label} className="bg-card border border-border/60 rounded-xl p-2.5 text-center hover:border-primary/20 transition-colors">
+                  <e.icon className="w-3.5 h-3.5 text-muted-foreground mx-auto mb-1" />
                   <p className="text-sm font-bold text-foreground">{e.value}</p>
                   <div className="mx-auto mt-1 mb-0.5">
                     <Progress value={e.pct} className="h-1 [&>div]:bg-primary" />
@@ -272,18 +272,18 @@ const InsightsPage = () => {
           </div>
         )}
 
-        {/* Tab switcher — pill style */}
-        <div className="flex gap-1 bg-secondary/50 rounded-2xl p-1 border border-border/50">
+        {/* Tab switcher — clean pill */}
+        <div className="flex gap-1 bg-muted/40 rounded-xl p-1 border border-border/40">
           {tabs.map(tab => {
             const Icon = tab.icon;
             return (
               <button
                 key={tab.key}
                 onClick={() => setActiveTab(tab.key)}
-                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200 ${
+                className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-lg text-xs font-semibold transition-all duration-200 ${
                   activeTab === tab.key
-                    ? 'bg-gradient-to-r from-primary to-primary/80 text-primary-foreground shadow-md shadow-primary/20'
-                    : 'text-muted-foreground hover:text-foreground'
+                    ? 'bg-primary text-primary-foreground shadow-sm'
+                    : 'text-muted-foreground hover:text-foreground hover:bg-muted/60'
                 }`}
               >
                 <Icon className="w-3.5 h-3.5" />
@@ -297,16 +297,15 @@ const InsightsPage = () => {
         {loading && !hasLoaded && (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <div className="relative">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center">
+              <div className="w-16 h-16 rounded-2xl bg-muted/60 flex items-center justify-center">
                 <Loader2 className="w-8 h-8 animate-spin text-primary" />
               </div>
-              <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 animate-ping" />
             </div>
             <p className="text-sm text-muted-foreground">{t('insights.analyzing')}</p>
           </div>
         )}
 
-        {/* ===== TAB: AI Insights — Gradient Cards ===== */}
+        {/* ===== TAB: AI Insights ===== */}
         {activeTab === 'insights' && insights.length > 0 && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
@@ -316,7 +315,7 @@ const InsightsPage = () => {
                 </h2>
                 <p className="text-[10px] text-muted-foreground">{roleLabels[insightRole]?.description}</p>
               </div>
-              <span className="text-[9px] px-2 py-1 rounded-full bg-primary/10 text-primary font-semibold">
+              <span className="text-[9px] px-2 py-1 rounded-full bg-muted text-muted-foreground font-semibold">
                 {insights.length} insights
               </span>
             </div>
@@ -331,25 +330,25 @@ const InsightsPage = () => {
               return (
                 <div
                   key={i}
-                  className={`relative overflow-hidden bg-gradient-to-br ${cat.gradient} border border-border rounded-2xl p-4 transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 group ${
+                  className={`relative bg-card border border-border/60 rounded-2xl p-4 transition-all duration-200 hover:border-primary/20 hover:shadow-sm group ${
                     isPremium ? 'opacity-60' : ''
                   }`}
                 >
-                  {/* Glow accent line */}
-                  <div className={`absolute top-0 left-0 w-1 h-full rounded-l-2xl ${cat.bg.replace('/10', '')}`} style={{ background: `hsl(var(--primary))` }} />
+                  {/* Left accent line */}
+                  <div className="absolute top-3 bottom-3 left-0 w-0.5 rounded-full bg-primary/30" />
 
                   {isPremium && (
-                    <div className="absolute inset-0 bg-background/60 backdrop-blur-sm z-10 flex items-center justify-center rounded-2xl">
+                    <div className="absolute inset-0 bg-background/70 backdrop-blur-sm z-10 flex items-center justify-center rounded-2xl">
                       <div className="text-center px-4">
-                        <Lock className="w-5 h-5 text-primary mx-auto mb-1.5" />
+                        <Lock className="w-5 h-5 text-muted-foreground mx-auto mb-1.5" />
                         <p className="text-xs font-semibold text-foreground">Premium Insight</p>
                         <p className="text-[10px] text-muted-foreground">Upgrade to unlock all insights</p>
                       </div>
                     </div>
                   )}
 
-                  <div className="flex items-start gap-3">
-                    <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${cat.gradient} border border-border/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}>
+                  <div className="flex items-start gap-3 ps-2">
+                    <div className={`w-10 h-10 rounded-xl ${cat.bg} border border-border/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform`}>
                       <CatIcon className={`w-5 h-5 ${cat.color}`} />
                     </div>
                     <div className="flex-1 min-w-0">
@@ -361,11 +360,11 @@ const InsightsPage = () => {
                       </div>
                       <p className="text-xs text-muted-foreground mb-3 leading-relaxed line-clamp-2">{insight.summary}</p>
                       <div className="flex items-center gap-3">
-                        <div className="flex items-center gap-2 bg-card/80 border border-border/50 rounded-lg px-2.5 py-1.5">
+                        <div className="flex items-center gap-2 bg-muted/50 border border-border/30 rounded-lg px-2.5 py-1.5">
                           <span className="text-[9px] text-muted-foreground font-medium">{insight.metric_label}</span>
                           <span className="text-sm font-extrabold text-foreground">{insight.metric_value}</span>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground/40 group-hover:text-primary transition-colors ml-auto" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors ml-auto" />
                       </div>
                     </div>
                   </div>
@@ -373,19 +372,17 @@ const InsightsPage = () => {
               );
             })}
 
-            {/* Upgrade CTA */}
-            <div className="relative overflow-hidden rounded-2xl border border-primary/30 bg-gradient-to-r from-primary/10 via-accent/5 to-primary/10 p-5">
-              <div className="absolute -top-8 -right-8 w-24 h-24 rounded-full bg-primary/10 blur-2xl" />
-              <div className="absolute -bottom-4 -left-4 w-16 h-16 rounded-full bg-accent/10 blur-xl" />
-              <div className="relative flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center shrink-0 shadow-lg shadow-primary/20">
-                  <Crown className="w-6 h-6 text-primary-foreground" />
+            {/* Upgrade CTA — clean, brand-aligned */}
+            <div className="rounded-2xl border border-primary/20 bg-card p-5">
+              <div className="flex items-center gap-4">
+                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center shrink-0">
+                  <Crown className="w-6 h-6 text-primary" />
                 </div>
                 <div className="flex-1">
                   <h3 className="text-sm font-bold text-foreground">Unlock Premium Insights</h3>
                   <p className="text-[11px] text-muted-foreground mt-0.5">Get deeper market intelligence, competitor analysis, and predictive trends</p>
                 </div>
-                <Button size="sm" className="shrink-0 bg-gradient-to-r from-primary to-accent hover:opacity-90 text-primary-foreground shadow-lg shadow-primary/20 gap-1.5">
+                <Button size="sm" className="shrink-0 bg-primary hover:bg-primary/90 text-primary-foreground shadow-sm gap-1.5">
                   <Gem className="w-3.5 h-3.5" />
                   Upgrade
                 </Button>
@@ -412,8 +409,8 @@ const InsightsPage = () => {
                   const pct = (cat.reviewCount / maxCatReviews) * 100;
                   const isTop = i === 0;
                   return (
-                    <div key={cat.name} className={`relative overflow-hidden border rounded-2xl p-4 transition-all duration-300 hover:shadow-lg group ${
-                      isTop ? 'bg-gradient-to-br from-accent/10 via-card to-card border-accent/30' : 'bg-card border-border hover:border-primary/20'
+                    <div key={cat.name} className={`relative border rounded-2xl p-4 transition-all duration-200 hover:shadow-sm group ${
+                      isTop ? 'bg-card border-primary/20' : 'bg-card border-border/60 hover:border-primary/15'
                     }`}>
                       {isTop && (
                         <div className="absolute top-2 right-2">
@@ -424,7 +421,7 @@ const InsightsPage = () => {
                       )}
                       <div className="flex items-center gap-3 mb-3">
                         <div className={`w-9 h-9 rounded-xl flex items-center justify-center font-bold text-sm ${
-                          isTop ? 'bg-gradient-to-br from-accent to-accent/70 text-primary-foreground' : 'bg-secondary text-muted-foreground'
+                          isTop ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'
                         }`}>
                           {i + 1}
                         </div>
@@ -443,10 +440,10 @@ const InsightsPage = () => {
                         )}
                       </div>
                       {/* Review volume bar */}
-                      <div className="relative h-2.5 w-full overflow-hidden rounded-full bg-secondary/70">
+                      <div className="relative h-2 w-full overflow-hidden rounded-full bg-muted/60">
                         <div
                           className={`h-full rounded-full transition-all duration-700 ${
-                            isTop ? 'bg-gradient-to-r from-accent to-accent/70' : 'bg-gradient-to-r from-primary to-primary/60'
+                            isTop ? 'bg-primary' : 'bg-primary/50'
                           }`}
                           style={{ width: `${pct}%` }}
                         />
@@ -460,7 +457,7 @@ const InsightsPage = () => {
                 })}
               </div>
             ) : (
-              <div className="bg-card border border-border rounded-2xl p-8 text-center">
+              <div className="bg-card border border-border/60 rounded-2xl p-8 text-center">
                 <Layers className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">No category data available yet</p>
               </div>
@@ -485,20 +482,16 @@ const InsightsPage = () => {
                 {snapshot.trendingCompanies.map((company, i) => {
                   const momPct = (company.momentum / maxMomentum) * 100;
                   const isTop3 = i < 3;
-                  const medalColors = ['from-accent to-accent/60', 'from-primary to-primary/60', 'from-trust-good to-trust-good/60'];
+                  const medalBg = ['bg-accent text-primary-foreground', 'bg-primary text-primary-foreground', 'bg-muted-foreground text-background'];
                   return (
-                    <div key={company.name} className={`relative overflow-hidden border rounded-2xl p-4 transition-all duration-300 hover:shadow-lg group ${
-                      i === 0 ? 'bg-gradient-to-br from-accent/10 via-card to-card border-accent/30' : 'bg-card border-border hover:border-primary/20'
+                    <div key={company.name} className={`relative border rounded-2xl p-4 transition-all duration-200 hover:shadow-sm group ${
+                      i === 0 ? 'bg-card border-primary/20' : 'bg-card border-border/60 hover:border-primary/15'
                     }`}>
                       <div className="flex items-start gap-3">
-                        <div className={`w-11 h-11 rounded-xl flex items-center justify-center shrink-0 ${
-                          isTop3 ? `bg-gradient-to-br ${medalColors[i]} shadow-md` : 'bg-secondary'
+                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                          isTop3 ? medalBg[i] : 'bg-muted text-muted-foreground'
                         }`}>
-                          {isTop3 ? (
-                            <span className="text-lg font-extrabold text-primary-foreground">{i + 1}</span>
-                          ) : (
-                            <span className="text-sm font-bold text-muted-foreground">{i + 1}</span>
-                          )}
+                          <span className={`font-extrabold ${isTop3 ? 'text-base' : 'text-sm'}`}>{i + 1}</span>
                         </div>
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between mb-1.5">
@@ -511,10 +504,10 @@ const InsightsPage = () => {
                             )}
                           </div>
                           {/* Momentum bar */}
-                          <div className="relative h-2 w-full overflow-hidden rounded-full bg-secondary/70 mb-2">
+                          <div className="relative h-1.5 w-full overflow-hidden rounded-full bg-muted/60 mb-2">
                             <div
                               className={`h-full rounded-full transition-all duration-700 ${
-                                i === 0 ? 'bg-gradient-to-r from-accent to-accent/60' : 'bg-gradient-to-r from-primary to-primary/50'
+                                i === 0 ? 'bg-primary' : 'bg-primary/40'
                               }`}
                               style={{ width: `${momPct}%` }}
                             />
@@ -539,22 +532,22 @@ const InsightsPage = () => {
                   );
                 })}
 
-                {/* Pro CTA at bottom of trending */}
-                <div className="rounded-2xl border border-dashed border-primary/30 p-4 flex items-center gap-3 bg-gradient-to-r from-primary/5 to-transparent">
-                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
+                {/* Pro CTA */}
+                <div className="rounded-2xl border border-dashed border-primary/20 p-4 flex items-center gap-3 bg-card">
+                  <div className="w-10 h-10 rounded-xl bg-primary/8 flex items-center justify-center shrink-0">
                     <Target className="w-5 h-5 text-primary" />
                   </div>
                   <div className="flex-1">
                     <p className="text-xs font-semibold text-foreground">Want your company here?</p>
                     <p className="text-[10px] text-muted-foreground">Boost visibility with verified reviews and engagement</p>
                   </div>
-                  <Button size="sm" variant="outline" className="shrink-0 text-xs gap-1 border-primary/30 text-primary hover:bg-primary hover:text-primary-foreground">
+                  <Button size="sm" variant="outline" className="shrink-0 text-xs gap-1 border-primary/20 text-primary hover:bg-primary hover:text-primary-foreground">
                     Learn More <ArrowRight className="w-3 h-3" />
                   </Button>
                 </div>
               </div>
             ) : (
-              <div className="bg-card border border-border rounded-2xl p-8 text-center">
+              <div className="bg-card border border-border/60 rounded-2xl p-8 text-center">
                 <Flame className="w-10 h-10 text-muted-foreground/30 mx-auto mb-2" />
                 <p className="text-sm text-muted-foreground">No trending data available yet</p>
               </div>
@@ -564,21 +557,21 @@ const InsightsPage = () => {
 
         {/* Empty state */}
         {activeTab === 'insights' && !loading && hasLoaded && insights.length === 0 && (
-          <div className="bg-gradient-to-br from-primary/5 to-card border border-border rounded-2xl p-12 text-center">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/20 flex items-center justify-center mx-auto mb-4">
+          <div className="bg-card border border-border/60 rounded-2xl p-12 text-center">
+            <div className="w-16 h-16 rounded-2xl bg-muted/60 flex items-center justify-center mx-auto mb-4">
               <Sparkles className="w-8 h-8 text-primary" />
             </div>
             <h3 className="font-bold text-foreground mb-1">No Insights Available</h3>
             <p className="text-sm text-muted-foreground mb-4">Try refreshing to generate fresh insights.</p>
-            <Button onClick={() => fetchInsights(false)} className="bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg shadow-primary/20">
+            <Button onClick={() => fetchInsights(false)} className="bg-primary text-primary-foreground shadow-sm">
               <RefreshCw className="w-4 h-4 me-1" /> Generate Insights
             </Button>
           </div>
         )}
 
-        {/* Business Hierarchy — Visual */}
+        {/* Business Hierarchy */}
         {snapshot && (snapshot.parentDevelopers > 0 || snapshot.childProjects > 0) && (
-          <div className="bg-gradient-to-br from-card to-secondary/30 border border-border rounded-2xl p-5">
+          <div className="bg-card border border-border/60 rounded-2xl p-5">
             <h3 className="text-sm font-bold text-foreground mb-4 flex items-center gap-2">
               <Building2 className="w-4 h-4 text-primary" /> Business Hierarchy
             </h3>
@@ -588,7 +581,7 @@ const InsightsPage = () => {
                 { label: 'Child Projects', value: snapshot.childProjects, icon: Layers, color: 'text-accent' },
                 { label: 'Total Profiles', value: snapshot.totalBusinessProfiles, icon: Users, color: 'text-trust-excellent' },
               ].map(h => (
-                <div key={h.label} className="text-center p-3 rounded-xl bg-card/60 border border-border/50">
+                <div key={h.label} className="text-center p-3 rounded-xl bg-muted/30 border border-border/30">
                   <h.icon className={`w-4 h-4 ${h.color} mx-auto mb-1.5`} />
                   <p className="text-xl font-extrabold text-foreground">{h.value}</p>
                   <p className="text-[9px] text-muted-foreground leading-tight mt-0.5">{h.label}</p>
