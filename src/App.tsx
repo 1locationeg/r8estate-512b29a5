@@ -46,6 +46,7 @@ const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
 const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
+const Categories = lazy(() => import("./pages/Categories"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -135,6 +136,7 @@ const AppContent = () => {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/deal-watch" element={<DealWatch />} />
           <Route path="/launch-watch" element={<LaunchWatch />} />
+          <Route path="/categories" element={<Categories />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
