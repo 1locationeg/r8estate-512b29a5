@@ -69,10 +69,12 @@ const Index = () => {
     }
   }, [user, isLoading, role]);
 
-  // Handle navigation from /categories page — open item detail
+  // Handle navigation from /categories page — open item detail or scroll to category
   useEffect(() => {
-    const state = location.state as { openItemId?: string } | null;
-    if (state?.openItemId) {
+    const state = location.state as { openItemId?: string; scrollToCategory?: number } | null;
+    if (!state) return;
+
+    if (state.openItemId) {
       const searchIndex = getSearchIndex();
       const found = searchIndex.find(si => si.id === state.openItemId);
       if (found) {
@@ -80,9 +82,23 @@ const Index = () => {
         setActiveView(null);
         setSelectedDeveloperId(null);
       }
-      // Clear state so it doesn't re-trigger
-      navigate(location.pathname, { replace: true, state: {} });
     }
+
+    if (typeof state.scrollToCategory === "number") {
+      const { categories } = require("@/components/HeroCategoryItems");
+      const cat = categories[state.scrollToCategory];
+      if (cat) {
+        setExternalCategory(cat.labelKey);
+        setSpecialViewItem(null);
+        setActiveView(null);
+        setSelectedDeveloperId(null);
+        setTimeout(() => {
+          document.querySelector('[data-hero-categories]')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 150);
+      }
+    }
+
+    navigate(location.pathname, { replace: true, state: {} });
   }, [location.state]);
 
 
