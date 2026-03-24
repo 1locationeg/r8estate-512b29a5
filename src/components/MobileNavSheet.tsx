@@ -37,7 +37,7 @@ export const MobileNavSheet = ({
     { label: t("nav.home"), href: "/" },
     { label: t("nav.categories"), href: "/directory" },
     { label: t("nav.developers"), href: "#" },
-    { label: t("nav.reviews"), href: "/reviews" },
+    { label: t("nav.projects"), href: "/reviews" },
     { label: t("nav.about"), href: "#" },
   ];
 
