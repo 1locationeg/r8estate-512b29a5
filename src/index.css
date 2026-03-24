@@ -62,6 +62,11 @@
     /* Brand red #ed1b40 for accents */
     --brand-red: 350 85% 52%;
 
+    /* Business green #EAF3DE / #3B6D11 / #27500A */
+    --business: 93 40% 90%;
+    --business-foreground: 93 66% 17%;
+    --business-border: 93 72% 25%;
+
     --radius: 0.75rem;
   }
 
@@ -107,6 +112,10 @@
     --hero-gradient-end: 203 81% 28%;
 
     --brand-red: 350 85% 58%;
+
+    --business: 93 40% 90%;
+    --business-foreground: 93 66% 17%;
+    --business-border: 93 72% 25%;
   }
 }
 

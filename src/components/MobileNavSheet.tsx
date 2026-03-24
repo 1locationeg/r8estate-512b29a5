@@ -150,10 +150,10 @@ export const MobileNavSheet = ({
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold"
+                  className="w-full gap-2 border-business-border text-business-foreground bg-business hover:bg-business/80 font-semibold"
                   onClick={() => { navigate("/auth"); onOpenChange(false); }}
                 >
-                  <Building2 className="w-4 h-4" />
+                  <Building2 className="w-4 h-4 text-business-border" />
                   {t("nav.forBusinesses")} →
                 </Button>
               </>
@@ -167,10 +167,10 @@ export const MobileNavSheet = ({
                 </Button>
                 <Button
                   variant="outline"
-                  className="w-full gap-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground font-semibold"
+                  className="w-full gap-2 border-business-border text-business-foreground bg-business hover:bg-business/80 font-semibold"
                   onClick={() => { navigate("/auth"); onOpenChange(false); }}
                 >
-                  <Building2 className="w-4 h-4" />
+                  <Building2 className="w-4 h-4 text-business-border" />
                   {t("nav.forBusinesses")} →
                 </Button>
               </>

@@ -22,11 +22,11 @@ export const ViewToggle = ({ onViewChange, defaultView = "buyers" }: ViewToggleP
         onClick={() => handleToggle("industry")}
         className={`flex items-center gap-1.5 px-4 py-2 rounded-full font-semibold text-sm transition-all ${
           activeView === "industry"
-            ? "bg-primary text-primary-foreground shadow-md"
+            ? "bg-business border border-business-border text-business-foreground shadow-md"
             : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        <Building2 className="w-3.5 h-3.5" />
+        <Building2 className="w-3.5 h-3.5 text-business-border" />
         <span>Business</span>
       </button>
     </div>

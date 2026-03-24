@@ -66,24 +66,24 @@ const BuyerOverview = () => {
 
       {/* Register Your Business CTA - only for non-developer users */}
       {role !== 'business' && role !== 'admin' && (
-      <div className="mb-8 relative overflow-hidden rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 via-accent/5 to-primary/10">
+      <div className="mb-8 relative overflow-hidden rounded-2xl border border-business-border/30 bg-business">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-primary rounded-full blur-3xl" />
+          <div className="absolute -top-10 -right-10 w-40 h-40 bg-business-border rounded-full blur-3xl" />
         </div>
         <div className="relative flex flex-col sm:flex-row items-center gap-4 p-5 sm:p-6">
-          <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-            <Building2 className="w-6 h-6 text-primary" />
+          <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-business-border/10 flex items-center justify-center">
+            <Building2 className="w-6 h-6 text-business-border" />
           </div>
           <div className="flex-1 text-center sm:text-start">
-            <h3 className="font-bold text-foreground text-base">Are you a developer or business?</h3>
-            <p className="text-sm text-muted-foreground mt-0.5">
+            <h3 className="font-bold text-business-foreground text-base">Are you a developer or business?</h3>
+            <p className="text-sm text-business-foreground/70 mt-0.5">
               Upgrade your account to manage your business profile, respond to reviews, and build trust with buyers.
             </p>
           </div>
           <Button
             onClick={handleUpgradeToBusiness}
             disabled={isUpgrading}
-            className="flex-shrink-0 gap-2"
+            className="flex-shrink-0 gap-2 bg-business-border text-white hover:bg-business-border/90"
           >
             {isUpgrading ? (
               <Loader2 className="w-4 h-4 animate-spin" />
