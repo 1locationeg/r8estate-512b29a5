@@ -17,6 +17,7 @@ interface ProjectJourneyWidgetProps {
   updatedAt?: string;
   theme?: "dark" | "light";
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
 const sentimentConfig: Record<Sentiment, { icon: typeof CheckCircle; color: string; label: string }> = {

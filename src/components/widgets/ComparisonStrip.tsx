@@ -6,6 +6,7 @@ interface ComparisonStripProps {
   marketAverage?: number;
   theme?: "dark" | "light";
   ctaUrl?: string;
+  onCtaClick?: () => void;
 }
 
 const ScoreBar = ({
@@ -39,6 +40,7 @@ export const ComparisonStrip = ({
   marketAverage = 3.5,
   theme = "dark",
   ctaUrl,
+  onCtaClick,
 }: ComparisonStripProps) => {
   const isDark = theme === "dark";
 
@@ -58,6 +60,7 @@ export const ComparisonStrip = ({
             href={ctaUrl}
             target="_blank"
             rel="noopener noreferrer"
+            onClick={onCtaClick}
             className="flex items-center gap-1 text-[10px] font-semibold"
             style={{ color: "#fac417" }}
           >

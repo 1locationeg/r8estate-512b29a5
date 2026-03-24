@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Plus, Copy, Eye, Trash2, Code, ExternalLink } from "lucide-react";
+import { Plus, Copy, Eye, Trash2, Code, ExternalLink, BarChart3 } from "lucide-react";
 import { MicroBadge } from "@/components/widgets/MicroBadge";
 import { EntityProfileWidget } from "@/components/widgets/EntityProfileWidget";
 import { ProjectJourneyWidget } from "@/components/widgets/ProjectJourneyWidget";
@@ -33,6 +33,7 @@ const ENTITY_TYPES = [
 const AdminWidgets = () => {
   const [widgets, setWidgets] = useState<any[]>([]);
   const [businesses, setBusinesses] = useState<any[]>([]);
+  const [analytics, setAnalytics] = useState<Record<string, { impressions: number; clicks: number }>>({});
   const [loading, setLoading] = useState(true);
   const [showCreate, setShowCreate] = useState(false);
   const [previewToken, setPreviewToken] = useState<string | null>(null);
@@ -67,9 +68,24 @@ const AdminWidgets = () => {
     setBusinesses(data || []);
   };
 
+  const fetchAnalytics = async () => {
+    const { data } = await supabase
+      .from("widget_analytics")
+      .select("embed_token, event_type");
+    if (!data) return;
+    const map: Record<string, { impressions: number; clicks: number }> = {};
+    data.forEach((row: any) => {
+      if (!map[row.embed_token]) map[row.embed_token] = { impressions: 0, clicks: 0 };
+      if (row.event_type === "impression") map[row.embed_token].impressions++;
+      else if (row.event_type === "click") map[row.embed_token].clicks++;
+    });
+    setAnalytics(map);
+  };
+
   useEffect(() => {
     fetchWidgets();
     fetchBusinesses();
+    fetchAnalytics();
   }, []);
 
   const handleCreate = async () => {
@@ -165,15 +181,21 @@ const AdminWidgets = () => {
               <th className="text-left px-4 py-3 font-medium">Entity</th>
               <th className="text-left px-4 py-3 font-medium">Entity Type</th>
               <th className="text-left px-4 py-3 font-medium">Status</th>
+              <th className="text-left px-4 py-3 font-medium">
+                <div className="flex items-center gap-1"><BarChart3 size={12} /> Impressions</div>
+              </th>
+              <th className="text-left px-4 py-3 font-medium">
+                <div className="flex items-center gap-1"><BarChart3 size={12} /> Clicks</div>
+              </th>
               <th className="text-left px-4 py-3 font-medium">Created</th>
               <th className="text-right px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={6} className="text-center py-8 text-muted-foreground">Loading...</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">Loading...</td></tr>
             ) : widgets.length === 0 ? (
-              <tr><td colSpan={6} className="text-center py-8 text-muted-foreground">No widgets yet. Create your first one!</td></tr>
+              <tr><td colSpan={8} className="text-center py-8 text-muted-foreground">No widgets yet. Create your first one!</td></tr>
             ) : (
               widgets.map((w) => (
                 <tr key={w.id} className="border-b last:border-0 hover:bg-muted/30">
@@ -186,6 +208,12 @@ const AdminWidgets = () => {
                   <td className="px-4 py-3 capitalize text-muted-foreground">{w.entity_type}</td>
                   <td className="px-4 py-3">
                     <Switch checked={w.is_active} onCheckedChange={() => toggleActive(w.id, w.is_active)} />
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground font-mono text-xs">
+                    {(analytics[w.embed_token]?.impressions || 0).toLocaleString()}
+                  </td>
+                  <td className="px-4 py-3 text-muted-foreground font-mono text-xs">
+                    {(analytics[w.embed_token]?.clicks || 0).toLocaleString()}
                   </td>
                   <td className="px-4 py-3 text-muted-foreground">
                     {new Date(w.created_at).toLocaleDateString()}

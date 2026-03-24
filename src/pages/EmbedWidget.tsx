@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 import { useWidgetData } from "@/hooks/useWidgetData";
+import { useWidgetAnalytics } from "@/hooks/useWidgetAnalytics";
 import { MicroBadge } from "@/components/widgets/MicroBadge";
 import { EntityProfileWidget } from "@/components/widgets/EntityProfileWidget";
 import { ProjectJourneyWidget } from "@/components/widgets/ProjectJourneyWidget";
@@ -10,6 +11,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 const EmbedWidget = () => {
   const { token } = useParams<{ token: string }>();
   const { config, entityName, score, reviewCount, recentReviews, isLoading, error } = useWidgetData(token || "");
+  const { trackClick } = useWidgetAnalytics(config.id, config.embed_token);
 
   if (isLoading) {
     return (
@@ -44,6 +46,7 @@ const EmbedWidget = () => {
           isVerified={settings.show_verified !== false}
           theme={theme}
           ctaUrl={ctaUrl}
+          onCtaClick={trackClick}
         />
       );
     case "entity_profile":
@@ -57,6 +60,7 @@ const EmbedWidget = () => {
           recentReviews={recentReviews}
           theme={theme}
           ctaUrl={ctaUrl}
+          onCtaClick={trackClick}
         />
       );
     case "project_journey":
@@ -68,6 +72,7 @@ const EmbedWidget = () => {
           reviewCount={reviewCount}
           theme={theme}
           ctaUrl={ctaUrl}
+          onCtaClick={trackClick}
         />
       );
     case "comparison_strip":
@@ -77,6 +82,7 @@ const EmbedWidget = () => {
           score={score}
           theme={theme}
           ctaUrl={ctaUrl}
+          onCtaClick={trackClick}
         />
       );
     case "review_us":
@@ -85,6 +91,7 @@ const EmbedWidget = () => {
           entityName={entityName}
           theme={theme}
           ctaUrl={ctaUrl}
+          onCtaClick={trackClick}
         />
       );
     default:
