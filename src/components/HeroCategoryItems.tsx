@@ -245,6 +245,7 @@ interface HeroCategoryItemsProps {
 
 export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectItem }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
+  const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
   const isRTL = i18n.language === "ar";
