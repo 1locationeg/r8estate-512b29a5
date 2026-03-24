@@ -235,7 +235,9 @@ export type Database = {
           created_at: string
           developer_id: string | null
           id: string
+          image_urls: string[] | null
           is_pinned: boolean
+          link_url: string | null
           reply_count: number
           title: string
           updated_at: string
@@ -248,7 +250,9 @@ export type Database = {
           created_at?: string
           developer_id?: string | null
           id?: string
+          image_urls?: string[] | null
           is_pinned?: boolean
+          link_url?: string | null
           reply_count?: number
           title: string
           updated_at?: string
@@ -261,7 +265,9 @@ export type Database = {
           created_at?: string
           developer_id?: string | null
           id?: string
+          image_urls?: string[] | null
           is_pinned?: boolean
+          link_url?: string | null
           reply_count?: number
           title?: string
           updated_at?: string

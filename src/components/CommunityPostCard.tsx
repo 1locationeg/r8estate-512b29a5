@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
@@ -39,9 +39,10 @@ interface Props {
   onClick: () => void;
   onVote: () => void;
   onTogglePin?: (postId: string, currentlyPinned: boolean) => void;
+  onEdit?: (post: CommunityPost) => void;
 }
 
-export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props) => {
+export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }: Props) => {
   const { t } = useTranslation();
   const { user, role } = useAuth();
   const [isSaved, setIsSaved] = useState(false);
@@ -123,6 +124,12 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props)
                 {post.is_pinned ? t("community.unpinPost", "Unpin post") : t("community.pinPost", "Pin to top")}
               </DropdownMenuItem>
             )}
+            {isOwnPost && onEdit && (
+              <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(post); }}>
+                <Pencil className="w-4 h-4 mr-2" />
+                {t("community.editPost", "Edit post")}
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSeparator />
             {!isOwnPost && (
               <>
@@ -162,6 +169,29 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin }: Props)
               <p className="text-xs text-primary font-medium mt-2">{t("community.beFirstAnswer", "Be the first to answer!")}</p>
             )}
           </button>
+        )}
+        {/* Attached images */}
+        {(post as any).image_urls?.length > 0 && (
+          <div className={`mt-2 grid gap-1 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+            {((post as any).image_urls as string[]).slice(0, 4).map((url, idx) => (
+              <div key={idx} className="rounded-lg overflow-hidden border border-border cursor-pointer" onClick={onClick}>
+                <img src={url} alt="" className="w-full h-40 object-cover" loading="lazy" />
+              </div>
+            ))}
+          </div>
+        )}
+        {/* Attached link */}
+        {(post as any).link_url && (
+          <a
+            href={(post as any).link_url}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-2 mt-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border text-xs text-primary hover:underline truncate"
+          >
+            <Link2 className="w-3.5 h-3.5 flex-shrink-0" />
+            <span className="truncate">{(post as any).link_url}</span>
+          </a>
         )}
       </div>
 

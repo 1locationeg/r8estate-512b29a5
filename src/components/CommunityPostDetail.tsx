@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image, Sticker, Type, Link2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -457,6 +457,28 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
         <div className="px-4 pb-3">
           <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
           <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{post.body}</p>
+          {/* Attached images */}
+          {(post as any).image_urls?.length > 0 && (
+            <div className={`mt-3 grid gap-1.5 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
+              {((post as any).image_urls as string[]).map((url: string, idx: number) => (
+                <div key={idx} className="rounded-lg overflow-hidden border border-border">
+                  <img src={url} alt="" className="w-full max-h-80 object-cover" loading="lazy" />
+                </div>
+              ))}
+            </div>
+          )}
+          {/* Attached link */}
+          {(post as any).link_url && (
+            <a
+              href={(post as any).link_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 mt-3 px-3 py-2.5 rounded-lg bg-secondary/50 border border-border text-sm text-primary hover:underline"
+            >
+              <Link2 className="w-4 h-4 flex-shrink-0" />
+              <span className="truncate">{(post as any).link_url}</span>
+            </a>
+          )}
         </div>
 
         <PostReactionSummary postId={post.id} replyCount={post.reply_count} />

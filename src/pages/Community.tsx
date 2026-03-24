@@ -9,7 +9,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CommunityPostCard } from "@/components/CommunityPostCard";
 import { CommunityPostDetail } from "@/components/CommunityPostDetail";
 import { CommunityNewPost } from "@/components/CommunityNewPost";
-import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory } from "@/hooks/useCommunity";
+import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory, type CommunityPost } from "@/hooks/useCommunity";
 import { CommunityEngagementNudge } from "@/components/CommunityEngagementNudge";
 import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
@@ -24,6 +24,7 @@ const Community = () => {
   const [sortBy, setSortBy] = useState<'trending' | 'newest' | 'discussed'>('newest');
   const [searchQuery, setSearchQuery] = useState("");
   const [showNewPost, setShowNewPost] = useState(false);
+  const [editingPost, setEditingPost] = useState<CommunityPost | null>(null);
   const [selectedPostId, setSelectedPostId] = useState<string | null>(searchParams.get("post"));
   const developerFilter = searchParams.get("developer") || undefined;
 
@@ -282,6 +283,7 @@ const Community = () => {
                   onClick={() => handleSelectPost(post.id)}
                   onVote={() => handleVotePost(post.id)}
                   onTogglePin={handleTogglePin}
+                  onEdit={(p) => { setEditingPost(p); setShowNewPost(true); }}
                 />
                 {/* Engagement nudges after every 3rd post */}
                 {idx === 2 && <CommunityEngagementNudge variant="referral" />}
@@ -295,9 +297,10 @@ const Community = () => {
 
       <CommunityNewPost
         open={showNewPost}
-        onOpenChange={setShowNewPost}
+        onOpenChange={(open) => { setShowNewPost(open); if (!open) setEditingPost(null); }}
         onCreated={refetch}
         prefillDeveloper={developerFilter}
+        editPost={editingPost}
       />
     </div>
   );

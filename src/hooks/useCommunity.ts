@@ -242,17 +242,29 @@ export function useCommunityActions() {
   const { user } = useAuth();
   const { toast } = useToast();
 
-  const createPost = async (title: string, body: string, category: CommunityPostCategory, developerId?: string) => {
+  const createPost = async (title: string, body: string, category: CommunityPostCategory, developerId?: string, imageUrls?: string[], linkUrl?: string) => {
     if (!user) { toast({ title: "Sign in required", description: "Please sign in to post.", variant: "destructive" }); return null; }
     const { data, error } = await supabase
       .from("community_posts")
-      .insert({ user_id: user.id, title, body, category, developer_id: developerId || null })
+      .insert({ user_id: user.id, title, body, category, developer_id: developerId || null, image_urls: imageUrls || [], link_url: linkUrl || null } as any)
       .select()
       .single();
     if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
-    // Track engagement for gamification
     trackBuyerEngagement(user.id, 'community_posts');
     showCoinToast('community_post');
+    return data;
+  };
+
+  const updatePost = async (postId: string, updates: { title?: string; body?: string; category?: CommunityPostCategory; image_urls?: string[]; link_url?: string | null }) => {
+    if (!user) { toast({ title: "Sign in required", variant: "destructive" }); return null; }
+    const { data, error } = await supabase
+      .from("community_posts")
+      .update({ ...updates, updated_at: new Date().toISOString() } as any)
+      .eq("id", postId)
+      .select()
+      .single();
+    if (error) { toast({ title: "Error", description: error.message, variant: "destructive" }); return null; }
+    toast({ title: "Post updated" });
     return data;
   };
 
@@ -323,5 +335,5 @@ export function useCommunityActions() {
     }
   };
 
-  return { createPost, createReply, toggleVote, togglePin };
+  return { createPost, createReply, toggleVote, togglePin, updatePost };
 }
