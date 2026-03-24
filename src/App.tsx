@@ -98,6 +98,7 @@ const App = () => (
               <AppContent />
             </BrowserRouter>
           </GuestTimerProvider>
+          </BusinessLogoProvider>
         </AuthProvider>
       </CookieConsentProvider>
     </TooltipProvider>
