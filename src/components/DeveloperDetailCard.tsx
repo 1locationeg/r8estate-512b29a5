@@ -19,6 +19,7 @@ import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useReviewability } from "@/hooks/useReviewability";
 import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 import {
   Select,
   SelectContent,
@@ -41,6 +42,8 @@ export const DeveloperDetailCard = ({
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { getLogoOverride } = useBusinessLogo();
+  const logoSrc = getLogoOverride(developer.id, developer.name) || developer.logo;
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -69,11 +72,11 @@ export const DeveloperDetailCard = ({
     name: developer.name,
     category: 'developers' as const,
     subtitle: developer.location,
-    image: developer.logo,
+    image: logoSrc,
     rating: developer.rating,
     reviewCount: developer.reviewCount,
     meta: { trustScore: developer.trustScore, verified: developer.verified }
-  }), [developer]);
+  }), [developer, logoSrc]);
 
   const getTrustScoreColor = (score: number) => {
     if (score >= 66) return "text-trust-excellent";
