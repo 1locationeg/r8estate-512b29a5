@@ -69,7 +69,23 @@ const Index = () => {
     }
   }, [user, isLoading, role]);
 
-  // Auto-scroll to detail section when item is selected
+  // Handle navigation from /categories page — open item detail
+  useEffect(() => {
+    const state = location.state as { openItemId?: string } | null;
+    if (state?.openItemId) {
+      const searchIndex = getSearchIndex();
+      const found = searchIndex.find(si => si.id === state.openItemId);
+      if (found) {
+        setSpecialViewItem(found);
+        setActiveView(null);
+        setSelectedDeveloperId(null);
+      }
+      // Clear state so it doesn't re-trigger
+      navigate(location.pathname, { replace: true, state: {} });
+    }
+  }, [location.state]);
+
+
   useEffect(() => {
     if (specialViewItem || selectedDeveloper) {
       setTimeout(() => {
