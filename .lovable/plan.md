@@ -1,30 +1,35 @@
 
 
-## Plan: Categories Button Opens Full Category Grid with Businesses
+## Plan: Dedicated Entity/Business Pages
 
-### What's happening now
-The "Categories" button in the bottom nav scrolls to `HeroCategoryItems` — a horizontal scrollable tab bar. This isn't what you want.
-
-### What we'll build
-When a user taps "Categories" in the bottom nav, they'll see the **BrowseCategoriesGrid** — a full grid showing all 18 categories (Units, Apps, Shares, Platforms, Brokers, Exhibitions, Channels, Law Firms, Valuation, Training, Auctions, Mortgage, Research, Tax, Management, Leasing, Blockchain, Lands) as cards, with the businesses/items listed under each category.
+### What's needed
+Currently, clicking a business/entity item opens an inline detail section or modal on the homepage. The user wants every entity to have its own URL page (e.g., `/entity/nawy`, `/entity/studio`) so users can navigate directly to any business.
 
 ### Changes
 
-**1. Create a dedicated `/categories` page**
-- New file: `src/pages/Categories.tsx`
-- Renders a clean header with back button + "Categories" title centered
-- Uses the existing `BrowseCategoriesGrid` component
-- When a user taps a sub-item, it navigates back to home and opens the `ItemDetailSection` for that item
-- When a user taps a category header, it navigates home and scrolls to that category in `HeroCategoryItems`
+**1. Create `/entity/:id` page (`src/pages/EntityPage.tsx`)**
+- Takes the entity `id` from URL params
+- Looks up the entity in the search index (`getSearchIndex()`) by ID
+- Also checks `categories` from `HeroCategoryItems` to find items not in the search index (covers all items)
+- Renders a full-page layout: back button header, then the existing `ItemDetailSection` component with the resolved `SearchItem`
+- Shows a "Not Found" state if no entity matches
 
-**2. Update `BottomNav.tsx`**
-- Change the Categories button to `navigate("/categories")` instead of scrolling to the hero section
-- Highlight it as active when on `/categories`
+**2. Add route in `App.tsx`**
+- Add `<Route path="/entity/:id" element={<EntityPage />} />`
+- Lazy-load the new page
 
-**3. Update `src/App.tsx`**
-- Add route: `/categories` → `Categories` page
+**3. Update `BrowseCategoriesGrid.tsx` — navigate to entity page on item click**
+- Instead of calling `onSelectItem` callback, use `navigate(`/entity/${item.id}`)` directly
+- Keep `onSelectItem` as optional override for backward compatibility
+
+**4. Update `HeroCategoryItems.tsx` — item clicks navigate to entity page**
+- When a category item is clicked, navigate to `/entity/${item.id}` instead of opening inline detail
+
+**5. Update `HeroSearchBar.tsx` / `HeroCategoryLinks` — search result clicks navigate to entity page**
+- When selecting a search result that isn't a developer, navigate to `/entity/${item.id}`
 
 ### Technical details
-- The `BrowseCategoriesGrid` already imports `categories` from `HeroCategoryItems` and renders all 18 segments with their items — we reuse it as-is
-- Navigation from the categories page back to item details uses URL params or navigation state
+- The `ItemDetailSection` already accepts a `SearchItem` and renders the full trust score, reviews, metrics, and actions — we reuse it as the page body
+- For items that exist in `categories` (HeroCategoryItems) but not in `getSearchIndex()`, we construct a `SearchItem` from the `CategoryItem` data
+- The entity page will include proper back navigation and the standard navbar/bottom nav from the app shell
 
