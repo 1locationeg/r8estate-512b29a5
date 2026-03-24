@@ -19,6 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { generateAvatar } from "@/lib/avatarUtils";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 interface DeveloperDetailModalProps {
   developer: Developer | null;
@@ -28,6 +29,7 @@ interface DeveloperDetailModalProps {
 
 export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDetailModalProps) => {
   const { t } = useTranslation();
+  const { getLogoOverride } = useBusinessLogo();
   const { toast } = useToast();
   const navigate = useNavigate();
   const { user, signInWithGoogle } = useAuth();
@@ -84,7 +86,7 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
           <DialogTitle className="text-2xl font-bold flex items-center gap-3">
             <div className="w-12 h-12 rounded-full overflow-hidden bg-secondary flex-shrink-0">
               <img
-                src={developer.logo}
+                src={getLogoOverride(developer.id, developer.name) || developer.logo}
                 alt={developer.name}
                 className="w-full h-full object-cover"
                 onError={(e) => { (e.target as HTMLImageElement).src = generateAvatar(developer.name, "developer"); }}
