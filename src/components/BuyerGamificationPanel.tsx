@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { BUYER_TIERS, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
+import { BUYER_TIERS, POINTS_PER_ACTION, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Flame } from 'lucide-react';
+import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Flame, Coins } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 import { toast } from '@/hooks/use-toast';
 
@@ -36,8 +36,8 @@ export const BuyerGamificationPanel = () => {
       // Show toast for each newly earned badge
       fresh.forEach((badge) => {
         toast({
-          title: `🏆 Badge Earned: ${badge.name}`,
-          description: `${badge.description} (+${badge.points} pts)`,
+          title: `🪙 Badge Earned: ${badge.name}`,
+          description: `${badge.description} (+${badge.points} coins)`,
         });
       });
     }
@@ -95,8 +95,8 @@ export const BuyerGamificationPanel = () => {
                 <p className="text-sm font-semibold text-foreground">{badge.name}</p>
                 <p className="text-xs text-muted-foreground">{badge.description}</p>
               </div>
-              <Badge className="bg-accent text-accent-foreground text-xs flex-shrink-0">
-                +{badge.points} pts
+              <Badge className="bg-coin/20 text-coin-foreground text-xs flex-shrink-0 gap-1">
+                <Coins className="w-3 h-3 text-coin" />+{badge.points}
               </Badge>
             </div>
           </div>
@@ -107,7 +107,10 @@ export const BuyerGamificationPanel = () => {
           <span className="text-4xl">{currentTier.emoji}</span>
           <div>
             <h2 className="text-2xl font-bold text-foreground">{currentTier.name}</h2>
-            <p className="text-sm text-muted-foreground">{totalPoints} points earned</p>
+            <div className="flex items-center gap-1.5 mt-0.5">
+              <Coins className="w-4 h-4 text-coin" />
+              <span className="text-sm font-bold text-coin-foreground">{totalPoints} coins</span>
+            </div>
           </div>
           <div className="ml-auto text-right">
             <div className="flex items-center gap-1 text-accent">
@@ -290,7 +293,7 @@ function BadgeCard({ badge, earned }: { badge: BuyerBadgeDef; earned: boolean })
       </div>
       <p className="text-xs font-semibold text-foreground leading-tight">{badge.name}</p>
       <p className="text-[10px] text-muted-foreground mt-0.5">{badge.description}</p>
-      <Badge variant="outline" className="mt-1 text-[10px]">{badge.points} pts</Badge>
+      <Badge variant="outline" className="mt-1 text-[10px] gap-1"><Coins className="w-3 h-3 text-coin" />{badge.points}</Badge>
     </div>
   );
 }
@@ -306,6 +309,9 @@ function MissionCard({ progress, onAction }: { progress: BuyerMissionProgress; o
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-1">
           <p className="text-sm font-semibold text-foreground">{mission.title}</p>
+          <span className="flex items-center gap-0.5 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground text-[10px] font-bold flex-shrink-0">
+            <Coins className="w-3 h-3 text-coin" />+{mission.points}
+          </span>
           {completed && <Badge className="bg-trust-excellent text-white text-[10px]">Done</Badge>}
         </div>
         <p className="text-xs text-muted-foreground mb-2">{mission.description}</p>

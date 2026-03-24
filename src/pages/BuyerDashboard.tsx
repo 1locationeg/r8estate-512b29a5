@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark } from 'lucide-react';
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -18,6 +18,7 @@ import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { ReferralWidget } from '@/components/ReferralWidget';
 import { SavedSearchWidget } from '@/components/SavedSearchWidget';
 import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
+import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -114,17 +115,29 @@ const BuyerOverview = () => {
         <div className="lg:col-span-2">
           <h3 className="text-lg font-semibold text-foreground mb-3">Quick Actions</h3>
           <div className="grid sm:grid-cols-3 gap-3">
-            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2" onClick={() => navigate('/')}>
+            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/')}>
+              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+                <Coins className="w-3 h-3 text-coin" />
+                <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.developer_view}</span>
+              </div>
               <Search className="w-5 h-5 text-primary" />
               <span className="font-semibold text-sm">Search Developers</span>
               <span className="text-xs text-muted-foreground text-start">Find trusted developers</span>
             </Button>
-            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2" onClick={() => navigate('/directory')}>
+            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/directory')}>
+              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+                <Coins className="w-3 h-3 text-coin" />
+                <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.developer_view}</span>
+              </div>
               <Building2 className="w-5 h-5 text-primary" />
               <span className="font-semibold text-sm">Developer Directory</span>
               <span className="text-xs text-muted-foreground text-start">Browse all developers</span>
             </Button>
-            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2" onClick={() => navigate('/buyer/saved')}>
+            <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/buyer/saved')}>
+              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+                <Coins className="w-3 h-3 text-coin" />
+                <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.project_save}</span>
+              </div>
               <Heart className="w-5 h-5 text-brand-red" />
               <span className="font-semibold text-sm">Saved Projects</span>
               <span className="text-xs text-muted-foreground text-start">View your saved items</span>

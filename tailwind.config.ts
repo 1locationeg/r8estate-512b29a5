@@ -70,6 +70,10 @@ export default {
           foreground: "hsl(var(--business-foreground))",
           border: "hsl(var(--business-border))",
         },
+        coin: {
+          DEFAULT: "hsl(var(--coin))",
+          foreground: "hsl(var(--coin-foreground))",
+        },
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
@@ -118,6 +122,11 @@ export default {
           "0%, 100%": { boxShadow: "0 0 8px 0 hsl(var(--primary) / 0.3)" },
           "50%": { boxShadow: "0 0 16px 4px hsl(var(--primary) / 0.15)" },
         },
+        "coin-pop": {
+          "0%": { transform: "scale(0.5) rotate(-10deg)", opacity: "0" },
+          "50%": { transform: "scale(1.2) rotate(5deg)", opacity: "1" },
+          "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
@@ -127,6 +136,7 @@ export default {
         "bounce-in": "bounce-in 0.6s ease-out",
         "shimmer": "shimmer 3s ease-in-out infinite",
         "pulse-glow": "pulse-glow 3s ease-in-out infinite",
+        "coin-pop": "coin-pop 0.6s ease-out",
       },
     },
   },

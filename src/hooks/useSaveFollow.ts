@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
+import { showCoinToast } from "@/components/CoinEarnedToast";
 
 export function useSavedItem(itemId: string, itemType: string) {
   const { user } = useAuth();
@@ -44,6 +45,7 @@ export function useSavedItem(itemId: string, itemType: string) {
         });
         setIsSaved(true);
         toast({ title: "Saved!", description: `${itemName} added to your saved items.` });
+        showCoinToast('project_save');
       }
       setLoading(false);
     },

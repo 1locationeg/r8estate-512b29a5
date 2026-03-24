@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import { BrandLogo } from '@/components/BrandLogo';
+import { CoinCounter } from '@/components/CoinCounter';
+import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { LogOut, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -48,6 +50,8 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const navigate = useNavigate();
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
+  const gamification = useBuyerGamification();
+  const isBuyerPortal = portalLabel === 'Buyer';
 
   const grouped = isNavGroups(navItems);
 
@@ -138,6 +142,19 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
                 : t("dashboard.recently", "Recently")}
             </p>
+          </div>
+        )}
+
+        {/* Coin Counter for Buyer */}
+        {isBuyerPortal && user && !gamification.isLoading && (
+          <div className="mt-3">
+            <CoinCounter
+              totalPoints={gamification.totalPoints}
+              variant="expanded"
+              tierEmoji={gamification.currentTier.emoji}
+              tierName={gamification.currentTier.name}
+              nextTierPoints={gamification.pointsToNext > 0 ? gamification.pointsToNext : null}
+            />
           </div>
         )}
       </div>

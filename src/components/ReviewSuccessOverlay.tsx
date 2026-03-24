@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Trophy, Star, PartyPopper, Eye } from 'lucide-react';
+import { CheckCircle2, Trophy, Star, PartyPopper, Eye, Coins } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { ConfettiCelebration } from '@/components/ConfettiCelebration';
 import { useNavigate } from 'react-router-dom';
@@ -83,11 +83,18 @@ export function ReviewSuccessOverlay({
           ))}
         </div>
 
-        {/* Points info */}
+        {/* Coins earned */}
+        <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-coin/15 border border-coin/30">
+          <Coins className="w-4 h-4 text-coin" />
+          <span className="text-sm font-bold text-coin-foreground">
+            +{isFirstReview ? 50 : 25} coins earned!
+          </span>
+        </div>
+
         {isFirstReview && (
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-semibold">
             <Star className="w-3.5 h-3.5 fill-accent" />
-            +50 bonus points earned
+            🏆 First Reviewer Badge Unlocked!
           </div>
         )}
 

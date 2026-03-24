@@ -67,6 +67,10 @@
     --business-foreground: 93 66% 17%;
     --business-border: 93 72% 25%;
 
+    /* Coin gold #F5A623 */
+    --coin: 38 91% 55%;
+    --coin-foreground: 30 80% 20%;
+
     --radius: 0.75rem;
   }
 
@@ -116,6 +120,9 @@
     --business: 93 40% 90%;
     --business-foreground: 93 66% 17%;
     --business-border: 93 72% 25%;
+
+    --coin: 38 91% 60%;
+    --coin-foreground: 30 80% 15%;
   }
 }
 
