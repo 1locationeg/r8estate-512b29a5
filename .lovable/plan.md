@@ -1,110 +1,59 @@
 
 
-# Full Arabic Translation Audit & Fix
+# Apply Forest Green Business Theme Across Platform
 
-## Problem
-Multiple pages and components contain hardcoded English strings that are not wrapped in `t()` translation calls. When users switch to Arabic mode, these strings remain in English, breaking the bilingual experience.
+## Summary
+Add a dedicated "business green" color token to the design system, then apply it consistently to every Business-related button, tab, toggle, and CTA across all views (desktop and mobile).
 
-## Scope of Untranslated Content
+## Color Spec
+- Fill/Background: `#EAF3DE`
+- Border + Icon: `#3B6D11`
+- Text: `#27500A`
 
-### 1. **Portfolio Page** (`src/pages/Portfolio.tsx`)
-- Tab labels: "Saved", "Following", "Reviews", "Questions", "Watchlist", "Activity"
-- Header: "My Activity"
-- Empty states: "No saved items yet", "Not following anyone", "No reviews written", "No questions yet", "Watchlist is empty", "No activity yet" + all descriptions
-- Action labels: "Browse Directory", "Explore Developers", "Write a Review"
-- Buttons: "Unfollow"
-- Text: "Following since ...", "Removed", "Item removed from saved", "Unfollowed", "Business unfollowed", "Developer"
-- Date formatting uses `en-US` locale — should switch to `ar-EG` when Arabic
+## Step 1 — Add CSS custom properties
 
-### 2. **Insights Page** (`src/pages/InsightsPage.tsx`)
-- Header: "AI Insights"
-- Role labels: "Admin", "Developer", "Buyer" + descriptions
-- Trend labels: "↑ Rising", "↓ Declining", "— Stable", "⚠ Alert"
-- Stats: "Total Reviews", "Avg Rating", "Businesses", "Active Users", "Viewed", "Saved", "Reports", "Votes", "Platform Stats"
-- Tabs: "AI Insights", "Categories", "Trending"
-- Section titles: "Category Performance", "Trending Companies", "Business Hierarchy"
-- Labels: "Parent Developers", "Child Projects", "Total Profiles"
-- Buttons: "Refresh", "Force Refresh", "Generate Insights", "Upgrade", "Learn More"
-- Messages: "Cached · Refreshes in Xm", "Fresh insights", "Showing cached insights", "Failed to load insights", "Analyzing platform data with AI..."
-- Promo: "Unlock Premium Insights", "Premium Insight", "Want your company here?"
-- Empty: "No Insights Available", "No category data available yet", "No trending data available yet"
-- Sub-labels: "total", "/mo", "/wk", "reviews", "insights", "of top volume"
+In `src/index.css`, add new business color tokens under `:root` (and `.dark`):
 
-### 3. **Deal Watch Page** (`src/pages/DealWatch.tsx`)
-- Title: "Deal Watch", "Beta"
-- Description: "The market's best offers..."
-- Filter options: "All Types", "Payment Plans", "Discounts", "Early Access", "Exclusive Units"
-- Sort options: "Top Rated", "Newest", "Most Reviewed"
-- Buttons: "Compare Deals", "Exit Compare"
-- Search: "Search deals..."
-- Empty: "No deals yet", "Check back soon..."
+```css
+--business: 93 40% 90%;          /* #EAF3DE */
+--business-foreground: 93 66% 17%; /* #27500A */
+--business-border: 93 72% 25%;    /* #3B6D11 */
+```
 
-### 4. **Launch Watch Page** (`src/pages/LaunchWatch.tsx`)
-- Status filters: "Reservations Open", "Launching Soon", "Active", "Sold Out", "All Locations"
-- Sort options: "R8 Score", "Price: Low to High", "Units Remaining", "Delivery Date", "Newest"
-- Location options: "New Cairo", "Sheikh Zayed", "6th of October", etc.
+And in `tailwind.config.ts`, register them:
+```
+business: "hsl(var(--business))"
+business-foreground: "hsl(var(--business-foreground))"
+business-border: "hsl(var(--business-border))"
+```
 
-### 5. **Leaderboard Page** (`src/pages/Leaderboard.tsx`)
-- Title: "Community Leaderboard"
-- Subtitle: "Top contributors making the community better for everyone"
-- Period buttons: "This Week", "All Time"
-- Tabs: "Total Points", "Posts", "Replies"
-- Labels: "Your Rank", "pts", "posts", "replies", "weekly", "total", "(You)"
-- Reset countdown: "Resets in X days"
-- Empty: "No activity this week yet. Be the first!", "No contributors yet. Be the first!"
-- Points legend: "How Points Work", "Community Post: 15 pts", "Reply: 10 pts", etc.
+## Step 2 — Update all Business UI elements
 
-### 6. **Community Post Card** (`src/components/CommunityPostCard.tsx`)
-- Menu items already use `t()` with fallbacks — need to add keys to `ar.json`
+Files and locations to update:
 
-### 7. **Community New Post** (`src/components/CommunityNewPost.tsx`)
-- "Enhance with AI", "Notify all users", "Send a push notification..." — need Arabic keys
+1. **`src/components/Navbar.tsx`** (3 places)
+   - Line 87-93: Desktop "Business" mode toggle button — change from `border-primary/30 bg-secondary` to `bg-business border-business-border text-business-foreground`
+   - Line 162-168: Desktop "For Businesses" CTA — change from `bg-accent` to `bg-business border border-business-border text-business-foreground`
+   - Line 176-182: Mobile "Business" mode toggle — same green styling
 
-### 8. **Featured Identity Spotlight** (`src/components/FeaturedIdentitySpotlight.tsx`)
-- "Unfollow"/"Follow" tooltip not using `t()`
+2. **`src/components/ViewToggle.tsx`** (line 21-31)
+   - Active "Business" tab — apply `bg-business border border-business-border text-business-foreground` instead of `bg-primary text-primary-foreground`
 
-## Plan
+3. **`src/components/MobileNavSheet.tsx`** (2 places, lines 151-158 and 168-175)
+   - "For Businesses" buttons — change from `border-primary text-primary` to `border-business-border text-business-foreground bg-business hover:bg-business/80`
 
-### Step 1: Add all missing Arabic keys to `ar.json`
-Add new translation sections:
-- `portfolio.*` (~25 keys) — Portfolio page strings
-- `insights.*` (~40 keys) — Insights page strings  
-- `dealWatch.*` (~15 keys) — Deal Watch strings
-- `launchWatch.*` (~15 keys) — Launch Watch strings
-- `leaderboard.*` (~20 keys) — Leaderboard strings
-- Additional keys under existing `community.*` section
+4. **`src/pages/BuyerDashboard.tsx`** (lines 67-94)
+   - "Upgrade to Business" CTA card — change gradient and button to use business green tokens
 
-All Arabic will follow the established "warm friend" Ammiya tone for buyer-facing copy, keeping strings under 15 words, scannable, and natural-sounding for Egyptian real estate buyers.
+## Step 3 — Icon colors
 
-### Step 2: Add matching English keys to `en.json`
-Mirror all new keys with their English equivalents.
+Wherever `Building2` icon appears alongside these business elements, change from `text-primary` to `text-business-border` (the `#3B6D11` shade) for consistency.
 
-### Step 3: Update `Portfolio.tsx`
-- Add `useTranslation()`, wrap all hardcoded strings in `t()` calls
-- Switch date locale based on `i18n.language`
-
-### Step 4: Update `InsightsPage.tsx`
-- Add `useTranslation()`, replace all hardcoded labels, tabs, role labels, trend labels, stats, buttons, empty states, and CTA text with `t()` calls
-
-### Step 5: Update `DealWatch.tsx`
-- Add `useTranslation()`, translate title, description, filter/sort options, search placeholder, buttons, empty states
-
-### Step 6: Update `LaunchWatch.tsx`
-- Add `useTranslation()`, translate status filters, sort options, location options
-
-### Step 7: Update `Leaderboard.tsx`
-- Wrap all remaining hardcoded strings (title, tabs, period buttons, points legend, empty states) in `t()` calls
-
-### Step 8: Update `CommunityPostCard.tsx` and `CommunityNewPost.tsx`
-- Ensure all fallback strings have matching Arabic keys in `ar.json`
-
-### Step 9: Update `FeaturedIdentitySpotlight.tsx`
-- Use `t()` for follow/unfollow tooltip
-
-## Translation Style Guide (applied)
-- Egyptian Ammiya for buyer-facing UI (informal, warm, direct)
-- Fusha for legal/formal sections
-- Max 15 words per string
-- No "AI" prefix in public-facing text (use "ذكي" or omit)
-- Verbs before nouns in Arabic
+## Files Modified
+- `src/index.css` — add CSS variables
+- `tailwind.config.ts` — register color tokens
+- `src/components/Navbar.tsx` — 3 button style updates
+- `src/components/ViewToggle.tsx` — active tab style
+- `src/components/MobileNavSheet.tsx` — 2 CTA button styles
+- `src/pages/BuyerDashboard.tsx` — upgrade CTA card
 
