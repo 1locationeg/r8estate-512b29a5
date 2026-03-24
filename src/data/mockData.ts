@@ -1,5 +1,24 @@
 import { generateAvatar } from "@/lib/avatarUtils";
 
+// Developer logos
+import palmHillsLogo from "@/assets/developers/palm-hills.png";
+import emaarMisrLogo from "@/assets/developers/emaar-misr.png";
+import sodicLogo from "@/assets/developers/sodic.png";
+import oraLogo from "@/assets/developers/ora-developers.png";
+import tatweerMisrLogo from "@/assets/developers/tatweer-misr.png";
+import mountainViewLogo from "@/assets/developers/mountain-view.png";
+import hydeParkLogo from "@/assets/developers/hyde-park.png";
+
+// Project images
+import palmHillsNewCairoImg from "@/assets/projects/palm-hills-new-cairo.jpg";
+import marassiImg from "@/assets/projects/marassi.jpg";
+import uptownCairoImg from "@/assets/projects/uptown-cairo.jpg";
+import sodicEastImg from "@/assets/projects/sodic-east.jpg";
+import sodicWestImg from "@/assets/projects/sodic-west.jpg";
+import silversandsImg from "@/assets/projects/silversands.jpg";
+import ilMonteGalalaImg from "@/assets/projects/il-monte-galala.jpg";
+import bloomfieldsImg from "@/assets/projects/bloomfields.jpg";
+
 export interface Developer {
   id: string;
   name: string;
