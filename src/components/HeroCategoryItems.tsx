@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 // Brand logo mapping — permanent local avatars (no external API dependency)
 // Business owners can override this by uploading their own logo from their profile
