@@ -183,29 +183,26 @@ const InsightsPage = () => {
       {/* Header — clean, minimal */}
       <div className="sticky top-0 z-40 bg-background/80 backdrop-blur-xl border-b border-border/50">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-3">
-          <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-            <BrandLogo size="hero" />
+          <button onClick={() => navigate("/")} className="p-1.5 rounded-lg hover:bg-muted/60 transition-colors" aria-label="Return to home">
+            <ArrowLeft className="w-5 h-5 text-foreground" />
           </button>
-          <div className="flex-1">
-            <h1 className="text-lg font-bold text-foreground flex items-center gap-2">
-              <div className="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Sparkles className="w-4 h-4 text-primary" />
-              </div>
-              {t('insights.title')}
+          <div className="flex-1 text-center">
+            <h1 className="text-base font-bold text-foreground flex items-center justify-center gap-2">
+              <Sparkles className="w-4 h-4 text-primary" />
+              {t('insights.title', 'AI Insights')}
             </h1>
             <p className="text-[10px] text-muted-foreground">
-              {roleLabels[effectiveRole]?.emoji} {roleLabels[effectiveRole]?.description || 'Real-time platform intelligence'}
+              {roleLabels[effectiveRole]?.description || 'Real-time platform intelligence'}
             </p>
           </div>
           <Button
             size="sm"
-            variant="outline"
+            variant="ghost"
             onClick={() => fetchInsights(false)}
             disabled={loading}
-            className="gap-1.5 text-xs"
+            className="gap-1 text-xs px-2"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin' : ''}`} />
-            {t('insights.refresh')}
           </Button>
         </div>
       </div>
