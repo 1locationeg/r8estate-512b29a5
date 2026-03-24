@@ -10,6 +10,7 @@ import { useNavigate } from "react-router-dom";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { ClaimBusinessModal } from "@/components/ClaimBusinessModal";
 import { generateAvatar } from "@/lib/avatarUtils";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 interface DeveloperDirectoryCardProps {
   developer: Developer;
@@ -21,6 +22,8 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
   const { user } = useAuth();
   const navigate = useNavigate();
   const [claimOpen, setClaimOpen] = useState(false);
+  const { getLogoOverride } = useBusinessLogo();
+  const logoSrc = getLogoOverride(developer.id, developer.name) || developer.logo;
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const { trackClick, startLinger, cancelLinger } = useTrackInterest();
@@ -76,7 +79,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
       <div className="flex flex-col items-center text-center space-y-4">
         <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center overflow-hidden">
           <img
-            src={developer.logo}
+            src={logoSrc}
             alt={developer.name}
             className="w-full h-full object-cover"
             onError={(e) => { (e.target as HTMLImageElement).src = generateAvatar(developer.name, "developer"); }}

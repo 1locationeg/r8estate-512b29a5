@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 // Brand logo mapping — permanent local avatars (no external API dependency)
 // Business owners can override this by uploading their own logo from their profile
@@ -246,6 +247,7 @@ interface HeroCategoryItemsProps {
 export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectItem }: HeroCategoryItemsProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
+  const { getLogoOverride } = useBusinessLogo();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const isRTL = i18n.language === "ar";
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -433,7 +435,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
                 >
                   {/* Centered circular avatar */}
                   <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-2 ring-border transition-all group-hover:ring-primary/40">
-                    <AvatarImage src={item.avatar} alt={getLocalizedName(item)} className="object-cover" />
+                    <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
                     <AvatarFallback className="bg-secondary text-sm font-bold">
                       {getLocalizedName(item).substring(0, 2)}
                     </AvatarFallback>
