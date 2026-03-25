@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react"; // unified navbar
+import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
