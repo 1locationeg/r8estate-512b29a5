@@ -57,28 +57,23 @@ export function TractionStats() {
   });
 
   return (
-    <div ref={ref} className="mt-3 mb-1 rounded-xl border border-border/60 bg-card/50 backdrop-blur-sm px-3 py-2.5 md:px-5 md:py-3">
-      <div className="flex items-center justify-center">
+    <div ref={ref} className="w-full max-w-[1100px] mx-auto mt-3 mb-1">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         {stats.map((s, i) => {
           const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
-            <div key={s.labelKey} className="contents">
-              {/* Divider */}
-              {i > 0 && (
-                <div className={`w-px h-8 bg-border/50 mx-3 md:mx-5 ${s.hideMobile ? 'hidden sm:block' : ''}`} />
-              )}
-              <div
-                className={`flex flex-col items-center gap-0.5 ${s.hideMobile ? "hidden sm:flex" : "flex"}`}
-              >
-                <Icon className="w-3.5 h-3.5 md:w-4 md:h-4 text-brand-red mb-0.5" />
-                <span className={`text-base md:text-xl font-extrabold ${s.colorClass} tabular-nums leading-none`}>
-                  {displayVal}
-                </span>
-                <span className="text-[10px] md:text-xs font-semibold text-foreground leading-none">
-                  {t(s.labelKey)}
-                </span>
-              </div>
+            <div
+              key={s.labelKey}
+              className="flex flex-col items-center gap-1 py-3 px-4 rounded-xl border border-border/60 bg-card shadow-sm"
+            >
+              <Icon className="w-4 h-4 text-brand-red mb-0.5" />
+              <span className={`text-lg md:text-xl font-extrabold ${s.colorClass} tabular-nums leading-none`}>
+                {displayVal}
+              </span>
+              <span className="text-[10px] md:text-xs font-semibold text-foreground leading-none text-center">
+                {t(s.labelKey)}
+              </span>
             </div>
           );
         })}

@@ -71,6 +71,9 @@
     --coin: 38 91% 55%;
     --coin-foreground: 30 80% 20%;
 
+    /* Page background — light gray for PWA feel */
+    --page-bg: 210 20% 98%;
+
     --radius: 0.75rem;
   }
 
