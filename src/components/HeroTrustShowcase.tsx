@@ -37,7 +37,7 @@ interface ReviewScenario {
 const scenarios: ReviewScenario[] = [
   {
     score: 25,
-    reviewer: "Ahmed K.",
+    reviewer: "Fatima R.",
     initial: "A",
     avatar: "https://i.pravatar.cc/80?img=12",
     project: "Galleria 40",
