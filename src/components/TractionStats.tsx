@@ -58,7 +58,7 @@ export function TractionStats() {
 
   return (
     <div ref={ref} className="w-full max-w-[1100px] mx-auto mt-3 mb-1">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-4 gap-2 sm:gap-3">
         {stats.map((s, i) => {
           const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
