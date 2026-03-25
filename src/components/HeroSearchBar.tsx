@@ -257,96 +257,102 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto relative">
-      {/* Search Container with glow on focus */}
-      <div className={cn(
-        "relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
-        isFocused && "z-50 hero-focus-glow shadow-lg shadow-primary/10"
-      )}>
-        {/* Ask AI Button */}
-        <button 
-          onClick={() => setIsAIModalOpen(true)}
-          className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all"
-        >
-          <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
-          <span>{t("hero.askAI")}</span>
-        </button>
+    <div className="w-full max-w-3xl mx-auto">
+      {/* Search + Suggestions anchor */}
+      <div className="relative">
+        {/* Search Container with glow on focus */}
+        <div className={cn(
+          "relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
+          isFocused && "z-50 hero-focus-glow shadow-lg shadow-primary/10"
+        )}>
+          {/* Ask AI Button */}
+          <button 
+            onClick={() => setIsAIModalOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all"
+          >
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span>{t("hero.askAI")}</span>
+          </button>
 
-        {/* Search Input */}
-        <div className="flex-1 relative overflow-hidden">
-          <input
-            data-hero-search
-            ref={inputRef}
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            onKeyDown={handleKeyDown}
-            placeholder=""
-            className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
-            style={{ fontSize: isMobile ? '16px' : undefined }}
-          />
-          {/* Animated trust placeholder */}
-          {!query && (
-            <div className="absolute inset-0 flex items-center px-3 pointer-events-none overflow-hidden">
-              <span
-                className={cn(
-                  "text-sm md:text-base text-muted-foreground transition-all duration-400 ease-out truncate",
-                  "bg-gradient-to-r from-muted-foreground via-primary/60 to-muted-foreground bg-[length:200%_100%] bg-clip-text",
-                  placeholderVisible
-                    ? "opacity-100 translate-y-0 animate-[shimmer_3s_ease-in-out_infinite]"
-                    : "opacity-0 translate-y-2"
-                )}
-                style={{ WebkitTextFillColor: placeholderVisible ? 'transparent' : undefined }}
-              >
-                {trustPhrases[placeholderIndex]}
-              </span>
-            </div>
-          )}
+          {/* Search Input */}
+          <div className="flex-1 relative overflow-hidden">
+            <input
+              data-hero-search
+              ref={inputRef}
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
+              onKeyDown={handleKeyDown}
+              placeholder=""
+              className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
+              style={{ fontSize: isMobile ? '16px' : undefined }}
+            />
+            {/* Animated trust placeholder */}
+            {!query && (
+              <div className="absolute inset-0 flex items-center px-3 pointer-events-none overflow-hidden">
+                <span
+                  className={cn(
+                    "text-sm md:text-base text-muted-foreground transition-all duration-400 ease-out truncate",
+                    "bg-gradient-to-r from-muted-foreground via-primary/60 to-muted-foreground bg-[length:200%_100%] bg-clip-text",
+                    placeholderVisible
+                      ? "opacity-100 translate-y-0 animate-[shimmer_3s_ease-in-out_infinite]"
+                      : "opacity-0 translate-y-2"
+                  )}
+                  style={{ WebkitTextFillColor: placeholderVisible ? 'transparent' : undefined }}
+                >
+                  {trustPhrases[placeholderIndex]}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Voice Search Button */}
+          <button
+            onClick={handleVoiceSearch}
+            className={cn(
+              "relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
+              isListening
+                ? "bg-destructive text-destructive-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+            )}
+            title={t("hero.voiceSearch")}
+          >
+            <Mic className="w-4 h-4 md:w-5 md:h-5" />
+            {isListening && (
+              <span className="absolute top-0.5 end-0.5 w-2 h-2 bg-destructive rounded-full animate-ping" />
+            )}
+          </button>
+
+          {/* Search Icon */}
+          <Search className="w-5 h-5 text-muted-foreground me-2" />
+
+          {/* Validate Decision Button */}
+          <button 
+            onClick={handleValidateDecision}
+            className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
+          >
+            {t("hero.validateDecision")}
+          </button>
         </div>
 
-        {/* Voice Search Button */}
-        <button
-          onClick={handleVoiceSearch}
-          className={cn(
-            "relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
-            isListening
-              ? "bg-destructive text-destructive-foreground"
-              : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-          )}
-          title={t("hero.voiceSearch")}
-        >
-          <Mic className="w-4 h-4 md:w-5 md:h-5" />
-          {isListening && (
-            <span className="absolute top-0.5 end-0.5 w-2 h-2 bg-destructive rounded-full animate-ping" />
-          )}
-        </button>
-
-        {/* Search Icon */}
-        <Search className="w-5 h-5 text-muted-foreground me-2" />
-
-        {/* Validate Decision Button */}
-        <button 
-          onClick={handleValidateDecision}
-          className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
-        >
-          {t("hero.validateDecision")}
-        </button>
+        {/* SearchSuggestions anchored directly under input */}
+        <SearchSuggestions
+          query={query}
+          isOpen={isFocused}
+          onSelect={handleSelect}
+          onCorrection={handleCorrection}
+          onWriteReview={handleWriteReview}
+          onCompare={handleCompare}
+          selectedIndex={selectedIndex}
+        />
       </div>
 
-      {/* Platform Traction Stats */}
-      <TractionStats />
-
-      <SearchSuggestions
-        query={query}
-        isOpen={isFocused}
-        onSelect={handleSelect}
-        onCorrection={handleCorrection}
-        onWriteReview={handleWriteReview}
-        onCompare={handleCompare}
-        selectedIndex={selectedIndex}
-      />
+      {/* Platform Traction Stats - hidden when focused */}
+      <div className={cn("transition-all duration-300", isFocused && "opacity-0 pointer-events-none")}>
+        <TractionStats />
+      </div>
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
