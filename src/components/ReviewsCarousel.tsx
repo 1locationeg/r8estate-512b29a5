@@ -268,7 +268,7 @@ export function ReviewsCarousel() {
                 <div className="flex-shrink-0 flex items-center relative z-10">
                   <div className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center relative shadow-md ${item.isBusiness ? "border-[3px] border-accent/40 bg-white p-1" : "border-[3px] border-primary/30 bg-muted"}`}>
                     <img
-                      src={item.avatar}
+                      src={item.isBusiness ? (getLogoOverride(item.id, item.author) || item.avatar) : item.avatar}
                       alt={isRTL ? item.authorAr : item.author}
                       className={`object-cover ${item.isBusiness ? "w-[85%] h-[85%] object-contain rounded-full" : "w-full h-full"}`}
                       loading="lazy"
