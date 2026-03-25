@@ -201,7 +201,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
       <>
         <div className="fixed inset-0 z-50 bg-background flex flex-col transition-all duration-300 ease-in-out animate-fade-in">
           {/* Top bar with input + cancel */}
-          <div className="flex items-center gap-2 p-3 border-b border-border safe-top">
+          <div className="flex items-center gap-2 px-4 pt-3 pb-3 border-b border-border/40 safe-top">
             <div className="flex-1 relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
@@ -213,7 +213,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
                 onKeyDown={handleKeyDown}
                 placeholder={trustPhrases[placeholderIndex]}
                 autoFocus
-                className="w-full pl-9 pr-3 py-3 bg-secondary border border-border rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full pl-9 pr-3 py-3 bg-secondary/60 border border-border/60 rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 style={{ fontSize: '16px' }}
               />
             </div>
@@ -226,7 +226,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
           </div>
 
           {/* Full-screen search results */}
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto search-suggestions-scrollbar">
             <SearchSuggestions
               query={query}
               isOpen={true}
@@ -236,6 +236,17 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
               onCompare={handleCompare}
               selectedIndex={selectedIndex}
             />
+          </div>
+
+          {/* Sticky footer - Validate Decision */}
+          <div className="sticky bottom-0 px-4 py-3 bg-card/95 backdrop-blur-md border-t border-border/40 safe-bottom">
+            <button
+              onClick={handleValidateDecision}
+              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-accent text-accent-foreground rounded-xl font-semibold text-sm hover:bg-accent/90 transition-colors"
+            >
+              <Sparkles className="w-4 h-4" />
+              {t("hero.validateDecision")}
+            </button>
           </div>
         </div>
 
@@ -252,6 +263,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
           open={!!compareItem}
           onClose={() => setCompareItem(null)}
         />
+      
       </>
     );
   }
