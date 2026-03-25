@@ -74,7 +74,7 @@ export const BrandLogo = ({
           </span>
         )}
         {subtitle && (
-          <span className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider mt-0.5">
+          <span className="text-muted-foreground uppercase tracking-wider mt-0.5 text-center font-bold text-xs border-0">
             {subtitle}
           </span>
         )}
