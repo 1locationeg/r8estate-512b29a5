@@ -50,7 +50,7 @@ export const MobileNavSheet = ({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side={isRTL ? "left" : "right"} className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
+      <SheetContent side={isRTL ? "right" : "left"} className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-4 border-b border-border">
