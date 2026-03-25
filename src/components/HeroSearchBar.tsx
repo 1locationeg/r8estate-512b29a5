@@ -113,8 +113,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
         setSelectedIndex(prev => Math.max(-1, prev - 1));
         break;
       case 'Escape':
-        setIsFocused(false);
-        inputRef.current?.blur();
+        dismissFocus();
         break;
       case 'Enter':
         // If an item is selected, trigger selection
@@ -123,20 +122,32 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
     }
   }, [isFocused]);
 
+  const isMobile = useIsMobile();
+
   const handleFocus = useCallback(() => {
     if (blurTimeoutRef.current) {
       clearTimeout(blurTimeoutRef.current);
     }
     setIsFocused(true);
-  }, []);
+    onFocusChange?.(true);
+  }, [onFocusChange]);
+
+  const dismissFocus = useCallback(() => {
+    setIsFocused(false);
+    setSelectedIndex(-1);
+    setQuery("");
+    inputRef.current?.blur();
+    onFocusChange?.(false);
+  }, [onFocusChange]);
 
   const handleBlur = useCallback(() => {
-    // Delay to allow click on suggestions
+    if (isMobile) return; // On mobile, only dismiss via Cancel/Esc
     blurTimeoutRef.current = setTimeout(() => {
       setIsFocused(false);
       setSelectedIndex(-1);
+      onFocusChange?.(false);
     }, 200);
-  }, []);
+  }, [isMobile, onFocusChange]);
 
   // Voice search handler
   const handleVoiceSearch = useCallback(() => {
