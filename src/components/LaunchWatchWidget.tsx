@@ -96,7 +96,7 @@ export const LaunchWatchWidget = () => {
       </div>
 
       <span className="text-2xl md:text-3xl font-black leading-none tracking-tight text-primary transition-all">
-        {animValue}{current.suffix ? <span className="text-sm font-bold ml-0.5">{current.suffix}</span> : ""}
+        {animValue}{current.suffix ? <span className="text-sm font-bold ms-0.5">{current.suffix}</span> : ""}
       </span>
       <span className="text-[10px] md:text-xs text-muted-foreground leading-snug transition-all">{current.label}</span>
 

@@ -44,7 +44,7 @@ export const CommunityHighlights = () => {
             <button
               key={post.id}
               onClick={() => navigate(`/community?post=${post.id}`)}
-              className="min-w-[240px] max-w-[280px] bg-card border border-border rounded-xl p-3 text-left hover:border-primary/30 transition-all flex-shrink-0"
+              className="min-w-[240px] max-w-[280px] bg-card border border-border rounded-xl p-3 text-start hover:border-primary/30 transition-all flex-shrink-0"
             >
               <Badge variant="outline" className={`text-[9px] px-1.5 py-0 mb-1.5 ${cat.className}`}>
                 {cat.label}

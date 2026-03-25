@@ -157,7 +157,7 @@ export const SearchSuggestions = ({
   if (!hasResults && query.trim()) {
     return (
       <div className={cn(
-        "absolute top-full left-0 right-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 p-5",
+        "absolute top-full start-0 end-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 p-5",
         className
       )}>
         <div className="text-center text-muted-foreground text-sm py-2">
@@ -371,7 +371,7 @@ export const SearchSuggestions = ({
     <div 
       ref={containerRef}
       className={cn(
-        "absolute top-full left-0 right-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 max-h-[360px] md:max-h-[440px] overflow-y-auto search-suggestions-scrollbar",
+        "absolute top-full start-0 end-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 max-h-[360px] md:max-h-[440px] overflow-y-auto search-suggestions-scrollbar",
         className
       )}
     >
@@ -460,7 +460,7 @@ export const SearchSuggestions = ({
                 <span>{cf.label}</span>
                 {count > 0 && (
                   <span className={cn(
-                    "ml-0.5 text-[10px] font-bold min-w-[16px] h-4 flex items-center justify-center rounded-full",
+                    "ms-0.5 text-[10px] font-bold min-w-[16px] h-4 flex items-center justify-center rounded-full",
                     activeCategory === cf.key ? "bg-current/10" : "bg-muted"
                   )}>
                     {count}

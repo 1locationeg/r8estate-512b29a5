@@ -72,7 +72,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
               </AvatarFallback>
             </Avatar>
             {review.profileVerified && (
-              <div className="absolute -bottom-0.5 -right-0.5 bg-background rounded-full p-0.5">
+              <div className="absolute -bottom-0.5 -end-0.5 bg-background rounded-full p-0.5">
                 <ShieldCheck className="w-3.5 h-3.5 md:w-4 md:h-4 text-trust-excellent fill-trust-excellent/20" />
               </div>
             )}

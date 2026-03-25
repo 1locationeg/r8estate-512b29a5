@@ -95,7 +95,7 @@ export const NotificationsPage = () => {
               )}
               {type === "all" ? t("notif.all") : config?.label}
               <span
-                className={`ml-1 px-1.5 py-0.5 rounded-full text-[10px] ${
+                className={`ms-1 px-1.5 py-0.5 rounded-full text-[10px] ${
                   isActive ? "bg-primary-foreground/20" : "bg-muted"
                 }`}
               >

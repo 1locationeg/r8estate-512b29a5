@@ -59,7 +59,7 @@ export const ReviewBlockedModal = ({
                       onSelectProject?.(project.id, project.name);
                       onOpenChange(false);
                     }}
-                    className="w-full flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors text-left"
+                    className="w-full flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-accent/50 transition-colors text-start"
                   >
                     <Building2 className="w-4 h-4 text-primary shrink-0" />
                     <span className="text-sm font-medium flex-1">{project.name}</span>

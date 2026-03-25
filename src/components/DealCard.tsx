@@ -109,7 +109,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
             </span>
           </div>
           {biz?.specialties?.[0] && (
-            <Badge className="bg-primary text-accent text-[10px] px-1.5 py-0 ml-auto">
+            <Badge className="bg-primary text-accent text-[10px] px-1.5 py-0 ms-auto">
               {biz.specialties[0]}
             </Badge>
           )}
@@ -152,7 +152,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
         <p className="text-sm text-muted-foreground leading-relaxed">
           {expanded ? deal.description : deal.description.slice(0, 120)}
           {deal.description.length > 120 && (
-            <button onClick={() => setExpanded(!expanded)} className="text-primary text-xs ml-1 font-medium">
+            <button onClick={() => setExpanded(!expanded)} className="text-primary text-xs ms-1 font-medium">
               {expanded ? "Show less" : "Read more"}
             </button>
           )}
@@ -180,7 +180,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
           <span className="text-sm font-medium text-foreground">{avgRating.toFixed(1)}</span>
           <span className="text-xs text-muted-foreground">({deal.rating_count} ratings)</span>
           {hot && (
-            <span className="text-[10px] text-orange-600 font-semibold ml-1 flex items-center gap-0.5">
+            <span className="text-[10px] text-orange-600 font-semibold ms-1 flex items-center gap-0.5">
               <Flame className="w-3 h-3" /> Trending
             </span>
           )}
@@ -226,7 +226,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
               View business
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="h-7 w-7 ml-auto">
+          <Button variant="ghost" size="icon" className="h-7 w-7 ms-auto">
             <Share2 className="w-3.5 h-3.5" />
           </Button>
         </div>

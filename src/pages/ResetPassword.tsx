@@ -119,7 +119,7 @@ const ResetPassword = () => {
                   <div className="space-y-2">
                     <Label htmlFor="password">{t('auth.newPassword', 'New password')}</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} className="ps-10" required minLength={6} />
                     </div>
                   </div>
@@ -127,7 +127,7 @@ const ResetPassword = () => {
                   <div className="space-y-2">
                     <Label htmlFor="confirmPassword">{t('auth.confirmPassword', 'Confirm password')}</Label>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="ps-10" required minLength={6} />
                     </div>
                   </div>

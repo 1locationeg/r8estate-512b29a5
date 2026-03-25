@@ -262,7 +262,7 @@ const Auth = () => {
                 {/* Email input */}
                 <form onSubmit={handleEmailContinue}>
                   <div className="relative mb-3">
-                    <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                    <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                     <Input
                       type="email"
                       placeholder={t('auth.emailPlaceholder', 'name@email.com')}
@@ -299,7 +299,7 @@ const Auth = () => {
 
             {/* ===== STEP 2: Password ===== */}
             {step === 'password' && (
-              <div className="animate-in fade-in slide-in-from-right-4 duration-200">
+              <div className="animate-in fade-in slide-in-from-end-4 duration-200">
                 <div className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary/50 border border-border mb-4">
                   <Mail className="w-4 h-4 text-muted-foreground shrink-0" />
                   <span className="text-sm text-foreground truncate">{email}</span>
@@ -329,12 +329,12 @@ const Auth = () => {
                   {isNewUser && (
                     <>
                       <div className="relative">
-                        <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input type="text" placeholder={t('auth.fullName', 'Full Name')} value={fullName} onChange={(e) => setFullName(e.target.value)} className="ps-10 h-10" />
                       </div>
                       {isBusinessMode && (
                         <div className="relative">
-                          <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                          <Building2 className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                           <Input type="text" placeholder={t('auth.companyName', 'Company Name')} value={companyName} onChange={(e) => setCompanyName(e.target.value)} className="ps-10 h-10" />
                         </div>
                       )}
@@ -343,7 +343,7 @@ const Auth = () => {
 
                   <div>
                     <div className="relative">
-                      <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                      <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                       <Input
                         type={showPassword ? 'text' : 'password'}
                         placeholder="••••••••"
@@ -352,7 +352,7 @@ const Auth = () => {
                         className={`ps-10 pe-10 h-10 ${errors.password ? 'border-destructive' : ''}`}
                         autoFocus
                       />
-                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                      <button type="button" onClick={() => setShowPassword(!showPassword)} className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
                         {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                       </button>
                     </div>

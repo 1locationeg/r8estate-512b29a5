@@ -20,7 +20,7 @@ export const IndexSkeleton = () => (
         {/* Gauge placeholder */}
         <div className="w-[200px] h-[110px] mb-2 relative">
           <Skeleton className="w-full h-full rounded-full bg-primary-foreground/10" />
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2">
+          <div className="absolute bottom-2 start-1/2 -translate-x-1/2">
             <Skeleton className="h-8 w-12 bg-primary-foreground/15 rounded" />
           </div>
         </div>
@@ -98,7 +98,7 @@ export const AuthSkeleton = () => (
 export const DashboardSkeleton = ({ title }: { title: string }) => (
   <div className="min-h-screen bg-background flex">
     {/* Sidebar */}
-    <div className="hidden lg:block w-64 border-r border-border bg-card p-4">
+    <div className="hidden lg:block w-64 border-e border-border bg-card p-4">
       <Skeleton className="h-8 w-32 mb-8" />
       <div className="space-y-3">
         {Array.from({ length: 6 }).map((_, i) => (

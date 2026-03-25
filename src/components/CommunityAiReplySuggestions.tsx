@@ -55,7 +55,7 @@ export const CommunityAiReplySuggestions = ({ postTitle, postBody, onSelectReply
             <button
               key={i}
               onClick={() => { onSelectReply(s); setSuggestions([]); }}
-              className="block w-full text-left text-xs px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/10 text-foreground border border-primary/10 transition-colors leading-relaxed"
+              className="block w-full text-start text-xs px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/10 text-foreground border border-primary/10 transition-colors leading-relaxed"
             >
               {s}
             </button>

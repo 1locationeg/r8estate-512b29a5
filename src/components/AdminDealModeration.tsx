@@ -143,7 +143,7 @@ export const AdminDealModeration = () => {
                       disabled={processing === deal.id}
                       className="bg-emerald-600 hover:bg-emerald-700"
                     >
-                      <CheckCircle className="w-3.5 h-3.5 mr-1" /> Verify
+                      <CheckCircle className="w-3.5 h-3.5 me-1" /> Verify
                     </Button>
                     <Button
                       size="sm"
@@ -151,7 +151,7 @@ export const AdminDealModeration = () => {
                       onClick={() => handleModerate(deal.id, "rejected")}
                       disabled={processing === deal.id}
                     >
-                      <XCircle className="w-3.5 h-3.5 mr-1" /> Reject
+                      <XCircle className="w-3.5 h-3.5 me-1" /> Reject
                     </Button>
                   </div>
                 </div>

@@ -114,7 +114,7 @@ const Leaderboard = () => {
                 {sorted[currentUserRank - 1]?.total_points ?? 0} {period === "week" ? t("leaderboard.weeklyPoints") : t("leaderboard.totalPoints")} {t("leaderboard.pts")}
               </p>
             </div>
-            <div className="text-right">
+            <div className="text-end">
               <span className="text-sm">{getBuyerTier(sorted[currentUserRank - 1]?.total_points ?? 0).emoji}{" "}{getBuyerTier(sorted[currentUserRank - 1]?.total_points ?? 0).name}</span>
             </div>
           </div>
@@ -173,7 +173,7 @@ const Leaderboard = () => {
                   </Avatar>
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium text-foreground truncate">
-                      {entry.full_name}{isCurrentUser && <span className="ml-1.5 text-[10px] text-primary font-normal">{t("leaderboard.you")}</span>}
+                      {entry.full_name}{isCurrentUser && <span className="ms-1.5 text-[10px] text-primary font-normal">{t("leaderboard.you")}</span>}
                     </p>
                     <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
                       <span>{tier.emoji} {tier.name}</span><span>·</span>
@@ -182,7 +182,7 @@ const Leaderboard = () => {
                       <span className="flex items-center gap-0.5"><ThumbsUp className="w-2.5 h-2.5" /> {entry.community_votes}</span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="text-end">
                     <p className="text-sm font-bold text-primary">{getStatValue(entry)}</p>
                     <p className="text-[10px] text-muted-foreground">{getStatLabel()}</p>
                   </div>

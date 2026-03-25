@@ -536,7 +536,7 @@ export const WriteReviewModal = ({
 
             <div className="space-y-3">
               <div className="relative">
-                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   placeholder={t("auth.fullName", "Full Name")}
                   value={signupName}
@@ -545,7 +545,7 @@ export const WriteReviewModal = ({
                 />
               </div>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="email"
                   placeholder={t("auth.email", "Email")}
@@ -555,7 +555,7 @@ export const WriteReviewModal = ({
                 />
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                 <Input
                   type="password"
                   placeholder={t("auth.password", "Password")}
@@ -646,7 +646,7 @@ export const WriteReviewModal = ({
                 </button>
               ))}
               {rating > 0 && (
-                <span className="ml-2 text-sm font-medium text-foreground">
+                <span className="ms-2 text-sm font-medium text-foreground">
                   {rating}/5
                 </span>
               )}
@@ -767,7 +767,7 @@ export const WriteReviewModal = ({
                   <button
                     key={i}
                     type="button"
-                    className="block w-full text-left text-sm p-2 rounded-md bg-background hover:bg-primary/5 border border-border/50 transition-colors"
+                    className="block w-full text-start text-sm p-2 rounded-md bg-background hover:bg-primary/5 border border-border/50 transition-colors"
                     onClick={() => insertText(s)}
                   >
                     {s}
@@ -874,7 +874,7 @@ export const WriteReviewModal = ({
                       )}
                       <button
                         type="button"
-                        className="absolute -top-1.5 -right-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute -top-1.5 -end-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity"
                         onClick={() => removeAttachment(i)}
                       >
                         <X className="w-3 h-3" />
@@ -891,7 +891,7 @@ export const WriteReviewModal = ({
             <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
                <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
                  <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification")}
-                 <Badge variant="secondary" className="text-[10px] ml-1">{t("form.optional")}</Badge>
+                 <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional")}</Badge>
               </label>
                <p className="text-xs text-muted-foreground mb-2">
                  {t("form.verification_desc")}

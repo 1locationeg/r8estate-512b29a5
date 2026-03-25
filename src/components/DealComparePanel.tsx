@@ -72,9 +72,9 @@ export const DealComparePanel = ({ deals, selectedIds, onToggleSelect, onClear }
         </span>
         <div className="flex gap-1 flex-1 flex-wrap">
           {selected.map((d) => (
-            <Badge key={d.id} variant="secondary" className="text-[10px] gap-1 pr-1">
+            <Badge key={d.id} variant="secondary" className="text-[10px] gap-1 pe-1">
               {d.business_profiles?.company_name || "Deal"}
-              <button onClick={() => onToggleSelect(d.id)} className="ml-0.5">
+              <button onClick={() => onToggleSelect(d.id)} className="ms-0.5">
                 <X className="w-3 h-3" />
               </button>
             </Badge>
@@ -108,7 +108,7 @@ export const DealComparePanel = ({ deals, selectedIds, onToggleSelect, onClear }
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-2 px-2 text-xs text-muted-foreground font-medium w-28">Metric</th>
+                  <th className="text-start py-2 px-2 text-xs text-muted-foreground font-medium w-28">Metric</th>
                   {selected.map((d) => {
                     const isWinner = d.id === winnerId;
                     return (

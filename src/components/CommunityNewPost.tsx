@@ -349,7 +349,7 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
                   <button
                     key={i}
                     onClick={() => { setTitle(s); setTitleSuggestions([]); }}
-                    className="block w-full text-left text-xs px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/10 text-foreground border border-primary/10 transition-colors"
+                    className="block w-full text-start text-xs px-3 py-2 rounded-lg bg-primary/5 hover:bg-primary/10 text-foreground border border-primary/10 transition-colors"
                   >
                     {s}
                   </button>
@@ -528,7 +528,7 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
                       <img src={url} alt="" className="w-full h-full object-cover" />
                       <button
                         onClick={() => removeImage(idx)}
-                        className="absolute top-1 right-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 end-1 p-0.5 rounded-full bg-destructive text-destructive-foreground opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <X className="w-3 h-3" />
                       </button>
@@ -544,7 +544,7 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
             <div className="flex items-start gap-2 px-3 py-2 rounded-lg bg-accent/30 border border-accent/20 animate-in fade-in">
               <TrendingUp className="w-3.5 h-3.5 text-primary mt-0.5 flex-shrink-0" />
               <p className="text-[11px] text-foreground leading-relaxed">{engagementTip}</p>
-              <button onClick={() => setEngagementTip("")} className="ml-auto text-muted-foreground hover:text-foreground flex-shrink-0">
+              <button onClick={() => setEngagementTip("")} className="ms-auto text-muted-foreground hover:text-foreground flex-shrink-0">
                 <X className="w-3 h-3" />
               </button>
             </div>

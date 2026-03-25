@@ -167,8 +167,8 @@ export const LaunchSubmitForm = () => {
             <Label>Reservation Start Date</Label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-full justify-start text-left", !reservationDate && "text-muted-foreground")}>
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                <Button variant="outline" className={cn("w-full justify-start text-start", !reservationDate && "text-muted-foreground")}>
+                  <CalendarIcon className="me-2 h-4 w-4" />
                   {reservationDate ? format(reservationDate, "PPP") : "Pick date"}
                 </Button>
               </PopoverTrigger>
@@ -181,8 +181,8 @@ export const LaunchSubmitForm = () => {
             <Label>Launch Date</Label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-full justify-start text-left", !launchDate && "text-muted-foreground")}>
-                  <CalendarIcon className="mr-2 h-4 w-4" />
+                <Button variant="outline" className={cn("w-full justify-start text-start", !launchDate && "text-muted-foreground")}>
+                  <CalendarIcon className="me-2 h-4 w-4" />
                   {launchDate ? format(launchDate, "PPP") : "Pick date"}
                 </Button>
               </PopoverTrigger>
@@ -229,8 +229,8 @@ export const LaunchSubmitForm = () => {
             <Label>Delivery Date</Label>
             <Popover>
               <PopoverTrigger asChild>
-                <Button variant="outline" className={cn("w-full justify-start text-left text-xs", !deliveryDate && "text-muted-foreground")}>
-                  <CalendarIcon className="mr-2 h-3 w-3" />
+                <Button variant="outline" className={cn("w-full justify-start text-start text-xs", !deliveryDate && "text-muted-foreground")}>
+                  <CalendarIcon className="me-2 h-3 w-3" />
                   {deliveryDate ? format(deliveryDate, "PPP") : "Pick"}
                 </Button>
               </PopoverTrigger>
@@ -252,7 +252,7 @@ export const LaunchSubmitForm = () => {
           disabled={loading || !projectName.trim() || !district || !launchType || !agreed}
           className="w-full"
         >
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Submitting...</> : "Submit for Review"}
+          {loading ? <><Loader2 className="w-4 h-4 animate-spin me-2" /> Submitting...</> : "Submit for Review"}
         </Button>
       </div>
 

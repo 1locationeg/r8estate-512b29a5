@@ -61,7 +61,7 @@ export const MicroBadge = ({
               className={i < stars ? "text-[#fac417] fill-[#fac417]" : isDark ? "text-white/30" : "text-gray-300"}
             />
           ))}
-          <span className="text-[10px] opacity-60 ml-1">({reviewCount})</span>
+          <span className="text-[10px] opacity-60 ms-1">({reviewCount})</span>
         </div>
         {isVerified && (
           <div className="flex items-center gap-1 mt-0.5">

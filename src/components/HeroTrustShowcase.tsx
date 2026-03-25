@@ -511,7 +511,7 @@ export const HeroTrustShowcase = () => {
       <div className="mt-1 mx-2 md:mx-0 space-y-1">
         {/* Slider with hand icon */}
         <div className="flex items-center gap-3 relative">
-          <span className="text-[10px] font-bold text-destructive w-6 text-right">0</span>
+          <span className="text-[10px] font-bold text-destructive w-6 text-end">0</span>
           <div className="flex-1 relative">
             <Slider
               value={[score]}

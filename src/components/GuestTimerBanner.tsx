@@ -22,7 +22,7 @@ export function GuestTimerBanner() {
   return (
     <div
       className={`
-        sticky top-0 left-0 right-0 z-50 flex items-center justify-between px-4 py-2
+        sticky top-0 start-0 end-0 z-50 flex items-center justify-between px-4 py-2
         pt-[max(0.5rem,env(safe-area-inset-top))] safe-x
         transition-all duration-700
         ${isUrgent
@@ -65,7 +65,7 @@ export function GuestTimerBanner() {
         </button>
       </div>
 
-      <div className="hidden sm:block text-white/80 text-xs font-medium text-right">
+      <div className="hidden sm:block text-white/80 text-xs font-medium text-end">
         {isUrgent ? t("guest.almost_expired") : t("guest.remaining")}
       </div>
     </div>

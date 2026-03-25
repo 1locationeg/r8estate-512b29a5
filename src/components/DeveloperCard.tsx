@@ -51,7 +51,7 @@ export const DeveloperCard = ({ developer, onClick }: DeveloperCardProps) => {
       onMouseLeave={() => cancelLinger(developer.id)}
     >
       {/* Save & Follow buttons */}
-      <div className="absolute top-2 right-2 flex gap-1 z-10">
+      <div className="absolute top-2 end-2 flex gap-1 z-10">
         <button
           onClick={handleSave}
           disabled={saveLoading}

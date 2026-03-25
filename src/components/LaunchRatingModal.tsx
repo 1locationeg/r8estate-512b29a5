@@ -113,7 +113,7 @@ export const LaunchRatingModal = ({ launchId, projectName, open, onClose, onSucc
                   </button>
                 ))}
                 {scores[field.key] && (
-                  <span className="text-xs font-bold text-foreground ml-1">{scores[field.key]}/5</span>
+                  <span className="text-xs font-bold text-foreground ms-1">{scores[field.key]}/5</span>
                 )}
               </div>
             </div>
@@ -159,7 +159,7 @@ export const LaunchRatingModal = ({ launchId, projectName, open, onClose, onSucc
             disabled={loading || !allScored || !disclaimerAgreed}
             className="w-full"
           >
-            {loading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Submitting...</> : "Submit Rating"}
+            {loading ? <><Loader2 className="w-4 h-4 animate-spin me-2" /> Submitting...</> : "Submit Rating"}
           </Button>
         </div>
       </DialogContent>

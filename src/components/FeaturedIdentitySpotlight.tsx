@@ -105,7 +105,7 @@ export const FeaturedIdentitySpotlight = () => {
               <h3 className="text-lg md:text-xl font-bold text-primary-foreground text-center">
                 {developer.name}
               </h3>
-              <div className="absolute right-0 flex items-center gap-1">
+              <div className="absolute end-0 flex items-center gap-1">
                 <button
                   onClick={() => {
                     if (!user) {navigate("/auth");return;}

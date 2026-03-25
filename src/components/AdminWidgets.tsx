@@ -177,18 +177,18 @@ const AdminWidgets = () => {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b bg-muted/50">
-              <th className="text-left px-4 py-3 font-medium">Type</th>
-              <th className="text-left px-4 py-3 font-medium">Entity</th>
-              <th className="text-left px-4 py-3 font-medium">Entity Type</th>
-              <th className="text-left px-4 py-3 font-medium">Status</th>
-              <th className="text-left px-4 py-3 font-medium">
+              <th className="text-start px-4 py-3 font-medium">Type</th>
+              <th className="text-start px-4 py-3 font-medium">Entity</th>
+              <th className="text-start px-4 py-3 font-medium">Entity Type</th>
+              <th className="text-start px-4 py-3 font-medium">Status</th>
+              <th className="text-start px-4 py-3 font-medium">
                 <div className="flex items-center gap-1"><BarChart3 size={12} /> Impressions</div>
               </th>
-              <th className="text-left px-4 py-3 font-medium">
+              <th className="text-start px-4 py-3 font-medium">
                 <div className="flex items-center gap-1"><BarChart3 size={12} /> Clicks</div>
               </th>
-              <th className="text-left px-4 py-3 font-medium">Created</th>
-              <th className="text-right px-4 py-3 font-medium">Actions</th>
+              <th className="text-start px-4 py-3 font-medium">Created</th>
+              <th className="text-end px-4 py-3 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -381,7 +381,7 @@ const AdminWidgets = () => {
                   <Button
                     size="sm"
                     variant="secondary"
-                    className="absolute top-2 right-2 gap-1"
+                    className="absolute top-2 end-2 gap-1"
                     onClick={() => copyEmbed(embedCodeToken)}
                   >
                     <Copy size={12} /> Copy

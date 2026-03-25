@@ -143,7 +143,7 @@ export const BusinessProfileHeader = ({
 
       {/* Profile Completion – clickable */}
       <button
-        className="w-full text-left bg-card border border-border rounded-xl p-4 hover:border-accent/50 transition-colors group cursor-pointer"
+        className="w-full text-start bg-card border border-border rounded-xl p-4 hover:border-accent/50 transition-colors group cursor-pointer"
         onClick={() => navigate(profileCompletion < 100 ? '/business/profile' : '/business/gamification')}
       >
         <div className="flex items-center justify-between mb-2">

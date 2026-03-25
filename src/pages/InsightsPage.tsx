@@ -332,7 +332,7 @@ const InsightsPage = () => {
                   }`}
                 >
                   {/* Left accent line */}
-                  <div className="absolute top-3 bottom-3 left-0 w-0.5 rounded-full bg-primary/30" />
+                  <div className="absolute top-3 bottom-3 start-0 w-0.5 rounded-full bg-primary/30" />
 
                   {isPremium && (
                     <div className="absolute inset-0 bg-background/70 backdrop-blur-sm z-10 flex items-center justify-center rounded-2xl">
@@ -361,7 +361,7 @@ const InsightsPage = () => {
                           <span className="text-[9px] text-muted-foreground font-medium">{insight.metric_label}</span>
                           <span className="text-sm font-extrabold text-foreground">{insight.metric_value}</span>
                         </div>
-                        <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors ml-auto" />
+                        <ChevronRight className="w-4 h-4 text-muted-foreground/30 group-hover:text-primary transition-colors ms-auto" />
                       </div>
                     </div>
                   </div>
@@ -410,7 +410,7 @@ const InsightsPage = () => {
                       isTop ? 'bg-card border-primary/20' : 'bg-card border-border/60 hover:border-primary/15'
                     }`}>
                       {isTop && (
-                        <div className="absolute top-2 right-2">
+                        <div className="absolute top-2 end-2">
                           <span className="text-[9px] px-2 py-0.5 rounded-full bg-accent/15 text-accent font-bold flex items-center gap-1">
                             <Trophy className="w-3 h-3" /> #1
                           </span>

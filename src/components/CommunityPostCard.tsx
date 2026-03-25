@@ -107,26 +107,26 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-56">
             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setIsSaved(!isSaved); toast({ title: isSaved ? t("community.unsaved", "Post unsaved") : t("community.saved", "Post saved") }); }}>
-              {isSaved ? <BookmarkCheck className="w-4 h-4 mr-2 text-primary" /> : <Bookmark className="w-4 h-4 mr-2" />}
+              {isSaved ? <BookmarkCheck className="w-4 h-4 me-2 text-primary" /> : <Bookmark className="w-4 h-4 me-2" />}
               {isSaved ? t("community.unsavePost", "Unsave post") : t("community.savePost", "Save post")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); navigator.clipboard.writeText(`${window.location.origin}/community?post=${post.id}`); toast({ title: t("community.linkCopied", "Link copied!") }); }}>
-              <Link2 className="w-4 h-4 mr-2" />
+              <Link2 className="w-4 h-4 me-2" />
               {t("community.copyLink", "Copy link")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setIsFollowing(!isFollowing); toast({ title: isFollowing ? t("community.unfollowed", "Notifications off for this post") : t("community.followed", "You'll be notified of new comments") }); }}>
-              {isFollowing ? <BellOff className="w-4 h-4 mr-2" /> : <BellPlus className="w-4 h-4 mr-2" />}
+              {isFollowing ? <BellOff className="w-4 h-4 me-2" /> : <BellPlus className="w-4 h-4 me-2" />}
               {isFollowing ? t("community.turnOffNotifications", "Turn off notifications") : t("community.turnOnNotifications", "Turn on notifications")}
             </DropdownMenuItem>
             {isAdmin && onTogglePin && (
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onTogglePin(post.id, post.is_pinned); }}>
-                <Pin className="w-4 h-4 mr-2" />
+                <Pin className="w-4 h-4 me-2" />
                 {post.is_pinned ? t("community.unpinPost", "Unpin post") : t("community.pinPost", "Pin to top")}
               </DropdownMenuItem>
             )}
             {isOwnPost && onEdit && (
               <DropdownMenuItem onClick={(e) => { e.stopPropagation(); onEdit(post); }}>
-                <Pencil className="w-4 h-4 mr-2" />
+                <Pencil className="w-4 h-4 me-2" />
                 {t("community.editPost", "Edit post")}
               </DropdownMenuItem>
             )}
@@ -134,15 +134,15 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             {!isOwnPost && (
               <>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.postHidden", "Post hidden from your feed") }); }}>
-                  <EyeOff className="w-4 h-4 mr-2" />
+                  <EyeOff className="w-4 h-4 me-2" />
                   {t("community.hidePost", "Hide post")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.userMuted", "You won't see posts from this user") }); }}>
-                  <UserX className="w-4 h-4 mr-2" />
+                  <UserX className="w-4 h-4 me-2" />
                   {t("community.muteUser", "Mute this user")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={(e) => { e.stopPropagation(); toast({ title: t("community.reported", "Thanks for reporting. We'll review this.") }); }} className="text-destructive focus:text-destructive">
-                  <AlertTriangle className="w-4 h-4 mr-2" />
+                  <AlertTriangle className="w-4 h-4 me-2" />
                   {t("community.reportPost", "Report post")}
                 </DropdownMenuItem>
               </>
@@ -153,7 +153,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
 
       {/* Post body */}
       <div className="px-4 pb-3">
-        <button onClick={onClick} className="w-full text-left">
+        <button onClick={onClick} className="w-full text-start">
           <h3 className="font-semibold text-[15px] text-foreground leading-snug mb-1">
             {post.title}
           </h3>
@@ -161,7 +161,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
         {post.category === "poll" ? (
           <PollDisplay postId={post.id} body={post.body} />
         ) : (
-          <button onClick={onClick} className="w-full text-left">
+          <button onClick={onClick} className="w-full text-start">
             <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
               {post.body}
             </p>
@@ -205,7 +205,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
                   <span key={r.emoji} className="text-sm">{r.emoji}</span>
                 ))}
               </div>
-              <span className="ml-1">{totalReactions}</span>
+              <span className="ms-1">{totalReactions}</span>
             </>
           )}
         </div>
@@ -245,7 +245,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             <div
               onMouseEnter={() => setShowEmojis(true)}
               onMouseLeave={() => setShowEmojis(false)}
-              className="absolute -top-11 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-card border border-border rounded-full px-3 py-1.5 shadow-xl"
+              className="absolute -top-11 start-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-card border border-border rounded-full px-3 py-1.5 shadow-xl"
             >
               {reactionEmojis.map((r) => (
                 <button

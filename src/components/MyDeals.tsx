@@ -42,7 +42,7 @@ export const MyDeals = () => {
           <p className="text-sm text-muted-foreground">Manage your submitted deals and track their status.</p>
         </div>
         <Button size="sm" onClick={() => navigate("/business/submit-deal")}>
-          <Plus className="w-4 h-4 mr-1" /> New Deal
+          <Plus className="w-4 h-4 me-1" /> New Deal
         </Button>
       </div>
 

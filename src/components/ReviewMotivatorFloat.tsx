@@ -49,7 +49,7 @@ export const ReviewMotivatorFloat = ({
   const badgeName = reviewBadge?.name ?? "Review Badge";
 
   return (
-    <div className="fixed bottom-20 md:bottom-6 left-6 z-40 flex flex-col items-start gap-2">
+    <div className="fixed bottom-20 md:bottom-6 start-6 z-40 flex flex-col items-start gap-2">
       {/* Expanded popover card */}
       {expanded && (
         <div
@@ -60,7 +60,7 @@ export const ReviewMotivatorFloat = ({
         >
           <button
             onClick={() => setDismissed(true)}
-            className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+            className="absolute top-2 end-2 text-muted-foreground hover:text-foreground transition-colors"
             aria-label="Dismiss"
           >
             <X className="w-3.5 h-3.5" />

@@ -78,7 +78,7 @@ export const BuyerGamificationPanel = () => {
           >
             <button
               onClick={() => dismissNewBadge(id)}
-              className="absolute top-2 right-2 text-muted-foreground hover:text-foreground transition-colors"
+              className="absolute top-2 end-2 text-muted-foreground hover:text-foreground transition-colors"
               aria-label="Dismiss"
             >
               <X className="w-4 h-4" />
@@ -112,7 +112,7 @@ export const BuyerGamificationPanel = () => {
               <span className="text-sm font-bold text-coin-foreground">{totalPoints} coins</span>
             </div>
           </div>
-          <div className="ml-auto text-right">
+          <div className="ms-auto text-end">
             <div className="flex items-center gap-1 text-accent">
               <Trophy className="w-5 h-5" />
               <span className="text-lg font-bold">{earnedBadges.length}</span>
@@ -218,7 +218,7 @@ export const BuyerGamificationPanel = () => {
             Missing: {missingFields.join(', ')}
           </p>
           <Button size="sm" onClick={() => navigate('/buyer/settings')}>
-            Complete Profile <ChevronRight className="w-4 h-4 ml-1" />
+            Complete Profile <ChevronRight className="w-4 h-4 ms-1" />
           </Button>
         </div>
       )}

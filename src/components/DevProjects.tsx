@@ -243,7 +243,7 @@ const DevProjects = () => {
           <div className="flex justify-end gap-3 mt-5 pt-4 border-t border-border">
             <Button variant="outline" onClick={() => { setShowForm(false); setEditingId(null); }}>Cancel</Button>
             <Button onClick={handleSave} disabled={saving}>
-              {saving && <Loader2 className="w-4 h-4 animate-spin mr-2" />}
+              {saving && <Loader2 className="w-4 h-4 animate-spin me-2" />}
               {editingId ? 'Update Project' : 'Create Project'}
             </Button>
           </div>

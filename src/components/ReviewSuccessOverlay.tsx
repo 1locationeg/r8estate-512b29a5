@@ -55,7 +55,7 @@ export function ReviewSuccessOverlay({
           ) : (
             <CheckCircle2 className="w-10 h-10 text-primary animate-bounce-in" />
           )}
-          <PartyPopper className="absolute -top-1 -right-1 w-5 h-5 text-accent animate-bounce-in" style={{ animationDelay: '0.3s' }} />
+          <PartyPopper className="absolute -top-1 -end-1 w-5 h-5 text-accent animate-bounce-in" style={{ animationDelay: '0.3s' }} />
         </div>
 
         {/* Title */}

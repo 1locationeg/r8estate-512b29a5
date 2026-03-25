@@ -140,13 +140,13 @@ const AdminModerationQueue = () => {
 
       {/* Search */}
       <div className="relative">
-        <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
           placeholder="Search by author, comment, or developer..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
+          className="w-full ps-10 pe-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
         />
       </div>
 
@@ -186,7 +186,7 @@ const AdminModerationQueue = () => {
                         {Array.from({ length: 5 }).map((_, i) => (
                           <Star key={i} className={`w-3.5 h-3.5 ${i < review.rating ? getRatingColorClass(review.rating).replace('text-', 'fill-') + ' ' + getRatingColorClass(review.rating) : 'text-muted'}`} />
                         ))}
-                        <span className="text-xs text-muted-foreground ml-2">
+                        <span className="text-xs text-muted-foreground ms-2">
                           {new Date(review.created_at).toLocaleDateString()}
                         </span>
                       </div>
@@ -210,7 +210,7 @@ const AdminModerationQueue = () => {
                           className="bg-green-600 hover:bg-green-700 text-white"
                         >
                           {processing === review.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <CheckCircle className="w-3 h-3" />}
-                          <span className="ml-1">Approve</span>
+                          <span className="ms-1">Approve</span>
                         </Button>
                         <Button
                           size="sm"
@@ -219,13 +219,13 @@ const AdminModerationQueue = () => {
                           disabled={processing === review.id}
                         >
                           {processing === review.id ? <Loader2 className="w-3 h-3 animate-spin" /> : <XCircle className="w-3 h-3" />}
-                          <span className="ml-1">Reject</span>
+                          <span className="ms-1">Reject</span>
                         </Button>
                       </div>
                     )}
 
                     {review.status !== 'pending' && review.reviewed_at && (
-                      <div className="text-xs text-muted-foreground text-right shrink-0">
+                      <div className="text-xs text-muted-foreground text-end shrink-0">
                         <p>Reviewed</p>
                         <p>{new Date(review.reviewed_at).toLocaleDateString()}</p>
                       </div>

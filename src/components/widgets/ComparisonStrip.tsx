@@ -30,7 +30,7 @@ const ScoreBar = ({
         style={{ width: `${(value / maxValue) * 100}%`, backgroundColor: color }}
       />
     </div>
-    <span className="w-6 text-right font-bold" style={{ color }}>{value.toFixed(1)}</span>
+    <span className="w-6 text-end font-bold" style={{ color }}>{value.toFixed(1)}</span>
   </div>
 );
 

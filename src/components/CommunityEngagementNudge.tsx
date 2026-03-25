@@ -56,7 +56,7 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
 
   return (
     <div className={`relative rounded-lg border p-4 ${c.bgColor} animate-in fade-in slide-in-from-bottom-2`}>
-      <button onClick={() => setDismissed(true)} className="absolute top-2 right-2 text-muted-foreground hover:text-foreground">
+      <button onClick={() => setDismissed(true)} className="absolute top-2 end-2 text-muted-foreground hover:text-foreground">
         <X className="w-3.5 h-3.5" />
       </button>
       <div className="flex items-start gap-3">

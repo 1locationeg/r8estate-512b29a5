@@ -619,7 +619,7 @@ const DevBusinessProfile = () => {
               <div className="flex items-center gap-2">
                 <Button size="sm" variant="ghost" className="text-xs" asChild>
                   <a href={bp.license_url} target="_blank" rel="noopener noreferrer">
-                    <Eye className="w-3.5 h-3.5 mr-1" /> View
+                    <Eye className="w-3.5 h-3.5 me-1" /> View
                   </a>
                 </Button>
                 <input

@@ -237,7 +237,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
               </div>
               <span className="text-sm font-bold text-foreground">{(r8Score * 5).toFixed(1)}</span>
               <span className="text-xs text-muted-foreground">({avgScores.count} ratings)</span>
-              <button onClick={() => setShowRatingBreakdown(!showRatingBreakdown)} className="text-xs text-primary font-medium ml-1">
+              <button onClick={() => setShowRatingBreakdown(!showRatingBreakdown)} className="text-xs text-primary font-medium ms-1">
                 {showRatingBreakdown ? "Hide" : "Details"}
               </button>
             </>
@@ -270,7 +270,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
               {showPhases ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
               Phase History
               {priceIncreasePct && Number(priceIncreasePct) > 0 && (
-                <Badge variant="outline" className="text-[9px] ml-1 border-red-300 text-red-600">
+                <Badge variant="outline" className="text-[9px] ms-1 border-red-300 text-red-600">
                   +{priceIncreasePct}% since reservation
                 </Badge>
               )}
@@ -302,7 +302,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
               onRate?.();
             }}
           >
-            <Rocket className="w-3 h-3 mr-1" />
+            <Rocket className="w-3 h-3 me-1" />
             Rate this launch
           </Button>
           <Button
@@ -319,7 +319,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
             <Button
               variant={isSelected ? "default" : "outline"}
               size="sm"
-              className={`text-xs gap-1 ml-auto ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
+              className={`text-xs gap-1 ms-auto ${isSelected ? "bg-primary text-primary-foreground" : ""}`}
               onClick={() => onToggleCompare(launch.id)}
             >
               <GitCompare className="w-3 h-3" />

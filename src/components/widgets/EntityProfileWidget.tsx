@@ -90,7 +90,7 @@ export const EntityProfileWidget = ({
         </div>
         <span className="opacity-60">{reviewCount} reviews</span>
         {isVerified && (
-          <div className="flex items-center gap-1 ml-auto">
+          <div className="flex items-center gap-1 ms-auto">
             <CheckCircle size={12} className="text-[hsl(105,50%,30%)]" />
             <span className="text-[10px] font-medium" style={{ color: "hsl(105,50%,30%)" }}>Verified</span>
           </div>
