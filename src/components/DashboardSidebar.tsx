@@ -55,7 +55,6 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
   const grouped = isNavGroups(navItems);
 
-  // Auto-expand groups containing the active route
   const getInitialOpen = () => {
     if (!grouped) return {};
     const map: Record<string, boolean> = {};
@@ -90,11 +89,11 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         className={cn(
           'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
           isActive
-            ? 'bg-brand-red/10 text-brand-red'
-            : 'text-foreground/70 hover:bg-secondary hover:text-foreground'
+            ? 'bg-sidebar-active/15 text-sidebar-active border-s-2 border-sidebar-active'
+            : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground border-s-2 border-transparent'
         )}
       >
-        <span className={cn('flex-shrink-0', isActive ? 'text-brand-red' : 'text-muted-foreground')}>
+        <span className={cn('flex-shrink-0', isActive ? 'text-sidebar-active' : 'text-sidebar-muted')}>
           {item.icon}
         </span>
         <span className="truncate">{item.label}</span>
@@ -103,9 +102,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   };
 
   return (
-    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-card text-foreground border-e border-border">
+    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-sidebar-bg text-sidebar-foreground">
       {/* Brand */}
-      <div className="p-4 border-b border-border">
+      <div className="p-4 border-b border-white/10">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
@@ -115,28 +114,32 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </div>
 
       {/* Profile Card */}
-      <div className="px-4 py-5 border-b border-border">
+      <div className="px-4 py-5 border-b border-white/10">
         {companyInfo ? (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
+            <div className="w-10 h-10 rounded-lg bg-sidebar-active/20 flex items-center justify-center text-sidebar-active font-bold text-sm">
               {companyInfo.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold truncate">{companyInfo.name}</p>
-              <p className="text-[11px] text-muted-foreground truncate">{companyInfo.subtitle}</p>
+              <p className="text-sm font-semibold text-sidebar-foreground truncate">{companyInfo.name}</p>
+              <p className="text-[11px] text-sidebar-muted truncate">{companyInfo.subtitle}</p>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
-            <Avatar className="h-16 w-16 ring-3 ring-brand-red/20 mb-2">
-              <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
-                {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
-            <p className="text-sm font-bold text-foreground truncate max-w-full">{profile?.full_name || 'User'}</p>
-            <p className="text-[11px] text-muted-foreground mt-0.5">
-              <span className="inline-block me-1 w-2 h-2 rounded-full bg-trust-excellent align-middle" />
+            <div className="relative">
+              <Avatar className="h-16 w-16 ring-3 ring-sidebar-active/30 mb-2">
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="bg-sidebar-active text-white text-xl font-bold">
+                  {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              {/* Online indicator */}
+              <span className="absolute bottom-2 end-0 w-3.5 h-3.5 rounded-full bg-sidebar-active border-2 border-sidebar-bg" />
+            </div>
+            <p className="text-sm font-bold text-sidebar-foreground truncate max-w-full">{profile?.full_name || 'User'}</p>
+            <p className="text-[11px] text-sidebar-muted mt-0.5">
+              <span className="inline-block me-1 w-2 h-2 rounded-full bg-sidebar-active align-middle" />
               {t("dashboard.memberSince", "Member since")}{' '}
               {profile?.created_at
                 ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
@@ -154,6 +157,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
               tierEmoji={gamification.currentTier.emoji}
               tierName={gamification.currentTier.name}
               nextTierPoints={gamification.pointsToNext > 0 ? gamification.pointsToNext : null}
+              darkMode
             />
           </div>
         )}
@@ -171,7 +175,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                   onClick={() => toggleGroup(group.label)}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-colors',
-                    hasActive ? 'text-brand-red' : 'text-muted-foreground hover:text-foreground'
+                    hasActive ? 'text-sidebar-active' : 'text-sidebar-muted/60 hover:text-sidebar-muted'
                   )}
                 >
                   <span>{group.label}</span>
@@ -191,17 +195,17 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </nav>
 
       {/* Mini Leaderboard */}
-      {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} />}
+      {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} darkMode />}
 
       {/* Bottom */}
-      <div className="p-3 space-y-2 border-t border-border safe-bottom">
+      <div className="p-3 space-y-2 border-t border-white/10 safe-bottom">
         {bottomAction && (
           <Button
             onClick={() => {
               bottomAction.onClick();
               onNavigate?.();
             }}
-            className="w-full bg-brand-red text-white hover:bg-brand-red/90 font-semibold"
+            className="w-full bg-sidebar-active text-white hover:bg-sidebar-active/90 font-semibold"
           >
             {bottomAction.icon}
             <span className="ms-2">{bottomAction.label}</span>
@@ -209,7 +213,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         )}
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover transition-all"
         >
           <LogOut className="w-4 h-4" />
           {t("common.signOut", "Sign Out")}
@@ -225,7 +229,7 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
   return (
     <>
       {/* Desktop: permanent sidebar */}
-      <aside className="hidden md:flex w-[260px] flex-shrink-0 h-screen sticky top-0 overflow-hidden border-e border-border">
+      <aside className="hidden md:flex w-[260px] flex-shrink-0 h-screen sticky top-0 overflow-hidden">
         <SidebarContent {...props} />
       </aside>
 
