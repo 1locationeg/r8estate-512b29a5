@@ -18,9 +18,10 @@ import { addToSearchHistory } from "@/lib/searchHistory";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
+  onFocusChange?: (focused: boolean) => void;
 }
 
-export const HeroSearchBar = ({ onSelectDeveloper }: HeroSearchBarProps) => {
+export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBarProps) => {
   const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
