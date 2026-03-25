@@ -1,40 +1,37 @@
 
 
-## Fix: Entity Pages Displaying Inconsistently
+# Fix: Search Suggestions Overlapping Hero Category Cards
 
-### Problem
-When navigating to an entity page, some entities show full details (name, header, business details, trust score) while others skip straight to the summary and trust categories. This happens because:
+## Problem
+The `SearchSuggestions` dropdown in `HeroSearchBar` uses `absolute top-full` positioning, but it's placed **after** the `TractionStats` component in the DOM. This means:
+1. The dropdown appears below the traction stats rather than directly below the search input
+2. It overlaps with the Hero Category Cards beneath it
 
-1. Entities found in the **search index** have rich `meta` data (location, employees, capital, etc.) → `renderEntityDetails()` shows content
-2. Entities found only in the **categories list** (e.g. Farida, Studio, Villa) are constructed in `EntityPage.tsx` **without `meta`** → `renderEntityDetails()` returns `null`, skipping that section
+## Solution
 
-### Fix
+**File: `src/components/HeroSearchBar.tsx`**
 
-**Update `EntityPage.tsx`** — when constructing a `SearchItem` from a category item, include the available data (`likes`, `shares`, `replies`, `trendScore`, `launchDate`) as `meta`:
+Restructure the desktop layout so the search input wrapper is the `relative` positioned anchor, and `SearchSuggestions` is placed directly after the search input container (not after `TractionStats`).
 
-```tsx
-return {
-  id: item.id,
-  name: isRTL ? item.nameAr : item.nameEn,
-  category: categoryToSearchCategory(cat.labelKey),
-  subtitle: t(cat.labelKey),
-  image: item.avatar,
-  rating: item.rating,
-  reviewCount: item.reviewCount,
-  meta: {
-    likes: item.likes,
-    shares: item.shares,
-    replies: item.replies,
-    trendScore: item.trendScore,
-    launchDate: item.launchDate,
-  },
-};
+Specifically:
+1. Wrap the search input container (the `div` with the border/rounded styling) and the `SearchSuggestions` dropdown together inside a `relative` wrapper
+2. Move `TractionStats` **outside** this relative wrapper so it doesn't interfere with dropdown positioning
+3. Hide `TractionStats` when search is focused to avoid visual clutter behind the dropdown
+
+This keeps the dropdown anchored directly below the search bar input, floating above everything else via `z-50`, without overlapping the category cards.
+
+## Technical Detail
+
 ```
+Current DOM order (inside max-w-3xl relative):
+  ├── Search Input Container
+  ├── TractionStats          ← pushes dropdown down
+  ├── SearchSuggestions      ← absolute, overlaps categories
 
-**Additionally**, the `ItemDetailSection` currently only renders entity details for specific categories (`developers`, `projects`, `brokers`, `apps`) that have category-specific fields. For generic categories (`units`, `categories`), it returns `null`. We need to add a fallback details renderer for entities that don't match those specific categories — showing whatever meta is available (e.g. trend score, launch date) and the category/subtitle info, so every entity page has a consistent layout with at least a basic details card.
-
-### Changes
-
-1. **`src/pages/EntityPage.tsx`** — Pass `meta` when constructing `SearchItem` from category items
-2. **`src/components/ItemDetailSection.tsx`** — Add a fallback in `renderEntityDetails` for categories not explicitly handled (`units`, `categories`), showing available generic metrics like launch date, trend score, likes, and the category subtitle
+Fixed DOM order:
+  ├── div.relative           ← new anchor
+  │   ├── Search Input Container
+  │   └── SearchSuggestions  ← absolute, directly under input
+  ├── TractionStats          ← outside, hidden when focused
+```
 
