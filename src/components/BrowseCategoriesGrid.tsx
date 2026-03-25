@@ -93,12 +93,11 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
                     key={item.id}
                     onClick={() => navigate(`/entity/${item.id}`)}
                     className={cn(
-                      "w-full flex items-center justify-between gap-1 px-2 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors text-start",
-                      isRTL && "flex-row-reverse text-end"
+                      "w-full flex items-center justify-between gap-1 px-2 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-secondary/60 transition-colors text-start"
                     )}
                   >
                     <span className="truncate">{isRTL ? item.nameAr : item.nameEn}</span>
-                    <ChevronRight className={cn("w-3 h-3 shrink-0 opacity-40", isRTL && "rotate-180")} />
+                    <ChevronRight className="w-3 h-3 shrink-0 opacity-40 rtl:rotate-180" />
                   </button>
                 ))}
                 {itemsToShow.length > 4 && (

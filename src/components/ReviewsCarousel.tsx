@@ -181,9 +181,9 @@ export function ReviewsCarousel() {
 
   const renderStars = (rating: number) => {
     const stars = [1, 2, 3, 4, 5];
-    const orderedStars = isRTL ? [...stars].reverse() : stars;
+    const stars = [1, 2, 3, 4, 5];
     return (
-      <div className={`flex gap-0.5 ${isRTL ? "flex-row-reverse" : ""}`}>
+      <div className="flex gap-0.5">
         {orderedStars.map((i) => (
           <Star
             key={i}
