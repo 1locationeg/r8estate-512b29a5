@@ -13,7 +13,8 @@ import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket,
+  ArrowUp
 } from 'lucide-react';
 import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
@@ -118,7 +119,10 @@ const DevOverview = () => {
               )}
               <span className="text-2xl font-bold text-foreground">{s.value}</span>
             </div>
-          </div>
+            <div className={`flex items-center gap-1 mt-1.5 text-[10px] font-medium ${s.deltaColor}`}>
+              <ArrowUp className="w-3 h-3" />
+              {s.delta}
+            </div>
         ))}
       </div>
 
