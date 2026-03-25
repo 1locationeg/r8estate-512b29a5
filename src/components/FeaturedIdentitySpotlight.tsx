@@ -82,7 +82,7 @@ export const FeaturedIdentitySpotlight = () => {
   };
 
   return (
-    <section className="w-full max-w-3xl mx-auto px-4 mt-4 mb-3">
+    <section className="w-full max-w-[1100px] mx-auto px-0 mt-4 mb-3">
       <div className="flex items-center justify-between mb-2 py-0">
         <h2 className="text-base md:text-lg font-bold text-foreground">
           Spotlight
