@@ -235,6 +235,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
               onWriteReview={handleWriteReview}
               onCompare={handleCompare}
               selectedIndex={selectedIndex}
+              className="relative top-auto mt-0 rounded-none border-0 shadow-none max-h-none"
             />
           </div>
 
