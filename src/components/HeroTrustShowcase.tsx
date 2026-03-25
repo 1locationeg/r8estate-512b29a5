@@ -453,7 +453,7 @@ export const HeroTrustShowcase = () => {
               rowsVisible >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <p className="text-xs md:text-base text-foreground/80 italic leading-relaxed line-clamp-3">
+            <p className="text-xs md:text-base text-foreground/80 italic leading-relaxed line-clamp-2">
               {scenario.comment}
             </p>
           </div>
