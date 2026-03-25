@@ -244,6 +244,42 @@
   animation: fadeInUp 0.5s ease-out both;
 }
 
+/* Live Activity Feed — animated conic-gradient border */
+@property --feed-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.live-feed-border {
+  position: relative;
+}
+
+.live-feed-gradient-spin {
+  background: conic-gradient(
+    from var(--feed-angle),
+    hsl(var(--primary)) 0%,
+    hsl(var(--accent)) 25%,
+    hsl(var(--destructive)) 50%,
+    hsl(var(--accent)) 75%,
+    hsl(var(--primary)) 100%
+  );
+  animation: feed-spin 3s linear infinite;
+}
+
+@keyframes feed-spin {
+  to { --feed-angle: 360deg; }
+}
+
+.live-feed-keyword {
+  animation: keyword-pulse 2s ease-in-out infinite;
+}
+
+@keyframes keyword-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.75; transform: scale(1.03); }
+}
+
 /* Prevent text selection on interactive elements on mobile */
 @layer utilities {
   .select-none-mobile {
