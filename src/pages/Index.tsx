@@ -273,7 +273,7 @@ const Index = () => {
           </div>
 
           {/* Live Activity Feed */}
-          <div className={cn("mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+          <div className={cn("mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
             <LiveActivityFeed />
           </div>
 
