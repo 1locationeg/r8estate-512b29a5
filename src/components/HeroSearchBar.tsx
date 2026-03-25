@@ -195,10 +195,74 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
     };
   }, []);
 
+  // Mobile full-screen overlay
+  if (isMobile && isFocused) {
+    return (
+      <>
+        <div className="fixed inset-0 z-50 bg-background flex flex-col transition-all duration-300 ease-in-out animate-fade-in">
+          {/* Top bar with input + cancel */}
+          <div className="flex items-center gap-2 p-3 border-b border-border safe-top">
+            <div className="flex-1 relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                data-hero-search
+                ref={inputRef}
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder={trustPhrases[placeholderIndex]}
+                autoFocus
+                className="w-full pl-9 pr-3 py-3 bg-secondary border border-border rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                style={{ fontSize: '16px' }}
+              />
+            </div>
+            <button
+              onClick={dismissFocus}
+              className="flex items-center justify-center px-3 py-3 text-sm font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
+            >
+              Cancel
+            </button>
+          </div>
+
+          {/* Full-screen search results */}
+          <div className="flex-1 overflow-y-auto">
+            <SearchSuggestions
+              query={query}
+              isOpen={true}
+              onSelect={(item) => { dismissFocus(); handleSelect(item); }}
+              onCorrection={handleCorrection}
+              onWriteReview={handleWriteReview}
+              onCompare={handleCompare}
+              selectedIndex={selectedIndex}
+            />
+          </div>
+        </div>
+
+        {/* Modals still rendered */}
+        <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
+        <WriteReviewModal
+          open={!!reviewItem}
+          onOpenChange={(open) => !open && setReviewItem(null)}
+          developerName={reviewItem?.name || ""}
+          developerId={reviewItem?.id || ""}
+        />
+        <CompareModal
+          item={compareItem}
+          open={!!compareItem}
+          onClose={() => setCompareItem(null)}
+        />
+      </>
+    );
+  }
+
   return (
     <div className="w-full max-w-3xl mx-auto relative">
-      {/* Search Container */}
-      <div className="relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04]">
+      {/* Search Container with glow on focus */}
+      <div className={cn(
+        "relative flex items-center gap-2 bg-card border border-border rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
+        isFocused && "z-50 hero-focus-glow shadow-lg shadow-primary/10"
+      )}>
         {/* Ask AI Button */}
         <button 
           onClick={() => setIsAIModalOpen(true)}
@@ -221,6 +285,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
             onKeyDown={handleKeyDown}
             placeholder=""
             className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
+            style={{ fontSize: isMobile ? '16px' : undefined }}
           />
           {/* Animated trust placeholder */}
           {!query && (
