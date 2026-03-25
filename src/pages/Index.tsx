@@ -242,7 +242,25 @@ const Index = () => {
                         </p>
                       </>
                 }
-                  </div>
+                   </div>
+
+                    {/* Search Bar — inside hero card */}
+                    {userMode === "buyers" && (
+                      <>
+                        {searchFocused && (
+                          <div
+                            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
+                            onClick={() => setSearchFocused(false)}
+                          />
+                        )}
+                        <div className={cn(
+                          "w-full max-w-[700px] mx-auto mt-3 mb-2 transition-all duration-300 ease-in-out",
+                          searchFocused && "relative z-50"
+                        )}>
+                          <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
+                        </div>
+                      </>
+                    )}
 
                     {/* Interactive Trust Showcase — Gauge as Proof */}
                     <div id="trust-showcase"><HeroTrustShowcase /></div>
@@ -252,21 +270,6 @@ const Index = () => {
 
           {userMode === "buyers" ?
           <>
-              {/* Desktop backdrop overlay when search is focused */}
-              {searchFocused && (
-                <div
-                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
-                  onClick={() => setSearchFocused(false)}
-                />
-              )}
-
-              {/* Search Bar */}
-              <div className={cn(
-                "w-full max-w-[1100px] mb-2 md:mb-4 transition-all duration-300 ease-in-out",
-                searchFocused && "relative z-50"
-              )}>
-                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
-              </div>
 
 
                {/* Trust Strip — dark bar with pill items */}
