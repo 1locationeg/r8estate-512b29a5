@@ -181,10 +181,9 @@ export function ReviewsCarousel() {
 
   const renderStars = (rating: number) => {
     const stars = [1, 2, 3, 4, 5];
-    const stars = [1, 2, 3, 4, 5];
     return (
       <div className="flex gap-0.5">
-        {orderedStars.map((i) => (
+        {stars.map((i) => (
           <Star
             key={i}
             className={`w-3 h-3 flex-shrink-0 ${i <= rating ? "text-accent fill-accent" : "text-muted stroke-muted-foreground/30 fill-none"}`}
