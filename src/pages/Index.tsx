@@ -1,4 +1,5 @@
 import { useState, useMemo, useEffect } from "react"; // unified navbar
+import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
@@ -40,6 +41,7 @@ const Index = () => {
   const [externalCategory, setExternalCategory] = useState<string | null>(null);
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const [togglePulse, setTogglePulse] = useState(false);
+  const [searchFocused, setSearchFocused] = useState(false);
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -250,14 +252,25 @@ const Index = () => {
 
           {userMode === "buyers" ?
           <>
+              {/* Desktop backdrop overlay when search is focused */}
+              {searchFocused && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
+                  onClick={() => setSearchFocused(false)}
+                />
+              )}
+
               {/* Search Bar */}
-              <div className="w-full max-w-[1100px] mb-2 md:mb-4">
-                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+              <div className={cn(
+                "w-full max-w-[1100px] mb-2 md:mb-4 transition-all duration-300 ease-in-out",
+                searchFocused && "relative z-50"
+              )}>
+                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
               </div>
 
 
                {/* Trust Strip — dark bar with pill items */}
-               <div className="w-full max-w-[1100px] mb-3">
+               <div className={cn("w-full max-w-[1100px] mb-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -275,11 +288,12 @@ const Index = () => {
               </div>
 
               {/* Live Activity Feed */}
-              <div className="mb-3">
+              <div className={cn("mb-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
                 <LiveActivityFeed />
               </div>
 
               {/* Category Links + Special View Grid */}
+              <div className={cn("transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <HeroCategoryLinks
               activeView={activeView}
               onViewSelect={(view) => {
@@ -299,7 +313,7 @@ const Index = () => {
                 setSpecialViewItem(null);
                 setTimeout(() => setExternalCategory(null), 100);
               }} />
-            
+              </div>
 
 
 
