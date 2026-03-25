@@ -8,22 +8,10 @@ import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
-// Brand logo mapping — uses Clearbit Logo API for known domains, falls back to generated avatar
+// Brand logo mapping — permanent local avatars (no external API dependency)
 // Business owners can override this by uploading their own logo from their profile
-const brandLogo = (name: string, domain?: string): string =>
-  domain ? `https://logo.clearbit.com/${domain}` : generateAvatar(name, "category");
-
-// Stock photos for unit/property types (no corporate domain available)
-const unitPhotos: Record<string, string> = {
-  studio: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=200&h=200&fit=crop",
-  "twin-house": "https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=200&h=200&fit=crop",
-  villa: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=200&h=200&fit=crop",
-  chalet: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=200&h=200&fit=crop",
-  penthouse: "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=200&h=200&fit=crop",
-  loft: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=200&h=200&fit=crop",
-  office: "https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&h=200&fit=crop",
-  retail: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=200&h=200&fit=crop",
-};
+const brandLogo = (name: string, _domain?: string): string =>
+  generateAvatar(name, "category");
 
 export interface CategoryItem {
   id: string;
@@ -54,14 +42,14 @@ export const categories: Category[] = [
     icon: <LayoutGrid className="w-4 h-4 text-primary" />,
     labelKey: "categories.units",
     items: [
-      { id: "studio", nameEn: "Studio", nameAr: "ستوديو", avatar: unitPhotos["studio"], rating: 4.2, reviewCount: 156, likes: 342, shares: 89, replies: 45, launchDate: "2025-01-15", trendScore: 78 },
-      { id: "twin-house", nameEn: "Twin House", nameAr: "توين هاوس", avatar: unitPhotos["twin-house"], rating: 4.5, reviewCount: 89, likes: 234, shares: 56, replies: 23, launchDate: "2024-11-20", trendScore: 65 },
-      { id: "villa", nameEn: "Villa", nameAr: "فيلا", avatar: unitPhotos["villa"], rating: 4.7, reviewCount: 234, likes: 567, shares: 145, replies: 89, launchDate: "2024-06-10", trendScore: 92 },
-      { id: "chalet", nameEn: "Chalet", nameAr: "شاليه", avatar: unitPhotos["chalet"], rating: 4.3, reviewCount: 178, likes: 289, shares: 67, replies: 34, launchDate: "2025-02-01", trendScore: 88 },
-      { id: "penthouse", nameEn: "Penthouse", nameAr: "بنتهاوس", avatar: unitPhotos["penthouse"], rating: 4.8, reviewCount: 67, likes: 456, shares: 123, replies: 67, launchDate: "2025-01-28", trendScore: 95 },
-      { id: "loft", nameEn: "Loft", nameAr: "لوفت", avatar: unitPhotos["loft"], rating: 4.1, reviewCount: 45, likes: 123, shares: 34, replies: 12, launchDate: "2024-12-05", trendScore: 42 },
-      { id: "office", nameEn: "Office", nameAr: "مكتب", avatar: unitPhotos["office"], rating: 4.4, reviewCount: 112, likes: 234, shares: 56, replies: 28, launchDate: "2024-09-15", trendScore: 71 },
-      { id: "retail", nameEn: "Retail", nameAr: "محل تجاري", avatar: unitPhotos["retail"], rating: 4.0, reviewCount: 98, likes: 167, shares: 45, replies: 19, launchDate: "2024-10-22", trendScore: 55 },
+      { id: "studio", nameEn: "Studio", nameAr: "ستوديو", avatar: generateAvatar("Studio", "category"), rating: 4.2, reviewCount: 156, likes: 342, shares: 89, replies: 45, launchDate: "2025-01-15", trendScore: 78 },
+      { id: "twin-house", nameEn: "Twin House", nameAr: "توين هاوس", avatar: generateAvatar("Twin House", "category"), rating: 4.5, reviewCount: 89, likes: 234, shares: 56, replies: 23, launchDate: "2024-11-20", trendScore: 65 },
+      { id: "villa", nameEn: "Villa", nameAr: "فيلا", avatar: generateAvatar("Villa", "category"), rating: 4.7, reviewCount: 234, likes: 567, shares: 145, replies: 89, launchDate: "2024-06-10", trendScore: 92 },
+      { id: "chalet", nameEn: "Chalet", nameAr: "شاليه", avatar: generateAvatar("Chalet", "category"), rating: 4.3, reviewCount: 178, likes: 289, shares: 67, replies: 34, launchDate: "2025-02-01", trendScore: 88 },
+      { id: "penthouse", nameEn: "Penthouse", nameAr: "بنتهاوس", avatar: generateAvatar("Penthouse", "category"), rating: 4.8, reviewCount: 67, likes: 456, shares: 123, replies: 67, launchDate: "2025-01-28", trendScore: 95 },
+      { id: "loft", nameEn: "Loft", nameAr: "لوفت", avatar: generateAvatar("Loft", "category"), rating: 4.1, reviewCount: 45, likes: 123, shares: 34, replies: 12, launchDate: "2024-12-05", trendScore: 42 },
+      { id: "office", nameEn: "Office", nameAr: "مكتب", avatar: generateAvatar("Office", "category"), rating: 4.4, reviewCount: 112, likes: 234, shares: 56, replies: 28, launchDate: "2024-09-15", trendScore: 71 },
+      { id: "retail", nameEn: "Retail", nameAr: "محل تجاري", avatar: generateAvatar("Retail", "category"), rating: 4.0, reviewCount: 98, likes: 167, shares: 45, replies: 19, launchDate: "2024-10-22", trendScore: 55 },
     ],
   },
   {
