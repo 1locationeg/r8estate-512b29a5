@@ -2,7 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins } from 'lucide-react';
+import { useBuyerGamification } from '@/hooks/useBuyerGamification';
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -22,14 +23,15 @@ import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
-  const { profile, role, refreshProfile } = useAuth();
+  const { profile, role, refreshProfile, user } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const gamification = useBuyerGamification();
 
   const stats = [
-    { icon: Building2, label: 'Developers Viewed', value: '24', bg: 'bg-primary/10', iconColor: 'text-primary' },
-    { icon: Star, label: 'Reviews Written', value: '3', bg: 'bg-accent/20', iconColor: 'text-accent' },
-    { icon: Heart, label: 'Saved Projects', value: '12', bg: 'bg-brand-red/10', iconColor: 'text-brand-red' },
-    { icon: TrendingUp, label: 'Reports Unlocked', value: '8', bg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent' },
+    { icon: Building2, label: 'Developers Viewed', value: '24', bg: 'bg-primary/10', iconColor: 'text-primary', delta: '+3 this week', deltaColor: 'text-trust-excellent' },
+    { icon: Star, label: 'Reviews Written', value: '3', bg: 'bg-accent/20', iconColor: 'text-accent', delta: '1 draft pending', deltaColor: 'text-accent' },
+    { icon: Heart, label: 'Saved Projects', value: '12', bg: 'bg-brand-red/10', iconColor: 'text-brand-red', delta: '3 new matches', deltaColor: 'text-trust-excellent' },
+    { icon: TrendingUp, label: 'Reports Unlocked', value: '8', bg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent', delta: '2 this month', deltaColor: 'text-muted-foreground' },
   ];
 
   const recentReviews = reviews.slice(0, 4);
@@ -50,24 +52,144 @@ const BuyerOverview = () => {
     }
   };
 
+  // Tier journey data
+  const tiers = [
+    { name: 'Visitor', emoji: '👋', minPts: 0 },
+    { name: 'Newcomer', emoji: '🌱', minPts: 10 },
+    { name: 'Explorer', emoji: '🧭', minPts: 50 },
+    { name: 'Pro', emoji: '⭐', minPts: 150 },
+  ];
+  const currentTierIdx = tiers.findIndex(t => t.name === gamification.currentTier?.name);
+
+  // Profile completion checklist
+  const profileChecks = [
+    { label: 'Add your name', done: !!profile?.full_name, pts: 5 },
+    { label: 'Upload photo', done: !!profile?.avatar_url, pts: 10 },
+    { label: 'Set buyer type', done: !!profile?.buyer_type, pts: 5 },
+    { label: 'Add phone number', done: !!profile?.phone_number, pts: 5 },
+    { label: 'Set budget range', done: !!profile?.budget_range, pts: 5 },
+  ];
+
   return (
-    <div>
-      {/* Welcome */}
-      <div className="mb-4">
-        <h2 className="text-2xl font-bold text-foreground">
-          Welcome back, {profile?.full_name?.split(' ')[0] || 'there'}!
-        </h2>
-        <p className="text-muted-foreground text-sm">Continue your search for the perfect developer</p>
+    <div className="space-y-6">
+      {/* Hero Row */}
+      <div className="grid md:grid-cols-[1fr_320px] gap-6">
+        {/* Left: Welcome + Post Box */}
+        <div className="space-y-4">
+          {/* Verified badge + Greeting */}
+          <div>
+            {user && (
+              <Badge className="mb-2 bg-primary/10 text-primary border-0 text-[10px] gap-1">
+                <BadgeCheck className="w-3 h-3" /> Verified Buyer
+              </Badge>
+            )}
+            <h2 className="text-2xl font-bold text-foreground">
+              Welcome back, {profile?.full_name?.split(' ')[0] || 'there'}!
+            </h2>
+            {gamification.pointsToNext > 0 && (
+              <p className="text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-accent" />
+                You're {gamification.pointsToNext} pts away from {gamification.nextTier?.name || 'the next tier'}
+              </p>
+            )}
+          </div>
+
+          {/* Community Post Box */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <Avatar className="h-9 w-9 flex-shrink-0">
+                <AvatarImage src={profile?.avatar_url || undefined} />
+                <AvatarFallback className="bg-primary text-primary-foreground text-xs font-bold">
+                  {profile?.full_name?.charAt(0) || 'U'}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                onClick={() => navigate('/community')}
+                className="flex-1 text-start px-3 py-2.5 bg-secondary/60 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors"
+              >
+                Share an experience, ask a question...
+              </button>
+            </div>
+            <div className="flex items-center gap-2 mt-3 ps-12">
+              {['Discussion', 'Question', 'Tip'].map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => navigate('/community')}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Onboarding Wizard */}
+          <OnboardingWizard />
+        </div>
+
+        {/* Right: Profile Completion + Tier Journey */}
+        <div className="space-y-4">
+          {/* Profile Completion */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-foreground">Complete Your Profile</h3>
+              <span className="text-xs font-bold text-primary">{gamification.profileCompletion}%</span>
+            </div>
+            <Progress value={gamification.profileCompletion} className="h-1.5 mb-3" />
+            <div className="space-y-2">
+              {profileChecks.map(check => (
+                <div key={check.label} className="flex items-center gap-2.5 text-xs">
+                  <CheckCircle2 className={`w-3.5 h-3.5 flex-shrink-0 ${check.done ? 'text-trust-excellent' : 'text-muted-foreground/30'}`} />
+                  <span className={check.done ? 'text-muted-foreground line-through' : 'text-foreground'}>{check.label}</span>
+                  {!check.done && (
+                    <span className="ms-auto text-[10px] font-bold text-coin flex items-center gap-0.5">
+                      <Coins className="w-3 h-3" /> +{check.pts}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier Journey Card */}
+          <div className="bg-sidebar-bg rounded-xl p-4 text-sidebar-foreground">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold">Your Journey</h3>
+              <span className="text-xs font-bold text-coin flex items-center gap-1">
+                <Coins className="w-3.5 h-3.5" /> {gamification.totalPoints} pts
+              </span>
+            </div>
+            {/* Track */}
+            <div className="relative flex items-center justify-between mb-2">
+              <div className="absolute inset-x-0 top-1/2 h-0.5 bg-white/10 -translate-y-1/2" />
+              {tiers.map((tier, i) => {
+                const reached = i <= currentTierIdx;
+                return (
+                  <div key={tier.name} className="relative flex flex-col items-center z-10">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm ${
+                      reached ? 'bg-sidebar-active text-white' : 'bg-white/10 text-sidebar-muted'
+                    }`}>
+                      {tier.emoji}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-between text-[9px] text-sidebar-muted">
+              {tiers.map(tier => (
+                <span key={tier.name} className="text-center w-10">{tier.name}</span>
+              ))}
+            </div>
+            <p className="text-[10px] text-sidebar-muted mt-2.5 text-center">
+              🔓 Unlock exclusive badges & perks as you level up
+            </p>
+          </div>
+        </div>
       </div>
 
-      {/* Onboarding Wizard */}
-      <div className="mb-6">
-        <OnboardingWizard />
-      </div>
-
-      {/* Register Your Business CTA - only for non-developer users */}
+      {/* Register Your Business CTA */}
       {role !== 'business' && role !== 'admin' && (
-      <div className="mb-8 relative overflow-hidden rounded-2xl border border-business-border/30 bg-business">
+      <div className="relative overflow-hidden rounded-2xl border border-business-border/30 bg-business">
         <div className="absolute inset-0 opacity-5">
           <div className="absolute -top-10 -end-10 w-40 h-40 bg-business-border rounded-full blur-3xl" />
         </div>
@@ -97,8 +219,8 @@ const BuyerOverview = () => {
       </div>
       )}
 
-      {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      {/* Stats with Deltas */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="bg-card border border-border rounded-xl p-4">
             <div className={`w-10 h-10 ${s.bg} rounded-lg flex items-center justify-center mb-3`}>
@@ -106,6 +228,10 @@ const BuyerOverview = () => {
             </div>
             <div className="text-2xl font-bold text-foreground">{s.value}</div>
             <div className="text-xs text-muted-foreground">{s.label}</div>
+            <div className={`flex items-center gap-1 mt-1.5 text-[10px] font-medium ${s.deltaColor}`}>
+              <ArrowUp className="w-3 h-3" />
+              {s.delta}
+            </div>
           </div>
         ))}
       </div>

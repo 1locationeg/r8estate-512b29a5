@@ -13,7 +13,8 @@ import { GamificationPanel } from '@/components/GamificationPanel';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
-  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket
+  Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket,
+  ArrowUp
 } from 'lucide-react';
 import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
@@ -76,9 +77,9 @@ const DevOverview = () => {
   const { profileCompletion, currentTier } = useGamification();
 
   const stats = [
-    { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent' },
-    { icon: Edit, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary' },
-    { icon: Eye, label: 'Total Visitors', value: '7.0K', iconBg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent' },
+    { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent', delta: '+0.2 this month', deltaColor: 'text-trust-excellent' },
+    { icon: Edit, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary', delta: '3 new this week', deltaColor: 'text-trust-excellent' },
+    { icon: Eye, label: 'Total Visitors', value: '7.0K', iconBg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent', delta: '+12% vs last month', deltaColor: 'text-trust-excellent' },
   ];
 
   return (
@@ -117,6 +118,10 @@ const DevOverview = () => {
                 </div>
               )}
               <span className="text-2xl font-bold text-foreground">{s.value}</span>
+            </div>
+            <div className={`flex items-center gap-1 mt-1.5 text-[10px] font-medium ${s.deltaColor}`}>
+              <ArrowUp className="w-3 h-3" />
+              {s.delta}
             </div>
           </div>
         ))}

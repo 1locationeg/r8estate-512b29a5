@@ -74,6 +74,13 @@
     /* Page background — light gray for PWA feel */
     --page-bg: 210 20% 98%;
 
+    /* Navy sidebar */
+    --sidebar-bg: 203 81% 11%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-muted: 203 30% 60%;
+    --sidebar-active: 142 76% 36%;
+    --sidebar-hover: 203 50% 18%;
+
     --radius: 0.75rem;
   }
 
@@ -127,6 +134,12 @@
     --coin: 38 91% 60%;
     --coin-foreground: 30 80% 15%;
     --page-bg: 203 50% 6%;
+
+    --sidebar-bg: 203 81% 8%;
+    --sidebar-foreground: 0 0% 100%;
+    --sidebar-muted: 203 30% 55%;
+    --sidebar-active: 142 76% 40%;
+    --sidebar-hover: 203 50% 14%;
   }
 }
 
