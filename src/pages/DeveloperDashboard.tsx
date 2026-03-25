@@ -123,6 +123,7 @@ const DevOverview = () => {
               <ArrowUp className="w-3 h-3" />
               {s.delta}
             </div>
+          </div>
         ))}
       </div>
 
