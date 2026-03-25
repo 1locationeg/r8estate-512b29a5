@@ -268,8 +268,13 @@ const Index = () => {
              </div>
 
           {/* Platform Traction Stats — below hero card */}
-          <div className={cn("w-full max-w-[1100px] mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+          <div className={cn("w-full max-w-[1100px] mt-0 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
             <TractionStats />
+          </div>
+
+          {/* Live Activity Feed */}
+          <div className={cn("mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <LiveActivityFeed />
           </div>
 
           {userMode === "buyers" ?
@@ -294,10 +299,6 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* Live Activity Feed */}
-              <div className={cn("mb-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-                <LiveActivityFeed />
-              </div>
 
               {/* Category Links + Special View Grid */}
               <div className={cn("transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
