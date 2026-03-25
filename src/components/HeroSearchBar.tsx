@@ -1,7 +1,8 @@
 import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchPhrases } from "@/hooks/useSearchPhrases";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic, X } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
