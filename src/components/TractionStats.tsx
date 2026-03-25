@@ -57,21 +57,21 @@ export function TractionStats() {
   });
 
   return (
-    <div ref={ref} className="w-full max-w-[1100px] mx-auto mt-3 mb-1">
-      <div className="grid grid-cols-4 gap-2 sm:gap-3">
+    <div ref={ref} className="w-full max-w-[1100px] mx-auto">
+      <div className="grid grid-cols-4 gap-1 sm:gap-2">
         {stats.map((s, i) => {
           const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
             <div
               key={s.labelKey}
-              className="flex flex-col items-center gap-1 py-3 px-4 rounded-xl border border-border/60 bg-card shadow-sm"
+              className="flex flex-col items-center gap-0.5 py-1 px-2"
             >
-              <Icon className="w-4 h-4 text-brand-red mb-0.5" />
-              <span className={`text-lg md:text-xl font-extrabold ${s.colorClass} tabular-nums leading-none`}>
+              <Icon className="w-3.5 h-3.5 text-brand-red" />
+              <span className={`text-sm md:text-base font-extrabold ${s.colorClass} tabular-nums leading-none`}>
                 {displayVal}
               </span>
-              <span className="text-[10px] md:text-xs font-semibold text-foreground leading-none text-center">
+              <span className="text-[9px] md:text-[11px] font-semibold text-foreground leading-none text-center">
                 {t(s.labelKey)}
               </span>
             </div>
