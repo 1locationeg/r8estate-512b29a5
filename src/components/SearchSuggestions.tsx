@@ -229,10 +229,10 @@ export const SearchSuggestions = ({
         key={`${item.category}-${item.id}`}
         data-index={currentIndex}
         className={cn(
-          "px-3 py-2.5 md:px-4 md:py-3.5 transition-colors border-b border-border/40 last:border-b-0",
+          "px-4 py-3 md:px-5 md:py-3.5 transition-all duration-200 border-b border-border/30 last:border-b-0",
           isSelected 
             ? "bg-primary/5" 
-            : "hover:bg-secondary/30"
+            : "hover:bg-secondary/40 hover:scale-[1.005]"
         )}
       >
         {/* Main item row - clickable */}
@@ -352,11 +352,11 @@ export const SearchSuggestions = ({
     
     return (
       <div key={category} className="py-2">
-        <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
           {categoryIcons[category]}
           <span>{label}</span>
         </div>
-        <div className="mt-1">
+        <div className="mt-0.5">
           {items.map((item) => renderItem(item, itemIndex + 1 === selectedIndex))}
         </div>
       </div>
@@ -371,7 +371,7 @@ export const SearchSuggestions = ({
     <div 
       ref={containerRef}
       className={cn(
-        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 max-h-[320px] md:max-h-[400px] overflow-y-auto",
+        "absolute top-full left-0 right-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 max-h-[360px] md:max-h-[440px] overflow-y-auto search-suggestions-scrollbar",
         className
       )}
     >
@@ -436,8 +436,8 @@ export const SearchSuggestions = ({
       )}
 
       {/* Visual Category Filter Chips */}
-      <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-sm border-b border-border px-3 py-2">
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar">
+      <div className="sticky top-0 z-10 bg-card/95 backdrop-blur-md border-b border-border/40 px-4 py-2.5">
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar">
           {categoryFilters.map((cf) => {
             const count = groupedToRender
               ? cf.key === 'all'
@@ -488,14 +488,14 @@ export const SearchSuggestions = ({
         return (
           <>
             {/* Trending Searches */}
-            <div className="border-b border-border px-3 py-2.5">
-              <div className="flex items-center gap-1.5 mb-2">
+             <div className="border-b border-border/40 px-5 py-4">
+              <div className="flex items-center gap-1.5 mb-3">
                 <Flame className="w-3.5 h-3.5 text-destructive" />
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">
                   {t("search.trending", "Trending Now")}
                 </span>
               </div>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="flex flex-wrap gap-2">
                 {trendingSearches.map((trend) => {
                   const TIcon = trend.icon;
                   return (
@@ -503,10 +503,10 @@ export const SearchSuggestions = ({
                       key={trend.term}
                       onClick={() => onCorrection(trend.term)}
                       className={cn(
-                        "inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium transition-all",
+                        "inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium transition-all duration-200",
                         trend.hot
-                          ? "bg-destructive/10 text-destructive border border-destructive/20 hover:bg-destructive/20"
-                          : "bg-secondary text-foreground border border-border hover:bg-secondary/80"
+                          ? "bg-destructive/8 text-destructive border border-destructive/15 hover:bg-destructive/15 hover:shadow-sm"
+                          : "bg-secondary/70 text-foreground border border-border/60 hover:bg-secondary hover:shadow-sm"
                       )}
                     >
                       <TIcon className="w-3 h-3" />
@@ -518,8 +518,8 @@ export const SearchSuggestions = ({
             </div>
 
             {history.length > 0 && (
-              <div className="border-b border-border">
-                <div className="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+              <div className="border-b border-border/40">
+                <div className="flex items-center gap-2 px-5 py-2.5 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   <Search className="w-3.5 h-3.5" />
                   <span>{t("search.recent")}</span>
                 </div>
@@ -527,7 +527,7 @@ export const SearchSuggestions = ({
                   <button
                     key={idx}
                     onClick={() => onCorrection(entry.query)}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-foreground hover:bg-secondary/30 transition-colors text-start"
+                    className="w-full flex items-center gap-2.5 px-6 py-2.5 text-sm text-foreground hover:bg-secondary/40 transition-colors duration-200 text-start"
                   >
                     <ArrowRight className="w-3.5 h-3.5 text-muted-foreground flex-shrink-0 rtl:rotate-180" />
                     <span>{entry.query}</span>
@@ -536,7 +536,7 @@ export const SearchSuggestions = ({
               </div>
             )}
             {activeCategory === 'all' && (
-              <div className="px-4 py-3 border-b border-border">
+              <div className="px-5 py-3.5 border-b border-border/40">
                 <div className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t("search.popular")}
                 </div>
@@ -547,7 +547,7 @@ export const SearchSuggestions = ({
       })()}
       
       {/* Category Sections */}
-      <div className="divide-y divide-border/50">
+      <div className="divide-y divide-border/30 pb-2">
         {groupedToRender && categoryOrder
           .filter((cat) => activeCategory === 'all' || cat === activeCategory)
           .map((cat) => {
