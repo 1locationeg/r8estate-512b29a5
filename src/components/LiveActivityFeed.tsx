@@ -146,9 +146,9 @@ export const LiveActivityFeed = () => {
         >
           {/* Live pulse icon */}
           <span className="relative flex h-3 w-3 flex-shrink-0">
-            <span className="absolute inline-flex h-full w-full rounded-full bg-destructive/60 animate-ping" />
-            <span className="absolute inline-flex h-full w-full rounded-full bg-destructive/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" style={{ transform: 'scale(1.3)' }} />
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive shadow-[0_0_6px_2px_hsl(var(--destructive)/0.4)]" />
+            <span className="absolute inline-flex h-full w-full rounded-full border-2 border-destructive/60 animate-ping" />
+            <span className="absolute inline-flex h-full w-full rounded-full border-2 border-destructive/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" style={{ transform: 'scale(1.3)' }} />
+            <span className="relative inline-flex rounded-full h-3 w-3 border-2 border-destructive shadow-[0_0_6px_2px_hsl(var(--destructive)/0.4)]" />
           </span>
 
           <div
