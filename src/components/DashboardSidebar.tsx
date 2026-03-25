@@ -232,7 +232,7 @@ export const DashboardSidebar = (props: DashboardSidebarProps) => {
       {/* Mobile: Sheet drawer */}
       {isControlled && (
         <Sheet open={props.mobileOpen} onOpenChange={props.onMobileOpenChange}>
-          <SheetContent side="left" className="p-0 w-[280px] safe-top safe-bottom">
+          <SheetContent side={document.documentElement.dir === 'rtl' ? 'right' : 'left'} className="p-0 w-[280px] safe-top safe-bottom">
             <SidebarContent {...props} onNavigate={() => props.onMobileOpenChange!(false)} />
           </SheetContent>
         </Sheet>

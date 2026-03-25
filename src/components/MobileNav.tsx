@@ -15,10 +15,11 @@ interface MobileNavProps {
 }
 
 export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const [open, setOpen] = useState(false);
+  const isRTL = i18n.dir() === "rtl";
 
   const navLinks = [
     { label: t("nav.developers"), href: "#" },
@@ -35,7 +36,7 @@ export const MobileNav = ({ onSignOut, getDashboardRoute }: MobileNavProps) => {
           <span className="sr-only">Toggle menu</span>
         </Button>
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
+      <SheetContent side={isRTL ? "left" : "right"} className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
         <div className="flex flex-col h-full">
           {/* Header */}
           <div className="p-4 border-b border-border">
