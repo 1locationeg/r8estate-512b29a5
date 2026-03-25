@@ -313,7 +313,7 @@ const Index = () => {
                 setSpecialViewItem(null);
                 setTimeout(() => setExternalCategory(null), 100);
               }} />
-            
+              </div>
 
 
 
