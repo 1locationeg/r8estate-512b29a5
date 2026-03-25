@@ -207,7 +207,25 @@ const Index = () => {
                        <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
                      </p>
 
-                  {/* Hero Tagline — Claim ABOVE the gauge */}
+                    {/* Search Bar — between descriptor and tagline */}
+                    {userMode === "buyers" && (
+                      <>
+                        {searchFocused && (
+                          <div
+                            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
+                            onClick={() => setSearchFocused(false)}
+                          />
+                        )}
+                        <div className={cn(
+                          "w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out",
+                          searchFocused && "relative z-50"
+                        )}>
+                          <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
+                        </div>
+                      </>
+                    )}
+
+                  {/* Hero Tagline */}
                    <div className="mb-1.5 max-w-[1100px] mx-auto">
                     {userMode === "buyers" ?
                 <>
@@ -227,7 +245,6 @@ const Index = () => {
                         if (searchInput) {searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });searchInput.focus();}
                       }}
                       className="text-foreground underline underline-offset-2 decoration-foreground/60 hover:decoration-primary hover:text-primary transition-colors font-bold">
-                      
                                checked before they signed
                              </button>
 .
@@ -243,24 +260,6 @@ const Index = () => {
                       </>
                 }
                    </div>
-
-                    {/* Search Bar — inside hero card */}
-                    {userMode === "buyers" && (
-                      <>
-                        {searchFocused && (
-                          <div
-                            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
-                            onClick={() => setSearchFocused(false)}
-                          />
-                        )}
-                        <div className={cn(
-                          "w-full max-w-[700px] mx-auto mt-3 mb-2 transition-all duration-300 ease-in-out",
-                          searchFocused && "relative z-50"
-                        )}>
-                          <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
-                        </div>
-                      </>
-                    )}
 
                     {/* Interactive Trust Showcase — Gauge as Proof */}
                     <div id="trust-showcase"><HeroTrustShowcase /></div>
