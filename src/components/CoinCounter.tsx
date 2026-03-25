@@ -76,7 +76,7 @@ export function CoinCounter({ totalPoints, variant = 'compact', tierEmoji, tierN
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5">
-          <span className="text-lg font-bold text-foreground">{displayPoints}</span>
+          <span className="text-lg font-bold text-foreground text-center">{displayPoints}</span>
           <span className="text-xs text-muted-foreground">coins</span>
         </div>
         {tierEmoji && tierName && (
