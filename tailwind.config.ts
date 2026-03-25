@@ -74,6 +74,13 @@ export default {
           DEFAULT: "hsl(var(--coin))",
           foreground: "hsl(var(--coin-foreground))",
         },
+        sidebar: {
+          bg: "hsl(var(--sidebar-bg))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          muted: "hsl(var(--sidebar-muted))",
+          active: "hsl(var(--sidebar-active))",
+          hover: "hsl(var(--sidebar-hover))",
+        },
       },
       fontFamily: {
         sans: ['Montserrat', 'sans-serif'],
