@@ -141,7 +141,7 @@ export const LiveActivityFeed = () => {
 
         {/* Inner content with glassmorphism */}
         <div
-          className="relative flex items-center gap-2.5 py-3 px-4 rounded-[14px] bg-white/70 dark:bg-background/70 backdrop-blur-md cursor-pointer hover:bg-white/80 dark:hover:bg-background/80 transition-all duration-200 min-h-[48px]"
+          className="relative flex items-center gap-2.5 py-3 px-4 rounded-[14px] bg-secondary dark:bg-card backdrop-blur-md cursor-pointer hover:bg-muted dark:hover:bg-muted transition-all duration-200 min-h-[48px]"
           onClick={() => current.link && navigate(current.link)}
         >
           {/* Live pulse icon */}
