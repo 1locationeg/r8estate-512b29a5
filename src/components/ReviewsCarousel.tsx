@@ -159,6 +159,7 @@ export function ReviewsCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [isPaused, setIsPaused] = useState(false);
   const navigate = useNavigate();
+  const { getLogoOverride } = useBusinessLogo();
 
   // Auto-scroll
   useEffect(() => {
