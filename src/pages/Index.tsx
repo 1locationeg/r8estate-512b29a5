@@ -251,9 +251,20 @@ const Index = () => {
 
           {userMode === "buyers" ?
           <>
+              {/* Desktop backdrop overlay when search is focused */}
+              {searchFocused && (
+                <div
+                  className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
+                  onClick={() => setSearchFocused(false)}
+                />
+              )}
+
               {/* Search Bar */}
-              <div className="w-full max-w-[1100px] mb-2 md:mb-4">
-                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
+              <div className={cn(
+                "w-full max-w-[1100px] mb-2 md:mb-4 transition-all duration-300 ease-in-out",
+                searchFocused && "relative z-50"
+              )}>
+                <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
               </div>
 
 
