@@ -270,7 +270,7 @@ const Index = () => {
 
 
                {/* Trust Strip — dark bar with pill items */}
-               <div className="w-full max-w-[1100px] mb-3">
+               <div className={cn("w-full max-w-[1100px] mb-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
