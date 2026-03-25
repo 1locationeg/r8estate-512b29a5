@@ -266,6 +266,10 @@ const Index = () => {
                </div>
              </div>
 
+          {/* Platform Traction Stats — below hero card */}
+          <div className={cn("w-full max-w-[1100px] mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <TractionStats />
+          </div>
 
           {userMode === "buyers" ?
           <>
