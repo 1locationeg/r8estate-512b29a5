@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Star, MessageSquarePlus, Building2 } from "lucide-react";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useNavigate } from "react-router-dom";
+import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 import avatar1 from "@/assets/testimonial-1.jpg";
 import avatar2 from "@/assets/testimonial-2.jpg";
