@@ -20,6 +20,7 @@ import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveActivityFeed } from "@/components/LiveActivityFeed";
+import { TractionStats } from "@/components/TractionStats";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
 import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint } from "lucide-react";
@@ -266,6 +267,10 @@ const Index = () => {
                </div>
              </div>
 
+          {/* Platform Traction Stats — below hero card */}
+          <div className={cn("w-full max-w-[1100px] mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <TractionStats />
+          </div>
 
           {userMode === "buyers" ?
           <>

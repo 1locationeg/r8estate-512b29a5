@@ -362,10 +362,6 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
         />
       </div>
 
-      {/* Platform Traction Stats - hidden when focused */}
-      <div className={cn("transition-all duration-300", isFocused && "opacity-0 pointer-events-none")}>
-        <TractionStats />
-      </div>
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
