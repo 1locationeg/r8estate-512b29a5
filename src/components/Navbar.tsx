@@ -170,7 +170,18 @@ export const Navbar = ({
           )}
         </div>
 
-        {/* ═══════════ MOBILE NAV (below md) ═══════════ */}
+        {/* ═══════════ MOBILE: Burger before logo ═══════════ */}
+        <div className="flex md:hidden items-center gap-0.5 shrink-0 order-first -me-2">
+          <button
+            onClick={() => setMoreMenuOpen(true)}
+            className="p-1.5 rounded-lg hover:bg-secondary transition-colors"
+            aria-label="More menu"
+          >
+            <Menu className="w-5 h-5 text-foreground" />
+          </button>
+        </div>
+
+        {/* ═══════════ MOBILE RIGHT ACTIONS ═══════════ */}
         <div className="flex md:hidden items-center gap-0.5 shrink-0">
           {userMode === "buyers" ? (
             <button
@@ -208,14 +219,6 @@ export const Navbar = ({
 
           <LanguageSwitcher />
           <NotificationBell />
-
-          <button
-            onClick={() => setMoreMenuOpen(true)}
-            className="p-1.5 rounded-lg hover:bg-secondary transition-colors ms-0.5"
-            aria-label="More menu"
-          >
-            <Menu className="w-5 h-5 text-foreground" />
-          </button>
         </div>
       </div>
 
