@@ -54,7 +54,7 @@ const scenarios: ReviewScenario[] = [
   },
   {
     score: 55,
-    reviewer: "Sarah M.",
+    reviewer: "Sara M.",
     initial: "S",
     avatar: "https://i.pravatar.cc/80?img=5",
     project: "Open Air Mall",
