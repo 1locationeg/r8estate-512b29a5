@@ -2,12 +2,13 @@ import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Star, Tag, MessageSquare, TrendingUp, Users } from "lucide-react";
+import { Star, Tag, MessageSquare, TrendingUp, Users, Zap } from "lucide-react";
 
 interface ActivityItem {
   id: string;
   type: "review" | "deal" | "community" | "signup";
   text: string;
+  keyword: string;
   icon: React.ReactNode;
   timestamp: string;
   link?: string;
@@ -47,6 +48,7 @@ export const LiveActivityFeed = () => {
         items.push({
           id: `review-${r.id}`,
           type: "review",
+          keyword: "REVIEW",
           text: `${r.author_name} rated ${r.developer_name || "a business"} ${r.rating}/5`,
           icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />,
           timestamp: r.created_at,
@@ -67,8 +69,9 @@ export const LiveActivityFeed = () => {
         items.push({
           id: `deal-${d.id}`,
           type: "deal",
-          text: `New deal: "${d.headline.slice(0, 40)}${d.headline.length > 40 ? "..." : ""}"`,
-          icon: <Tag className="w-3.5 h-3.5 text-verified" />,
+          keyword: "HOT DEAL",
+          text: `${d.headline.slice(0, 40)}${d.headline.length > 40 ? "..." : ""}`,
+          icon: <Zap className="w-3.5 h-3.5 text-accent fill-accent" />,
           timestamp: d.created_at,
           link: "/deal-watch",
         });
@@ -86,7 +89,8 @@ export const LiveActivityFeed = () => {
         items.push({
           id: `post-${p.id}`,
           type: "community",
-          text: `New discussion: "${p.title.slice(0, 40)}${p.title.length > 40 ? "..." : ""}"`,
+          keyword: "TRENDING",
+          text: `${p.title.slice(0, 40)}${p.title.length > 40 ? "..." : ""}`,
           icon: <MessageSquare className="w-3.5 h-3.5 text-primary" />,
           timestamp: p.created_at,
           link: "/community",
@@ -98,9 +102,9 @@ export const LiveActivityFeed = () => {
 
     if (items.length === 0) {
       items.push(
-        { id: "f1", type: "signup", text: "New buyers are joining the platform", icon: <Users className="w-3.5 h-3.5 text-primary" />, timestamp: new Date().toISOString() },
-        { id: "f2", type: "review", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/reviews" },
-        { id: "f3", type: "deal", text: "New deals from verified businesses", icon: <TrendingUp className="w-3.5 h-3.5 text-verified" />, timestamp: new Date().toISOString(), link: "/deal-watch" },
+        { id: "f1", type: "signup", keyword: "LIVE", text: "New buyers are joining the platform", icon: <Users className="w-3.5 h-3.5 text-primary" />, timestamp: new Date().toISOString() },
+        { id: "f2", type: "review", keyword: "REVIEW", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/reviews" },
+        { id: "f3", type: "deal", keyword: "HOT DEAL", text: "New deals from verified businesses", icon: <Zap className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/deal-watch" },
       );
     }
 
@@ -122,23 +126,52 @@ export const LiveActivityFeed = () => {
 
   const current = activities[visibleIdx];
 
+  const keywordColor = current.type === "deal"
+    ? "bg-accent/20 text-accent-foreground"
+    : current.type === "review"
+      ? "bg-destructive/10 text-destructive"
+      : "bg-primary/10 text-primary";
+
   return (
     <div className="w-full max-w-3xl mx-auto px-4">
-      <div
-        className="flex items-center gap-2 py-2 px-3 rounded-full bg-secondary/50 border border-border overflow-hidden cursor-pointer hover:bg-secondary/70 transition-colors"
-        onClick={() => current.link && navigate(current.link)}
-      >
-        <span className="relative flex h-2 w-2 flex-shrink-0">
-          <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-verified opacity-75" />
-          <span className="relative inline-flex rounded-full h-2 w-2 bg-verified" />
-        </span>
-        <div 
-          key={current.id} 
-          className="flex items-center gap-2 flex-1 min-w-0 animate-fade-in"
+      {/* Outer wrapper with animated conic-gradient border */}
+      <div className="relative rounded-2xl p-[2px] overflow-hidden live-feed-border">
+        {/* Animated gradient border layer */}
+        <div className="absolute inset-0 rounded-2xl live-feed-gradient-spin" />
+
+        {/* Inner content with glassmorphism */}
+        <div
+          className="relative flex items-center gap-2.5 py-3 px-4 rounded-[14px] bg-background/70 backdrop-blur-md cursor-pointer hover:bg-background/80 transition-all duration-200 min-h-[48px]"
+          onClick={() => current.link && navigate(current.link)}
         >
-          {current.icon}
-          <span className="text-xs text-foreground truncate">{current.text}</span>
-          <span className="text-[10px] text-muted-foreground flex-shrink-0">{timeAgo(current.timestamp)}</span>
+          {/* Live pulse icon */}
+          <span className="relative flex h-3 w-3 flex-shrink-0">
+            <span className="absolute inline-flex h-full w-full rounded-full bg-destructive/60 animate-ping" />
+            <span className="absolute inline-flex h-full w-full rounded-full bg-destructive/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" style={{ transform: 'scale(1.3)' }} />
+            <span className="relative inline-flex rounded-full h-3 w-3 bg-destructive shadow-[0_0_6px_2px_hsl(var(--destructive)/0.4)]" />
+          </span>
+
+          <div
+            key={current.id}
+            className="flex items-center gap-2 flex-1 min-w-0 animate-fade-in"
+          >
+            {/* Keyword badge with pulse */}
+            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider flex-shrink-0 live-feed-keyword ${keywordColor}`}>
+              {current.icon}
+              {current.keyword}
+            </span>
+
+            <span className="text-xs font-medium text-foreground truncate">{current.text}</span>
+
+            <span className="text-[10px] text-muted-foreground flex-shrink-0 font-medium">
+              • {timeAgo(current.timestamp)}
+            </span>
+          </div>
+
+          {/* Tap indicator on mobile */}
+          <span className="text-muted-foreground/50 flex-shrink-0 md:hidden">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 3l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
         </div>
       </div>
     </div>
