@@ -65,7 +65,7 @@ export function TractionStats() {
           return (
             <div
               key={s.labelKey}
-              className="flex flex-col items-center gap-0.5 py-1 px-2"
+              className="flex flex-col items-center gap-0.5 py-0 px-2"
             >
               <Icon className="w-3.5 h-3.5 text-brand-red" />
               <span className={`text-sm md:text-base font-extrabold ${s.colorClass} tabular-nums leading-none`}>
