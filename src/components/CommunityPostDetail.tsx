@@ -85,7 +85,7 @@ const CommentComposer = ({
   };
 
   return (
-    <div className={`flex items-start gap-2 ${parentReplyId ? 'ml-12 mt-2' : 'px-4 py-3'}`}>
+    <div className={`flex items-start gap-2 ${parentReplyId ? 'ms-12 mt-2' : 'px-4 py-3'}`}>
       <Avatar className="h-8 w-8 mt-0.5 flex-shrink-0">
         <AvatarImage src={avatarUrl} />
         <AvatarFallback className="text-[10px] bg-secondary font-semibold">{displayName.charAt(0)}</AvatarFallback>
@@ -110,7 +110,7 @@ const CommentComposer = ({
               onChange={(e) => onReplyTextChange(e.target.value)}
               placeholder={t("community.writeComment", "Write a comment...")}
               autoFocus={autoFocus}
-              className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 pr-10 focus-visible:ring-1"
+              className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 pe-10 focus-visible:ring-1"
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {
                   e.preventDefault();
@@ -123,7 +123,7 @@ const CommentComposer = ({
               variant="ghost"
               onClick={onSubmit}
               disabled={submitting || !replyText.trim()}
-              className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-primary flex-shrink-0"
+              className="absolute end-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-primary flex-shrink-0"
             >
               <Send className="w-3.5 h-3.5" />
             </Button>
@@ -162,7 +162,7 @@ const CommentComposer = ({
           </button>
 
           {showEmojiPicker && (
-            <div className="absolute bottom-full left-0 mb-1 z-50 bg-card border border-border rounded-xl shadow-xl p-2 grid grid-cols-8 gap-1 w-[220px]">
+            <div className="absolute bottom-full start-0 mb-1 z-50 bg-card border border-border rounded-xl shadow-xl p-2 grid grid-cols-8 gap-1 w-[220px]">
               {quickEmojis.map((emoji) => (
                 <button
                   key={emoji}
@@ -213,7 +213,7 @@ const CommentItem = ({
   const { t } = useTranslation();
 
   return (
-    <div className={`${isNested ? 'ml-12' : ''} py-1`}>
+    <div className={`${isNested ? 'ms-12' : ''} py-1`}>
       <div className="flex items-start gap-2">
         <Avatar className={`${isNested ? 'h-6 w-6' : 'h-8 w-8'} mt-0.5 flex-shrink-0`}>
           <AvatarImage src={reply.author_avatar} />
@@ -331,7 +331,7 @@ const PostLikeButton = ({ postId }: { postId: string }) => {
         <div
           onMouseEnter={() => setShowEmojis(true)}
           onMouseLeave={() => setShowEmojis(false)}
-          className="absolute -top-11 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-card border border-border rounded-full px-3 py-1.5 shadow-xl"
+          className="absolute -top-11 start-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-card border border-border rounded-full px-3 py-1.5 shadow-xl"
         >
           {reactionEmojis.map((r) => (
             <button
@@ -372,7 +372,7 @@ const InlineReactionButton = ({ targetId, targetType }: { targetId: string; targ
         <div
           onMouseEnter={() => setShowEmojis(true)}
           onMouseLeave={() => setShowEmojis(false)}
-          className="absolute -top-9 left-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-xl"
+          className="absolute -top-9 start-0 z-50 flex items-center gap-0.5 bg-card border border-border rounded-full px-2 py-1 shadow-xl"
         >
           {reactionEmojis.map((r) => (
             <button
@@ -405,20 +405,20 @@ const PostDropdownMenu = ({ post, user, onEdit }: { post: CommunityPost; user: a
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem onClick={() => { setIsSaved(!isSaved); toast({ title: isSaved ? t("community.unsaved", "Post unsaved") : t("community.saved", "Post saved") }); }}>
-          {isSaved ? <BookmarkCheck className="w-4 h-4 mr-2 text-primary" /> : <Bookmark className="w-4 h-4 mr-2" />}
+          {isSaved ? <BookmarkCheck className="w-4 h-4 me-2 text-primary" /> : <Bookmark className="w-4 h-4 me-2" />}
           {isSaved ? t("community.unsavePost", "Unsave post") : t("community.savePost", "Save post")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => { navigator.clipboard.writeText(`${window.location.origin}/community?post=${post.id}`); toast({ title: t("community.linkCopied", "Link copied!") }); }}>
-          <Link2 className="w-4 h-4 mr-2" />
+          <Link2 className="w-4 h-4 me-2" />
           {t("community.copyLink", "Copy link")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => { setIsFollowing(!isFollowing); toast({ title: isFollowing ? t("community.unfollowed", "Notifications off for this post") : t("community.followed", "You'll be notified of new comments") }); }}>
-          {isFollowing ? <BellOff className="w-4 h-4 mr-2" /> : <BellPlus className="w-4 h-4 mr-2" />}
+          {isFollowing ? <BellOff className="w-4 h-4 me-2" /> : <BellPlus className="w-4 h-4 me-2" />}
           {isFollowing ? t("community.turnOffNotifications", "Turn off notifications") : t("community.turnOnNotifications", "Turn on notifications")}
         </DropdownMenuItem>
         {isOwnPost && onEdit && (
           <DropdownMenuItem onClick={() => onEdit(post)}>
-            <Pencil className="w-4 h-4 mr-2" />
+            <Pencil className="w-4 h-4 me-2" />
             {t("community.editPost", "Edit post")}
           </DropdownMenuItem>
         )}
@@ -426,15 +426,15 @@ const PostDropdownMenu = ({ post, user, onEdit }: { post: CommunityPost; user: a
         {!isOwnPost && (
           <>
             <DropdownMenuItem onClick={() => toast({ title: t("community.postHidden", "Post hidden from your feed") })}>
-              <EyeOff className="w-4 h-4 mr-2" />
+              <EyeOff className="w-4 h-4 me-2" />
               {t("community.hidePost", "Hide post")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => toast({ title: t("community.userMuted", "You won't see posts from this user") })}>
-              <UserX className="w-4 h-4 mr-2" />
+              <UserX className="w-4 h-4 me-2" />
               {t("community.muteUser", "Mute this user")}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => toast({ title: t("community.reported", "Thanks for reporting. We'll review this.") })} className="text-destructive focus:text-destructive">
-              <AlertTriangle className="w-4 h-4 mr-2" />
+              <AlertTriangle className="w-4 h-4 me-2" />
               {t("community.reportPost", "Report post")}
             </DropdownMenuItem>
           </>
@@ -667,7 +667,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
                       <img src={url} alt="" className="w-full h-24 object-cover" />
                       <button
                         onClick={() => setEditImageUrls(prev => prev.filter((_, i) => i !== idx))}
-                        className="absolute top-1 right-1 p-1 rounded-full bg-background/80 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
+                        className="absolute top-1 end-1 p-1 rounded-full bg-background/80 text-destructive opacity-0 group-hover:opacity-100 transition-opacity"
                       >
                         <Trash2 className="w-3 h-3" />
                       </button>
@@ -700,10 +700,10 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               {/* Save / Cancel */}
               <div className="flex items-center gap-2 justify-end">
                 <Button variant="ghost" size="sm" onClick={cancelEditing} disabled={editSaving}>
-                  <X className="w-4 h-4 mr-1" /> {t("community.cancel", "Cancel")}
+                  <X className="w-4 h-4 me-1" /> {t("community.cancel", "Cancel")}
                 </Button>
                 <Button size="sm" onClick={saveEdit} disabled={editSaving || !editTitle.trim() || !editBody.trim()}>
-                  {editSaving ? <Loader2 className="w-4 h-4 mr-1 animate-spin" /> : <Check className="w-4 h-4 mr-1" />}
+                  {editSaving ? <Loader2 className="w-4 h-4 me-1 animate-spin" /> : <Check className="w-4 h-4 me-1" />}
                   {t("community.saveChanges", "Save changes")}
                 </Button>
               </div>

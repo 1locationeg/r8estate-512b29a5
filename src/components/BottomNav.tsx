@@ -20,7 +20,7 @@ export const BottomNav = () => {
     <>
       <div className="h-12 md:hidden" />
 
-      <nav className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
+      <nav className="fixed bottom-0 start-0 end-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
         <div className="flex items-center justify-around h-12 px-2 max-w-md mx-auto">
           {/* Reviews */}
           <button

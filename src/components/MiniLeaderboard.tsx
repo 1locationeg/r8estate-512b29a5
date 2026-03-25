@@ -135,7 +135,7 @@ export const MiniLeaderboard = ({ onNavigate, variant = "default", className }: 
                 </Avatar>
                 <span className="flex-1 text-[11px] font-medium text-foreground truncate">
                   {entry.full_name}
-                  {isCurrentUser && <span className="text-primary ml-1">(You)</span>}
+                  {isCurrentUser && <span className="text-primary ms-1">(You)</span>}
                 </span>
                 <span className="text-[10px] text-muted-foreground">{tier.emoji}</span>
                 <span className="text-[10px] font-semibold text-primary">{entry.total_points}</span>
@@ -149,7 +149,7 @@ export const MiniLeaderboard = ({ onNavigate, variant = "default", className }: 
                 navigate("/leaderboard");
                 onNavigate?.();
               }}
-              className="w-full rounded-lg border border-dashed border-border bg-secondary/40 px-2 py-1.5 text-left"
+              className="w-full rounded-lg border border-dashed border-border bg-secondary/40 px-2 py-1.5 text-start"
             >
               <div className="flex items-center justify-between gap-2">
                 <div>
@@ -182,7 +182,7 @@ export const MiniLeaderboard = ({ onNavigate, variant = "default", className }: 
                 </Avatar>
                 <span className="flex-1 text-[11px] font-medium text-foreground truncate">
                   {userEntry.full_name}
-                  <span className="text-primary ml-1">(You)</span>
+                  <span className="text-primary ms-1">(You)</span>
                 </span>
                 <span className="text-[10px] text-muted-foreground">
                   {getBuyerTier(userEntry.total_points).emoji}

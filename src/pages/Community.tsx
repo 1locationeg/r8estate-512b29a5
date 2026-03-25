@@ -145,7 +145,7 @@ const Community = () => {
                 if (!user) { navigate("/auth"); return; }
                 setShowNewPost(true);
               }}
-              className="flex-1 bg-secondary hover:bg-secondary/80 rounded-full px-4 py-2.5 text-sm text-muted-foreground text-left transition-colors"
+              className="flex-1 bg-secondary hover:bg-secondary/80 rounded-full px-4 py-2.5 text-sm text-muted-foreground text-start transition-colors"
             >
               {t("community.whatsOnYourMind", "What's on your mind, {{name}}?", { name: user ? displayName.split(' ')[0] : t("community.guest", "Guest") })}
             </button>
@@ -195,7 +195,7 @@ const Community = () => {
               </span>
               <button
                 onClick={() => { const p = new URLSearchParams(searchParams); p.delete("developer"); setSearchParams(p); }}
-                className="ml-auto text-muted-foreground hover:text-foreground"
+                className="ms-auto text-muted-foreground hover:text-foreground"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -205,12 +205,12 @@ const Community = () => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
             placeholder={t("community.searchPlaceholder", "Search community...")}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-9 h-10 text-sm rounded-full bg-card border-border"
+            className="ps-9 h-10 text-sm rounded-full bg-card border-border"
           />
         </div>
 
@@ -249,7 +249,7 @@ const Community = () => {
                 {opt.label}
               </button>
             ))}
-            <div className="ml-auto flex items-center gap-1.5 text-[11px] text-muted-foreground">
+            <div className="ms-auto flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <Users className="w-3 h-3" />
               <span>{t("community.postsCount", "{{count}} posts", { count: posts.length })}</span>
             </div>

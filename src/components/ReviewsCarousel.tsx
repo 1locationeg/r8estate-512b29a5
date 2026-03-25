@@ -181,10 +181,9 @@ export function ReviewsCarousel() {
 
   const renderStars = (rating: number) => {
     const stars = [1, 2, 3, 4, 5];
-    const orderedStars = isRTL ? [...stars].reverse() : stars;
     return (
-      <div className={`flex gap-0.5 ${isRTL ? "flex-row-reverse" : ""}`}>
-        {orderedStars.map((i) => (
+      <div className="flex gap-0.5">
+        {stars.map((i) => (
           <Star
             key={i}
             className={`w-3 h-3 flex-shrink-0 ${i <= rating ? "text-accent fill-accent" : "text-muted stroke-muted-foreground/30 fill-none"}`}
@@ -276,14 +275,14 @@ export function ReviewsCarousel() {
                       height={64}
                     />
                     {!item.isBusiness && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
+                      <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
                         <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
                           <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
                         </svg>
                       </div>
                     )}
                     {item.isBusiness && (
-                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
+                      <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
                         <Building2 className="w-2.5 h-2.5 text-accent-foreground" />
                       </div>
                     )}

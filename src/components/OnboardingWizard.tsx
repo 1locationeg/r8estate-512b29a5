@@ -200,7 +200,7 @@ export const OnboardingWizard = () => {
               <button
                 key={step.id}
                 onClick={step.action}
-                className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-left transition-all ${
+                className={`w-full flex items-center gap-3 p-2.5 rounded-lg text-start transition-all ${
                   step.completed
                     ? "bg-verified/10 border border-verified/20"
                     : "bg-background/60 border border-border hover:border-primary/30 hover:bg-primary/5"

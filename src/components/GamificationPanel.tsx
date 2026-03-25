@@ -62,8 +62,8 @@ export const GamificationPanel = () => {
       <ConfettiCelebration trigger={confettiTrigger} />
       {/* Tier & Points Hero */}
       <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-accent/10 rounded-full -translate-y-8 translate-x-8" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-accent/5 rounded-full translate-y-6 -translate-x-6" />
+        <div className="absolute top-0 end-0 w-32 h-32 bg-accent/10 rounded-full -translate-y-8 translate-x-8" />
+        <div className="absolute bottom-0 start-0 w-24 h-24 bg-accent/5 rounded-full translate-y-6 -translate-x-6" />
         
         <div className="relative z-10">
           <div className="flex items-center justify-between mb-4">
@@ -74,7 +74,7 @@ export const GamificationPanel = () => {
                 <h2 className="text-2xl font-bold">{currentTier.name}</h2>
               </div>
             </div>
-            <div className="text-right">
+            <div className="text-end">
               <p className="text-primary-foreground/70 text-xs font-medium uppercase tracking-wider mb-1">Total Points</p>
               <p className="text-3xl font-bold">{totalPoints}</p>
             </div>
@@ -211,7 +211,7 @@ export const GamificationPanel = () => {
               <div key={entry.rank} className="flex items-center gap-3 p-2.5 bg-card border border-border rounded-lg">
                 <span className="text-sm font-bold text-accent w-6">#{entry.rank}</span>
                 <span className="text-sm">{entry.emoji}</span>
-                <span className="flex-1 text-sm font-medium text-foreground text-left">{entry.name}</span>
+                <span className="flex-1 text-sm font-medium text-foreground text-start">{entry.name}</span>
                 <span className="text-xs font-semibold text-muted-foreground">{entry.points} pts</span>
               </div>
             ))}
@@ -234,7 +234,7 @@ function BadgeCard({ badge, earned }: { badge: BadgeDef; earned: boolean }) {
         earned ? 'border-accent/30 bg-accent/5' : 'border-border bg-muted/30 opacity-50'
       )}
     >
-      {!earned && <Lock className="absolute top-2 right-2 w-3 h-3 text-muted-foreground" />}
+      {!earned && <Lock className="absolute top-2 end-2 w-3 h-3 text-muted-foreground" />}
       <div className={cn('w-10 h-10 rounded-full flex items-center justify-center', earned ? 'bg-accent/20' : 'bg-muted')}>
         <Icon className={cn('w-5 h-5', earned ? 'text-accent' : 'text-muted-foreground')} />
       </div>

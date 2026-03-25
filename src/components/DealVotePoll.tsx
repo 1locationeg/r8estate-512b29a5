@@ -111,7 +111,7 @@ export const DealVotePoll = ({ dealId }: DealVotePollProps) => {
           No {noCount > 0 && <span className="font-bold">{noCount}</span>}
         </Button>
         {total > 0 && (
-          <div className="flex-1 flex items-center gap-1.5 ml-1">
+          <div className="flex-1 flex items-center gap-1.5 ms-1">
             <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
                 className="h-full bg-emerald-500 rounded-full transition-all duration-500"

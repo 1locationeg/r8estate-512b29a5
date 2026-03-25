@@ -349,7 +349,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     if (currentItem.category === 'apps' && m.platform) {
       return (m.platform as string[]).map(p => (
         <span key={p} className="px-3 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary border border-primary/20">
-          <Monitor className="w-3 h-3 inline mr-1" />{p}
+          <Monitor className="w-3 h-3 inline me-1" />{p}
         </span>
       ));
     }
@@ -431,7 +431,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           variant="ghost"
           size="icon"
           onClick={onClose}
-          className="absolute top-3 right-3 bg-background/80 hover:bg-background backdrop-blur-sm rounded-full z-10"
+          className="absolute top-3 end-3 bg-background/80 hover:bg-background backdrop-blur-sm rounded-full z-10"
         >
           <X className="w-4 h-4" />
         </Button>
@@ -635,7 +635,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       <div className="flex flex-col md:flex-row gap-0 md:gap-0">
         
         {/* LEFT COLUMN - Main content */}
-        <div className="flex-1 p-4 md:p-6 space-y-6 md:border-r border-border">
+        <div className="flex-1 p-4 md:p-6 space-y-6 md:border-e border-border">
           
           {/* Entity-specific details card */}
           {renderEntityDetails(item) && (

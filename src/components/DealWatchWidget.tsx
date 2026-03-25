@@ -105,7 +105,7 @@ export const DealWatchWidget = () => {
 
       {/* Pulse dot for urgency */}
       {(isExpiring || isPopular) && (
-        <span className={`absolute top-2 right-2 w-2 h-2 rounded-full ${isExpiring ? "bg-destructive" : "bg-orange-500"} animate-pulse`} />
+        <span className={`absolute top-2 end-2 w-2 h-2 rounded-full ${isExpiring ? "bg-destructive" : "bg-orange-500"} animate-pulse`} />
       )}
 
       {/* Icon + label */}

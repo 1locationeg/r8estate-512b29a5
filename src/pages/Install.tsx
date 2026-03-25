@@ -68,7 +68,7 @@ const Install = () => {
                 <Download className="w-5 h-5" /> Install Now
               </Button>
             ) : (
-              <div className="space-y-4 text-left bg-secondary/50 rounded-xl p-6">
+              <div className="space-y-4 text-start bg-secondary/50 rounded-xl p-6">
                 <p className="font-semibold text-foreground text-center">How to install:</p>
                 <div className="space-y-3 text-sm text-muted-foreground">
                   <p><strong className="text-foreground">iPhone/iPad:</strong> Tap the Share button → "Add to Home Screen"</p>

@@ -53,7 +53,7 @@ export const DeveloperDirectoryCard = ({ developer, onClick }: DeveloperDirector
       onMouseLeave={() => cancelLinger(developer.id)}
     >
       {/* Action buttons */}
-      <div className="absolute top-2 right-2 flex gap-1">
+      <div className="absolute top-2 end-2 flex gap-1">
         <button
           onClick={handleSave}
           disabled={saveLoading}

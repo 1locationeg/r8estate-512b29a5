@@ -142,7 +142,7 @@ const AdminSearchPhrases = () => {
                 Reset Defaults
               </Button>
               <Button size="sm" onClick={handleSave} disabled={saving}>
-                {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : <Save className="w-4 h-4 mr-1" />}
+                {saving ? <Loader2 className="w-4 h-4 animate-spin me-1" /> : <Save className="w-4 h-4 me-1" />}
                 Save
               </Button>
             </div>
@@ -153,7 +153,7 @@ const AdminSearchPhrases = () => {
             <div key={index} className="flex gap-3 items-start p-3 rounded-lg border border-border bg-muted/30">
               <div className="flex items-center pt-2 text-muted-foreground">
                 <GripVertical className="w-4 h-4" />
-                <span className="text-xs font-mono ml-1 w-4">{index + 1}</span>
+                <span className="text-xs font-mono ms-1 w-4">{index + 1}</span>
               </div>
               <div className="flex-1 space-y-2">
                 <div>
@@ -189,7 +189,7 @@ const AdminSearchPhrases = () => {
           ))}
 
           <Button variant="outline" className="w-full" onClick={addPhrase}>
-            <Plus className="w-4 h-4 mr-1" />
+            <Plus className="w-4 h-4 me-1" />
             Add Phrase
           </Button>
         </CardContent>

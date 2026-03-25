@@ -109,9 +109,9 @@ const AdminFakeReviewDetection = () => {
         </div>
         <Button onClick={handleScanAll} disabled={scanning || analyzing || reviews.length === 0}>
           {scanning || analyzing ? (
-            <Loader2 className="w-4 h-4 animate-spin mr-2" />
+            <Loader2 className="w-4 h-4 animate-spin me-2" />
           ) : (
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="w-4 h-4 me-2" />
           )}
           {scanning || analyzing ? "Scanning..." : `Scan All (${reviews.length})`}
         </Button>
@@ -178,10 +178,10 @@ const AdminFakeReviewDetection = () => {
                     </div>
                     <div className="flex flex-col gap-1.5 flex-shrink-0">
                       <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => handleVerifyReview(r.id)}>
-                        <CheckCircle className="w-3 h-3 mr-1" /> Approve
+                        <CheckCircle className="w-3 h-3 me-1" /> Approve
                       </Button>
                       <Button size="sm" variant="destructive" className="h-7 text-xs" onClick={() => handleDeleteReview(r.id)}>
-                        <Trash2 className="w-3 h-3 mr-1" /> Remove
+                        <Trash2 className="w-3 h-3 me-1" /> Remove
                       </Button>
                     </div>
                   </div>

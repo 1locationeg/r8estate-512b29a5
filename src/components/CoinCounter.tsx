@@ -63,7 +63,7 @@ export function CoinCounter({ totalPoints, variant = 'compact', tierEmoji, tierN
     <button
       onClick={() => navigate('/buyer/achievements')}
       className={cn(
-        'w-full flex items-center gap-3 p-3 rounded-xl bg-coin/10 border border-coin/20 hover:bg-coin/15 transition-all cursor-pointer text-left',
+        'w-full flex items-center gap-3 p-3 rounded-xl bg-coin/10 border border-coin/20 hover:bg-coin/15 transition-all cursor-pointer text-start',
         animating && 'ring-2 ring-coin/40',
         className
       )}

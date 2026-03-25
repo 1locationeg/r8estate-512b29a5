@@ -83,18 +83,18 @@ export const LaunchComparePanel = ({ launches, selectedIds, onToggleSelect, onCl
   return (
     <>
       {/* Sticky bottom bar */}
-      <div className="fixed bottom-16 md:bottom-4 left-1/2 -translate-x-1/2 z-40 bg-card border border-border shadow-xl rounded-xl px-4 py-2.5 flex items-center gap-2 max-w-md w-[calc(100%-2rem)]">
+      <div className="fixed bottom-16 md:bottom-4 start-1/2 -translate-x-1/2 z-40 bg-card border border-border shadow-xl rounded-xl px-4 py-2.5 flex items-center gap-2 max-w-md w-[calc(100%-2rem)]">
         <div className="flex items-center gap-1.5 flex-1 overflow-x-auto">
           {selected.map((l) => (
             <Badge
               key={l.id}
               variant="secondary"
-              className="shrink-0 text-[10px] gap-1 pr-1 max-w-[120px] truncate"
+              className="shrink-0 text-[10px] gap-1 pe-1 max-w-[120px] truncate"
             >
               <span className="truncate">{l.project_name.split("—")[0].trim()}</span>
               <button
                 onClick={(e) => { e.stopPropagation(); onToggleSelect(l.id); }}
-                className="ml-0.5 hover:text-destructive"
+                className="ms-0.5 hover:text-destructive"
               >
                 <X className="w-3 h-3" />
               </button>
@@ -132,7 +132,7 @@ export const LaunchComparePanel = ({ launches, selectedIds, onToggleSelect, onCl
                 return (
                   <div key={l.id} className={`relative bg-secondary/50 rounded-lg p-3 text-center space-y-1 ${isWinner ? "ring-2 ring-accent" : ""}`}>
                     {isWinner && (
-                      <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                      <div className="absolute -top-2 start-1/2 -translate-x-1/2 bg-accent text-accent-foreground text-[9px] font-bold px-2 py-0.5 rounded-full flex items-center gap-0.5">
                         <Crown className="w-3 h-3" /> Best Pick
                       </div>
                     )}
@@ -154,7 +154,7 @@ export const LaunchComparePanel = ({ launches, selectedIds, onToggleSelect, onCl
                 return (
                   <span key={l.id} className={`text-xs font-bold ${isBest ? "text-emerald-600" : "text-foreground"}`}>
                     {val ? `EGP ${val.toLocaleString()}` : "—"}
-                    {isBest && <Trophy className="w-3 h-3 inline ml-1 text-emerald-600" />}
+                    {isBest && <Trophy className="w-3 h-3 inline ms-1 text-emerald-600" />}
                   </span>
                 );
               })} cols={selected.length} />
@@ -166,7 +166,7 @@ export const LaunchComparePanel = ({ launches, selectedIds, onToggleSelect, onCl
                 return (
                   <span key={l.id} className={`text-xs font-bold ${isBest ? "text-emerald-600" : "text-foreground"}`}>
                     {val !== null ? `${val}%` : "—"}
-                    {isBest && <Trophy className="w-3 h-3 inline ml-1 text-emerald-600" />}
+                    {isBest && <Trophy className="w-3 h-3 inline ms-1 text-emerald-600" />}
                   </span>
                 );
               })} cols={selected.length} />
@@ -178,7 +178,7 @@ export const LaunchComparePanel = ({ launches, selectedIds, onToggleSelect, onCl
                 return (
                   <span key={l.id} className={`text-xs font-bold ${isBest ? "text-emerald-600" : "text-foreground"}`}>
                     {val ? `${val} years` : "—"}
-                    {isBest && <Trophy className="w-3 h-3 inline ml-1 text-emerald-600" />}
+                    {isBest && <Trophy className="w-3 h-3 inline ms-1 text-emerald-600" />}
                   </span>
                 );
               })} cols={selected.length} />
@@ -275,7 +275,7 @@ function CompareRow({ label, values, cols, highlight, sub }: { label: string; va
     <div className={`grid items-center border-b border-border last:border-b-0 ${highlight ? "bg-accent/5" : sub ? "bg-secondary/20" : ""}`}
       style={{ gridTemplateColumns: `100px repeat(${cols}, 1fr)` }}
     >
-      <div className={`px-3 py-2 ${sub ? "text-[9px] pl-5" : "text-[10px]"} font-medium text-muted-foreground`}>{label}</div>
+      <div className={`px-3 py-2 ${sub ? "text-[9px] ps-5" : "text-[10px]"} font-medium text-muted-foreground`}>{label}</div>
       {values.map((v, i) => (
         <div key={i} className="px-2 py-2">{v}</div>
       ))}

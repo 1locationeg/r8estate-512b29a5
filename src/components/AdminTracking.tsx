@@ -209,7 +209,7 @@ export const AdminTracking = () => {
                     className="text-destructive text-xs h-7 px-2"
                     onClick={() => removeTracker(def)}
                   >
-                    <Trash2 className="w-3 h-3 mr-1" />
+                    <Trash2 className="w-3 h-3 me-1" />
                     Remove
                   </Button>
                 </CardContent>

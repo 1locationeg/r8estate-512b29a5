@@ -103,7 +103,7 @@ export const ProjectJourneyWidget = ({
             Updated {updatedAt}
           </span>
         )}
-        <span className={`text-[9px] ${isDark ? "text-white/30" : "text-gray-400"} ml-auto`}>
+        <span className={`text-[9px] ${isDark ? "text-white/30" : "text-gray-400"} ms-auto`}>
           Powered by R8ESTATE
         </span>
       </div>

@@ -162,8 +162,8 @@ export const DealSubmitForm = () => {
           <Label>Valid Until</Label>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className={cn("w-full justify-start text-left", !validUntil && "text-muted-foreground")}>
-                <CalendarIcon className="mr-2 h-4 w-4" />
+              <Button variant="outline" className={cn("w-full justify-start text-start", !validUntil && "text-muted-foreground")}>
+                <CalendarIcon className="me-2 h-4 w-4" />
                 {validUntil ? format(validUntil, "PPP") : "Pick a date"}
               </Button>
             </PopoverTrigger>
@@ -195,7 +195,7 @@ export const DealSubmitForm = () => {
         <DisclaimerCheckbox checked={agreed} onCheckedChange={setAgreed} />
 
         <Button onClick={handleSubmit} disabled={loading || !headline.trim() || !description.trim() || !dealType || !agreed} className="w-full">
-          {loading ? <><Loader2 className="w-4 h-4 animate-spin mr-2" /> Submitting...</> : "Submit for Review"}
+          {loading ? <><Loader2 className="w-4 h-4 animate-spin me-2" /> Submitting...</> : "Submit for Review"}
         </Button>
       </div>
 

@@ -203,7 +203,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
           {/* Top bar with input + cancel */}
           <div className="flex items-center gap-2 px-4 pt-3 pb-3 border-b border-border/40 safe-top">
             <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 data-hero-search
                 ref={inputRef}
@@ -213,7 +213,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
                 onKeyDown={handleKeyDown}
                 placeholder={trustPhrases[placeholderIndex]}
                 autoFocus
-                className="w-full pl-9 pr-3 py-3 bg-secondary/60 border border-border/60 rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                className="w-full ps-9 pe-3 py-3 bg-secondary/60 border border-border/60 rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
                 style={{ fontSize: '16px' }}
               />
             </div>
@@ -510,7 +510,7 @@ export const HeroCategoryLinks = ({ onViewSelect, activeView, onSelectItem, onCa
 
         return (
           <div className="mt-3 w-full overflow-hidden overflow-x-hidden">
-            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 text-left">
+            <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 text-start">
               {t("hero.featured")}
             </h3>
             <div className="relative">

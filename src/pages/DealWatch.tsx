@@ -104,8 +104,8 @@ const DealWatch = () => {
             <Scale className="w-3.5 h-3.5" />{compareMode ? t("dealWatch.exitCompare") : t("dealWatch.compareDeals")}
           </Button>
           <div className="relative flex-1 min-w-[150px]">
-            <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
-            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("dealWatch.searchDeals")} className="pl-8 h-9 text-xs" />
+            <Search className="absolute start-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
+            <Input value={search} onChange={(e) => setSearch(e.target.value)} placeholder={t("dealWatch.searchDeals")} className="ps-8 h-9 text-xs" />
           </div>
         </div>
 

@@ -1392,7 +1392,7 @@ const AdminFeedback = () => {
         <div className="overflow-x-auto border border-border rounded-xl">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-muted/50 text-left">
+              <tr className="bg-muted/50 text-start">
                 <th className="p-3 font-semibold text-muted-foreground">Date</th>
                 <th className="p-3 font-semibold text-muted-foreground">Rating</th>
                 <th className="p-3 font-semibold text-muted-foreground">Type</th>
@@ -1449,7 +1449,7 @@ const AdminSettings = () => (
             <p className="text-xs text-muted-foreground">{s.desc}</p>
           </div>
           <div className="w-10 h-6 bg-secondary rounded-full relative cursor-pointer">
-            <div className="w-4 h-4 bg-muted-foreground/30 rounded-full absolute top-1 left-1" />
+            <div className="w-4 h-4 bg-muted-foreground/30 rounded-full absolute top-1 start-1" />
           </div>
         </div>
       ))}
@@ -1592,7 +1592,7 @@ const AdminAIUsage = () => {
           </div>
         </div>
         <Button onClick={saveLimits} disabled={saving} size="sm">
-          {saving ? <Loader2 className="w-4 h-4 animate-spin mr-1" /> : null}
+          {saving ? <Loader2 className="w-4 h-4 animate-spin me-1" /> : null}
           Save Limits
         </Button>
       </div>
@@ -1619,9 +1619,9 @@ const AdminAIUsage = () => {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border text-muted-foreground text-xs">
-                <th className="text-left p-3">User ID</th>
-                <th className="text-left p-3">Function</th>
-                <th className="text-left p-3">Date</th>
+                <th className="text-start p-3">User ID</th>
+                <th className="text-start p-3">Function</th>
+                <th className="text-start p-3">Date</th>
               </tr>
             </thead>
             <tbody>
@@ -1801,7 +1801,7 @@ const AdminBusiness = () => {
         <div className="overflow-x-auto border border-border rounded-xl">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-muted/50 text-left">
+              <tr className="bg-muted/50 text-start">
                 <th className="p-3 font-semibold text-muted-foreground">Business</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden sm:table-cell">Type</th>
                 <th className="p-3 font-semibold text-muted-foreground hidden md:table-cell">Location</th>
@@ -1992,7 +1992,7 @@ const AdminBusiness = () => {
             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-border">
               <Button variant="outline" onClick={() => setSelectedBusiness(null)}>Cancel</Button>
               <Button onClick={handleSave} disabled={isSaving}>
-                {isSaving ? <Loader2 className="w-4 h-4 animate-spin mr-2" /> : null}
+                {isSaving ? <Loader2 className="w-4 h-4 animate-spin me-2" /> : null}
                 Save Changes
               </Button>
             </div>
@@ -2107,7 +2107,7 @@ const AdminDashboard = () => {
     >
       <div className="space-y-4">
         {location.pathname === '/admin' && (
-          <MiniLeaderboard variant="compact" className="w-full lg:ml-auto lg:max-w-sm" />
+          <MiniLeaderboard variant="compact" className="w-full lg:ms-auto lg:max-w-sm" />
         )}
 
         <Routes>

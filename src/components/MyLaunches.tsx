@@ -64,7 +64,7 @@ export const MyLaunches = () => {
           <p className="text-sm text-muted-foreground">Manage your submitted launches and update phase info.</p>
         </div>
         <Button size="sm" onClick={() => navigate("/business/submit-launch")}>
-          <Plus className="w-4 h-4 mr-1" /> New Launch
+          <Plus className="w-4 h-4 me-1" /> New Launch
         </Button>
       </div>
 
@@ -163,7 +163,7 @@ export const MyLaunches = () => {
                         current_phase: launch.current_phase || 1,
                       });
                     }}>
-                      <Edit2 className="w-3.5 h-3.5 mr-1" /> Update Phase Info
+                      <Edit2 className="w-3.5 h-3.5 me-1" /> Update Phase Info
                     </Button>
                   </div>
                 )}

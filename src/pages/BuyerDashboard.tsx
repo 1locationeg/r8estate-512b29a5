@@ -69,7 +69,7 @@ const BuyerOverview = () => {
       {role !== 'business' && role !== 'admin' && (
       <div className="mb-8 relative overflow-hidden rounded-2xl border border-business-border/30 bg-business">
         <div className="absolute inset-0 opacity-5">
-          <div className="absolute -top-10 -right-10 w-40 h-40 bg-business-border rounded-full blur-3xl" />
+          <div className="absolute -top-10 -end-10 w-40 h-40 bg-business-border rounded-full blur-3xl" />
         </div>
         <div className="relative flex flex-col sm:flex-row items-center gap-4 p-5 sm:p-6">
           <div className="flex-shrink-0 w-12 h-12 rounded-xl bg-business-border/10 flex items-center justify-center">
@@ -116,7 +116,7 @@ const BuyerOverview = () => {
           <h3 className="text-lg font-semibold text-foreground mb-3">Quick Actions</h3>
           <div className="grid sm:grid-cols-3 gap-3">
             <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/')}>
-              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+              <div className="absolute top-2 end-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
                 <Coins className="w-3 h-3 text-coin" />
                 <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.developer_view}</span>
               </div>
@@ -125,7 +125,7 @@ const BuyerOverview = () => {
               <span className="text-xs text-muted-foreground text-start">Find trusted developers</span>
             </Button>
             <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/directory')}>
-              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+              <div className="absolute top-2 end-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
                 <Coins className="w-3 h-3 text-coin" />
                 <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.developer_view}</span>
               </div>
@@ -134,7 +134,7 @@ const BuyerOverview = () => {
               <span className="text-xs text-muted-foreground text-start">Browse all developers</span>
             </Button>
             <Button variant="outline" className="h-auto p-5 flex flex-col items-start gap-2 relative overflow-hidden" onClick={() => navigate('/buyer/saved')}>
-              <div className="absolute top-2 right-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
+              <div className="absolute top-2 end-2 flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-coin/15 text-coin-foreground">
                 <Coins className="w-3 h-3 text-coin" />
                 <span className="text-[10px] font-bold">+{POINTS_PER_ACTION.project_save}</span>
               </div>
@@ -409,8 +409,8 @@ const BuyerProfile = () => {
       <div className="relative bg-gradient-to-br from-primary via-primary/95 to-primary/80 rounded-2xl overflow-hidden">
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-0 right-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
-          <div className="absolute bottom-0 left-0 w-48 h-48 bg-accent rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
+          <div className="absolute top-0 end-0 w-64 h-64 bg-white rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/2" />
+          <div className="absolute bottom-0 start-0 w-48 h-48 bg-accent rounded-full blur-3xl transform -translate-x-1/2 translate-y-1/2" />
         </div>
         
         <div className="relative p-6 md:p-8">
@@ -435,7 +435,7 @@ const BuyerProfile = () => {
               <button
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadingAvatar}
-                className="absolute bottom-1 right-1 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
+                className="absolute bottom-1 end-1 w-8 h-8 bg-accent rounded-full flex items-center justify-center shadow-lg hover:bg-accent/90 transition-colors disabled:opacity-50"
               >
                 {uploadingAvatar ? (
                   <Loader2 className="w-4 h-4 text-accent-foreground animate-spin" />

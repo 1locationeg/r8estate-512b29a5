@@ -106,7 +106,7 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
             key={idx}
             onClick={() => !loading && handleVote(idx)}
             disabled={loading}
-            className={`w-full relative overflow-hidden rounded-lg border text-left px-3 py-2.5 transition-all ${
+            className={`w-full relative overflow-hidden rounded-lg border text-start px-3 py-2.5 transition-all ${
               isSelected
                 ? "border-primary bg-primary/5"
                 : "border-border hover:border-primary/30 bg-card"
@@ -114,7 +114,7 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
           >
             {hasVoted && (
               <div
-                className="absolute inset-y-0 left-0 bg-primary/10 transition-all duration-500"
+                className="absolute inset-y-0 start-0 bg-primary/10 transition-all duration-500"
                 style={{ width: `${pct}%` }}
               />
             )}
@@ -161,7 +161,7 @@ export const PollDisplay = ({ postId, body }: { postId: string; body: string }) 
 
       <p className="text-[11px] text-muted-foreground pt-0.5">
         {totalVotes} {totalVotes === 1 ? t("community.vote", "vote") : t("community.votes", "votes")}
-        {hasVoted && <span className="ml-1">· {t("community.youVoted", "You voted")}</span>}
+        {hasVoted && <span className="ms-1">· {t("community.youVoted", "You voted")}</span>}
       </p>
     </div>
   );

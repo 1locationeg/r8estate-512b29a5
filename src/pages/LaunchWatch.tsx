@@ -394,7 +394,7 @@ const LaunchWatch = () => {
             </SelectContent>
           </Select>
 
-          <div className="flex items-center gap-1.5 ml-auto">
+          <div className="flex items-center gap-1.5 ms-auto">
             <Switch id="verified" checked={verifiedOnly} onCheckedChange={setVerifiedOnly} />
             <Label htmlFor="verified" className="text-[10px] text-muted-foreground cursor-pointer">Verified only</Label>
           </div>
@@ -402,12 +402,12 @@ const LaunchWatch = () => {
 
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
+          <Search className="absolute start-2.5 top-2.5 w-3.5 h-3.5 text-muted-foreground" />
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search launches..."
-            className="pl-8 h-9 text-xs"
+            className="ps-8 h-9 text-xs"
           />
         </div>
 

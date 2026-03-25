@@ -32,7 +32,7 @@ export const CookieConsentBanner = () => {
                 onClick={accept}
                 className="h-8 text-xs px-4"
               >
-                <Shield className="w-3.5 h-3.5 mr-1.5" />
+                <Shield className="w-3.5 h-3.5 me-1.5" />
                 {t("cookies.accept", "Accept All")}
               </Button>
               <Button
