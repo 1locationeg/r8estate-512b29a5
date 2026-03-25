@@ -288,6 +288,28 @@
   to { --hero-glow-angle: 360deg; }
 }
 
+/* Premium thin scrollbar for search suggestions */
+.search-suggestions-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+.search-suggestions-scrollbar:hover {
+  scrollbar-color: hsl(var(--border)) transparent;
+}
+.search-suggestions-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.search-suggestions-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.search-suggestions-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 9999px;
+}
+.search-suggestions-scrollbar:hover::-webkit-scrollbar-thumb {
+  background: hsl(var(--border));
+}
+
 .live-feed-border {
   position: relative;
 }
