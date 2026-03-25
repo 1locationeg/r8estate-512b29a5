@@ -157,7 +157,7 @@ export const SearchSuggestions = ({
   if (!hasResults && query.trim()) {
     return (
       <div className={cn(
-        "absolute top-full left-0 right-0 mt-2 bg-card border border-border rounded-xl shadow-lg overflow-hidden z-50 p-4",
+        "absolute top-full left-0 right-0 mt-1 bg-card border border-border/60 rounded-b-2xl shadow-2xl shadow-primary/[0.08] overflow-hidden z-50 p-5",
         className
       )}>
         <div className="text-center text-muted-foreground text-sm py-2">
