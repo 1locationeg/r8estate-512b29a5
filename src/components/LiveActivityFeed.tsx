@@ -50,7 +50,7 @@ export const LiveActivityFeed = () => {
           type: "review",
           keyword: "REVIEW",
           text: `${r.author_name} rated ${r.developer_name || "a business"} ${r.rating}/5`,
-          icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />,
+          icon: <Star className="w-3.5 h-3.5 text-accent" />,
           timestamp: r.created_at,
           link: "/reviews",
         });
@@ -71,7 +71,7 @@ export const LiveActivityFeed = () => {
           type: "deal",
           keyword: "HOT DEAL",
           text: `${d.headline.slice(0, 40)}${d.headline.length > 40 ? "..." : ""}`,
-          icon: <Zap className="w-3.5 h-3.5 text-accent fill-accent" />,
+          icon: <Zap className="w-3.5 h-3.5 text-accent" />,
           timestamp: d.created_at,
           link: "/deal-watch",
         });
@@ -103,8 +103,8 @@ export const LiveActivityFeed = () => {
     if (items.length === 0) {
       items.push(
         { id: "f1", type: "signup", keyword: "LIVE", text: "New buyers are joining the platform", icon: <Users className="w-3.5 h-3.5 text-primary" />, timestamp: new Date().toISOString() },
-        { id: "f2", type: "review", keyword: "REVIEW", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/reviews" },
-        { id: "f3", type: "deal", keyword: "HOT DEAL", text: "New deals from verified businesses", icon: <Zap className="w-3.5 h-3.5 text-accent fill-accent" />, timestamp: new Date().toISOString(), link: "/deal-watch" },
+        { id: "f2", type: "review", keyword: "REVIEW", text: "Reviews are being submitted daily", icon: <Star className="w-3.5 h-3.5 text-accent" />, timestamp: new Date().toISOString(), link: "/reviews" },
+        { id: "f3", type: "deal", keyword: "HOT DEAL", text: "New deals from verified businesses", icon: <Zap className="w-3.5 h-3.5 text-accent" />, timestamp: new Date().toISOString(), link: "/deal-watch" },
       );
     }
 
@@ -162,10 +162,6 @@ export const LiveActivityFeed = () => {
             </span>
 
             <span className="text-xs font-medium text-foreground truncate">{current.text}</span>
-
-            <span className="text-[10px] text-muted-foreground flex-shrink-0 font-medium">
-              • {timeAgo(current.timestamp)}
-            </span>
           </div>
 
           {/* Tap indicator on mobile */}
