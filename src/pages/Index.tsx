@@ -178,7 +178,7 @@ const Index = () => {
 
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-background flex flex-col overflow-x-hidden w-full max-w-full">
+    <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full">
       <Navbar
         userMode={userMode}
         onSwitchToBusinessView={switchToBusinessView}
@@ -188,11 +188,11 @@ const Index = () => {
         getDashboardRoute={getDashboardRoute}
       />
 
-      {/* Hero Section */}
-      <section className="flex-1 flex flex-col bg-background">
-       <div className="flex-1 flex flex-col items-center justify-center px-4 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
-             {/* Hero Card with dot-grid background */}
-             <div className="relative w-full max-w-3xl rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden my-[6px] py-[6px]">
+      {/* Global centered container */}
+      <section className="flex-1 flex flex-col">
+       <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-0 pb-0 sm:pt-2 sm:pb-2 md:py-6">
+              {/* Hero Card with dot-grid background */}
+              <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-6 mt-2 md:mt-4 overflow-hidden my-[6px] py-[6px] bg-card shadow-sm">
                {/* Dot-grid SVG texture */}
                <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
               backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
@@ -206,7 +206,7 @@ const Index = () => {
                      </p>
 
                   {/* Hero Tagline — Claim ABOVE the gauge */}
-                   <div className="mb-1.5 max-w-3xl mx-auto">
+                   <div className="mb-1.5 max-w-[1100px] mx-auto">
                     {userMode === "buyers" ?
                 <>
                     <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
@@ -251,13 +251,13 @@ const Index = () => {
           {userMode === "buyers" ?
           <>
               {/* Search Bar */}
-              <div className="w-full max-w-3xl px-4 mb-2 md:mb-4">
+              <div className="w-full max-w-[1100px] mb-2 md:mb-4">
                 <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} />
               </div>
 
 
                {/* Trust Strip — dark bar with pill items */}
-               <div className="w-full max-w-3xl px-4 mb-3">
+               <div className="w-full max-w-[1100px] mb-3">
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -304,7 +304,7 @@ const Index = () => {
 
 
               {/* Quick Actions Grid */}
-              <div className="w-full max-w-3xl px-4 mb-4 py-[5px] pb-0">
+              <div className="w-full max-w-[1100px] mb-4 py-[5px] pb-0">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                   {quickActions.map((action) => {
                   const Icon = action.icon;
@@ -331,7 +331,7 @@ const Index = () => {
 
               {/* Special View Item Detail */}
               {specialViewItem &&
-            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
                   <ItemDetailSection
                 item={specialViewItem}
                 onClose={() => setSpecialViewItem(null)} />
@@ -341,7 +341,7 @@ const Index = () => {
 
               {/* Developer Detail Card */}
               {selectedDeveloper && !specialViewItem &&
-            <div className="w-full max-w-3xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
                   <DeveloperDetailCard
                 developer={selectedDeveloper}
                 onClose={() => setSelectedDeveloperId(null)} />
@@ -353,17 +353,17 @@ const Index = () => {
               {!specialViewItem && !selectedDeveloper &&
             <>
               <FeaturedIdentitySpotlight />
-              <div className="w-full max-w-3xl px-4">
+              <div className="w-full max-w-[1100px]">
                 <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
               </div>
-              <div className="w-full max-w-3xl px-4 mt-4">
+              <div className="w-full max-w-[1100px] mt-4">
                 <CommunityHighlights />
               </div>
             </>
             }
 
               {/* Category Bar */}
-              <div data-hero-categories className="w-full">
+              <div data-hero-categories className="w-full max-w-[1100px]">
               <HeroCategoryItems
               onInteraction={() => {setSelectedDeveloperId(null);setSpecialViewItem(null);setActiveView(null);}}
               externalCategory={externalCategory}
@@ -388,7 +388,7 @@ const Index = () => {
               Not a business? Switch to Buyer View
             </button>
             }
-          <div className="w-full max-w-3xl px-4 mb-4">
+          <div className="w-full max-w-[1100px] mb-4">
               {/* Business Feature Cards */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                 <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
@@ -478,7 +478,7 @@ const Index = () => {
             }
 
             {specialViewItem && showIndustryCategories &&
-            <div className="w-full max-w-5xl px-4 mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
                 <ItemDetailSection
                 item={specialViewItem}
                 onClose={() => setSpecialViewItem(null)} />
