@@ -1140,11 +1140,14 @@ export type Database = {
           facebook_url: string | null
           full_name: string | null
           id: string
+          id_document_url: string | null
           identity_provider: string | null
           identity_verified: boolean
           interests: string[] | null
+          kyc_verified: boolean
           linkedin_url: string | null
           phone_number: string | null
+          selfie_url: string | null
           updated_at: string
           user_id: string
         }
@@ -1157,11 +1160,14 @@ export type Database = {
           facebook_url?: string | null
           full_name?: string | null
           id?: string
+          id_document_url?: string | null
           identity_provider?: string | null
           identity_verified?: boolean
           interests?: string[] | null
+          kyc_verified?: boolean
           linkedin_url?: string | null
           phone_number?: string | null
+          selfie_url?: string | null
           updated_at?: string
           user_id: string
         }
@@ -1174,11 +1180,14 @@ export type Database = {
           facebook_url?: string | null
           full_name?: string | null
           id?: string
+          id_document_url?: string | null
           identity_provider?: string | null
           identity_verified?: boolean
           interests?: string[] | null
+          kyc_verified?: boolean
           linkedin_url?: string | null
           phone_number?: string | null
+          selfie_url?: string | null
           updated_at?: string
           user_id?: string
         }
@@ -1325,8 +1334,10 @@ export type Database = {
           developer_id: string | null
           document_url: string | null
           id: string
+          id_document_url: string | null
           reviewed_at: string | null
           reviewed_by: string | null
+          selfie_url: string | null
           social_url: string | null
           status: string
           updated_at: string
@@ -1339,8 +1350,10 @@ export type Database = {
           developer_id?: string | null
           document_url?: string | null
           id?: string
+          id_document_url?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selfie_url?: string | null
           social_url?: string | null
           status?: string
           updated_at?: string
@@ -1353,8 +1366,10 @@ export type Database = {
           developer_id?: string | null
           document_url?: string | null
           id?: string
+          id_document_url?: string | null
           reviewed_at?: string | null
           reviewed_by?: string | null
+          selfie_url?: string | null
           social_url?: string | null
           status?: string
           updated_at?: string
