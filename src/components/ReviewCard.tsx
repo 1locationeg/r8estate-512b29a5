@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { SentimentBadge } from "@/components/SentimentBadge";
 import { ReviewReplyForm } from "@/components/ReviewReplyForm";
+import { ReviewVerificationBadge } from "@/components/ReviewVerificationBadge";
 import type { ReviewAnalysis } from "@/hooks/useReviewAnalysis";
 import r8Stars from "@/assets/r8-stars.png";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
@@ -95,6 +96,13 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                 {tierConfig.label}
               </Badge>
               {analysis && <SentimentBadge analysis={analysis} compact />}
+              <ReviewVerificationBadge
+                verificationLevel={(review as any).verificationLevel}
+                facebookUrl={(review as any).facebookUrl}
+                linkedinUrl={(review as any).linkedinUrl}
+                identityVerified={(review as any).identityVerified}
+                compact
+              />
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">
               {projectLabel} • {developer?.name}

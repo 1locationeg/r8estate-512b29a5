@@ -18,6 +18,10 @@ interface Profile {
   budget_range: string | null;
   avatar_url: string | null;
   created_at: string | null;
+  facebook_url: string | null;
+  linkedin_url: string | null;
+  identity_verified: boolean;
+  identity_provider: string | null;
 }
 
 interface AuthContextType {

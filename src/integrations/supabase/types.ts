@@ -1137,9 +1137,13 @@ export type Database = {
           buyer_type: string | null
           created_at: string
           email: string | null
+          facebook_url: string | null
           full_name: string | null
           id: string
+          identity_provider: string | null
+          identity_verified: boolean
           interests: string[] | null
+          linkedin_url: string | null
           phone_number: string | null
           updated_at: string
           user_id: string
@@ -1150,9 +1154,13 @@ export type Database = {
           buyer_type?: string | null
           created_at?: string
           email?: string | null
+          facebook_url?: string | null
           full_name?: string | null
           id?: string
+          identity_provider?: string | null
+          identity_verified?: boolean
           interests?: string[] | null
+          linkedin_url?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id: string
@@ -1163,9 +1171,13 @@ export type Database = {
           buyer_type?: string | null
           created_at?: string
           email?: string | null
+          facebook_url?: string | null
           full_name?: string | null
           id?: string
+          identity_provider?: string | null
+          identity_verified?: boolean
           interests?: string[] | null
+          linkedin_url?: string | null
           phone_number?: string | null
           updated_at?: string
           user_id?: string
@@ -1306,6 +1318,51 @@ export type Database = {
           },
         ]
       }
+      reviewer_verifications: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          developer_id: string | null
+          document_url: string | null
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          social_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          verification_type: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          developer_id?: string | null
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          verification_type?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          developer_id?: string | null
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          social_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          verification_type?: string
+        }
+        Relationships: []
+      }
       reviews: {
         Row: {
           attachment_urls: string[] | null
@@ -1325,6 +1382,7 @@ export type Database = {
           title: string | null
           unit_type: string | null
           user_id: string
+          verification_level: string
         }
         Insert: {
           attachment_urls?: string[] | null
@@ -1344,6 +1402,7 @@ export type Database = {
           title?: string | null
           unit_type?: string | null
           user_id: string
+          verification_level?: string
         }
         Update: {
           attachment_urls?: string[] | null
@@ -1363,6 +1422,7 @@ export type Database = {
           title?: string | null
           unit_type?: string | null
           user_id?: string
+          verification_level?: string
         }
         Relationships: []
       }

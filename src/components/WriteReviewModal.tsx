@@ -606,10 +606,26 @@ export const WriteReviewModal = ({
             <p className="text-xs text-muted-foreground mt-1">
               {t("guestReview.noAccountNeeded", "No account needed — share your experience freely")}
             </p>
-          )}
+           )}
         </DialogHeader>
 
         <div className="p-4 md:p-6 pt-2 space-y-5">
+          {/* Verification nudge for authenticated users */}
+          {!isGuest && !user?.user_metadata?.identity_verified && (
+            <div className="flex items-center gap-2 p-3 rounded-lg bg-[#1877F2]/5 border border-[#1877F2]/20">
+              <Shield className="w-4 h-4 text-[#1877F2] flex-shrink-0" />
+              <p className="text-xs text-muted-foreground">
+                <button
+                  type="button"
+                  onClick={() => { onOpenChange(false); navigate('/buyer/settings'); }}
+                  className="text-[#1877F2] font-medium hover:underline"
+                >
+                  Link your Facebook or LinkedIn
+                </button>
+                {" "}to get a verified identity badge on your reviews.
+              </p>
+            </div>
+          )}
           {/* Guest name field */}
           {isGuest && (
             <div>

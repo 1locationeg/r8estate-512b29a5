@@ -3,7 +3,7 @@ import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame } from 'lucide-react'; // refresh
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame, ExternalLink } from 'lucide-react'; // refresh
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -397,6 +397,8 @@ const BuyerProfile = () => {
     phone_number: profile?.phone_number || '',
     buyer_type: profile?.buyer_type || '',
     budget_range: profile?.budget_range || '',
+    facebook_url: profile?.facebook_url || '',
+    linkedin_url: profile?.linkedin_url || '',
   });
 
   useEffect(() => {
@@ -406,6 +408,8 @@ const BuyerProfile = () => {
         phone_number: profile.phone_number || '',
         buyer_type: profile.buyer_type || '',
         budget_range: profile.budget_range || '',
+        facebook_url: profile.facebook_url || '',
+        linkedin_url: profile.linkedin_url || '',
       });
     }
   }, [profile]);
@@ -420,8 +424,10 @@ const BuyerProfile = () => {
         phone_number: formData.phone_number,
         buyer_type: formData.buyer_type,
         budget_range: formData.budget_range,
+        facebook_url: formData.facebook_url || null,
+        linkedin_url: formData.linkedin_url || null,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('user_id', user.id);
     
     setSaving(false);
@@ -431,6 +437,22 @@ const BuyerProfile = () => {
       toast.success('Profile updated successfully!');
       setIsEditing(false);
       refreshProfile();
+
+      // Auto-submit verification request if social link added and not yet verified
+      if (!profile?.identity_verified && (formData.facebook_url || formData.linkedin_url)) {
+        const socialUrl = formData.facebook_url || formData.linkedin_url;
+        const { error: verErr } = await supabase
+          .from('reviewer_verifications' as any)
+          .insert({
+            user_id: user.id,
+            verification_type: 'social',
+            social_url: socialUrl,
+            status: 'pending',
+          });
+        if (!verErr) {
+          toast.success('Verification request submitted! Our team will review your social profile.');
+        }
+      }
     }
   };
 
@@ -808,6 +830,47 @@ const BuyerProfile = () => {
                   ))}
                 </select>
               </div>
+
+              {/* Social Verification Links */}
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <ExternalLink className="w-3 h-3" /> Facebook Profile
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.facebook_url || ''}
+                  onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="https://facebook.com/your.profile"
+                />
+              </div>
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <ExternalLink className="w-3 h-3" /> LinkedIn Profile
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.linkedin_url || ''}
+                  onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="https://linkedin.com/in/your-profile"
+                />
+              </div>
+
+              {/* Verification Submit CTA */}
+              {!profile?.identity_verified && (formData.facebook_url || formData.linkedin_url) && isEditing && (
+                <div className="md:col-span-2 p-3 rounded-lg bg-[#1877F2]/5 border border-[#1877F2]/20">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Save your profile first, then submit for identity verification. Our team will review your social profile.
+                  </p>
+                </div>
+              )}
+              {profile?.identity_verified && (
+                <div className="md:col-span-2 p-3 rounded-lg bg-trust-excellent/5 border border-trust-excellent/20 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-trust-excellent flex-shrink-0" />
+                  <p className="text-xs text-trust-excellent font-medium">Identity Verified — Your reviews show a verification badge</p>
+                </div>
+              )}
             </div>
 
             {isEditing && (
