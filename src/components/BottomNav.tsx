@@ -40,26 +40,6 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
 
-          {/* Messages */}
-          {user && (
-            <button
-              onClick={() => navigate("/messages")}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-                isMessages ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              <span className="relative">
-                <Mail className="h-5 w-5" strokeWidth={isMessages ? 2.5 : 2} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -end-2 min-w-[16px] h-[16px] px-1 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] font-medium">{t("nav.messages", "Messages")}</span>
-            </button>
-          )}
-
           {/* Categories / Directory */}
           <button
             onClick={() => navigate("/categories")}

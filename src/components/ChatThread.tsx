@@ -39,6 +39,21 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Scroll to bottom when virtual keyboard opens
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const onResize = () => {
+      bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    };
+    vv.addEventListener('resize', onResize);
+    return () => vv.removeEventListener('resize', onResize);
+  }, []);
+
+  const handleInputFocus = () => {
+    setTimeout(() => bottomRef.current?.scrollIntoView({ behavior: 'smooth' }), 300);
+  };
+
   const updateSelection = (transform: (selectedText: string, start: number, end: number) => SelectionResult) => {
     const textarea = textareaRef.current;
     const start = textarea?.selectionStart ?? input.length;
