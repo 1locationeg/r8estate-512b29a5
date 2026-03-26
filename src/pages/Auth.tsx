@@ -57,9 +57,16 @@ const Auth = () => {
   }, []);
 
   const promoteToBusinessRole = async () => {
-    const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
-    if (error) throw error;
-    await refreshProfile();
+    // Business upgrades now require admin approval
+    // For new signups with business type, the handle_new_user trigger assigns the role directly
+    // For existing buyers trying to switch, they must submit a business upgrade request
+    if (role && role !== 'business' && role !== 'admin') {
+      // Existing user trying to upgrade - skip auto-promote, redirect to buyer dashboard
+      // They can use the upgrade modal from there
+      toast({ title: 'Business upgrade requires approval', description: 'Please submit a business upgrade request from your dashboard.' });
+      return;
+    }
+    await refreshProfile(); 
   };
 
   useEffect(() => {
@@ -71,7 +78,8 @@ const Auth = () => {
         await promoteToBusinessRole();
         localStorage.removeItem('oauth_account_type');
       } catch {
-        toast({ title: 'Business activation failed', description: 'Signed in, but could not switch to Business.', variant: 'destructive' });
+        toast({ title: 'Business upgrade requires approval', description: 'Please submit a business upgrade request from your dashboard.' });
+        localStorage.removeItem('oauth_account_type');
       } finally {
         if (isMounted) setIsSyncingBusinessRole(false);
       }
@@ -139,12 +147,10 @@ const Auth = () => {
           return;
         }
         if (shouldSyncBusiness) {
-          try {
-            await promoteToBusinessRole();
-          } catch {
-            toast({ title: 'Business activation failed', description: 'Signed in, but could not switch to Business.', variant: 'destructive' });
-            return;
-          }
+          // For existing users signing in with business intent, redirect to buyer dashboard
+          // where they can submit a business upgrade request
+          toast({ title: 'Business upgrade requires approval', description: 'Submit a business upgrade request from your dashboard.' });
+          localStorage.removeItem('oauth_account_type');
         }
         toast({ title: 'Welcome back!', description: 'Signed in successfully.' });
       }
