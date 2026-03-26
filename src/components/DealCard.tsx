@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { ShareMenu } from "@/components/ShareMenu";
 import { getStarColorClass } from "@/lib/ratingColors";
 import { DealRatingModal } from "./DealRatingModal";
 import { DealVotePoll } from "./DealVotePoll";
@@ -226,9 +227,13 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
               View business
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="h-7 w-7 ms-auto">
-            <Share2 className="w-3.5 h-3.5" />
-          </Button>
+          <ShareMenu
+            title={deal.headline}
+            description={deal.description}
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7 ms-auto"
+          />
         </div>
       </div>
 

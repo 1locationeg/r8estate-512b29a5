@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ShareMenu } from "@/components/ShareMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -326,9 +327,13 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
               {isSelected ? "Selected" : "Compare"}
             </Button>
           )}
-          <Button variant="ghost" size="icon" className="h-7 w-7">
-            <Share2 className="w-3.5 h-3.5" />
-          </Button>
+          <ShareMenu
+            title={launch.project_name}
+            description={`${biz?.company_name || "Business"} • ${status.label}`}
+            variant="ghost"
+            size="icon"
+            className="h-7 w-7"
+          />
         </div>
       </div>
     </div>
