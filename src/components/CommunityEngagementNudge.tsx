@@ -5,6 +5,16 @@ import { Gift, Share2, Star, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShareMenu } from "@/components/ShareMenu";
 
+type NudgeConfig = {
+  icon: typeof Gift;
+  iconColor: string;
+  bgColor: string;
+  title: string;
+  desc: string;
+  cta: string;
+  action?: () => void;
+};
+
 /**
  * Engagement nudge cards shown in community feed to motivate
  * sharing, referrals, and deeper platform engagement.
@@ -16,7 +26,7 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
 
   if (dismissed) return null;
 
-  const configs = {
+  const configs: Record<"referral" | "share" | "review", NudgeConfig> = {
     referral: {
       icon: Gift,
       iconColor: "text-primary",
@@ -33,6 +43,7 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       title: t("community.shareNudge", "Found this helpful? Share it! 📢"),
       desc: t("community.shareNudgeDesc", "Help other buyers make better decisions by sharing valuable discussions"),
       cta: t("community.shareNow", "Share R8ESTATE"),
+      action: undefined,
     },
     review: {
       icon: Star,
