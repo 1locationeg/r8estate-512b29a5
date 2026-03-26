@@ -12,8 +12,12 @@ export const BottomNav = () => {
   const { user } = useAuth();
   const { unreadCount } = useMessageUnreadCount();
 
+  // Hide BottomNav entirely on messages page (chat has its own nav)
+  if (location.pathname === "/messages") {
+    return <div className="h-12 md:hidden" />;
+  }
+
   const isReviews = location.pathname === "/reviews";
-  const isMessages = location.pathname === "/messages";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
   const isCommunity = location.pathname === "/community";
@@ -35,26 +39,6 @@ export const BottomNav = () => {
             <MessageSquare className="h-5 w-5" strokeWidth={isReviews ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
-
-          {/* Messages */}
-          {user && (
-            <button
-              onClick={() => navigate("/messages")}
-              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-                isMessages ? "text-primary" : "text-muted-foreground"
-              }`}
-            >
-              <span className="relative">
-                <Mail className="h-5 w-5" strokeWidth={isMessages ? 2.5 : 2} />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1.5 -end-2 min-w-[16px] h-[16px] px-1 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </span>
-              <span className="text-[10px] font-medium">{t("nav.messages", "Messages")}</span>
-            </button>
-          )}
 
           {/* Categories / Directory */}
           <button

@@ -129,7 +129,7 @@ const Messages = () => {
       </div>
 
       {/* Mobile: single panel */}
-      <div className="md:hidden flex flex-col h-[calc(100dvh)] pb-16">
+      <div className={cn("md:hidden flex flex-col h-[100dvh]", !activeConv && "pb-16")}>
         {activeConv ? (
           <ChatThread
             conversationId={activeConv.id}
