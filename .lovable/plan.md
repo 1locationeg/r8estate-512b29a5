@@ -1,23 +1,43 @@
 
 
-## Fix: Admin "New Conversation" Message Sending
+## Fix: Hidden Message Textbox on Mobile/PWA
 
-### Problem
-When an admin clicks "New Conversation" and selects a user, `startConvWithUser` navigates away to `/messages` instead of staying on the admin messaging panel. The admin should be able to create a conversation and immediately send messages from within the admin panel using the inline reply.
+The core issue is that on mobile, when a chat thread is active, the input box gets hidden behind the BottomNav (which is 48px + safe area) and/or pushed off-screen by virtual keyboard. The `pb-16` on the mobile container reserves space for BottomNav, but when inside a chat thread, the BottomNav should be hidden entirely so the input can use the full viewport.
+
+### Root Cause
+- Mobile chat container uses `h-[calc(100dvh)] pb-16` -- the `pb-16` steals 64px from the chat, pushing the input below the fold
+- BottomNav is always visible even during active chat threads
+- No scroll-to-bottom on textarea focus (keyboard pushes content up but input stays hidden)
 
 ### Changes
 
-**File: `src/components/AdminMessaging.tsx`**
+**1. Hide BottomNav when in active chat (Messages page)**
+- `src/components/BottomNav.tsx`: Hide the BottomNav when route is `/messages` AND a chat thread is active. Simplest approach: hide BottomNav entirely on `/messages` route since the chat thread has its own back button.
 
-1. Change `startConvWithUser` to stay on the admin panel instead of navigating to `/messages`:
-   - After creating the conversation via RPC, call `fetchConversations()` to refresh the list
-   - Auto-select the new conversation by calling `fetchMessages(convId)` so the message viewer opens
-   - Remove the `navigate('/messages', ...)` call
+**2. Fix mobile container in Messages.tsx**
+- Remove the `pb-16` when an active conversation is open (no BottomNav visible)
+- Keep `pb-16` only for the conversation list view
 
-2. Add error logging to `sendAdminReply` for better debugging — log the actual error object to console so we can see what's failing.
+**3. Scroll-to-bottom on focus in ChatThread.tsx**
+- Add `onFocus` handler to the Textarea that scrolls `bottomRef` into view
+- Use `visualViewport` resize listener to adjust when virtual keyboard opens
 
-3. Add error handling to the participant insert step (currently silently fails if the INSERT is rejected by RLS).
+**4. RTL-safe logical properties audit**
+- Already using `start-0`, `end-0`, `ms-auto`, `border-s`, `ps-3` throughout -- these are correct
+- Ensure the ArrowLeft icon gets `rtl:rotate-180` class
 
-### Technical Detail
-The `find_or_create_conversation` RPC (SECURITY DEFINER) already adds both users as participants, so the admin will be a participant. The existing "Participants can send messages" INSERT policy on `messages` + the "Admins can send messages" policy should both allow the insert. The inline reply (`sendAdminReply`) already handles this correctly — the fix is just keeping the admin on the right page.
+### File-by-file
+
+**`src/components/BottomNav.tsx`**
+- Add check: if `location.pathname === "/messages"`, return only the spacer div (or null) to hide the nav bar during messaging
+
+**`src/pages/Messages.tsx`**
+- Mobile container: change from `h-[calc(100dvh)] pb-16` to conditional classes
+  - When `activeConv` is set: `h-[100dvh]` (no bottom padding, full height for chat)
+  - When showing conversation list: keep `h-[calc(100dvh)] pb-16` for BottomNav space
+
+**`src/components/ChatThread.tsx`**
+- Add `onFocus` to Textarea that triggers `bottomRef.current?.scrollIntoView()`
+- Add `useEffect` with `window.visualViewport?.addEventListener('resize', ...)` to scroll input into view when keyboard opens
+- Add `rtl:rotate-180` to the ArrowLeft back button icon
 
