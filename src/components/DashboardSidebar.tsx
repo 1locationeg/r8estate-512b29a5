@@ -242,7 +242,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           <span className={cn(
             "inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold uppercase tracking-wide",
             isBusinessPortal
-              ? "bg-business/10 border-business-border/20 text-business-foreground"
+              ? "bg-business border-business-border/30 text-business-foreground"
               : "bg-primary/10 border-primary/20 text-primary"
           )}>
             {portalLabel}
