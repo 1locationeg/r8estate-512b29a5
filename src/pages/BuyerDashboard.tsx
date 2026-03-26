@@ -105,9 +105,12 @@ const BuyerOverview = () => {
               </Avatar>
               <button
                 onClick={() => navigate('/community')}
-                className="flex-1 text-start px-3 py-2.5 bg-secondary/60 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors"
+                className="flex-1 text-start px-3 py-2.5 bg-secondary/60 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors overflow-hidden h-[38px] relative"
               >
-                Share an experience, ask a question...
+                <span className="absolute inset-0 flex flex-col animate-[post-box-cycle_6s_ease-in-out_infinite] px-3 py-2.5">
+                  <span className="shrink-0">Share an experience.</span>
+                  <span className="shrink-0 mt-[38px]">Ask a question.</span>
+                </span>
               </button>
             </div>
             <div className="flex items-center gap-2 mt-3 ps-12">
