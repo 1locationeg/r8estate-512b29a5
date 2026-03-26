@@ -12,8 +12,12 @@ export const BottomNav = () => {
   const { user } = useAuth();
   const { unreadCount } = useMessageUnreadCount();
 
+  // Hide BottomNav entirely on messages page (chat has its own nav)
+  if (location.pathname === "/messages") {
+    return <div className="h-12 md:hidden" />;
+  }
+
   const isReviews = location.pathname === "/reviews";
-  const isMessages = location.pathname === "/messages";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
   const isCommunity = location.pathname === "/community";
