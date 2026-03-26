@@ -174,9 +174,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   };
 
   const renderNavButton = (item: NavItem) => {
-    // Skip leaderboard in nav — it's rendered above as a pinned strip
+    // Render leaderboard as a special card inline
     if ((isBuyerPortal || isBusinessPortal) && item.path === '/leaderboard') {
-      return null;
+      return <div key={item.label} className="my-1">{renderLeaderboardCard(item)}</div>;
     }
 
     const isActive = location.pathname === item.path;
@@ -319,13 +319,6 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           )}
         </div>
       </div>
-
-      {/* Leaderboard Strip — pinned above nav for visibility */}
-      {(isBuyerPortal || isBusinessPortal) && (() => {
-        const allItems = grouped ? (navItems as NavGroup[]).flatMap(g => g.items) : (navItems as NavItem[]);
-        const lbItem = allItems.find(i => i.path === '/leaderboard');
-        return lbItem ? <div className="px-3 pt-3 pb-1">{renderLeaderboardCard(lbItem)}</div> : null;
-      })()}
 
       {/* Scrollable area: Nav */}
       <div className="flex-1 min-h-0 overflow-y-auto">
