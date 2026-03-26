@@ -126,10 +126,3 @@ export const ReferralWidget = () => {
     </Card>
   );
 };
-
-      <p className="text-[10px] text-muted-foreground text-center mt-2">
-        Earn 50 points when your friend signs up and takes their first action
-      </p>
-    </Card>
-  );
-};
