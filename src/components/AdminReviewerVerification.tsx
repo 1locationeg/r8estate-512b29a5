@@ -87,7 +87,7 @@ const AdminReviewerVerification = () => {
 
       // If approved, update the profile
       if (action === "approved") {
-        if (v.verification_type === 'kyc') {
+        if (verificationType === 'kyc') {
           await supabase
             .from("profiles")
             .update({ kyc_verified: true, identity_verified: true } as any)
@@ -100,7 +100,7 @@ const AdminReviewerVerification = () => {
         }
 
         // Update all reviews by this user
-        const newLevel = v.verification_type === 'kyc' ? 'kyc' : 'identity';
+        const newLevel = verificationType === 'kyc' ? 'kyc' : 'identity';
         await supabase
           .from("reviews")
           .update({ verification_level: newLevel })
