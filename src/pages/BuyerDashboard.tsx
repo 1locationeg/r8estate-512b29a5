@@ -107,9 +107,9 @@ const BuyerOverview = () => {
                 onClick={() => navigate('/community')}
                 className="flex-1 text-start px-3 py-2.5 bg-secondary/60 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors overflow-hidden h-[38px] relative"
               >
-                <span className="absolute inset-0 flex flex-col animate-[post-box-cycle_6s_ease-in-out_infinite] px-3 py-2.5">
-                  <span className="shrink-0">Share an experience.</span>
-                  <span className="shrink-0 mt-[38px]">Ask a question.</span>
+                <span className="absolute inset-x-0 top-0 flex flex-col animate-[post-box-cycle_6s_ease-in-out_infinite] px-3">
+                  <span className="h-[38px] flex items-center">Share an experience.</span>
+                  <span className="h-[38px] flex items-center">Ask a question.</span>
                 </span>
               </button>
             </div>
