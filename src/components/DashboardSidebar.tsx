@@ -209,9 +209,15 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         <div className="flex flex-col items-center text-center">
           {/* Avatar with tier badge + online dot */}
           <div className="relative mb-3">
-            <Avatar className="h-[72px] w-[72px] ring-[3px] ring-primary/20 shadow-[0_4px_16px_rgba(13,122,107,0.15)]">
+            <Avatar className={cn(
+              "h-[72px] w-[72px] ring-[3px]",
+              isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
+            )}>
               <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
+              <AvatarFallback className={cn(
+                "text-xl font-bold",
+                isBusinessPortal ? "bg-business-border text-white" : "bg-primary text-primary-foreground"
+              )}>
                 {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
