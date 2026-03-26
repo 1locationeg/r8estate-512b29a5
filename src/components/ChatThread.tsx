@@ -140,7 +140,7 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
       <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card shrink-0">
         {onBack && (
           <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
-            <ArrowLeft className="w-5 h-5" />
+            <ArrowLeft className="w-5 h-5 rtl:rotate-180" />
           </button>
         )}
         <div className="relative">
@@ -253,6 +253,7 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
               ref={textareaRef}
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
               placeholder={t('messages.typeRichMessage', 'Write a message...')}
               className="flex-1 min-h-[44px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm"
