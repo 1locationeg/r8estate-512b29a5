@@ -437,6 +437,22 @@ const BuyerProfile = () => {
       toast.success('Profile updated successfully!');
       setIsEditing(false);
       refreshProfile();
+
+      // Auto-submit verification request if social link added and not yet verified
+      if (!profile?.identity_verified && (formData.facebook_url || formData.linkedin_url)) {
+        const socialUrl = formData.facebook_url || formData.linkedin_url;
+        const { error: verErr } = await supabase
+          .from('reviewer_verifications' as any)
+          .insert({
+            user_id: user.id,
+            verification_type: 'social',
+            social_url: socialUrl,
+            status: 'pending',
+          });
+        if (!verErr) {
+          toast.success('Verification request submitted! Our team will review your social profile.');
+        }
+      }
     }
   };
 
