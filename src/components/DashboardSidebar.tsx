@@ -1,14 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
-import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { LogOut, ChevronDown, Coins } from 'lucide-react';
+import { LogOut, ChevronDown, Coins, Trophy, ChevronRight } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -51,6 +51,27 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const { user, profile, signOut } = useAuth();
   const gamification = useBuyerGamification();
   const isBuyerPortal = portalLabel === 'Buyer';
+
+  // Compact rank data
+  const [userRank, setUserRank] = useState(0);
+  const [userPoints, setUserPoints] = useState(0);
+  const [nextUserPoints, setNextUserPoints] = useState(0);
+
+  useEffect(() => {
+    if (!user || !isBuyerPortal) return;
+    const fetchRank = async () => {
+      const { data } = await supabase.rpc('get_weekly_leaderboard', { _limit: 50 });
+      if (data) {
+        const idx = data.findIndex((e: any) => e.user_id === user.id);
+        if (idx >= 0) {
+          setUserRank(idx + 1);
+          setUserPoints(data[idx].total_points);
+          setNextUserPoints(idx > 0 ? data[idx - 1].total_points : 0);
+        }
+      }
+    };
+    fetchRank();
+  }, [user, isBuyerPortal]);
 
   const grouped = isNavGroups(navItems);
 
@@ -211,13 +232,32 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
             (navItems as NavItem[]).map(renderNavButton)
           )}
         </nav>
-
-        {/* Leaderboard inside scroll area */}
-        {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} />}
       </div>
 
-      {/* Bottom: Sign out + action (pinned) */}
+      {/* Bottom: Rank banner + action + sign out (pinned) */}
       <div className="flex-shrink-0 border-t border-border p-3 space-y-2 safe-bottom">
+          {/* Compact Rank Banner */}
+          {isBuyerPortal && user && userRank > 0 && (
+            <button
+              onClick={() => { navigate('/leaderboard'); onNavigate?.(); }}
+              className="w-full group bg-gradient-to-r from-coin/8 to-primary/8 border border-coin/20 rounded-lg px-3 py-2 text-start hover:from-coin/15 hover:to-primary/15 transition-all"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Trophy className="w-4 h-4 text-coin" />
+                  <span className="text-[13px] font-bold text-foreground">#{userRank} this week</span>
+                  <span className="text-[11px] text-muted-foreground">· {userPoints} pts</span>
+                </div>
+                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
+              </div>
+              {nextUserPoints > userPoints && (
+                <p className="text-[10px] text-muted-foreground mt-0.5 group-hover:text-foreground transition-colors">
+                  <strong className="text-coin">{nextUserPoints - userPoints} more</strong> to climb to #{userRank - 1}
+                </p>
+              )}
+            </button>
+          )}
+
           {bottomAction && (
             <Button
               onClick={() => {
