@@ -6,17 +6,33 @@ import { ConversationList } from '@/components/ConversationList';
 import { ChatThread } from '@/components/ChatThread';
 import { ChatPresenceToggle } from '@/components/ChatPresenceToggle';
 import { NewConversationDialog } from '@/components/NewConversationDialog';
-import { MessageSquare, Settings2 } from 'lucide-react';
-import { Navigate, useLocation } from 'react-router-dom';
+import { MessageSquare, Settings2, ArrowLeft } from 'lucide-react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { Button } from '@/components/ui/button';
 
 const Messages = () => {
   const { t } = useTranslation();
-  const { user, isLoading } = useAuth();
+  const { user, role, isLoading } = useAuth();
   const { conversations, loading, startConversation } = useConversations();
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const getDashboardRoute = () => {
+    if (role === 'admin') return '/admin';
+    if (role === 'business') return '/business';
+    return '/buyer';
+  };
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate(getDashboardRoute());
+    }
+  };
 
   // Auto-select conversation from navigation state
   useEffect(() => {
@@ -60,6 +76,9 @@ const Messages = () => {
         <div className="w-[340px] border-e border-border flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
               <MessageSquare className="w-5 h-5 text-primary" />
               <h1 className="text-lg font-bold text-foreground">{t('messages.title', 'Messages')}</h1>
             </div>
@@ -123,6 +142,9 @@ const Messages = () => {
           <>
             <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
               <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
                 <MessageSquare className="w-5 h-5 text-primary" />
                 <h1 className="text-lg font-bold text-foreground">{t('messages.title', 'Messages')}</h1>
               </div>
