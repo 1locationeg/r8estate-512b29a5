@@ -236,8 +236,31 @@ const AdminReviewerVerification = () => {
                 )}
               </div>
 
+              {/* KYC: Selfie + ID side-by-side */}
+              {v.verification_type === 'kyc' && (v.selfie_url || v.id_document_url) && (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {v.selfie_url && (
+                    <div className="rounded-lg border border-border overflow-hidden">
+                      <p className="text-[10px] font-medium text-muted-foreground px-2 py-1 bg-muted/50">Selfie</p>
+                      <a href={v.selfie_url} target="_blank" rel="noopener noreferrer">
+                        <img src={v.selfie_url} alt="Selfie" className="w-full h-32 object-cover hover:opacity-90 transition-opacity" />
+                      </a>
+                    </div>
+                  )}
+                  {v.id_document_url && (
+                    <div className="rounded-lg border border-border overflow-hidden">
+                      <p className="text-[10px] font-medium text-muted-foreground px-2 py-1 bg-muted/50">National ID</p>
+                      <a href={v.id_document_url} target="_blank" rel="noopener noreferrer">
+                        <img src={v.id_document_url} alt="ID Document" className="w-full h-32 object-cover hover:opacity-90 transition-opacity" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <p className="text-xs text-muted-foreground mb-3">
                 Type: <span className="font-medium text-foreground capitalize">{v.verification_type}</span>
+                {v.verification_type === 'kyc' && <span className="ms-1 text-[#7C3AED] font-semibold">★ Highest Tier</span>}
                 {" • "}
                 Submitted: {new Date(v.created_at).toLocaleDateString()}
               </p>
@@ -254,7 +277,7 @@ const AdminReviewerVerification = () => {
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      onClick={() => handleAction(v.id, v.user_id, "approved")}
+                      onClick={() => handleAction(v.id, v.user_id, "approved", v.verification_type)}
                       disabled={actionLoading === v.id}
                       className="bg-trust-excellent hover:bg-trust-excellent/90 text-white"
                     >
@@ -264,7 +287,7 @@ const AdminReviewerVerification = () => {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleAction(v.id, v.user_id, "rejected")}
+                      onClick={() => handleAction(v.id, v.user_id, "rejected", v.verification_type)}
                       disabled={actionLoading === v.id}
                     >
                       <XCircle className="w-3 h-3 me-1" />
