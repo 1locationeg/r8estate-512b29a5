@@ -52,10 +52,11 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const gamification = useBuyerGamification();
   const isBuyerPortal = portalLabel === 'Buyer';
 
-  // Compact rank data
+  // Competition data for leaderboard strip
   const [userRank, setUserRank] = useState(0);
   const [userPoints, setUserPoints] = useState(0);
-  const [nextUserPoints, setNextUserPoints] = useState(0);
+  const [rivalName, setRivalName] = useState('');
+  const [rivalPoints, setRivalPoints] = useState(0);
 
   useEffect(() => {
     if (!user || !isBuyerPortal) return;
@@ -66,7 +67,11 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         if (idx >= 0) {
           setUserRank(idx + 1);
           setUserPoints(data[idx].total_points);
-          setNextUserPoints(idx > 0 ? data[idx - 1].total_points : 0);
+          if (idx > 0) {
+            const rival = data[idx - 1];
+            setRivalName(rival.full_name || 'Anonymous');
+            setRivalPoints(rival.total_points);
+          }
         }
       }
     };
