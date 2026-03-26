@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   MessageSquare, Users, Search, Eye, Trash2, 
-  BarChart3, ArrowUpDown, RefreshCw, Clock, AlertTriangle 
+  BarChart3, ArrowUpDown, RefreshCw, Clock, AlertTriangle, Plus, Send, ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 interface ConversationRow {
   id: string;
@@ -30,6 +32,8 @@ interface MessageRow {
 }
 
 const AdminMessaging = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -38,6 +42,11 @@ const AdminMessaging = () => {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [stats, setStats] = useState({ totalConversations: 0, totalMessages: 0, activeUsers: 0, todayMessages: 0 });
   const [sortBy, setSortBy] = useState<'recent' | 'messages'>('recent');
+  const [adminReply, setAdminReply] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  const [showNewConv, setShowNewConv] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [userResults, setUserResults] = useState<{ user_id: string; full_name: string | null; email: string | null }[]>([]);
 
   const fetchStats = async () => {
     const [convRes, msgRes, todayRes, presenceRes] = await Promise.all([
@@ -151,8 +160,65 @@ const AdminMessaging = () => {
   };
 
   const deleteMessage = async (msgId: string) => {
-    // Admin can't delete via RLS — show info
     toast.info('Message flagged for review. Direct deletion requires a database migration to add admin DELETE policy.');
+  };
+
+  const searchUsers = async (q: string) => {
+    setUserSearch(q);
+    if (q.length < 2) { setUserResults([]); return; }
+    const { data } = await supabase
+      .from('profiles')
+      .select('user_id, full_name, email')
+      .or(`full_name.ilike.%${q}%,email.ilike.%${q}%`)
+      .limit(10);
+    setUserResults(data || []);
+  };
+
+  const startConvWithUser = async (otherUserId: string) => {
+    if (!user) return;
+    const { data, error } = await supabase.rpc('find_or_create_conversation', {
+      _other_user_id: otherUserId,
+    });
+    if (error) { toast.error('Failed to create conversation'); return; }
+    setShowNewConv(false);
+    setUserSearch('');
+    setUserResults([]);
+    navigate('/messages', { state: { conversationId: data } });
+  };
+
+  const sendAdminReply = async () => {
+    if (!selectedConv || !user || !adminReply.trim()) return;
+    setSendingReply(true);
+    
+    // First ensure admin is a participant
+    const { data: existing } = await supabase
+      .from('conversation_participants')
+      .select('id')
+      .eq('conversation_id', selectedConv)
+      .eq('user_id', user.id)
+      .maybeSingle();
+    
+    if (!existing) {
+      await supabase.from('conversation_participants').insert({
+        conversation_id: selectedConv,
+        user_id: user.id,
+      });
+    }
+
+    const { error } = await supabase.from('messages').insert({
+      conversation_id: selectedConv,
+      sender_id: user.id,
+      content: adminReply.trim(),
+    });
+    
+    if (error) {
+      toast.error('Failed to send message');
+    } else {
+      setAdminReply('');
+      toast.success('Message sent');
+      fetchMessages(selectedConv);
+    }
+    setSendingReply(false);
   };
 
   useEffect(() => {
@@ -204,6 +270,14 @@ const AdminMessaging = () => {
         </div>
         <div className="flex gap-2">
           <Button
+            size="sm"
+            onClick={() => setShowNewConv(!showNewConv)}
+            className="gap-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            New Conversation
+          </Button>
+          <Button
             variant="outline"
             size="sm"
             onClick={() => setSortBy(sortBy === 'recent' ? 'messages' : 'recent')}
@@ -216,6 +290,39 @@ const AdminMessaging = () => {
           </Button>
         </div>
       </div>
+
+      {/* New Conversation Search */}
+      {showNewConv && (
+        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+          <p className="text-sm font-semibold text-foreground">Start a new conversation with a user</p>
+          <div className="relative">
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={userSearch}
+              onChange={e => searchUsers(e.target.value)}
+              placeholder="Search by name or email..."
+              className="ps-9"
+            />
+          </div>
+          {userResults.length > 0 && (
+            <div className="divide-y divide-border border border-border rounded-lg max-h-48 overflow-y-auto">
+              {userResults.map(u => (
+                <button
+                  key={u.user_id}
+                  onClick={() => startConvWithUser(u.user_id)}
+                  className="w-full text-start px-4 py-2.5 hover:bg-muted/50 transition-colors flex items-center justify-between"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{u.full_name || 'User'}</p>
+                    <p className="text-xs text-muted-foreground">{u.email}</p>
+                  </div>
+                  <MessageSquare className="w-4 h-4 text-primary" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Two-panel layout */}
       <div className="flex gap-4 min-h-[500px]">
@@ -279,11 +386,21 @@ const AdminMessaging = () => {
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Eye className="w-4 h-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">Message Viewer (Read Only)</p>
+                  <p className="text-sm font-semibold text-foreground">Message Viewer</p>
                 </div>
-                <Badge variant="outline" className="text-[10px]">
-                  {messages.length} messages
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-[10px]">
+                    {messages.length} messages
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/messages', { state: { conversationId: selectedConv } })}
+                    title="Open in full messaging"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messagesLoading ? (
@@ -323,12 +440,26 @@ const AdminMessaging = () => {
                   ))
                 )}
               </div>
+              {/* Admin Reply Input */}
+              <div className="px-4 py-3 border-t border-border bg-muted/20">
+                <div className="flex gap-2">
+                  <Input
+                    value={adminReply}
+                    onChange={e => setAdminReply(e.target.value)}
+                    placeholder="Send a message as admin..."
+                    onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendAdminReply()}
+                  />
+                  <Button size="sm" onClick={sendAdminReply} disabled={sendingReply || !adminReply.trim()}>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
               <Eye className="w-12 h-12 opacity-20 mb-3" />
               <p className="text-sm font-medium">Select a conversation to view</p>
-              <p className="text-xs mt-1">Read-only access for moderation</p>
+              <p className="text-xs mt-1">View and reply to conversations as admin</p>
             </div>
           )}
         </div>
