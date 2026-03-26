@@ -5,6 +5,7 @@ import { useConversations, type Conversation } from '@/hooks/useMessages';
 import { ConversationList } from '@/components/ConversationList';
 import { ChatThread } from '@/components/ChatThread';
 import { ChatPresenceToggle } from '@/components/ChatPresenceToggle';
+import { NewConversationDialog } from '@/components/NewConversationDialog';
 import { MessageSquare, Settings2 } from 'lucide-react';
 import { Navigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
