@@ -101,6 +101,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                 facebookUrl={(review as any).facebookUrl}
                 linkedinUrl={(review as any).linkedinUrl}
                 identityVerified={(review as any).identityVerified}
+                kycVerified={(review as any).kycVerified}
                 compact
               />
             </div>

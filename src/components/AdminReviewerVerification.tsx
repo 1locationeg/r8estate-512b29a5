@@ -15,6 +15,8 @@ interface Verification {
   status: string;
   social_url: string | null;
   document_url: string | null;
+  selfie_url: string | null;
+  id_document_url: string | null;
   admin_notes: string | null;
   created_at: string;
   profile?: { full_name: string | null; email: string | null; facebook_url: string | null; linkedin_url: string | null };
@@ -69,7 +71,7 @@ const AdminReviewerVerification = () => {
     fetchVerifications();
   }, [filter]);
 
-  const handleAction = async (id: string, userId: string, action: "approved" | "rejected") => {
+  const handleAction = async (id: string, userId: string, action: "approved" | "rejected", verificationType?: string) => {
     setActionLoading(id);
     try {
       const { error } = await supabase
@@ -85,15 +87,23 @@ const AdminReviewerVerification = () => {
 
       // If approved, update the profile
       if (action === "approved") {
-        await supabase
-          .from("profiles")
-          .update({ identity_verified: true })
-          .eq("user_id", userId);
+        if (verificationType === 'kyc') {
+          await supabase
+            .from("profiles")
+            .update({ kyc_verified: true, identity_verified: true } as any)
+            .eq("user_id", userId);
+        } else {
+          await supabase
+            .from("profiles")
+            .update({ identity_verified: true })
+            .eq("user_id", userId);
+        }
 
-        // Update all reviews by this user to 'identity' verification level (if not already 'transaction')
+        // Update all reviews by this user
+        const newLevel = verificationType === 'kyc' ? 'kyc' : 'identity';
         await supabase
           .from("reviews")
-          .update({ verification_level: "identity" })
+          .update({ verification_level: newLevel })
           .eq("user_id", userId)
           .eq("verification_level", "none");
       }
@@ -226,8 +236,31 @@ const AdminReviewerVerification = () => {
                 )}
               </div>
 
+              {/* KYC: Selfie + ID side-by-side */}
+              {v.verification_type === 'kyc' && (v.selfie_url || v.id_document_url) && (
+                <div className="grid grid-cols-2 gap-3 mb-3">
+                  {v.selfie_url && (
+                    <div className="rounded-lg border border-border overflow-hidden">
+                      <p className="text-[10px] font-medium text-muted-foreground px-2 py-1 bg-muted/50">Selfie</p>
+                      <a href={v.selfie_url} target="_blank" rel="noopener noreferrer">
+                        <img src={v.selfie_url} alt="Selfie" className="w-full h-32 object-cover hover:opacity-90 transition-opacity" />
+                      </a>
+                    </div>
+                  )}
+                  {v.id_document_url && (
+                    <div className="rounded-lg border border-border overflow-hidden">
+                      <p className="text-[10px] font-medium text-muted-foreground px-2 py-1 bg-muted/50">National ID</p>
+                      <a href={v.id_document_url} target="_blank" rel="noopener noreferrer">
+                        <img src={v.id_document_url} alt="ID Document" className="w-full h-32 object-cover hover:opacity-90 transition-opacity" />
+                      </a>
+                    </div>
+                  )}
+                </div>
+              )}
+
               <p className="text-xs text-muted-foreground mb-3">
                 Type: <span className="font-medium text-foreground capitalize">{v.verification_type}</span>
+                {v.verification_type === 'kyc' && <span className="ms-1 text-[#7C3AED] font-semibold">★ Highest Tier</span>}
                 {" • "}
                 Submitted: {new Date(v.created_at).toLocaleDateString()}
               </p>
@@ -244,7 +277,7 @@ const AdminReviewerVerification = () => {
                   <div className="flex gap-2">
                     <Button
                       size="sm"
-                      onClick={() => handleAction(v.id, v.user_id, "approved")}
+                      onClick={() => handleAction(v.id, v.user_id, "approved", v.verification_type)}
                       disabled={actionLoading === v.id}
                       className="bg-trust-excellent hover:bg-trust-excellent/90 text-white"
                     >
@@ -254,7 +287,7 @@ const AdminReviewerVerification = () => {
                     <Button
                       size="sm"
                       variant="destructive"
-                      onClick={() => handleAction(v.id, v.user_id, "rejected")}
+                      onClick={() => handleAction(v.id, v.user_id, "rejected", v.verification_type)}
                       disabled={actionLoading === v.id}
                     >
                       <XCircle className="w-3 h-3 me-1" />

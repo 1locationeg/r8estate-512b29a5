@@ -7,6 +7,7 @@ interface ReviewVerificationBadgeProps {
   facebookUrl?: string | null;
   linkedinUrl?: string | null;
   identityVerified?: boolean;
+  kycVerified?: boolean;
   compact?: boolean;
 }
 
@@ -27,20 +28,37 @@ export const ReviewVerificationBadge = ({
   facebookUrl,
   linkedinUrl,
   identityVerified,
+  kycVerified,
   compact = false,
 }: ReviewVerificationBadgeProps) => {
   const { t } = useTranslation();
 
-  if (verificationLevel === "none" && !identityVerified) return null;
+  if (verificationLevel === "none" && !identityVerified && !kycVerified) return null;
 
   const isTransaction = verificationLevel === "transaction";
   const isIdentity = verificationLevel === "identity" || identityVerified;
+  const isKyc = kycVerified;
 
   return (
     <TooltipProvider>
       <div className="inline-flex items-center gap-1">
-        {/* Transaction Verified (Verified Buyer) — highest tier */}
-        {isTransaction && (
+        {/* KYC Verified — highest tier */}
+        {isKyc && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#7C3AED]/10 text-[#7C3AED] text-[10px] font-semibold">
+                <ShieldCheck className="w-3 h-3" />
+                {!compact && "KYC Verified"}
+              </span>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p className="text-xs">This reviewer's identity has been verified via selfie & national ID</p>
+            </TooltipContent>
+          </Tooltip>
+        )}
+
+        {/* Transaction Verified (Verified Buyer) */}
+        {isTransaction && !isKyc && (
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-trust-excellent/10 text-trust-excellent text-[10px] font-semibold">
@@ -55,7 +73,7 @@ export const ReviewVerificationBadge = ({
         )}
 
         {/* Identity Verified via Social Profile */}
-        {isIdentity && !isTransaction && (
+        {isIdentity && !isTransaction && !isKyc && (
           <Tooltip>
             <TooltipTrigger asChild>
               <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-[#1877F2]/10 text-[#1877F2] text-[10px] font-semibold">

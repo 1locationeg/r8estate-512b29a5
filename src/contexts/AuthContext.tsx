@@ -22,6 +22,9 @@ interface Profile {
   linkedin_url: string | null;
   identity_verified: boolean;
   identity_provider: string | null;
+  kyc_verified: boolean;
+  selfie_url: string | null;
+  id_document_url: string | null;
 }
 
 interface AuthContextType {
