@@ -2074,7 +2074,7 @@ const AdminDashboard = () => {
     {
       label: 'Communications',
       items: [
-        { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
+        { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/admin/messaging' },
         { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
         { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
         { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
