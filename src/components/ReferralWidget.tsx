@@ -5,7 +5,8 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Gift, Copy, CheckCircle2, Users, Trophy, Share2 } from "lucide-react";
+import { ShareMenu } from "@/components/ShareMenu";
+import { Gift, Copy, CheckCircle2, Users, Trophy } from "lucide-react";
 import { toast } from "sonner";
 
 export const ReferralWidget = () => {
@@ -72,20 +73,6 @@ export const ReferralWidget = () => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const shareLink = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: "Join R8ESTATE",
-          text: "Join R8ESTATE — the trusted real estate review platform!",
-          url: referralLink,
-        });
-        return;
-      }
-    } catch {}
-    copyLink();
-  };
-
   if (!user || loading) return null;
 
   return (
@@ -123,10 +110,22 @@ export const ReferralWidget = () => {
         </Button>
       </div>
 
-      <Button className="w-full gap-2" onClick={shareLink}>
-        <Share2 className="w-4 h-4" />
-        Share Invite Link
-      </Button>
+      <ShareMenu
+        title="Join R8ESTATE"
+        description="Join R8ESTATE — the trusted real estate review platform!"
+        url={referralLink}
+        label="Share Invite Link"
+        variant="default"
+        size="default"
+        className="w-full gap-2"
+      />
+
+      <p className="text-[10px] text-muted-foreground text-center mt-2">
+        Earn 50 points when your friend signs up and takes their first action
+      </p>
+    </Card>
+  );
+};
 
       <p className="text-[10px] text-muted-foreground text-center mt-2">
         Earn 50 points when your friend signs up and takes their first action
