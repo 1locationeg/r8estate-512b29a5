@@ -62,7 +62,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const [rivalPoints, setRivalPoints] = useState(0);
 
   useEffect(() => {
-    if (!user || !isBuyerPortal) return;
+    if (!user || (!isBuyerPortal && !isBusinessPortal)) return;
     const fetchRank = async () => {
       const { data } = await supabase.rpc('get_weekly_leaderboard', { _limit: 50 });
       if (data) {
@@ -79,7 +79,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       }
     };
     fetchRank();
-  }, [user, isBuyerPortal]);
+  }, [user, isBuyerPortal, isBusinessPortal]);
 
   const grouped = isNavGroups(navItems);
 
@@ -175,7 +175,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
   const renderNavButton = (item: NavItem) => {
     // Render competition card for leaderboard nav item
-    if (isBuyerPortal && item.path === '/leaderboard') {
+    if ((isBuyerPortal || isBusinessPortal) && item.path === '/leaderboard') {
       return renderLeaderboardCard(item);
     }
 
