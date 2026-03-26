@@ -365,3 +365,10 @@
 [dir="rtl"] .rtl-flip {
   transform: scaleX(-1);
 }
+
+/* Post box text cycling animation */
+@keyframes post-box-cycle {
+  0%, 40% { transform: translateY(0); }
+  50%, 90% { transform: translateY(-38px); }
+  100% { transform: translateY(0); }
+}
