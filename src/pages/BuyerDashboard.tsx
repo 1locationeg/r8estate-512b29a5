@@ -386,8 +386,136 @@ const BuyerSaved = () => {
   );
 };
 
-const BuyerProfile = () => {
+const KycUploadSection = () => {
   const { user, profile, refreshProfile } = useAuth();
+  const [selfieUrl, setSelfieUrl] = useState('');
+  const [idDocUrl, setIdDocUrl] = useState('');
+  const [uploading, setUploading] = useState<'selfie' | 'id' | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const selfieRef = useRef<HTMLInputElement>(null);
+  const idDocRef = useRef<HTMLInputElement>(null);
+
+  const handleUpload = async (file: File, type: 'selfie' | 'id') => {
+    if (!user) return;
+    setUploading(type);
+    const ext = file.name.split('.').pop();
+    const path = `kyc/${user.id}/${type}_${Date.now()}.${ext}`;
+    const { error } = await supabase.storage.from('review-attachments').upload(path, file);
+    if (error) {
+      toast.error(`Failed to upload ${type}`);
+    } else {
+      const { data } = supabase.storage.from('review-attachments').getPublicUrl(path);
+      if (type === 'selfie') setSelfieUrl(data.publicUrl);
+      else setIdDocUrl(data.publicUrl);
+      toast.success(`${type === 'selfie' ? 'Selfie' : 'ID document'} uploaded`);
+    }
+    setUploading(null);
+  };
+
+  const handleSubmitKyc = async () => {
+    if (!user || !selfieUrl || !idDocUrl) return;
+    setSubmitting(true);
+    const { error } = await supabase.from('reviewer_verifications' as any).insert({
+      user_id: user.id,
+      verification_type: 'kyc',
+      selfie_url: selfieUrl,
+      id_document_url: idDocUrl,
+      status: 'pending',
+    });
+    setSubmitting(false);
+    if (error) {
+      if (error.code === '23505') toast.error('You already have a pending KYC request');
+      else toast.error('Failed to submit KYC request');
+    } else {
+      toast.success('KYC verification submitted! Our team will review your documents.');
+      setSelfieUrl('');
+      setIdDocUrl('');
+    }
+  };
+
+  if ((profile as any)?.kyc_verified) {
+    return (
+      <div className="bg-card border border-border rounded-xl p-5">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-full bg-[#7C3AED]/10 flex items-center justify-center">
+            <Shield className="w-5 h-5 text-[#7C3AED]" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground flex items-center gap-2">
+              KYC Verified
+              <Badge className="bg-[#7C3AED]/10 text-[#7C3AED] border-0 text-[10px]">Purple Badge</Badge>
+            </h3>
+            <p className="text-xs text-muted-foreground">Your identity has been verified via selfie & national ID</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="bg-card border border-border rounded-xl p-5">
+      <h3 className="font-semibold text-foreground mb-1 flex items-center gap-2">
+        <Shield className="w-4 h-4 text-[#7C3AED]" />
+        KYC Verification
+        <Badge className="bg-[#7C3AED]/10 text-[#7C3AED] border-0 text-[10px]">Highest Trust</Badge>
+      </h3>
+      <p className="text-xs text-muted-foreground mb-4">
+        Upload a selfie and your national ID to earn the purple KYC Verified badge — the highest trust level.
+      </p>
+
+      <div className="grid sm:grid-cols-2 gap-4 mb-4">
+        {/* Selfie Upload */}
+        <div className="p-4 rounded-lg border border-dashed border-border bg-muted/30 text-center">
+          <input ref={selfieRef} type="file" className="hidden" accept="image/*" capture="user"
+            onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'selfie')} />
+          {selfieUrl ? (
+            <div className="space-y-2">
+              <img src={selfieUrl} alt="Selfie" className="w-20 h-20 rounded-full mx-auto object-cover border-2 border-[#7C3AED]/30" />
+              <p className="text-xs text-[#7C3AED] font-medium">Selfie uploaded</p>
+              <Button variant="outline" size="sm" onClick={() => { setSelfieUrl(''); selfieRef.current?.click(); }}>Replace</Button>
+            </div>
+          ) : (
+            <button onClick={() => selfieRef.current?.click()} disabled={uploading === 'selfie'} className="w-full">
+              {uploading === 'selfie' ? <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mx-auto" /> : <Camera className="w-8 h-8 text-muted-foreground mx-auto" />}
+              <p className="text-sm text-muted-foreground mt-2">{uploading === 'selfie' ? 'Uploading...' : 'Take / Upload Selfie'}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">Clear face photo</p>
+            </button>
+          )}
+        </div>
+
+        {/* ID Document Upload */}
+        <div className="p-4 rounded-lg border border-dashed border-border bg-muted/30 text-center">
+          <input ref={idDocRef} type="file" className="hidden" accept="image/*,.pdf"
+            onChange={(e) => e.target.files?.[0] && handleUpload(e.target.files[0], 'id')} />
+          {idDocUrl ? (
+            <div className="space-y-2">
+              <CheckCircle2 className="w-8 h-8 text-[#7C3AED] mx-auto" />
+              <p className="text-xs text-[#7C3AED] font-medium">ID document uploaded</p>
+              <Button variant="outline" size="sm" onClick={() => { setIdDocUrl(''); idDocRef.current?.click(); }}>Replace</Button>
+            </div>
+          ) : (
+            <button onClick={() => idDocRef.current?.click()} disabled={uploading === 'id'} className="w-full">
+              {uploading === 'id' ? <Loader2 className="w-8 h-8 animate-spin text-muted-foreground mx-auto" /> : <FileText className="w-8 h-8 text-muted-foreground mx-auto" />}
+              <p className="text-sm text-muted-foreground mt-2">{uploading === 'id' ? 'Uploading...' : 'Upload National ID'}</p>
+              <p className="text-[10px] text-muted-foreground mt-1">Front of ID card</p>
+            </button>
+          )}
+        </div>
+      </div>
+
+      <Button
+        onClick={handleSubmitKyc}
+        disabled={!selfieUrl || !idDocUrl || submitting}
+        className="w-full bg-[#7C3AED] hover:bg-[#7C3AED]/90 text-white"
+      >
+        {submitting ? <Loader2 className="w-4 h-4 animate-spin me-2" /> : <Shield className="w-4 h-4 me-2" />}
+        Submit KYC Verification
+      </Button>
+    </div>
+  );
+};
+
+const BuyerProfile = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
