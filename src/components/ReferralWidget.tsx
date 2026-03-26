@@ -73,17 +73,17 @@ export const ReferralWidget = () => {
   };
 
   const shareLink = async () => {
-    if (navigator.share) {
-      try {
+    try {
+      if (navigator.share) {
         await navigator.share({
           title: "Join R8ESTATE",
           text: "Join R8ESTATE — the trusted real estate review platform!",
           url: referralLink,
         });
-      } catch {}
-    } else {
-      copyLink();
-    }
+        return;
+      }
+    } catch {}
+    copyLink();
   };
 
   if (!user || loading) return null;
