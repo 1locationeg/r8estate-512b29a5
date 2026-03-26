@@ -1768,6 +1768,10 @@ export type Database = {
           longest_streak: number
         }[]
       }
+      user_in_conversation: {
+        Args: { _conversation_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       admin_permission_level: "super_admin" | "admin" | "editor" | "view_only"
