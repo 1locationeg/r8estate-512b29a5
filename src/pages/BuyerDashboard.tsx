@@ -840,6 +840,21 @@ const BuyerProfile = () => {
                   placeholder="https://linkedin.com/in/your-profile"
                 />
               </div>
+
+              {/* Verification Submit CTA */}
+              {!profile?.identity_verified && (formData.facebook_url || formData.linkedin_url) && isEditing && (
+                <div className="md:col-span-2 p-3 rounded-lg bg-[#1877F2]/5 border border-[#1877F2]/20">
+                  <p className="text-xs text-muted-foreground mb-2">
+                    Save your profile first, then submit for identity verification. Our team will review your social profile.
+                  </p>
+                </div>
+              )}
+              {profile?.identity_verified && (
+                <div className="md:col-span-2 p-3 rounded-lg bg-trust-excellent/5 border border-trust-excellent/20 flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 text-trust-excellent flex-shrink-0" />
+                  <p className="text-xs text-trust-excellent font-medium">Identity Verified — Your reviews show a verification badge</p>
+                </div>
+              )}
             </div>
 
             {isEditing && (
