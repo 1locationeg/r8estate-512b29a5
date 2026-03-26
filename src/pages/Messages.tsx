@@ -13,11 +13,26 @@ import { Button } from '@/components/ui/button';
 
 const Messages = () => {
   const { t } = useTranslation();
-  const { user, isLoading } = useAuth();
+  const { user, role, isLoading } = useAuth();
   const { conversations, loading, startConversation } = useConversations();
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const getDashboardRoute = () => {
+    if (role === 'admin') return '/admin';
+    if (role === 'business') return '/business';
+    return '/buyer';
+  };
+
+  const handleBack = () => {
+    if (window.history.length > 2) {
+      navigate(-1);
+    } else {
+      navigate(getDashboardRoute());
+    }
+  };
 
   // Auto-select conversation from navigation state
   useEffect(() => {
