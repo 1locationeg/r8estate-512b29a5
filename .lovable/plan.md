@@ -1,60 +1,93 @@
 
 
-## Competitive Leaderboard Strip — Integrated Into Nav List
+## Real-Time Messaging System with Online Presence
 
-### Idea
-Instead of a separate widget or a bottom banner, **embed the leaderboard as a styled nav item within the navigation list itself** — but make it richer than a plain link. It becomes a "live competition card" sitting naturally among the nav items, always visible without overlapping anything.
+### Overview
+Build a full chat system allowing buyers and businesses to message each other in real time, with online/offline presence indicators and a privacy toggle to hide online status.
 
-The Leaderboard nav item transforms from a plain text link into a **mini competition strip** that shows:
-- Your rank with a pulsing indicator
-- A rival row ("You vs #4 — only 3 pts behind!")
-- A slim progress bar racing toward the next rank
-- Tapping it navigates to `/leaderboard`
+### Database Changes (4 new tables + 1 migration)
 
-This creates FOMO and a competitive feeling every time they glance at the sidebar, without taking extra space or overlapping other items.
+**1. `conversations` table**
+- `id` (uuid, PK), `created_at`, `updated_at`
+- Tracks each conversation thread
 
-### Layout Within Nav List
+**2. `conversation_participants` table**
+- `id` (uuid, PK), `conversation_id` (FK → conversations), `user_id` (uuid), `joined_at`, `last_read_at`
+- Links users to conversations; `last_read_at` tracks unread state
+- Unique constraint on `(conversation_id, user_id)`
 
-```text
-  Dashboard
-  My Reviews
-  Search Alerts
-  ┌─────────────────────────────┐
-  │ 🏆 Leaderboard        #12  │
-  │ ▓▓▓▓▓▓▓▓▓░░░  3 pts to #11 │
-  │ Beat Ahmed K. to rank up!   │
-  └─────────────────────────────┘
-  Community
-  Achievements
-  Invite Friends
-  ...
-```
+**3. `messages` table**
+- `id` (uuid, PK), `conversation_id` (FK → conversations), `sender_id` (uuid), `content` (text), `created_at`, `is_read` (boolean, default false)
+- Enable Supabase Realtime on this table for live message delivery
 
-It sits exactly where "Leaderboard" already is in the nav, but expanded into a competition card. No extra space, no overlap.
+**4. `user_presence` table**
+- `id` (uuid, PK), `user_id` (uuid, unique), `is_online` (boolean, default false), `last_seen` (timestamptz), `hide_online_status` (boolean, default false), `updated_at`
+- When `hide_online_status = true`, other users see them as offline regardless
+
+**RLS policies:**
+- Conversations/messages: participants can read/insert; authenticated users can create conversations
+- Presence: anyone authenticated can read (but the app logic respects `hide_online_status`); users can only update their own row
+
+**Realtime:** Enable on `messages` and `user_presence` tables.
 
 ### File Changes
 
-**`src/components/DashboardSidebar.tsx`**
+**New files:**
 
-1. In `renderNavButton`, detect when `item.path === '/leaderboard'` and render an enhanced competition card instead of a plain nav button
-2. The card shows:
-   - Trophy icon + "Leaderboard" label + user's rank badge (`#12`)
-   - A slim progress bar showing how close they are to the next rank (percentage based on points gap)
-   - Rival name: the person one rank above them (fetched from existing `get_weekly_leaderboard` data)
-   - Motivational text: "Beat [Name] to rank up!" or "You're #1!" if top
-3. Style: gradient border on the left (like active state but gold/coin colored), subtle coin-tinted background, slightly more padding than regular nav items
-4. Still navigates to `/leaderboard` on click
-5. When user has no rank yet, fall back to a simpler motivational version: "Start reviewing to join the race!"
+1. **`src/pages/Messages.tsx`** — Main messages page with two-panel layout:
+   - Left: conversation list with search, each showing last message preview, unread badge, and online dot
+   - Right: active chat thread with message bubbles, input, and header showing recipient name + online status
+   - Mobile: single-panel with back navigation
 
-**Data**: Already fetched via the existing `useEffect` that calls `get_weekly_leaderboard`. Just need to also store the rival's name from `data[idx-1]`.
+2. **`src/components/ConversationList.tsx`** — Scrollable list of conversations with:
+   - Avatar, name, last message preview, timestamp, unread count badge
+   - Green dot for online users (respecting `hide_online_status`)
 
-**`src/pages/BuyerDashboard.tsx`**
-- No changes needed — the Leaderboard nav item already exists in `navItems`.
+3. **`src/components/ChatThread.tsx`** — Message thread view:
+   - Header: recipient name, online/offline/last seen indicator
+   - Message bubbles (sender right-aligned, recipient left-aligned)
+   - Auto-scroll to bottom on new messages
+   - Text input + send button
 
-### Why This Works for Competition & Engagement
-- **Always visible** — sits in the nav list, no scrolling needed
-- **Personal rival** — seeing a real name creates emotional competition
-- **Progress bar** — visualizes how close they are, triggering "almost there" psychology  
-- **No layout issues** — it's just a slightly taller nav item, flows naturally
-- **Motivates clicks** — the competitive data makes them want to check the full board
+4. **`src/components/ChatPresenceToggle.tsx`** — Small toggle in chat settings or user profile:
+   - Switch labeled "Show online status" 
+   - Updates `user_presence.hide_online_status`
+
+5. **`src/hooks/useMessages.ts`** — Hook for:
+   - Fetching conversations list with last message + unread count
+   - Fetching messages for a conversation
+   - Sending messages
+   - Realtime subscription for new messages
+
+6. **`src/hooks/usePresence.ts`** — Hook for:
+   - Updating own presence (online/offline) on mount/unmount and visibility change
+   - Reading other users' presence
+   - Managing the hide toggle
+
+**Modified files:**
+
+7. **`src/App.tsx`** — Add `/messages` route (lazy-loaded)
+
+8. **`src/components/DashboardSidebar.tsx`** — Add "Messages" nav item with unread badge
+
+9. **`src/components/BottomNav.tsx`** — Add messages icon with unread indicator
+
+10. **`src/components/Navbar.tsx`** — Add message icon in top nav with unread count
+
+### Presence Logic
+- On app load (AuthProvider or a top-level component), set `is_online = true` and update `last_seen`
+- On `visibilitychange` (tab hidden → set offline; tab visible → set online)
+- On `beforeunload` → set offline
+- Heartbeat: update `last_seen` every 60s while online
+- When querying another user's status: if `hide_online_status = true`, always show "offline" regardless of actual status
+
+### Privacy Toggle UX
+- Located in buyer/business dashboard settings and also accessible from the chat header
+- Simple switch: "Others can see when I'm online"
+- Default: ON (visible)
+
+### Message Flow
+1. User clicks "Message" on a business profile or developer card → creates/finds conversation → opens chat
+2. Messages delivered in real time via Supabase Realtime postgres_changes
+3. Unread count shown on nav icons and conversation list
 
