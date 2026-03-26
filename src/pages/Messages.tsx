@@ -126,12 +126,15 @@ const Messages = () => {
                 <MessageSquare className="w-5 h-5 text-primary" />
                 <h1 className="text-lg font-bold text-foreground">{t('messages.title', 'Messages')}</h1>
               </div>
-              <button
-                onClick={() => setShowSettings(!showSettings)}
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                <Settings2 className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-1">
+                <NewConversationDialog onStartConversation={handleNewConversation} />
+                <button
+                  onClick={() => setShowSettings(!showSettings)}
+                  className="text-muted-foreground hover:text-foreground transition-colors p-2"
+                >
+                  <Settings2 className="w-5 h-5" />
+                </button>
+              </div>
             </div>
             {showSettings && (
               <div className="p-3 border-b border-border">
