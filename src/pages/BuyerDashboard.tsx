@@ -397,6 +397,8 @@ const BuyerProfile = () => {
     phone_number: profile?.phone_number || '',
     buyer_type: profile?.buyer_type || '',
     budget_range: profile?.budget_range || '',
+    facebook_url: profile?.facebook_url || '',
+    linkedin_url: profile?.linkedin_url || '',
   });
 
   useEffect(() => {
@@ -406,6 +408,8 @@ const BuyerProfile = () => {
         phone_number: profile.phone_number || '',
         buyer_type: profile.buyer_type || '',
         budget_range: profile.budget_range || '',
+        facebook_url: profile.facebook_url || '',
+        linkedin_url: profile.linkedin_url || '',
       });
     }
   }, [profile]);
@@ -420,8 +424,10 @@ const BuyerProfile = () => {
         phone_number: formData.phone_number,
         buyer_type: formData.buyer_type,
         budget_range: formData.budget_range,
+        facebook_url: formData.facebook_url || null,
+        linkedin_url: formData.linkedin_url || null,
         updated_at: new Date().toISOString(),
-      })
+      } as any)
       .eq('user_id', user.id);
     
     setSaving(false);
