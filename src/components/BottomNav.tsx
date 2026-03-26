@@ -2,6 +2,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MessageSquare, LayoutGrid, Users, Briefcase, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
 import logoIcon from "@/assets/logo-icon.png";
 
 export const BottomNav = () => {
@@ -9,6 +10,7 @@ export const BottomNav = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
+  const { unreadCount } = useMessageUnreadCount();
 
   const isReviews = location.pathname === "/reviews";
   const isMessages = location.pathname === "/messages";
@@ -42,7 +44,14 @@ export const BottomNav = () => {
                 isMessages ? "text-primary" : "text-muted-foreground"
               }`}
             >
-              <Mail className="h-5 w-5" strokeWidth={isMessages ? 2.5 : 2} />
+              <span className="relative">
+                <Mail className="h-5 w-5" strokeWidth={isMessages ? 2.5 : 2} />
+                {unreadCount > 0 && (
+                  <span className="absolute -top-1.5 -end-2 min-w-[16px] h-[16px] px-1 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
+              </span>
               <span className="text-[10px] font-medium">{t("nav.messages", "Messages")}</span>
             </button>
           )}
