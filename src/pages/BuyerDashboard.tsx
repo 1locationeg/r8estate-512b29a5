@@ -516,6 +516,7 @@ const KycUploadSection = () => {
 };
 
 const BuyerProfile = () => {
+  const { user, profile, refreshProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [saving, setSaving] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
