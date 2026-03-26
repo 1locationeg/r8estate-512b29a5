@@ -34,9 +34,15 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       title: t("community.shareNudge", "Found this helpful? Share it! 📢"),
       desc: t("community.shareNudgeDesc", "Help other buyers make better decisions by sharing valuable discussions"),
       cta: t("community.shareNow", "Share R8ESTATE"),
-      action: () => {
-        if (navigator.share) {
-          navigator.share({ title: "R8ESTATE Community", url: window.location.href });
+      action: async () => {
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: "R8ESTATE Community", url: window.location.href });
+          } else {
+            await navigator.clipboard.writeText(window.location.href);
+          }
+        } catch {
+          try { await navigator.clipboard.writeText(window.location.href); } catch {}
         }
       },
     },
