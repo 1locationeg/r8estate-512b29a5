@@ -102,18 +102,8 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
   return (
     <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white text-foreground">
-      {/* Brand */}
-      <div className="p-4 border-b border-border">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}
-          role="button" tabIndex={0}
-          onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
-        >
-          <BrandLogo size="hero" />
-        </div>
-      </div>
-
       {/* Profile Card */}
-      <div className="px-4 py-5 border-b border-border">
+      <div className="px-4 py-3 border-b border-border">
         {companyInfo ? (
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
