@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { LogOut, ChevronDown, Coins, Trophy } from 'lucide-react';
+import { useGamification } from '@/hooks/useGamification';
+import { LogOut, ChevronDown, Coins, Trophy, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -50,7 +51,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   const gamification = useBuyerGamification();
+  const businessGamification = useGamification();
   const isBuyerPortal = portalLabel === 'Buyer';
+  const isBusinessPortal = portalLabel === 'Business';
 
   // Competition data for leaderboard strip
   const [userRank, setUserRank] = useState(0);
@@ -200,80 +203,112 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
     <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white text-foreground">
       {/* Profile Card */}
       <div className="px-4 py-3 border-b border-border">
-        {companyInfo ? (
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
-              {companyInfo.name.charAt(0)}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-foreground truncate">{companyInfo.name}</p>
-              <p className="text-[11px] text-muted-foreground truncate">{companyInfo.subtitle}</p>
-            </div>
-          </div>
-        ) : (
-          <div className="flex flex-col items-center text-center">
-            {/* Avatar with tier badge + online dot */}
-            <div className="relative mb-3">
-              <Avatar className="h-[72px] w-[72px] ring-[3px] ring-primary/20 shadow-[0_4px_16px_rgba(13,122,107,0.15)]">
-                <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
-                  {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-                </AvatarFallback>
-              </Avatar>
-              {/* Tier badge — top-start */}
-              {isBuyerPortal && !gamification.isLoading && (
-                <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-coin border-[2.5px] border-white flex items-center justify-center text-[10px]">
-                  {gamification.currentTier.emoji}
-                </span>
-              )}
-              {/* Online dot — bottom-end */}
-              <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-white" />
-            </div>
-            <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-full">{profile?.full_name || 'User'}</p>
-            <span className="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-semibold text-primary uppercase tracking-wide">
-              {portalLabel}
-            </span>
-            <p className="text-[11.5px] text-muted-foreground mt-1.5 flex items-center justify-center gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
-              {t("dashboard.memberSince", "Member since")}{' '}
-              {profile?.created_at
-                ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
-                : t("dashboard.recently", "Recently")}
-            </p>
-
-            {/* Compact tier card */}
-            {isBuyerPortal && user && !gamification.isLoading && (
-              <button
-                onClick={() => navigate('/buyer/achievements')}
-                className="w-full mt-2.5 group bg-gradient-to-r from-coin/10 to-primary/10 border border-coin/20 rounded-lg px-3 py-2 text-start hover:from-coin/15 hover:to-primary/15 transition-all cursor-pointer"
-              >
-                <div className="flex items-center justify-between mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <Coins className="w-4 h-4 text-coin" />
-                    <span className="text-[15px] font-extrabold text-foreground leading-none">{gamification.totalPoints}</span>
-                    <span className="text-[10px] text-muted-foreground font-medium">coins</span>
-                  </div>
-                  <span className="text-[10px] font-bold bg-coin/15 text-coin px-2 py-0.5 rounded-full">
-                    {gamification.currentTier.emoji} {gamification.currentTier.name}
-                  </span>
-                </div>
-                {gamification.nextTier && (
-                  <>
-                    <div className="h-[5px] bg-background rounded-full overflow-hidden">
-                      <div
-                        className="h-full rounded-full bg-gradient-to-r from-coin to-primary transition-all"
-                        style={{ width: `${Math.min(100, (gamification.totalPoints / gamification.nextTier.minPoints) * 100)}%` }}
-                      />
-                    </div>
-                    <p className="text-[10px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
-                      <strong className="text-coin">{gamification.pointsToNext} more</strong> to unlock <strong>{gamification.nextTier.emoji} {gamification.nextTier.name}</strong>
-                    </p>
-                  </>
-                )}
-              </button>
+        <div className="flex flex-col items-center text-center">
+          {/* Avatar with tier badge + online dot */}
+          <div className="relative mb-3">
+            <Avatar className="h-[72px] w-[72px] ring-[3px] ring-primary/20 shadow-[0_4px_16px_rgba(13,122,107,0.15)]">
+              <AvatarImage src={profile?.avatar_url || undefined} />
+              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
+                {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+              </AvatarFallback>
+            </Avatar>
+            {/* Tier badge — top-start (buyer) */}
+            {isBuyerPortal && !gamification.isLoading && (
+              <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-coin border-[2.5px] border-white flex items-center justify-center text-[10px]">
+                {gamification.currentTier.emoji}
+              </span>
             )}
+            {/* Business icon badge — top-start */}
+            {isBusinessPortal && (
+              <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-business border-[2.5px] border-white flex items-center justify-center">
+                <Building2 className="w-3 h-3 text-business-foreground" />
+              </span>
+            )}
+            {/* Online dot — bottom-end */}
+            <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-white" />
           </div>
-        )}
+          <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-full">
+            {isBusinessPortal && companyInfo ? companyInfo.name : (profile?.full_name || 'User')}
+          </p>
+          <span className={cn(
+            "inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold uppercase tracking-wide",
+            isBusinessPortal
+              ? "bg-business/10 border-business-border/20 text-business-foreground"
+              : "bg-primary/10 border-primary/20 text-primary"
+          )}>
+            {portalLabel}
+          </span>
+          {isBusinessPortal && companyInfo?.subtitle && (
+            <p className="text-[11px] text-muted-foreground mt-1">{companyInfo.subtitle}</p>
+          )}
+          <p className="text-[11.5px] text-muted-foreground mt-1.5 flex items-center justify-center gap-1.5">
+            <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
+            {t("dashboard.memberSince", "Member since")}{' '}
+            {profile?.created_at
+              ? new Date(profile.created_at).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+              : t("dashboard.recently", "Recently")}
+          </p>
+
+          {/* Compact tier card — Buyer */}
+          {isBuyerPortal && user && !gamification.isLoading && (
+            <button
+              onClick={() => navigate('/buyer/achievements')}
+              className="w-full mt-2.5 group bg-gradient-to-r from-coin/10 to-primary/10 border border-coin/20 rounded-lg px-3 py-2 text-start hover:from-coin/15 hover:to-primary/15 transition-all cursor-pointer"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1.5">
+                  <Coins className="w-4 h-4 text-coin" />
+                  <span className="text-[15px] font-extrabold text-foreground leading-none">{gamification.totalPoints}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">coins</span>
+                </div>
+                <span className="text-[10px] font-bold bg-coin/15 text-coin px-2 py-0.5 rounded-full">
+                  {gamification.currentTier.emoji} {gamification.currentTier.name}
+                </span>
+              </div>
+              {gamification.nextTier && (
+                <>
+                  <div className="h-[5px] bg-background rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-coin to-primary transition-all"
+                      style={{ width: `${Math.min(100, (gamification.totalPoints / gamification.nextTier.minPoints) * 100)}%` }}
+                    />
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+                    <strong className="text-coin">{gamification.pointsToNext} more</strong> to unlock <strong>{gamification.nextTier.emoji} {gamification.nextTier.name}</strong>
+                  </p>
+                </>
+              )}
+            </button>
+          )}
+
+          {/* Compact tier card — Business */}
+          {isBusinessPortal && user && (
+            <button
+              onClick={() => navigate('/business/gamification')}
+              className="w-full mt-2.5 group bg-gradient-to-r from-business/10 to-business-border/10 border border-business-border/20 rounded-lg px-3 py-2 text-start hover:from-business/15 hover:to-business-border/15 transition-all cursor-pointer"
+            >
+              <div className="flex items-center justify-between mb-1.5">
+                <div className="flex items-center gap-1.5">
+                  <Trophy className="w-4 h-4 text-business-border" />
+                  <span className="text-[15px] font-extrabold text-foreground leading-none">{businessGamification.totalPoints}</span>
+                  <span className="text-[10px] text-muted-foreground font-medium">pts</span>
+                </div>
+                <span className="text-[10px] font-bold bg-business/15 text-business-foreground px-2 py-0.5 rounded-full">
+                  {businessGamification.currentTier.emoji} {businessGamification.currentTier.name}
+                </span>
+              </div>
+              <div className="h-[5px] bg-background rounded-full overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-gradient-to-r from-business to-business-border transition-all"
+                  style={{ width: `${businessGamification.profileCompletion}%` }}
+                />
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+                Profile {businessGamification.profileCompletion}% complete
+              </p>
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Scrollable area: Nav + Leaderboard */}
