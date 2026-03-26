@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import { BrandLogo } from '@/components/BrandLogo';
-import { CoinCounter } from '@/components/CoinCounter';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { LogOut, ChevronDown, Coins } from 'lucide-react';
 import { cn } from '@/lib/utils';
