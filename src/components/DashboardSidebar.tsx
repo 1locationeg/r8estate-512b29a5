@@ -7,7 +7,8 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { LogOut, ChevronDown, Coins, Trophy } from 'lucide-react';
+import { useGamification } from '@/hooks/useGamification';
+import { LogOut, ChevronDown, Coins, Trophy, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
@@ -50,7 +51,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   const location = useLocation();
   const { user, profile, signOut } = useAuth();
   const gamification = useBuyerGamification();
+  const businessGamification = useGamification();
   const isBuyerPortal = portalLabel === 'Buyer';
+  const isBusinessPortal = portalLabel === 'Business';
 
   // Competition data for leaderboard strip
   const [userRank, setUserRank] = useState(0);
