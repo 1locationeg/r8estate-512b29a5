@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { emitMessagesRead, subscribeToMessagesRead } from '@/lib/messageReadEvents';
 
 export interface Conversation {
   id: string;
@@ -30,7 +31,6 @@ export const useConversations = () => {
   const fetchConversations = useCallback(async () => {
     if (!user) return;
 
-    // Get all conversation IDs where user is a participant
     const { data: myParts } = await supabase
       .from('conversation_participants')
       .select('conversation_id, last_read_at')
@@ -43,36 +43,40 @@ export const useConversations = () => {
       return;
     }
 
-    const convIds = myParts.map(p => p.conversation_id);
+    const convIds = myParts.map((p) => p.conversation_id);
     const lastReadMap: Record<string, string> = {};
-    myParts.forEach(p => { lastReadMap[p.conversation_id] = p.last_read_at || '1970-01-01'; });
+    myParts.forEach((p) => {
+      lastReadMap[p.conversation_id] = p.last_read_at || '1970-01-01';
+    });
 
-    // Get other participants
     const { data: otherParts } = await supabase
       .from('conversation_participants')
       .select('conversation_id, user_id')
       .in('conversation_id', convIds)
       .neq('user_id', user.id);
 
-    if (!otherParts) { setLoading(false); return; }
+    if (!otherParts) {
+      setLoading(false);
+      return;
+    }
 
-    const otherUserIds = [...new Set(otherParts.map(p => p.user_id))];
-    
-    // Get profiles
+    const otherUserIds = [...new Set(otherParts.map((p) => p.user_id))];
+
     const { data: profiles } = await supabase
       .from('profiles')
       .select('user_id, full_name, avatar_url')
       .in('user_id', otherUserIds);
 
     const profileMap: Record<string, { full_name: string | null; avatar_url: string | null }> = {};
-    profiles?.forEach(p => { profileMap[p.user_id] = p; });
+    profiles?.forEach((p) => {
+      profileMap[p.user_id] = p;
+    });
 
-    // Get last message per conversation
     const convList: Conversation[] = [];
     let totalU = 0;
 
     for (const convId of convIds) {
-      const otherPart = otherParts.find(p => p.conversation_id === convId);
+      const otherPart = otherParts.find((p) => p.conversation_id === convId);
       if (!otherPart) continue;
 
       const { data: lastMsg } = await supabase
@@ -83,7 +87,6 @@ export const useConversations = () => {
         .limit(1)
         .maybeSingle();
 
-      // Count unread
       const { count } = await supabase
         .from('messages')
         .select('id', { count: 'exact', head: true })
@@ -121,31 +124,48 @@ export const useConversations = () => {
     fetchConversations();
   }, [fetchConversations]);
 
-  // Realtime: refresh on new messages
+  useEffect(() => {
+    if (!user) return;
+    return subscribeToMessagesRead(fetchConversations);
+  }, [user, fetchConversations]);
+
   useEffect(() => {
     if (!user) return;
     const channel = supabase
       .channel('conversations-refresh')
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-      }, () => {
-        fetchConversations();
-      })
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+        },
+        () => {
+          fetchConversations();
+        }
+      )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, fetchConversations]);
 
-  const startConversation = useCallback(async (otherUserId: string) => {
-    if (!user) return null;
-    const { data, error } = await supabase.rpc('find_or_create_conversation', {
-      _other_user_id: otherUserId,
-    });
-    if (error) { console.error(error); return null; }
-    await fetchConversations();
-    return data as string;
-  }, [user, fetchConversations]);
+  const startConversation = useCallback(
+    async (otherUserId: string) => {
+      if (!user) return null;
+      const { data, error } = await supabase.rpc('find_or_create_conversation', {
+        _other_user_id: otherUserId,
+      });
+      if (error) {
+        console.error(error);
+        return null;
+      }
+      await fetchConversations();
+      return data as string;
+    },
+    [user, fetchConversations]
+  );
 
   return { conversations, loading, totalUnread, startConversation, refetch: fetchConversations };
 };
@@ -155,61 +175,75 @@ export const useChatMessages = (conversationId: string | null) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [loading, setLoading] = useState(false);
 
+  const markConversationAsRead = useCallback(async () => {
+    if (!conversationId || !user) return;
+
+    const { error } = await supabase
+      .from('conversation_participants')
+      .update({ last_read_at: new Date().toISOString() })
+      .eq('conversation_id', conversationId)
+      .eq('user_id', user.id);
+
+    if (!error) {
+      emitMessagesRead();
+    }
+  }, [conversationId, user]);
+
   const fetchMessages = useCallback(async () => {
     if (!conversationId || !user) return;
     setLoading(true);
+
     const { data } = await supabase
       .from('messages')
       .select('*')
       .eq('conversation_id', conversationId)
       .order('created_at', { ascending: true });
+
     setMessages((data as Message[]) || []);
     setLoading(false);
-
-    // Mark as read
-    await supabase
-      .from('conversation_participants')
-      .update({ last_read_at: new Date().toISOString() })
-      .eq('conversation_id', conversationId)
-      .eq('user_id', user.id);
-  }, [conversationId, user]);
+    await markConversationAsRead();
+  }, [conversationId, user, markConversationAsRead]);
 
   useEffect(() => {
     fetchMessages();
   }, [fetchMessages]);
 
-  // Realtime
   useEffect(() => {
     if (!conversationId || !user) return;
     const channel = supabase
       .channel(`chat-${conversationId}`)
-      .on('postgres_changes', {
-        event: 'INSERT',
-        schema: 'public',
-        table: 'messages',
-        filter: `conversation_id=eq.${conversationId}`,
-      }, (payload: any) => {
-        const newMsg = payload.new as Message;
-        setMessages(prev => [...prev, newMsg]);
-        // Mark as read if we're viewing
-        supabase
-          .from('conversation_participants')
-          .update({ last_read_at: new Date().toISOString() })
-          .eq('conversation_id', conversationId)
-          .eq('user_id', user.id);
-      })
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'messages',
+          filter: `conversation_id=eq.${conversationId}`,
+        },
+        async (payload: any) => {
+          const newMsg = payload.new as Message;
+          setMessages((prev) => [...prev, newMsg]);
+          await markConversationAsRead();
+        }
+      )
       .subscribe();
-    return () => { supabase.removeChannel(channel); };
-  }, [conversationId, user]);
 
-  const sendMessage = useCallback(async (content: string) => {
-    if (!conversationId || !user || !content.trim()) return;
-    await supabase.from('messages').insert({
-      conversation_id: conversationId,
-      sender_id: user.id,
-      content: content.trim(),
-    });
-  }, [conversationId, user]);
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [conversationId, user, markConversationAsRead]);
+
+  const sendMessage = useCallback(
+    async (content: string) => {
+      if (!conversationId || !user || !content.trim()) return;
+      await supabase.from('messages').insert({
+        conversation_id: conversationId,
+        sender_id: user.id,
+        content: content.trim(),
+      });
+    },
+    [conversationId, user]
+  );
 
   return { messages, loading, sendMessage };
 };
