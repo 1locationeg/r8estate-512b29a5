@@ -41,6 +41,17 @@ const Messages = () => {
     setActiveConv(conv);
   };
 
+  const handleNewConversation = async (userId: string) => {
+    const convId = await startConversation(userId);
+    if (convId) {
+      // Find the conversation after refresh
+      setTimeout(() => {
+        const found = conversations.find(c => c.id === convId);
+        if (found) setActiveConv(found);
+      }, 500);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-background">
       {/* Desktop: two-panel */}
