@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Sparkles, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Briefcase, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import logoIcon from "@/assets/logo-icon.png";
 
@@ -11,6 +11,7 @@ export const BottomNav = () => {
   const { user } = useAuth();
 
   const isReviews = location.pathname === "/reviews";
+  const isMessages = location.pathname === "/messages";
   const isDirectory = location.pathname === "/directory";
   const isInsights = location.pathname === "/insights";
   const isCommunity = location.pathname === "/community";
@@ -32,6 +33,19 @@ export const BottomNav = () => {
             <MessageSquare className="h-5 w-5" strokeWidth={isReviews ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.reviews", "Reviews")}</span>
           </button>
+
+          {/* Messages */}
+          {user && (
+            <button
+              onClick={() => navigate("/messages")}
+              className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+                isMessages ? "text-primary" : "text-muted-foreground"
+              }`}
+            >
+              <Mail className="h-5 w-5" strokeWidth={isMessages ? 2.5 : 2} />
+              <span className="text-[10px] font-medium">{t("nav.messages", "Messages")}</span>
+            </button>
+          )}
 
           {/* Categories / Directory */}
           <button
