@@ -71,7 +71,7 @@ const AdminReviewerVerification = () => {
     fetchVerifications();
   }, [filter]);
 
-  const handleAction = async (id: string, userId: string, action: "approved" | "rejected") => {
+  const handleAction = async (id: string, userId: string, action: "approved" | "rejected", verificationType?: string) => {
     setActionLoading(id);
     try {
       const { error } = await supabase
