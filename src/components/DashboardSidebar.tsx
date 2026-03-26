@@ -108,7 +108,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
         >
-          <BrandLogo size="hero" subtitle={portalLabel} />
+          <BrandLogo size="hero" />
         </div>
       </div>
 
@@ -144,7 +144,10 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
               <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-white" />
             </div>
             <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-full">{profile?.full_name || 'User'}</p>
-            <p className="text-[11.5px] text-primary font-semibold mt-0.5 flex items-center justify-center gap-1.5">
+            <span className="inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full bg-primary/10 border border-primary/20 text-[11px] font-semibold text-primary uppercase tracking-wide">
+              {portalLabel}
+            </span>
+            <p className="text-[11.5px] text-muted-foreground mt-1.5 flex items-center justify-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
               {t("dashboard.memberSince", "Member since")}{' '}
               {profile?.created_at
