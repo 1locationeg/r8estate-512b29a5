@@ -160,8 +160,65 @@ const AdminMessaging = () => {
   };
 
   const deleteMessage = async (msgId: string) => {
-    // Admin can't delete via RLS — show info
     toast.info('Message flagged for review. Direct deletion requires a database migration to add admin DELETE policy.');
+  };
+
+  const searchUsers = async (q: string) => {
+    setUserSearch(q);
+    if (q.length < 2) { setUserResults([]); return; }
+    const { data } = await supabase
+      .from('profiles')
+      .select('user_id, full_name, email')
+      .or(`full_name.ilike.%${q}%,email.ilike.%${q}%`)
+      .limit(10);
+    setUserResults(data || []);
+  };
+
+  const startConvWithUser = async (otherUserId: string) => {
+    if (!user) return;
+    const { data, error } = await supabase.rpc('find_or_create_conversation', {
+      _other_user_id: otherUserId,
+    });
+    if (error) { toast.error('Failed to create conversation'); return; }
+    setShowNewConv(false);
+    setUserSearch('');
+    setUserResults([]);
+    navigate('/messages', { state: { conversationId: data } });
+  };
+
+  const sendAdminReply = async () => {
+    if (!selectedConv || !user || !adminReply.trim()) return;
+    setSendingReply(true);
+    
+    // First ensure admin is a participant
+    const { data: existing } = await supabase
+      .from('conversation_participants')
+      .select('id')
+      .eq('conversation_id', selectedConv)
+      .eq('user_id', user.id)
+      .maybeSingle();
+    
+    if (!existing) {
+      await supabase.from('conversation_participants').insert({
+        conversation_id: selectedConv,
+        user_id: user.id,
+      });
+    }
+
+    const { error } = await supabase.from('messages').insert({
+      conversation_id: selectedConv,
+      sender_id: user.id,
+      content: adminReply.trim(),
+    });
+    
+    if (error) {
+      toast.error('Failed to send message');
+    } else {
+      setAdminReply('');
+      toast.success('Message sent');
+      fetchMessages(selectedConv);
+    }
+    setSendingReply(false);
   };
 
   useEffect(() => {
