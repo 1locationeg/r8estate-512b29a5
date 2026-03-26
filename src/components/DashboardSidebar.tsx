@@ -206,41 +206,44 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         )}
       </div>
 
-      {/* Navigation */}
-      <nav className="flex-1 min-h-0 p-3 space-y-1 overflow-y-auto">
-        {grouped ? (
-          (navItems as NavGroup[]).map((group) => {
-            const isOpen = openGroups[group.label] ?? false;
-            const hasActive = group.items.some((i) => location.pathname === i.path);
-            return (
-              <div key={group.label}>
-                <button
-                  onClick={() => toggleGroup(group.label)}
-                  className={cn(
-                    'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-colors',
-                    hasActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-muted-foreground'
+      {/* Scrollable area: Nav + Leaderboard */}
+      <div className="flex-1 min-h-0 overflow-y-auto">
+        <nav className="p-3 space-y-1">
+          {grouped ? (
+            (navItems as NavGroup[]).map((group) => {
+              const isOpen = openGroups[group.label] ?? false;
+              const hasActive = group.items.some((i) => location.pathname === i.path);
+              return (
+                <div key={group.label}>
+                  <button
+                    onClick={() => toggleGroup(group.label)}
+                    className={cn(
+                      'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-colors',
+                      hasActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-muted-foreground'
+                    )}
+                  >
+                    <span>{group.label}</span>
+                    <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', isOpen && 'rotate-180')} />
+                  </button>
+                  {isOpen && (
+                    <div className="space-y-0.5 mt-0.5 mb-2">
+                      {group.items.map(renderNavButton)}
+                    </div>
                   )}
-                >
-                  <span>{group.label}</span>
-                  <ChevronDown className={cn('w-3.5 h-3.5 transition-transform', isOpen && 'rotate-180')} />
-                </button>
-                {isOpen && (
-                  <div className="space-y-0.5 mt-0.5 mb-2">
-                    {group.items.map(renderNavButton)}
-                  </div>
-                )}
-              </div>
-            );
-          })
-        ) : (
-          (navItems as NavItem[]).map(renderNavButton)
-        )}
-      </nav>
+                </div>
+              );
+            })
+          ) : (
+            (navItems as NavItem[]).map(renderNavButton)
+          )}
+        </nav>
 
-      {/* Bottom: Leaderboard + Actions (pinned) */}
-      <div className="flex-shrink-0 border-t border-border">
+        {/* Leaderboard inside scroll area */}
         {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} />}
-        <div className="p-3 space-y-2 border-t border-border safe-bottom">
+      </div>
+
+      {/* Bottom: Sign out + action (pinned) */}
+      <div className="flex-shrink-0 border-t border-border p-3 space-y-2 safe-bottom">
           {bottomAction && (
             <Button
               onClick={() => {
@@ -259,8 +262,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
           >
             <LogOut className="w-4 h-4" />
             {t("common.signOut", "Sign Out")}
-          </button>
-        </div>
+        </button>
       </div>
     </div>
   );
