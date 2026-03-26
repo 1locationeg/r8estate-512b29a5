@@ -68,6 +68,7 @@ import { useReviews } from "@/hooks/useReviews";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { useStartChat } from "@/hooks/useStartChat";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
@@ -135,6 +136,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
+  const { startChatWithBusinessId } = useStartChat();
 
   // Track implicit interest when item detail is opened
   const { trackClick } = useTrackInterest();
