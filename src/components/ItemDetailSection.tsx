@@ -619,6 +619,15 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             <MessageCircle className="w-4 h-4" />
             Ask Community
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-2"
+            onClick={() => startChatWithBusinessId(item.id)}
+          >
+            <MessageSquare className="w-4 h-4" />
+            {t("common.message", "Message")}
+          </Button>
           <ShareMenu
             title={item.name}
             description={`Trust Score: ${trustScore} • ${rating.toFixed(1)}★`}
