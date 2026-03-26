@@ -180,6 +180,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
     }
 
     const isActive = location.pathname === item.path;
+    const activeColor = isBusinessPortal ? 'business-border' : 'primary';
     return (
       <button
         key={item.label}
@@ -187,11 +188,13 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         className={cn(
           'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
           isActive
-            ? 'bg-primary/10 text-primary border-s-2 border-primary'
+            ? isBusinessPortal
+              ? 'bg-business/30 text-business-border border-s-2 border-business-border'
+              : 'bg-primary/10 text-primary border-s-2 border-primary'
             : 'text-muted-foreground hover:bg-muted hover:text-foreground border-s-2 border-transparent'
         )}
       >
-        <span className={cn('flex-shrink-0', isActive ? 'text-primary' : 'text-muted-foreground')}>
+        <span className={cn('flex-shrink-0', isActive ? (isBusinessPortal ? 'text-business-border' : 'text-primary') : 'text-muted-foreground')}>
           {item.icon}
         </span>
         <span className="truncate">{item.label}</span>
@@ -206,9 +209,15 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         <div className="flex flex-col items-center text-center">
           {/* Avatar with tier badge + online dot */}
           <div className="relative mb-3">
-            <Avatar className="h-[72px] w-[72px] ring-[3px] ring-primary/20 shadow-[0_4px_16px_rgba(13,122,107,0.15)]">
+            <Avatar className={cn(
+              "h-[72px] w-[72px] ring-[3px]",
+              isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
+            )}>
               <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
+              <AvatarFallback className={cn(
+                "text-xl font-bold",
+                isBusinessPortal ? "bg-business-border text-white" : "bg-primary text-primary-foreground"
+              )}>
                 {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
               </AvatarFallback>
             </Avatar>
@@ -353,7 +362,12 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 bottomAction.onClick();
                 onNavigate?.();
               }}
-              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+              className={cn(
+                "w-full font-semibold",
+                isBusinessPortal
+                  ? "bg-business-border text-white hover:bg-business-foreground"
+                  : "bg-primary text-primary-foreground hover:bg-primary/90"
+              )}
             >
               {bottomAction.icon}
               <span className="ms-2">{bottomAction.label}</span>
