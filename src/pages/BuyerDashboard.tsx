@@ -1115,9 +1115,9 @@ const BuyerDashboard = () => {
     { icon: <Bookmark className="w-4 h-4" />, label: 'Search Alerts', path: '/buyer/search-alerts' },
     { icon: <Gift className="w-4 h-4" />, label: 'Invite Friends', path: '/buyer/referrals' },
     { icon: <Award className="w-4 h-4" />, label: 'Achievements', path: '/buyer/achievements' },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
-    { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
     
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/buyer/notification-preferences' },
     { icon: <User className="w-4 h-4" />, label: 'Account Details', path: '/buyer/settings' },
