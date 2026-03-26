@@ -239,8 +239,8 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={t('messages.typeRichMessage', 'Write a message... Use the toolbar for rich text. Ctrl/Cmd + Enter to send.')}
-              className="flex-1 min-h-[88px] max-h-40 resize-none border-0 shadow-none focus-visible:ring-0"
+              placeholder={t('messages.typeRichMessage', 'Write a message...')}
+              className="flex-1 min-h-[44px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm"
             />
             <Button
               size="icon"
