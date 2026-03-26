@@ -1,15 +1,17 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { 
   MessageSquare, Users, Search, Eye, Trash2, 
-  BarChart3, ArrowUpDown, RefreshCw, Clock, AlertTriangle 
+  BarChart3, ArrowUpDown, RefreshCw, Clock, AlertTriangle, Plus, Send, ExternalLink
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { format } from 'date-fns';
+import { useNavigate } from 'react-router-dom';
 
 interface ConversationRow {
   id: string;
