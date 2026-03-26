@@ -270,6 +270,14 @@ const AdminMessaging = () => {
         </div>
         <div className="flex gap-2">
           <Button
+            size="sm"
+            onClick={() => setShowNewConv(!showNewConv)}
+            className="gap-1.5"
+          >
+            <Plus className="w-4 h-4" />
+            New Conversation
+          </Button>
+          <Button
             variant="outline"
             size="sm"
             onClick={() => setSortBy(sortBy === 'recent' ? 'messages' : 'recent')}
@@ -282,6 +290,39 @@ const AdminMessaging = () => {
           </Button>
         </div>
       </div>
+
+      {/* New Conversation Search */}
+      {showNewConv && (
+        <div className="bg-card border border-border rounded-xl p-4 space-y-3">
+          <p className="text-sm font-semibold text-foreground">Start a new conversation with a user</p>
+          <div className="relative">
+            <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              value={userSearch}
+              onChange={e => searchUsers(e.target.value)}
+              placeholder="Search by name or email..."
+              className="ps-9"
+            />
+          </div>
+          {userResults.length > 0 && (
+            <div className="divide-y divide-border border border-border rounded-lg max-h-48 overflow-y-auto">
+              {userResults.map(u => (
+                <button
+                  key={u.user_id}
+                  onClick={() => startConvWithUser(u.user_id)}
+                  className="w-full text-start px-4 py-2.5 hover:bg-muted/50 transition-colors flex items-center justify-between"
+                >
+                  <div>
+                    <p className="text-sm font-medium text-foreground">{u.full_name || 'User'}</p>
+                    <p className="text-xs text-muted-foreground">{u.email}</p>
+                  </div>
+                  <MessageSquare className="w-4 h-4 text-primary" />
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Two-panel layout */}
       <div className="flex gap-4 min-h-[500px]">
