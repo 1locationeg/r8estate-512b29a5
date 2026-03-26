@@ -32,6 +32,8 @@ interface MessageRow {
 }
 
 const AdminMessaging = () => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const [conversations, setConversations] = useState<ConversationRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +42,11 @@ const AdminMessaging = () => {
   const [messagesLoading, setMessagesLoading] = useState(false);
   const [stats, setStats] = useState({ totalConversations: 0, totalMessages: 0, activeUsers: 0, todayMessages: 0 });
   const [sortBy, setSortBy] = useState<'recent' | 'messages'>('recent');
+  const [adminReply, setAdminReply] = useState('');
+  const [sendingReply, setSendingReply] = useState(false);
+  const [showNewConv, setShowNewConv] = useState(false);
+  const [userSearch, setUserSearch] = useState('');
+  const [userResults, setUserResults] = useState<{ user_id: string; full_name: string | null; email: string | null }[]>([]);
 
   const fetchStats = async () => {
     const [convRes, msgRes, todayRes, presenceRes] = await Promise.all([
