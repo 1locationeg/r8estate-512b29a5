@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent } from '@/components/ui/sheet';
 import { BrandLogo } from '@/components/BrandLogo';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { LogOut, ChevronDown, Coins, Trophy, ChevronRight } from 'lucide-react';
+import { LogOut, ChevronDown, Coins, Trophy } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 
