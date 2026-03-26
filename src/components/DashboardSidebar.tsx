@@ -320,7 +320,14 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         </div>
       </div>
 
-      {/* Scrollable area: Nav + Leaderboard */}
+      {/* Leaderboard Strip — pinned above nav for visibility */}
+      {(isBuyerPortal || isBusinessPortal) && (() => {
+        const allItems = grouped ? (navItems as NavGroup[]).flatMap(g => g.items) : (navItems as NavItem[]);
+        const lbItem = allItems.find(i => i.path === '/leaderboard');
+        return lbItem ? <div className="px-3 pt-3 pb-1">{renderLeaderboardCard(lbItem)}</div> : null;
+      })()}
+
+      {/* Scrollable area: Nav */}
       <div className="flex-1 min-h-0 overflow-y-auto">
         <nav className="p-3 space-y-1">
           {grouped ? (
