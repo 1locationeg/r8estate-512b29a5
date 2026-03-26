@@ -121,8 +121,8 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
       : t('messages.offline', 'Offline');
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card">
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex items-center gap-3 px-4 py-3 border-b border-border bg-card shrink-0">
         {onBack && (
           <button onClick={onBack} className="text-muted-foreground hover:text-foreground transition-colors">
             <ArrowLeft className="w-5 h-5" />
@@ -194,7 +194,7 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
         <div ref={bottomRef} />
       </div>
 
-      <div className="border-t border-border p-3">
+      <div className="border-t border-border p-3 shrink-0 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
         <div className="rounded-2xl border border-border bg-card p-2 space-y-2">
           <div className="flex flex-wrap items-center gap-1 border-b border-border pb-2">
             <Button type="button" variant="ghost" size="sm" onClick={() => wrapSelection('**')}>
@@ -239,8 +239,8 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={handleKeyDown}
-              placeholder={t('messages.typeRichMessage', 'Write a message... Use the toolbar for rich text. Ctrl/Cmd + Enter to send.')}
-              className="flex-1 min-h-[88px] max-h-40 resize-none border-0 shadow-none focus-visible:ring-0"
+              placeholder={t('messages.typeRichMessage', 'Write a message...')}
+              className="flex-1 min-h-[44px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm"
             />
             <Button
               size="icon"
