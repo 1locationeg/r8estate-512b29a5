@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
+import { subscribeToMessagesRead } from '@/lib/messageReadEvents';
 
 export const useMessageUnreadCount = () => {
   const { user } = useAuth();
@@ -41,6 +42,11 @@ export const useMessageUnreadCount = () => {
   useEffect(() => {
     fetchUnreadCount();
   }, [fetchUnreadCount]);
+
+  useEffect(() => {
+    if (!user) return;
+    return subscribeToMessagesRead(fetchUnreadCount);
+  }, [user, fetchUnreadCount]);
 
   useEffect(() => {
     if (!user) return;
