@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
+import { NavGroup } from '@/components/DashboardSidebar';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
@@ -729,26 +730,51 @@ const DeveloperDashboard = () => {
   const subPath = location.pathname.replace('/business', '').replace('/', '');
   const pageTitle = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Dashboard';
 
-  const navItems = [
-    { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/business' },
-    { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/business/profile' },
-    { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/business/projects' },
-    { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
-    { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
-    { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
-    { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
-    { icon: <Tag className="w-4 h-4" />, label: 'My Deals', path: '/business/my-deals' },
-    { icon: <Rocket className="w-4 h-4" />, label: 'Submit Launch', path: '/business/submit-launch' },
-    { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
-    { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
-    { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
-    { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
-    { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/business/integration' },
-    { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
-    { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
-    { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/business/notification-preferences' },
-    { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/business/settings' },
+  const navItems: NavGroup[] = [
+    {
+      label: 'Overview',
+      items: [
+        { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/business' },
+        { icon: <Building2 className="w-4 h-4" />, label: 'Business Profile', path: '/business/profile' },
+        { icon: <MapPin className="w-4 h-4" />, label: 'Projects', path: '/business/projects' },
+        { icon: <Image className="w-4 h-4" />, label: 'Gallery', path: '/business/gallery' },
+        { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
+        { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
+      ],
+    },
+    {
+      label: 'Reviews & Reputation',
+      items: [
+        { icon: <Star className="w-4 h-4" />, label: 'Reviews', path: '/business/reviews' },
+        { icon: <Phone className="w-4 h-4" />, label: 'Request Review', path: '/business/request-review' },
+        { icon: <Trophy className="w-4 h-4" />, label: 'Rewards & Badges', path: '/business/gamification' },
+      ],
+    },
+    {
+      label: 'Deals & Launches',
+      items: [
+        { icon: <Tag className="w-4 h-4" />, label: 'Submit Deal', path: '/business/submit-deal' },
+        { icon: <Tag className="w-4 h-4" />, label: 'My Deals', path: '/business/my-deals' },
+        { icon: <Rocket className="w-4 h-4" />, label: 'Submit Launch', path: '/business/submit-launch' },
+        { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
+      ],
+    },
+    {
+      label: 'Communication',
+      items: [
+        { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
+        { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
+        { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
+      ],
+    },
+    {
+      label: 'Settings',
+      items: [
+        { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/business/integration' },
+        { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/business/notification-preferences' },
+        { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/business/settings' },
+      ],
+    },
   ];
 
   return (
