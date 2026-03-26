@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { Badge } from '@/components/ui/badge';
@@ -47,6 +47,7 @@ const AdminMessaging = () => {
   const [showNewConv, setShowNewConv] = useState(false);
   const [userSearch, setUserSearch] = useState('');
   const [userResults, setUserResults] = useState<{ user_id: string; full_name: string | null; email: string | null }[]>([]);
+  const viewerRef = useRef<HTMLDivElement | null>(null);
 
   const fetchStats = async () => {
     const [convRes, msgRes, todayRes, presenceRes] = await Promise.all([
@@ -189,7 +190,8 @@ const AdminMessaging = () => {
     setUserResults([]);
     // Stay on admin panel and auto-select the new conversation
     await fetchConversations();
-    fetchMessages(data as string);
+    await fetchMessages(data as string);
+    toast.success('Conversation ready — you can send the first message now.');
   };
 
   const sendAdminReply = async () => {
@@ -232,6 +234,14 @@ const AdminMessaging = () => {
     fetchStats();
     fetchConversations();
   }, [sortBy]);
+
+  useEffect(() => {
+    if (!selectedConv) return;
+
+    requestAnimationFrame(() => {
+      viewerRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  }, [selectedConv]);
 
   const filtered = conversations.filter(c => {
     if (!searchQuery) return true;
@@ -332,7 +342,7 @@ const AdminMessaging = () => {
       )}
 
       {/* Two-panel layout */}
-      <div className="flex gap-4 min-h-[500px]">
+      <div className="flex flex-col lg:flex-row gap-4 min-h-[500px]">
         {/* Conversations list */}
         <div className="w-full lg:w-[400px] border border-border rounded-xl overflow-hidden flex flex-col bg-card">
           <div className="px-4 py-3 border-b border-border bg-muted/30">
@@ -387,7 +397,7 @@ const AdminMessaging = () => {
         </div>
 
         {/* Message viewer */}
-        <div className="hidden lg:flex flex-1 border border-border rounded-xl overflow-hidden flex-col bg-card">
+        <div ref={viewerRef} className="flex flex-1 min-h-[420px] border border-border rounded-xl overflow-hidden flex-col bg-card">
           {selectedConv ? (
             <>
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
@@ -415,7 +425,10 @@ const AdminMessaging = () => {
                     <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                   </div>
                 ) : messages.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-12">No messages in this conversation</p>
+                  <div className="py-12 text-center space-y-2">
+                    <p className="text-sm text-muted-foreground">No messages in this conversation yet</p>
+                    <p className="text-xs text-muted-foreground/70">Use the message box below to send the first message.</p>
+                  </div>
                 ) : (
                   messages.map(msg => (
                     <div key={msg.id} className="flex items-start gap-3 group">
@@ -449,6 +462,7 @@ const AdminMessaging = () => {
               </div>
               {/* Admin Reply Input */}
               <div className="px-4 py-3 border-t border-border bg-muted/20">
+                <p className="text-xs font-medium text-muted-foreground mb-2">Send as admin</p>
                 <div className="flex gap-2">
                   <Input
                     value={adminReply}

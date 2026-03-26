@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { LogOut, LayoutDashboard, Building2, User, Search, Menu, LogIn, UserPlus } from "lucide-react";
+import { LogOut, LayoutDashboard, Building2, User, Search, Menu, LogIn, UserPlus, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { BrandLogo } from "@/components/BrandLogo";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { NotificationBell } from "@/components/NotificationBell";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
+import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -37,6 +38,7 @@ export const Navbar = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
+  const { unreadCount } = useMessageUnreadCount();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
 
   const guestNavLinks = [
@@ -102,6 +104,16 @@ export const Navbar = ({
           )}
 
           <LanguageSwitcher />
+          {user && (
+            <Button variant="ghost" size="icon" className="relative" onClick={() => navigate("/messages")}>
+              <Mail className="w-5 h-5" />
+              {unreadCount > 0 && (
+                <span className="absolute top-1 end-1 min-w-[18px] h-[18px] px-1 bg-primary text-primary-foreground text-[10px] font-bold rounded-full flex items-center justify-center">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+            </Button>
+          )}
           <NotificationBell />
 
           {user ? (
@@ -126,6 +138,10 @@ export const Navbar = ({
                 <DropdownMenuItem onClick={() => navigate(getDashboardRoute())} className="cursor-pointer">
                   <LayoutDashboard className="w-4 h-4 me-2" />
                   {t("nav.dashboard")}
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate("/messages")} className="cursor-pointer">
+                  <Mail className="w-4 h-4 me-2" />
+                  Messages
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={onSignOut} className="text-destructive cursor-pointer">
                   <LogOut className="w-4 h-4 me-2" />
@@ -218,6 +234,16 @@ export const Navbar = ({
           </button>
 
           <LanguageSwitcher />
+          {user && (
+            <Button variant="ghost" size="icon" className="relative h-8 w-8" onClick={() => navigate("/messages")}>
+              <Mail className="w-4 h-4" />
+              {unreadCount > 0 && (
+                <span className="absolute -top-0.5 -end-0.5 min-w-[16px] h-[16px] px-1 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
+                  {unreadCount > 99 ? "99+" : unreadCount}
+                </span>
+              )}
+            </Button>
+          )}
           <NotificationBell />
         </div>
       </div>

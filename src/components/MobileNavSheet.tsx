@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { LogOut, LayoutDashboard, Globe, ChevronDown, Building2, ArrowRight } from "lucide-react";
+import { LogOut, LayoutDashboard, Globe, ChevronDown, Building2, ArrowRight, Mail } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -9,6 +9,7 @@ import { BrandLogo } from "@/components/BrandLogo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { BusinessUpgradeModal } from "@/components/BusinessUpgradeModal";
 import { useState } from "react";
+import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
 
 interface MobileNavSheetProps {
   open: boolean;
@@ -26,6 +27,7 @@ export const MobileNavSheet = ({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
+  const { unreadCount } = useMessageUnreadCount();
   const isAr = i18n.language === "ar";
   const isRTL = i18n.dir() === "rtl";
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
@@ -151,6 +153,17 @@ export const MobileNavSheet = ({
                 <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigate(getDashboardRoute()); onOpenChange(false); }}>
                   <LayoutDashboard className="w-4 h-4" />
                   {t("nav.dashboard")}
+                </Button>
+                <Button variant="outline" className="w-full justify-start gap-2" onClick={() => { navigate("/messages"); onOpenChange(false); }}>
+                  <span className="relative">
+                    <Mail className="w-4 h-4" />
+                    {unreadCount > 0 && (
+                      <span className="absolute -top-2 -end-2 min-w-[16px] h-[16px] px-1 bg-primary text-primary-foreground text-[9px] font-bold rounded-full flex items-center justify-center">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
+                  </span>
+                  Messages
                 </Button>
                 <Button variant="ghost" className="w-full justify-start gap-2 text-destructive hover:text-destructive" onClick={() => { onSignOut(); onOpenChange(false); }}>
                   <LogOut className="w-4 h-4" />
