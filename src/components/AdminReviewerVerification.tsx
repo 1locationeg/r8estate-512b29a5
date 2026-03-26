@@ -15,6 +15,8 @@ interface Verification {
   status: string;
   social_url: string | null;
   document_url: string | null;
+  selfie_url: string | null;
+  id_document_url: string | null;
   admin_notes: string | null;
   created_at: string;
   profile?: { full_name: string | null; email: string | null; facebook_url: string | null; linkedin_url: string | null };
@@ -85,15 +87,23 @@ const AdminReviewerVerification = () => {
 
       // If approved, update the profile
       if (action === "approved") {
-        await supabase
-          .from("profiles")
-          .update({ identity_verified: true })
-          .eq("user_id", userId);
+        if (v.verification_type === 'kyc') {
+          await supabase
+            .from("profiles")
+            .update({ kyc_verified: true, identity_verified: true } as any)
+            .eq("user_id", userId);
+        } else {
+          await supabase
+            .from("profiles")
+            .update({ identity_verified: true })
+            .eq("user_id", userId);
+        }
 
-        // Update all reviews by this user to 'identity' verification level (if not already 'transaction')
+        // Update all reviews by this user
+        const newLevel = v.verification_type === 'kyc' ? 'kyc' : 'identity';
         await supabase
           .from("reviews")
-          .update({ verification_level: "identity" })
+          .update({ verification_level: newLevel })
           .eq("user_id", userId)
           .eq("verification_level", "none");
       }
