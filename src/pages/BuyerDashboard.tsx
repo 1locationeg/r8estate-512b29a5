@@ -808,6 +808,32 @@ const BuyerProfile = () => {
                   ))}
                 </select>
               </div>
+
+              {/* Social Verification Links */}
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <ExternalLink className="w-3 h-3" /> Facebook Profile
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.facebook_url || ''}
+                  onChange={(e) => setFormData({ ...formData, facebook_url: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="https://facebook.com/your.profile"
+                />
+              </div>
+              <div>
+                <label className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-1.5">
+                  <ExternalLink className="w-3 h-3" /> LinkedIn Profile
+                </label>
+                <input
+                  className="w-full px-3 py-2.5 bg-secondary rounded-lg text-sm text-foreground border border-border focus:border-primary focus:ring-1 focus:ring-primary transition-colors disabled:opacity-60"
+                  value={formData.linkedin_url || ''}
+                  onChange={(e) => setFormData({ ...formData, linkedin_url: e.target.value })}
+                  disabled={!isEditing}
+                  placeholder="https://linkedin.com/in/your-profile"
+                />
+              </div>
             </div>
 
             {isEditing && (
