@@ -76,6 +76,9 @@ const Messages = () => {
         <div className="w-[340px] border-e border-border flex flex-col">
           <div className="flex items-center justify-between px-4 py-3 border-b border-border">
             <div className="flex items-center gap-2">
+              <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+                <ArrowLeft className="w-5 h-5" />
+              </Button>
               <MessageSquare className="w-5 h-5 text-primary" />
               <h1 className="text-lg font-bold text-foreground">{t('messages.title', 'Messages')}</h1>
             </div>
@@ -139,6 +142,9 @@ const Messages = () => {
           <>
             <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-card">
               <div className="flex items-center gap-2">
+                <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
+                  <ArrowLeft className="w-5 h-5" />
+                </Button>
                 <MessageSquare className="w-5 h-5 text-primary" />
                 <h1 className="text-lg font-bold text-foreground">{t('messages.title', 'Messages')}</h1>
               </div>
