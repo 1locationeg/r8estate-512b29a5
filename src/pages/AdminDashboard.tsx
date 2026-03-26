@@ -30,6 +30,7 @@ import AdminTracking from '@/components/AdminTracking';
 import AdminWidgets from '@/components/AdminWidgets';
 import { AdminBusinessUpgrades } from '@/components/AdminBusinessUpgrades';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
+import AdminMessaging from '@/components/AdminMessaging';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2146,6 +2147,7 @@ const AdminDashboard = () => {
           <Route path="launch-moderation" element={<AdminLaunchModeration />} />
           <Route path="tracking" element={<AdminTracking />} />
           <Route path="widgets" element={<AdminWidgets />} />
+          <Route path="messaging" element={<AdminMessaging />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
