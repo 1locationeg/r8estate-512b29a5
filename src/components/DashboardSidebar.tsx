@@ -174,9 +174,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   };
 
   const renderNavButton = (item: NavItem) => {
-    // Render competition card for leaderboard nav item
+    // Skip leaderboard in nav — it's rendered above as a pinned strip
     if ((isBuyerPortal || isBusinessPortal) && item.path === '/leaderboard') {
-      return renderLeaderboardCard(item);
+      return null;
     }
 
     const isActive = location.pathname === item.path;
