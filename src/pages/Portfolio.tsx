@@ -170,7 +170,7 @@ const Portfolio = () => {
     );
   };
 
-  const renderQuestions = () => <EmptyState icon={HelpCircle} title={t("portfolio.noQuestions")} description={t("portfolio.noQuestionsDesc")} />;
+  const renderQuestions = () => <EmptyState icon={HelpCircle} title={t("portfolio.noQuestions")} description={t("portfolio.noQuestionsDesc")} actionLabel={t("portfolio.askQuestion", "Ask a Question")} onAction={() => navigate("/community")} />;
   const renderWatchlist = () => <EmptyState icon={Eye} title={t("portfolio.watchlistEmpty")} description={t("portfolio.watchlistEmptyDesc")} actionLabel={t("portfolio.browseDirectory")} onAction={() => navigate("/directory")} />;
   const renderActivity = () => <EmptyState icon={Activity} title={t("portfolio.noActivity")} description={t("portfolio.noActivityDesc")} />;
 
