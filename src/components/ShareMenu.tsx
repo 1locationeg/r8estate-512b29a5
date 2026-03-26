@@ -50,6 +50,7 @@ export const ShareMenu = ({
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
+      setOpen(false);
       toast({ title: t("share.linkCopied") });
       setTimeout(() => setCopied(false), 2000);
     } catch {
@@ -60,6 +61,7 @@ export const ShareMenu = ({
       document.execCommand("copy");
       document.body.removeChild(input);
       setCopied(true);
+      setOpen(false);
       toast({ title: t("share.linkCopied") });
       setTimeout(() => setCopied(false), 2000);
     }
