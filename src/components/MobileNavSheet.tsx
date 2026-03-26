@@ -7,6 +7,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { BrandLogo } from "@/components/BrandLogo";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { BusinessUpgradeModal } from "@/components/BusinessUpgradeModal";
+import { useState } from "react";
 
 interface MobileNavSheetProps {
   open: boolean;
@@ -26,6 +28,7 @@ export const MobileNavSheet = ({
   const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const isAr = i18n.language === "ar";
   const isRTL = i18n.dir() === "rtl";
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   const guestNavLinks = [
     { label: t("nav.home"), href: "/" },
@@ -49,6 +52,7 @@ export const MobileNavSheet = ({
   };
 
   return (
+    <>
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side={isRTL ? "right" : "left"} className="w-[300px] sm:w-[350px] p-0 safe-top safe-bottom">
         <div className="flex flex-col h-full">
@@ -129,7 +133,7 @@ export const MobileNavSheet = ({
             {role !== 'business' && role !== 'admin' && (
               <div className="mt-3 px-4">
                 <button
-                  onClick={() => { navigate("/auth?type=business"); onOpenChange(false); }}
+                  onClick={() => { if (user) { onOpenChange(false); setTimeout(() => setShowUpgradeModal(true), 300); } else { navigate("/auth?type=business"); onOpenChange(false); } }}
                   className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full border border-business-border bg-business text-business-foreground font-bold text-xs transition-all hover:bg-business/80"
                 >
                   <Building2 className="w-3.5 h-3.5" />
@@ -194,5 +198,7 @@ export const MobileNavSheet = ({
         </div>
       </SheetContent>
     </Sheet>
+    <BusinessUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
+    </>
   );
 };

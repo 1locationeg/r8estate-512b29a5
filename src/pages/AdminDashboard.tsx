@@ -28,6 +28,7 @@ import AdminDealModeration from '@/components/AdminDealModeration';
 import AdminLaunchModeration from '@/components/AdminLaunchModeration';
 import AdminTracking from '@/components/AdminTracking';
 import AdminWidgets from '@/components/AdminWidgets';
+import { AdminBusinessUpgrades } from '@/components/AdminBusinessUpgrades';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 
 const AdminOverview = () => {
@@ -2036,6 +2037,7 @@ const AdminDashboard = () => {
         { icon: <Building2 className="w-4 h-4" />, label: 'Developers', path: '/admin/developers' },
         { icon: <Briefcase className="w-4 h-4" />, label: 'Business', path: '/admin/business' },
         { icon: <Shield className="w-4 h-4" />, label: 'Claims', path: '/admin/claims' },
+        { icon: <UserCheck className="w-4 h-4" />, label: 'Upgrade Requests', path: '/admin/upgrades' },
       ],
     },
     {
@@ -2116,6 +2118,7 @@ const AdminDashboard = () => {
           <Route path="developers" element={<AdminDevelopers />} />
           <Route path="business" element={<AdminBusiness />} />
           <Route path="claims" element={<AdminBusinessClaims />} />
+          <Route path="upgrades" element={<AdminBusinessUpgrades />} />
           <Route path="reviews" element={<AdminReviewMod />} />
           <Route path="moderation" element={<AdminModerationQueue />} />
           <Route path="guest-reviews" element={<AdminGuestReviews />} />

@@ -20,11 +20,13 @@ import { ReferralWidget } from '@/components/ReferralWidget';
 import { SavedSearchWidget } from '@/components/SavedSearchWidget';
 import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
 import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
+import { BusinessUpgradeModal } from '@/components/BusinessUpgradeModal';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
   const { profile, role, refreshProfile, user } = useAuth();
   const [isUpgrading, setIsUpgrading] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const gamification = useBuyerGamification();
 
   const stats = [
@@ -36,21 +38,6 @@ const BuyerOverview = () => {
 
   const recentReviews = reviews.slice(0, 4);
   const savedProjects = projects.slice(0, 3);
-
-  const handleUpgradeToBusiness = async () => {
-    setIsUpgrading(true);
-    try {
-      const { error } = await supabase.rpc('set_my_account_type', { _account_type: 'business' });
-      if (error) throw error;
-      await refreshProfile();
-      toast.success('Account upgraded to Business! Redirecting to your business dashboard...');
-      setTimeout(() => navigate('/business'), 1000);
-    } catch (err: any) {
-      toast.error(err.message || 'Failed to upgrade account. Please try again.');
-    } finally {
-      setIsUpgrading(false);
-    }
-  };
 
   // Tier journey data
   const tiers = [
@@ -207,20 +194,17 @@ const BuyerOverview = () => {
             </p>
           </div>
           <Button
-            onClick={handleUpgradeToBusiness}
-            disabled={isUpgrading}
+            onClick={() => setShowUpgradeModal(true)}
             className="flex-shrink-0 gap-2 bg-business-border text-white hover:bg-business-border/90"
           >
-            {isUpgrading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
-            ) : (
-              <Building2 className="w-4 h-4" />
-            )}
-            {isUpgrading ? 'Upgrading...' : 'Upgrade to Business'}
+            <Building2 className="w-4 h-4" />
+            Apply for Business
           </Button>
         </div>
       </div>
       )}
+
+      <BusinessUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
 
       {/* Stats with Deltas */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

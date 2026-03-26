@@ -186,6 +186,48 @@ export type Database = {
           },
         ]
       }
+      business_upgrade_requests: {
+        Row: {
+          admin_notes: string | null
+          company_name: string
+          created_at: string
+          description: string | null
+          document_url: string | null
+          id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          company_name: string
+          created_at?: string
+          description?: string | null
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          admin_notes?: string | null
+          company_name?: string
+          created_at?: string
+          description?: string | null
+          document_url?: string | null
+          id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       buyer_engagement: {
         Row: {
           community_posts: number
