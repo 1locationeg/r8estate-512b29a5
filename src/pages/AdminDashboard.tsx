@@ -30,6 +30,7 @@ import AdminTracking from '@/components/AdminTracking';
 import AdminWidgets from '@/components/AdminWidgets';
 import { AdminBusinessUpgrades } from '@/components/AdminBusinessUpgrades';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
+import AdminMessaging from '@/components/AdminMessaging';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2073,7 +2074,7 @@ const AdminDashboard = () => {
     {
       label: 'Communications',
       items: [
-        { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
+        { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/admin/messaging' },
         { icon: <Megaphone className="w-4 h-4" />, label: 'Notifications', path: '/admin/notifications' },
         { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
         { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
@@ -2146,6 +2147,7 @@ const AdminDashboard = () => {
           <Route path="launch-moderation" element={<AdminLaunchModeration />} />
           <Route path="tracking" element={<AdminTracking />} />
           <Route path="widgets" element={<AdminWidgets />} />
+          <Route path="messaging" element={<AdminMessaging />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
