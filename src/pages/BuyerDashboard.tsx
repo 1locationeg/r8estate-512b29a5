@@ -884,6 +884,9 @@ const BuyerProfile = () => {
             )}
           </div>
 
+          {/* KYC Verification Section */}
+          <KycUploadSection />
+
           {/* Recent Activity */}
           <div className="bg-card border border-border rounded-xl p-5">
             <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
