@@ -916,8 +916,6 @@ const BuyerDashboard = () => {
 
   const navItems = [
     { icon: <LayoutDashboard className="w-4 h-4" />, label: 'Dashboard', path: '/buyer' },
-    { icon: <Building2 className="w-4 h-4" />, label: 'Products I Use', path: '/buyer/saved' },
-    { icon: <Search className="w-4 h-4" />, label: 'Research Board', path: '/directory' },
     { icon: <Star className="w-4 h-4" />, label: 'My Reviews', path: '/buyer/reviews' },
     { icon: <Bookmark className="w-4 h-4" />, label: 'Search Alerts', path: '/buyer/search-alerts' },
     { icon: <Gift className="w-4 h-4" />, label: 'Invite Friends', path: '/buyer/referrals' },
