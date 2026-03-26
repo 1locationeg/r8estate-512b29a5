@@ -3,7 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { subscribeToMessagesRead } from '@/lib/messageReadEvents';
 
-export const useMessageUnreadCount = () => {
+export const useMessageUnreadCount = () => { // v2
   const { user } = useAuth();
   const [unreadCount, setUnreadCount] = useState(0);
 
