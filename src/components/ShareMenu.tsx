@@ -16,6 +16,8 @@ interface ShareMenuProps {
   description?: string;
   /** URL to share – defaults to current page */
   url?: string;
+  /** Custom button label */
+  label?: string;
   /** Render as icon-only button */
   iconOnly?: boolean;
   /** Button variant */
@@ -30,6 +32,7 @@ export const ShareMenu = ({
   title,
   description,
   url,
+  label,
   iconOnly = false,
   variant = "ghost",
   size = "icon",
@@ -50,7 +53,6 @@ export const ShareMenu = ({
       toast({ title: t("share.linkCopied") });
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      // Fallback
       const input = document.createElement("input");
       input.value = shareUrl;
       document.body.appendChild(input);
@@ -74,7 +76,7 @@ export const ShareMenu = ({
       try {
         await navigator.share({ title, text: shareText, url: shareUrl });
       } catch {
-        // User cancelled
+        // User cancelled or browser blocked share
       }
       setOpen(false);
     }
@@ -87,7 +89,7 @@ export const ShareMenu = ({
       <PopoverTrigger asChild>
         <Button variant={variant} size={size} className={className}>
           <Forward className="w-4 h-4 text-current" />
-          {!iconOnly && <span>{t("share.share")}</span>}
+          {!iconOnly && <span>{label || t("share.share")}</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-52 p-2" align="end">
@@ -103,7 +105,7 @@ export const ShareMenu = ({
             onClick={handleWhatsApp}
             className="w-full flex items-center gap-3 px-3 py-2 rounded-md text-sm hover:bg-secondary transition-colors text-start"
           >
-            <MessageCircle className="w-4 h-4 text-green-500" />
+            <MessageCircle className="w-4 h-4 text-verified" />
             <span>{t("share.whatsapp")}</span>
           </button>
           {canNativeShare && (
