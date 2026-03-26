@@ -88,11 +88,11 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         className={cn(
           'w-full flex items-center gap-3 px-3 py-2 rounded-lg text-[13px] font-medium transition-all',
           isActive
-            ? 'bg-sidebar-active/15 text-sidebar-active border-s-2 border-sidebar-active'
-            : 'text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground border-s-2 border-transparent'
+            ? 'bg-primary/10 text-primary border-s-2 border-primary'
+            : 'text-muted-foreground hover:bg-muted hover:text-foreground border-s-2 border-transparent'
         )}
       >
-        <span className={cn('flex-shrink-0', isActive ? 'text-sidebar-active' : 'text-sidebar-muted')}>
+        <span className={cn('flex-shrink-0', isActive ? 'text-primary' : 'text-muted-foreground')}>
           {item.icon}
         </span>
         <span className="truncate">{item.label}</span>
@@ -101,9 +101,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
   };
 
   return (
-    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-sidebar-bg text-sidebar-foreground">
+    <div className="h-full min-h-0 flex flex-col overflow-hidden bg-white text-foreground">
       {/* Brand */}
-      <div className="p-4 border-b border-white/10">
+      <div className="p-4 border-b border-border">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => handleNav('/')}
           role="button" tabIndex={0}
           onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && handleNav('/')}
@@ -113,38 +113,38 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
       </div>
 
       {/* Profile Card */}
-      <div className="px-4 py-5 border-b border-white/10">
+      <div className="px-4 py-5 border-b border-border">
         {companyInfo ? (
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-sidebar-active/20 flex items-center justify-center text-sidebar-active font-bold text-sm">
+            <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-sm">
               {companyInfo.name.charAt(0)}
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-sidebar-foreground truncate">{companyInfo.name}</p>
-              <p className="text-[11px] text-sidebar-muted truncate">{companyInfo.subtitle}</p>
+              <p className="text-sm font-semibold text-foreground truncate">{companyInfo.name}</p>
+              <p className="text-[11px] text-muted-foreground truncate">{companyInfo.subtitle}</p>
             </div>
           </div>
         ) : (
           <div className="flex flex-col items-center text-center">
             {/* Avatar with tier badge + online dot */}
             <div className="relative mb-3">
-              <Avatar className="h-[72px] w-[72px] ring-[3px] ring-white shadow-[0_0_0_2.5px_hsl(var(--sidebar-active)),0_4px_16px_rgba(13,122,107,0.2)]">
+              <Avatar className="h-[72px] w-[72px] ring-[3px] ring-primary/20 shadow-[0_4px_16px_rgba(13,122,107,0.15)]">
                 <AvatarImage src={profile?.avatar_url || undefined} />
-                <AvatarFallback className="bg-sidebar-active text-white text-xl font-bold">
+                <AvatarFallback className="bg-primary text-primary-foreground text-xl font-bold">
                   {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
                 </AvatarFallback>
               </Avatar>
               {/* Tier badge — top-start */}
               {isBuyerPortal && !gamification.isLoading && (
-                <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-coin border-[2.5px] border-sidebar-bg flex items-center justify-center text-[10px]">
+                <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-coin border-[2.5px] border-white flex items-center justify-center text-[10px]">
                   {gamification.currentTier.emoji}
                 </span>
               )}
               {/* Online dot — bottom-end */}
-              <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-sidebar-bg" />
+              <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-white" />
             </div>
-            <p className="text-[17px] font-bold text-sidebar-foreground tracking-tight truncate max-w-full">{profile?.full_name || 'User'}</p>
-            <p className="text-[11.5px] text-sidebar-active font-semibold mt-0.5 flex items-center justify-center gap-1.5">
+            <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-full">{profile?.full_name || 'User'}</p>
+            <p className="text-[11.5px] text-primary font-semibold mt-0.5 flex items-center justify-center gap-1.5">
               <span className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
               {t("dashboard.memberSince", "Member since")}{' '}
               {profile?.created_at
@@ -157,23 +157,23 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
               <div className="w-full mt-3.5">
                 <button
                   onClick={() => navigate('/buyer/achievements')}
-                  className="w-full bg-white/5 border border-white/10 rounded-xl p-3 flex items-center gap-3 hover:bg-white/10 transition-all cursor-pointer text-start"
+                  className="w-full bg-muted/50 border border-border rounded-xl p-3 flex items-center gap-3 hover:bg-muted transition-all cursor-pointer text-start"
                 >
                   <div className="w-[42px] h-[42px] rounded-full bg-coin/15 border-[1.5px] border-coin/25 flex items-center justify-center flex-shrink-0">
                     <Coins className="w-[22px] h-[22px] text-coin" />
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-baseline gap-1.5">
-                      <span className="text-[22px] font-bold text-sidebar-foreground leading-none">{gamification.totalPoints}</span>
-                      <span className="text-xs text-sidebar-muted">points</span>
+                      <span className="text-[22px] font-bold text-foreground leading-none">{gamification.totalPoints}</span>
+                      <span className="text-xs text-muted-foreground">points</span>
                     </div>
                     <div className="flex items-center gap-1.5 mt-1.5">
-                      <span className="text-[10px] font-bold bg-sidebar-active/15 border border-sidebar-active/25 text-sidebar-active px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                      <span className="text-[10px] font-bold bg-primary/10 border border-primary/20 text-primary px-2.5 py-0.5 rounded-full flex items-center gap-1">
                         {gamification.currentTier.emoji} {gamification.currentTier.name}
                       </span>
                       {gamification.pointsToNext > 0 && gamification.nextTier && (
-                        <span className="text-[10.5px] text-sidebar-muted">
-                          <strong className="text-sidebar-active">{gamification.pointsToNext} pts</strong> to {gamification.nextTier.name}
+                        <span className="text-[10.5px] text-muted-foreground">
+                          <strong className="text-primary">{gamification.pointsToNext} pts</strong> to {gamification.nextTier.name}
                         </span>
                       )}
                     </div>
@@ -183,18 +183,18 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 {/* Tier progress bar */}
                 {gamification.nextTier && (
                   <div className="mt-2.5">
-                    <div className="flex justify-between text-[9.5px] text-sidebar-muted mb-1.5 font-medium">
+                    <div className="flex justify-between text-[9.5px] text-muted-foreground mb-1.5 font-medium">
                       <span>{gamification.currentTier.name}</span>
                       <span>
-                        <strong className="text-sidebar-foreground">
+                        <strong className="text-foreground">
                           {gamification.totalPoints} / {gamification.nextTier.minPoints} pts
                         </strong>
                       </span>
                       <span>{gamification.nextTier.name}</span>
                     </div>
-                    <div className="h-[7px] bg-sidebar-active/10 rounded border border-sidebar-active/15 overflow-hidden">
+                    <div className="h-[7px] bg-primary/10 rounded border border-primary/15 overflow-hidden">
                       <div
-                        className="h-full rounded bg-gradient-to-r from-sidebar-active to-coin transition-all"
+                        className="h-full rounded bg-gradient-to-r from-primary to-coin transition-all"
                         style={{ width: `${Math.min(100, (gamification.totalPoints / gamification.nextTier.minPoints) * 100)}%` }}
                       />
                     </div>
@@ -218,7 +218,7 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                   onClick={() => toggleGroup(group.label)}
                   className={cn(
                     'w-full flex items-center justify-between px-3 py-2 rounded-lg text-[11px] font-semibold uppercase tracking-wider transition-colors',
-                    hasActive ? 'text-sidebar-active' : 'text-sidebar-muted/60 hover:text-sidebar-muted'
+                    hasActive ? 'text-primary' : 'text-muted-foreground/60 hover:text-muted-foreground'
                   )}
                 >
                   <span>{group.label}</span>
@@ -237,30 +237,30 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         )}
       </nav>
 
-      {/* Mini Leaderboard */}
-      {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} darkMode />}
-
-      {/* Bottom */}
-      <div className="p-3 space-y-2 border-t border-white/10 safe-bottom">
-        {bottomAction && (
-          <Button
-            onClick={() => {
-              bottomAction.onClick();
-              onNavigate?.();
-            }}
-            className="w-full bg-sidebar-active text-white hover:bg-sidebar-active/90 font-semibold"
+      {/* Bottom: Leaderboard + Actions (pinned) */}
+      <div className="flex-shrink-0 border-t border-border">
+        {showMiniLeaderboard && <MiniLeaderboard onNavigate={onNavigate} />}
+        <div className="p-3 space-y-2 border-t border-border safe-bottom">
+          {bottomAction && (
+            <Button
+              onClick={() => {
+                bottomAction.onClick();
+                onNavigate?.();
+              }}
+              className="w-full bg-primary text-primary-foreground hover:bg-primary/90 font-semibold"
+            >
+              {bottomAction.icon}
+              <span className="ms-2">{bottomAction.label}</span>
+            </Button>
+          )}
+          <button
+            onClick={handleSignOut}
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
           >
-            {bottomAction.icon}
-            <span className="ms-2">{bottomAction.label}</span>
-          </Button>
-        )}
-        <button
-          onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-sidebar-muted hover:text-sidebar-foreground hover:bg-sidebar-hover transition-all"
-        >
-          <LogOut className="w-4 h-4" />
-          {t("common.signOut", "Sign Out")}
-        </button>
+            <LogOut className="w-4 h-4" />
+            {t("common.signOut", "Sign Out")}
+          </button>
+        </div>
       </div>
     </div>
   );
