@@ -20,6 +20,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useTranslation } from "react-i18next";
 import { generateAvatar } from "@/lib/avatarUtils";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
+import { useStartChat } from "@/hooks/useStartChat";
 
 interface DeveloperDetailModalProps {
   developer: Developer | null;
@@ -34,6 +35,7 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
   const navigate = useNavigate();
   const { user, signInWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
+  const { startChatWithBusinessId } = useStartChat();
 
   // Track developer view
   useEffect(() => {
@@ -204,13 +206,24 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
                   <p className="text-sm font-medium text-foreground">Join the conversation</p>
                   <p className="text-xs text-muted-foreground">Ask a question or share your experience with this developer</p>
                 </div>
-                <Button 
-                  onClick={handleStartDiscussion} 
-                  size="sm"
-                  className="gap-1.5 whitespace-nowrap"
-                >
-                  Start Discussion
-                </Button>
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => { onClose(); startChatWithBusinessId(developer!.id); }}
+                    size="sm"
+                    variant="outline"
+                    className="gap-1.5 whitespace-nowrap"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Message
+                  </Button>
+                  <Button 
+                    onClick={handleStartDiscussion} 
+                    size="sm"
+                    className="gap-1.5 whitespace-nowrap"
+                  >
+                    Start Discussion
+                  </Button>
+                </div>
               </div>
 
               <div className="flex items-center gap-2 text-green-600">
