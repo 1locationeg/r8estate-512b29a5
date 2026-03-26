@@ -145,55 +145,36 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 : t("dashboard.recently", "Recently")}
             </p>
 
-            {/* Coins + tier card */}
+            {/* Compact tier card */}
             {isBuyerPortal && user && !gamification.isLoading && (
-              <div className="w-full mt-3.5">
-                <button
-                  onClick={() => navigate('/buyer/achievements')}
-                  className="w-full bg-muted/50 border border-border rounded-xl p-3 flex items-center gap-3 hover:bg-muted transition-all cursor-pointer text-start"
-                >
-                  <div className="w-[42px] h-[42px] rounded-full bg-coin/15 border-[1.5px] border-coin/25 flex items-center justify-center flex-shrink-0">
-                    <Coins className="w-[22px] h-[22px] text-coin" />
+              <button
+                onClick={() => navigate('/buyer/achievements')}
+                className="w-full mt-2.5 group bg-gradient-to-r from-coin/10 to-primary/10 border border-coin/20 rounded-lg px-3 py-2 text-start hover:from-coin/15 hover:to-primary/15 transition-all cursor-pointer"
+              >
+                <div className="flex items-center justify-between mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <Coins className="w-4 h-4 text-coin" />
+                    <span className="text-[15px] font-extrabold text-foreground leading-none">{gamification.totalPoints}</span>
+                    <span className="text-[10px] text-muted-foreground font-medium">coins</span>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-baseline gap-1.5">
-                      <span className="text-[22px] font-bold text-foreground leading-none">{gamification.totalPoints}</span>
-                      <span className="text-xs text-muted-foreground">points</span>
-                    </div>
-                    <div className="flex items-center gap-1.5 mt-1.5">
-                      <span className="text-[10px] font-bold bg-primary/10 border border-primary/20 text-primary px-2.5 py-0.5 rounded-full flex items-center gap-1">
-                        {gamification.currentTier.emoji} {gamification.currentTier.name}
-                      </span>
-                      {gamification.pointsToNext > 0 && gamification.nextTier && (
-                        <span className="text-[10.5px] text-muted-foreground">
-                          <strong className="text-primary">{gamification.pointsToNext} pts</strong> to {gamification.nextTier.name}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </button>
-
-                {/* Tier progress bar */}
+                  <span className="text-[10px] font-bold bg-coin/15 text-coin px-2 py-0.5 rounded-full">
+                    {gamification.currentTier.emoji} {gamification.currentTier.name}
+                  </span>
+                </div>
                 {gamification.nextTier && (
-                  <div className="mt-2.5">
-                    <div className="flex justify-between text-[9.5px] text-muted-foreground mb-1.5 font-medium">
-                      <span>{gamification.currentTier.name}</span>
-                      <span>
-                        <strong className="text-foreground">
-                          {gamification.totalPoints} / {gamification.nextTier.minPoints} pts
-                        </strong>
-                      </span>
-                      <span>{gamification.nextTier.name}</span>
-                    </div>
-                    <div className="h-[7px] bg-primary/10 rounded border border-primary/15 overflow-hidden">
+                  <>
+                    <div className="h-[5px] bg-background rounded-full overflow-hidden">
                       <div
-                        className="h-full rounded bg-gradient-to-r from-primary to-coin transition-all"
+                        className="h-full rounded-full bg-gradient-to-r from-coin to-primary transition-all"
                         style={{ width: `${Math.min(100, (gamification.totalPoints / gamification.nextTier.minPoints) * 100)}%` }}
                       />
                     </div>
-                  </div>
+                    <p className="text-[10px] text-muted-foreground mt-1 group-hover:text-foreground transition-colors">
+                      <strong className="text-coin">{gamification.pointsToNext} more</strong> to unlock <strong>{gamification.nextTier.emoji} {gamification.nextTier.name}</strong>
+                    </p>
+                  </>
                 )}
-              </div>
+              </button>
             )}
           </div>
         )}
