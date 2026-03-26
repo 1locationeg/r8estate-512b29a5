@@ -179,11 +179,17 @@ const AdminMessaging = () => {
     const { data, error } = await supabase.rpc('find_or_create_conversation', {
       _other_user_id: otherUserId,
     });
-    if (error) { toast.error('Failed to create conversation'); return; }
+    if (error) { 
+      console.error('Failed to create conversation:', error);
+      toast.error('Failed to create conversation'); 
+      return; 
+    }
     setShowNewConv(false);
     setUserSearch('');
     setUserResults([]);
-    navigate('/messages', { state: { conversationId: data } });
+    // Stay on admin panel and auto-select the new conversation
+    await fetchConversations();
+    fetchMessages(data as string);
   };
 
   const sendAdminReply = async () => {
@@ -212,7 +218,8 @@ const AdminMessaging = () => {
     });
     
     if (error) {
-      toast.error('Failed to send message');
+      console.error('Failed to send admin message:', error);
+      toast.error('Failed to send message: ' + error.message);
     } else {
       setAdminReply('');
       toast.success('Message sent');
