@@ -1,4 +1,4 @@
-import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck } from "lucide-react";
+import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck, MessageSquare } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
@@ -20,6 +20,7 @@ import { useReviewability } from "@/hooks/useReviewability";
 import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
+import { useStartChat } from "@/hooks/useStartChat";
 import {
   Select,
   SelectContent,
@@ -44,6 +45,7 @@ export const DeveloperDetailCard = ({
   const navigate = useNavigate();
   const { getLogoOverride } = useBusinessLogo();
   const logoSrc = getLogoOverride(developer.id, developer.name) || developer.logo;
+  const { startChatWithBusinessId } = useStartChat();
   const [reviewFilter, setReviewFilter] = useState<ReviewFilterType>("all");
   const [sortOrder, setSortOrder] = useState<string>("newest");
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -197,6 +199,10 @@ export const DeveloperDetailCard = ({
           <button onClick={() => setIsCompareOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors">
             <GitCompare className="w-4 h-4" />
             {t("actions.compareWith")}
+          </button>
+          <button onClick={() => startChatWithBusinessId(developer.id)} className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors">
+            <MessageSquare className="w-4 h-4" />
+            {t("common.message", "Message")}
           </button>
         </div>
       </div>
