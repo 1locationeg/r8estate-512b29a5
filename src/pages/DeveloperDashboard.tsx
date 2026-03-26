@@ -741,6 +741,7 @@ const DeveloperDashboard = () => {
     { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
+    { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/business/notification-preferences' },
     { icon: <Settings className="w-4 h-4" />, label: 'Account Details', path: '/business/settings' },
