@@ -386,11 +386,21 @@ const AdminMessaging = () => {
               <div className="px-4 py-3 border-b border-border bg-muted/30 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Eye className="w-4 h-4 text-primary" />
-                  <p className="text-sm font-semibold text-foreground">Message Viewer (Read Only)</p>
+                  <p className="text-sm font-semibold text-foreground">Message Viewer</p>
                 </div>
-                <Badge variant="outline" className="text-[10px]">
-                  {messages.length} messages
-                </Badge>
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline" className="text-[10px]">
+                    {messages.length} messages
+                  </Badge>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => navigate('/messages', { state: { conversationId: selectedConv } })}
+                    title="Open in full messaging"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {messagesLoading ? (
@@ -430,12 +440,26 @@ const AdminMessaging = () => {
                   ))
                 )}
               </div>
+              {/* Admin Reply Input */}
+              <div className="px-4 py-3 border-t border-border bg-muted/20">
+                <div className="flex gap-2">
+                  <Input
+                    value={adminReply}
+                    onChange={e => setAdminReply(e.target.value)}
+                    placeholder="Send a message as admin..."
+                    onKeyDown={e => e.key === 'Enter' && !e.shiftKey && sendAdminReply()}
+                  />
+                  <Button size="sm" onClick={sendAdminReply} disabled={sendingReply || !adminReply.trim()}>
+                    <Send className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
             </>
           ) : (
             <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground">
               <Eye className="w-12 h-12 opacity-20 mb-3" />
               <p className="text-sm font-medium">Select a conversation to view</p>
-              <p className="text-xs mt-1">Read-only access for moderation</p>
+              <p className="text-xs mt-1">View and reply to conversations as admin</p>
             </div>
           )}
         </div>

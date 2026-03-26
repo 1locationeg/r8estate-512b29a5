@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '@/contexts/AuthContext';
 import { useConversations, type Conversation } from '@/hooks/useMessages';
@@ -6,7 +6,7 @@ import { ConversationList } from '@/components/ConversationList';
 import { ChatThread } from '@/components/ChatThread';
 import { ChatPresenceToggle } from '@/components/ChatPresenceToggle';
 import { MessageSquare, Settings2 } from 'lucide-react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 
 const Messages = () => {
@@ -15,6 +15,16 @@ const Messages = () => {
   const { conversations, loading, startConversation } = useConversations();
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const location = useLocation();
+
+  // Auto-select conversation from navigation state
+  useEffect(() => {
+    const stateConvId = (location.state as any)?.conversationId;
+    if (stateConvId && conversations.length > 0 && !activeConv) {
+      const found = conversations.find(c => c.id === stateConvId);
+      if (found) setActiveConv(found);
+    }
+  }, [conversations, location.state]);
 
   if (isLoading) {
     return (
