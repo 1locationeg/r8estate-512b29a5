@@ -744,6 +744,7 @@ const DeveloperDashboard = () => {
     { icon: <Users className="w-4 h-4" />, label: 'Employees', path: '/business/employees' },
     { icon: <Tag className="w-4 h-4" />, label: 'Categories', path: '/business/categories' },
     { icon: <Plug className="w-4 h-4" />, label: 'Integration', path: '/business/integration' },
+    { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/business/notification-preferences' },
