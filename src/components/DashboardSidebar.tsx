@@ -105,7 +105,77 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
     onNavigate?.();
   };
 
+  const renderLeaderboardCard = (item: NavItem) => {
+    const isActive = location.pathname === item.path;
+    const pointsGap = rivalPoints - userPoints;
+    const progressPct = rivalPoints > 0 ? Math.min(100, (userPoints / rivalPoints) * 100) : 0;
+
+    return (
+      <button
+        key={item.label}
+        onClick={() => handleNav(item.path)}
+        className={cn(
+          'w-full rounded-lg px-3 py-2.5 text-start transition-all border',
+          isActive
+            ? 'bg-coin/10 border-coin/30 border-s-2 border-s-coin'
+            : 'bg-coin/5 border-coin/15 hover:bg-coin/10 border-s-2 border-s-transparent hover:border-s-coin/40'
+        )}
+      >
+        {/* Row 1: Trophy + Label + Rank badge */}
+        <div className="flex items-center justify-between mb-1.5">
+          <div className="flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-coin" />
+            <span className="text-[13px] font-bold text-foreground">{item.label}</span>
+          </div>
+          {userRank > 0 ? (
+            <span className="text-[11px] font-extrabold bg-coin/15 text-coin px-2 py-0.5 rounded-full flex items-center gap-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-coin animate-pulse" />
+              #{userRank}
+            </span>
+          ) : (
+            <span className="text-[10px] text-muted-foreground">Join the race!</span>
+          )}
+        </div>
+
+        {userRank > 0 && (
+          <>
+            {/* Row 2: Progress bar + points to next */}
+            <div className="h-[5px] bg-background rounded-full overflow-hidden mb-1">
+              <div
+                className="h-full rounded-full bg-gradient-to-r from-coin to-primary transition-all"
+                style={{ width: `${progressPct}%` }}
+              />
+            </div>
+
+            {/* Row 3: Rival motivator */}
+            {rivalName && pointsGap > 0 ? (
+              <p className="text-[10px] text-muted-foreground leading-tight">
+                <strong className="text-coin">{pointsGap} pts</strong> to beat{' '}
+                <strong className="text-foreground">{rivalName}</strong> for #{userRank - 1}
+              </p>
+            ) : userRank === 1 ? (
+              <p className="text-[10px] font-semibold text-coin leading-tight">🔥 You're #1 this week!</p>
+            ) : (
+              <p className="text-[10px] text-muted-foreground leading-tight">{userPoints} pts this week</p>
+            )}
+          </>
+        )}
+
+        {userRank === 0 && (
+          <p className="text-[10px] text-muted-foreground leading-tight mt-0.5">
+            Start reviewing to climb the ranks!
+          </p>
+        )}
+      </button>
+    );
+  };
+
   const renderNavButton = (item: NavItem) => {
+    // Render competition card for leaderboard nav item
+    if (isBuyerPortal && item.path === '/leaderboard') {
+      return renderLeaderboardCard(item);
+    }
+
     const isActive = location.pathname === item.path;
     return (
       <button
@@ -241,27 +311,6 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
 
       {/* Bottom: Rank banner + action + sign out (pinned) */}
       <div className="flex-shrink-0 border-t border-border p-3 space-y-2 safe-bottom">
-          {/* Compact Rank Banner */}
-          {isBuyerPortal && user && userRank > 0 && (
-            <button
-              onClick={() => { navigate('/leaderboard'); onNavigate?.(); }}
-              className="w-full group bg-gradient-to-r from-coin/8 to-primary/8 border border-coin/20 rounded-lg px-3 py-2 text-start hover:from-coin/15 hover:to-primary/15 transition-all"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Trophy className="w-4 h-4 text-coin" />
-                  <span className="text-[13px] font-bold text-foreground">#{userRank} this week</span>
-                  <span className="text-[11px] text-muted-foreground">· {userPoints} pts</span>
-                </div>
-                <ChevronRight className="w-3.5 h-3.5 text-muted-foreground group-hover:text-primary transition-colors" />
-              </div>
-              {nextUserPoints > userPoints && (
-                <p className="text-[10px] text-muted-foreground mt-0.5 group-hover:text-foreground transition-colors">
-                  <strong className="text-coin">{nextUserPoints - userPoints} more</strong> to climb to #{userRank - 1}
-                </p>
-              )}
-            </button>
-          )}
 
           {bottomAction && (
             <Button
