@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { TrendingUp, TrendingDown, Minus, AlertTriangle, Sparkles } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTranslation } from "react-i18next";
 
 interface InsightData {
   metric_value: string;
@@ -11,10 +12,10 @@ interface InsightData {
 }
 
 const trendConfig = {
-  up: { Icon: TrendingUp, label: "Rising", color: "text-trust-excellent", border: "border-trust-excellent/40", bg: "from-trust-excellent/20 to-trust-excellent/5", glow: "shadow-trust-excellent/20", iconColor: "text-trust-excellent" },
-  down: { Icon: TrendingDown, label: "Cooling", color: "text-destructive", border: "border-destructive/40", bg: "from-destructive/20 to-destructive/5", glow: "shadow-destructive/20", iconColor: "text-destructive" },
-  stable: { Icon: Minus, label: "Steady", color: "text-muted-foreground", border: "border-border", bg: "from-secondary/40 to-secondary/10", glow: "shadow-muted/10", iconColor: "text-muted-foreground" },
-  alert: { Icon: AlertTriangle, label: "Watch", color: "text-accent", border: "border-accent/40", bg: "from-accent/20 to-accent/5", glow: "shadow-accent/20", iconColor: "text-accent" },
+  up: { Icon: TrendingUp, labelKey: "widgets.trending", color: "text-trust-excellent", border: "border-trust-excellent/40", bg: "from-trust-excellent/20 to-trust-excellent/5", glow: "shadow-trust-excellent/20", iconColor: "text-trust-excellent" },
+  down: { Icon: TrendingDown, labelKey: "widgets.cooling", color: "text-destructive", border: "border-destructive/40", bg: "from-destructive/20 to-destructive/5", glow: "shadow-destructive/20", iconColor: "text-destructive" },
+  stable: { Icon: Minus, labelKey: "widgets.steady", color: "text-muted-foreground", border: "border-border", bg: "from-secondary/40 to-secondary/10", glow: "shadow-muted/10", iconColor: "text-muted-foreground" },
+  alert: { Icon: AlertTriangle, labelKey: "widgets.watch", color: "text-accent", border: "border-accent/40", bg: "from-accent/20 to-accent/5", glow: "shadow-accent/20", iconColor: "text-accent" },
 };
 
 function parseNumeric(val: string): { num: number; prefix: string; suffix: string } | null {
@@ -86,6 +87,7 @@ const FALLBACK_INSIGHTS: InsightData[] = [
 
 export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   const { user, role } = useAuth();
+  const { t } = useTranslation();
   const [insights, setInsights] = useState<InsightData[]>(FALLBACK_INSIGHTS);
   const [activeIdx, setActiveIdx] = useState(0);
   const [fading, setFading] = useState(false);
@@ -129,7 +131,6 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
   }, [insights.length]);
 
   const current: InsightData = insights[activeIdx];
-
   const cfg = trendConfig[current.trend];
 
   return (
@@ -141,13 +142,13 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
     >
       <div className="flex items-center gap-1.5">
         <Sparkles className={`w-3.5 h-3.5 ${cfg.iconColor}`} />
-        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">AI Insights</span>
+        <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("widgets.aiInsights")}</span>
       </div>
 
       <div className={`transition-opacity duration-300 w-full flex flex-col items-center ${fading ? "opacity-0" : "opacity-100"}`}>
         <AnimatedValue raw={current.metric_value} colorClass={cfg.color} />
         <span className="text-[10px] text-muted-foreground leading-snug mt-1">
-          {cfg.label}
+          {t(cfg.labelKey)}
         </span>
       </div>
 
