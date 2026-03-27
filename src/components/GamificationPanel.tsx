@@ -10,6 +10,8 @@ import { Loader2, Lock, CheckCircle2, ArrowRight, Trophy, Target, Award, Crown, 
 import { cn } from '@/lib/utils';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 import { toast } from '@/hooks/use-toast';
+import { DailyTasksCard } from '@/components/DailyTasksCard';
+import { PointsBreakdownHeader } from '@/components/PointsBreakdownHeader';
 
 export const GamificationPanel = () => {
   const navigate = useNavigate();
@@ -60,42 +62,19 @@ export const GamificationPanel = () => {
   return (
     <div className="space-y-6 relative">
       <ConfettiCelebration trigger={confettiTrigger} />
-      {/* Tier & Points Hero */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-primary to-primary/80 rounded-2xl p-6 text-primary-foreground">
-        <div className="absolute top-0 end-0 w-32 h-32 bg-accent/10 rounded-full -translate-y-8 translate-x-8" />
-        <div className="absolute bottom-0 start-0 w-24 h-24 bg-accent/5 rounded-full translate-y-6 -translate-x-6" />
-        
-        <div className="relative z-10">
-          <div className="flex items-center justify-between mb-4">
-            <div>
-              <p className="text-primary-foreground/70 text-xs font-medium uppercase tracking-wider mb-1">Current Tier</p>
-              <div className="flex items-center gap-2">
-                <span className="text-3xl">{currentTier.emoji}</span>
-                <h2 className="text-2xl font-bold">{currentTier.name}</h2>
-              </div>
-            </div>
-            <div className="text-end">
-              <p className="text-primary-foreground/70 text-xs font-medium uppercase tracking-wider mb-1">Total Points</p>
-              <p className="text-3xl font-bold">{totalPoints}</p>
-            </div>
-          </div>
 
-          {nextTier && (
-            <div>
-              <div className="flex items-center justify-between text-xs mb-1.5">
-                <span className="text-primary-foreground/70">Next: {nextTier.emoji} {nextTier.name}</span>
-                <span className="text-primary-foreground/70">{pointsToNext} pts to go</span>
-              </div>
-              <div className="h-2 bg-primary-foreground/20 rounded-full overflow-hidden">
-                <div
-                  className="h-full bg-accent rounded-full transition-all duration-500"
-                  style={{ width: `${Math.min(((totalPoints - currentTier.minPoints) / (nextTier.minPoints - currentTier.minPoints)) * 100, 100)}%` }}
-                />
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Points Breakdown Header */}
+      <PointsBreakdownHeader
+        totalPoints={totalPoints}
+        currentStreak={0}
+        tierName={currentTier.name}
+        tierEmoji={currentTier.emoji}
+        earnedBadges={earnedBadges.length}
+        totalBadges={earnedBadges.length + lockedBadges.length}
+      />
+
+      {/* Daily Tasks */}
+      <DailyTasksCard />
 
       {/* Profile Completion CTA */}
       {profileCompletion < 100 && (
