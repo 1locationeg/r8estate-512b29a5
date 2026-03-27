@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { BUYER_TIERS, POINTS_PER_ACTION, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
+import { BUYER_TIERS, type BuyerBadgeDef, type BuyerMissionProgress } from '@/lib/buyerGamification';
 import { Progress } from '@/components/ui/progress';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Flame, Coins } from 'lucide-react';
+import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Coins } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 import { toast } from '@/hooks/use-toast';
 import { PointsBreakdownHeader } from '@/components/PointsBreakdownHeader';
@@ -27,7 +27,6 @@ export const BuyerGamificationPanel = () => {
     currentTier.id,
   );
 
-  // Track newly earned badges the user hasn't dismissed yet
   const [newBadgeIds, setNewBadgeIds] = useState<string[]>([]);
 
   useEffect(() => {
@@ -37,7 +36,6 @@ export const BuyerGamificationPanel = () => {
     const fresh = earnedBadges.filter((b) => !seen.includes(b.id));
     if (fresh.length > 0) {
       setNewBadgeIds(fresh.map((b) => b.id));
-      // Show toast for each newly earned badge
       fresh.forEach((badge) => {
         toast({
           title: `🪙 Badge Earned: ${badge.name}`,
@@ -61,10 +59,6 @@ export const BuyerGamificationPanel = () => {
       </div>
     );
   }
-
-  const tierProgress = nextTier
-    ? ((totalPoints - currentTier.minPoints) / (nextTier.minPoints - currentTier.minPoints)) * 100
-    : 100;
 
   return (
     <div className="space-y-6 relative">
@@ -106,6 +100,7 @@ export const BuyerGamificationPanel = () => {
           </div>
         );
       })}
+
       {/* Points Breakdown Header */}
       <PointsBreakdownHeader
         totalPoints={totalPoints}
@@ -128,119 +123,6 @@ export const BuyerGamificationPanel = () => {
 
       {/* Activity Cards */}
       <ActivityCardsGrid currentTierIndex={BUYER_TIERS.findIndex(t => t.id === currentTier.id)} />
-
-      {profileCompletion < 100 && (
-        <div className="bg-card border border-border rounded-xl p-5">
-          <div className="flex items-center justify-between mb-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="w-5 h-5 text-accent" />
-              <h3 className="font-semibold text-foreground">Complete Your Profile</h3>
-            </div>
-            <span className="text-sm font-bold text-primary">{profileCompletion}%</span>
-          </div>
-          <Progress value={profileCompletion} className="h-2 mb-3" />
-          <p className="text-xs text-muted-foreground mb-3">
-            Missing: {missingFields.join(', ')}
-          </p>
-          <Button size="sm" onClick={() => navigate('/buyer/settings')}>
-            Complete Profile <ChevronRight className="w-4 h-4 ms-1" />
-          </Button>
-        </div>
-      )}
-              <span className="text-sm font-bold text-coin-foreground">{totalPoints} coins</span>
-            </div>
-          </div>
-          <div className="ms-auto text-end">
-            <div className="flex items-center gap-1 text-accent">
-              <Trophy className="w-5 h-5" />
-              <span className="text-lg font-bold">{earnedBadges.length}</span>
-            </div>
-            <p className="text-xs text-muted-foreground">badges</p>
-          </div>
-        </div>
-        {nextTier && (
-          <div>
-            <div className="flex justify-between text-xs text-muted-foreground mb-1">
-              <span>{currentTier.emoji} {currentTier.name}</span>
-              <span>{nextTier.emoji} {nextTier.name} ({pointsToNext} pts away)</span>
-            </div>
-            <Progress value={tierProgress} className="h-3" />
-          </div>
-        )}
-      </div>
-
-      {/* Streak Widget */}
-      <div className="bg-card border border-border rounded-xl p-5">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-              currentStreak >= 7 ? 'bg-orange-500/20' : currentStreak >= 3 ? 'bg-amber-500/20' : 'bg-muted'
-            }`}>
-              <Flame className={`w-5 h-5 ${
-                currentStreak >= 7 ? 'text-orange-500' : currentStreak >= 3 ? 'text-amber-500' : 'text-muted-foreground'
-              }`} />
-            </div>
-            <div>
-              <h3 className="font-semibold text-foreground">Daily Streak</h3>
-              <p className="text-xs text-muted-foreground">Be active every day to earn bonus points</p>
-            </div>
-          </div>
-        </div>
-        
-        <div className="grid grid-cols-3 gap-3 mb-4">
-          <div className="text-center p-3 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Flame className={`w-4 h-4 ${currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground'}`} />
-              <span className="text-xl font-bold text-foreground">{currentStreak}</span>
-            </div>
-            <p className="text-[10px] text-muted-foreground">Current</p>
-          </div>
-          <div className="text-center p-3 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Trophy className="w-4 h-4 text-accent" />
-              <span className="text-xl font-bold text-foreground">{longestStreak}</span>
-            </div>
-            <p className="text-[10px] text-muted-foreground">Best</p>
-          </div>
-          <div className="text-center p-3 bg-secondary/50 rounded-lg">
-            <div className="flex items-center justify-center gap-1 mb-1">
-              <Sparkles className="w-4 h-4 text-primary" />
-              <span className="text-xl font-bold text-foreground">{streakBonusPoints}</span>
-            </div>
-            <p className="text-[10px] text-muted-foreground">Bonus Pts</p>
-          </div>
-        </div>
-
-        {/* Streak milestones */}
-        <div className="space-y-2">
-          {[
-            { days: 3, bonus: 10, label: '3 Days' },
-            { days: 7, bonus: 25, label: '1 Week' },
-            { days: 14, bonus: 50, label: '2 Weeks' },
-            { days: 30, bonus: 100, label: '1 Month' },
-          ].map((milestone) => {
-            const reached = longestStreak >= milestone.days;
-            const progress = Math.min((currentStreak / milestone.days) * 100, 100);
-            return (
-              <div key={milestone.days} className="flex items-center gap-3">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 ${
-                  reached ? 'bg-orange-500/20 text-orange-500' : 'bg-muted text-muted-foreground'
-                }`}>
-                  <Flame className="w-3 h-3" />
-                </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center justify-between mb-0.5">
-                    <span className="text-xs font-medium text-foreground">{milestone.label}</span>
-                    <span className="text-[10px] text-muted-foreground">+{milestone.bonus} pts</span>
-                  </div>
-                  <Progress value={reached ? 100 : progress} className="h-1.5" />
-                </div>
-                {reached && <Badge className="bg-orange-500/10 text-orange-500 border-orange-500/20 text-[10px]">✓</Badge>}
-              </div>
-            );
-          })}
-        </div>
-      </div>
 
       {profileCompletion < 100 && (
         <div className="bg-card border border-border rounded-xl p-5">
