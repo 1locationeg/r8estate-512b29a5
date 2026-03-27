@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Slider } from "@/components/ui/slider";
 import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle, Hand } from "lucide-react";
 
