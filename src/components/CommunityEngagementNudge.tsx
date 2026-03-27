@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Gift, Share2, Star, X, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ShareMenu } from "@/components/ShareMenu";
+import { supabase } from "@/integrations/supabase/client";
 
 type NudgeConfig = {
   icon: typeof Gift;
@@ -23,6 +24,29 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(false);
+  const [whatsappNumber, setWhatsappNumber] = useState("");
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchWhatsappNumber = async () => {
+      const { data } = await supabase
+        .from("platform_settings")
+        .select("value")
+        .eq("key", "whatsapp_number")
+        .maybeSingle();
+
+      if (isMounted && data?.value) {
+        setWhatsappNumber(data.value);
+      }
+    };
+
+    void fetchWhatsappNumber();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   if (dismissed) return null;
 
@@ -35,10 +59,26 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       desc: t("community.referralNudgeDesc", "Share R8ESTATE with friends and unlock exclusive badges & points"),
       cta: t("community.inviteFriends", "Invite Friends"),
       action: () => {
+        const cleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
         const shareUrl = window.location.origin;
         const shareText = "Join R8ESTATE — Egypt's most trusted real estate community! 🏠✨";
-        const waUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
-        window.open(waUrl, "_blank");
+        const waUrl = cleanNumber
+          ? `https://wa.me/${cleanNumber}?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`
+          : `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
+
+        const preOpened = window.open("", "_blank");
+
+        if (preOpened) {
+          try {
+            preOpened.location.href = waUrl;
+            preOpened.focus();
+            return;
+          } catch {
+            // fall through to same-tab navigation
+          }
+        }
+
+        window.location.href = waUrl;
       },
     },
     share: {
