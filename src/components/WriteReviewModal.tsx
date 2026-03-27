@@ -46,6 +46,7 @@ import { ConfettiCelebration } from "@/components/ConfettiCelebration";
 import { Trophy } from "lucide-react";
 import { TrustSignals } from "@/components/TrustSignals";
 import { ReviewSuccessOverlay } from "@/components/ReviewSuccessOverlay";
+import { BrandLogo } from "@/components/BrandLogo";
 
 interface WriteReviewModalProps {
   open: boolean;
@@ -92,6 +93,7 @@ export const WriteReviewModal = ({
   const [signupName, setSignupName] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
   const [isSigningUp, setIsSigningUp] = useState(false);
+  const [signupStep, setSignupStep] = useState<"options" | "password">("options");
 
   // Form state
   const [rating, setRating] = useState(0);
