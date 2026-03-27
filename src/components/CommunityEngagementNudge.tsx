@@ -66,19 +66,20 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
           ? `https://wa.me/${cleanNumber}?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`
           : `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
 
-        const preOpened = window.open("", "_blank");
+        const popup = window.open(waUrl, "_blank", "noopener,noreferrer");
 
-        if (preOpened) {
-          try {
-            preOpened.location.href = waUrl;
-            preOpened.focus();
-            return;
-          } catch {
-            // fall through to same-tab navigation
-          }
+        if (popup) {
+          popup.opener = null;
+          return;
         }
 
-        window.location.href = waUrl;
+        const link = document.createElement("a");
+        link.href = waUrl;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
       },
     },
     share: {
