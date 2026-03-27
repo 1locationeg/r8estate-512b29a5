@@ -754,6 +754,8 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
           <div className="flex-1 flex justify-center">
             <ShareMenu
               title={post.title}
+              description={`${post.upvotes > 0 ? `👍 ${post.upvotes} upvotes` : ""}${post.reply_count > 0 ? ` · 💬 ${post.reply_count} replies` : ""} — Join the discussion on R8ESTATE Community`}
+              url={`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/og-community?post=${post.id}`}
               iconOnly={false}
               variant="ghost"
               size="sm"
