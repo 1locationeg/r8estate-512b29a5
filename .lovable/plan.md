@@ -1,77 +1,104 @@
 
 
-## Reviewer Verification System — Social Profile-Based
+# No-Signup Review Submission Page
 
-You're right — Google accounts are private and invisible. Facebook and LinkedIn profiles are **public assets** that other users can actually visit, see friends/connections, and judge authenticity. This is much stronger social proof.
+## Overview
+Build a standalone frictionless review page at `/review/:token` that uses BJ Fogg's micro-commitment pattern to progressively reveal form fields, maximizing completion rates. No account required — uses Supabase anonymous auth for session tracking.
 
-### Approach: "Link & Display" Social Verification
+## Architecture
 
-Instead of complex OAuth integrations (Facebook requires weeks of Meta app review), we use a **profile-link verification** model:
+```text
+/review/:token (optional token)
+  ┌─────────────────────────────┐
+  │  R8-Trust Integrity Seal    │
+  │                             │
+  │  ★ ★ ★ ★ ★  (Step 1)       │
+  │                             │
+  │  ┌─ Textarea ─────────┐    │  ← slides in after star click (Step 2)
+  │  │ كلمة حق تفرق..     │    │
+  │  └────────────────────┘    │
+  │                             │
+  │  🎥 Video Review Toggle    │  ← Step 3
+  │  "Record 30s → Gold Badge" │
+  │                             │
+  │  [ Submit Review ]          │
+  │                             │
+  │  🏅 Claim Verified Badge   │  ← Step 4 (post-submit)
+  └─────────────────────────────┘
+```
 
-1. **Users paste their Facebook or LinkedIn profile URL** in their profile settings
-2. **Admins verify** the linked profile is real and matches the user
-3. **Verified social badges** appear on all their reviews — clickable, linking to the actual profile
-4. **Transaction verification** (Tier 2) stays via receipt uploads (already partially built)
+## Implementation Steps
 
-This is minimal, effective, and instant to ship — no new API keys, no Meta/LinkedIn app review process.
+### 1. Database: Create `pending_reviews` table
+New migration to create a `pending_reviews` table for token-based pre-filled reviews:
+- `id` (uuid, PK)
+- `token` (text, unique) — shareable link token
+- `first_name` (text)
+- `project_name` (text)
+- `developer_id` (text)
+- `developer_name` (text)
+- `created_at`, `expires_at`
+- `is_used` (boolean, default false)
+- RLS: public SELECT by token, service-role INSERT
 
-### Two Verification Tiers
+Also add a `device_fingerprint` column to `guest_reviews` for IP clustering detection.
 
-| Tier | Badge | How |
-|------|-------|-----|
-| **Identity Verified** | Blue Facebook/LinkedIn icon | User links social profile → Admin approves |
-| **Verified Buyer** | Green shield | User uploads receipt/contract → Admin approves |
+### 2. Edge Function: `review-integrity-check`
+New edge function that:
+- Accepts review text
+- Uses Lovable AI (Gemini Flash) to score for marketing clichés (0-100 suspicion score)
+- Returns `{ suspicion_score, flags[], suggestion }`
+- Called before final submission
 
-### Database Changes
+### 3. New Page: `src/pages/FrictionlessReview.tsx`
+Standalone page (no navbar/bottom nav) with:
 
-**Add to `profiles` table:**
-- `facebook_url text` — user's Facebook profile link
-- `linkedin_url text` — user's LinkedIn profile link  
-- `identity_verified boolean default false` — admin-approved flag
-- `identity_provider text` — 'facebook', 'linkedin', or null
+**Step 1 — The Hook:**
+- Large animated 5-star rating (RTL-optimized, fills right-to-left in Arabic)
+- Pre-filled greeting if token exists: "Hi {firstName}, how was {projectName}?"
+- Anonymous auth via `supabase.auth.signInAnonymously()` on page load
 
-**New table `reviewer_verifications`:**
-- Tracks verification requests (social profile links + document uploads)
-- Status workflow: pending → approved/rejected
-- Admin notes and audit trail
+**Step 2 — Progressive Reveal:**
+- On first star click, slide-down animation reveals textarea
+- Placeholder: "كلمة حق تفرق.. رأيك أمانة" (Arabic) / "Your honest opinion matters..." (English)
+- Character counter, emoji quick-insert bar
 
-### Code Changes
+**Step 3 — Video Toggle:**
+- Toggle switch: "Record a 30s video to earn a Gold Badge 🏅"
+- On enable: MediaRecorder capture (30s max), upload to `review-attachments` bucket
+- Social proof message below toggle
 
-**1. Profile Settings — Social Link Fields**
-- `BuyerProfile` section in `BuyerDashboard.tsx`: Add Facebook URL and LinkedIn URL input fields
-- Validation: must match `facebook.com/` or `linkedin.com/in/` patterns
-- "Submit for Verification" button that creates a `reviewer_verifications` row
+**Step 4 — Identity Link (post-submit):**
+- After successful submission, show "Claim your Verified Buyer Badge" CTA
+- Links to signup/login flow, claims the guest review via existing `r8_pending_claim_review` mechanism
 
-**2. ReviewCard — Verification Badges**  
-- New `ReviewVerificationBadge.tsx` component
-- Shows clickable Facebook/LinkedIn icon that opens the user's actual profile in new tab
-- Green "Verified Buyer" badge for transaction-verified reviews
-- Renders on `ReviewCard.tsx` next to the author name
+**Visual:**
+- R8-Trust Integrity watermark (semi-transparent logo in corner)
+- Device metadata capture (user-agent, screen size, language, timezone) stored as JSON in guest review
+- Minimal, mobile-first, full-screen card layout
+- Smooth CSS transitions between steps
 
-**3. WriteReviewModal — Verification Prompt**
-- If user has no social profile linked: show a subtle nudge "Link your Facebook/LinkedIn to get a verified badge"
-- If verified: show verification badge on the review form preview
+### 4. Route Registration
+Add `/review/:token?` route to `App.tsx` (lazy-loaded, outside bottom nav/guest timer chrome).
 
-**4. Admin Verification Panel**
-- New `AdminReviewerVerification.tsx` component
-- Lists pending verification requests with clickable links to the user's social profiles
-- Admin can visit the profile, verify it's real, then approve/reject
-- On approval: sets `identity_verified = true` on the profile
-- Added as a new route in `AdminDashboard.tsx`
+### 5. Integrity Guard Integration
+Before submission:
+- Call `review-integrity-check` edge function
+- If suspicion_score > 70: show warning, allow override
+- If suspicion_score > 90: block submission with explanation
+- Store fingerprint data alongside the guest review
 
-**5. `handle_new_user` trigger update**
-- Detect Google/Apple OAuth provider and store in `identity_provider` (informational only, not verified tier)
-
-### Files to Create/Edit
-
+## Files Changed
 | File | Action |
 |------|--------|
-| SQL migration | Add columns to `profiles`, create `reviewer_verifications` table with RLS |
-| `src/components/ReviewVerificationBadge.tsx` | **Create** — tiered badge with clickable social links |
-| `src/components/AdminReviewerVerification.tsx` | **Create** — admin approval panel |
-| `src/components/ReviewCard.tsx` | **Edit** — add verification badges |
-| `src/components/WriteReviewModal.tsx` | **Edit** — add verification nudge |
-| `src/pages/BuyerDashboard.tsx` | **Edit** — add social link fields to profile settings |
-| `src/pages/AdminDashboard.tsx` | **Edit** — add verification route/tab |
-| `src/contexts/AuthContext.tsx` | **Edit** — include new profile fields |
+| `supabase/migrations/xxx_pending_reviews.sql` | New table + guest_reviews fingerprint column |
+| `supabase/functions/review-integrity-check/index.ts` | New edge function |
+| `src/pages/FrictionlessReview.tsx` | New page component |
+| `src/App.tsx` | Add route |
+
+## Technical Notes
+- Anonymous auth is supported by Supabase — needs to be enabled via `cloud--configure_auth`
+- Video recording uses native `MediaRecorder` API (already proven in `WriteReviewModal`)
+- Reuses existing `guest_reviews` table for storage, adding device metadata
+- No new npm dependencies required
 
