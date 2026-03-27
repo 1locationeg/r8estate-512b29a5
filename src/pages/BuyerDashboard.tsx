@@ -237,6 +237,17 @@ const BuyerOverview = () => {
         ))}
       </div>
 
+      {/* Daily Tasks & Streak */}
+      <DailyTasksCard />
+      <StreakTrackerVisual
+        currentStreak={gamification.currentStreak ?? 0}
+        longestStreak={gamification.longestStreak ?? 0}
+        streakBonusPoints={gamification.streakBonusPoints ?? 0}
+      />
+
+      {/* Activity Cards */}
+      <ActivityCardsGrid currentTierIndex={BUYER_TIERS.findIndex(t => t.id === gamification.currentTier?.id)} />
+
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Quick Actions */}
         <div className="lg:col-span-2">
