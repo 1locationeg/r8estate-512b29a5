@@ -286,15 +286,15 @@ const Index = () => {
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">verified reviews</span>
+                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.verifiedReviews")}</span>
                   </div>
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Fingerprint className="w-3.5 h-3.5 text-verified shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">Real buyers </span>
+                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.realBuyers")}</span>
                   </div>
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <ShieldCheck className="w-3.5 h-3.5 text-trust-excellent shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">Real Experts</span>
+                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.realExperts")}</span>
                   </div>
                 </div>
               </div>

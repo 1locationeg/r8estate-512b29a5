@@ -1,4 +1,5 @@
 import { Coins, Flame, Trophy, TrendingUp, Award } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 
 interface PointsBreakdownHeaderProps {
@@ -20,36 +21,38 @@ export const PointsBreakdownHeader = ({
   totalBadges,
   className,
 }: PointsBreakdownHeaderProps) => {
+  const { t } = useTranslation();
+
   const stats = [
     {
       icon: Coins,
-      label: 'Available coins',
+      label: t('gamification.availableCoins'),
       value: totalPoints.toLocaleString(),
-      sublabel: 'Points breakdown →',
+      sublabel: t('gamification.pointsBreakdown'),
       iconColor: 'text-coin',
       bgColor: 'bg-coin/10',
     },
     {
       icon: Award,
-      label: 'Badges earned',
+      label: t('gamification.badgesEarned'),
       value: `${earnedBadges}/${totalBadges}`,
-      sublabel: 'View all →',
+      sublabel: t('gamification.viewAllBadges'),
       iconColor: 'text-accent',
       bgColor: 'bg-accent/10',
     },
     {
       icon: TrendingUp,
-      label: "Today's points",
+      label: t('gamification.todaysPoints'),
       value: '0',
-      sublabel: 'Complete tasks →',
+      sublabel: t('gamification.completeTasks'),
       iconColor: 'text-primary',
       bgColor: 'bg-primary/10',
     },
     {
       icon: Flame,
-      label: 'Streak count',
+      label: t('gamification.streakCount'),
       value: `${currentStreak}`,
-      sublabel: currentStreak > 0 ? 'Keep it going!' : 'Start today!',
+      sublabel: currentStreak > 0 ? t('gamification.keepItGoing') : t('gamification.startToday'),
       iconColor: currentStreak >= 3 ? 'text-orange-500' : 'text-muted-foreground',
       bgColor: currentStreak >= 3 ? 'bg-orange-500/10' : 'bg-muted',
     },
@@ -57,18 +60,16 @@ export const PointsBreakdownHeader = ({
 
   return (
     <div className={cn('bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-5 text-primary-foreground', className)}>
-      {/* Top Row: Greeting + Level */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{tierEmoji}</span>
           <div>
-            <p className="text-xs text-primary-foreground/70 font-medium">Level</p>
+            <p className="text-xs text-primary-foreground/70 font-medium">{t('gamification.level')}</p>
             <p className="text-sm font-bold">{tierName}</p>
           </div>
         </div>
       </div>
 
-      {/* Stats Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {stats.map((stat) => {
           const Icon = stat.icon;

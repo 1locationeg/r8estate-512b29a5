@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { Slider } from "@/components/ui/slider";
 import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle, Hand } from "lucide-react";
 
@@ -129,6 +130,7 @@ const dimensionIcons: Record<string, typeof Clock> = {
 
 // ── Component ──
 export const HeroTrustShowcase = () => {
+  const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
   const [phase, setPhase] = useState<"entrance" | "interactive">("entrance");
@@ -377,7 +379,7 @@ export const HeroTrustShowcase = () => {
           <text x="12" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">0</text>
           <text x="182" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">100</text>
           <text x="100" y="111" textAnchor="middle" fontSize="9" fill="hsl(var(--muted-foreground))" fontWeight="900" letterSpacing="0.25em" opacity="0.6">
-            TRUST SCORE
+            {t("spotlight.trustScore").toUpperCase()}
           </text>
         </svg>
 

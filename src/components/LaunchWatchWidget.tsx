@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Rocket } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const useAnimatedCount = (target: number, duration = 1200) => {
   const [value, setValue] = useState(0);
@@ -24,18 +25,19 @@ const useAnimatedCount = (target: number, duration = 1200) => {
 };
 
 interface LaunchStat {
-  label: string;
+  labelKey: string;
   value: number;
   suffix?: string;
 }
 
 export const LaunchWatchWidget = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [stats, setStats] = useState<LaunchStat[]>([
-    { label: "Active Launches", value: 0 },
-    { label: "Buyer Ratings", value: 0 },
-    { label: "Units Tracked", value: 0 },
-    { label: "Avg Price/m²", value: 0, suffix: "K" },
+    { labelKey: "widgets.activeLaunches", value: 0 },
+    { labelKey: "widgets.buyerRatings", value: 0 },
+    { labelKey: "widgets.totalUnits", value: 0 },
+    { labelKey: "widgets.avgPriceM2", value: 0, suffix: "K" },
   ]);
   const [activeIdx, setActiveIdx] = useState(0);
 
@@ -56,11 +58,11 @@ export const LaunchWatchWidget = () => {
       const rc = ratingRes.count || 0;
 
       setStats([
-        { label: "Active Launches", value: lc > 0 ? lc : 5 },
-        { label: "Buyer Ratings", value: rc > 0 ? rc : 24 },
-        { label: "Total Units", value: totalUnits > 0 ? totalUnits : 620 },
-        { label: "Units Sold", value: unitsSold > 0 ? unitsSold : 287 },
-        { label: "Avg Price/m²", value: avgPrice > 0 ? avgPrice : 48, suffix: "K EGP" },
+        { labelKey: "widgets.activeLaunches", value: lc > 0 ? lc : 5 },
+        { labelKey: "widgets.buyerRatings", value: rc > 0 ? rc : 24 },
+        { labelKey: "widgets.totalUnits", value: totalUnits > 0 ? totalUnits : 620 },
+        { labelKey: "widgets.unitsSold", value: unitsSold > 0 ? unitsSold : 287 },
+        { labelKey: "widgets.avgPriceM2", value: avgPrice > 0 ? avgPrice : 48, suffix: "K EGP" },
       ]);
     };
     fetchStats();
@@ -85,20 +87,20 @@ export const LaunchWatchWidget = () => {
 
       <div className="flex items-center gap-1.5">
         <Rocket className="w-4 h-4 text-primary transition-transform group-hover:scale-110" />
-        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">Launch Watch</span>
+        <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">{t("widgets.launchWatch")}</span>
         <span className="flex items-center gap-1 bg-destructive text-destructive-foreground text-[7px] font-bold px-1.5 py-0.5 rounded-full leading-none">
           <span className="relative flex h-1.5 w-1.5">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive-foreground opacity-75" />
             <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-destructive-foreground" />
           </span>
-          LIVE
+          {t("widgets.live")}
         </span>
       </div>
 
       <span className="text-2xl md:text-3xl font-black leading-none tracking-tight text-primary transition-all">
         {animValue}{current.suffix ? <span className="text-sm font-bold ms-0.5">{current.suffix}</span> : ""}
       </span>
-      <span className="text-[10px] md:text-xs text-muted-foreground leading-snug transition-all">{current.label}</span>
+      <span className="text-[10px] md:text-xs text-muted-foreground leading-snug transition-all">{t(current.labelKey)}</span>
 
       <div className="flex gap-1 mt-0.5">
         {stats.map((_, i) => (
