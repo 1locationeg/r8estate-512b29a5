@@ -1,4 +1,5 @@
 import { Flame, Trophy, Sparkles, Shield, Gift } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Badge } from '@/components/ui/badge';
 import { cn } from '@/lib/utils';
 
@@ -8,22 +9,24 @@ interface StreakTrackerVisualProps {
   streakBonusPoints: number;
 }
 
-const STREAK_DAYS = 7; // show 7-day visual
+const STREAK_DAYS = 7;
 
 export const StreakTrackerVisual = ({ currentStreak, longestStreak, streakBonusPoints }: StreakTrackerVisualProps) => {
+  const { t, i18n } = useTranslation();
+
   const streakMilestones = [
-    { days: 3, bonus: 10, label: '3-Day', icon: Flame },
-    { days: 7, bonus: 25, label: '1 Week', icon: Sparkles },
-    { days: 14, bonus: 50, label: '2 Weeks', icon: Trophy },
-    { days: 30, bonus: 100, label: '1 Month', icon: Gift },
+    { days: 3, bonus: 10, labelKey: 'gamification.threeDay', icon: Flame },
+    { days: 7, bonus: 25, labelKey: 'gamification.oneWeek', icon: Sparkles },
+    { days: 14, bonus: 50, labelKey: 'gamification.twoWeeks', icon: Trophy },
+    { days: 30, bonus: 100, labelKey: 'gamification.oneMonth', icon: Gift },
   ];
 
-  // Generate last 7 days
   const today = new Date();
+  const dayLocale = i18n.language === 'ar' ? 'ar' : 'en';
   const days = Array.from({ length: STREAK_DAYS }, (_, i) => {
     const d = new Date(today);
     d.setDate(d.getDate() - (STREAK_DAYS - 1 - i));
-    const dayName = d.toLocaleDateString('en', { weekday: 'short' }).slice(0, 2);
+    const dayName = d.toLocaleDateString(dayLocale, { weekday: 'short' }).slice(0, 2);
     const isActive = i >= STREAK_DAYS - currentStreak;
     const isToday = i === STREAK_DAYS - 1;
     return { dayName, isActive, isToday };
@@ -43,18 +46,17 @@ export const StreakTrackerVisual = ({ currentStreak, longestStreak, streakBonusP
             )} />
           </div>
           <div>
-            <h3 className="font-semibold text-foreground text-sm">Daily Streak</h3>
-            <p className="text-[10px] text-muted-foreground">Stay active to earn bonus coins</p>
+            <h3 className="font-semibold text-foreground text-sm">{t('gamification.dailyStreak')}</h3>
+            <p className="text-[10px] text-muted-foreground">{t('gamification.stayActive')}</p>
           </div>
         </div>
         <div className="flex items-center gap-1.5">
           <Badge variant="outline" className="gap-1 text-xs">
-            <Shield className="w-3 h-3" /> Streak protection
+            <Shield className="w-3 h-3" /> {t('gamification.streakProtection')}
           </Badge>
         </div>
       </div>
 
-      {/* Visual streak dots */}
       <div className="flex items-center justify-center gap-3 mb-5">
         {days.map((day, i) => (
           <div key={i} className="flex flex-col items-center gap-1.5">
@@ -82,32 +84,30 @@ export const StreakTrackerVisual = ({ currentStreak, longestStreak, streakBonusP
         ))}
       </div>
 
-      {/* Streak stats row */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="text-center p-2.5 bg-secondary/50 rounded-lg">
           <div className="flex items-center justify-center gap-1 mb-0.5">
             <Flame className={cn('w-4 h-4', currentStreak > 0 ? 'text-orange-500' : 'text-muted-foreground')} />
             <span className="text-lg font-bold text-foreground">{currentStreak}</span>
           </div>
-          <p className="text-[10px] text-muted-foreground">Current</p>
+          <p className="text-[10px] text-muted-foreground">{t('gamification.current')}</p>
         </div>
         <div className="text-center p-2.5 bg-secondary/50 rounded-lg">
           <div className="flex items-center justify-center gap-1 mb-0.5">
             <Trophy className="w-4 h-4 text-accent" />
             <span className="text-lg font-bold text-foreground">{longestStreak}</span>
           </div>
-          <p className="text-[10px] text-muted-foreground">Best</p>
+          <p className="text-[10px] text-muted-foreground">{t('gamification.best')}</p>
         </div>
         <div className="text-center p-2.5 bg-secondary/50 rounded-lg">
           <div className="flex items-center justify-center gap-1 mb-0.5">
             <Sparkles className="w-4 h-4 text-primary" />
             <span className="text-lg font-bold text-foreground">{streakBonusPoints}</span>
           </div>
-          <p className="text-[10px] text-muted-foreground">Bonus Pts</p>
+          <p className="text-[10px] text-muted-foreground">{t('gamification.bonusPts')}</p>
         </div>
       </div>
 
-      {/* Streak Bonus milestones */}
       <div className="flex items-center gap-2 overflow-x-auto pb-1">
         {streakMilestones.map((m) => {
           const reached = longestStreak >= m.days;
@@ -123,7 +123,7 @@ export const StreakTrackerVisual = ({ currentStreak, longestStreak, streakBonusP
               )}
             >
               <Icon className="w-3.5 h-3.5" />
-              <span className="font-medium">{m.label}</span>
+              <span className="font-medium">{t(m.labelKey)}</span>
               <span className="font-bold">+{m.bonus}</span>
               {reached && <Badge className="bg-orange-500/20 text-orange-600 border-0 text-[9px] px-1">✓</Badge>}
             </div>
