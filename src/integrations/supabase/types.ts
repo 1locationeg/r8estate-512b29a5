@@ -696,6 +696,7 @@ export type Database = {
           created_at: string
           developer_id: string
           developer_name: string | null
+          device_fingerprint: Json | null
           experience_type: string | null
           guest_email: string | null
           guest_name: string
@@ -710,6 +711,7 @@ export type Database = {
           created_at?: string
           developer_id: string
           developer_name?: string | null
+          device_fingerprint?: Json | null
           experience_type?: string | null
           guest_email?: string | null
           guest_name?: string
@@ -724,6 +726,7 @@ export type Database = {
           created_at?: string
           developer_id?: string
           developer_name?: string | null
+          device_fingerprint?: Json | null
           experience_type?: string | null
           guest_email?: string | null
           guest_name?: string
@@ -1074,6 +1077,42 @@ export type Database = {
           steps_completed?: string[] | null
           updated_at?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      pending_reviews: {
+        Row: {
+          created_at: string
+          developer_id: string | null
+          developer_name: string | null
+          expires_at: string | null
+          first_name: string | null
+          id: string
+          is_used: boolean
+          project_name: string | null
+          token: string
+        }
+        Insert: {
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          is_used?: boolean
+          project_name?: string | null
+          token: string
+        }
+        Update: {
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          expires_at?: string | null
+          first_name?: string | null
+          id?: string
+          is_used?: boolean
+          project_name?: string | null
+          token?: string
         }
         Relationships: []
       }
