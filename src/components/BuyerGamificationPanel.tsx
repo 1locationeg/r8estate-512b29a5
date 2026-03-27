@@ -8,6 +8,10 @@ import { Button } from '@/components/ui/button';
 import { Loader2, ChevronRight, Lock, Trophy, Sparkles, Target, Star, X, Flame, Coins } from 'lucide-react';
 import { ConfettiCelebration, useConfettiTrigger } from '@/components/ConfettiCelebration';
 import { toast } from '@/hooks/use-toast';
+import { PointsBreakdownHeader } from '@/components/PointsBreakdownHeader';
+import { DailyTasksCard } from '@/components/DailyTasksCard';
+import { StreakTrackerVisual } from '@/components/StreakTrackerVisual';
+import { ActivityCardsGrid } from '@/components/ActivityCardsGrid';
 
 export const BuyerGamificationPanel = () => {
   const navigate = useNavigate();
