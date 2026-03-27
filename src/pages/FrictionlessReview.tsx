@@ -228,8 +228,8 @@ const FrictionlessReview = () => {
         </div>
         <Card className="w-full max-w-md mx-auto shadow-xl border-0">
           <CardContent className="p-8 text-center space-y-6">
-            <div className="w-16 h-16 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-              <CheckCircle2 className="w-8 h-8 text-green-600" />
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto">
+              <CheckCircle2 className="w-8 h-8 text-primary" />
             </div>
             <h2 className="text-2xl font-bold text-foreground">شكراً لك! Thank You!</h2>
             <p className="text-muted-foreground">Your honest review helps the community make better decisions.</p>
@@ -404,7 +404,7 @@ const FrictionlessReview = () => {
           {integrityWarning && (
             <div className={cn(
               "flex items-start gap-2 rounded-lg p-3 text-sm",
-              integrityBlocked ? "bg-destructive/10 text-destructive" : "bg-yellow-50 text-yellow-800"
+              integrityBlocked ? "bg-destructive/10 text-destructive" : "bg-accent/10 text-accent-foreground"
             )}>
               <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
               <span>{integrityWarning}</span>
