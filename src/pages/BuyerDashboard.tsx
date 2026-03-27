@@ -3,7 +3,12 @@ import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
-import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame, ExternalLink } from 'lucide-react'; // refresh
+import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame, ExternalLink } from 'lucide-react';
+import { DailyTasksCard } from '@/components/DailyTasksCard';
+import { ActivityCardsGrid } from '@/components/ActivityCardsGrid';
+import { StreakTrackerVisual } from '@/components/StreakTrackerVisual';
+import { PointsBreakdownHeader } from '@/components/PointsBreakdownHeader';
+import { BUYER_TIERS } from '@/lib/buyerGamification';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
