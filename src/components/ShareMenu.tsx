@@ -68,7 +68,7 @@ export const ShareMenu = ({
   };
 
   const handleWhatsApp = () => {
-    const waUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
+    const waUrl = `https://wa.me/?text=${encodeURIComponent(shareUrl)}`;
     window.open(waUrl, "_blank");
     setOpen(false);
   };
