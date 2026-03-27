@@ -34,7 +34,12 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       title: t("community.referralNudge", "Invite friends, earn rewards 🎁"),
       desc: t("community.referralNudgeDesc", "Share R8ESTATE with friends and unlock exclusive badges & points"),
       cta: t("community.inviteFriends", "Invite Friends"),
-      action: () => navigate("/buyer"),
+      action: () => {
+        const shareUrl = window.location.origin;
+        const shareText = "Join R8ESTATE — Egypt's most trusted real estate community! 🏠✨";
+        const waUrl = `https://wa.me/?text=${encodeURIComponent(`${shareText}\n${shareUrl}`)}`;
+        window.open(waUrl, "_blank");
+      },
     },
     share: {
       icon: Share2,
