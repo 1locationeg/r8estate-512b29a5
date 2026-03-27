@@ -50,6 +50,7 @@ const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 const Categories = lazy(() => import("./pages/Categories"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
+const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -118,11 +119,15 @@ const ScrollToTop = () => {
 const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
-  if (isEmbed) {
+  const isReviewRoute = location.pathname.startsWith("/review");
+
+  if (isEmbed || isReviewRoute) {
     return (
       <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4" />}>
         <Routes>
           <Route path="/embed/widget/:token" element={<EmbedWidget />} />
+          <Route path="/review/:token?" element={<FrictionlessReview />} />
+          <Route path="/review" element={<FrictionlessReview />} />
         </Routes>
       </Suspense>
     );
