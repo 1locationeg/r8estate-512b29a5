@@ -106,13 +106,47 @@ export const BuyerGamificationPanel = () => {
           </div>
         );
       })}
-      <div className="bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 rounded-2xl p-6 border border-primary/10">
-        <div className="flex items-center gap-3 mb-4">
-          <span className="text-4xl">{currentTier.emoji}</span>
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">{currentTier.name}</h2>
-            <div className="flex items-center gap-1.5 mt-0.5">
-              <Coins className="w-4 h-4 text-coin" />
+      {/* Points Breakdown Header */}
+      <PointsBreakdownHeader
+        totalPoints={totalPoints}
+        currentStreak={currentStreak}
+        tierName={currentTier.name}
+        tierEmoji={currentTier.emoji}
+        earnedBadges={earnedBadges.length}
+        totalBadges={earnedBadges.length + lockedBadges.length}
+      />
+
+      {/* Daily Tasks */}
+      <DailyTasksCard />
+
+      {/* Streak Tracker */}
+      <StreakTrackerVisual
+        currentStreak={currentStreak}
+        longestStreak={longestStreak}
+        streakBonusPoints={streakBonusPoints}
+      />
+
+      {/* Activity Cards */}
+      <ActivityCardsGrid currentTierIndex={BUYER_TIERS.findIndex(t => t.id === currentTier.id)} />
+
+      {profileCompletion < 100 && (
+        <div className="bg-card border border-border rounded-xl p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-accent" />
+              <h3 className="font-semibold text-foreground">Complete Your Profile</h3>
+            </div>
+            <span className="text-sm font-bold text-primary">{profileCompletion}%</span>
+          </div>
+          <Progress value={profileCompletion} className="h-2 mb-3" />
+          <p className="text-xs text-muted-foreground mb-3">
+            Missing: {missingFields.join(', ')}
+          </p>
+          <Button size="sm" onClick={() => navigate('/buyer/settings')}>
+            Complete Profile <ChevronRight className="w-4 h-4 ms-1" />
+          </Button>
+        </div>
+      )}
               <span className="text-sm font-bold text-coin-foreground">{totalPoints} coins</span>
             </div>
           </div>
