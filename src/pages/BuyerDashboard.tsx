@@ -64,6 +64,15 @@ const BuyerOverview = () => {
 
   return (
     <div className="space-y-6">
+      {/* Points Breakdown Header */}
+      <PointsBreakdownHeader
+        totalPoints={gamification.totalPoints}
+        currentStreak={gamification.currentStreak ?? 0}
+        tierName={gamification.currentTier?.name || 'Newcomer'}
+        tierEmoji={gamification.currentTier?.emoji || '🌱'}
+        earnedBadges={gamification.earnedBadges?.length || 0}
+        totalBadges={(gamification.earnedBadges?.length || 0) + (gamification.lockedBadges?.length || 0)}
+      />
       {/* Hero Row */}
       <div className="grid md:grid-cols-[1fr_320px] gap-6">
         {/* Left: Welcome + Post Box */}
