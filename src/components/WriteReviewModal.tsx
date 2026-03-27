@@ -519,74 +519,160 @@ export const WriteReviewModal = ({
 
   // Post-submit account prompt for guests
   if (showAccountPrompt && isGuest) {
+    const isValidEmail = (e: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);
+    const showPasswordStep = signupStep === "password";
+
+    const handleSocialSignup = async (provider: "google" | "apple") => {
+      if (guestReviewId) localStorage.setItem("r8_pending_claim_review", guestReviewId);
+      const { signInWithOAuth } = (await import("@/integrations/lovable")).lovable.auth;
+      await signInWithOAuth(provider, { redirect_uri: window.location.origin });
+    };
+
+    const handleEmailContinue = () => {
+      if (isValidEmail(signupEmail)) setSignupStep("password");
+    };
+
     return (
       <Dialog open={open} onOpenChange={(v) => { if (!v) { resetForm(); } onOpenChange(v); }}>
-        <DialogContent className="max-w-md p-0">
-          <DialogHeader className="p-6 pb-0">
-            <DialogTitle className="text-lg font-bold text-foreground flex items-center gap-2">
-              <UserPlus className="w-5 h-5 text-primary" />
-              {t("guestReview.claimTitle", "Claim your review")}
-            </DialogTitle>
-          </DialogHeader>
+        <DialogContent className="max-w-sm p-0 gap-0 rounded-2xl overflow-hidden">
+          {/* Close / Skip */}
+          <button
+            onClick={() => { resetForm(); onReviewSubmitted?.(); onOpenChange(false); }}
+            className="absolute end-3 top-3 text-muted-foreground hover:text-foreground z-10"
+            aria-label="Close"
+          >
+            <X className="w-4 h-4" />
+          </button>
 
-          <div className="p-6 pt-3 space-y-4">
-            <p className="text-sm text-muted-foreground">
-              {t("guestReview.claimDescription", "Create an account to track your review, earn badges, and edit it later.")}
+          <div className="flex flex-col items-center px-6 pt-7 pb-2 gap-1">
+            <BrandLogo size="sm" tagline="" />
+            <h2 className="text-lg font-bold text-foreground mt-3">
+              {t("auth.createAccount", "Create an account")}
+            </h2>
+            <p className="text-xs text-muted-foreground">
+              {t("auth.alreadyHaveAccount", "Already have an account?")}{" "}
+              <button onClick={() => navigate("/auth")} className="text-primary font-semibold hover:underline">
+                {t("auth.logIn", "Log In")}
+              </button>
+            </p>
+          </div>
+
+          <div className="px-6 pb-6 pt-3 space-y-3">
+            {/* Social buttons */}
+            <Button
+              variant="outline"
+              className="w-full gap-3 h-10 text-sm font-medium"
+              onClick={() => handleSocialSignup("google")}
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden>
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.27-4.74 3.27-8.1z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              {t("auth.continueWithGoogle", "Continue with Google")}
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full gap-3 h-10 text-sm font-medium"
+              onClick={() => handleSocialSignup("apple")}
+            >
+              <svg viewBox="0 0 24 24" className="w-4 h-4 fill-foreground" aria-hidden>
+                <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              {t("auth.continueWithApple", "Continue with Apple")}
+            </Button>
+
+            {/* Divider */}
+            <div className="flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground">{t("auth.orContinueWith", "or continue with")}</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            {/* Email step */}
+            {!showPasswordStep ? (
+              <>
+                <div className="relative">
+                  <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="email"
+                    placeholder={t("auth.email", "Email")}
+                    value={signupEmail}
+                    onChange={(e) => setSignupEmail(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleEmailContinue()}
+                    className="ps-10"
+                    autoFocus
+                  />
+                </div>
+                <Button
+                  className="w-full"
+                  disabled={!isValidEmail(signupEmail)}
+                  onClick={handleEmailContinue}
+                >
+                  {t("auth.continue", "Continue")}
+                </Button>
+              </>
+            ) : (
+              <>
+                <button
+                  className="text-xs text-primary hover:underline text-start"
+                  onClick={() => setSignupStep("options")}
+                >
+                  ← {signupEmail}
+                </button>
+                <div className="relative">
+                  <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder={t("auth.fullName", "Full Name")}
+                    value={signupName}
+                    onChange={(e) => setSignupName(e.target.value)}
+                    className="ps-10"
+                    autoFocus
+                  />
+                </div>
+                <div className="relative">
+                  <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    type="password"
+                    placeholder={t("auth.password", "Password (6+ characters)")}
+                    value={signupPassword}
+                    onChange={(e) => setSignupPassword(e.target.value)}
+                    onKeyDown={(e) => e.key === "Enter" && handleGuestSignup()}
+                    className="ps-10"
+                  />
+                </div>
+                <Button
+                  className="w-full gap-2"
+                  onClick={handleGuestSignup}
+                  disabled={isSigningUp || signupPassword.length < 6}
+                >
+                  {isSigningUp ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
+                  {isSigningUp
+                    ? t("guestReview.creatingAccount", "Creating account...")
+                    : t("auth.createAccount", "Create Account")}
+                </Button>
+              </>
+            )}
+
+            {/* Business link */}
+            <p className="text-xs text-center text-muted-foreground pt-1">
+              {t("auth.areYouBusiness", "Are you a business?")}{" "}
+              <button onClick={() => navigate("/auth?tab=business")} className="text-primary font-semibold hover:underline">
+                {t("auth.registerBusiness", "Register your business →")}
+              </button>
             </p>
 
-            <div className="space-y-3">
-              <div className="relative">
-                <User className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  placeholder={t("auth.fullName", "Full Name")}
-                  value={signupName}
-                  onChange={(e) => setSignupName(e.target.value)}
-                  className="ps-10"
-                />
-              </div>
-              <div className="relative">
-                <Mail className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  type="email"
-                  placeholder={t("auth.email", "Email")}
-                  value={signupEmail}
-                  onChange={(e) => setSignupEmail(e.target.value)}
-                  className="ps-10"
-                />
-              </div>
-              <div className="relative">
-                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input
-                  type="password"
-                  placeholder={t("auth.password", "Password")}
-                  value={signupPassword}
-                  onChange={(e) => setSignupPassword(e.target.value)}
-                  className="ps-10"
-                />
-              </div>
-            </div>
+            {/* Trust signals */}
+            <TrustSignals compact className="justify-center pt-1" />
 
-            <TrustSignals compact className="mt-2" />
-
-            <div className="flex flex-col gap-2 pt-2">
-              <Button onClick={handleGuestSignup} disabled={isSigningUp} className="w-full gap-2">
-                {isSigningUp ? <Loader2 className="w-4 h-4 animate-spin" /> : <UserPlus className="w-4 h-4" />}
-                {isSigningUp
-                  ? t("guestReview.creatingAccount", "Creating account...")
-                  : t("auth.createAccount", "Create Account")}
-              </Button>
-              <Button
-                variant="ghost"
-                className="w-full text-sm text-muted-foreground"
-                onClick={() => {
-                  resetForm();
-                  onReviewSubmitted?.();
-                  onOpenChange(false);
-                }}
-              >
-                {t("guestReview.skipForNow", "Skip for now")}
-              </Button>
-            </div>
+            {/* Skip */}
+            <button
+              className="w-full text-xs text-muted-foreground hover:text-foreground text-center pt-1"
+              onClick={() => { resetForm(); onReviewSubmitted?.(); onOpenChange(false); }}
+            >
+              {t("guestReview.skipForNow", "Skip for now")}
+            </button>
           </div>
         </DialogContent>
       </Dialog>
