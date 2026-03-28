@@ -847,7 +847,15 @@ export const WriteReviewModal = ({
 
             <Textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setContent(val);
+                // Local content guard check
+                const localCheck = checkContentLocally(val);
+                setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
+                // Clear previous AI moderation on edit
+                if (aiModeration) setAiModeration(null);
+              }}
               placeholder={t("form.review_placeholder")}
               rows={isGuest ? 4 : 5}
               className="resize-none"
