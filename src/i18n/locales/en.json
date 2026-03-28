@@ -1185,6 +1185,16 @@
     "bullet3": "Benchmarking against top-tier local competitors.",
     "cta": "Unlock Business Insights"
   },
+  "howWeWork": {
+    "headline": "Your journey from doubt to confidence",
+    "subtitle": "Powered by community intelligence",
+    "step1Title": "Collect",
+    "step1Desc": "Real buyers share verified experiences — no fake reviews, no paid opinions.",
+    "step2Title": "Analyse",
+    "step2Desc": "AI processes thousands of data points to build trust scores you can rely on.",
+    "step3Title": "Decide",
+    "step3Desc": "Make confident real estate decisions backed by transparent, community-driven insights."
+  },
   "retention": {
     "trackDeveloper": "Track Your Developer",
     "followDuration": "Following for {{duration}}",
