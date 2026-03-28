@@ -180,7 +180,7 @@
   /* Arabic font when RTL is active */
   body.rtl,
   :root[lang="ar"] body {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Tajawal', sans-serif;
     font-size: 15px;
     line-height: 1.8;
   }
