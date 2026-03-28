@@ -33,6 +33,7 @@ import { AdminBusinessUpgrades } from '@/components/AdminBusinessUpgrades';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import AdminMessaging from '@/components/AdminMessaging';
 import AdminReceiptVerification from '@/components/AdminReceiptVerification';
+import AdminReferrals from '@/components/AdminReferrals';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2091,6 +2092,7 @@ const AdminDashboard = () => {
         { icon: <CreditCard className="w-4 h-4" />, label: 'Pricing Plans', path: '/admin/pricing' },
         { icon: <Receipt className="w-4 h-4" />, label: 'Subscriptions', path: '/admin/subscriptions' },
         { icon: <DollarSign className="w-4 h-4" />, label: 'Transactions', path: '/admin/transactions' },
+        { icon: <Gift className="w-4 h-4" />, label: 'Referrals', path: '/admin/referrals' },
       ],
     },
     {
@@ -2154,6 +2156,7 @@ const AdminDashboard = () => {
           <Route path="widgets" element={<AdminWidgets />} />
           <Route path="messaging" element={<AdminMessaging />} />
           <Route path="receipt-verification" element={<AdminReceiptVerification />} />
+          <Route path="referrals" element={<AdminReferrals />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
