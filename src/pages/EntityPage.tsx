@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
@@ -28,6 +28,10 @@ const EntityPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   const { getLogoOverride } = useBusinessLogo();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+  }, [id]);
 
   const logoOverride = id ? getLogoOverride(id) : null;
 
