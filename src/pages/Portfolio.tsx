@@ -125,21 +125,51 @@ const Portfolio = () => {
     );
   };
 
+  const getFollowDuration = (createdAt: string) => {
+    const now = new Date();
+    const start = new Date(createdAt);
+    const diffMs = now.getTime() - start.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    if (diffDays >= 30) {
+      const months = Math.floor(diffDays / 30);
+      return t("retention.monthsAgo", { count: months });
+    }
+    return t("retention.daysAgo", { count: diffDays });
+  };
+
+  const isLongFollower = (createdAt: string) => {
+    const diffMs = Date.now() - new Date(createdAt).getTime();
+    return diffMs > 30 * 24 * 60 * 60 * 1000; // 30+ days
+  };
+
   const renderFollowing = () => {
     if (followedBusinesses.length === 0) return <EmptyState icon={Users} title={t("portfolio.notFollowing")} description={t("portfolio.notFollowingDesc")} actionLabel={t("portfolio.exploreDevelopers")} onAction={() => navigate("/directory")} />;
     return (
       <div className="space-y-3">
         {followedBusinesses.map((biz) => (
           <Card key={biz.id} className="overflow-hidden">
-            <CardContent className="p-3 flex items-center gap-3">
-              <Avatar className="h-10 w-10 shrink-0">
-                <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">{biz.business_name.charAt(0)}</AvatarFallback>
-              </Avatar>
-              <div className="flex-1 min-w-0">
-                <p className="font-medium text-foreground text-sm truncate">{biz.business_name}</p>
-                <span className="text-[10px] text-muted-foreground">{t("portfolio.followingSince", { date: formatDate(biz.created_at) })}</span>
+            <CardContent className="p-3">
+              <div className="flex items-center gap-3">
+                <Avatar className="h-10 w-10 shrink-0">
+                  <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">{biz.business_name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-foreground text-sm truncate">{biz.business_name}</p>
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-muted-foreground">{t("retention.followDuration", { duration: getFollowDuration(biz.created_at) })}</span>
+                  </div>
+                </div>
+                <Button variant="outline" size="sm" className="shrink-0 text-xs" onClick={() => unfollowBusiness(biz.id)}>{t("portfolio.unfollow")}</Button>
               </div>
-              <Button variant="outline" size="sm" className="shrink-0 text-xs" onClick={() => unfollowBusiness(biz.id)}>{t("portfolio.unfollow")}</Button>
+              {isLongFollower(biz.created_at) && (
+                <div className="mt-2 flex items-center justify-between gap-2 pt-2 border-t border-border">
+                  <p className="text-[10px] text-muted-foreground">{t("retention.longFollower")}</p>
+                  <Button size="sm" variant="default" className="h-6 text-[10px] gap-1" onClick={() => navigate(`/reviews?developer=${biz.business_id}`)}>
+                    <Star className="h-3 w-3" />
+                    {t("retention.writeReview")}
+                  </Button>
+                </div>
+              )}
             </CardContent>
           </Card>
         ))}

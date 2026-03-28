@@ -643,6 +643,7 @@ export type Database = {
           business_id: string
           business_name: string
           created_at: string
+          follow_reminded_at: string | null
           id: string
           user_id: string
         }
@@ -650,6 +651,7 @@ export type Database = {
           business_id: string
           business_name: string
           created_at?: string
+          follow_reminded_at?: string | null
           id?: string
           user_id: string
         }
@@ -657,6 +659,7 @@ export type Database = {
           business_id?: string
           business_name?: string
           created_at?: string
+          follow_reminded_at?: string | null
           id?: string
           user_id?: string
         }

@@ -1176,5 +1176,17 @@
   "community": {
     "referralNudge": "Your contribution makes a difference 🎁",
     "referralNudgeDesc": "Share your experience and help friends make the right decision"
+  },
+  "retention": {
+    "trackDeveloper": "Track Your Developer",
+    "followDuration": "Following for {{duration}}",
+    "reviewNudge": "Ready to share your experience?",
+    "writeReview": "Write a Review",
+    "newReviewAlert": "New review posted for {{developer}}",
+    "sixMonthReminder": "You've been tracking {{developer}} for 6 months — share your experience!",
+    "followingSince": "Since {{date}}",
+    "longFollower": "You've been following for a while — your review matters!",
+    "monthsAgo": "{{count}} months",
+    "daysAgo": "{{count}} days"
   }
 }
