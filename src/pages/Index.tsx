@@ -374,7 +374,7 @@ const Index = () => {
 
               {/* Special View Item Detail */}
               {specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
                   <ItemDetailSection
                 item={specialViewItem}
                 onClose={() => setSpecialViewItem(null)} />
@@ -384,7 +384,7 @@ const Index = () => {
 
               {/* Developer Detail Card */}
               {selectedDeveloper && !specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
                   <DeveloperDetailCard
                 developer={selectedDeveloper}
                 onClose={() => setSelectedDeveloperId(null)} />
