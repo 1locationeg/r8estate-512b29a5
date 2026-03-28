@@ -3,9 +3,9 @@ import { Search, BrainCircuit, BadgeCheck, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const steps = [
-  { num: "01", icon: Search, titleKey: "step1Title", descKey: "step1Desc" },
+  { num: "01", icon: Search, titleKey: "step1Title", descKey: "step1Desc", glow: false },
   { num: "02", icon: BrainCircuit, titleKey: "step2Title", descKey: "step2Desc", glow: true },
-  { num: "03", icon: BadgeCheck, titleKey: "step3Title", descKey: "step3Desc" },
+  { num: "03", icon: BadgeCheck, titleKey: "step3Title", descKey: "step3Desc", glow: false },
 ] as const;
 
 const HowWeWork = () => {

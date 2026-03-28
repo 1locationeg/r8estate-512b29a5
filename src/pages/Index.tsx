@@ -24,6 +24,7 @@ import { TractionStats } from "@/components/TractionStats";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
 import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint } from "lucide-react";
+import HowWeWork from "@/components/HowWeWork";
 import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
