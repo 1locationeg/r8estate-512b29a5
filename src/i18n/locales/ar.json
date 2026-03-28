@@ -1219,5 +1219,17 @@
   "community": {
     "referralNudge": "مساهمتك تصنع الفرق 🎁",
     "referralNudgeDesc": "شارك خبرتك وساعد أصدقائك يختاروا صح"
+  },
+  "retention": {
+    "trackDeveloper": "تابع المطوّر",
+    "followDuration": "متابع منذ {{duration}}",
+    "reviewNudge": "مستعد تشارك تجربتك؟",
+    "writeReview": "اكتب تقييم",
+    "newReviewAlert": "تقييم جديد لـ {{developer}}",
+    "sixMonthReminder": "متابع {{developer}} من ٦ شهور — شاركنا تجربتك!",
+    "followingSince": "منذ {{date}}",
+    "longFollower": "متابع من فترة — تقييمك مهم!",
+    "monthsAgo": "{{count}} شهر",
+    "daysAgo": "{{count}} يوم"
   }
 }
