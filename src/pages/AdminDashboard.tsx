@@ -35,6 +35,7 @@ import AdminMessaging from '@/components/AdminMessaging';
 import AdminReceiptVerification from '@/components/AdminReceiptVerification';
 import AdminReferrals from '@/components/AdminReferrals';
 import AdminUpsell from '@/components/AdminUpsell';
+import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
