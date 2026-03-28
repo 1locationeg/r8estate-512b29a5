@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react"; // unified navbar
+import { useState, useMemo, useEffect, useRef } from "react"; // unified navbar
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -48,6 +48,7 @@ const Index = () => {
   const [showContractModal, setShowContractModal] = useState(false);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
+  const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedDeveloper = useMemo(() => {
     if (!selectedDeveloperId) return null;
@@ -105,11 +106,40 @@ const Index = () => {
 
 
   useEffect(() => {
-    if (specialViewItem || selectedDeveloper) {
-      setTimeout(() => {
-        document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }, 100);
+    if (!specialViewItem && !selectedDeveloper) return;
+
+    const scrollToDetailTop = () => {
+      const detailSection = document.getElementById('item-detail-section');
+      if (!detailSection) return;
+
+      const navbar = document.querySelector('header');
+      const navbarHeight = navbar instanceof HTMLElement ? navbar.offsetHeight : 0;
+      const topOffset = Math.max(navbarHeight + 12, 88);
+      const detailTop = detailSection.getBoundingClientRect().top + window.scrollY - topOffset;
+
+      window.scrollTo({
+        top: Math.max(0, detailTop),
+        left: 0,
+        behavior: 'smooth',
+      });
+    };
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(scrollToDetailTop);
+    });
+
+    if (detailScrollTimeoutRef.current) {
+      clearTimeout(detailScrollTimeoutRef.current);
     }
+
+    detailScrollTimeoutRef.current = setTimeout(scrollToDetailTop, 260);
+
+    return () => {
+      if (detailScrollTimeoutRef.current) {
+        clearTimeout(detailScrollTimeoutRef.current);
+        detailScrollTimeoutRef.current = null;
+      }
+    };
   }, [specialViewItem, selectedDeveloper]);
 
   const handleSignOut = async () => {
@@ -344,7 +374,7 @@ const Index = () => {
 
               {/* Special View Item Detail */}
               {specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
                   <ItemDetailSection
                 item={specialViewItem}
                 onClose={() => setSpecialViewItem(null)} />
@@ -354,7 +384,7 @@ const Index = () => {
 
               {/* Developer Detail Card */}
               {selectedDeveloper && !specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
+            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
                   <DeveloperDetailCard
                 developer={selectedDeveloper}
                 onClose={() => setSelectedDeveloperId(null)} />
