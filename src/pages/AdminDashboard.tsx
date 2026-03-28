@@ -2057,6 +2057,7 @@ const AdminDashboard = () => {
         { icon: <Receipt className="w-4 h-4" />, label: 'Receipt Verification', path: '/admin/receipt-verification' },
         { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
         { icon: <Rocket className="w-4 h-4" />, label: 'Launch Moderation', path: '/admin/launch-moderation' },
+        { icon: <ShieldAlert className="w-4 h-4" />, label: 'Community Guard', path: '/admin/community-moderation' },
       ],
     },
     {
