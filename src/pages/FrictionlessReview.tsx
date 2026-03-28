@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, Shield, Video, Award, CheckCircle2, AlertTriangle, Loader2, Mail, X, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Star, Shield, Video, Award, CheckCircle2, AlertTriangle, Loader2, Mail, X, ArrowLeft, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { checkContentLocally } from "@/lib/contentGuard";
 
 /* ─── helpers ─── */
 function getDeviceFingerprint() {
@@ -54,6 +55,7 @@ const FrictionlessReview = () => {
   const [submitted, setSubmitted] = useState(false);
   const [integrityWarning, setIntegrityWarning] = useState<string | null>(null);
   const [integrityBlocked, setIntegrityBlocked] = useState(false);
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
 
   /* video */
   const [recording, setRecording] = useState(false);
