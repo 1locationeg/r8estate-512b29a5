@@ -79,6 +79,7 @@ const CommentComposer = ({
 }) => {
   const { t } = useTranslation();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
 
   const quickEmojis = ["😀", "😂", "❤️", "🔥", "👏", "💯", "🙌", "😍", "🤔", "👀", "🎉", "💪", "😎", "🏠", "🏗️", "📍"];
 
