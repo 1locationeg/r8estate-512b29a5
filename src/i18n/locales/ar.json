@@ -584,7 +584,14 @@
     "bodyPlaceholder": "شارك التفاصيل...",
     "cancel": "إلغاء",
     "post": "نشر",
-    "askCommunity": "اسأل المجتمع"
+    "askCommunity": "اسأل المجتمع",
+    "bridgeTitle": "معلومات المطور",
+    "bridgeTrustScore": "نقاط الثقة",
+    "bridgeSentimentRising": "صاعد",
+    "bridgeSentimentStable": "مستقر",
+    "bridgeSentimentDeclining": "متراجع",
+    "bridgeDownloadReport": "تحميل تقرير المشتري لـ {{name}}",
+    "bridgeVerifiedOnly": "للمشترين الموثقين فقط"
   },
   "dashboard": {
     "memberSince": "عضو منذ",
