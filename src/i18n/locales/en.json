@@ -1195,6 +1195,18 @@
     "step3Title": "Decide",
     "step3Desc": "Make confident real estate decisions backed by transparent, community-driven insights."
   },
+  "stepTimeline": {
+    "headline": "Here's how you get started",
+    "subtitle": "Four steps to confident decisions",
+    "step1Title": "Search",
+    "step1Desc": "Find developers, projects, or services by name, category, or location.",
+    "step2Title": "Compare",
+    "step2Desc": "Stack companies side-by-side with trust scores and real reviews.",
+    "step3Title": "Review",
+    "step3Desc": "Share your experience and help the community decide better.",
+    "step4Title": "Decide",
+    "step4Desc": "Choose with confidence, backed by verified data and AI insights."
+  },
   "retention": {
     "trackDeveloper": "Track Your Developer",
     "followDuration": "Following for {{duration}}",
