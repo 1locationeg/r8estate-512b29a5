@@ -4,6 +4,7 @@ import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
+import { VerifiedBuyerBadge } from "@/components/VerifiedBuyerBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { PollDisplay } from "@/components/PollDisplay";
 import { toast } from "@/hooks/use-toast";
@@ -82,6 +83,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
           <div className="flex items-center gap-1.5">
             <span className="font-semibold text-sm text-foreground truncate">{post.author_name}</span>
             <UserTierBadge userId={post.user_id} />
+            <VerifiedBuyerBadge userId={post.user_id} compact />
           </div>
           <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
             <span>{timeAgo(post.created_at, t)}</span>
