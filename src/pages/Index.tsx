@@ -238,18 +238,9 @@ const Index = () => {
                          </p>
 
                            {/* Social proof CTA text */}
-                           <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                             Join 1,200+ buyers who{' '}
-                             <button
-                      onClick={() => {
-                        const searchInput = document.querySelector<HTMLInputElement>('[data-hero-search]');
-                        if (searchInput) {searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });searchInput.focus();}
-                      }}
-                      className="text-foreground underline underline-offset-2 decoration-foreground/60 hover:decoration-primary hover:text-primary transition-colors font-bold">
-                               checked before they signed
-                             </button>
-.
-                           </p>
+                            <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                              {t("hero.joinBuyers")}.
+                            </p>
                       </> :
                 <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
