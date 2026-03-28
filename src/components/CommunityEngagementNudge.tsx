@@ -55,9 +55,9 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       icon: Gift,
       iconColor: "text-primary",
       bgColor: "bg-primary/5 border-primary/15",
-      title: t("community.referralNudge", "Invite friends, earn rewards 🎁"),
-      desc: t("community.referralNudgeDesc", "Share R8ESTATE with friends and unlock exclusive badges & points"),
-      cta: t("community.inviteFriends", "Invite Friends"),
+      title: t("community.referralNudge", "Your contribution makes a difference 🎁"),
+      desc: t("community.referralNudgeDesc", "Share your experience and help friends make the right decision"),
+      cta: t("referral.cta", "Invite a Friend"),
       action: () => {
         const cleanNumber = whatsappNumber.replace(/[^0-9]/g, "");
         const shareUrl = window.location.origin;
