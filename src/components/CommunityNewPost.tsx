@@ -14,6 +14,7 @@ import { useCommunityActions } from "@/hooks/useCommunity";
 import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DeveloperMentionSuggestions } from "@/components/DeveloperMentionSuggestions";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 interface Props {
