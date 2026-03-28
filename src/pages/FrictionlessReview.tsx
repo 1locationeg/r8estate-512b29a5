@@ -130,19 +130,28 @@ const FrictionlessReview = () => {
 
   /* ─── integrity check ─── */
   const checkIntegrity = async (): Promise<boolean> => {
+    // Local pre-filter first
+    const localCheck = checkContentLocally(comment);
+    if (localCheck.blocked) {
+      setLocalWarning("يرجى حذف الألفاظ الخارجة — Please remove offensive language");
+      setIntegrityBlocked(true);
+      return false;
+    }
+    setLocalWarning(null);
+
     if (comment.length < 20) return true; // too short to check
     try {
       const { data, error } = await supabase.functions.invoke("review-integrity-check", {
-        body: { review_text: comment, rating },
+        body: { review_text: comment, rating, content_type: "review" },
       });
       if (error) return true; // fail-open
-      if (data.suspicion_score > 90) {
+      if (data.suspicion_score > 80) {
         setIntegrityBlocked(true);
-        setIntegrityWarning(data.suggestion || "This review appears to contain promotional language.");
+        setIntegrityWarning(data.suggestion || "This review contains content that violates our guidelines.");
         return false;
       }
-      if (data.suspicion_score > 70) {
-        setIntegrityWarning(data.suggestion || "Your review may sound promotional. Consider adding personal details.");
+      if (data.suspicion_score > 50) {
+        setIntegrityWarning(data.suggestion || "Your content may violate community guidelines. Please review.");
         return true; // warn but allow
       }
       return true;
