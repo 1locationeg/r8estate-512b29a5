@@ -278,8 +278,11 @@ export type Database = {
           developer_id: string | null
           id: string
           image_urls: string[] | null
+          is_hidden: boolean
           is_pinned: boolean
           link_url: string | null
+          moderation_flags: Json | null
+          moderation_status: string
           reply_count: number
           title: string
           updated_at: string
@@ -293,8 +296,11 @@ export type Database = {
           developer_id?: string | null
           id?: string
           image_urls?: string[] | null
+          is_hidden?: boolean
           is_pinned?: boolean
           link_url?: string | null
+          moderation_flags?: Json | null
+          moderation_status?: string
           reply_count?: number
           title: string
           updated_at?: string
@@ -308,8 +314,11 @@ export type Database = {
           developer_id?: string | null
           id?: string
           image_urls?: string[] | null
+          is_hidden?: boolean
           is_pinned?: boolean
           link_url?: string | null
+          moderation_flags?: Json | null
+          moderation_status?: string
           reply_count?: number
           title?: string
           updated_at?: string
