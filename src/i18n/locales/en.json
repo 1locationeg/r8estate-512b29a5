@@ -1061,7 +1061,9 @@
     "joinConversation": "Join the conversation",
     "verifiedReviews": "verified reviews",
     "realBuyers": "Real buyers",
-    "realExperts": "Real Experts"
+    "realExperts": "Real Experts",
+    "buyersChecked": "{{count}} buyers checked {{name}} in the last hour",
+    "liveNow": "LIVE"
   },
   "gamification": {
     "dailySet": "Daily Set",

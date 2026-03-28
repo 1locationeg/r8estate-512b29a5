@@ -19,7 +19,7 @@ import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
-import { LiveActivityFeed } from "@/components/LiveActivityFeed";
+import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
@@ -293,9 +293,9 @@ const Index = () => {
             <TractionStats />
           </div>
 
-          {/* Live Activity Feed */}
+          {/* Live Market Pulse — desktop marquee */}
           <div className={cn("mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-            <LiveActivityFeed />
+            <LiveMarketPulse />
           </div>
 
           {userMode === "buyers" ?
