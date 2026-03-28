@@ -5,22 +5,30 @@ import { useAuth } from '@/contexts/AuthContext';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { NavGroup } from '@/components/DashboardSidebar';
 import { Button } from '@/components/ui/button';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
+import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { BusinessProfileHeader } from '@/components/BusinessProfileHeader';
 import { GamificationPanel } from '@/components/GamificationPanel';
+import { PointsBreakdownHeader } from '@/components/PointsBreakdownHeader';
+import { DailyTasksCard } from '@/components/DailyTasksCard';
+import { StreakTrackerVisual } from '@/components/StreakTrackerVisual';
+import { BusinessActivityCards } from '@/components/BusinessActivityCards';
+import { ReferralWidget } from '@/components/ReferralWidget';
 import { 
   Loader2, LayoutDashboard, Star, MessageSquare, BarChart3, 
   Building2, Users, Settings, Edit, TrendingUp, Plus, Eye, Image,
   Tag, Plug, Bell, Phone, Mail, Globe, MapPin, Calendar, Upload, FileText, Trophy, Share2, Rocket,
-  ArrowUp
+  ArrowUp, Flame, CheckCircle2, Coins, BadgeCheck
 } from 'lucide-react';
 import { ReviewToSocialModal } from '@/components/ReviewToSocialModal';
 import { developers, reviews, projects } from '@/data/mockData';
 import { useBusinessProfile } from '@/hooks/useBusinessProfile';
 import { useGamification } from '@/hooks/useGamification';
+import { TIERS } from '@/lib/gamification';
 import { getRatingColorClass } from '@/lib/ratingColors';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import { NotificationsPage } from '@/components/NotificationsPage';
@@ -32,6 +40,7 @@ import { LaunchSubmitForm } from '@/components/LaunchSubmitForm';
 import { MyDeals } from '@/components/MyDeals';
 import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
+import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
 const myReviews = reviews.filter(r => r.developerId === myDev.id);
@@ -75,19 +84,155 @@ const companyData = {
 
 const DevOverview = () => {
   const navigate = useNavigate();
-  const { profileCompletion, currentTier } = useGamification();
+  const { t } = useTranslation();
+  const { profile, user } = useAuth();
+  const { profileCompletion, missingFields, currentTier, nextTier, pointsToNext, totalPoints, earnedBadges, lockedBadges, allBadges } = useGamification();
+
+  const currentTierIdx = TIERS.findIndex(ti => ti.id === currentTier.id);
 
   const stats = [
-    { icon: Star, label: 'Average Rating', value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent', delta: '+0.2 this month', deltaColor: 'text-trust-excellent' },
-    { icon: Edit, label: 'Total Reviews', value: String(myDev.reviewCount), iconBg: 'bg-primary/10', iconColor: 'text-primary', delta: '3 new this week', deltaColor: 'text-trust-excellent' },
-    { icon: Eye, label: 'Total Visitors', value: '7.0K', iconBg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent', delta: '+12% vs last month', deltaColor: 'text-trust-excellent' },
+    { icon: Star, label: t('businessDashboard.avgRating'), value: myDev.rating.toFixed(1), iconBg: 'bg-accent/20', iconColor: 'text-accent', delta: '+0.2 this month', deltaColor: 'text-trust-excellent' },
+    { icon: Edit, label: t('businessDashboard.totalReviews'), value: String(myDev.reviewCount), iconBg: 'bg-business-border/10', iconColor: 'text-business-border', delta: '3 new this week', deltaColor: 'text-trust-excellent' },
+    { icon: Eye, label: t('businessDashboard.totalVisitors'), value: '7.0K', iconBg: 'bg-trust-excellent/10', iconColor: 'text-trust-excellent', delta: '+12% vs last month', deltaColor: 'text-trust-excellent' },
   ];
 
+  // Profile completion checklist for business
+  const profileChecks = [
+    { label: t('businessDashboard.checkCompanyName'), done: !missingFields.includes('Company Name'), pts: 5 },
+    { label: t('businessDashboard.checkDescription'), done: !missingFields.includes('Description'), pts: 10 },
+    { label: t('businessDashboard.checkLogo'), done: !missingFields.includes('Logo'), pts: 10 },
+    { label: t('businessDashboard.checkLocation'), done: !missingFields.includes('Location'), pts: 5 },
+    { label: t('businessDashboard.checkPhone'), done: !missingFields.includes('Phone'), pts: 5 },
+    { label: t('businessDashboard.checkWebsite'), done: !missingFields.includes('Website'), pts: 5 },
+    { label: t('businessDashboard.checkLicense'), done: !missingFields.includes('Business License'), pts: 15 },
+  ];
+
+  // Tier journey for businesses
+  const businessTiers = TIERS.slice(0, 4);
+
   return (
-    <div>
-      {/* Onboarding Wizard */}
-      <div className="mb-6">
-        <OnboardingWizard />
+    <div className="space-y-6">
+      {/* Points Breakdown Header — Forest Green */}
+      <PointsBreakdownHeader
+        totalPoints={totalPoints}
+        currentStreak={0}
+        tierName={currentTier.name}
+        tierEmoji={currentTier.emoji}
+        earnedBadges={earnedBadges.length}
+        totalBadges={allBadges.length}
+        variant="business"
+      />
+
+      {/* Hero Row */}
+      <div className="grid md:grid-cols-[1fr_320px] gap-6">
+        {/* Left: Welcome + Post Box */}
+        <div className="space-y-4">
+          <div>
+            <Badge className="mb-2 bg-business/50 text-business-foreground border-business-border/30 text-[10px] gap-1">
+              <Building2 className="w-3 h-3" /> {t('businessDashboard.verifiedBusiness')}
+            </Badge>
+            <h2 className="text-2xl font-bold text-foreground">
+              {t('businessDashboard.welcomeBack', { name: profile?.full_name?.split(' ')[0] || myDev.name })}
+            </h2>
+            {pointsToNext > 0 && nextTier && (
+              <p className="text-sm text-muted-foreground mt-0.5 flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-business-border" />
+                {t('businessDashboard.ptsAway', { pts: pointsToNext, tier: nextTier.name })}
+              </p>
+            )}
+          </div>
+
+          {/* Community Post Box */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-start gap-3">
+              <Avatar className="h-9 w-9 flex-shrink-0">
+                <AvatarFallback className="bg-business-border text-white text-xs font-bold">
+                  {myDev.name.charAt(0)}
+                </AvatarFallback>
+              </Avatar>
+              <button
+                onClick={() => navigate('/community')}
+                className="flex-1 text-start px-3 py-2.5 bg-secondary/60 rounded-lg text-sm text-muted-foreground hover:bg-secondary transition-colors overflow-hidden h-[38px] relative"
+              >
+                <span className="absolute inset-x-0 top-0 flex flex-col animate-[post-box-cycle_6s_ease-in-out_infinite] px-3">
+                  <span className="h-[38px] flex items-center">{t('businessDashboard.postPrompt1')}</span>
+                  <span className="h-[38px] flex items-center">{t('businessDashboard.postPrompt2')}</span>
+                </span>
+              </button>
+            </div>
+            <div className="flex items-center gap-2 mt-3 ps-12">
+              {['Discussion', 'Tip', 'Experience'].map(cat => (
+                <button
+                  key={cat}
+                  onClick={() => navigate('/community')}
+                  className="px-2.5 py-1 rounded-full text-[10px] font-medium bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <OnboardingWizard />
+        </div>
+
+        {/* Right: Profile Completion + Tier Journey */}
+        <div className="space-y-4">
+          {/* Profile Completion */}
+          <div className="bg-card border border-border rounded-xl p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-foreground">{t('businessDashboard.completeProfile')}</h3>
+              <span className="text-xs font-bold text-business-border">{profileCompletion}%</span>
+            </div>
+            <Progress value={profileCompletion} className="h-1.5 mb-3 [&>div]:bg-business-border" />
+            <div className="space-y-2">
+              {profileChecks.map(check => (
+                <div key={check.label} className="flex items-center gap-2.5 text-xs">
+                  <CheckCircle2 className={`w-3.5 h-3.5 flex-shrink-0 ${check.done ? 'text-trust-excellent' : 'text-muted-foreground/30'}`} />
+                  <span className={check.done ? 'text-muted-foreground line-through' : 'text-foreground'}>{check.label}</span>
+                  {!check.done && (
+                    <span className="ms-auto text-[10px] font-bold text-coin flex items-center gap-0.5">
+                      <Coins className="w-3 h-3" /> +{check.pts}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Tier Journey */}
+          <div className="bg-[#27500A] rounded-xl p-4 text-white">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold">{t('businessDashboard.yourJourney')}</h3>
+              <span className="text-xs font-bold text-coin flex items-center gap-1">
+                <Coins className="w-3.5 h-3.5" /> {totalPoints} pts
+              </span>
+            </div>
+            <div className="relative flex items-center justify-between mb-2">
+              <div className="absolute inset-x-0 top-1/2 h-0.5 bg-white/10 -translate-y-1/2" />
+              {businessTiers.map((tier, i) => {
+                const reached = i <= currentTierIdx;
+                return (
+                  <div key={tier.id} className="relative flex flex-col items-center z-10">
+                    <div className={`w-7 h-7 rounded-full flex items-center justify-center text-sm ${
+                      reached ? 'bg-business-border text-white' : 'bg-white/10 text-white/40'
+                    }`}>
+                      {tier.emoji}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="flex justify-between text-[9px] text-white/50">
+              {businessTiers.map(tier => (
+                <span key={tier.id} className="text-center w-10">{tier.name}</span>
+              ))}
+            </div>
+            <p className="text-[10px] text-white/50 mt-2.5 text-center">
+              🔓 {t('businessDashboard.unlockPerks')}
+            </p>
+          </div>
+        </div>
       </div>
 
       {/* Business Profile Header */}
@@ -101,7 +246,7 @@ const DevOverview = () => {
       />
 
       {/* Stats cards */}
-      <div className="grid sm:grid-cols-3 gap-4 mb-8">
+      <div className="grid sm:grid-cols-3 gap-4">
         {stats.map((s) => (
           <div key={s.label} className="bg-card border border-border rounded-xl p-5">
             <div className="flex items-center justify-between mb-3">
@@ -111,7 +256,7 @@ const DevOverview = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              {s.label === 'Average Rating' && (
+              {s.label === t('businessDashboard.avgRating') && (
                 <div className="flex items-center gap-1">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className={`w-4 h-4 ${i < Math.round(myDev.rating) ? 'text-accent fill-accent' : 'text-muted'}`} />
@@ -128,95 +273,110 @@ const DevOverview = () => {
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-6 mb-8">
-        {/* Reviews Statistics Chart */}
-        <div className="lg:col-span-2">
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground">Reviews Statistics</h3>
-            <Button variant="outline" size="sm" className="text-xs gap-2">
-              📅 February 2026 ▾
-            </Button>
+      {/* Daily Tasks */}
+      <DailyTasksCard />
+
+      {/* Streak Tracker */}
+      <StreakTrackerVisual currentStreak={0} longestStreak={0} streakBonusPoints={0} />
+
+      {/* Business Activity Cards */}
+      <BusinessActivityCards currentTierIndex={currentTierIdx} />
+
+      {/* Charts + Reviews + Sidebar */}
+      <div className="grid lg:grid-cols-3 gap-6">
+        {/* Charts */}
+        <div className="lg:col-span-2 space-y-6">
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-foreground">{t('businessDashboard.reviewStats')}</h3>
+              <Button variant="outline" size="sm" className="text-xs gap-2">📅 February 2026 ▾</Button>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={reviewsChartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                  <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                  <Line type="monotone" dataKey="reviews" stroke="#3B6D11" strokeWidth={2} dot={{ fill: '#3B6D11', r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
-          <div className="bg-card border border-border rounded-xl p-6">
-            <ResponsiveContainer width="100%" height={250}>
-              <LineChart data={reviewsChartData}>
-                <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: 'hsl(var(--card))',
-                    border: '1px solid hsl(var(--border))',
-                    borderRadius: '8px',
-                    fontSize: '12px',
-                  }}
-                />
-                <Line type="monotone" dataKey="reviews" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ fill: 'hsl(var(--accent))', r: 4 }} />
-              </LineChart>
-            </ResponsiveContainer>
+
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-foreground">{t('businessDashboard.viewStats')}</h3>
+              <Button variant="outline" size="sm" className="text-xs gap-2">📅 February 2026 ▾</Button>
+            </div>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={viewsChartData}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                  <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                  <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
+                  <Tooltip contentStyle={{ backgroundColor: 'hsl(var(--card))', border: '1px solid hsl(var(--border))', borderRadius: '8px', fontSize: '12px' }} />
+                  <Line type="monotone" dataKey="views" stroke="#3B6D11" strokeWidth={2} dot={{ fill: '#3B6D11', r: 4 }} />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </div>
         </div>
 
-        {/* Latest Reviews */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <h3 className="text-lg font-semibold text-foreground">Latest Reviews</h3>
-            <button className="text-xs text-accent font-semibold hover:underline">View All →</button>
-          </div>
-          <div className="space-y-3">
-            {myReviews.slice(0, 6).map((r) => (
-              <div key={r.id} className="bg-card border border-border rounded-xl p-3">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                    <AvatarFallback className="text-[10px] bg-accent text-accent-foreground font-bold">
-                      {r.author.split(' ').map(n=>n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
-                    <p className="text-[10px] text-muted-foreground">{r.date}</p>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold">{r.rating}.0</span>
-                    <div className="flex">
-                      {[...Array(5)].map((_, i) => (
-                        <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'text-accent fill-accent' : 'text-muted'}`} />
-                      ))}
+        {/* Right Sidebar */}
+        <div className="space-y-4">
+          {/* Latest Reviews */}
+          <div>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-lg font-semibold text-foreground">{t('businessDashboard.latestReviews')}</h3>
+              <button className="text-xs text-business-border font-semibold hover:underline">View All →</button>
+            </div>
+            <div className="space-y-3">
+              {myReviews.slice(0, 4).map((r) => (
+                <div key={r.id} className="bg-card border border-border rounded-xl p-3">
+                  <div className="flex items-center gap-2">
+                    <Avatar className="h-8 w-8">
+                      {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
+                      <AvatarFallback className="text-[10px] bg-accent text-accent-foreground font-bold">
+                        {r.author.split(' ').map(n=>n[0]).join('')}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-xs font-semibold text-foreground truncate">{r.author}</p>
+                      <p className="text-[10px] text-muted-foreground">{r.date}</p>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <span className="text-xs font-bold">{r.rating}.0</span>
+                      <div className="flex">
+                        {[...Array(5)].map((_, i) => (
+                          <Star key={i} className={`w-3 h-3 ${i < r.rating ? 'text-accent fill-accent' : 'text-muted'}`} />
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </div>
 
-      {/* Views Statistics Chart */}
-      <div>
-        <div className="flex items-center justify-between mb-3">
-          <h3 className="text-lg font-semibold text-foreground">Views Statistics</h3>
-          <Button variant="outline" size="sm" className="text-xs gap-2">
-            📅 February 2026 ▾
-          </Button>
-        </div>
-        <div className="bg-card border border-border rounded-xl p-6">
-          <ResponsiveContainer width="100%" height={250}>
-            <LineChart data={viewsChartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-              <XAxis dataKey="date" tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-              <YAxis tick={{ fontSize: 11 }} stroke="hsl(var(--muted-foreground))" />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: 'hsl(var(--card))',
-                  border: '1px solid hsl(var(--border))',
-                  borderRadius: '8px',
-                  fontSize: '12px',
-                }}
-              />
-              <Line type="monotone" dataKey="views" stroke="hsl(var(--accent))" strokeWidth={2} dot={{ fill: 'hsl(var(--accent))', r: 4 }} />
-            </LineChart>
-          </ResponsiveContainer>
+          {/* WhatsApp Review Request CTA */}
+          <div className="bg-card border border-business-border/20 rounded-xl p-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Phone className="w-4 h-4 text-business-border" />
+              <h4 className="text-sm font-semibold text-foreground">{t('businessDashboard.requestReviewCta')}</h4>
+            </div>
+            <p className="text-xs text-muted-foreground mb-3">{t('businessDashboard.requestReviewCtaDesc')}</p>
+            <Button
+              size="sm"
+              className="w-full bg-business-border text-white hover:bg-business-border/90 gap-1.5"
+              onClick={() => navigate('/business/whatsapp-reviews')}
+            >
+              <Phone className="w-3 h-3" /> {t('businessDashboard.sendReviewRequest')}
+            </Button>
+          </div>
+
+          {/* Referral */}
+          <ReferralWidget />
         </div>
       </div>
     </div>
