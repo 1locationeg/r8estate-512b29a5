@@ -45,7 +45,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
-    let query = supabase.from("community_posts").select("*");
+    let query = (supabase.from("community_posts").select("*") as any).eq("is_hidden", false);
 
     if (category) {
       query = query.eq("category", category);
@@ -79,7 +79,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
         const { data: profiles } = await supabase
           .from("profiles")
           .select("user_id, full_name, avatar_url, email")
-          .in("user_id", userIds);
+          .in("user_id", userIds as string[]);
         if (profiles) {
           profileMap = Object.fromEntries(profiles.map((p: any) => [p.user_id, p]));
         }
