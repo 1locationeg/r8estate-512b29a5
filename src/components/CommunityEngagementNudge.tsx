@@ -20,7 +20,7 @@ type NudgeConfig = {
  * Engagement nudge cards shown in community feed to motivate
  * sharing, referrals, and deeper platform engagement.
  */
-export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "share" | "review" }) => {
+export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "share" | "review" | "retention" }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [dismissed, setDismissed] = useState(false);
@@ -50,7 +50,7 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
 
   if (dismissed) return null;
 
-  const configs: Record<"referral" | "share" | "review", NudgeConfig> = {
+  const configs: Record<"referral" | "share" | "review" | "retention", NudgeConfig> = {
     referral: {
       icon: Gift,
       iconColor: "text-primary",
@@ -98,6 +98,15 @@ export const CommunityEngagementNudge = ({ variant }: { variant: "referral" | "s
       title: t("community.reviewNudge", "Had a real estate experience? ⭐"),
       desc: t("community.reviewNudgeDesc", "Your review helps thousands of buyers make confident, risk-free decisions"),
       cta: t("community.writeReview", "Write a Review"),
+      action: () => navigate("/reviews"),
+    },
+    retention: {
+      icon: Star,
+      iconColor: "text-primary",
+      bgColor: "bg-primary/5 border-primary/15",
+      title: t("retention.reviewNudge", "Ready to share your experience?"),
+      desc: t("retention.longFollower", "You've been following for a while — your review matters!"),
+      cta: t("retention.writeReview", "Write a Review"),
       action: () => navigate("/reviews"),
     },
   };
