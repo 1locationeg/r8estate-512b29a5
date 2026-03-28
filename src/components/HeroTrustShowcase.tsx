@@ -12,16 +12,8 @@ const getScoreColor = (s: number) => {
   return "hsl(0, 72%, 51%)";
 };
 
-const getTrustLabel = (s: number) => {
-  if (s >= 90) return "Exceptional";
-  if (s >= 75) return "High Trust";
-  if (s >= 60) return "Moderate";
-  if (s >= 40) return "Mixed";
-  return "Low Trust";
-};
-
-// ── Review scenarios ──
-interface ReviewScenario {
+// Trust labels are now translated via t()
+interface ReviewScenarioDef {
   score: number;
   reviewer: string;
   initial: string;
@@ -30,12 +22,12 @@ interface ReviewScenario {
   location: string;
   developer: string;
   rating: number;
-  comment: string;
-  dimensions: { label: string; value: string; positive: boolean }[];
-  trustLabel: string;
+  commentKey: string;
+  dimensions: { labelKey: string; valueKey: string; positive: boolean }[];
+  trustLabelKey: string;
 }
 
-const scenarios: ReviewScenario[] = [
+const scenarioDefs: ReviewScenarioDef[] = [
   {
     score: 25,
     reviewer: "Aly R.",
@@ -45,13 +37,13 @@ const scenarios: ReviewScenario[] = [
     location: "New Cairo",
     developer: "Ora Developers",
     rating: 1.5,
-    comment: "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
+    commentKey: "showcase.comment1",
     dimensions: [
-      { label: "Delivery", value: "18mo late", positive: false },
-      { label: "Quality", value: "Poor", positive: false },
-      { label: "Response", value: "No reply", positive: false },
+      { labelKey: "showcase.delivery", valueKey: "showcase.18moLate", positive: false },
+      { labelKey: "showcase.quality", valueKey: "showcase.poor", positive: false },
+      { labelKey: "showcase.response", valueKey: "showcase.noReply", positive: false },
     ],
-    trustLabel: "Low Trust",
+    trustLabelKey: "showcase.lowTrust",
   },
   {
     score: 55,
@@ -62,13 +54,13 @@ const scenarios: ReviewScenario[] = [
     location: "New Cairo",
     developer: "Marakez",
     rating: 3,
-    comment: "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
+    commentKey: "showcase.comment2",
     dimensions: [
-      { label: "Delivery", value: "3mo late", positive: false },
-      { label: "Quality", value: "Average", positive: false },
-      { label: "Response", value: "Slow", positive: false },
+      { labelKey: "showcase.delivery", valueKey: "showcase.3moLate", positive: false },
+      { labelKey: "showcase.quality", valueKey: "showcase.average", positive: false },
+      { labelKey: "showcase.response", valueKey: "showcase.slow", positive: false },
     ],
-    trustLabel: "Mixed",
+    trustLabelKey: "showcase.mixed",
   },
   {
     score: 88,
@@ -79,13 +71,13 @@ const scenarios: ReviewScenario[] = [
     location: "New Cairo",
     developer: "Emaar Misr",
     rating: 4.5,
-    comment: "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
+    commentKey: "showcase.comment3",
     dimensions: [
-      { label: "Delivery", value: "On time", positive: true },
-      { label: "Quality", value: "Excellent", positive: true },
-      { label: "Response", value: "Fast", positive: true },
+      { labelKey: "showcase.delivery", valueKey: "showcase.onTime", positive: true },
+      { labelKey: "showcase.quality", valueKey: "showcase.excellent", positive: true },
+      { labelKey: "showcase.response", valueKey: "showcase.fast", positive: true },
     ],
-    trustLabel: "High Trust",
+    trustLabelKey: "showcase.highTrust",
   },
   {
     score: 97,
@@ -96,22 +88,22 @@ const scenarios: ReviewScenario[] = [
     location: "New Cairo",
     developer: "Mountain View",
     rating: 5,
-    comment: "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\"",
+    commentKey: "showcase.comment4",
     dimensions: [
-      { label: "Delivery", value: "Early", positive: true },
-      { label: "Quality", value: "Premium", positive: true },
-      { label: "Response", value: "Instant", positive: true },
+      { labelKey: "showcase.delivery", valueKey: "showcase.early", positive: true },
+      { labelKey: "showcase.quality", valueKey: "showcase.premium", positive: true },
+      { labelKey: "showcase.response", valueKey: "showcase.instant", positive: true },
     ],
-    trustLabel: "Exceptional",
+    trustLabelKey: "showcase.exceptional",
   },
 ];
 
 const presets = [25, 55, 88, 97];
 
-function getClosestScenario(score: number): ReviewScenario {
-  let closest = scenarios[0];
-  let minDist = Math.abs(score - scenarios[0].score);
-  for (const s of scenarios) {
+function getClosestScenario(score: number): ReviewScenarioDef {
+  let closest = scenarioDefs[0];
+  let minDist = Math.abs(score - scenarioDefs[0].score);
+  for (const s of scenarioDefs) {
     const d = Math.abs(score - s.score);
     if (d < minDist) {
       minDist = d;
@@ -121,11 +113,11 @@ function getClosestScenario(score: number): ReviewScenario {
   return closest;
 }
 
-const dimensionIcons: Record<string, typeof Clock> = {
-  Delivery: Clock,
-  Quality: Hammer,
-  "Brochure match": FileText,
-  Response: MessageCircle,
+const dimensionIconKeys: Record<string, typeof Clock> = {
+  "showcase.delivery": Clock,
+  "showcase.quality": Hammer,
+  "showcase.brochureMatch": FileText,
+  "showcase.response": MessageCircle,
 };
 
 // ── Component ──
