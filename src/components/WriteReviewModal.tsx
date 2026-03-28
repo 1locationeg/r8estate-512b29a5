@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 import { useTranslation } from "react-i18next";
+import { checkContentLocally, checkContentWithAI, type AIModerationResult } from "@/lib/contentGuard";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +40,8 @@ import {
   Lock,
   Mail,
   User,
+  ShieldCheck,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
