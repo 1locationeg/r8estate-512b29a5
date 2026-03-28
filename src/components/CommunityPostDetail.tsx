@@ -257,6 +257,7 @@ const CommentItem = ({
                 {t("community.reply", "Reply")}
               </button>
             )}
+            <ReportButton contentType="reply" contentId={reply.id} size="sm" />
           </div>
         </div>
       </div>
