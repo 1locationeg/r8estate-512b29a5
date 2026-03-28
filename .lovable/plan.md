@@ -1,75 +1,76 @@
 
 
-## Compare Engine — Landing Page Showcase Section
+## Upgrade Business Dashboard — Buyer-Inspired Engagement Suite
 
-### Position
+### What's Missing
 
-**After the Step Timeline, before the Featured Identity Spotlight** (after line 403, before line 405 in Index.tsx). This is the optimal spot because:
-- User just learned "how to get started" (Step Timeline) — now they see the Compare tool in action as a concrete payoff
-- It sits right before content recommendations, acting as a conversion hook before users browse
-- Visually breaks up the flow with a rich, interactive-feeling preview
+The Buyer dashboard has a rich engagement layer that the Business dashboard completely lacks. Here's the gap:
 
-### What We're Building
+| Feature | Buyer | Business |
+|---------|-------|----------|
+| Points Breakdown Header | Yes | No |
+| Welcome greeting + tier nudge | Yes | No |
+| Community Post Box | Yes | No |
+| Profile Completion checklist (with coin incentives) | Yes | No (only a progress bar in BusinessProfileHeader) |
+| Tier Journey visual track | Yes | No |
+| Daily Tasks Card | Yes | No |
+| 7-Day Streak Tracker | Yes | No |
+| Activity Cards Grid | Yes | No |
+| Quick Actions with coin badges | Yes | No |
+| Sidebar widgets (Referral, Saved Search) | Yes | No |
 
-A new `CompareEngineShowcase` component — a static but visually rich preview of the comparison tool with animated bar charts, gold/rust color coding, and a gated CTA.
+### Plan
 
-### Design
+Restructure `DevOverview` to mirror the Buyer dashboard layout, adapted with the **Forest Green** business theme (`business-border`, `business`, `business-foreground`).
 
-```text
-┌──────────────────────────────────────────────────┐
-│  ✨ Compare before you commit                    │
-│     AI-powered side-by-side analysis             │
-├──────────────────────────────────────────────────┤
-│                                                  │
-│  ┌─────────────┐  vs  ┌─────────────┐           │
-│  │ Developer A  │      │ Developer B  │           │
-│  │ ████████ 4.2 │      │ █████░░ 3.1  │           │
-│  │ ██████░ 78%  │      │ ████░░░ 52%  │           │
-│  │ ███████ 85%  │      │ █████░░ 61%  │           │
-│  └─────────────┘      └─────────────┘           │
-│                                                  │
-│  [ 🔓 Export Full Report — Pro ]  [ Compare Now ] │
-│                                                  │
-│  Powered by community intelligence               │
-└──────────────────────────────────────────────────┘
-```
+### Changes to `src/pages/DeveloperDashboard.tsx` — DevOverview rewrite
 
-- **Bar charts**: Scroll-triggered width animation (0% → target%) with staggered delays
-- **Color coding**: Gold (`text-accent` / `bg-accent`) for scores ≥ 3.5, Rust (`text-red-500` / `bg-red-400`) for < 3.5
-- **Metrics shown**: Trust Score, Delivery Quality, Value for Money (3 rows)
-- **Monetisation hook**: "Export Full Report" button styled with a lock icon + "Pro" badge — clicking navigates to `/auth` or shows upgrade prompt
-- **"Compare Now" CTA**: Opens the existing `CompareModal` or navigates to categories
-- **AI shimmer headline** consistent with HowWeWork and StepTimeline
+**1. Add PointsBreakdownHeader** (top of page)
+- Uses `useGamification()` data (already imported)
+- Forest green gradient instead of buyer's primary/coin gradient
 
-### Files
+**2. Add Hero Row** (2-column grid like Buyer)
+- **Left column**:
+  - Welcome greeting with `Building2` verified badge (green) + "You're X pts away from [next tier]" motivator
+  - Community Post Box (same pattern, green accent)
+  - OnboardingWizard (move from current position)
+- **Right column**:
+  - Profile Completion checklist card with coin incentives per field (company_name, description, logo, location, phone, website, license)
+  - Tier Journey visual track (using business gamification tiers, green theme)
 
-#### 1. New: `src/components/CompareEngineShowcase.tsx`
-- Static mock data for two fictional developers (no DB call)
-- `IntersectionObserver` triggers bar width animations on scroll
-- 3 metric rows with animated colored bars + score labels
-- Two CTAs: "Export Full Report" (gated, lock icon + Pro badge) and "Compare Now"
-- RTL/LTR via `useTranslation()`
+**3. Keep BusinessProfileHeader** (after hero row)
 
-#### 2. Edit: `src/i18n/locales/en.json` — Add `compareEngine` namespace
-```json
-"compareEngine": {
-  "headline": "Compare before you commit",
-  "subtitle": "AI-powered side-by-side analysis",
-  "trustScore": "Trust Score",
-  "deliveryQuality": "Delivery Quality",
-  "valueForMoney": "Value for Money",
-  "exportReport": "Export Full Report",
-  "proBadge": "Pro",
-  "compareNow": "Compare Now",
-  "poweredBy": "Powered by community intelligence"
-}
-```
+**4. Keep Stats cards** (after profile header)
 
-#### 3. Edit: `src/i18n/locales/ar.json` — Arabic `compareEngine` namespace
+**5. Add DailyTasksCard** (new section after stats)
+- Already a generic component, works for both portals
 
-#### 4. Edit: `src/pages/Index.tsx`
-- Import `CompareEngineShowcase`
-- Render after StepTimeline (line 403), before Featured Identity Spotlight
+**6. Add StreakTrackerVisual** (after daily tasks)
+- Pass business gamification streak data
+
+**7. Add Business Activity Cards Grid** (after streak)
+- Create business-specific activities: "Complete Profile", "Reply to Review", "Request Review", "Submit Deal", "Add Project", "Join Community"
+- Reuse `ActivityCardsGrid` pattern but with business routes and green theme
+
+**8. Restructure charts + reviews into 3-column grid** (like buyer's Quick Actions + Latest Reviews + Sidebar)
+- Left (2 cols): Charts (reviews + views)
+- Right (1 col): Latest Reviews + WhatsApp Review Request CTA
+
+**9. Add ReferralWidget** at bottom (businesses can refer other businesses)
+
+### New Component: `src/components/BusinessActivityCards.tsx`
+- Business-specific activity grid (mirrors `ActivityCardsGrid` but with business actions/routes)
+- 6 cards: Complete Profile (+10), Reply to Review (+15), Request Review (+10), Submit a Deal (+20), Add Project (+15), Post in Community (+10)
+- Forest green color scheme, lock badges for tier-gated features
+
+### Files to Edit
+
+1. **`src/pages/DeveloperDashboard.tsx`** — Rewrite `DevOverview` with buyer-inspired layout
+2. **New: `src/components/BusinessActivityCards.tsx`** — Business-specific activity grid
+3. **`src/components/PointsBreakdownHeader.tsx`** — Add optional `variant="business"` prop for green theming
+4. **`src/components/DailyTasksCard.tsx`** — Verify it works without buyer-specific assumptions (may need minor portal detection)
+5. **`src/i18n/locales/en.json`** — Add `businessDashboard` namespace for welcome text, activity labels
+6. **`src/i18n/locales/ar.json`** — Arabic translations
 
 ### No database changes needed
 
