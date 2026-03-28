@@ -1218,5 +1218,16 @@
     "longFollower": "You've been following for a while — your review matters!",
     "monthsAgo": "{{count}} months",
     "daysAgo": "{{count}} days"
+  },
+  "compareEngine": {
+    "headline": "Compare before you commit",
+    "subtitle": "AI-powered side-by-side analysis",
+    "trustScore": "Trust Score",
+    "deliveryQuality": "Delivery Quality",
+    "valueForMoney": "Value for Money",
+    "exportReport": "Export Full Report",
+    "proBadge": "Pro",
+    "compareNow": "Compare Now",
+    "poweredBy": "Powered by community intelligence"
   }
 }
