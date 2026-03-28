@@ -154,14 +154,14 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
             <div className="flex-1 min-w-0">
               <div className="flex flex-wrap items-center gap-1.5 md:gap-2 mb-0.5 md:mb-1">
                 <span className="text-xs md:text-sm font-semibold text-foreground truncate">
-                  {review.developerReply.author}
+                  {i18n.language === 'ar' ? (review.developerReply.authorAr || review.developerReply.author) : review.developerReply.author}
                 </span>
                 <span className="text-[10px] md:text-xs text-muted-foreground">
                   {formatDate(review.developerReply.date, i18n.language)}
                 </span>
               </div>
               <p className="text-xs md:text-sm text-muted-foreground leading-relaxed line-clamp-2">
-                {review.developerReply.comment}
+                {i18n.language === 'ar' ? (review.developerReply.commentAr || review.developerReply.comment) : review.developerReply.comment}
               </p>
             </div>
           </div>
