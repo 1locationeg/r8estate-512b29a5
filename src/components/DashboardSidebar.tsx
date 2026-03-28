@@ -11,6 +11,7 @@ import { useGamification } from '@/hooks/useGamification';
 import { LogOut, ChevronDown, Coins, Trophy, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
+import { VerifiedBuyerBadge } from '@/components/VerifiedBuyerBadge';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -236,9 +237,12 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
             {/* Online dot — bottom-end */}
             <span className="absolute bottom-0.5 end-0.5 w-3.5 h-3.5 rounded-full bg-green-500 border-[2.5px] border-white" />
           </div>
-          <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-full">
-            {isBusinessPortal && companyInfo ? companyInfo.name : (profile?.full_name || 'User')}
-          </p>
+          <div className="flex items-center justify-center gap-1.5">
+            <p className="text-[17px] font-bold text-foreground tracking-tight truncate max-w-[160px]">
+              {isBusinessPortal && companyInfo ? companyInfo.name : (profile?.full_name || 'User')}
+            </p>
+            {isBuyerPortal && <VerifiedBuyerBadge userId={user?.id} compact />}
+          </div>
           <span className={cn(
             "inline-flex items-center gap-1 mt-1 px-2.5 py-0.5 rounded-full border text-[11px] font-semibold uppercase tracking-wide",
             isBusinessPortal
