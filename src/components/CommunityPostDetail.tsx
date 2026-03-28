@@ -16,6 +16,7 @@ import { useReactions } from "@/hooks/useReactions";
 import type { CommunityPost, CommunityReply } from "@/hooks/useCommunity";
 import { useCommunityActions } from "@/hooks/useCommunity";
 import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
+import { DeveloperBridgeCard } from "@/components/DeveloperBridgeCard";
 import { supabase } from "@/integrations/supabase/client";
 
 const EMOJI_GRID = [
@@ -734,6 +735,10 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
               )}
             </>
           )}
+        </div>
+
+        <div className="px-4">
+          <DeveloperBridgeCard post={post} />
         </div>
 
         <PostReactionSummary postId={post.id} replyCount={post.reply_count} />

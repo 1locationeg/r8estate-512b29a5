@@ -14,9 +14,11 @@ interface Props {
   post: CommunityPost;
 }
 
-/** Match developer names (≥2 consecutive words) in post text */
+/** Match developer names (≥2 consecutive words) in post text.
+ *  Also strips @mentions so "@palm hills" matches "Palm Hills Developments". */
 function findMentionedDeveloper(text: string): Developer | null {
-  const lower = text.toLowerCase();
+  // Normalize: lowercase + strip @ symbols so "@palm hills" becomes "palm hills"
+  const lower = text.toLowerCase().replace(/@/g, "");
   for (const dev of developers) {
     const words = dev.name.toLowerCase().split(/\s+/);
     if (words.length >= 2) {
@@ -29,15 +31,22 @@ function findMentionedDeveloper(text: string): Developer | null {
     // Single-word developer names: exact word boundary match
     if (words.length === 1) {
       const regex = new RegExp(`\\b${words[0]}\\b`, "i");
-      if (regex.test(text)) return dev;
+      if (regex.test(lower)) return dev;
     }
+  }
+  // Also check developer id (slug) mentions like @palm-hills
+  const slugified = text.toLowerCase().replace(/@/g, "");
+  for (const dev of developers) {
+    if (slugified.includes(dev.id)) return dev;
   }
   return null;
 }
 
 function getSentiment(score: number): "rising" | "stable" | "declining" {
-  if (score >= 75) return "rising";
-  if (score >= 50) return "stable";
+  // sentimentScore is 0-10 scale in mock data; normalize to 0-100
+  const normalized = score <= 10 ? score * 10 : score;
+  if (normalized >= 75) return "rising";
+  if (normalized >= 50) return "stable";
   return "declining";
 }
 
