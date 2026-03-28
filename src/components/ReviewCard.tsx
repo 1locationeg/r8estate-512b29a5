@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { formatDate } from "@/utils/formatArabic";
 import { useNavigate } from "react-router-dom";
 import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
+import { ReportButton } from "@/components/ReportButton";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -127,6 +128,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
             size="icon"
             className="w-7 h-7 md:w-8 md:h-8"
           />
+          <ReportButton contentType="review" contentId={review.id} size="sm" className="w-7 h-7 md:w-8 md:h-8 flex items-center justify-center" />
         </div>
       </div>
 

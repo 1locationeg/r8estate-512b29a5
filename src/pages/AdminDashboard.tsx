@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -36,6 +36,7 @@ import AdminReceiptVerification from '@/components/AdminReceiptVerification';
 import AdminReferrals from '@/components/AdminReferrals';
 import AdminUpsell from '@/components/AdminUpsell';
 import AdminCommunityModeration from '@/components/AdminCommunityModeration';
+import AdminContentReports from '@/components/AdminContentReports';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2058,6 +2059,7 @@ const AdminDashboard = () => {
         { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
         { icon: <Rocket className="w-4 h-4" />, label: 'Launch Moderation', path: '/admin/launch-moderation' },
         { icon: <ShieldAlert className="w-4 h-4" />, label: 'Community Guard', path: '/admin/community-moderation' },
+        { icon: <Flag className="w-4 h-4" />, label: 'Content Reports', path: '/admin/content-reports' },
       ],
     },
     {
@@ -2163,6 +2165,7 @@ const AdminDashboard = () => {
           <Route path="referrals" element={<AdminReferrals />} />
           <Route path="upsell" element={<AdminUpsell />} />
           <Route path="community-moderation" element={<AdminCommunityModeration />} />
+          <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>

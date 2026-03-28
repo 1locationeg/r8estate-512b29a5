@@ -20,6 +20,7 @@ import { useCommunityActions } from "@/hooks/useCommunity";
 import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
 import { DeveloperBridgeCard } from "@/components/DeveloperBridgeCard";
 import { supabase } from "@/integrations/supabase/client";
+import { ReportButton } from "@/components/ReportButton";
 
 const EMOJI_GRID = [
   "😀", "😂", "😍", "🤔", "👍", "👎", "🔥", "💯",
@@ -256,6 +257,7 @@ const CommentItem = ({
                 {t("community.reply", "Reply")}
               </button>
             )}
+            <ReportButton contentType="reply" contentId={reply.id} size="sm" />
           </div>
         </div>
       </div>

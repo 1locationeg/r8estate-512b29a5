@@ -47,6 +47,8 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
     setLoading(true);
     let query = (supabase.from("community_posts").select("*") as any).eq("is_hidden", false);
 
+    // 100-minute auto-expire: filter out warning posts older than 100 minutes
+    // This is done client-side since we need the data for the warning banner
     if (category) {
       query = query.eq("category", category);
     }
@@ -101,14 +103,24 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
         }
       }
 
-      setPosts(
-        (data || []).map((p: any) => ({
+      // Filter out expired warning posts (100-minute grace period)
+      const GRACE_PERIOD_MS = 100 * 60 * 1000;
+      const enrichedPosts = (data || [])
+        .filter((p: any) => {
+          if (p.moderation_status === 'warning' && p.flagged_at) {
+            const elapsed = Date.now() - new Date(p.flagged_at).getTime();
+            if (elapsed > GRACE_PERIOD_MS) return false; // expired, hide it
+          }
+          return true;
+        })
+        .map((p: any) => ({
           ...p,
           author_name: profileMap[p.user_id]?.full_name || profileMap[p.user_id]?.email?.split('@')[0] || "User",
           author_avatar: profileMap[p.user_id]?.avatar_url || undefined,
           user_voted: votedPostIds.has(p.id),
-        }))
-      );
+        }));
+
+      setPosts(enrichedPosts);
     }
     setLoading(false);
   }, [category, sortBy, user, developerId]);

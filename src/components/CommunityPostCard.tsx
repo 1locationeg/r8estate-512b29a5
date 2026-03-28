@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon, ShieldAlert } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
@@ -11,6 +11,7 @@ import { toast } from "@/hooks/use-toast";
 import { useReactions, type ReactionSummary } from "@/hooks/useReactions";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
+import { ReportButton } from "@/components/ReportButton";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 function timeAgo(dateStr: string, t: (key: string, fallback: string) => string) {
@@ -66,13 +67,31 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
   const userHasReacted = reactions.some(r => r.user_reacted);
 
   return (
-    <div className={`bg-card border rounded-lg overflow-hidden shadow-sm ${post.is_pinned ? 'border-primary/40 ring-1 ring-primary/20' : 'border-border'}`}>
+    <div className={`bg-card border rounded-lg overflow-hidden shadow-sm ${post.is_pinned ? 'border-primary/40 ring-1 ring-primary/20' : (post as any).moderation_status === 'warning' ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-border'}`}>
       {post.is_pinned && (
         <div className="flex items-center gap-1.5 px-4 py-1.5 bg-primary/5 text-primary text-xs font-medium border-b border-primary/10">
           <Pin className="w-3 h-3" />
           {t("community.pinnedPost", "Pinned post")}
         </div>
       )}
+      {/* Warning banner for moderation_status === 'warning' */}
+      {(post as any).moderation_status === 'warning' && (post as any).flagged_at && (() => {
+        const elapsed = Date.now() - new Date((post as any).flagged_at).getTime();
+        const remainingMins = Math.max(0, Math.ceil((100 * 60 * 1000 - elapsed) / 60000));
+        return (
+          <div className="flex flex-col gap-1 px-4 py-2 bg-amber-500/10 border-b border-amber-500/20">
+            <div className="flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                {t("contentGuard.warningBanner", "⚠️ This content is under review for objectivity. The author has {{minutes}} minutes to edit with evidence and polite language.", { minutes: remainingMins })}
+              </p>
+            </div>
+            <p className="text-[10px] text-amber-600/80 dark:text-amber-500/80 ps-5">
+              {t("contentGuard.businessRights", "Businesses have the right to take legal action against defamatory content.")}
+            </p>
+          </div>
+        );
+      })()}
       {/* Author header */}
       <div className="flex items-center gap-3 px-4 pt-3 pb-2">
         <Avatar className="h-10 w-10 ring-2 ring-border">
@@ -284,6 +303,13 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             className="w-full justify-center h-auto py-2 text-sm font-medium text-muted-foreground hover:bg-secondary gap-1.5"
           />
         </div>
+
+        {/* Report */}
+        {!isOwnPost && (
+          <div className="flex items-center justify-center px-2">
+            <ReportButton contentType="post" contentId={post.id} size="sm" />
+          </div>
+        )}
       </div>
     </div>
   );
