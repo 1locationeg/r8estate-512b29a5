@@ -241,6 +241,16 @@ const Index = () => {
                             <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
                               {t("hero.joinBuyers")}.
                             </p>
+                            <div className="flex items-center gap-2 mt-2 animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+                              <button onClick={() => navigate("/reviews?writeReview=true")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-primary text-primary-foreground text-xs font-bold hover:opacity-90 transition-opacity">
+                                <MessageSquarePlus className="w-3.5 h-3.5" />
+                                {t("hero.shareExperience")}
+                              </button>
+                              <button onClick={() => navigate("/developers")} className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full border border-border bg-background text-foreground text-xs font-bold hover:bg-muted transition-colors">
+                                <ScanSearch className="w-3.5 h-3.5" />
+                                {t("hero.checkDeveloper")}
+                              </button>
+                            </div>
                       </> :
                 <>
                         <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
