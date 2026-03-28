@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { TrendingUp, Minus, TrendingDown, Star, FileDown, ShieldCheck, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
