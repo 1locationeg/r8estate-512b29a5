@@ -303,6 +303,13 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             className="w-full justify-center h-auto py-2 text-sm font-medium text-muted-foreground hover:bg-secondary gap-1.5"
           />
         </div>
+
+        {/* Report */}
+        {!isOwnPost && (
+          <div className="flex items-center justify-center px-2">
+            <ReportButton contentType="post" contentId={post.id} size="sm" />
+          </div>
+        )}
       </div>
     </div>
   );
