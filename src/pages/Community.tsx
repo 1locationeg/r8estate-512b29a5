@@ -11,6 +11,7 @@ import { CommunityPostDetail } from "@/components/CommunityPostDetail";
 import { CommunityNewPost } from "@/components/CommunityNewPost";
 import { useCommunityPosts, useCommunityPost, useCommunityActions, type CommunityPostCategory, type CommunityPost } from "@/hooks/useCommunity";
 import { CommunityEngagementNudge } from "@/components/CommunityEngagementNudge";
+import { DeveloperBridgeCard } from "@/components/DeveloperBridgeCard";
 import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 import { Loader2 } from "lucide-react";
@@ -286,6 +287,7 @@ const Community = () => {
                   onTogglePin={handleTogglePin}
                   onEdit={(p) => { setEditingPost(p); setShowNewPost(true); }}
                 />
+                <DeveloperBridgeCard post={post} />
                 {/* Engagement nudges after every 3rd post */}
                 {idx === 2 && <CommunityEngagementNudge variant="referral" />}
                 {idx === 5 && <CommunityEngagementNudge variant="review" />}

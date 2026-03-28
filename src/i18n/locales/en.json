@@ -584,7 +584,14 @@
     "bodyPlaceholder": "Share the details...",
     "cancel": "Cancel",
     "post": "Post",
-    "askCommunity": "Ask the community"
+    "askCommunity": "Ask the community",
+    "bridgeTitle": "Developer Intelligence",
+    "bridgeTrustScore": "Trust Score",
+    "bridgeSentimentRising": "Rising",
+    "bridgeSentimentStable": "Stable",
+    "bridgeSentimentDeclining": "Declining",
+    "bridgeDownloadReport": "Download Buyer Report for {{name}}",
+    "bridgeVerifiedOnly": "Verified buyers only"
   },
   "dashboard": {
     "memberSince": "Member since",
