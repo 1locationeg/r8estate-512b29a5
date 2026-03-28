@@ -2161,6 +2161,7 @@ const AdminDashboard = () => {
           <Route path="receipt-verification" element={<AdminReceiptVerification />} />
           <Route path="referrals" element={<AdminReferrals />} />
           <Route path="upsell" element={<AdminUpsell />} />
+          <Route path="community-moderation" element={<AdminCommunityModeration />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
