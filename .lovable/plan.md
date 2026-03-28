@@ -1,41 +1,73 @@
 
 
-## Enhance Developer Bridge Card: Better Matching, Autocomplete & Chat Button
+## Modern Referral & Trust System — Fully Bilingual (AR/EN)
 
-### What We're Building
+### What Changes
 
-1. **Bridge card shows with or without @ mention** — currently matching logic works but the card is gated to verified buyers only. We'll keep verified-buyer gating but ensure plain text mentions (e.g. just "emaar" or "palm hills" without @) trigger the card reliably.
+#### 1. `src/i18n/locales/en.json` — Add `referral` namespace
+```json
+"referral": {
+  "headline": "Your contribution makes a difference",
+  "subtext": "Share your experience with friends and help them make the right decision",
+  "cta": "Invite a Friend",
+  "invited": "Invited",
+  "verified": "Verified",
+  "insightCredits": "Insight Credits",
+  "collectiveNote": "Every invite strengthens the community",
+  "linkCopied": "Referral link copied!",
+  "shareTitle": "Join R8ESTATE",
+  "shareDesc": "Join R8ESTATE — the trusted real estate review platform!",
+  "shareButton": "Share Invite Link",
+  "rewardNote": "Both you and your friend earn Insight Credits when they verify",
+  "perReferral": "+50 credits each"
+}
+```
+Update `community.referralNudge` → "Your contribution makes a difference 🎁" and `community.referralNudgeDesc` → "Share your experience and help friends make the right decision".
 
-2. **Business name autocomplete in post composer** — when writing a post in `CommunityNewPost`, typing `@` followed by characters shows a dropdown of matching developers from the mock data list, letting the user pick one to insert.
+#### 2. `src/i18n/locales/ar.json` — Add Arabic `referral` namespace
+```json
+"referral": {
+  "headline": "مساهمتك تصنع الفرق",
+  "subtext": "شارك خبرتك مع أصدقائك وساعدهم في اتخاذ القرار الصحيح",
+  "cta": "دعوة صديق",
+  "invited": "تمت الدعوة",
+  "verified": "تم التفعيل",
+  "insightCredits": "رصيد المعرفة",
+  "collectiveNote": "كل دعوة تضيف لمجتمع أقوى",
+  "linkCopied": "تم نسخ رابط الدعوة!",
+  "shareTitle": "انضم لـ R8ESTATE",
+  "shareDesc": "انضم لـ R8ESTATE — منصة التقييم العقاري الموثوقة!",
+  "shareButton": "شارك رابط الدعوة",
+  "rewardNote": "أنت وصديقك تحصلوا على رصيد معرفة لما يفعّل حسابه",
+  "perReferral": "+٥٠ رصيد لكل دعوة"
+}
+```
+Update `community.referralNudge` and `community.referralNudgeDesc` with Arabic equivalents.
 
-3. **Message/Chat button on bridge card** — add a "Message Business" button next to the download report button, using the existing `useStartChat.startChatWithBusinessId` hook.
+#### 3. `src/components/ReferralWidget.tsx` — Full i18n redesign
+- Add `useTranslation()` hook
+- Replace all hardcoded English strings with `t("referral.*")` keys
+- Headline: `t("referral.headline")` — shows Arabic or English based on active language
+- Stats labels: `t("referral.invited")`, `t("referral.verified")`, `t("referral.insightCredits")`
+- Badge: `t("referral.perReferral")`
+- Toast: `t("referral.linkCopied")`
+- ShareMenu props: `title={t("referral.shareTitle")}`, `description={t("referral.shareDesc")}`, `label={t("referral.shareButton")}`
+- Bottom note: `t("referral.rewardNote")`
+- Add collective intelligence tagline: `t("referral.collectiveNote")`
+- Visual polish: gradient accent border, Sparkles icon next to headline
 
----
+#### 4. `src/components/CommunityEngagementNudge.tsx` — Update referral variant
+- Change referral config to use new i18n keys:
+  - `title`: `t("community.referralNudge")` (already uses this, just updating the fallback and the locale values)
+  - `desc`: `t("community.referralNudgeDesc")`
+  - `cta`: `t("referral.cta")`
 
-### Files to Change
+#### 5. `src/index.css` — Add Cairo as preferred Arabic font
+- Update Arabic font rule to: `font-family: 'Cairo', 'Almarai', 'Tajawal', sans-serif;`
 
-#### 1. `src/components/DeveloperBridgeCard.tsx`
-- The matching logic already handles plain text (no @). The current issue is likely that single common words like "emaar" fail the word-boundary check against multi-word names. Fix: also check if any single alias word appears as a standalone word in the normalized text (not just for single-word dev names).
-- Add a **"Message Business"** button using `useStartChat.startChatWithBusinessId(matchedDev.id)`. Place it alongside the existing download button in a 2-column layout.
-- Import `MessageCircle` from lucide-react and `useStartChat` hook.
+#### 6. `index.html` — Import Cairo font
+- Add Google Fonts `<link>` for Cairo (weights 400, 600, 700) alongside existing font preconnects
 
-#### 2. `src/components/CommunityNewPost.tsx` — Add @mention autocomplete
-- Track cursor position in the textarea. On each keystroke, detect if the user is mid-`@mention` (find `@` before cursor, extract partial query).
-- Filter `developers` array by partial match on name/id.
-- Show a small absolute-positioned dropdown list of matching developers (logo + name).
-- On selection, replace the `@partial` text with `@developer-name` and close the dropdown.
-- Use a `useState` for suggestion list + selected index, keyboard nav (up/down/enter/escape).
-
-#### 3. `src/components/CommunityPostDetail.tsx`
-- No changes needed — bridge card is already rendered there.
-
----
-
-### Technical Details
-
-**Matching fix** — In `findMentionedDeveloper`, for each developer, after multi-word phrase check, add a check: for each alias in the set, test `new RegExp(\b${alias}\b, 'i')` against the normalized text. This catches "emaar" in "I visited emaar showroom" without needing @.
-
-**Autocomplete component** — Create a small inline `DeveloperMentionSuggestions` component rendered inside the `CommunityNewPost` dialog, positioned relative to the textarea. It filters developers on the current @-query fragment and inserts the selected name.
-
-**Chat button** — Uses existing `useStartChat` which looks up `business_profiles.user_id` by mock ID. If the business isn't claimed, it shows a toast. The button will be a secondary outline button with a `MessageCircle` icon.
+### No database changes needed
+The existing `referrals` table and logic remain unchanged. "Insight Credits" is a UI-only rename of points.
 
