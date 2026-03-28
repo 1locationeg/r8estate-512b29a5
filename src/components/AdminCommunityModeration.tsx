@@ -376,6 +376,18 @@ const AdminCommunityModeration = () => {
                           {togglingId === post.id ? <Loader2 className="w-3 h-3 animate-spin" /> : post.is_hidden ? <Eye className="w-3 h-3" /> : <EyeOff className="w-3 h-3" />}
                           {post.is_hidden ? 'Show' : 'Hide'}
                         </Button>
+                        {(post.moderation_status === 'flagged' || post.moderation_status === 'warning') && (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => restorePost(post.id)}
+                            disabled={togglingId === post.id}
+                            className="gap-1 border-green-500/30 text-green-600 hover:bg-green-500/10"
+                          >
+                            <CheckCircle className="w-3 h-3" />
+                            Restore
+                          </Button>
+                        )}
                       </div>
                     </div>
                   </CardContent>
