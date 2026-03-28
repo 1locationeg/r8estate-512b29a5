@@ -9,6 +9,7 @@ interface PointsBreakdownHeaderProps {
   tierEmoji: string;
   earnedBadges: number;
   totalBadges: number;
+  variant?: 'buyer' | 'business';
   className?: string;
 }
 
@@ -19,9 +20,12 @@ export const PointsBreakdownHeader = ({
   tierEmoji,
   earnedBadges,
   totalBadges,
+  variant = 'buyer',
   className,
 }: PointsBreakdownHeaderProps) => {
   const { t } = useTranslation();
+
+  const isBusiness = variant === 'business';
 
   const stats = [
     {
@@ -45,8 +49,8 @@ export const PointsBreakdownHeader = ({
       label: t('gamification.todaysPoints'),
       value: '0',
       sublabel: t('gamification.completeTasks'),
-      iconColor: 'text-primary',
-      bgColor: 'bg-primary/10',
+      iconColor: isBusiness ? 'text-business-border' : 'text-primary',
+      bgColor: isBusiness ? 'bg-business-border/10' : 'bg-primary/10',
     },
     {
       icon: Flame,
@@ -59,12 +63,18 @@ export const PointsBreakdownHeader = ({
   ];
 
   return (
-    <div className={cn('bg-gradient-to-r from-primary to-primary/80 rounded-2xl p-5 text-primary-foreground', className)}>
+    <div className={cn(
+      'rounded-2xl p-5 text-primary-foreground',
+      isBusiness
+        ? 'bg-gradient-to-r from-[#27500A] to-[#3B6D11] text-white'
+        : 'bg-gradient-to-r from-primary to-primary/80',
+      className
+    )}>
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <span className="text-2xl">{tierEmoji}</span>
           <div>
-            <p className="text-xs text-primary-foreground/70 font-medium">{t('gamification.level')}</p>
+            <p className="text-xs text-white/70 font-medium">{t('gamification.level')}</p>
             <p className="text-sm font-bold">{tierName}</p>
           </div>
         </div>
@@ -77,12 +87,12 @@ export const PointsBreakdownHeader = ({
             <div key={stat.label} className="bg-white/10 backdrop-blur-sm rounded-xl p-3">
               <div className="flex items-center gap-2 mb-1">
                 <div className={cn('w-7 h-7 rounded-lg flex items-center justify-center', 'bg-white/15')}>
-                  <Icon className="w-4 h-4 text-primary-foreground" />
+                  <Icon className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-[10px] text-primary-foreground/70 font-medium">{stat.label}</span>
+                <span className="text-[10px] text-white/70 font-medium">{stat.label}</span>
               </div>
               <p className="text-xl font-bold">{stat.value}</p>
-              <p className="text-[10px] text-primary-foreground/60 mt-0.5">{stat.sublabel}</p>
+              <p className="text-[10px] text-white/60 mt-0.5">{stat.sublabel}</p>
             </div>
           );
         })}
