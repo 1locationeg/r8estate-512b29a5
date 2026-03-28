@@ -75,15 +75,25 @@ export function DeveloperBridgeCard({ post }: Props) {
       return;
     }
     let cancelled = false;
-    supabase
-      .from("receipt_submissions")
-      .select("id")
-      .eq("user_id", user.id)
-      .eq("status", "approved")
-      .limit(1)
-      .then(({ data }) => {
-        if (!cancelled) setIsVerifiedBuyer((data?.length ?? 0) > 0);
-      });
+    Promise.all([
+      supabase
+        .from("receipt_submissions")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("status", "approved")
+        .limit(1),
+      supabase
+        .from("reviewer_verifications")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("status", "approved")
+        .limit(1),
+    ]).then(([receipts, verifications]) => {
+      if (!cancelled) {
+        const has = (receipts.data?.length ?? 0) > 0 || (verifications.data?.length ?? 0) > 0;
+        setIsVerifiedBuyer(has);
+      }
+    });
     return () => { cancelled = true; };
   }, [user, role, matchedDev]);
 
