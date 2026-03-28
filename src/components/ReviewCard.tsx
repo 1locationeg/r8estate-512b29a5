@@ -82,7 +82,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 mb-0.5 md:mb-1 flex-wrap">
               <span className="font-semibold text-foreground text-sm md:text-base truncate">
-                {review.author}
+                {i18n.language === 'ar' ? (review.authorAr || review.author) : review.author}
               </span>
               {review.verified && (
                 <CheckCircle2 className="w-3.5 h-3.5 md:w-4 md:h-4 text-verified fill-verified flex-shrink-0" />
@@ -131,7 +131,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       </div>
 
       <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
-        {review.comment}
+        {i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment}
       </p>
       <div className="flex items-center justify-between mb-2 md:mb-3">
         <span className="text-[10px] md:text-xs text-muted-foreground">
