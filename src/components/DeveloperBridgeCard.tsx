@@ -76,6 +76,7 @@ const sentimentConfig = {
 export function DeveloperBridgeCard({ post }: Props) {
   const { t } = useTranslation();
   const { user, role } = useAuth();
+  const navigate = useNavigate();
   const { getLogoOverride } = useBusinessLogo();
   const { startChatWithBusinessId } = useStartChat();
   const [isVerifiedBuyer, setIsVerifiedBuyer] = useState<boolean | null>(null);
