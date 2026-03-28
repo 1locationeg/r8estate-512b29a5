@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
+import { VerifiedBuyerBadge } from "@/components/VerifiedBuyerBadge";
 import { ShareMenu } from "@/components/ShareMenu";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "@/hooks/use-toast";
@@ -225,6 +226,7 @@ const CommentItem = ({
             <div className="flex items-center gap-1.5 mb-0.5">
               <span className="text-xs font-semibold text-foreground">{reply.author_name}</span>
               <UserTierBadge userId={reply.user_id} />
+              <VerifiedBuyerBadge userId={reply.user_id} compact />
             </div>
             <p className="text-sm text-foreground leading-relaxed break-words">{reply.body}</p>
           </div>
@@ -587,6 +589,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
             <div className="flex items-center gap-1.5">
               <span className="font-semibold text-sm text-foreground">{post.author_name}</span>
               <UserTierBadge userId={post.user_id} />
+              <VerifiedBuyerBadge userId={post.user_id} compact />
             </div>
             <div className="flex items-center gap-1.5 text-[11px] text-muted-foreground">
               <span>{timeAgo(post.created_at, t)}</span>
