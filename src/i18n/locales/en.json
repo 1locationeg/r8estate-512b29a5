@@ -1313,6 +1313,27 @@
     "objectivityMessage": "Your review matters. To help others make real decisions, please be specific and objective — share what happened, when, and what evidence you have. Generic praise or personal attacks without proof won't be published.",
     "tipSpecific": "Be specific — mention dates, locations, unit numbers",
     "tipEvidence": "Share evidence — photos, receipts, contracts",
-    "tipObjective": "Stay objective — focus on facts, not emotions"
+    "tipObjective": "Stay objective — focus on facts, not emotions",
+    "warningBanner": "⚠️ This content is under review for objectivity. The author has {{minutes}} minutes to edit with evidence and polite language.",
+    "warningBannerExpired": "This content has been auto-hidden due to unresolved content policy concerns.",
+    "businessRights": "Businesses have the right to take legal action against defamatory content.",
+    "anonymousBlocked": "Anonymous users cannot post flagged content. Please sign in and use your real identity.",
+    "autoHidden": "This post was auto-hidden by the content guard (score > 80)."
+  },
+  "report": {
+    "flag": "Report",
+    "title": "Why are you reporting this?",
+    "spam": "Spam",
+    "harassment": "Harassment",
+    "misinformation": "Misinformation",
+    "inappropriate": "Inappropriate",
+    "defamation": "Defamation",
+    "other": "Other",
+    "detailsPlaceholder": "Add more details (optional)...",
+    "submit": "Report",
+    "thanks": "Thanks for reporting",
+    "thanksDesc": "We'll review this content shortly.",
+    "alreadyReported": "Already reported",
+    "alreadyReportedDesc": "You've already reported this content."
   }
 }
