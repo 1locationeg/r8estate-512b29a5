@@ -48,7 +48,26 @@ const AdminBusinessClaims = () => {
       toast.error('Failed to load claims');
       console.error(error);
     }
-    setClaims((data as any[]) || []);
+    const rawClaims = (data as any[]) || [];
+
+    // Fetch profile info for user context
+    const userIds = [...new Set(rawClaims.map((c: any) => c.user_id))];
+    let profileMap: Record<string, { full_name: string | null; email: string | null }> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, full_name, email')
+        .in('user_id', userIds);
+      (profiles || []).forEach((p: any) => {
+        profileMap[p.user_id] = { full_name: p.full_name, email: p.email };
+      });
+    }
+
+    setClaims(rawClaims.map((c: any) => ({
+      ...c,
+      _userName: profileMap[c.user_id]?.full_name || null,
+      _userEmail: profileMap[c.user_id]?.email || null,
+    })));
     setLoading(false);
   }, []);
 
@@ -172,7 +191,7 @@ const AdminBusinessClaims = () => {
                       </div>
 
                       <p className="text-xs text-muted-foreground mb-2">
-                        Submitted {new Date(claim.created_at).toLocaleDateString()}
+                        Submitted by {(claim as any)._userName || 'Unknown'} {(claim as any)._userEmail ? `(${(claim as any)._userEmail})` : ''} · {new Date(claim.created_at).toLocaleDateString()}
                       </p>
 
                       {claim.document_url && (

@@ -27,7 +27,26 @@ export const AdminBusinessUpgrades = () => {
       .order("created_at", { ascending: false });
     if (filter !== "all") query = query.eq("status", filter);
     const { data } = await query;
-    setRequests((data as any[]) || []);
+    const rawRequests = (data as any[]) || [];
+
+    // Fetch profile info
+    const userIds = [...new Set(rawRequests.map(r => r.user_id))];
+    let profileMap: Record<string, { full_name: string | null; email: string | null }> = {};
+    if (userIds.length > 0) {
+      const { data: profiles } = await supabase
+        .from('profiles')
+        .select('user_id, full_name, email')
+        .in('user_id', userIds);
+      (profiles || []).forEach((p: any) => {
+        profileMap[p.user_id] = { full_name: p.full_name, email: p.email };
+      });
+    }
+
+    setRequests(rawRequests.map(r => ({
+      ...r,
+      _userName: profileMap[r.user_id]?.full_name || null,
+      _userEmail: profileMap[r.user_id]?.email || null,
+    })));
     setLoading(false);
   };
 
@@ -129,7 +148,7 @@ export const AdminBusinessUpgrades = () => {
                     <p className="text-xs text-muted-foreground mb-1">{req.description}</p>
                   )}
                   <p className="text-[10px] text-muted-foreground">
-                    User: {req.user_id?.slice(0, 8)}... • {new Date(req.created_at).toLocaleDateString()}
+                    {req._userName || 'Unknown'} {req._userEmail ? `(${req._userEmail})` : ''} • {new Date(req.created_at).toLocaleDateString()}
                   </p>
                 </div>
                 {req.document_url && (
