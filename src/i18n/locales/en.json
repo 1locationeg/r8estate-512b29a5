@@ -1121,5 +1121,32 @@
     "verifyPurchaseDesc": "Submit a receipt for verified buyer status",
     "levelRequired": "Level {{level}} required"
   },
-  "brandTagline": "Real Reviews · Real Estate"
+  "brandTagline": "Real Reviews · Real Estate",
+  "showcase": {
+    "weeksAgo": "2 weeks ago",
+    "delivery": "Delivery",
+    "quality": "Quality",
+    "response": "Response",
+    "brochureMatch": "Brochure match",
+    "18moLate": "18mo late",
+    "poor": "Poor",
+    "noReply": "No reply",
+    "3moLate": "3mo late",
+    "average": "Average",
+    "slow": "Slow",
+    "onTime": "On time",
+    "excellent": "Excellent",
+    "fast": "Fast",
+    "early": "Early",
+    "premium": "Premium",
+    "instant": "Instant",
+    "lowTrust": "Low Trust",
+    "mixed": "Mixed",
+    "highTrust": "High Trust",
+    "exceptional": "Exceptional",
+    "comment1": "\"Delivery delayed 18 months with zero communication. Finishing quality was far below the brochure. Very disappointing.\"",
+    "comment2": "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
+    "comment3": "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
+    "comment4": "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\""
+  }
 }
