@@ -21,7 +21,8 @@ const trustCategoryKeys = [
 ];
 
 export const FeaturedIdentitySpotlight = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isAr = i18n.language === 'ar';
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
@@ -219,7 +220,7 @@ export const FeaturedIdentitySpotlight = () => {
                     <div className="min-w-0">
                       <div className="flex items-center gap-1">
                         <span className="text-xs font-semibold text-foreground truncate">
-                          {review.author}
+                          {isAr ? (review.authorAr || review.author) : review.author}
                         </span>
                         {review.tier &&
                           <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
@@ -238,7 +239,7 @@ export const FeaturedIdentitySpotlight = () => {
                 </div>
 
                 <p className="text-xs text-foreground/80 leading-snug line-clamp-2">
-                  {review.comment}
+                  {isAr ? (review.commentAr || review.comment) : review.comment}
                 </p>
                 <p className="text-[9px] text-muted-foreground">{review.date}</p>
 
@@ -247,14 +248,14 @@ export const FeaturedIdentitySpotlight = () => {
                     <div className="flex items-center gap-1 mb-0.5">
                       <MessageSquare className="w-2.5 h-2.5 text-primary" />
                       <span className="text-[10px] font-semibold text-primary">
-                        {review.developerReply.author}
+                        {isAr ? (review.developerReply.authorAr || review.developerReply.author) : review.developerReply.author}
                       </span>
                       <span className="text-[9px] text-muted-foreground">
                         {review.developerReply.date}
                       </span>
                     </div>
                     <p className="text-[11px] text-foreground/70 leading-snug line-clamp-2">
-                      {review.developerReply.comment}
+                      {isAr ? (review.developerReply.commentAr || review.developerReply.comment) : review.developerReply.comment}
                     </p>
                   </div>
                 }
