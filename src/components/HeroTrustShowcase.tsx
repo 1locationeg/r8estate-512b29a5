@@ -141,10 +141,10 @@ export const HeroTrustShowcase = () => {
   const startCycling = useCallback(() => {
     if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
     cycleIntervalRef.current = setInterval(() => {
-      cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarios.length;
+      cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarioDefs.length;
 
       // When wrapping back to start, just crossfade like any other transition (no replay reset)
-      const nextScore = scenarios[cycleIdxRef.current].score;
+      const nextScore = scenarioDefs[cycleIdxRef.current].score;
       setTransitioning(true);
       setTimeout(() => {
         setScore(nextScore);
@@ -436,7 +436,7 @@ export const HeroTrustShowcase = () => {
                     />
                   ))}
                 </div>
-                <span className="text-[10px] text-muted-foreground">2 weeks ago</span>
+                <span className="text-[10px] text-muted-foreground">{t("showcase.weeksAgo")}</span>
               </div>
             </div>
           </div>
@@ -448,7 +448,7 @@ export const HeroTrustShowcase = () => {
             }`}
           >
             <p className="text-xs md:text-base text-foreground/80 italic leading-relaxed line-clamp-2">
-              {scenario.comment}
+              {t(scenario.commentKey)}
             </p>
           </div>
 
@@ -459,10 +459,10 @@ export const HeroTrustShowcase = () => {
             }`}
           >
             {scenario.dimensions.map((dim) => {
-              const Icon = dimensionIcons[dim.label] || Clock;
+              const Icon = dimensionIconKeys[dim.labelKey] || Clock;
               return (
                 <span
-                  key={dim.label}
+                  key={dim.labelKey}
                   className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[10px] font-semibold border ${
                     dim.positive
                       ? "bg-trust-excellent/10 text-trust-excellent border-trust-excellent/20"
@@ -470,8 +470,8 @@ export const HeroTrustShowcase = () => {
                   }`}
                 >
                   <Icon className="w-3 h-3" />
-                  <span className="text-foreground/60">{dim.label}</span>
-                  <span className="font-bold">{dim.value}</span>
+                  <span className="text-foreground/60">{t(dim.labelKey)}</span>
+                  <span className="font-bold">{t(dim.valueKey)}</span>
                 </span>
               );
             })}
@@ -495,7 +495,7 @@ export const HeroTrustShowcase = () => {
                 backgroundColor: `${color}15`,
               }}
             >
-              {getTrustLabel(displayScore)} · {displayScore}
+              {t(scenario.trustLabelKey)} · {displayScore}
             </span>
           </div>
         </div>
