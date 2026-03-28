@@ -20,6 +20,7 @@ import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
 import StepTimeline from "@/components/StepTimeline";
 import CompareEngineShowcase from "@/components/CompareEngineShowcase";
+import { AudienceSegmentCards } from "@/components/AudienceSegmentCards";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
