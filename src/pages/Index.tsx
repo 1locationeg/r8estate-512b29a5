@@ -321,6 +321,9 @@ const Index = () => {
               </div>
 
 
+              {/* How We Work */}
+              <HowWeWork />
+
               {/* Category Links + Special View Grid */}
               <div className={cn("transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <HeroCategoryLinks
