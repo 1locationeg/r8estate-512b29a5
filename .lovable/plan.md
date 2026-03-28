@@ -1,79 +1,67 @@
 
 
-## Post-Decision Retention Loop — "Track Your Developer"
-
-### Answer: Same Follow, Enhanced Purpose
-
-The existing **Follow** button in Portfolio and directory cards is the **same** `followed_businesses` table. What you're asking for builds **on top** of that — turning a passive "following" list into an active retention engine with alerts and automated review requests.
+## Dynamic Business Upsell Teaser — Extended to Buyers + Admin Controls
 
 ### What We're Building
 
-**Three layers on top of the existing follow system:**
-
-1. **"Track Your Developer" Alert System** — When a followed business gets a new review, deal, or launch, the follower gets an in-app notification. This already partially works via the `user_interests` trigger, but we'll make it explicit for followed businesses.
-
-2. **Automated 6-Month Review Request** — A scheduled check that finds users who followed a business 6+ months ago but haven't reviewed it. Sends an in-app notification nudging them: "You've been following [Developer] for 6 months — share your experience!"
-
-3. **Enhanced Portfolio "Following" Tab** — Show follow duration, last activity from the developer, and a "Write Review" CTA for long-term followers.
-
----
+1. **`DeveloperInsightsUpsell` component** — as previously planned (blurred SVG charts, 3 icon bullets, bilingual headline/CTA)
+2. **Show it on Buyer Dashboard** — render the upsell at the bottom of `BuyerOverview` to encourage buyers to unlock business insights
+3. **Admin Upsell Management** — a new `AdminUpsell` section at `/admin/upsell` where admins can toggle the upsell on/off, edit headline/subtext/CTA per language, and preview changes — all stored in `platform_settings`
 
 ### Files & Changes
 
-#### 1. Database Migration — Add `follow_reminded_at` column
-```sql
-ALTER TABLE followed_businesses 
-ADD COLUMN follow_reminded_at timestamptz DEFAULT NULL;
-```
-This tracks when the last review reminder was sent, preventing spam.
+#### 1. Database Migration — Seed `platform_settings` keys for upsell
+Insert 3 rows into `platform_settings`:
+- `upsell_enabled` → `"true"`
+- `upsell_content_en` → JSON with `headline`, `subtext`, `bullet1-3`, `cta`
+- `upsell_content_ar` → same structure in Arabic
 
-#### 2. Database Trigger — Notify followers on new approved reviews
-Create a PostgreSQL trigger on `reviews` table (on status change to `approved`) that inserts a notification for each user following that `developer_id` via `followed_businesses`. This ensures followers get "New review for [Developer]" alerts automatically.
+These are data inserts using the insert tool (not schema changes).
 
-#### 3. Edge Function — `follow-review-reminder`
-A scheduled function (pg_cron, runs daily) that:
-- Queries `followed_businesses` where `created_at < now() - interval '6 months'` AND `follow_reminded_at IS NULL`
-- Checks the user hasn't already reviewed that developer (LEFT JOIN `reviews`)
-- Inserts a notification: "You've been tracking [Developer] for 6 months — ready to share your experience?"
-- Updates `follow_reminded_at` to prevent repeat reminders
+#### 2. New Component: `src/components/DeveloperInsightsUpsell.tsx`
+- Fetches `platform_settings` keys `upsell_enabled` and `upsell_content_{lang}` on mount
+- If `upsell_enabled !== "true"`, renders nothing
+- Falls back to hardcoded i18n strings if no DB content found
+- Blurred SVG background with fake 24-month trend lines
+- Three icon rows: `AlertTriangle`, `TrendingUp`, `Shield` with bullet text
+- Headline + subtext + CTA button
+- RTL/LTR auto-switch via `useTranslation()` direction
+- CTA opens `BusinessUpgradeModal` (authenticated) or navigates to `/auth`
 
-#### 4. `src/pages/Portfolio.tsx` — Enhanced "Following" tab
-- Show follow duration (e.g., "Following for 3 months")
-- Add a "Write Review" button for follows older than 30 days
-- Show latest review count or activity indicator per followed business
-
-#### 5. `src/i18n/locales/en.json` & `ar.json` — Add retention copy
+#### 3. `src/i18n/locales/en.json` — Add `upsell` namespace (fallback strings)
 ```json
-"retention": {
-  "trackDeveloper": "Track Your Developer",
-  "followDuration": "Following for {{duration}}",
-  "reviewNudge": "Ready to share your experience?",
-  "writeReview": "Write a Review",
-  "newReviewAlert": "New review posted for {{developer}}",
-  "sixMonthReminder": "You've been tracking {{developer}} for 6 months — share your experience!"
-}
-```
-Arabic:
-```json
-"retention": {
-  "trackDeveloper": "تابع المطوّر",
-  "followDuration": "متابع منذ {{duration}}",
-  "reviewNudge": "مستعد تشارك تجربتك؟",
-  "writeReview": "اكتب تقييم",
-  "newReviewAlert": "تقييم جديد لـ {{developer}}",
-  "sixMonthReminder": "متابع {{developer}} من ٦ شهور — شاركنا تجربتك!"
+"upsell": {
+  "headline": "Want to see the full picture?",
+  "subtext": "Don't settle for surface-level reviews...",
+  "bullet1": "Deep-dive into complaint trends and patterns.",
+  "bullet2": "Predictive risk indicators (Delivery & Quality).",
+  "bullet3": "Benchmarking against top-tier local competitors.",
+  "cta": "Unlock Business Insights"
 }
 ```
 
-#### 6. `src/components/CommunityEngagementNudge.tsx` — Add retention nudge variant
-A new nudge type for users following businesses 3+ months, encouraging review writing.
+#### 4. `src/i18n/locales/ar.json` — Arabic `upsell` namespace
 
----
+#### 5. Integration Points — Render `<DeveloperInsightsUpsell />`
+- **`src/components/DeveloperDetailModal.tsx`** — bottom of modal
+- **`src/components/DeveloperDetailCard.tsx`** — bottom of card
+- **`src/pages/BuyerDashboard.tsx`** (`BuyerOverview`) — after the stats/activity section, before the "Upgrade to Business" CTA
+
+#### 6. New Component: `src/components/AdminUpsell.tsx`
+Admin panel at `/admin/upsell` with:
+- **Toggle switch**: Enable/Disable upsell globally (updates `upsell_enabled`)
+- **EN tab / AR tab**: Editable fields for headline, subtext, 3 bullets, CTA text
+- **Save button**: Writes updated JSON to `upsell_content_en` / `upsell_content_ar` in `platform_settings`
+- **Live preview**: Mini preview card showing current upsell appearance
+
+#### 7. `src/pages/AdminDashboard.tsx` — Add Upsell route
+- Import `AdminUpsell`
+- Add nav item under "Content" group: `{ icon: <TrendingUp />, label: 'Upsell Teaser', path: '/admin/upsell' }`
+- Add route: `<Route path="upsell" element={<AdminUpsell />} />`
 
 ### Technical Details
-
-- **Trigger**: `AFTER UPDATE ON reviews WHEN (NEW.status = 'approved')` → queries `followed_businesses` by `business_id = NEW.developer_id` → inserts into `notifications`
-- **Cron**: Daily at 9 AM UTC via pg_cron calling the edge function
-- **No new tables** — uses existing `followed_businesses`, `reviews`, and `notifications`
-- **One new column**: `follow_reminded_at` on `followed_businesses`
+- Uses existing `platform_settings` table pattern (same as Spotlight, WhatsApp, SEO)
+- No schema migration needed — only data inserts for initial seed values
+- Component gracefully degrades to i18n fallback if DB settings not found
+- Admin can fully control visibility and copy without code changes
 
