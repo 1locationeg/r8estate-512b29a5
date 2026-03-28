@@ -21,7 +21,8 @@ const trustCategoryKeys = [
 ];
 
 export const FeaturedIdentitySpotlight = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isAr = i18n.language === 'ar';
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showAllReviews, setShowAllReviews] = useState(false);
