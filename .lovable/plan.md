@@ -1,98 +1,75 @@
 
 
-## Step Timeline — "What Do I Actually Do Here?"
+## Compare Engine — Landing Page Showcase Section
 
 ### Position
 
-**After the Quick Actions Grid, before the Featured Identity Spotlight** (after line 377, before line 399 in Index.tsx). This is the best spot because:
-
-- User has already seen trust proof (Trust Strip), understood the process (How We Work), browsed categories, and seen action cards
-- At this point they're thinking "okay but what do I *actually do* on this platform?" — the Step Timeline answers that in under 10 seconds
-- Placing it before Featured Spotlight and Smart Recommendations means users who were about to drop off get re-engaged right before the content feed
-- It acts as an **activation bridge**: process understanding → concrete user actions → content exploration
+**After the Step Timeline, before the Featured Identity Spotlight** (after line 403, before line 405 in Index.tsx). This is the optimal spot because:
+- User just learned "how to get started" (Step Timeline) — now they see the Compare tool in action as a concrete payoff
+- It sits right before content recommendations, acting as a conversion hook before users browse
+- Visually breaks up the flow with a rich, interactive-feeling preview
 
 ### What We're Building
 
-A `StepTimeline` component — a vertical (mobile) / horizontal (desktop) animated timeline showing 4 concrete user actions with scroll-triggered reveal animations.
+A new `CompareEngineShowcase` component — a static but visually rich preview of the comparison tool with animated bar charts, gold/rust color coding, and a gated CTA.
 
-### Design Language (AI Vibes)
+### Design
 
-- Scroll-triggered staggered fade-in using Intersection Observer — each step animates in as user scrolls
-- Vertical timeline on mobile with a glowing animated line, horizontal on desktop
-- Each step: numbered circle (with pulse on active), icon, title, one-line description
-- Subtle gradient glow on the timeline connector line (`bg-gradient-to-b from-primary/40 via-primary to-primary/40`)
-- AI shimmer header pill (consistent with HowWeWork)
-- Steps: **Search** → **Compare** → **Review** → **Decide** (concrete actions, not abstract concepts)
+```text
+┌──────────────────────────────────────────────────┐
+│  ✨ Compare before you commit                    │
+│     AI-powered side-by-side analysis             │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ┌─────────────┐  vs  ┌─────────────┐           │
+│  │ Developer A  │      │ Developer B  │           │
+│  │ ████████ 4.2 │      │ █████░░ 3.1  │           │
+│  │ ██████░ 78%  │      │ ████░░░ 52%  │           │
+│  │ ███████ 85%  │      │ █████░░ 61%  │           │
+│  └─────────────┘      └─────────────┘           │
+│                                                  │
+│  [ 🔓 Export Full Report — Pro ]  [ Compare Now ] │
+│                                                  │
+│  Powered by community intelligence               │
+└──────────────────────────────────────────────────┘
+```
 
-### Steps Content
-
-1. **Search** — "Find developers, projects, or services by name, category, or location"
-2. **Compare** — "Stack companies side-by-side with trust scores and real reviews"
-3. **Review** — "Share your experience and help the community make better decisions"
-4. **Decide** — "Choose with confidence, backed by verified data and AI insights"
+- **Bar charts**: Scroll-triggered width animation (0% → target%) with staggered delays
+- **Color coding**: Gold (`text-accent` / `bg-accent`) for scores ≥ 3.5, Rust (`text-red-500` / `bg-red-400`) for < 3.5
+- **Metrics shown**: Trust Score, Delivery Quality, Value for Money (3 rows)
+- **Monetisation hook**: "Export Full Report" button styled with a lock icon + "Pro" badge — clicking navigates to `/auth` or shows upgrade prompt
+- **"Compare Now" CTA**: Opens the existing `CompareModal` or navigates to categories
+- **AI shimmer headline** consistent with HowWeWork and StepTimeline
 
 ### Files
 
-#### 1. New: `src/components/StepTimeline.tsx`
-- Uses `IntersectionObserver` to trigger staggered animations per step
-- Vertical layout on mobile (timeline line on the left), horizontal on desktop
-- Each step gets `opacity-0 translate-y-4` → `opacity-100 translate-y-0` with staggered delays
-- Numbered circles with `bg-primary text-primary-foreground` and a subtle ring pulse
-- Icons: `ScanSearch`, `GitCompare`, `MessageSquarePlus`, `BadgeCheck`
-- AI shimmer headline: "Here's how you get started"
-- RTL support via `useTranslation()` + `dir`
+#### 1. New: `src/components/CompareEngineShowcase.tsx`
+- Static mock data for two fictional developers (no DB call)
+- `IntersectionObserver` triggers bar width animations on scroll
+- 3 metric rows with animated colored bars + score labels
+- Two CTAs: "Export Full Report" (gated, lock icon + Pro badge) and "Compare Now"
+- RTL/LTR via `useTranslation()`
 
-#### 2. Edit: `src/i18n/locales/en.json` — Add `stepTimeline` namespace
+#### 2. Edit: `src/i18n/locales/en.json` — Add `compareEngine` namespace
 ```json
-"stepTimeline": {
-  "headline": "Here's how you get started",
-  "subtitle": "Four steps to confident decisions",
-  "step1Title": "Search",
-  "step1Desc": "Find developers, projects, or services by name, category, or location.",
-  "step2Title": "Compare",
-  "step2Desc": "Stack companies side-by-side with trust scores and real reviews.",
-  "step3Title": "Review",
-  "step3Desc": "Share your experience and help the community decide better.",
-  "step4Title": "Decide",
-  "step4Desc": "Choose with confidence, backed by verified data and AI insights."
+"compareEngine": {
+  "headline": "Compare before you commit",
+  "subtitle": "AI-powered side-by-side analysis",
+  "trustScore": "Trust Score",
+  "deliveryQuality": "Delivery Quality",
+  "valueForMoney": "Value for Money",
+  "exportReport": "Export Full Report",
+  "proBadge": "Pro",
+  "compareNow": "Compare Now",
+  "poweredBy": "Powered by community intelligence"
 }
 ```
 
-#### 3. Edit: `src/i18n/locales/ar.json` — Arabic `stepTimeline` namespace
+#### 3. Edit: `src/i18n/locales/ar.json` — Arabic `compareEngine` namespace
 
 #### 4. Edit: `src/pages/Index.tsx`
-- Import `StepTimeline`
-- Render `<StepTimeline />` inside `w-full max-w-[1100px]` wrapper after the Quick Actions Grid (line ~377), before Featured Identity Spotlight
-
-### Component Structure
-
-```text
-Desktop:
-┌──────────────────────────────────────────────────┐
-│  ✨ Here's how you get started                   │
-│     Four steps to confident decisions            │
-├──────────────────────────────────────────────────┤
-│  ①──────────②──────────③──────────④              │
-│  Search    Compare    Review     Decide          │
-│  desc      desc       desc       desc            │
-└──────────────────────────────────────────────────┘
-
-Mobile (vertical):
-┌────────────────────┐
-│  ✨ Get started     │
-├────────────────────┤
-│  ① Search          │
-│  │  desc           │
-│  ② Compare         │
-│  │  desc           │
-│  ③ Review          │
-│  │  desc           │
-│  ④ Decide          │
-│     desc           │
-└────────────────────┘
-```
-
-Each step fades in with a 150ms stagger as the section enters the viewport.
+- Import `CompareEngineShowcase`
+- Render after StepTimeline (line 403), before Featured Identity Spotlight
 
 ### No database changes needed
 
