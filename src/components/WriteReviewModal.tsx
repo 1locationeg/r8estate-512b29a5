@@ -133,6 +133,11 @@ export const WriteReviewModal = ({
   const receiptCameraRef = useRef<HTMLInputElement>(null);
   const [isReceiptUploading, setIsReceiptUploading] = useState(false);
 
+  // Content guard state
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
+  const [aiModeration, setAiModeration] = useState<AIModerationResult | null>(null);
+  const [isCheckingContent, setIsCheckingContent] = useState(false);
+
   const resetForm = () => {
     setRating(0);
     setTitle("");
