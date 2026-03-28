@@ -1,67 +1,80 @@
 
 
-## Dynamic Business Upsell Teaser — Extended to Buyers + Admin Controls
+## "How We Work" — 3-Column Story Arc Section
+
+### Position
+
+**After the Trust Strip, before Category Links** (between lines 321 and 324 in Index.tsx). This is the ideal spot because:
+- User has just seen trust signals (verified reviews, real buyers, real experts) — they're primed to ask "but how?"
+- Placing it before category browsing answers that question and builds confidence before exploration
+- It acts as a narrative bridge: trust proof → process explanation → action
 
 ### What We're Building
 
-1. **`DeveloperInsightsUpsell` component** — as previously planned (blurred SVG charts, 3 icon bullets, bilingual headline/CTA)
-2. **Show it on Buyer Dashboard** — render the upsell at the bottom of `BuyerOverview` to encourage buyers to unlock business insights
-3. **Admin Upsell Management** — a new `AdminUpsell` section at `/admin/upsell` where admins can toggle the upsell on/off, edit headline/subtext/CTA per language, and preview changes — all stored in `platform_settings`
+A `HowWeWork` component with three cards in a **Collect → Analyse → Decide** story arc. Each card has:
+- A numbered step indicator with a connecting line between them
+- An icon with subtle animated glow
+- Title + short description
+- **On hover**: dark inversion (bg flips to primary, text to white) with a scale-up — tactile delight
+- A motivational headline above: "Your journey from doubt to confidence" with a subtle AI shimmer effect
+- Bilingual AR/EN support
 
-### Files & Changes
+### Design Language (AI Vibes)
 
-#### 1. Database Migration — Seed `platform_settings` keys for upsell
-Insert 3 rows into `platform_settings`:
-- `upsell_enabled` → `"true"`
-- `upsell_content_en` → JSON with `headline`, `subtext`, `bullet1-3`, `cta`
-- `upsell_content_ar` → same structure in Arabic
+- Cards: `bg-card border border-border` default → `bg-primary text-primary-foreground` on hover
+- Connecting dotted line between steps (horizontal desktop, vertical mobile)
+- Icons: `Search` (Collect), `BrainCircuit` (Analyse), `BadgeCheck` (Decide)
+- Headline uses `backdrop-blur` pill with gradient text
+- Subtle `animate-pulse-glow` on the AI/Analyse card icon
+- Step numbers in small monospace font with `text-accent`
 
-These are data inserts using the insert tool (not schema changes).
+### Files
 
-#### 2. New Component: `src/components/DeveloperInsightsUpsell.tsx`
-- Fetches `platform_settings` keys `upsell_enabled` and `upsell_content_{lang}` on mount
-- If `upsell_enabled !== "true"`, renders nothing
-- Falls back to hardcoded i18n strings if no DB content found
-- Blurred SVG background with fake 24-month trend lines
-- Three icon rows: `AlertTriangle`, `TrendingUp`, `Shield` with bullet text
-- Headline + subtext + CTA button
-- RTL/LTR auto-switch via `useTranslation()` direction
-- CTA opens `BusinessUpgradeModal` (authenticated) or navigates to `/auth`
+#### 1. New: `src/components/HowWeWork.tsx`
+- 3-column grid (responsive: stack on mobile)
+- Hover state via Tailwind `group-hover:` classes for dark inversion + scale
+- Dotted connector line via pseudo-elements or a flex separator
+- Uses `useTranslation()` for all text
+- Motivational header with AI shimmer animation
 
-#### 3. `src/i18n/locales/en.json` — Add `upsell` namespace (fallback strings)
+#### 2. Edit: `src/i18n/locales/en.json` — Add `howWeWork` namespace
 ```json
-"upsell": {
-  "headline": "Want to see the full picture?",
-  "subtext": "Don't settle for surface-level reviews...",
-  "bullet1": "Deep-dive into complaint trends and patterns.",
-  "bullet2": "Predictive risk indicators (Delivery & Quality).",
-  "bullet3": "Benchmarking against top-tier local competitors.",
-  "cta": "Unlock Business Insights"
+"howWeWork": {
+  "headline": "Your journey from doubt to confidence",
+  "subtitle": "Powered by community intelligence",
+  "step1Title": "Collect",
+  "step1Desc": "Real buyers share verified experiences — no fake reviews, no paid opinions.",
+  "step2Title": "Analyse",
+  "step2Desc": "AI processes thousands of data points to build trust scores you can rely on.",
+  "step3Title": "Decide",
+  "step3Desc": "Make confident real estate decisions backed by transparent, community-driven insights."
 }
 ```
 
-#### 4. `src/i18n/locales/ar.json` — Arabic `upsell` namespace
+#### 3. Edit: `src/i18n/locales/ar.json` — Arabic `howWeWork` namespace
 
-#### 5. Integration Points — Render `<DeveloperInsightsUpsell />`
-- **`src/components/DeveloperDetailModal.tsx`** — bottom of modal
-- **`src/components/DeveloperDetailCard.tsx`** — bottom of card
-- **`src/pages/BuyerDashboard.tsx`** (`BuyerOverview`) — after the stats/activity section, before the "Upgrade to Business" CTA
+#### 4. Edit: `src/pages/Index.tsx`
+- Import `HowWeWork`
+- Render `<HowWeWork />` inside `w-full max-w-[1100px]` wrapper after Trust Strip, before Category Links
 
-#### 6. New Component: `src/components/AdminUpsell.tsx`
-Admin panel at `/admin/upsell` with:
-- **Toggle switch**: Enable/Disable upsell globally (updates `upsell_enabled`)
-- **EN tab / AR tab**: Editable fields for headline, subtext, 3 bullets, CTA text
-- **Save button**: Writes updated JSON to `upsell_content_en` / `upsell_content_ar` in `platform_settings`
-- **Live preview**: Mini preview card showing current upsell appearance
+### Component Structure
 
-#### 7. `src/pages/AdminDashboard.tsx` — Add Upsell route
-- Import `AdminUpsell`
-- Add nav item under "Content" group: `{ icon: <TrendingUp />, label: 'Upsell Teaser', path: '/admin/upsell' }`
-- Add route: `<Route path="upsell" element={<AdminUpsell />} />`
+```text
+┌──────────────────────────────────────────────────┐
+│  ✨ Your journey from doubt to confidence        │
+│     Powered by community intelligence            │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  ┌──────┐ ·····> ┌──────┐ ·····> ┌──────┐       │
+│  │  01  │        │  02  │        │  03  │       │
+│  │  🔍  │        │  🧠  │        │  ✅  │       │
+│  │Collect│       │Analyse│       │Decide │       │
+│  │ desc  │        │ desc  │        │ desc  │       │
+│  └──────┘        └──────┘        └──────┘       │
+│                                                  │
+│  [ hover any card → dark inversion + scale ]     │
+└──────────────────────────────────────────────────┘
+```
 
-### Technical Details
-- Uses existing `platform_settings` table pattern (same as Spotlight, WhatsApp, SEO)
-- No schema migration needed — only data inserts for initial seed values
-- Component gracefully degrades to i18n fallback if DB settings not found
-- Admin can fully control visibility and copy without code changes
+### No database changes needed
 
