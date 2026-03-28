@@ -20,6 +20,7 @@ import { useCommunityActions } from "@/hooks/useCommunity";
 import { CommunityAiReplySuggestions } from "@/components/CommunityAiReplySuggestions";
 import { DeveloperBridgeCard } from "@/components/DeveloperBridgeCard";
 import { supabase } from "@/integrations/supabase/client";
+import { ReportButton } from "@/components/ReportButton";
 
 const EMOJI_GRID = [
   "😀", "😂", "😍", "🤔", "👍", "👎", "🔥", "💯",
