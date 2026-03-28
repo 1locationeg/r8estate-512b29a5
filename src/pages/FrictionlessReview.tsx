@@ -516,7 +516,7 @@ const FrictionlessReview = () => {
               <Textarea
                 value={comment}
                 onChange={(e) => setComment(e.target.value)}
-                placeholder="كلمة حق تفرق.. رأيك أمانة ✍️"
+                placeholder={isRTL ? "قبل ما ألاقي R8ESTATE كنت... بعدها اكتشفت إن... ✍️" : "Before R8ESTATE, I was about to... Then I discovered... ✍️"}
                 className="min-h-[120px] text-base resize-none"
                 maxLength={1000}
               />

@@ -96,34 +96,52 @@ serve(async (req) => {
     let userPrompt = "";
 
     if (action === "suggest") {
-      systemPrompt = `You are an AI assistant for R8ESTATE, a real estate trust platform. Help users write better property reviews. 
+      systemPrompt = `You are an AI assistant for R8ESTATE, a real estate trust platform. Help users write powerful, emotionally compelling property reviews using the "Transformation Story" framework.
+
+The best reviews follow a BEFORE → MOMENT → AFTER arc:
+- BEFORE: What was the situation? What fears or doubts existed?
+- MOMENT: What specific thing happened (discovery on R8ESTATE, a red flag found, a trust score checked)?
+- AFTER: What was the outcome? What was saved or gained?
+
+Example transformation stories:
+- "I was 2 days from signing a 3M EGP contract. R8ESTATE showed me 47 complaints about delayed delivery. I walked away. Six months later, that project froze."
+- "Every developer felt like a gamble. Then R8ESTATE's trust scores led me to a verified developer with 4.8 stars. I signed, moved in on time."
+
 Return a JSON object with these fields:
-- suggestions: array of 3-5 short sentence suggestions relevant to the context
+- suggestions: array of 3-5 short sentence starters that nudge the user toward telling their before/after story (e.g., "I was about to...", "Before R8ESTATE, I...", "The moment I saw the trust score...")
 - emojis: array of 5-8 relevant emojis for the review context
-- keywords: array of 5-8 relevant keywords/phrases the reviewer might want to use
-Keep suggestions specific to real estate experiences.`;
+- keywords: array of 5-8 relevant keywords/phrases (include emotional ones like "saved me", "walked away", "game-changer", "wish I knew sooner")
+Keep suggestions specific to real estate experiences. Encourage vivid, personal storytelling.`;
       
       userPrompt = `The user is writing a review for "${developerName || 'a developer'}". 
 Rating: ${rating || 'not set'}/5 stars. 
 Experience type: ${experienceType || 'not specified'}.
 Current review text so far: "${text || '(empty - just starting)'}"
 
-Provide helpful suggestions, relevant emojis, and keywords to help them write a great review.`;
+Provide transformation-story style suggestions, relevant emojis, and emotional keywords to help them write a compelling before/after review.`;
     } else if (action === "enhance") {
-      systemPrompt = `You are an AI writing assistant for R8ESTATE. Improve the user's review text while keeping their voice and meaning. 
+      systemPrompt = `You are an AI writing assistant for R8ESTATE. Improve the user's review using the "Transformation Story" framework while keeping their voice and meaning.
+
+If the review is flat or generic, restructure it into a BEFORE → MOMENT → AFTER arc:
+- BEFORE: What was the situation/fear?
+- MOMENT: What changed? What did R8ESTATE reveal?
+- AFTER: What was the result?
+
+Keep it authentic — don't add fake details. Just reshape their existing points into a more compelling narrative flow.
+
 Return a JSON object with:
-- enhanced: the improved review text (fix grammar, improve clarity, add detail)
-- changes: brief description of what was improved`;
+- enhanced: the improved review text (restructured as a transformation story, fix grammar, improve clarity)
+- changes: brief description of what was improved (mention if you applied the transformation story structure)`;
       
-      userPrompt = `Please enhance this real estate review (keep the same meaning but improve grammar, clarity, and professionalism):
+      userPrompt = `Please enhance this real estate review into a compelling transformation story (keep the same meaning but restructure as before/after narrative, improve grammar and emotional impact):
 "${text}"`;
     } else if (action === "enhance_voice") {
-      systemPrompt = `You are an AI assistant for R8ESTATE. The user dictated a review using voice-to-text. Clean up the transcription, fix any speech-to-text errors, improve grammar and flow while preserving the reviewer's voice and meaning.
+      systemPrompt = `You are an AI assistant for R8ESTATE. The user dictated a review using voice-to-text. Clean up the transcription, fix any speech-to-text errors, and reshape it into a compelling "Transformation Story" (BEFORE → MOMENT → AFTER) while preserving the reviewer's voice and meaning.
 Return a JSON object with:
-- enhanced: the cleaned up and improved review text
+- enhanced: the cleaned up review text reshaped as a transformation narrative
 - changes: brief description of what was improved`;
       
-      userPrompt = `This is a voice-dictated real estate review for "${developerName || 'a developer'}". Please clean it up and improve it:
+      userPrompt = `This is a voice-dictated real estate review for "${developerName || 'a developer'}". Please clean it up and reshape it into a transformation story:
 "${text}"`;
     }
 
