@@ -1,76 +1,57 @@
 
 
-## Upgrade Business Dashboard — Buyer-Inspired Engagement Suite
+## AI Content Guard — Full Plan (Updated)
 
-### What's Missing
+### Problem
 
-The Buyer dashboard has a rich engagement layer that the Business dashboard completely lacks. Here's the gap:
+Users can post insults, competitor attacks, bias, and generic/evidence-free reviews. The existing `review-integrity-check` only catches promotional language.
 
-| Feature | Buyer | Business |
-|---------|-------|----------|
-| Points Breakdown Header | Yes | No |
-| Welcome greeting + tier nudge | Yes | No |
-| Community Post Box | Yes | No |
-| Profile Completion checklist (with coin incentives) | Yes | No (only a progress bar in BusinessProfileHeader) |
-| Tier Journey visual track | Yes | No |
-| Daily Tasks Card | Yes | No |
-| 7-Day Streak Tracker | Yes | No |
-| Activity Cards Grid | Yes | No |
-| Quick Actions with coin badges | Yes | No |
-| Sidebar widgets (Referral, Saved Search) | Yes | No |
+### Solution: Two-Layer Content Guard + Pre-Publish Objectivity Prompt
 
-### Plan
+#### Layer 1: Client-Side Pre-filter (`src/lib/contentGuard.ts`)
+- Regex list of Arabic/Egyptian + English profanity and slurs
+- `checkContentLocally(text): { blocked: boolean; reason?: string }` — instant inline warning while typing (debounced 500ms)
 
-Restructure `DevOverview` to mirror the Buyer dashboard layout, adapted with the **Forest Green** business theme (`business-border`, `business`, `business-foreground`).
+#### Layer 2: AI Deep Analysis (`supabase/functions/review-integrity-check/index.ts`)
+- Expand system prompt to detect: profanity, insults, personal attacks, competitor sabotage, bias, threats, defamation
+- Add `content_type` param (`review` | `post` | `reply`)
+- New response fields: `violation_type`, `severity`
+- Keep backward compatibility with existing `suspicion_score` + `flags`
 
-### Changes to `src/pages/DeveloperDashboard.tsx` — DevOverview rewrite
+#### NEW — Layer 3: Pre-Publish Objectivity Reminder
 
-**1. Add PointsBreakdownHeader** (top of page)
-- Uses `useGamification()` data (already imported)
-- Forest green gradient instead of buyer's primary/coin gradient
+Before the submit button fires the AI check, show a **prominent guidance card** reminding the reviewer to be objective and evidence-based. This appears as a persistent banner above the submit button in all review/post forms.
 
-**2. Add Hero Row** (2-column grid like Buyer)
-- **Left column**:
-  - Welcome greeting with `Building2` verified badge (green) + "You're X pts away from [next tier]" motivator
-  - Community Post Box (same pattern, green accent)
-  - OnboardingWizard (move from current position)
-- **Right column**:
-  - Profile Completion checklist card with coin incentives per field (company_name, description, logo, location, phone, website, license)
-  - Tier Journey visual track (using business gamification tiers, green theme)
+**Message (EN):**
+> "Your review matters. To help others make real decisions, please be specific and objective — share what happened, when, and what evidence you have. Generic praise or personal attacks without proof won't be published."
 
-**3. Keep BusinessProfileHeader** (after hero row)
+**Message (AR):**
+> "رأيك مهم. عشان تساعد غيرك ياخد قرار صح، اكتب بموضوعية — قول إيه اللي حصل بالظبط، إمتى، وإيه الدليل. الكلام العام أو الهجوم الشخصي من غير دليل مش هيتنشر."
 
-**4. Keep Stats cards** (after profile header)
+This card includes:
+- A `ShieldCheck` icon with amber/gold accent
+- Three mini-tips as bullet points: "Be specific", "Share evidence", "Stay objective"
+- Appears in `WriteReviewModal`, `FrictionlessReview`, `CommunityNewPost`, and `CommunityPostDetail` (reply composer)
 
-**5. Add DailyTasksCard** (new section after stats)
-- Already a generic component, works for both portals
+### Integration Points
 
-**6. Add StreakTrackerVisual** (after daily tasks)
-- Pass business gamification streak data
+| Component | Local filter | AI check on submit | Objectivity reminder |
+|-----------|-------------|-------------------|---------------------|
+| `WriteReviewModal` | Yes (typing) | Yes (block >80, warn 50-80) | Yes (above submit) |
+| `FrictionlessReview` | Yes (typing) | Yes (existing, enhanced) | Yes (above submit) |
+| `CommunityNewPost` | Yes (typing) | Yes (post body) | Yes (above submit) |
+| `CommunityPostDetail` | Yes (replies) | Yes (reply body) | Yes (above send) |
 
-**7. Add Business Activity Cards Grid** (after streak)
-- Create business-specific activities: "Complete Profile", "Reply to Review", "Request Review", "Submit Deal", "Add Project", "Join Community"
-- Reuse `ActivityCardsGrid` pattern but with business routes and green theme
+### Files
 
-**8. Restructure charts + reviews into 3-column grid** (like buyer's Quick Actions + Latest Reviews + Sidebar)
-- Left (2 cols): Charts (reviews + views)
-- Right (1 col): Latest Reviews + WhatsApp Review Request CTA
-
-**9. Add ReferralWidget** at bottom (businesses can refer other businesses)
-
-### New Component: `src/components/BusinessActivityCards.tsx`
-- Business-specific activity grid (mirrors `ActivityCardsGrid` but with business actions/routes)
-- 6 cards: Complete Profile (+10), Reply to Review (+15), Request Review (+10), Submit a Deal (+20), Add Project (+15), Post in Community (+10)
-- Forest green color scheme, lock badges for tier-gated features
-
-### Files to Edit
-
-1. **`src/pages/DeveloperDashboard.tsx`** — Rewrite `DevOverview` with buyer-inspired layout
-2. **New: `src/components/BusinessActivityCards.tsx`** — Business-specific activity grid
-3. **`src/components/PointsBreakdownHeader.tsx`** — Add optional `variant="business"` prop for green theming
-4. **`src/components/DailyTasksCard.tsx`** — Verify it works without buyer-specific assumptions (may need minor portal detection)
-5. **`src/i18n/locales/en.json`** — Add `businessDashboard` namespace for welcome text, activity labels
-6. **`src/i18n/locales/ar.json`** — Arabic translations
+1. **New: `src/lib/contentGuard.ts`** — Client-side regex pre-filter
+2. **Edit: `supabase/functions/review-integrity-check/index.ts`** — Expand AI prompt for profanity/attacks/bias + add `content_type` param
+3. **Edit: `src/components/WriteReviewModal.tsx`** — Add local filter, AI check on submit, objectivity reminder card
+4. **Edit: `src/pages/FrictionlessReview.tsx`** — Add local filter, objectivity reminder card (AI check already exists)
+5. **Edit: `src/components/CommunityNewPost.tsx`** — Add local filter, AI check, objectivity reminder card
+6. **Edit: `src/components/CommunityPostDetail.tsx`** — Add local filter + AI check + reminder to reply composer
+7. **Edit: `src/i18n/locales/en.json`** — Add `contentGuard` namespace (warnings, objectivity tips, violation messages)
+8. **Edit: `src/i18n/locales/ar.json`** — Arabic translations
 
 ### No database changes needed
 
