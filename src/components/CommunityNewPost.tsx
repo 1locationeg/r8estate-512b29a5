@@ -65,6 +65,11 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const [engagementTip, setEngagementTip] = useState("");
 
+  // Content guard state
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
+  const [aiModeration, setAiModeration] = useState<AIModerationResult | null>(null);
+  const [isCheckingContent, setIsCheckingContent] = useState(false);
+
   // Populate fields when editing
   useEffect(() => {
     if (editPost && open) {
