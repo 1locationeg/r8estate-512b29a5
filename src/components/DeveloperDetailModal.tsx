@@ -8,6 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { DeveloperInsightsUpsell } from "./DeveloperInsightsUpsell";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { 
@@ -372,6 +373,8 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
               </div>
             </div>
           )}
+
+          <DeveloperInsightsUpsell />
         </div>
       </DialogContent>
     </Dialog>

@@ -11,6 +11,7 @@ import { WriteReviewModal } from "./WriteReviewModal";
 import { CompareModal } from "./CompareModal";
 import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
 import { ReviewBlockedModal } from "./ReviewBlockedModal";
+import { DeveloperInsightsUpsell } from "./DeveloperInsightsUpsell";
 import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
@@ -244,6 +245,7 @@ export const DeveloperDetailCard = ({
       <ReviewMotivatorFloat onWriteReview={handleWriteReview} isReviewModalOpen={isReviewModalOpen} />
       <WriteReviewModal open={isReviewModalOpen} onOpenChange={setIsReviewModalOpen} developerName={developer.name} developerId={developer.id} onReviewSubmitted={refetchReviews} />
       <ReviewBlockedModal open={isReviewBlockedOpen} onOpenChange={setIsReviewBlockedOpen} parentName={parentName || developer.name} childProjects={childProjects} />
+      <DeveloperInsightsUpsell />
     </div>
     <CompareModal item={developerAsSearchItem} open={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
     </>

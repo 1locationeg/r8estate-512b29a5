@@ -1177,6 +1177,14 @@
     "referralNudge": "Your contribution makes a difference 🎁",
     "referralNudgeDesc": "Share your experience and help friends make the right decision"
   },
+  "upsell": {
+    "headline": "Want to see the full picture?",
+    "subtext": "Don't settle for surface-level reviews. Get an expert report analyzing the developer's performance over the last 24 months.",
+    "bullet1": "Deep-dive into complaint trends and patterns.",
+    "bullet2": "Predictive risk indicators (Delivery & Quality).",
+    "bullet3": "Benchmarking against top-tier local competitors.",
+    "cta": "Unlock Business Insights"
+  },
   "retention": {
     "trackDeveloper": "Track Your Developer",
     "followDuration": "Following for {{duration}}",

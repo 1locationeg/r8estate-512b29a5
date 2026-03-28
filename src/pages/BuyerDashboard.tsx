@@ -27,6 +27,7 @@ import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
 import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 import { BusinessUpgradeModal } from '@/components/BusinessUpgradeModal';
 import BuyerVerification from '@/components/BuyerVerification';
+import { DeveloperInsightsUpsell } from '@/components/DeveloperInsightsUpsell';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -218,6 +219,8 @@ const BuyerOverview = () => {
         </div>
       </div>
       )}
+
+      <DeveloperInsightsUpsell />
 
       <BusinessUpgradeModal open={showUpgradeModal} onOpenChange={setShowUpgradeModal} />
 
