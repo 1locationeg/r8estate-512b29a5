@@ -1261,5 +1261,16 @@
     "longFollower": "متابع من فترة — تقييمك مهم!",
     "monthsAgo": "{{count}} شهر",
     "daysAgo": "{{count}} يوم"
+  },
+  "compareEngine": {
+    "headline": "قارن قبل أن تقرر",
+    "subtitle": "تحليل ذكي جنبًا إلى جنب",
+    "trustScore": "درجة الثقة",
+    "deliveryQuality": "جودة التسليم",
+    "valueForMoney": "القيمة مقابل المال",
+    "exportReport": "تصدير التقرير الكامل",
+    "proBadge": "Pro",
+    "compareNow": "قارن الآن",
+    "poweredBy": "مدعوم بذكاء المجتمع"
   }
 }
