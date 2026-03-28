@@ -18,6 +18,7 @@ import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
+import StepTimeline from "@/components/StepTimeline";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
@@ -395,6 +396,11 @@ const Index = () => {
               
                 </div>
             }
+
+              {/* Step Timeline */}
+              <div className="w-full max-w-[1100px]">
+                <StepTimeline />
+              </div>
 
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
