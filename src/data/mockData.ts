@@ -44,6 +44,7 @@ export interface Review {
   id: string;
   developerId: string;
   author: string;
+  authorAr?: string;
   avatar?: string;
   profileVerified: boolean;
   tier: ReviewerTier;
@@ -51,11 +52,14 @@ export interface Review {
   date: string;
   project: string;
   comment: string;
+  commentAr?: string;
   verified: boolean;
   developerReply?: {
     author: string;
+    authorAr?: string;
     date: string;
     comment: string;
+    commentAr?: string;
   };
 }
 
