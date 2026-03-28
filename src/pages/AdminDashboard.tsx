@@ -32,6 +32,7 @@ import AdminWidgets from '@/components/AdminWidgets';
 import { AdminBusinessUpgrades } from '@/components/AdminBusinessUpgrades';
 import { MiniLeaderboard } from '@/components/MiniLeaderboard';
 import AdminMessaging from '@/components/AdminMessaging';
+import AdminReceiptVerification from '@/components/AdminReceiptVerification';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2050,6 +2051,7 @@ const AdminDashboard = () => {
         { icon: <UserCheck className="w-4 h-4" />, label: 'Guest Reviews', path: '/admin/guest-reviews' },
         { icon: <ShieldCheck className="w-4 h-4" />, label: 'Reviewer Verification', path: '/admin/reviewer-verification' },
         { icon: <AlertTriangle className="w-4 h-4" />, label: 'Fraud Detection', path: '/admin/fraud-detection' },
+        { icon: <Receipt className="w-4 h-4" />, label: 'Receipt Verification', path: '/admin/receipt-verification' },
         { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
         { icon: <Rocket className="w-4 h-4" />, label: 'Launch Moderation', path: '/admin/launch-moderation' },
       ],
@@ -2151,6 +2153,7 @@ const AdminDashboard = () => {
           <Route path="tracking" element={<AdminTracking />} />
           <Route path="widgets" element={<AdminWidgets />} />
           <Route path="messaging" element={<AdminMessaging />} />
+          <Route path="receipt-verification" element={<AdminReceiptVerification />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>

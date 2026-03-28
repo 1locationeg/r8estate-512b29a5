@@ -26,6 +26,7 @@ import { SavedSearchWidget } from '@/components/SavedSearchWidget';
 import { WelcomeGiftOverlay } from '@/components/WelcomeGiftOverlay';
 import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 import { BusinessUpgradeModal } from '@/components/BusinessUpgradeModal';
+import BuyerVerification from '@/components/BuyerVerification';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -1144,6 +1145,7 @@ const BuyerDashboard = () => {
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     
+    { icon: <Shield className="w-4 h-4" />, label: 'Verification', path: '/buyer/verification' },
     { icon: <Settings className="w-4 h-4" />, label: 'Notification Preferences', path: '/buyer/notification-preferences' },
     { icon: <User className="w-4 h-4" />, label: 'Account Details', path: '/buyer/settings' },
   ];
@@ -1165,6 +1167,7 @@ const BuyerDashboard = () => {
         <Route path="referrals" element={<ReferralWidget />} />
         <Route path="achievements" element={<BuyerGamificationPanel />} />
         <Route path="notifications" element={<NotificationsPage />} />
+        <Route path="verification" element={<BuyerVerification />} />
         <Route path="notification-preferences" element={<NotificationPreferences />} />
         <Route path="settings" element={<BuyerProfile />} />
       </Routes>

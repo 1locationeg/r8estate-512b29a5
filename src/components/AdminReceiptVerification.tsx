@@ -10,48 +10,49 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
 } from '@/components/ui/dialog';
 import {
-  Loader2, CheckCircle, XCircle, Clock, Search, Shield, ExternalLink, Building2,
+  Loader2, CheckCircle, XCircle, Clock, Search, Receipt, ExternalLink, User,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
-interface BusinessClaim {
+interface ReceiptSubmission {
   id: string;
   user_id: string;
-  business_name: string;
-  business_mock_id: string | null;
-  business_profile_id: string | null;
-  document_url: string | null;
+  developer_id: string | null;
+  developer_name: string | null;
+  image_url: string;
   status: string;
   admin_notes: string | null;
-  reviewed_by: string | null;
   reviewed_at: string | null;
   created_at: string;
+  // joined from profiles
+  user_name?: string;
+  user_email?: string;
 }
 
-const AdminBusinessClaims = () => {
+const AdminReceiptVerification = () => {
   const { user } = useAuth();
-  const [claims, setClaims] = useState<BusinessClaim[]>([]);
+  const [receipts, setReceipts] = useState<ReceiptSubmission[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState('pending');
   const [searchQuery, setSearchQuery] = useState('');
   const [processing, setProcessing] = useState<string | null>(null);
-  const [reviewModal, setReviewModal] = useState<BusinessClaim | null>(null);
+  const [reviewModal, setReviewModal] = useState<ReceiptSubmission | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
 
-  const fetchClaims = useCallback(async () => {
+  const fetchReceipts = useCallback(async () => {
     setLoading(true);
     const { data, error } = await supabase
-      .from('business_claims' as any)
+      .from('receipt_submissions')
       .select('*')
       .order('created_at', { ascending: false });
     if (error) {
-      toast.error('Failed to load claims');
+      toast.error('Failed to load receipts');
       console.error(error);
     }
-    const rawClaims = (data as any[]) || [];
+    const rawReceipts = (data as any[]) || [];
 
-    // Fetch profile info for user context
-    const userIds = [...new Set(rawClaims.map((c: any) => c.user_id))];
+    // Fetch profile info for all user_ids
+    const userIds = [...new Set(rawReceipts.map(r => r.user_id))];
     let profileMap: Record<string, { full_name: string | null; email: string | null }> = {};
     if (userIds.length > 0) {
       const { data: profiles } = await supabase
@@ -63,51 +64,61 @@ const AdminBusinessClaims = () => {
       });
     }
 
-    setClaims(rawClaims.map((c: any) => ({
-      ...c,
-      _userName: profileMap[c.user_id]?.full_name || null,
-      _userEmail: profileMap[c.user_id]?.email || null,
+    setReceipts(rawReceipts.map(r => ({
+      ...r,
+      user_name: profileMap[r.user_id]?.full_name || null,
+      user_email: profileMap[r.user_id]?.email || null,
     })));
     setLoading(false);
   }, []);
 
-  useEffect(() => { fetchClaims(); }, [fetchClaims]);
+  useEffect(() => { fetchReceipts(); }, [fetchReceipts]);
 
-  const handleModerate = async (claimId: string, status: 'approved' | 'rejected') => {
-    setProcessing(claimId);
+  const handleModerate = async (receiptId: string, status: 'approved' | 'rejected') => {
+    setProcessing(receiptId);
+    const receipt = receipts.find(r => r.id === receiptId);
+
     const { error } = await supabase
-      .from('business_claims' as any)
+      .from('receipt_submissions')
       .update({
         status,
-        reviewed_by: user?.id,
         reviewed_at: new Date().toISOString(),
         admin_notes: adminNotes || null,
-      } as any)
-      .eq('id', claimId);
+      })
+      .eq('id', receiptId);
 
     if (error) {
-      toast.error(`Failed to ${status} claim`);
+      toast.error(`Failed to ${status} receipt`);
       console.error(error);
     } else {
-      toast.success(`Claim ${status}`);
+      // On approval, upgrade user's reviews verification_level to 'transaction'
+      if (status === 'approved' && receipt) {
+        await supabase
+          .from('reviews')
+          .update({ verification_level: 'transaction' } as any)
+          .eq('user_id', receipt.user_id)
+          .in('verification_level', ['none', 'identity']);
+      }
+      toast.success(`Receipt ${status}`);
       setReviewModal(null);
       setAdminNotes('');
-      fetchClaims();
+      fetchReceipts();
     }
     setProcessing(null);
   };
 
-  const filtered = claims.filter(c => {
-    const matchesTab = activeTab === 'all' || c.status === activeTab;
+  const filtered = receipts.filter(r => {
+    const matchesTab = activeTab === 'all' || r.status === activeTab;
     const matchesSearch = !searchQuery ||
-      c.business_name.toLowerCase().includes(searchQuery.toLowerCase());
+      (r.developer_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (r.user_name || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
   const stats = {
-    pending: claims.filter(c => c.status === 'pending').length,
-    approved: claims.filter(c => c.status === 'approved').length,
-    rejected: claims.filter(c => c.status === 'rejected').length,
+    pending: receipts.filter(r => r.status === 'pending').length,
+    approved: receipts.filter(r => r.status === 'approved').length,
+    rejected: receipts.filter(r => r.status === 'rejected').length,
   };
 
   if (loading) {
@@ -117,8 +128,8 @@ const AdminBusinessClaims = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h2 className="text-xl font-bold text-foreground">Business Claims</h2>
-        <p className="text-sm text-muted-foreground">Review and verify business ownership claims</p>
+        <h2 className="text-xl font-bold text-foreground">Receipt Verification</h2>
+        <p className="text-sm text-muted-foreground">Review buyer receipt submissions to verify transaction history</p>
       </div>
 
       {/* Stats */}
@@ -151,7 +162,7 @@ const AdminBusinessClaims = () => {
         <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
-          placeholder="Search by business name..."
+          placeholder="Search by developer or user name..."
           value={searchQuery}
           onChange={e => setSearchQuery(e.target.value)}
           className="w-full ps-10 pe-4 py-2 rounded-lg border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
@@ -170,64 +181,68 @@ const AdminBusinessClaims = () => {
         <TabsContent value={activeTab} className="mt-4 space-y-3">
           {filtered.length === 0 ? (
             <div className="text-center py-12 text-muted-foreground">
-              <Shield className="w-10 h-10 mx-auto mb-2 opacity-40" />
-              <p>No {activeTab !== 'all' ? activeTab : ''} claims found</p>
+              <Receipt className="w-10 h-10 mx-auto mb-2 opacity-40" />
+              <p>No {activeTab !== 'all' ? activeTab : ''} receipts found</p>
             </div>
           ) : (
-            filtered.map(claim => (
-              <Card key={claim.id} className="overflow-hidden">
+            filtered.map(receipt => (
+              <Card key={receipt.id} className="overflow-hidden">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap mb-2">
-                        <Building2 className="w-4 h-4 text-primary" />
-                        <span className="font-semibold text-foreground">{claim.business_name}</span>
-                        <Badge
-                          variant={claim.status === 'approved' ? 'default' : claim.status === 'rejected' ? 'destructive' : 'secondary'}
-                          className="capitalize"
-                        >
-                          {claim.status}
-                        </Badge>
+                    <div className="flex gap-3 flex-1 min-w-0">
+                      {/* Receipt image preview */}
+                      <a href={receipt.image_url} target="_blank" rel="noopener noreferrer" className="flex-shrink-0">
+                        <div className="w-16 h-16 rounded-lg overflow-hidden border border-border bg-secondary">
+                          <img src={receipt.image_url} alt="Receipt" className="w-full h-full object-cover" />
+                        </div>
+                      </a>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap mb-1">
+                          <Receipt className="w-4 h-4 text-primary" />
+                          <span className="font-semibold text-foreground">{receipt.developer_name || 'Unknown Developer'}</span>
+                          <Badge
+                            variant={receipt.status === 'approved' ? 'default' : receipt.status === 'rejected' ? 'destructive' : 'secondary'}
+                            className="capitalize"
+                          >
+                            {receipt.status}
+                          </Badge>
+                        </div>
+
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-1">
+                          <User className="w-3 h-3" />
+                          <span>{receipt.user_name || 'Unknown'}</span>
+                          {receipt.user_email && <span className="text-muted-foreground/60">({receipt.user_email})</span>}
+                        </div>
+
+                        <p className="text-xs text-muted-foreground">
+                          Submitted {new Date(receipt.created_at).toLocaleDateString()}
+                        </p>
+
+                        {receipt.admin_notes && (
+                          <p className="text-xs text-muted-foreground mt-1 italic">Note: {receipt.admin_notes}</p>
+                        )}
                       </div>
-
-                      <p className="text-xs text-muted-foreground mb-2">
-                        Submitted by {(claim as any)._userName || 'Unknown'} {(claim as any)._userEmail ? `(${(claim as any)._userEmail})` : ''} · {new Date(claim.created_at).toLocaleDateString()}
-                      </p>
-
-                      {claim.document_url && (
-                        <a
-                          href={claim.document_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-xs text-primary hover:underline"
-                        >
-                          <ExternalLink className="w-3 h-3" />
-                          View document
-                        </a>
-                      )}
-
-                      {claim.admin_notes && (
-                        <p className="text-xs text-muted-foreground mt-1 italic">Note: {claim.admin_notes}</p>
-                      )}
                     </div>
 
-                    {claim.status === 'pending' && (
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => { setReviewModal(claim); setAdminNotes(''); }}
-                      >
-                        <Shield className="w-3 h-3 me-1" />
-                        Review
-                      </Button>
-                    )}
+                    <div className="flex flex-col items-end gap-2 shrink-0">
+                      {receipt.status === 'pending' && (
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => { setReviewModal(receipt); setAdminNotes(''); }}
+                        >
+                          <Receipt className="w-3 h-3 me-1" />
+                          Review
+                        </Button>
+                      )}
 
-                    {claim.status !== 'pending' && claim.reviewed_at && (
-                      <div className="text-xs text-muted-foreground text-end shrink-0">
-                        <p>Reviewed</p>
-                        <p>{new Date(claim.reviewed_at).toLocaleDateString()}</p>
-                      </div>
-                    )}
+                      {receipt.status !== 'pending' && receipt.reviewed_at && (
+                        <div className="text-xs text-muted-foreground text-end">
+                          <p>Reviewed</p>
+                          <p>{new Date(receipt.reviewed_at).toLocaleDateString()}</p>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -239,29 +254,32 @@ const AdminBusinessClaims = () => {
       {/* Review Modal */}
       {reviewModal && (
         <Dialog open={!!reviewModal} onOpenChange={() => setReviewModal(null)}>
-          <DialogContent>
+          <DialogContent className="max-w-lg">
             <DialogHeader>
-              <DialogTitle>Review Claim: {reviewModal.business_name}</DialogTitle>
+              <DialogTitle>Review Receipt</DialogTitle>
               <DialogDescription>
-                Review the submitted documents and approve or reject this business ownership claim.
+                Verify the receipt for {reviewModal.developer_name || 'Unknown Developer'} submitted by {reviewModal.user_name || 'Unknown User'}
               </DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
-              {reviewModal.document_url && (
-                <div>
-                  <label className="text-sm font-medium text-foreground block mb-1">Verification Document</label>
-                  <a
-                    href={reviewModal.document_url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-3 py-2 rounded-lg border border-border hover:bg-muted transition-colors text-sm"
-                  >
-                    <ExternalLink className="w-4 h-4 text-primary" />
-                    Open document in new tab
-                  </a>
-                </div>
-              )}
+              {/* Receipt image */}
+              <div>
+                <label className="text-sm font-medium text-foreground block mb-1">Receipt Image</label>
+                <a
+                  href={reviewModal.image_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <div className="rounded-lg overflow-hidden border border-border max-h-64">
+                    <img src={reviewModal.image_url} alt="Receipt" className="w-full object-contain max-h-64" />
+                  </div>
+                  <span className="inline-flex items-center gap-1 text-xs text-primary mt-1 hover:underline">
+                    <ExternalLink className="w-3 h-3" /> Open full size
+                  </span>
+                </a>
+              </div>
 
               <div>
                 <label className="text-sm font-medium text-foreground block mb-1">Admin Notes (optional)</label>
@@ -299,4 +317,4 @@ const AdminBusinessClaims = () => {
   );
 };
 
-export default AdminBusinessClaims;
+export default AdminReceiptVerification;
