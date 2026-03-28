@@ -20,6 +20,7 @@ import { MarketPulseWidget } from "@/components/MarketPulseWidget";
 import { DealWatchWidget } from "@/components/DealWatchWidget";
 import StepTimeline from "@/components/StepTimeline";
 import CompareEngineShowcase from "@/components/CompareEngineShowcase";
+import { AudienceSegmentCards } from "@/components/AudienceSegmentCards";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
@@ -406,6 +407,11 @@ const Index = () => {
               {/* Compare Engine Showcase */}
               <div className="w-full max-w-[1100px]">
                 <CompareEngineShowcase />
+              </div>
+
+              {/* Audience Segmentation Cards */}
+              <div className="w-full max-w-[1100px]">
+                <AudienceSegmentCards />
               </div>
 
               {/* Featured Identity Spotlight */}
