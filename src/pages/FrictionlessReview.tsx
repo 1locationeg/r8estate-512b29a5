@@ -526,7 +526,13 @@ const FrictionlessReview = () => {
             <div className="space-y-3">
               <Textarea
                 value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setComment(val);
+                  const localCheck = checkContentLocally(val);
+                  setLocalWarning(localCheck.blocked ? "يرجى حذف الألفاظ الخارجة — Please remove offensive language" : null);
+                  if (!localCheck.blocked) setIntegrityBlocked(false);
+                }}
                 placeholder={isRTL ? "قبل ما ألاقي R8ESTATE كنت... بعدها اكتشفت إن... ✍️" : "Before R8ESTATE, I was about to... Then I discovered... ✍️"}
                 className="min-h-[120px] text-base resize-none"
                 maxLength={1000}
@@ -600,6 +606,14 @@ const FrictionlessReview = () => {
             </div>
           </div>
 
+          {/* Local profanity warning */}
+          {localWarning && (
+            <div className="flex items-start gap-2 rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+              <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+              <p className="text-xs text-destructive font-medium">{localWarning}</p>
+            </div>
+          )}
+
           {/* Integrity warning */}
           {integrityWarning && (
             <div className={cn(
@@ -610,6 +624,25 @@ const FrictionlessReview = () => {
               <span>{integrityWarning}</span>
             </div>
           )}
+
+          {/* Objectivity Reminder */}
+          <div className={cn(
+            "flex items-start gap-3 rounded-xl p-3.5 bg-amber-500/5 border border-amber-500/20",
+            step >= 2 ? "opacity-100" : "opacity-0 pointer-events-none",
+            "transition-all duration-500"
+          )}>
+            <ShieldCheck className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-1">
+                {isRTL ? "اكتب بموضوعية ودليل" : "Be Objective & Evidence-Based"}
+              </p>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                {isRTL
+                  ? "رأيك مهم. عشان تساعد غيرك ياخد قرار صح، اكتب بموضوعية — قول إيه اللي حصل بالظبط، إمتى، وإيه الدليل."
+                  : "Your review matters. Be specific and objective — share what happened, when, and what evidence you have."}
+              </p>
+            </div>
+          </div>
 
           {/* Submit button */}
           <div
