@@ -14,31 +14,43 @@ interface Props {
   post: CommunityPost;
 }
 
-/** Match developer names (≥2 consecutive words) in post text.
- *  Also strips @mentions so "@palm hills" matches "Palm Hills Developments". */
+/** Match developer names or @mentions in post text.
+ * Supports:
+ * - full phrases like "Palm Hills"
+ * - exact short @mentions like "@emaar"
+ * - slug mentions like "@palm-hills"
+ */
 function findMentionedDeveloper(text: string): Developer | null {
-  // Normalize: lowercase + strip @ symbols so "@palm hills" becomes "palm hills"
-  const lower = text.toLowerCase().replace(/@/g, "");
+  const lower = text.toLowerCase();
+  const normalized = lower.replace(/@/g, "");
+  const mentions = Array.from(lower.matchAll(/@([a-z0-9-_.]+)/gi), (match) => match[1].toLowerCase());
+
   for (const dev of developers) {
-    const words = dev.name.toLowerCase().split(/\s+/);
+    const words = dev.name.toLowerCase().split(/\s+/).filter(Boolean);
+    const firstWord = words[0];
+    const aliases = new Set<string>([
+      dev.id.toLowerCase(),
+      dev.id.toLowerCase().replace(/-/g, " "),
+      firstWord,
+      ...words,
+    ]);
+
     if (words.length >= 2) {
-      // Check if 2+ consecutive words appear
       for (let i = 0; i <= words.length - 2; i++) {
         const phrase = words.slice(i, i + 2).join(" ");
-        if (lower.includes(phrase)) return dev;
+        if (normalized.includes(phrase)) return dev;
       }
     }
-    // Single-word developer names: exact word boundary match
+
     if (words.length === 1) {
       const regex = new RegExp(`\\b${words[0]}\\b`, "i");
-      if (regex.test(lower)) return dev;
+      if (regex.test(normalized)) return dev;
     }
+
+    if (mentions.some((mention) => aliases.has(mention))) return dev;
+    if (normalized.includes(dev.id)) return dev;
   }
-  // Also check developer id (slug) mentions like @palm-hills
-  const slugified = text.toLowerCase().replace(/@/g, "");
-  for (const dev of developers) {
-    if (slugified.includes(dev.id)) return dev;
-  }
+
   return null;
 }
 
