@@ -1,12 +1,13 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { TrendingUp, Minus, TrendingDown, Star, FileDown, ShieldCheck } from "lucide-react";
+import { TrendingUp, Minus, TrendingDown, Star, FileDown, ShieldCheck, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/contexts/AuthContext";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 import { supabase } from "@/integrations/supabase/client";
 import { developers, type Developer } from "@/data/mockData";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
+import { useStartChat } from "@/hooks/useStartChat";
 import type { SearchItem } from "@/data/searchIndex";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
@@ -14,16 +15,12 @@ interface Props {
   post: CommunityPost;
 }
 
-/** Match developer names or @mentions in post text.
- * Supports:
- * - full phrases like "Palm Hills"
- * - exact short @mentions like "@emaar"
- * - slug mentions like "@palm-hills"
- */
 function findMentionedDeveloper(text: string): Developer | null {
   const lower = text.toLowerCase();
   const normalized = lower.replace(/@/g, "");
-  const mentions = Array.from(lower.matchAll(/@([a-z0-9-_.]+)/gi), (match) => match[1].toLowerCase());
+
+  // Extract @mentions
+  const mentions = Array.from(lower.matchAll(/@([a-z0-9-_.]+)/gi), (m) => m[1].toLowerCase());
 
   for (const dev of developers) {
     const words = dev.name.toLowerCase().split(/\s+/).filter(Boolean);
@@ -35,6 +32,7 @@ function findMentionedDeveloper(text: string): Developer | null {
       ...words,
     ]);
 
+    // Multi-word phrase match (e.g. "palm hills")
     if (words.length >= 2) {
       for (let i = 0; i <= words.length - 2; i++) {
         const phrase = words.slice(i, i + 2).join(" ");
@@ -42,11 +40,18 @@ function findMentionedDeveloper(text: string): Developer | null {
       }
     }
 
-    if (words.length === 1) {
-      const regex = new RegExp(`\\b${words[0]}\\b`, "i");
-      if (regex.test(normalized)) return dev;
+    // Single alias word-boundary match in plain text (catches "emaar" without @)
+    for (const alias of aliases) {
+      if (alias.length < 3) continue; // skip very short aliases
+      try {
+        const regex = new RegExp(`\\b${alias}\\b`, "i");
+        if (regex.test(normalized)) return dev;
+      } catch {
+        if (normalized.includes(alias)) return dev;
+      }
     }
 
+    // @mention match
     if (mentions.some((mention) => aliases.has(mention))) return dev;
     if (normalized.includes(dev.id)) return dev;
   }
@@ -55,7 +60,6 @@ function findMentionedDeveloper(text: string): Developer | null {
 }
 
 function getSentiment(score: number): "rising" | "stable" | "declining" {
-  // sentimentScore is 0-10 scale in mock data; normalize to 0-100
   const normalized = score <= 10 ? score * 10 : score;
   if (normalized >= 75) return "rising";
   if (normalized >= 50) return "stable";
@@ -72,15 +76,14 @@ export function DeveloperBridgeCard({ post }: Props) {
   const { t } = useTranslation();
   const { user, role } = useAuth();
   const { getLogoOverride } = useBusinessLogo();
+  const { startChatWithBusinessId } = useStartChat();
   const [isVerifiedBuyer, setIsVerifiedBuyer] = useState<boolean | null>(null);
 
-  // Find mentioned developer
   const matchedDev = useMemo(
     () => findMentionedDeveloper(`${post.title} ${post.body}`),
     [post.title, post.body]
   );
 
-  // Check verified buyer status (only if buyer role + dev matched)
   useEffect(() => {
     if (!user || role !== "buyer" || !matchedDev) {
       setIsVerifiedBuyer(false);
@@ -118,7 +121,6 @@ export function DeveloperBridgeCard({ post }: Props) {
   const logo = logoOverride || matchedDev.logo;
 
   const handleDownload = () => {
-    // Track analytics
     supabase
       .from("widget_analytics")
       .insert({
@@ -129,7 +131,6 @@ export function DeveloperBridgeCard({ post }: Props) {
       })
       .then(() => {});
 
-    // Build SearchItem for report
     const item: SearchItem = {
       id: matchedDev.id,
       name: matchedDev.name,
@@ -149,15 +150,17 @@ export function DeveloperBridgeCard({ post }: Props) {
     downloadTrustReport(item);
   };
 
+  const handleMessage = () => {
+    startChatWithBusinessId(matchedDev.id);
+  };
+
   return (
     <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/10 backdrop-blur-xl p-4 space-y-3 shadow-lg">
-      {/* Verified badge */}
       <div className="absolute top-2 end-2 flex items-center gap-1 text-[10px] text-muted-foreground">
         <ShieldCheck className="w-3 h-3 text-primary" />
         <span>{t("community.bridgeVerifiedOnly", "Verified buyers only")}</span>
       </div>
 
-      {/* Header: logo + name + trust score */}
       <div className="flex items-center gap-3">
         <img
           src={logo}
@@ -182,7 +185,6 @@ export function DeveloperBridgeCard({ post }: Props) {
           </div>
         </div>
 
-        {/* Sentiment badge */}
         <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-[11px] font-medium ${cfg.bg} ${cfg.color}`}>
           <SentimentIcon className="w-3 h-3" />
           <span>
@@ -193,16 +195,26 @@ export function DeveloperBridgeCard({ post }: Props) {
         </div>
       </div>
 
-      {/* CTA */}
-      <Button
-        size="sm"
-        variant="outline"
-        className="w-full gap-2 text-xs border-primary/30 hover:bg-primary/10"
-        onClick={handleDownload}
-      >
-        <FileDown className="w-3.5 h-3.5" />
-        {t("community.bridgeDownloadReport", "Download Buyer Report for {{name}}", { name: matchedDev.name })}
-      </Button>
+      <div className="grid grid-cols-2 gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-2 text-xs border-primary/30 hover:bg-primary/10"
+          onClick={handleDownload}
+        >
+          <FileDown className="w-3.5 h-3.5" />
+          {t("community.bridgeDownloadReport", "Download Report")}
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="gap-2 text-xs border-primary/30 hover:bg-primary/10"
+          onClick={handleMessage}
+        >
+          <MessageCircle className="w-3.5 h-3.5" />
+          {t("community.bridgeMessageBusiness", "Message Business")}
+        </Button>
+      </div>
     </div>
   );
 }

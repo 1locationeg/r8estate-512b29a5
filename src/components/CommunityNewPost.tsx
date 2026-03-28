@@ -14,6 +14,7 @@ import { useCommunityActions } from "@/hooks/useCommunity";
 import { useAuth } from "@/contexts/AuthContext";
 import { developers } from "@/data/mockData";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { DeveloperMentionSuggestions } from "@/components/DeveloperMentionSuggestions";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 interface Props {
@@ -492,13 +493,31 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
                 </Button>
               </div>
 
-              <Textarea
-                ref={textareaRef}
-                placeholder={t("community.bodyPlaceholder", "Share the details...")}
-                value={body}
-                onChange={(e) => setBody(e.target.value)}
-                className="min-h-[120px] text-sm rounded-t-none -mt-2 border-t-0"
-              />
+              <div className="relative">
+                <Textarea
+                  ref={textareaRef}
+                  placeholder={t("community.bodyPlaceholder", "Share the details... Type @ to mention a business")}
+                  value={body}
+                  onChange={(e) => setBody(e.target.value)}
+                  className="min-h-[120px] text-sm rounded-t-none -mt-2 border-t-0"
+                />
+                <DeveloperMentionSuggestions
+                  textareaRef={textareaRef as React.RefObject<HTMLTextAreaElement>}
+                  body={body}
+                  onInsertMention={(devName, startPos, queryLen) => {
+                    const before = body.substring(0, startPos);
+                    const after = body.substring(startPos + queryLen);
+                    const newBody = `${before}@${devName}${after}`;
+                    setBody(newBody);
+                    // Restore cursor after React re-render
+                    setTimeout(() => {
+                      const pos = startPos + devName.length + 1;
+                      textareaRef.current?.setSelectionRange(pos, pos);
+                      textareaRef.current?.focus();
+                    }, 0);
+                  }}
+                />
+              </div>
 
               {/* Link input */}
               {showLinkInput && (
