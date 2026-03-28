@@ -8,9 +8,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, Shield, Video, Award, CheckCircle2, AlertTriangle, Loader2, Mail, X, ArrowLeft, Eye, EyeOff } from "lucide-react";
+import { Star, Shield, Video, Award, CheckCircle2, AlertTriangle, Loader2, Mail, X, ArrowLeft, Eye, EyeOff, ShieldCheck } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { checkContentLocally } from "@/lib/contentGuard";
 
 /* ─── helpers ─── */
 function getDeviceFingerprint() {
@@ -54,6 +55,7 @@ const FrictionlessReview = () => {
   const [submitted, setSubmitted] = useState(false);
   const [integrityWarning, setIntegrityWarning] = useState<string | null>(null);
   const [integrityBlocked, setIntegrityBlocked] = useState(false);
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
 
   /* video */
   const [recording, setRecording] = useState(false);
@@ -128,19 +130,28 @@ const FrictionlessReview = () => {
 
   /* ─── integrity check ─── */
   const checkIntegrity = async (): Promise<boolean> => {
+    // Local pre-filter first
+    const localCheck = checkContentLocally(comment);
+    if (localCheck.blocked) {
+      setLocalWarning("يرجى حذف الألفاظ الخارجة — Please remove offensive language");
+      setIntegrityBlocked(true);
+      return false;
+    }
+    setLocalWarning(null);
+
     if (comment.length < 20) return true; // too short to check
     try {
       const { data, error } = await supabase.functions.invoke("review-integrity-check", {
-        body: { review_text: comment, rating },
+        body: { review_text: comment, rating, content_type: "review" },
       });
       if (error) return true; // fail-open
-      if (data.suspicion_score > 90) {
+      if (data.suspicion_score > 80) {
         setIntegrityBlocked(true);
-        setIntegrityWarning(data.suggestion || "This review appears to contain promotional language.");
+        setIntegrityWarning(data.suggestion || "This review contains content that violates our guidelines.");
         return false;
       }
-      if (data.suspicion_score > 70) {
-        setIntegrityWarning(data.suggestion || "Your review may sound promotional. Consider adding personal details.");
+      if (data.suspicion_score > 50) {
+        setIntegrityWarning(data.suggestion || "Your content may violate community guidelines. Please review.");
         return true; // warn but allow
       }
       return true;
@@ -515,7 +526,13 @@ const FrictionlessReview = () => {
             <div className="space-y-3">
               <Textarea
                 value={comment}
-                onChange={(e) => setComment(e.target.value)}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setComment(val);
+                  const localCheck = checkContentLocally(val);
+                  setLocalWarning(localCheck.blocked ? "يرجى حذف الألفاظ الخارجة — Please remove offensive language" : null);
+                  if (!localCheck.blocked) setIntegrityBlocked(false);
+                }}
                 placeholder={isRTL ? "قبل ما ألاقي R8ESTATE كنت... بعدها اكتشفت إن... ✍️" : "Before R8ESTATE, I was about to... Then I discovered... ✍️"}
                 className="min-h-[120px] text-base resize-none"
                 maxLength={1000}
@@ -589,6 +606,14 @@ const FrictionlessReview = () => {
             </div>
           </div>
 
+          {/* Local profanity warning */}
+          {localWarning && (
+            <div className="flex items-start gap-2 rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+              <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+              <p className="text-xs text-destructive font-medium">{localWarning}</p>
+            </div>
+          )}
+
           {/* Integrity warning */}
           {integrityWarning && (
             <div className={cn(
@@ -599,6 +624,25 @@ const FrictionlessReview = () => {
               <span>{integrityWarning}</span>
             </div>
           )}
+
+          {/* Objectivity Reminder */}
+          <div className={cn(
+            "flex items-start gap-3 rounded-xl p-3.5 bg-amber-500/5 border border-amber-500/20",
+            step >= 2 ? "opacity-100" : "opacity-0 pointer-events-none",
+            "transition-all duration-500"
+          )}>
+            <ShieldCheck className="w-5 h-5 text-amber-600 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-1">
+                {isRTL ? "اكتب بموضوعية ودليل" : "Be Objective & Evidence-Based"}
+              </p>
+              <p className="text-[11px] text-muted-foreground leading-relaxed">
+                {isRTL
+                  ? "رأيك مهم. عشان تساعد غيرك ياخد قرار صح، اكتب بموضوعية — قول إيه اللي حصل بالظبط، إمتى، وإيه الدليل."
+                  : "Your review matters. Be specific and objective — share what happened, when, and what evidence you have."}
+              </p>
+            </div>
+          </div>
 
           {/* Submit button */}
           <div

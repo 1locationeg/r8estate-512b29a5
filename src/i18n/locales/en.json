@@ -1295,5 +1295,24 @@
     "checkPhone": "Add phone number",
     "checkWebsite": "Add website",
     "checkLicense": "Upload business license"
+  },
+  "contentGuard": {
+    "blocked": "This content cannot be posted",
+    "profanity": "Please remove offensive language before posting.",
+    "personalAttack": "Personal attacks are not allowed. Focus on your experience.",
+    "competitorAttack": "Unfair competitor attacks violate our community guidelines.",
+    "bias": "This content contains discriminatory language.",
+    "threat": "Threatening language is not permitted.",
+    "defamation": "Unsubstantiated accusations are not allowed. Please provide evidence.",
+    "promotional": "This content sounds promotional. Add specific personal details.",
+    "genericNoEvidence": "Please be more specific — share what happened, when, and what evidence you have.",
+    "warning": "Your content may violate community guidelines. Please review before posting.",
+    "typingWarning": "Offensive language detected — please revise.",
+    "checking": "Checking content...",
+    "objectivityTitle": "Be Objective & Evidence-Based",
+    "objectivityMessage": "Your review matters. To help others make real decisions, please be specific and objective — share what happened, when, and what evidence you have. Generic praise or personal attacks without proof won't be published.",
+    "tipSpecific": "Be specific — mention dates, locations, unit numbers",
+    "tipEvidence": "Share evidence — photos, receipts, contracts",
+    "tipObjective": "Stay objective — focus on facts, not emotions"
   }
 }

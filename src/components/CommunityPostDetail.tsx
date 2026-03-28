@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image as ImageIcon, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin, X, Check, Loader2, Bold, Italic, List, Trash2 } from "lucide-react";
+import { MessageCircle, ArrowLeft, Send, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, CornerDownRight, Forward, Smile, Image as ImageIcon, Sticker, Type, Link2, Pencil, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Pin, X, Check, Loader2, Bold, Italic, List, Trash2, ShieldCheck, CheckCircle2 } from "lucide-react";
+import { checkContentLocally } from "@/lib/contentGuard";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -78,6 +79,7 @@ const CommentComposer = ({
 }) => {
   const { t } = useTranslation();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
 
   const quickEmojis = ["😀", "😂", "❤️", "🔥", "👏", "💯", "🙌", "😍", "🤔", "👀", "🎉", "💪", "😎", "🏠", "🏗️", "📍"];
 
@@ -105,32 +107,44 @@ const CommentComposer = ({
             onSelectReply={(text) => onReplyTextChange(text)}
           />
         )}
-        <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <Textarea
-              value={replyText}
-              onChange={(e) => onReplyTextChange(e.target.value)}
-              placeholder={t("community.writeComment", "Write a comment...")}
-              autoFocus={autoFocus}
-              className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 pe-10 focus-visible:ring-1"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                  e.preventDefault();
-                  onSubmit();
-                }
-              }}
-            />
-            <Button
-              size="icon"
-              variant="ghost"
-              onClick={onSubmit}
-              disabled={submitting || !replyText.trim()}
-              className="absolute end-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-primary flex-shrink-0"
-            >
-              <Send className="w-3.5 h-3.5" />
-            </Button>
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <Textarea
+                value={replyText}
+                onChange={(e) => {
+                  const val = e.target.value;
+                  onReplyTextChange(val);
+                  const check = checkContentLocally(val);
+                  setLocalWarning(check.blocked ? t("contentGuard.typingWarning") : null);
+                }}
+                placeholder={t("community.writeComment", "Write a comment...")}
+                autoFocus={autoFocus}
+                className="min-h-[40px] max-h-[120px] text-sm rounded-2xl bg-secondary border-0 resize-none py-2 px-3 pe-10 focus-visible:ring-1"
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    if (!localWarning) onSubmit();
+                  }
+                }}
+              />
+              <Button
+                size="icon"
+                variant="ghost"
+                onClick={onSubmit}
+                disabled={submitting || !replyText.trim() || !!localWarning}
+                className="absolute end-1 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full text-primary flex-shrink-0"
+              >
+                <Send className="w-3.5 h-3.5" />
+              </Button>
+            </div>
           </div>
-        </div>
+          {/* Content guard warning */}
+          {localWarning && (
+            <div className="flex items-center gap-1.5 mt-1 px-1">
+              <AlertTriangle className="w-3 h-3 text-destructive shrink-0" />
+              <p className="text-[10px] text-destructive font-medium">{localWarning}</p>
+            </div>
+          )}
         {/* Emoji toolbar */}
         <div className="flex items-center gap-0.5 mt-1 relative">
           <button

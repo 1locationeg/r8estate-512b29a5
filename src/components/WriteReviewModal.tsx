@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
 import { useTranslation } from "react-i18next";
+import { checkContentLocally, checkContentWithAI, type AIModerationResult } from "@/lib/contentGuard";
 import {
   Dialog,
   DialogContent,
@@ -39,6 +40,8 @@ import {
   Lock,
   Mail,
   User,
+  ShieldCheck,
+  AlertTriangle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -129,6 +132,11 @@ export const WriteReviewModal = ({
   // Receipt camera state
   const receiptCameraRef = useRef<HTMLInputElement>(null);
   const [isReceiptUploading, setIsReceiptUploading] = useState(false);
+
+  // Content guard state
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
+  const [aiModeration, setAiModeration] = useState<AIModerationResult | null>(null);
+  const [isCheckingContent, setIsCheckingContent] = useState(false);
 
   const resetForm = () => {
     setRating(0);
@@ -839,7 +847,15 @@ export const WriteReviewModal = ({
 
             <Textarea
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setContent(val);
+                // Local content guard check
+                const localCheck = checkContentLocally(val);
+                setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
+                // Clear previous AI moderation on edit
+                if (aiModeration) setAiModeration(null);
+              }}
               placeholder={t("form.review_placeholder")}
               rows={isGuest ? 4 : 5}
               className="resize-none"
@@ -1053,17 +1069,87 @@ export const WriteReviewModal = ({
           {/* Disclaimer */}
           <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
 
+          {/* Content Guard: Local profanity warning */}
+          {localWarning && (
+            <div className="flex items-start gap-2 rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+              <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+              <p className="text-xs text-destructive font-medium">{localWarning}</p>
+            </div>
+          )}
+
+          {/* Content Guard: AI moderation result */}
+          {aiModeration && aiModeration.suspicion_score > 50 && (
+            <div className={cn(
+              "flex items-start gap-2 rounded-lg p-3 text-sm",
+              aiModeration.suspicion_score > 80
+                ? "bg-destructive/10 border border-destructive/20 text-destructive"
+                : "bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400"
+            )}>
+              <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium text-xs">
+                  {aiModeration.suspicion_score > 80 ? t("contentGuard.blocked") : t("contentGuard.warning")}
+                </p>
+                <p className="text-xs mt-0.5">{aiModeration.suggestion}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Objectivity Reminder Card */}
+          <div className="flex items-start gap-3 rounded-xl p-3.5 bg-amber-500/5 border border-amber-500/20">
+            <ShieldCheck className="w-5 h-5 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-xs font-semibold text-foreground mb-1.5">{t("contentGuard.objectivityTitle")}</p>
+              <p className="text-[11px] text-muted-foreground leading-relaxed mb-2">{t("contentGuard.objectivityMessage")}</p>
+              <ul className="space-y-1">
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipSpecific")}
+                </li>
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipEvidence")}
+                </li>
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3 h-3 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipObjective")}
+                </li>
+              </ul>
+            </div>
+          </div>
+
           {/* Submit */}
           <div className="flex items-center justify-end gap-2 pt-2">
              <Button variant="outline" onClick={() => onOpenChange(false)}>
                {t("form.cancel")}
             </Button>
             <Button
-              onClick={handleSubmit}
-              disabled={isUploading || rating === 0 || !content.trim() || !disclaimerAgreed}
+              onClick={async () => {
+                // Local check first
+                const localCheck = checkContentLocally(content);
+                if (localCheck.blocked) {
+                  setLocalWarning(t("contentGuard.profanity"));
+                  return;
+                }
+                // AI deep check
+                setIsCheckingContent(true);
+                const result = await checkContentWithAI(content, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
+                setIsCheckingContent(false);
+                if (result) {
+                  setAiModeration(result);
+                  if (result.suspicion_score > 80) return; // block
+                }
+                // Proceed with original submit
+                handleSubmit();
+              }}
+              disabled={isUploading || isCheckingContent || rating === 0 || !content.trim() || !disclaimerAgreed || (aiModeration?.suspicion_score ?? 0) > 80}
               className="gap-1.5 min-h-[44px]"
             >
-               {isUploading ? (
+               {isCheckingContent ? (
+                 <>
+                   <Loader2 className="w-4 h-4 animate-spin" /> {t("contentGuard.checking")}
+                 </>
+               ) : isUploading ? (
                  <>
                    <Loader2 className="w-4 h-4 animate-spin" /> {t("form.submitting")}
                  </>

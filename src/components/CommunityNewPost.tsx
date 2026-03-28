@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, TrendingUp, Megaphone, Image as ImageIcon, Link2, Smile, Bold, Italic, List } from "lucide-react";
+import { Send, Loader2, X, Building2, Plus, Trash2, Sparkles, Wand2, TrendingUp, Megaphone, Image as ImageIcon, Link2, Smile, Bold, Italic, List, ShieldCheck, CheckCircle2, AlertTriangle } from "lucide-react";
+import { checkContentLocally, checkContentWithAI, type AIModerationResult } from "@/lib/contentGuard";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -63,6 +64,11 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
   const [aiLoading, setAiLoading] = useState(false);
   const [titleSuggestions, setTitleSuggestions] = useState<string[]>([]);
   const [engagementTip, setEngagementTip] = useState("");
+
+  // Content guard state
+  const [localWarning, setLocalWarning] = useState<string | null>(null);
+  const [aiModeration, setAiModeration] = useState<AIModerationResult | null>(null);
+  const [isCheckingContent, setIsCheckingContent] = useState(false);
 
   // Populate fields when editing
   useEffect(() => {
@@ -583,21 +589,85 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
             </div>
           )}
 
+          {/* Content Guard: Local warning */}
+          {localWarning && (
+            <div className="flex items-start gap-2 rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+              <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
+              <p className="text-xs text-destructive font-medium">{localWarning}</p>
+            </div>
+          )}
+
+          {/* Content Guard: AI moderation */}
+          {aiModeration && aiModeration.suspicion_score > 50 && (
+            <div className={`flex items-start gap-2 rounded-lg p-3 text-sm ${
+              aiModeration.suspicion_score > 80
+                ? "bg-destructive/10 border border-destructive/20 text-destructive"
+                : "bg-amber-500/10 border border-amber-500/20 text-amber-700 dark:text-amber-400"
+            }`}>
+              <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
+              <div>
+                <p className="font-medium text-xs">
+                  {aiModeration.suspicion_score > 80 ? t("contentGuard.blocked") : t("contentGuard.warning")}
+                </p>
+                <p className="text-xs mt-0.5">{aiModeration.suggestion}</p>
+              </div>
+            </div>
+          )}
+
+          {/* Objectivity Reminder */}
+          <div className="flex items-start gap-3 rounded-xl p-3 bg-amber-500/5 border border-amber-500/20">
+            <ShieldCheck className="w-4 h-4 text-amber-600 dark:text-amber-400 mt-0.5 shrink-0" />
+            <div>
+              <p className="text-[11px] font-semibold text-foreground mb-1">{t("contentGuard.objectivityTitle")}</p>
+              <ul className="space-y-0.5">
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <CheckCircle2 className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipSpecific")}
+                </li>
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <CheckCircle2 className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipEvidence")}
+                </li>
+                <li className="text-[10px] text-muted-foreground flex items-center gap-1">
+                  <CheckCircle2 className="w-2.5 h-2.5 text-amber-600 dark:text-amber-400 shrink-0" />
+                  {t("contentGuard.tipObjective")}
+                </li>
+              </ul>
+            </div>
+          </div>
+
           {/* Actions */}
           <div className="flex justify-end gap-2">
             <Button variant="outline" onClick={() => onOpenChange(false)} size="sm">{t("community.cancel", "Cancel")}</Button>
             <Button
-              onClick={handleSubmit}
-              disabled={submitting || !title.trim() || (!isPoll && !body.trim()) || (isPoll && !pollValid)}
+              onClick={async () => {
+                const textToCheck = body || title;
+                const localCheck = checkContentLocally(textToCheck);
+                if (localCheck.blocked) {
+                  setLocalWarning(t("contentGuard.profanity"));
+                  return;
+                }
+                setIsCheckingContent(true);
+                const result = await checkContentWithAI(textToCheck, "post", undefined, (name, opts) => supabase.functions.invoke(name, opts));
+                setIsCheckingContent(false);
+                if (result) {
+                  setAiModeration(result);
+                  if (result.suspicion_score > 80) return;
+                }
+                handleSubmit();
+              }}
+              disabled={isCheckingContent || submitting || !title.trim() || (!isPoll && !body.trim()) || (isPoll && !pollValid) || (aiModeration?.suspicion_score ?? 0) > 80}
               size="sm"
               className="gap-1.5"
             >
-              {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
-              {isEditing
-                ? t("community.saveChanges", "Save Changes")
-                : notifyAll && isAdmin
-                  ? t("community.postAndNotify", "Post & Notify")
-                  : t("community.post", "Post")}
+              {isCheckingContent ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Send className="w-3.5 h-3.5" />}
+              {isCheckingContent
+                ? t("contentGuard.checking")
+                : isEditing
+                  ? t("community.saveChanges", "Save Changes")
+                  : notifyAll && isAdmin
+                    ? t("community.postAndNotify", "Post & Notify")
+                    : t("community.post", "Post")}
             </Button>
           </div>
         </div>
