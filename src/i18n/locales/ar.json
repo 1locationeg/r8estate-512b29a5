@@ -1104,7 +1104,9 @@
     "joinConversation": "انضم للمحادثة",
     "verifiedReviews": "تقييمات موثقة",
     "realBuyers": "مشترين حقيقيين",
-    "realExperts": "خبراء حقيقيين"
+    "realExperts": "خبراء حقيقيين",
+    "buyersChecked": "{{count}} مشتري تحققوا من {{name}} في الساعة الأخيرة",
+    "liveNow": "مباشر"
   },
   "gamification": {
     "dailySet": "المهام اليومية",

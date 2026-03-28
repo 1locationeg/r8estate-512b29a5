@@ -352,6 +352,14 @@
   50% { opacity: 0.75; transform: scale(1.03); }
 }
 
+/* Market Pulse mobile glassmorphism toast */
+.market-pulse-glass {
+  background: hsla(var(--card), 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid hsl(var(--border));
+}
+
 /* Prevent text selection on interactive elements on mobile */
 @layer utilities {
   .select-none-mobile {
