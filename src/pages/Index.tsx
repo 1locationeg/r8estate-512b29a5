@@ -408,6 +408,11 @@ const Index = () => {
                 <CompareEngineShowcase />
               </div>
 
+              {/* Audience Segmentation Cards */}
+              <div className="w-full max-w-[1100px]">
+                <AudienceSegmentCards />
+              </div>
+
               {/* Featured Identity Spotlight */}
               {!specialViewItem && !selectedDeveloper &&
             <>

@@ -1229,5 +1229,31 @@
     "proBadge": "Pro",
     "compareNow": "Compare Now",
     "poweredBy": "Powered by community intelligence"
+  },
+  "audience": {
+    "badge": "AI-Matched Experience",
+    "headline": "Built for every player in real estate",
+    "subtitle": "Select your role — we'll tailor everything to your goals",
+    "getStarted": "Get started",
+    "buyers": {
+      "title": "Buyers & Investors",
+      "pitch": "Verified reviews, developer comparisons & risk insights — so you invest with confidence, not anxiety.",
+      "cta": "Start exploring"
+    },
+    "business": {
+      "title": "Business Owners",
+      "pitch": "Build a trusted brand, manage project reputation & generate qualified leads with real buyer feedback.",
+      "cta": "Grow your brand"
+    },
+    "services": {
+      "title": "Service Companies",
+      "pitch": "Showcase expertise, collect structured feedback & stand out in a saturated market with social proof.",
+      "cta": "Get discovered"
+    },
+    "professionals": {
+      "title": "RE Professionals",
+      "pitch": "Access market data, build client trust with verified credentials & grow your network efficiently.",
+      "cta": "Boost credibility"
+    }
   }
 }
