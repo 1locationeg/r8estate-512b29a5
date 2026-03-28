@@ -1,7 +1,7 @@
 /**
  * Content Sanitizer — masks profanity, insults, and harmful words
- * in displayed text with censored symbols (e.g. "***").
- * Uses the same word lists as contentGuard.ts.
+ * in displayed text with a uniform block character (█) so it's
+ * obvious the word was censored, not just missing letters.
  */
 
 const AR_PROFANITY = [
@@ -29,15 +29,6 @@ const ALL_WORDS = [...AR_PROFANITY, ...EN_PROFANITY].sort(
   (a, b) => b.length - a.length
 );
 
-function buildMask(word: string): string {
-  // For single-char words use *
-  if (word.length <= 1) return "*";
-  // Keep first char, mask the rest
-  const firstChar = word[0];
-  const masked = "•".repeat(Math.min(word.length - 1, 6));
-  return `${firstChar}${masked}`;
-}
-
 // Build replacement regex — case insensitive
 const combinedPattern = new RegExp(
   ALL_WORDS.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|"),
@@ -45,12 +36,12 @@ const combinedPattern = new RegExp(
 );
 
 /**
- * Sanitize text by masking profanity with censored symbols.
- * Returns the cleaned text safe for display.
+ * Sanitize text by replacing profanity with solid block characters (█████).
+ * The block bar is visually obvious — readers instantly understand it's censored.
  */
 export function sanitizeDisplayText(text: string): string {
   if (!text) return text;
-  return text.replace(combinedPattern, (match) => buildMask(match));
+  return text.replace(combinedPattern, (match) => "█".repeat(match.length));
 }
 
 /**
