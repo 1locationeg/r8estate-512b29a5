@@ -14,6 +14,7 @@ import { ReviewVerificationBadge } from "@/components/ReviewVerificationBadge";
 import type { ReviewAnalysis } from "@/hooks/useReviewAnalysis";
 import r8Stars from "@/assets/r8-stars.png";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
+import { sanitizeDisplayText } from "@/lib/contentSanitizer";
 import { generateAvatar } from "@/lib/avatarUtils";
 
 interface ReviewCardProps {
@@ -133,7 +134,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       </div>
 
       <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
-        {i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment}
+        {sanitizeDisplayText(i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment)}
       </p>
       <div className="flex items-center justify-between mb-2 md:mb-3">
         <span className="text-[10px] md:text-xs text-muted-foreground">
