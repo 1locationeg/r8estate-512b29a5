@@ -276,6 +276,7 @@ export type Database = {
           category: Database["public"]["Enums"]["community_post_category"]
           created_at: string
           developer_id: string | null
+          flagged_at: string | null
           id: string
           image_urls: string[] | null
           is_hidden: boolean
@@ -294,6 +295,7 @@ export type Database = {
           category?: Database["public"]["Enums"]["community_post_category"]
           created_at?: string
           developer_id?: string | null
+          flagged_at?: string | null
           id?: string
           image_urls?: string[] | null
           is_hidden?: boolean
@@ -312,6 +314,7 @@ export type Database = {
           category?: Database["public"]["Enums"]["community_post_category"]
           created_at?: string
           developer_id?: string | null
+          flagged_at?: string | null
           id?: string
           image_urls?: string[] | null
           is_hidden?: boolean
@@ -455,6 +458,48 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      content_reports: {
+        Row: {
+          admin_notes: string | null
+          content_id: string
+          content_type: string
+          created_at: string
+          details: string | null
+          id: string
+          reason: string
+          reporter_id: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          content_id: string
+          content_type: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason: string
+          reporter_id: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          details?: string | null
+          id?: string
+          reason?: string
+          reporter_id?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+        }
+        Relationships: []
       }
       conversation_participants: {
         Row: {
