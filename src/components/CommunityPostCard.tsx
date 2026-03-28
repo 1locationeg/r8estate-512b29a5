@@ -67,13 +67,31 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
   const userHasReacted = reactions.some(r => r.user_reacted);
 
   return (
-    <div className={`bg-card border rounded-lg overflow-hidden shadow-sm ${post.is_pinned ? 'border-primary/40 ring-1 ring-primary/20' : 'border-border'}`}>
+    <div className={`bg-card border rounded-lg overflow-hidden shadow-sm ${post.is_pinned ? 'border-primary/40 ring-1 ring-primary/20' : (post as any).moderation_status === 'warning' ? 'border-amber-500/40 ring-1 ring-amber-500/20' : 'border-border'}`}>
       {post.is_pinned && (
         <div className="flex items-center gap-1.5 px-4 py-1.5 bg-primary/5 text-primary text-xs font-medium border-b border-primary/10">
           <Pin className="w-3 h-3" />
           {t("community.pinnedPost", "Pinned post")}
         </div>
       )}
+      {/* Warning banner for moderation_status === 'warning' */}
+      {(post as any).moderation_status === 'warning' && (post as any).flagged_at && (() => {
+        const elapsed = Date.now() - new Date((post as any).flagged_at).getTime();
+        const remainingMins = Math.max(0, Math.ceil((100 * 60 * 1000 - elapsed) / 60000));
+        return (
+          <div className="flex flex-col gap-1 px-4 py-2 bg-amber-500/10 border-b border-amber-500/20">
+            <div className="flex items-center gap-1.5">
+              <ShieldAlert className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+              <p className="text-xs text-amber-700 dark:text-amber-400 font-medium">
+                {t("contentGuard.warningBanner", "⚠️ This content is under review for objectivity. The author has {{minutes}} minutes to edit with evidence and polite language.", { minutes: remainingMins })}
+              </p>
+            </div>
+            <p className="text-[10px] text-amber-600/80 dark:text-amber-500/80 ps-5">
+              {t("contentGuard.businessRights", "Businesses have the right to take legal action against defamatory content.")}
+            </p>
+          </div>
+        );
+      })()}
       {/* Author header */}
       <div className="flex items-center gap-3 px-4 pt-3 pb-2">
         <Avatar className="h-10 w-10 ring-2 ring-border">
