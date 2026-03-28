@@ -2059,6 +2059,7 @@ const AdminDashboard = () => {
         { icon: <Tag className="w-4 h-4" />, label: 'Deal Moderation', path: '/admin/deal-moderation' },
         { icon: <Rocket className="w-4 h-4" />, label: 'Launch Moderation', path: '/admin/launch-moderation' },
         { icon: <ShieldAlert className="w-4 h-4" />, label: 'Community Guard', path: '/admin/community-moderation' },
+        { icon: <Flag className="w-4 h-4" />, label: 'Content Reports', path: '/admin/content-reports' },
       ],
     },
     {
@@ -2164,6 +2165,7 @@ const AdminDashboard = () => {
           <Route path="referrals" element={<AdminReferrals />} />
           <Route path="upsell" element={<AdminUpsell />} />
           <Route path="community-moderation" element={<AdminCommunityModeration />} />
+          <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
