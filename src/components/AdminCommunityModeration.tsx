@@ -81,17 +81,29 @@ const AdminCommunityModeration = () => {
       if (error) throw error;
 
       const flags = data as any;
-      const newStatus = flags.suspicion_score > 80 ? 'flagged' : flags.suspicion_score > 50 ? 'warning' : 'clean';
+      let newStatus = 'clean';
+      let shouldHide = false;
+      let flaggedAt: string | null = null;
+
+      if (flags.suspicion_score > 80) {
+        newStatus = 'flagged';
+        shouldHide = true;
+      } else if (flags.suspicion_score > 50) {
+        newStatus = 'warning';
+        flaggedAt = new Date().toISOString();
+      }
 
       await supabase
         .from('community_posts')
         .update({
           moderation_flags: flags,
           moderation_status: newStatus,
+          is_hidden: shouldHide || post.is_hidden,
+          ...(flaggedAt ? { flagged_at: flaggedAt } : {}),
         } as any)
         .eq('id', post.id);
 
-      toast.success(`Post scanned — ${newStatus}`);
+      toast.success(`Post scanned — ${newStatus}${shouldHide ? ' (auto-hidden)' : flaggedAt ? ' (100min grace period)' : ''}`);
       fetchPosts();
     } catch (err) {
       console.error(err);
@@ -115,10 +127,26 @@ const AdminCommunityModeration = () => {
           body: { review_text: `${post.title}\n${post.body}`, rating: null, content_type: 'post' },
         });
         const flags = data as any;
-        const newStatus = flags.suspicion_score > 80 ? 'flagged' : flags.suspicion_score > 50 ? 'warning' : 'clean';
+        let newStatus = 'clean';
+        let shouldHide = false;
+        let flaggedAt: string | null = null;
+
+        if (flags.suspicion_score > 80) {
+          newStatus = 'flagged';
+          shouldHide = true;
+        } else if (flags.suspicion_score > 50) {
+          newStatus = 'warning';
+          flaggedAt = new Date().toISOString();
+        }
+
         await supabase
           .from('community_posts')
-          .update({ moderation_flags: flags, moderation_status: newStatus } as any)
+          .update({
+            moderation_flags: flags,
+            moderation_status: newStatus,
+            is_hidden: shouldHide || post.is_hidden,
+            ...(flaggedAt ? { flagged_at: flaggedAt } : {}),
+          } as any)
           .eq('id', post.id);
         scanned++;
       } catch {
@@ -128,6 +156,21 @@ const AdminCommunityModeration = () => {
     toast.success(`Scanned ${scanned}/${unscanned.length} posts`);
     fetchPosts();
     setScanningAll(false);
+  };
+
+  const restorePost = async (postId: string) => {
+    setTogglingId(postId);
+    const { error } = await supabase
+      .from('community_posts')
+      .update({ is_hidden: false, moderation_status: 'clean', flagged_at: null } as any)
+      .eq('id', postId);
+    if (error) {
+      toast.error('Failed to restore post');
+    } else {
+      toast.success('Post restored to clean status');
+      fetchPosts();
+    }
+    setTogglingId(null);
   };
 
   const toggleHidden = async (postId: string, currentlyHidden: boolean) => {
