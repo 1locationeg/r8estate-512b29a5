@@ -45,7 +45,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
 
   const fetchPosts = useCallback(async () => {
     setLoading(true);
-    let query = supabase.from("community_posts").select("*");
+    let query = supabase.from("community_posts").select("*").eq("is_hidden" as any, false);
 
     if (category) {
       query = query.eq("category", category);
