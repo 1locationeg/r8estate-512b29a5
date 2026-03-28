@@ -1157,5 +1157,24 @@
     "comment2": "\"Decent mall experience, great variety of stores — but parking is a nightmare and some units still vacant after a year.\"",
     "comment3": "\"Excellent compound, green spaces everywhere. Delivered on schedule with premium finishing. Community life is wonderful.\"",
     "comment4": "\"Absolutely world-class compound. Every detail perfect — from handover to community management. Above and beyond.\""
+  },
+  "referral": {
+    "headline": "Your contribution makes a difference",
+    "subtext": "Share your experience with friends and help them make the right decision",
+    "cta": "Invite a Friend",
+    "invited": "Invited",
+    "verified": "Verified",
+    "insightCredits": "Insight Credits",
+    "collectiveNote": "Every invite strengthens the community",
+    "linkCopied": "Referral link copied!",
+    "shareTitle": "Join R8ESTATE",
+    "shareDesc": "Join R8ESTATE — the trusted real estate review platform!",
+    "shareButton": "Share Invite Link",
+    "rewardNote": "Both you and your friend earn Insight Credits when they verify",
+    "perReferral": "+50 credits each"
+  },
+  "community": {
+    "referralNudge": "Your contribution makes a difference 🎁",
+    "referralNudgeDesc": "Share your experience and help friends make the right decision"
   }
 }
