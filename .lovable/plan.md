@@ -1,74 +1,33 @@
 
 
-## Fix "Lost User" Problem — Consistent Navigation Across All Pages
+## Fix: Search Items Not Displaying in Focus Area
 
 ### Problem
+When a user clicks search results in the hero search bar, only **developers** display inline on the page (in the focus/detail area). All other item types (projects, locations, brokers, apps, units, property-types, categories) **navigate away** to `/entity/:id`, breaking the focused experience.
 
-Users feel lost because pages have inconsistent navigation patterns — some have only a logo, some have only a back arrow, some have neither a clear page title nor a way home. There's no unified header telling the user "where am I" and "how do I go back."
+### Root Cause
+In `HeroSearchBar.tsx`, the `handleSelect` function splits behavior:
+- `developers` → calls `onSelectDeveloper(item.id)` → shows `DeveloperDetailCard` inline ✓
+- **Everything else** → `searchNavigate('/entity/${item.id}')` → leaves the page ✗
 
 ### Solution
+Route all search result clicks through a unified callback so every item type displays inline in the focus area (using `ItemDetailSection`), keeping the user on the homepage.
 
-Create a **reusable `PageHeader` component** used by all standalone pages (not dashboard pages, which already have `DashboardHeader`). Every page gets:
+### Files to Change
 
-1. **Home icon** (left) — always navigates to `/`
-2. **Back arrow** — navigates to previous page (`navigate(-1)`)
-3. **Page title** — clear, bold label showing where the user is
-4. **Optional breadcrumb** — e.g., "Home > Community > Post"
-5. **Right slot** — for page-specific actions (write review button, language switcher, etc.)
+**1. `src/components/HeroSearchBar.tsx`**
+- Add new prop: `onSelectItem?: (item: SearchItem) => void`
+- Update `handleSelect`: instead of navigating to `/entity/:id` for non-developer items, call `onSelectItem(item)` which will display the item inline via `ItemDetailSection`
+- Keep developer handling via `onSelectDeveloper` for backward compatibility
 
-```text
-┌──────────────────────────────────────────────────┐
-│  🏠  ←  Reviews                        [+ Write] │
-│       Home > Reviews                              │
-└──────────────────────────────────────────────────┘
-```
+**2. `src/pages/Index.tsx`**
+- Pass a new `onSelectItem` callback to `HeroSearchBar` that sets `specialViewItem` state
+- This triggers `ItemDetailSection` to render inline (already wired up at line 383-389)
+- Also clear `selectedDeveloperId` and `activeView` when an item is selected (same pattern as `HeroCategoryLinks.onSelectItem`)
 
-### Files
-
-**1. New: `src/components/PageHeader.tsx`**
-- Sticky header with `backdrop-blur`, matching the existing `DashboardHeader` style
-- Props: `title`, `breadcrumbs?: {label, path?}[]`, `rightSlot?: ReactNode`, `showBack?: boolean`
-- Home icon button → `navigate("/")`
-- Back arrow button → `navigate(-1)` (shown by default, hideable)
-- Breadcrumb trail: Home > Parent > **Current** (last segment bold)
-- Bilingual: RTL flips arrows, uses i18n for "Home"
-
-**2. Edit: `src/pages/Reviews.tsx`**
-- Replace custom header with `<PageHeader title="Reviews" rightSlot={writeButton} />`
-
-**3. Edit: `src/pages/Portfolio.tsx`**
-- Replace custom header with `<PageHeader title="My Portfolio" />` + keep avatar/tabs below
-
-**4. Edit: `src/pages/Community.tsx`**
-- Add `<PageHeader title="Community" />` above the composer card
-
-**5. Edit: `src/pages/DealWatch.tsx`**
-- Replace BrandLogo-only header with `<PageHeader title="Deal Watch" />`
-
-**6. Edit: `src/pages/LaunchWatch.tsx`**
-- Replace BrandLogo-only header with `<PageHeader title="Launch Watch" rightSlot={liveBadge} />`
-
-**7. Edit: `src/pages/InsightsPage.tsx`**
-- Replace custom back-arrow header with `<PageHeader title="AI Insights" rightSlot={refreshButton} />`
-
-**8. Edit: `src/pages/Leaderboard.tsx`**
-- Replace custom header with `<PageHeader title="Leaderboard" />`
-
-**9. Edit: `src/pages/Categories.tsx`**
-- Replace custom header with `<PageHeader title="Categories" />`
-
-**10. Edit: `src/pages/DeveloperDirectory.tsx`**
-- Replace custom header with `<PageHeader title="Developer Directory" />`
-
-**11. Edit: `src/pages/EntityPage.tsx`**
-- Replace custom back-only header with `<PageHeader title={entityName} breadcrumbs={[{label: 'Directory'}]} />`
-
-**12. Edit: `src/i18n/locales/en.json` + `ar.json`**
-- Add `pageHeader.home`, `pageHeader.back` translations
-
-### Design Decisions
-- Consistent 54px height matching `DashboardHeader`
-- Home icon is always the house icon (not the brand logo) for clarity — BrandLogo stays in Index/Navbar only
-- On mobile, the header works with the existing `BottomNav` — no conflict
-- Back button uses `navigate(-1)` so it respects actual browser history, not hardcoded routes
+### Behavior After Fix
+- User clicks any search result → page scrolls to inline detail section showing that item
+- Works for all categories: projects, locations, brokers, apps, units, etc.
+- Developer items continue to show `DeveloperDetailCard` as before
+- User stays on the homepage in the "focus area" instead of being navigated away
 
