@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Shield, AlertTriangle, X, Clock, FileWarning } from "lucide-react";
+import buyerAvatar1 from "@/assets/buyer-avatar-1.jpg";
+import buyerAvatar2 from "@/assets/buyer-avatar-2.jpg";
+import buyerAvatar3 from "@/assets/buyer-avatar-3.jpg";
+import buyerAvatar4 from "@/assets/buyer-avatar-4.jpg";
 
-const avatarInitials = ["AK", "LS", "OD", "NM"];
+const avatarImages = [buyerAvatar1, buyerAvatar2, buyerAvatar3, buyerAvatar4];
 
 function useCountUp(target: number, duration = 2000) {
   const [value, setValue] = useState(0);
