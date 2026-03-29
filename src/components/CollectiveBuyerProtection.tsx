@@ -121,7 +121,7 @@ export const CollectiveBuyerProtection = () => {
                 ))}
               </div>
               <span className="text-[11px] text-white/50 font-medium">
-                {buyerCount}{" "}
+                {buyerCount.value.toLocaleString()}+{" "}
                 {isAr ? "مشتري حموا أموالهم" : "buyers protected their money"}
               </span>
             </div>
