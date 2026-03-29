@@ -39,8 +39,9 @@ export const CollectiveBuyerProtection = () => {
   const { t, i18n } = useTranslation();
   const isAr = i18n.language === "ar";
 
-  const protectedAmount = "847M";
-  const buyerCount = "1,247+";
+  const protectedAmount = useCountUp(847, 2000);
+  const buyerCount = useCountUp(1247, 1800);
+
 
   const risks = [
     {
