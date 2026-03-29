@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Star, Users, Building2, MessageSquare, ArrowRight, LogIn, Clock, Gift, Send, Loader2 } from 'lucide-react';
+import { Star, Users, Building2, MessageSquare, ArrowRight, LogIn, Clock, Gift, Send, Loader2, Shield, CheckCircle2, Sparkles } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
 import { Textarea } from '@/components/ui/textarea';
@@ -19,7 +19,8 @@ function getOrCreateSessionId(): string {
 }
 
 export function GuestTimerExpiredModal() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isAr = i18n.language?.startsWith('ar');
   const { expiredModalOpen, dismissExpiredModal, isGuest, grantBonusTime, hasBonusBeenUsed } = useGuestTimer();
   const navigate = useNavigate();
 
@@ -33,10 +34,16 @@ export function GuestTimerExpiredModal() {
   if (!isGuest) return null;
 
   const STATS = [
-    { icon: MessageSquare, value: '50K+', label: t("guest.stat_reviews") },
-    { icon: Building2, value: '1,200+', label: t("guest.stat_companies") },
-    { icon: Users, value: '100K+', label: t("guest.stat_users") },
-    { icon: Star, value: '4.8★', label: t("guest.stat_trust") },
+    { icon: MessageSquare, value: '50K+', label: isAr ? 'تقييم موثق' : 'Verified Reviews' },
+    { icon: Building2, value: '1,200+', label: isAr ? 'شركة مسجلة' : 'Companies Listed' },
+    { icon: Users, value: '100K+', label: isAr ? 'مستخدم نشط' : 'Active Users' },
+    { icon: Star, value: '4.8★', label: isAr ? 'تقييم الثقة' : 'Trust Score' },
+  ];
+
+  const BENEFITS = [
+    { icon: Shield, text: isAr ? 'حماية استثمارك العقاري' : 'Protect your real estate investment' },
+    { icon: CheckCircle2, text: isAr ? 'تقييمات موثقة من مشترين حقيقيين' : 'Verified reviews from real buyers' },
+    { icon: Sparkles, text: isAr ? 'تحليلات ذكية ومقارنات فورية' : 'AI insights & instant comparisons' },
   ];
 
   const FEEDBACK_TYPES = [
@@ -90,47 +97,64 @@ export function GuestTimerExpiredModal() {
   return (
     <Dialog open={expiredModalOpen} onOpenChange={() => {}}>
       <DialogContent
-        className="max-w-md w-full p-0 overflow-hidden border-0 shadow-2xl [&>button]:hidden"
+        className="max-w-md w-[calc(100vw-2rem)] max-h-[90dvh] overflow-y-auto p-0 border-0 shadow-2xl [&>button]:hidden rounded-2xl"
         onEscapeKeyDown={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        <div className="bg-gradient-to-br from-orange-500 via-red-500 to-rose-600 px-6 pt-8 pb-10 text-white text-center relative">
+        {/* Hero gradient header — compact on mobile */}
+        <div className="bg-gradient-to-br from-primary via-primary/90 to-accent px-5 pt-6 pb-8 text-center relative overflow-hidden">
           <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,white,transparent)]" />
           <div className="relative">
-            <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-4 mx-auto">
-              <Clock className="w-8 h-8 text-white" />
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm mb-3 mx-auto">
+              <Clock className="w-7 h-7 text-white" />
             </div>
-            <h2 className="text-2xl font-extrabold mb-2 leading-tight">
-              {t("guest.preview_ended")}
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white mb-1.5 leading-tight">
+              {isAr ? 'انتهت المعاينة المجانية' : 'Your Free Preview Has Ended'}
             </h2>
-            <p className="text-white/85 text-sm leading-relaxed max-w-xs mx-auto">
-              {t("guest.preview_ended_desc")}
+            <p className="text-white/85 text-xs sm:text-sm leading-relaxed max-w-[280px] mx-auto">
+              {isAr
+                ? 'سجّل مجاناً واحصل على وصول كامل لكل التقييمات والتحليلات'
+                : 'Sign up for free to unlock full access to all reviews, insights & comparisons'}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-px bg-border mx-0">
+        {/* Stats grid */}
+        <div className="grid grid-cols-4 gap-px bg-border">
           {STATS.map(({ icon: Icon, value, label }) => (
-            <div key={label} className="bg-background flex flex-col items-center justify-center py-4 px-3">
-              <Icon className="w-4 h-4 text-primary mb-1" />
-              <span className="text-xl font-extrabold text-foreground">{value}</span>
-              <span className="text-xs text-muted-foreground text-center leading-tight">{label}</span>
+            <div key={label} className="bg-background flex flex-col items-center justify-center py-3 px-1.5">
+              <Icon className="w-3.5 h-3.5 text-primary mb-0.5" />
+              <span className="text-base sm:text-lg font-extrabold text-foreground leading-none">{value}</span>
+              <span className="text-[10px] text-muted-foreground text-center leading-tight mt-0.5">{label}</span>
             </div>
           ))}
         </div>
 
+        {/* Benefits list */}
+        <div className="px-5 pt-4 space-y-2">
+          {BENEFITS.map(({ icon: Icon, text }, i) => (
+            <div key={i} className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                <Icon className="w-3.5 h-3.5 text-primary" />
+              </div>
+              <span className="text-xs sm:text-sm font-medium text-foreground">{text}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Bonus feedback section */}
         {!hasBonusBeenUsed && (
-          <div className="px-5 pt-4">
+          <div className="px-5 pt-3">
             {!showFeedbackForm ? (
               <button
                 onClick={() => setShowFeedbackForm(true)}
-                className="w-full flex items-center justify-center gap-2 bg-accent/60 hover:bg-accent text-accent-foreground font-semibold py-3 rounded-xl transition-all duration-200 text-sm border border-border"
+                className="w-full flex items-center justify-center gap-2 bg-accent/15 hover:bg-accent/25 text-foreground font-semibold py-2.5 rounded-xl transition-all duration-200 text-xs border border-border"
               >
-                <Gift className="w-4 h-4 text-primary" />
-                {t("guest.share_feedback_bonus")}
+                <Gift className="w-4 h-4 text-accent" />
+                {isAr ? '💬 شارك رأيك واحصل على دقيقتين إضافيتين' : '💬 Share feedback & get 2 bonus minutes'}
               </button>
             ) : (
-              <div className="space-y-3 bg-muted/40 rounded-xl p-4 border border-border">
+              <div className="space-y-2.5 bg-muted/40 rounded-xl p-3 border border-border">
                 <p className="text-xs font-semibold text-foreground">{t("guest.rate_experience")}</p>
 
                 <div className="flex items-center gap-1">
@@ -144,9 +168,9 @@ export function GuestTimerExpiredModal() {
                       className="transition-transform hover:scale-110"
                     >
                       <Star
-                        className={`w-7 h-7 ${
+                        className={`w-6 h-6 ${
                           s <= (hoverRating || rating)
-                            ? 'fill-yellow-400 text-yellow-400'
+                            ? 'fill-accent text-accent'
                             : 'text-muted-foreground/40'
                         }`}
                       />
@@ -154,12 +178,12 @@ export function GuestTimerExpiredModal() {
                   ))}
                 </div>
 
-                <div className="flex flex-wrap gap-1.5">
+                <div className="flex flex-wrap gap-1">
                   {FEEDBACK_TYPES.map((ft) => (
                     <button
                       key={ft.value}
                       onClick={() => setFeedbackType(ft.value)}
-                      className={`text-xs px-3 py-1.5 rounded-full border transition-all ${
+                      className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
                         feedbackType === ft.value
                           ? 'bg-primary text-primary-foreground border-primary'
                           : 'bg-background text-muted-foreground border-border hover:border-primary/40'
@@ -174,20 +198,20 @@ export function GuestTimerExpiredModal() {
                   placeholder={t("guest.feedback_placeholder")}
                   value={feedbackText}
                   onChange={(e) => setFeedbackText(e.target.value)}
-                  className="min-h-[70px] text-sm resize-none"
+                  className="min-h-[60px] text-xs resize-none"
                   maxLength={500}
                 />
 
                 <button
                   onClick={handleSubmitFeedback}
                   disabled={submitting}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-bold py-2.5 rounded-lg shadow-md transition-all duration-200 active:scale-[0.98] text-sm disabled:opacity-50"
+                  className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-2 rounded-lg shadow-md transition-all duration-200 active:scale-[0.98] text-xs disabled:opacity-50"
                 >
                   {submitting ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
                   ) : (
                     <>
-                      <Send className="w-4 h-4" />
+                      <Send className="w-3.5 h-3.5" />
                       {t("guest.submit_bonus")}
                     </>
                   )}
@@ -197,26 +221,30 @@ export function GuestTimerExpiredModal() {
           </div>
         )}
 
-        <div className="p-5 flex flex-col gap-3 bg-background">
+        {/* CTA buttons */}
+        <div className="p-5 pt-3 flex flex-col gap-2.5">
           <button
             onClick={handleSignUp}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-orange-500/30 hover:shadow-orange-500/40 transition-all duration-200 active:scale-[0.98] text-sm"
+            className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-3.5 rounded-xl shadow-lg shadow-primary/20 transition-all duration-200 active:scale-[0.98] text-sm"
           >
-            <span>{t("guest.signup_continue")}</span>
-            <ArrowRight className="w-4 h-4" />
+            <span>{isAr ? '🚀 سجّل مجاناً — خلال ثوانٍ' : '🚀 Sign Up Free — Takes Seconds'}</span>
+            <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
           </button>
 
           <button
             onClick={handleLogin}
-            className="w-full flex items-center justify-center gap-2 border border-border hover:border-primary/40 text-foreground hover:text-primary font-semibold py-3 rounded-xl transition-all duration-200 active:scale-[0.98] text-sm bg-muted/40 hover:bg-muted/60"
+            className="w-full flex items-center justify-center gap-2 border border-border hover:border-primary/40 text-foreground hover:text-primary font-semibold py-2.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-xs bg-muted/40"
           >
-            <LogIn className="w-4 h-4" />
-            {t("guest.already_have_account")}
+            <LogIn className="w-3.5 h-3.5" />
+            {isAr ? 'عندك حساب بالفعل؟ سجّل دخول' : 'Already have an account? Sign in'}
           </button>
 
-          <p className="text-center text-xs text-muted-foreground">
-            {t("guest.free_forever")}
-          </p>
+          <div className="flex items-center justify-center gap-2 pt-1">
+            <Shield className="w-3 h-3 text-muted-foreground" />
+            <p className="text-center text-[10px] text-muted-foreground">
+              {isAr ? 'مجاني للأبد • بياناتك محمية ومشفرة' : 'Free forever • Your data is encrypted & secure'}
+            </p>
+          </div>
         </div>
       </DialogContent>
     </Dialog>
