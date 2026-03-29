@@ -1,17 +1,18 @@
+import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { MessageSquare, LayoutGrid, Users } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
+import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
-import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
-import { UserAvatarAnchor } from "@/components/UserAvatarAnchor";
 import logoIcon from "@/assets/logo-icon.png";
 
 export const BottomNav = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user } = useAuth();
-  const { unreadCount } = useMessageUnreadCount();
+  const { user, signOut } = useAuth();
+  const [moreOpen, setMoreOpen] = useState(false);
 
   // Hide BottomNav entirely on messages page (chat has its own nav)
   if (location.pathname === "/messages") {
@@ -73,12 +74,24 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
           </button>
 
-          {/* User Avatar Anchor */}
-          <div className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1">
-            <UserAvatarAnchor size="sm" />
-          </div>
+          {/* More Menu */}
+          <button
+            onClick={() => setMoreOpen(true)}
+            className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 text-muted-foreground"
+          >
+            <MoreHorizontal className="h-5 w-5" strokeWidth={2} />
+            <span className="text-[10px] font-medium">{t("nav.more", "More")}</span>
+          </button>
         </div>
       </nav>
+      <MobileNavSheet
+        open={moreOpen}
+        onOpenChange={setMoreOpen}
+        onSignOut={signOut}
+        getDashboardRoute={() =>
+          user ? "/buyer" : "/auth"
+        }
+      />
     </>
   );
 };
