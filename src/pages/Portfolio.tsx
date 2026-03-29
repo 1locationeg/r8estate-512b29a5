@@ -12,7 +12,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 
 interface SavedItem { id: string; item_id: string; item_type: string; item_name: string; item_image: string | null; created_at: string; }
 interface FollowedBusiness { id: string; business_id: string; business_name: string; created_at: string; }
@@ -210,18 +210,11 @@ const Portfolio = () => {
 
   return (
     <div className="min-h-screen bg-background pb-16">
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border">
-        <div className="flex items-center gap-3 px-4 py-3 max-w-lg mx-auto">
-          <Avatar className="h-10 w-10 shrink-0">
-            <AvatarImage src={profile?.avatar_url || undefined} />
-            <AvatarFallback className="bg-primary text-primary-foreground font-semibold">{profile?.full_name?.charAt(0) || user.email?.charAt(0) || "U"}</AvatarFallback>
-          </Avatar>
-          <div className="flex-1 min-w-0">
-            <h1 className="text-lg font-bold text-foreground leading-tight">{t("portfolio.myActivity")}</h1>
-            <p className="text-xs text-muted-foreground truncate">{profile?.full_name || user.email}</p>
-          </div>
-          <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home"><BrandLogo size="hero" /></button>
-        </div>
+      <PageHeader
+        title={t("portfolio.myActivity", "My Activity")}
+        breadcrumbs={[{ label: t("portfolio.myActivity", "My Activity") }]}
+      />
+      <div className="sticky top-[54px] z-30 bg-background/95 backdrop-blur-md border-b border-border">
         <div className="overflow-x-auto scrollbar-none">
           <div className="flex gap-1 px-4 pb-2 min-w-max max-w-lg mx-auto">
             {tabs.map(({ key, label, icon: Icon }) => (

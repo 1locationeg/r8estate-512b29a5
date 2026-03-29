@@ -1335,5 +1335,9 @@
     "thanksDesc": "We'll review this content shortly.",
     "alreadyReported": "Already reported",
     "alreadyReportedDesc": "You've already reported this content."
+  },
+  "pageHeader": {
+    "home": "Home",
+    "back": "Go back"
   }
 }

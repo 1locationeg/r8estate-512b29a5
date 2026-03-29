@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const Reviews = () => {
@@ -87,29 +87,21 @@ const Reviews = () => {
 
   return (
     <div className="min-h-screen bg-background pb-16">
-      {/* Header */}
-      <div className="sticky top-0 z-40 bg-background/95 backdrop-blur-lg border-b border-border">
-        <div className="max-w-2xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-              <BrandLogo size="hero" />
-            </button>
-          </div>
+      <PageHeader
+        title={t("reviews.totalReviews", "Reviews")}
+        breadcrumbs={[{ label: t("reviews.totalReviews", "Reviews") }]}
+        rightSlot={
           <Button
             size="sm"
             className="rounded-full h-9 w-9 p-0"
             onClick={() => {
-              if (user) {
-                setWriteModalOpen(true);
-              } else {
-                navigate("/auth");
-              }
+              if (user) { setWriteModalOpen(true); } else { navigate("/auth"); }
             }}
           >
             <Plus className="w-5 h-5" />
           </Button>
-        </div>
-      </div>
+        }
+      />
 
       <div className="max-w-2xl mx-auto px-4 py-4 space-y-5">
         {/* Mine / All toggle */}
