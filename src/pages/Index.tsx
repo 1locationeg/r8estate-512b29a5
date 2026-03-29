@@ -341,8 +341,6 @@ const Index = () => {
               {/* How We Work */}
               <HowWeWork />
 
-              {/* Collective Buyer Protection Banner */}
-              <CollectiveBuyerProtection />
 
               {/* Category Links + Special View Grid */}
               <div className={cn("transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
