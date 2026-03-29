@@ -1,14 +1,47 @@
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Shield, AlertTriangle, X, Clock, FileWarning } from "lucide-react";
 
 const avatarInitials = ["AK", "LS", "OD", "NM"];
 
+function useCountUp(target: number, duration = 2000) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const animate = (now: number) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setValue(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+
+  return { value, ref };
+}
+
 export const CollectiveBuyerProtection = () => {
   const { t, i18n } = useTranslation();
   const isAr = i18n.language === "ar";
 
-  const protectedAmount = "847M";
-  const buyerCount = "1,247+";
+  const protectedAmount = useCountUp(847, 2000);
+  const buyerCount = useCountUp(1247, 1800);
+
 
   const risks = [
     {
@@ -61,8 +94,8 @@ export const CollectiveBuyerProtection = () => {
             </div>
 
             <div className="flex items-baseline gap-2 mb-1">
-              <span className="text-4xl md:text-5xl font-extrabold text-[#fac417] tracking-tight leading-none">
-                {protectedAmount}
+              <span ref={protectedAmount.ref} className="text-4xl md:text-5xl font-extrabold text-[#fac417] tracking-tight leading-none tabular-nums">
+                {protectedAmount.value}M
               </span>
               <span className="text-lg md:text-xl font-bold text-white/70">
                 {isAr ? "ج.م" : "EGP"}
@@ -88,7 +121,7 @@ export const CollectiveBuyerProtection = () => {
                 ))}
               </div>
               <span className="text-[11px] text-white/50 font-medium">
-                {buyerCount}{" "}
+                {buyerCount.value.toLocaleString()}+{" "}
                 {isAr ? "مشتري حموا أموالهم" : "buyers protected their money"}
               </span>
             </div>
