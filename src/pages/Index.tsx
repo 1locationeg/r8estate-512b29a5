@@ -422,6 +422,9 @@ const Index = () => {
                 <CompareEngineShowcase />
               </div>
 
+              {/* Collective Buyer Protection Banner */}
+              <CollectiveBuyerProtection />
+
               {/* Audience Segmentation Cards */}
               <div className="w-full max-w-[1100px]">
                 <AudienceSegmentCards />
