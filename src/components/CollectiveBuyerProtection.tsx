@@ -94,8 +94,8 @@ export const CollectiveBuyerProtection = () => {
             </div>
 
             <div className="flex items-baseline gap-2 mb-1">
-              <span className="text-4xl md:text-5xl font-extrabold text-[#fac417] tracking-tight leading-none">
-                {protectedAmount}
+              <span ref={protectedAmount.ref} className="text-4xl md:text-5xl font-extrabold text-[#fac417] tracking-tight leading-none tabular-nums">
+                {protectedAmount.value}M
               </span>
               <span className="text-lg md:text-xl font-bold text-white/70">
                 {isAr ? "ج.م" : "EGP"}
