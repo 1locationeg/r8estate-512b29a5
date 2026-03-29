@@ -115,13 +115,14 @@ export const CollectiveBuyerProtection = () => {
             {/* Avatar row */}
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2 rtl:space-x-reverse">
-                {avatarInitials.map((initials) => (
-                  <div
-                    key={initials}
-                    className="h-7 w-7 rounded-full bg-white/15 border-2 border-white/10 flex items-center justify-center text-[9px] font-bold text-white/80"
-                  >
-                    {initials}
-                  </div>
+                {avatarImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="h-7 w-7 rounded-full border-2 border-white/20 object-cover"
+                  />
                 ))}
               </div>
               <span className="text-[11px] text-white/50 font-medium">
