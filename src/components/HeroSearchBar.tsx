@@ -19,10 +19,11 @@ import { addToSearchHistory } from "@/lib/searchHistory";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
+  onSelectItem?: (item: SearchItem) => void;
   onFocusChange?: (focused: boolean) => void;
 }
 
-export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBarProps) => {
+export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }: HeroSearchBarProps) => {
   const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
@@ -66,10 +67,12 @@ export const HeroSearchBar = ({ onSelectDeveloper, onFocusChange }: HeroSearchBa
     
     if (item.category === 'developers') {
       onSelectDeveloper(item.id);
+    } else if (onSelectItem) {
+      onSelectItem(item);
     } else {
       searchNavigate(`/entity/${item.id}`);
     }
-  }, [onSelectDeveloper, searchNavigate]);
+  }, [onSelectDeveloper, onSelectItem, searchNavigate]);
 
   const handleCloseDetail = useCallback(() => {
     setSelectedItem(null);

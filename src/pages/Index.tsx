@@ -255,7 +255,19 @@ const Index = () => {
                           "w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out",
                           searchFocused && "relative z-50"
                         )}>
-                          <HeroSearchBar onSelectDeveloper={setSelectedDeveloperId} onFocusChange={setSearchFocused} />
+                          <HeroSearchBar
+                            onSelectDeveloper={(id) => {
+                              setSpecialViewItem(null);
+                              setActiveView(null);
+                              setSelectedDeveloperId(id);
+                            }}
+                            onSelectItem={(item) => {
+                              setSelectedDeveloperId(null);
+                              setActiveView(null);
+                              setSpecialViewItem(item);
+                            }}
+                            onFocusChange={setSearchFocused}
+                          />
                         </div>
                       </>
                     )}
