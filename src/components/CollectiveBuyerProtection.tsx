@@ -1,8 +1,12 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Shield, AlertTriangle, X, Clock, FileWarning } from "lucide-react";
+import buyerAvatar1 from "@/assets/buyer-avatar-1.jpg";
+import buyerAvatar2 from "@/assets/buyer-avatar-2.jpg";
+import buyerAvatar3 from "@/assets/buyer-avatar-3.jpg";
+import buyerAvatar4 from "@/assets/buyer-avatar-4.jpg";
 
-const avatarInitials = ["AK", "LS", "OD", "NM"];
+const avatarImages = [buyerAvatar1, buyerAvatar2, buyerAvatar3, buyerAvatar4];
 
 function useCountUp(target: number, duration = 2000) {
   const [value, setValue] = useState(0);
@@ -111,13 +115,14 @@ export const CollectiveBuyerProtection = () => {
             {/* Avatar row */}
             <div className="flex items-center gap-2">
               <div className="flex -space-x-2 rtl:space-x-reverse">
-                {avatarInitials.map((initials) => (
-                  <div
-                    key={initials}
-                    className="h-7 w-7 rounded-full bg-white/15 border-2 border-white/10 flex items-center justify-center text-[9px] font-bold text-white/80"
-                  >
-                    {initials}
-                  </div>
+                {avatarImages.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    className="h-7 w-7 rounded-full border-2 border-white/20 object-cover"
+                  />
                 ))}
               </div>
               <span className="text-[11px] text-white/50 font-medium">
