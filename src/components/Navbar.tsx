@@ -9,15 +9,7 @@ import { NotificationBell } from "@/components/NotificationBell";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { Button } from "@/components/ui/button";
 import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { UserAvatarAnchor } from "@/components/UserAvatarAnchor";
 
 interface NavbarProps {
   userMode: "buyers" | "industry";
@@ -118,38 +110,7 @@ export const Navbar = ({
           <NotificationBell />
 
           {user ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger className="focus:outline-none">
-                <Avatar className="h-9 w-9 cursor-pointer ring-2 ring-primary/20 hover:ring-primary/40 transition-all">
-                  <AvatarImage src={profile?.avatar_url || undefined} alt={profile?.full_name || "User"} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                    {profile?.full_name?.charAt(0) || user.email?.charAt(0) || "U"}
-                  </AvatarFallback>
-                </Avatar>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>
-                  <div className="flex flex-col">
-                    <span className="font-medium">{profile?.full_name || "User"}</span>
-                    <span className="text-xs text-muted-foreground">{user.email}</span>
-                    <span className="text-xs text-primary mt-1 capitalize">{role || "Buyer"}</span>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={() => navigate(getDashboardRoute())} className="cursor-pointer">
-                  <LayoutDashboard className="w-4 h-4 me-2" />
-                  {t("nav.dashboard")}
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => navigate("/messages")} className="cursor-pointer">
-                  <Mail className="w-4 h-4 me-2" />
-                  Messages
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={onSignOut} className="text-destructive cursor-pointer">
-                  <LogOut className="w-4 h-4 me-2" />
-                  {t("common.signOut")}
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <UserAvatarAnchor size="md" showDropdown getDashboardRoute={getDashboardRoute} onSignOut={onSignOut} />
           ) : isLoading ? (
             <div className="h-9 w-20 rounded-lg bg-muted animate-pulse" />
           ) : isReturningDevice ? (
@@ -246,6 +207,7 @@ export const Navbar = ({
             </Button>
           )}
           <NotificationBell />
+          <UserAvatarAnchor size="sm" getDashboardRoute={getDashboardRoute} />
         </div>
       </div>
 

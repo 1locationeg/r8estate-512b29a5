@@ -1,8 +1,9 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Briefcase, Mail } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useMessageUnreadCount } from "@/hooks/useMessageUnreadCount";
+import { UserAvatarAnchor } from "@/components/UserAvatarAnchor";
 import logoIcon from "@/assets/logo-icon.png";
 
 export const BottomNav = () => {
@@ -18,10 +19,7 @@ export const BottomNav = () => {
   }
 
   const isReviews = location.pathname === "/reviews";
-  const isDirectory = location.pathname === "/directory";
-  const isInsights = location.pathname === "/insights";
   const isCommunity = location.pathname === "/community";
-  const isPortfolio = location.pathname === "/portfolio";
 
   return (
     <>
@@ -47,7 +45,7 @@ export const BottomNav = () => {
               location.pathname === "/categories" ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
+            <LayoutGrid className="h-5 w-5" strokeWidth={location.pathname === "/categories" ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
           </button>
 
@@ -75,22 +73,10 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
           </button>
 
-          {/* Portfolio */}
-          <button
-            onClick={() => {
-              if (user) {
-                navigate("/portfolio");
-              } else {
-                navigate("/auth");
-              }
-            }}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isPortfolio ? "text-primary" : "text-muted-foreground"
-            }`}
-          >
-            <Briefcase className="h-5 w-5" strokeWidth={isPortfolio ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
-          </button>
+          {/* User Avatar Anchor */}
+          <div className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1">
+            <UserAvatarAnchor size="sm" />
+          </div>
         </div>
       </nav>
     </>
