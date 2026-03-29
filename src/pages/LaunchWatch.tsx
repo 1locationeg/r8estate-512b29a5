@@ -310,20 +310,21 @@ const LaunchWatch = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
-        <PageHeader
-          title="Launch Watch"
-          breadcrumbs={[{ label: "Launch Watch" }]}
-          rightSlot={
-            <span className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+        <div className="space-y-2">
+          <PageHeader
+            title="Launch Watch"
+            breadcrumbs={[{ label: "Launch Watch" }]}
+            rightSlot={
+              <span className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                </span>
+                LIVE
               </span>
-              LIVE
-            </span>
-          }
-        />
-        <p className="text-sm text-muted-foreground">Active off-plan launches — tracked, rated, and compared</p>
+            }
+          />
+          <p className="text-sm text-muted-foreground">Active off-plan launches — tracked, rated, and compared</p>
 
           {/* Stats bar */}
           <div className="flex items-center gap-4 text-xs">
