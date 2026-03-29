@@ -21,6 +21,7 @@ import { DealWatchWidget } from "@/components/DealWatchWidget";
 import StepTimeline from "@/components/StepTimeline";
 import CompareEngineShowcase from "@/components/CompareEngineShowcase";
 import { AudienceSegmentCards } from "@/components/AudienceSegmentCards";
+import { CollectiveBuyerProtection } from "@/components/CollectiveBuyerProtection";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
@@ -420,6 +421,9 @@ const Index = () => {
               <div className="w-full max-w-[1100px]">
                 <CompareEngineShowcase />
               </div>
+
+              {/* Collective Buyer Protection Banner */}
+              <CollectiveBuyerProtection />
 
               {/* Audience Segmentation Cards */}
               <div className="w-full max-w-[1100px]">
