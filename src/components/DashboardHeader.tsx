@@ -7,7 +7,6 @@ import { NotificationBell } from '@/components/NotificationBell';
 import { MobileNavSheet } from '@/components/MobileNavSheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { CoinCounter } from '@/components/CoinCounter';
-import { UserAvatarAnchor } from '@/components/UserAvatarAnchor';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 
 interface DashboardHeaderProps {
@@ -88,7 +87,6 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
             )}
             <LanguageSwitcher />
             <NotificationBell />
-            <UserAvatarAnchor size="sm" getDashboardRoute={getDashboardRoute} />
           </div>
         </div>
       </header>

@@ -2,7 +2,6 @@ import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Home, ChevronLeft, ChevronRight } from "lucide-react";
-import { UserAvatarAnchor } from "@/components/UserAvatarAnchor";
 import {
   Breadcrumb,
   BreadcrumbList,
@@ -66,11 +65,12 @@ export const PageHeader = ({
             {title}
           </h1>
 
-          {/* Right slot + Avatar */}
-          <div className="shrink-0 flex items-center gap-2">
-            {rightSlot}
-            <UserAvatarAnchor size="sm" />
-          </div>
+          {/* Right slot */}
+          {rightSlot && (
+            <div className="shrink-0 flex items-center gap-2">
+              {rightSlot}
+            </div>
+          )}
         </div>
 
         {/* Breadcrumbs */}
