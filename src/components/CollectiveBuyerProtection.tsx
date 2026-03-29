@@ -1,7 +1,39 @@
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Shield, AlertTriangle, X, Clock, FileWarning } from "lucide-react";
 
 const avatarInitials = ["AK", "LS", "OD", "NM"];
+
+function useCountUp(target: number, duration = 2000) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const animate = (now: number) => {
+            const progress = Math.min((now - startTime) / duration, 1);
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setValue(Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(animate);
+          };
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [target, duration]);
+
+  return { value, ref };
+}
 
 export const CollectiveBuyerProtection = () => {
   const { t, i18n } = useTranslation();
