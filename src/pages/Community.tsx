@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy, Edit3, ImageIcon, BarChart3 } from "lucide-react";
@@ -129,10 +129,10 @@ const Community = () => {
   return (
     <div className="min-h-screen bg-muted/50">
       <div className="max-w-[680px] mx-auto px-4 py-4 space-y-3">
-        {/* Logo → Home */}
-        <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-          <BrandLogo size="hero" />
-        </button>
+        <PageHeader
+          title={t("community.title", "Community")}
+          breadcrumbs={[{ label: t("community.title", "Community") }]}
+        />
 
         {/* "What's on your mind?" composer card — Facebook style */}
         <div className="bg-card border border-border rounded-lg shadow-sm p-4">

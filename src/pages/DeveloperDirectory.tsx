@@ -7,8 +7,7 @@ import { DeveloperDetailModal } from "@/components/DeveloperDetailModal";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Footer } from "@/components/Footer";
 import { Developer } from "@/data/mockData";
-import { BrandLogo } from "@/components/BrandLogo";
-import { ArrowLeft } from "lucide-react";
+import { PageHeader } from "@/components/PageHeader";
 
 const DeveloperDirectory = () => {
   const { t } = useTranslation();
@@ -17,28 +16,11 @@ const DeveloperDirectory = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button 
-              onClick={() => navigate('/')}
-              className="p-2 rounded-lg hover:bg-secondary transition-colors"
-              aria-label="Return to home"
-            >
-              <ArrowLeft className="w-5 h-5 text-muted-foreground" />
-            </button>
-            <button
-              onClick={() => navigate('/')}
-              className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              aria-label="Return to home"
-            >
-              <BrandLogo size="hero" />
-            </button>
-          </div>
-          <LanguageSwitcher />
-        </div>
-      </header>
+      <PageHeader
+        title={t("directory.majorDevelopers", "Developer Directory")}
+        breadcrumbs={[{ label: t("directory.majorDevelopers", "Developer Directory") }]}
+        rightSlot={<LanguageSwitcher />}
+      />
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-12">

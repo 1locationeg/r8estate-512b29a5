@@ -1,11 +1,12 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft } from "lucide-react";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
+import { PageHeader } from "@/components/PageHeader";
 import { getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { categories } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
 const categoryToSearchCategory = (labelKey: string): SearchCategory => {
@@ -91,20 +92,13 @@ const EntityPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Header */}
-      <div className="sticky top-0 z-30 bg-background/95 backdrop-blur-sm border-b border-border px-4 py-3 flex items-center gap-3">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={() => navigate(-1)}
-          className="shrink-0"
-        >
-          <ArrowLeft className="w-5 h-5" />
-        </Button>
-        <h1 className="text-lg font-semibold text-foreground truncate">
-          {entity.name}
-        </h1>
-      </div>
+      <PageHeader
+        title={entity.name}
+        breadcrumbs={[
+          { label: isRTL ? "الدليل" : "Directory", path: "/directory" },
+          { label: entity.name },
+        ]}
+      />
 
       {/* Entity Detail */}
       <ItemDetailSection

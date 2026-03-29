@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { DealCard } from "@/components/DealCard";
 import { DealComparePanel } from "@/components/DealComparePanel";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 
 const DealWatch = () => {
@@ -81,15 +81,12 @@ const DealWatch = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
-        <div className="space-y-2">
-          <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home"><BrandLogo size="hero" /></button>
-          <div className="flex items-center gap-2">
-            <Tag className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">{t("dealWatch.title")}</h1>
-            <Badge className="bg-accent/20 text-accent-foreground border-accent text-[10px]">{t("dealWatch.beta")}</Badge>
-          </div>
-          <p className="text-sm text-muted-foreground">{t("dealWatch.description")}</p>
-        </div>
+        <PageHeader
+          title={t("dealWatch.title", "Deal Watch")}
+          breadcrumbs={[{ label: t("dealWatch.title", "Deal Watch") }]}
+          rightSlot={<Badge className="bg-accent/20 text-accent-foreground border-accent text-[10px]">{t("dealWatch.beta")}</Badge>}
+        />
+        <p className="text-sm text-muted-foreground">{t("dealWatch.description")}</p>
 
         <div className="flex flex-wrap gap-2">
           <Select value={dealType} onValueChange={setDealType}>

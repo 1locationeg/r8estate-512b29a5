@@ -1378,5 +1378,9 @@
     "thanksDesc": "هنراجع المحتوى ده قريب.",
     "alreadyReported": "تم الإبلاغ مسبقاً",
     "alreadyReportedDesc": "أنت بلغت عن المحتوى ده قبل كده."
+  },
+  "pageHeader": {
+    "home": "الرئيسية",
+    "back": "رجوع"
   }
 }

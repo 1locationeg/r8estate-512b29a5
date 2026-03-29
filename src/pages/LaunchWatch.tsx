@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { LaunchCard } from "@/components/LaunchCard";
 import { LaunchRatingModal } from "@/components/LaunchRatingModal";
 import { LaunchComparePanel } from "@/components/LaunchComparePanel";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -310,14 +310,10 @@ const LaunchWatch = () => {
   return (
     <div className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
-        {/* Header */}
-        <div className="space-y-2">
-          <button onClick={() => navigate("/")} className="hover:opacity-80 transition-opacity" aria-label="Return to home">
-            <BrandLogo size="hero" />
-          </button>
-          <div className="flex items-center gap-2">
-            <Rocket className="w-6 h-6 text-primary" />
-            <h1 className="text-2xl font-bold text-foreground">Launch Watch</h1>
+        <PageHeader
+          title="Launch Watch"
+          breadcrumbs={[{ label: "Launch Watch" }]}
+          rightSlot={
             <span className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
@@ -325,8 +321,9 @@ const LaunchWatch = () => {
               </span>
               LIVE
             </span>
-          </div>
-          <p className="text-sm text-muted-foreground">Active off-plan launches — tracked, rated, and compared</p>
+          }
+        />
+        <p className="text-sm text-muted-foreground">Active off-plan launches — tracked, rated, and compared</p>
 
           {/* Stats bar */}
           <div className="flex items-center gap-4 text-xs">

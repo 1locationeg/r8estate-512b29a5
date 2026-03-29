@@ -9,7 +9,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
-import { BrandLogo } from "@/components/BrandLogo";
+import { PageHeader } from "@/components/PageHeader";
 
 interface LeaderboardEntry {
   user_id: string; full_name: string; avatar_url: string | null;
@@ -71,15 +71,11 @@ const Leaderboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card">
-        <div className="container mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <button onClick={() => navigate(-1)} className="p-2 rounded-lg hover:bg-secondary transition-colors" aria-label="Go back"><ArrowLeft className="w-5 h-5 text-muted-foreground" /></button>
-            <button onClick={() => navigate("/")} className="flex items-center gap-2 hover:opacity-80 transition-opacity"><BrandLogo size="hero" /></button>
-          </div>
-          <LanguageSwitcher />
-        </div>
-      </header>
+      <PageHeader
+        title={t("leaderboard.title", "Leaderboard")}
+        breadcrumbs={[{ label: t("leaderboard.title", "Leaderboard") }]}
+        rightSlot={<LanguageSwitcher />}
+      />
 
       <main className="container mx-auto px-4 py-8 max-w-2xl">
         <div className="text-center mb-6">
