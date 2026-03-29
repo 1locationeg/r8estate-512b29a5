@@ -1,71 +1,44 @@
 
 
-## Add Persistent User Avatar Anchor Across All Views
+## Simplify Avatar Anchor — Reduce to Standard Minimal Positions
 
 ### Problem
-The user's avatar only appears in the desktop navbar dropdown. On mobile, there is zero identity presence — no avatar in the top navbar, bottom nav, PageHeader, or DashboardHeader. Users lose their "personal landmark" and feel disconnected.
+The avatar appears in **5 places simultaneously**: mobile top navbar, bottom nav, PageHeader, DashboardHeader, and desktop navbar. This is over-engineered and cluttered. Standard apps (Gmail, Instagram, Airbnb) show the avatar in **1-2 strategic spots** max — typically in the top navbar only, with everything else accessible from the hamburger/side menu.
 
-### Solution
-Add a small, tappable avatar button as a **persistent personal anchor** in three key locations:
+### Strategy
+Follow the industry standard pattern:
 
 ```text
-MOBILE NAVBAR (top bar):
-┌─────────────────────────────────────────┐
-│ ☰  [LOGO]          🔍 🌐 🔔 [Avatar]  │
-└─────────────────────────────────────────┘
-
-BOTTOM NAV (replace Portfolio with Avatar):
-┌─────────────────────────────────────────┐
-│ Reviews  Categories  [R8]  Community 👤 │
-└─────────────────────────────────────────┘
-       Portfolio icon → User Avatar
-
-PAGE HEADER (rightSlot auto-inject):
-┌─────────────────────────────────────────┐
-│ 🏠 ← Reviews                   [Avatar]│
-└─────────────────────────────────────────┘
-
-DASHBOARD HEADER (add avatar):
-┌─────────────────────────────────────────┐
-│ ☰  🏠 > Dashboard     🪙 🌐 🔔 [Avatar]│
-└─────────────────────────────────────────┘
+DESKTOP:  Avatar in top navbar only (with dropdown) ✓ keep
+MOBILE:   Avatar in top navbar only               ✓ keep
+BOTTOM NAV: Remove avatar, restore Portfolio/Menu  ✗ remove
+PAGE HEADER: Remove avatar (navbar already has it) ✗ remove  
+DASHBOARD HEADER: Remove avatar (redundant)        ✗ remove
 ```
 
-### Behavior
-- **Logged in**: Shows user's avatar photo or initials. Tap → navigates to dashboard (mobile) or opens dropdown (desktop).
-- **Guest**: Shows a generic user icon with a subtle pulse/ring. Tap → navigates to `/auth`.
-- Avatar has a `ring-2 ring-primary/30` glow so it's always noticeable as "your spot."
+The hamburger menu (MobileNavSheet) already contains the full user profile, dashboard link, messages, and sign-out — so the avatar in the top navbar is the single entry point, and everything else is redundant.
 
 ### Files to Change
 
-**1. New: `src/components/UserAvatarAnchor.tsx`**
-- Reusable component that reads `useAuth()` for user/profile data
-- Props: `size?: 'sm' | 'md'`, `showDropdown?: boolean`
-- When `showDropdown=true` (desktop): wraps in DropdownMenu with Dashboard/Messages/Sign Out
-- When `showDropdown=false` (mobile): simple tap → dashboard or `/auth`
-- Guest state: renders a `UserCircle` icon with subtle animated ring to invite sign-up
+**1. `src/components/BottomNav.tsx`**
+- Remove `UserAvatarAnchor` from the last tab position
+- Replace with a "More" or "Menu" button (3 dots / ellipsis icon) that opens the MobileNavSheet, OR restore a useful nav item like "Deals" or "Directory"
+- This keeps the bottom nav focused on **content navigation**, not identity
 
-**2. Edit: `src/components/Navbar.tsx`**
-- Mobile right actions (line ~202-249): Add `<UserAvatarAnchor size="sm" />` after NotificationBell
-- Desktop right actions: Replace inline avatar/dropdown code (lines 120-152) with `<UserAvatarAnchor size="md" showDropdown />`
+**2. `src/components/PageHeader.tsx`**
+- Remove `<UserAvatarAnchor>` from the right slot
+- Keep only `rightSlot` content (page-specific actions) — the global navbar above already shows the avatar
 
-**3. Edit: `src/components/BottomNav.tsx`**
-- Replace the Portfolio button (last item) with the avatar anchor
-- Logged in: show user avatar image/initials, tap → dashboard
-- Guest: show `UserCircle` icon, tap → `/auth`
-- Keep "Portfolio" accessible from dashboard sidebar instead
+**3. `src/components/DashboardHeader.tsx`**
+- Remove `<UserAvatarAnchor>` from the right actions
+- The dashboard sidebar already shows full profile info, and the navbar has the avatar
 
-**4. Edit: `src/components/PageHeader.tsx`**
-- Auto-inject `<UserAvatarAnchor size="sm" />` into the right side of the header (after any `rightSlot` content)
-- This ensures every standalone page shows the user's identity
+**4. `src/components/Navbar.tsx`** (keep as-is)
+- Desktop: `UserAvatarAnchor` with dropdown — this is the **single** identity anchor ✓
+- Mobile: `UserAvatarAnchor` in top bar — this is the **single** mobile identity anchor ✓
 
-**5. Edit: `src/components/DashboardHeader.tsx`**
-- Add `<UserAvatarAnchor size="sm" />` to the right actions area (after NotificationBell)
-
-### Design Details
-- Size `sm` = 32px (h-8 w-8), size `md` = 36px (h-9 w-9)
-- Ring styling: `ring-2 ring-primary/20 hover:ring-primary/40` for logged-in, `ring-2 ring-primary/30 animate-pulse` for guest
-- Uses existing `Avatar`/`AvatarImage`/`AvatarFallback` components
-- RTL-compatible, bilingual dropdown labels
-- On mobile bottom nav, the avatar replaces the briefcase icon but keeps the same position for muscle memory
+### Result
+- **Desktop**: 1 avatar (top navbar with dropdown)
+- **Mobile**: 1 avatar (top navbar) + full profile in hamburger menu
+- Clean, standard, minimal — no visual clutter
 
