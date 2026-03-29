@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Star, MessageSquare, Building2, Users, ArrowRight, LogIn,
-  Clock, Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2
+  Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2
 } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -10,15 +10,38 @@ import { Textarea } from '@/components/ui/textarea';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
+import reviewerAhmed from '@/assets/reviewer-ahmed.jpg';
+import reviewerSara from '@/assets/reviewer-sara.jpg';
+import reviewerOmar from '@/assets/reviewer-omar.jpg';
 
 function getOrCreateSessionId(): string {
   const key = 'r8estate_guest_session';
   let id = localStorage.getItem(key);
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem(key, id);
-  }
+  if (!id) { id = crypto.randomUUID(); localStorage.setItem(key, id); }
   return id;
+}
+
+/* ── Animated counter hook ── */
+function useCountUp(target: number, duration = 1200) {
+  const [value, setValue] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    if (started.current) return;
+    started.current = true;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const elapsed = now - start;
+      const progress = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.round(eased * target));
+      if (progress < 1) requestAnimationFrame(tick);
+    };
+    requestAnimationFrame(tick);
+  }, [target, duration]);
+
+  return { value, ref };
 }
 
 /* ── Feedback sub-component ── */
@@ -33,71 +56,45 @@ function FeedbackPanel({
   feedbackType: string; setFeedbackType: (s: string) => void;
   submitting: boolean; onSubmit: () => void;
 }) {
-  const FEEDBACK_TYPES = [
+  const TYPES = [
     { value: 'value_found', label: isAr ? 'محتوى مفيد' : 'Valuable' },
     { value: 'advice', label: isAr ? 'اقتراحات' : 'Suggestions' },
     { value: 'general', label: isAr ? 'عام' : 'General' },
   ];
 
   return (
-    <div className="mx-4 mt-3 mb-1 rounded-xl p-3 space-y-2.5"
+    <div className="mx-4 mt-2 mb-1 rounded-xl p-3 space-y-2"
       style={{ background: 'hsla(203,81%,12%,0.06)', border: '1px solid hsla(203,81%,12%,0.1)' }}>
       <p className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-        <Star className="w-3 h-3 text-[hsl(45,96%,54%)]" />
+        <Star className="w-3 h-3" style={{ color: 'hsl(45,96%,54%)' }} />
         {isAr ? 'قيّم تجربتك واحصل على دقيقتين إضافيتين' : 'Rate & get 2 bonus minutes'}
       </p>
-
-      {/* Stars */}
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((s) => (
           <button key={s} type="button"
-            onMouseEnter={() => setHoverRating(s)}
-            onMouseLeave={() => setHoverRating(0)}
+            onMouseEnter={() => setHoverRating(s)} onMouseLeave={() => setHoverRating(0)}
             onClick={() => setRating(s)}
             className="transition-transform hover:scale-110 active:scale-95">
-            <Star className={`w-6 h-6 ${
-              s <= (hoverRating || rating)
-                ? 'fill-[hsl(45,96%,54%)] text-[hsl(45,96%,54%)]'
-                : 'text-muted-foreground/25'
-            }`} />
+            <Star className={`w-5 h-5 ${s <= (hoverRating || rating) ? 'fill-[hsl(45,96%,54%)] text-[hsl(45,96%,54%)]' : 'text-muted-foreground/25'}`} />
           </button>
         ))}
       </div>
-
-      {/* Chips */}
       <div className="flex flex-wrap gap-1">
-        {FEEDBACK_TYPES.map((ft) => (
+        {TYPES.map((ft) => (
           <button key={ft.value} onClick={() => setFeedbackType(ft.value)}
-            className={`text-[10px] px-2.5 py-1 rounded-full border transition-all ${
-              feedbackType === ft.value
-                ? 'text-white border-transparent'
-                : 'bg-background text-muted-foreground border-border hover:border-primary/40'
-            }`}
-            style={feedbackType === ft.value
-              ? { background: 'linear-gradient(135deg, hsl(203,81%,18%), hsl(203,55%,28%))' }
-              : undefined}>
+            className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${feedbackType === ft.value ? 'text-white border-transparent' : 'bg-background text-muted-foreground border-border hover:border-primary/40'}`}
+            style={feedbackType === ft.value ? { background: 'linear-gradient(135deg, hsl(203,81%,18%), hsl(203,55%,28%))' } : undefined}>
             {ft.label}
           </button>
         ))}
       </div>
-
-      <Textarea
-        placeholder={isAr ? 'أخبرنا عن تجربتك...' : 'Tell us about your experience...'}
-        value={feedbackText}
-        onChange={(e) => setFeedbackText(e.target.value)}
-        className="min-h-[44px] text-xs resize-none bg-background"
-        maxLength={500}
-      />
-
+      <Textarea placeholder={isAr ? 'أخبرنا عن تجربتك...' : 'Tell us about your experience...'}
+        value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)}
+        className="min-h-[40px] text-xs resize-none bg-background" maxLength={500} />
       <button onClick={onSubmit} disabled={submitting}
-        className="w-full flex items-center justify-center gap-2 font-bold py-2 rounded-lg shadow-md transition-all duration-200 active:scale-[0.98] text-xs disabled:opacity-50 text-white"
+        className="w-full flex items-center justify-center gap-2 font-bold py-2 rounded-lg transition-all active:scale-[0.98] text-xs disabled:opacity-50"
         style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(40,90%,48%) 100%)', color: 'hsl(203,81%,12%)' }}>
-        {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : (
-          <>
-            <Send className="w-3 h-3" />
-            {isAr ? 'أرسل واحصل على وقت إضافي' : 'Submit for bonus time'}
-          </>
-        )}
+        {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Send className="w-3 h-3" />{isAr ? 'أرسل واحصل على وقت إضافي' : 'Submit for bonus time'}</>}
       </button>
     </div>
   );
@@ -115,6 +112,11 @@ export function GuestTimerExpiredModal() {
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackType, setFeedbackType] = useState('general');
   const [submitting, setSubmitting] = useState(false);
+
+  const reviews = useCountUp(50000, 1600);
+  const companies = useCountUp(1200, 1400);
+  const users = useCountUp(100000, 1800);
+  const trust = useCountUp(48, 1200);
 
   if (!isGuest) return null;
 
@@ -134,11 +136,34 @@ export function GuestTimerExpiredModal() {
     grantBonusTime();
   };
 
+  const formatNum = (n: number) => n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K+` : `${n}+`;
+
   const STATS = [
-    { icon: MessageSquare, value: '50K+', label: isAr ? 'تقييم' : 'Reviews' },
-    { icon: Building2, value: '1,200+', label: isAr ? 'شركة' : 'Companies' },
-    { icon: Users, value: '100K+', label: isAr ? 'مستخدم' : 'Users' },
-    { icon: Star, value: '4.8★', label: isAr ? 'متوسط الثقة' : 'Trust Avg' },
+    { icon: MessageSquare, value: formatNum(reviews.value), label: isAr ? 'تقييم' : 'Reviews' },
+    { icon: Building2, value: formatNum(companies.value), label: isAr ? 'شركة' : 'Companies' },
+    { icon: Users, value: formatNum(users.value), label: isAr ? 'مستخدم' : 'Users' },
+    { icon: Star, value: `${(trust.value / 10).toFixed(1)}★`, label: isAr ? 'متوسط الثقة' : 'Trust Avg' },
+  ];
+
+  const TESTIMONIALS = [
+    {
+      name: isAr ? 'أحمد محمد' : 'Ahmed M.',
+      role: isAr ? 'مشتري عقار' : 'Property Buyer',
+      text: isAr ? 'وفرت لي المنصة من خسارة ١.٢ مليون جنيه — اكتشفت مشاكل المطور قبل التوقيع' : 'R8ESTATE saved me from a 1.2M EGP loss — I found developer issues before signing',
+      img: reviewerAhmed, stars: 5,
+    },
+    {
+      name: isAr ? 'سارة أحمد' : 'Sara A.',
+      role: isAr ? 'مستثمرة' : 'Investor',
+      text: isAr ? 'أفضل أداة للمقارنة بين المطورين — قررت بثقة' : 'Best tool to compare developers — I decided with confidence',
+      img: reviewerSara, stars: 5,
+    },
+    {
+      name: isAr ? 'عمر حسن' : 'Omar H.',
+      role: isAr ? 'مشتري لأول مرة' : 'First-time Buyer',
+      text: isAr ? 'التقييمات الموثقة ساعدتني أختار الشركة الصح' : 'Verified reviews helped me pick the right company',
+      img: reviewerOmar, stars: 5,
+    },
   ];
 
   const BENEFITS = [
@@ -157,54 +182,46 @@ export function GuestTimerExpiredModal() {
   return (
     <Dialog open={expiredModalOpen} onOpenChange={() => {}}>
       <DialogContent
-        className="max-w-[380px] w-[calc(100vw-2rem)] max-h-[100dvh] overflow-y-auto p-0 border-0 shadow-2xl [&>button]:hidden rounded-2xl"
+        className="max-w-[400px] w-[calc(100vw-2rem)] max-h-[100dvh] overflow-y-auto p-0 border-0 shadow-2xl [&>button]:hidden rounded-2xl"
         onEscapeKeyDown={(e) => e.preventDefault()}
         onPointerDownOutside={(e) => e.preventDefault()}
       >
-        {/* ── Hero: Deep navy gradient ── */}
-        <div className="relative px-5 pt-6 pb-5 text-center overflow-hidden"
+        {/* ── Hero ── */}
+        <div className="relative px-5 pt-5 pb-4 text-center overflow-hidden"
           style={{ background: 'linear-gradient(160deg, hsl(203,81%,12%) 0%, hsl(203,81%,21%) 40%, hsl(203,55%,28%) 100%)' }}>
-          {/* Radial glow */}
           <div className="pointer-events-none absolute inset-0"
             style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 20%, hsla(45,96%,54%,0.1) 0%, transparent 70%)' }} />
-          {/* Dot texture */}
           <div className="pointer-events-none absolute inset-0 opacity-[0.04]"
             style={{ backgroundImage: 'radial-gradient(circle, white 1px, transparent 1px)', backgroundSize: '16px 16px' }} />
 
           <div className="relative z-10 flex flex-col items-center">
-            {/* Lock icon with glow ring */}
-            <div className="mb-3 flex h-14 w-14 items-center justify-center rounded-full"
+            <div className="mb-2.5 flex h-12 w-12 items-center justify-center rounded-full"
               style={{ background: 'hsla(45,96%,54%,0.15)', border: '1px solid hsla(45,96%,54%,0.3)', boxShadow: '0 0 24px hsla(45,96%,54%,0.15)' }}>
-              <Lock className="h-6 w-6" style={{ color: 'hsl(45,96%,54%)' }} />
+              <Lock className="h-5 w-5" style={{ color: 'hsl(45,96%,54%)' }} />
             </div>
-
-            <h2 className="text-xl font-extrabold text-white tracking-tight mb-1">
+            <h2 className="text-lg font-extrabold text-white tracking-tight mb-0.5">
               {isAr ? 'انتهت المعاينة المجانية' : 'Preview Ended'}
             </h2>
-            <p className="text-white/60 text-xs leading-relaxed max-w-[260px] mx-auto mb-4">
-              {isAr
-                ? 'سجّل مجاناً لحماية استثمارك ومقارنة المطورين والمشاريع'
-                : 'Sign up free to protect your investment — compare developers, projects & reviews.'}
+            <p className="text-white/60 text-[11px] leading-relaxed max-w-[260px] mx-auto mb-3">
+              {isAr ? 'سجّل مجاناً لحماية استثمارك ومقارنة المطورين' : 'Sign up free to protect your investment — compare developers & reviews.'}
             </p>
-
-            {/* Trust pills */}
             <div className="flex flex-wrap justify-center gap-1.5">
               {PILLS.map((pill, i) => (
-                <div key={i} className="flex items-center gap-1 rounded-full px-2.5 py-1"
+                <div key={i} className="flex items-center gap-1 rounded-full px-2 py-0.5"
                   style={{ background: 'hsla(0,0%,100%,0.08)', border: '1px solid hsla(0,0%,100%,0.12)' }}>
-                  <pill.icon className="h-3 w-3" style={{ color: 'hsl(45,96%,54%)' }} />
-                  <span className="text-[10px] font-semibold text-white/80 whitespace-nowrap">{pill.text}</span>
+                  <pill.icon className="h-2.5 w-2.5" style={{ color: 'hsl(45,96%,54%)' }} />
+                  <span className="text-[9px] font-semibold text-white/80 whitespace-nowrap">{pill.text}</span>
                 </div>
               ))}
             </div>
           </div>
         </div>
 
-        {/* ── Stats strip ── */}
+        {/* ── Animated Stats ── */}
         <div className="grid grid-cols-4 divide-x rtl:divide-x-reverse divide-border"
           style={{ background: 'hsl(203,81%,12%)', borderTop: '1px solid hsla(0,0%,100%,0.06)' }}>
           {STATS.map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex flex-col items-center py-3 px-1">
+            <div key={label} className="flex flex-col items-center py-2.5 px-1">
               <Icon className="w-3 h-3 mb-0.5" style={{ color: 'hsl(45,96%,54%)' }} />
               <span className="text-sm font-extrabold text-white leading-none">{value}</span>
               <span className="text-[8px] text-white/45 text-center leading-tight mt-0.5">{label}</span>
@@ -212,22 +229,52 @@ export function GuestTimerExpiredModal() {
           ))}
         </div>
 
-        {/* ── Benefits: What you unlock ── */}
-        <div className="px-4 pt-4 pb-2">
-          <div className="flex items-center gap-2 mb-3">
+        {/* ── Testimonials ── */}
+        <div className="px-4 pt-3 pb-1">
+          <div className="flex items-center gap-2 mb-2">
             <div className="h-px flex-1 bg-border" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.12em] text-muted-foreground whitespace-nowrap">
+            <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
+              {isAr ? 'ماذا يقول المشترون' : 'What buyers say'}
+            </span>
+            <div className="h-px flex-1 bg-border" />
+          </div>
+          <div className="flex flex-col gap-2">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="flex items-start gap-2.5 rounded-xl p-2.5 border border-border bg-muted/30">
+                <img src={t.img} alt={t.name} className="w-9 h-9 rounded-full object-cover shrink-0 ring-1 ring-border" loading="lazy" width={36} height={36} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-[11px] font-bold text-foreground truncate">{t.name}</span>
+                    <span className="text-[9px] text-muted-foreground">·</span>
+                    <span className="text-[9px] text-muted-foreground truncate">{t.role}</span>
+                  </div>
+                  <div className="flex gap-0.5 mb-1">
+                    {Array.from({ length: t.stars }).map((_, j) => (
+                      <Star key={j} className="w-2.5 h-2.5 fill-[hsl(45,96%,54%)] text-[hsl(45,96%,54%)]" />
+                    ))}
+                  </div>
+                  <p className="text-[10px] text-muted-foreground leading-snug">"{t.text}"</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Benefits ── */}
+        <div className="px-4 pt-2 pb-1">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-px flex-1 bg-border" />
+            <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
               {isAr ? 'ماذا تفتح — مجاناً' : 'What you unlock — Free'}
             </span>
             <div className="h-px flex-1 bg-border" />
           </div>
-
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1.5">
             {BENEFITS.map((b, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <div className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg"
+              <div key={i} className="flex items-center gap-2">
+                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
                   style={{ background: 'hsla(203,81%,12%,0.08)' }}>
-                  <b.icon className="h-3.5 w-3.5 text-primary" />
+                  <b.icon className="h-3 w-3 text-primary" />
                 </div>
                 <span className="text-[11px] font-medium text-foreground leading-snug">{b.text}</span>
               </div>
@@ -235,28 +282,25 @@ export function GuestTimerExpiredModal() {
           </div>
         </div>
 
-        {/* ── Feedback panel (if bonus not used) ── */}
+        {/* ── Feedback ── */}
         {!hasBonusBeenUsed && (
-          <FeedbackPanel
-            isAr={isAr} rating={rating} hoverRating={hoverRating}
+          <FeedbackPanel isAr={isAr} rating={rating} hoverRating={hoverRating}
             setRating={setRating} setHoverRating={setHoverRating}
             feedbackText={feedbackText} setFeedbackText={setFeedbackText}
             feedbackType={feedbackType} setFeedbackType={setFeedbackType}
-            submitting={submitting} onSubmit={handleSubmitFeedback}
-          />
+            submitting={submitting} onSubmit={handleSubmitFeedback} />
         )}
 
-        {/* ── CTA buttons ── */}
+        {/* ── CTAs ── */}
         <div className="px-4 pt-2 pb-4 flex flex-col gap-2">
           <button onClick={handleSignUp}
-            className="w-full flex items-center justify-center gap-2 font-bold py-3 rounded-xl shadow-lg transition-all duration-200 active:scale-[0.98] text-sm"
+            className="w-full flex items-center justify-center gap-2 font-bold py-2.5 rounded-xl shadow-lg transition-all active:scale-[0.98] text-sm"
             style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(40,90%,48%) 100%)', color: 'hsl(203,81%,12%)', boxShadow: '0 4px 20px hsla(45,96%,54%,0.3)' }}>
             <span>{isAr ? 'سجّل مجاناً وابدأ' : 'Sign up free & start exploring'}</span>
             <ArrowRight className={`w-4 h-4 ${isAr ? 'rotate-180' : ''}`} />
           </button>
-
           <button onClick={handleLogin}
-            className="w-full flex items-center justify-center gap-2 border border-border hover:border-primary/40 text-foreground hover:text-primary font-semibold py-2.5 rounded-xl transition-all duration-200 active:scale-[0.98] text-xs bg-muted/40">
+            className="w-full flex items-center justify-center gap-2 border border-border hover:border-primary/40 text-foreground hover:text-primary font-semibold py-2 rounded-xl transition-all active:scale-[0.98] text-xs bg-muted/40">
             <LogIn className="w-3.5 h-3.5" />
             {isAr ? 'عندك حساب؟ سجّل دخول' : 'Already have an account?'}
           </button>
