@@ -45,7 +45,7 @@ export const BottomNav = () => {
               location.pathname === "/categories" ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <LayoutGrid className="h-5 w-5" strokeWidth={isDirectory ? 2.5 : 2} />
+            <LayoutGrid className="h-5 w-5" strokeWidth={location.pathname === "/categories" ? 2.5 : 2} />
             <span className="text-[10px] font-medium">{t("nav.categories", "Categories")}</span>
           </button>
 
