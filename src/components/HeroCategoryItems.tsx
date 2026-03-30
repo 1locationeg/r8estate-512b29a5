@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight, Star, Heart, Share2, MessageCircle, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
+import { Star, Heart, Share2, MessageCircle, ChevronRight, ChevronDown, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -8,8 +8,6 @@ import { type SearchItem } from "@/data/searchIndex";
 import { generateAvatar } from "@/lib/avatarUtils";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 
-// Brand logo mapping — permanent local avatars (no external API dependency)
-// Business owners can override this by uploading their own logo from their profile
 const brandLogo = (name: string, _domain?: string): string =>
   generateAvatar(name, "category");
 
@@ -25,8 +23,8 @@ export interface CategoryItem {
   replies?: number;
   categoryKey?: string;
   categoryIcon?: React.ReactNode;
-  launchDate?: string; // ISO date for "New Launches" sorting
-  trendScore?: number; // recent momentum score for "Trending"
+  launchDate?: string;
+  trendScore?: number;
 }
 
 interface Category {
@@ -216,28 +214,58 @@ export const categories: Category[] = [
 ];
 
 const getRatingColor = (rating: number) => {
-  if (rating >= 4) return "text-primary";
-  if (rating >= 3) return "text-accent";
+  if (rating >= 4.5) return "text-primary";
+  if (rating >= 4) return "text-accent";
   return "text-destructive";
 };
 
-// Calculate engagement score for ranking
 export const calculateEngagementScore = (item: CategoryItem) => {
-  const reviewWeight = 2;
-  const ratingWeight = 1000;
-  const likeWeight = 1;
-  const shareWeight = 3;
-  const replyWeight = 2;
-  
-  return (
-    (item.reviewCount * reviewWeight) +
-    (item.rating * ratingWeight) +
-    ((item.likes || 0) * likeWeight) +
-    ((item.shares || 0) * shareWeight) +
-    ((item.replies || 0) * replyWeight)
-  );
+  return (item.reviewCount * 2) + (item.rating * 1000) + ((item.likes || 0) * 1) + ((item.shares || 0) * 3) + ((item.replies || 0) * 2);
 };
 
+// ── Journey step definitions ────────────────────────────────────
+type JourneyStepKey = "research" | "choose" | "finance" | "protect";
+
+interface JourneyStep {
+  key: JourneyStepKey;
+  color: string; // tailwind bg class
+  activeColor: string;
+  textColor: string;
+  categoryKeys: string[]; // which categories belong to this step
+}
+
+const journeySteps: JourneyStep[] = [
+  {
+    key: "research",
+    color: "bg-primary/20",
+    activeColor: "bg-primary",
+    textColor: "text-primary",
+    categoryKeys: ["categories.platforms", "categories.channels", "categories.research", "categories.exhibitions", "categories.apps", "categories.training"],
+  },
+  {
+    key: "choose",
+    color: "bg-accent/20",
+    activeColor: "bg-accent",
+    textColor: "text-accent",
+    categoryKeys: ["categories.units", "categories.brokers", "categories.shares", "categories.lands", "categories.leasing"],
+  },
+  {
+    key: "finance",
+    color: "bg-[hsl(var(--coin))]/20",
+    activeColor: "bg-[hsl(var(--coin))]",
+    textColor: "text-[hsl(var(--coin))]",
+    categoryKeys: ["categories.mortgage", "categories.valuation", "categories.auctions", "categories.blockchain"],
+  },
+  {
+    key: "protect",
+    color: "bg-brand-red/20",
+    activeColor: "bg-brand-red",
+    textColor: "text-brand-red",
+    categoryKeys: ["categories.lawFirms", "categories.tax", "categories.management"],
+  },
+];
+
+// ── Component ───────────────────────────────────────────────────
 interface HeroCategoryItemsProps {
   onInteraction?: () => void;
   externalCategory?: string | null;
@@ -248,232 +276,217 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { getLogoOverride } = useBusinessLogo();
-  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const isRTL = i18n.language === "ar";
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const categoryButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
 
-  // Sync with external category selection
-  useEffect(() => {
-    if (externalCategory) {
-      setActiveCategory(externalCategory);
-    }
-  }, [externalCategory]);
+  const [activeStep, setActiveStep] = useState<JourneyStepKey>("research");
+  const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
 
-  const activeCategoryData = useMemo(
-    () => categories.find((category) => category.labelKey === activeCategory) ?? null,
-    [activeCategory],
+  const currentStep = journeySteps.find(s => s.key === activeStep)!;
+  const currentStepIndex = journeySteps.findIndex(s => s.key === activeStep);
+  const nextStep = journeySteps[currentStepIndex + 1] ?? null;
+
+  // Categories for this journey step
+  const stepCategories = useMemo(() =>
+    categories.filter(c => currentStep.categoryKeys.includes(c.labelKey)),
+    [currentStep]
   );
 
-  const handleItemClick = (item: CategoryItem) => {
-    onInteraction?.();
-    navigate(`/entity/${item.id}`);
-  };
-
-  const handleCategoryClick = (labelKey: string) => {
-    onInteraction?.();
-    setActiveCategory(activeCategory === labelKey ? null : labelKey);
-  };
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-    return num.toString();
-  };
+  // Avg rating per category
+  const getCategoryAvgRating = useCallback((cat: Category) => {
+    const avg = cat.items.reduce((s, i) => s + i.rating, 0) / cat.items.length;
+    return avg;
+  }, []);
 
   const getLocalizedName = useCallback(
     (item: CategoryItem) => (isRTL ? item.nameAr : item.nameEn),
     [isRTL],
   );
 
-  const getScrollPosition = (el: HTMLDivElement) => {
-    const maxScrollLeft = Math.max(el.scrollWidth - el.clientWidth, 0);
-    return el.scrollLeft < 0 ? Math.abs(el.scrollLeft) : el.scrollLeft;
+  const formatNumber = (num: number) => {
+    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
+    return num.toString();
   };
 
-  const updateScrollState = useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const tolerance = 2;
-    const currentScroll = getScrollPosition(el);
-    const maxScrollLeft = Math.max(el.scrollWidth - el.clientWidth, 0);
-
-    setCanScrollLeft(currentScroll > tolerance);
-    setCanScrollRight(currentScroll < maxScrollLeft - tolerance);
-  }, []);
-
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    updateScrollState();
-    el.addEventListener('scroll', updateScrollState, { passive: true });
-    const ro = new ResizeObserver(updateScrollState);
-    ro.observe(el);
-    return () => { el.removeEventListener('scroll', updateScrollState); ro.disconnect(); };
-  }, [updateScrollState]);
-
-  useEffect(() => {
-    if (!activeCategory) return;
-
-    categoryButtonRefs.current[activeCategory]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: "center",
-    });
-  }, [activeCategory]);
-
-  const scroll = (direction: 'left' | 'right') => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const amount = el.clientWidth * 0.72;
-    el.scrollBy({ left: direction === 'left' ? -amount : amount, behavior: 'smooth' });
+  const handleItemClick = (item: CategoryItem) => {
+    onInteraction?.();
+    navigate(`/entity/${item.id}`);
   };
 
-  const scrollToEdge = (edge: "start" | "end") => {
-    if (categories.length === 0) return;
-
-    const category = edge === "start" ? categories[0] : categories[categories.length - 1];
-
-    categoryButtonRefs.current[category.labelKey]?.scrollIntoView({
-      behavior: "smooth",
-      block: "nearest",
-      inline: edge === "start" ? "start" : "end",
-    });
+  const handlePillClick = (labelKey: string) => {
+    onInteraction?.();
+    setExpandedCategory(expandedCategory === labelKey ? null : labelKey);
   };
+
+  const expandedCategoryData = useMemo(
+    () => categories.find(c => c.labelKey === expandedCategory) ?? null,
+    [expandedCategory]
+  );
+
+  // Trending dot logic — show dot if any item in category has trendScore > 85
+  const isTrending = (cat: Category) => cat.items.some(i => (i.trendScore || 0) > 85);
 
   return (
-    <div className="w-full bg-card border-t border-border shadow-lg overflow-x-hidden">
-      {/* Category Tabs */}
-      <div className="relative flex items-center">
-        <button
-          onClick={() => scrollToEdge('start')}
-          disabled={!canScrollLeft}
-          className={cn(
-            "p-2 transition-colors border-e border-border shrink-0",
-            canScrollLeft ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
-          )}
-          aria-label="Scroll to first category"
-        >
-          <ChevronsLeft className="w-4 h-4" />
-        </button>
-
-        <button
-          onClick={() => scroll('left')}
-          disabled={!canScrollLeft}
-          className={cn(
-            "p-2 md:p-3 transition-colors border-e border-border shrink-0",
-            canScrollLeft ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
-          )}
-          aria-label="Scroll left"
-        >
-          <ChevronLeft className="w-4 h-4 md:w-5 md:h-5" />
-        </button>
-
-        {/* Scrollable Categories */}
-        <div ref={scrollRef} className="flex-1 overflow-x-auto scrollbar-hide">
-          <div className="flex items-center gap-1 md:gap-2 px-2 py-2 md:py-3 w-max">
-            {/* Category Buttons */}
-            {categories.map((cat) => (
-              <button
-                key={cat.labelKey}
-                ref={(node) => {
-                  categoryButtonRefs.current[cat.labelKey] = node;
-                }}
-                onClick={() => handleCategoryClick(cat.labelKey)}
-                className={cn(
-                  "flex items-center gap-1.5 md:gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-lg text-xs md:text-sm transition-colors whitespace-nowrap",
-                  activeCategory === cat.labelKey
-                    ? "bg-primary text-primary-foreground"
-                    : "bg-secondary text-foreground hover:bg-secondary/80"
-                )}
-              >
-                <span>{cat.icon}</span>
-                <span>{t(cat.labelKey)}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Right Arrow */}
-        <button
-          onClick={() => scroll('right')}
-          disabled={!canScrollRight}
-          className={cn(
-            "p-2 md:p-3 transition-colors border-s border-border shrink-0",
-            canScrollRight ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
-          )}
-          aria-label="Scroll right"
-        >
-          <ChevronRight className="w-4 h-4 md:w-5 md:h-5" />
-        </button>
-
-        <button
-          onClick={() => scrollToEdge('end')}
-          disabled={!canScrollRight}
-          className={cn(
-            "p-2 transition-colors border-s border-border shrink-0",
-            canScrollRight ? "hover:bg-secondary/50 text-muted-foreground" : "text-muted-foreground/30 cursor-default"
-          )}
-          aria-label="Scroll to last category"
-        >
-          <ChevronsRight className="w-4 h-4" />
-        </button>
+    <div className="w-full bg-card border-t border-border shadow-lg overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
+      {/* ── 4-Step Stepper ──────────────────────────────── */}
+      <div className="flex items-stretch border-b border-border">
+        {journeySteps.map((step, i) => {
+          const isActive = step.key === activeStep;
+          const isPast = i < currentStepIndex;
+          return (
+            <button
+              key={step.key}
+              onClick={() => { setActiveStep(step.key); setExpandedCategory(null); onInteraction?.(); }}
+              className={cn(
+                "flex-1 flex flex-col items-center gap-0.5 py-2.5 md:py-3 transition-all relative",
+                isActive ? "bg-card" : "bg-muted/30 hover:bg-muted/50"
+              )}
+            >
+              {/* Active indicator bar */}
+              <div className={cn(
+                "absolute top-0 inset-x-0 h-[3px] transition-all",
+                isActive ? step.activeColor : isPast ? step.activeColor + " opacity-40" : "bg-border"
+              )} />
+              {/* Step number circle */}
+              <div className={cn(
+                "w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[11px] md:text-xs font-bold transition-all",
+                isActive
+                  ? step.activeColor + " text-primary-foreground shadow-sm"
+                  : isPast
+                    ? step.color + " " + step.textColor
+                    : "bg-muted text-muted-foreground"
+              )}>
+                {i + 1}
+              </div>
+              {/* Label + emoji */}
+              <span className={cn(
+                "text-[10px] md:text-xs font-semibold transition-colors",
+                isActive ? step.textColor : "text-muted-foreground"
+              )}>
+                {t(`journey.${step.key}.label`)}
+              </span>
+              {!isActive && (
+                <span className="text-[10px] leading-none">{t(`journey.${step.key}.emoji`)}</span>
+              )}
+            </button>
+          );
+        })}
       </div>
 
-      {/* Category Businesses */}
-      {activeCategoryData && (
-        <div className="border-t border-border bg-background/95 backdrop-blur-sm">
-          <div className="p-4 md:p-6 space-y-4">
+      {/* ── Benefit Headline ─────────────────────────────── */}
+      <div className="px-4 pt-3 pb-1.5 md:px-6 md:pt-4 md:pb-2">
+        <h3 className="text-sm md:text-base font-extrabold text-foreground leading-tight">
+          {t(`journey.${activeStep}.headline`)}
+        </h3>
+        <p className="text-[11px] md:text-xs text-muted-foreground mt-0.5 leading-snug">
+          {t(`journey.${activeStep}.description`)}
+        </p>
+      </div>
 
-            <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {activeCategoryData.items.map((item) => (
+      {/* ── Category Pills Grid ──────────────────────────── */}
+      <div className="px-3 pb-2 md:px-5 md:pb-3">
+        <div className="grid grid-cols-2 gap-1.5 md:grid-cols-3 lg:grid-cols-4 md:gap-2">
+          {stepCategories.map((cat) => {
+            const avgRating = getCategoryAvgRating(cat);
+            const isExpanded = expandedCategory === cat.labelKey;
+            const trending = isTrending(cat);
+            return (
+              <button
+                key={cat.labelKey}
+                onClick={() => handlePillClick(cat.labelKey)}
+                className={cn(
+                  "group relative flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl border transition-all duration-200",
+                  isExpanded
+                    ? "border-primary/50 bg-primary/5 shadow-sm"
+                    : "border-border/60 bg-card hover:border-primary/30 hover:bg-primary/5"
+                )}
+              >
+                {/* Icon */}
+                <span className="shrink-0">{cat.icon}</span>
+                {/* Label */}
+                <span className="flex-1 text-start text-xs md:text-sm font-semibold text-foreground truncate">
+                  {t(cat.labelKey)}
+                </span>
+                {/* Trending dot */}
+                {trending && (
+                  <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />
+                )}
+                {/* Rating */}
+                <span className={cn("flex items-center gap-0.5 text-[10px] md:text-xs font-bold shrink-0", getRatingColor(avgRating))}>
+                  <Star className="w-3 h-3 fill-current" />
+                  {avgRating.toFixed(1)}
+                </span>
+                {/* Expand chevron */}
+                <ChevronDown className={cn(
+                  "w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-200",
+                  isExpanded && "rotate-180"
+                )} />
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Expanded Items Grid ──────────────────────────── */}
+      {expandedCategoryData && (
+        <div className="border-t border-border bg-background/95 backdrop-blur-sm animate-in slide-in-from-top-2 duration-200">
+          <div className="p-3 md:p-5">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-3">
+              {expandedCategoryData.items.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleItemClick(item)}
-                  className="group flex w-full flex-col items-center rounded-2xl border border-border bg-card px-3 py-5 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                  className="group flex w-full flex-col items-center rounded-xl border border-border bg-card px-2 py-3 md:px-3 md:py-4 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
                 >
-                  {/* Centered circular avatar */}
-                  <Avatar className="h-16 w-16 md:h-20 md:w-20 ring-2 ring-border transition-all group-hover:ring-primary/40">
+                  <Avatar className="h-12 w-12 md:h-16 md:w-16 ring-2 ring-border transition-all group-hover:ring-primary/40">
                     <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
-                    <AvatarFallback className="bg-secondary text-sm font-bold">
+                    <AvatarFallback className="bg-secondary text-xs font-bold">
                       {getLocalizedName(item).substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-
-                  {/* Name */}
-                  <p className="mt-3 line-clamp-1 text-sm font-bold text-foreground md:text-base">
+                  <p className="mt-2 line-clamp-1 text-xs md:text-sm font-bold text-foreground">
                     {getLocalizedName(item)}
                   </p>
-
-                  {/* Star rating + review count */}
-                  <div className="mt-1.5 flex items-center gap-1.5">
-                    <Star className={cn("h-4 w-4 fill-current", getRatingColor(item.rating))} />
-                    <span className={cn("text-sm font-bold", getRatingColor(item.rating))}>{item.rating.toFixed(1)}</span>
-                    <span className="text-xs text-muted-foreground">
+                  <div className="mt-1 flex items-center gap-1">
+                    <Star className={cn("h-3 w-3 fill-current", getRatingColor(item.rating))} />
+                    <span className={cn("text-xs font-bold", getRatingColor(item.rating))}>{item.rating.toFixed(1)}</span>
+                    <span className="text-[10px] text-muted-foreground">
                       ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
                     </span>
                   </div>
-
-                  {/* Engagement metrics */}
-                  <div className="mt-3 flex items-center justify-center gap-3 text-muted-foreground">
-                    <span className="flex items-center gap-1 text-xs">
-                      <Heart className="h-3 w-3" />
-                      {formatNumber(item.likes || 0)}
+                  <div className="mt-2 flex items-center justify-center gap-2 text-muted-foreground">
+                    <span className="flex items-center gap-0.5 text-[10px]">
+                      <Heart className="h-2.5 w-2.5" />{formatNumber(item.likes || 0)}
                     </span>
-                    <span className="flex items-center gap-1 text-xs">
-                      <Share2 className="h-3 w-3" />
-                      {formatNumber(item.shares || 0)}
+                    <span className="flex items-center gap-0.5 text-[10px]">
+                      <Share2 className="h-2.5 w-2.5" />{formatNumber(item.shares || 0)}
                     </span>
-                    <span className="flex items-center gap-1 text-xs">
-                      <MessageCircle className="h-3 w-3" />
-                      {formatNumber(item.replies || 0)}
+                    <span className="flex items-center gap-0.5 text-[10px]">
+                      <MessageCircle className="h-2.5 w-2.5" />{formatNumber(item.replies || 0)}
                     </span>
                   </div>
                 </button>
               ))}
             </div>
           </div>
+        </div>
+      )}
+
+      {/* ── Journey Nudge CTA ────────────────────────────── */}
+      {nextStep && (
+        <div className="border-t border-border px-4 py-2 md:px-6 md:py-2.5 flex items-center justify-between">
+          <span className="text-[11px] md:text-xs text-muted-foreground">
+            {t(`journey.${activeStep}.nudge`)}
+          </span>
+          <button
+            onClick={() => { setActiveStep(nextStep.key); setExpandedCategory(null); onInteraction?.(); }}
+            className={cn(
+              "flex items-center gap-1 text-[11px] md:text-xs font-bold transition-colors underline underline-offset-2",
+              nextStep.textColor, "hover:opacity-80"
+            )}
+          >
+            {t(`journey.${activeStep}.nextAction`)}
+            <ChevronRight className={cn("w-3 h-3", isRTL && "rotate-180")} />
+          </button>
         </div>
       )}
     </div>

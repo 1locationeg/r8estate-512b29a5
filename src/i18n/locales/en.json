@@ -291,6 +291,40 @@
     "blockchain": "Blockchain",
     "lands": "Lands"
   },
+  "journey": {
+    "research": {
+      "label": "Research",
+      "emoji": "🔍",
+      "headline": "Find who everyone's talking about",
+      "description": "Before you visit a sales office — know the platforms, channels & data buyers trust.",
+      "nudge": "Done with Research?",
+      "nextAction": "Move to Choose"
+    },
+    "choose": {
+      "label": "Choose",
+      "emoji": "🏠",
+      "headline": "Pick the right developer & unit",
+      "description": "Compare brokers, units & developers side-by-side with verified buyer ratings.",
+      "nudge": "Found your match?",
+      "nextAction": "Move to Finance"
+    },
+    "finance": {
+      "label": "Finance",
+      "emoji": "💰",
+      "headline": "Secure the best deal & terms",
+      "description": "Explore mortgage options, valuations & payment plans from verified providers.",
+      "nudge": "Terms locked in?",
+      "nextAction": "Move to Protect"
+    },
+    "protect": {
+      "label": "Protect",
+      "emoji": "🛡️",
+      "headline": "Protect your money & rights",
+      "description": "Get legal reviews, tax advice & property management you can trust.",
+      "nudge": "You're all set!",
+      "nextAction": "Start your journey"
+    }
+  },
   "stats": {
     "verifiedReviews": "Buyer experiences",
     "verifiedReviewsDesc": "Real buyer experiences",
