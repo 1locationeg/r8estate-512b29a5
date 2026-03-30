@@ -112,6 +112,7 @@ export function GuestTimerExpiredModal() {
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackType, setFeedbackType] = useState('general');
   const [submitting, setSubmitting] = useState(false);
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   const reviews = useCountUp(50000, 1600);
   const companies = useCountUp(1200, 1400);
