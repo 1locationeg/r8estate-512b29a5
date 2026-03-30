@@ -292,7 +292,7 @@ export const HeroTrustShowcase = () => {
   const rotDeg = pct * 180 - 90;
 
   return (
-    <div className="w-full max-w-md mx-auto">
+    <div className="w-full max-w-md mx-auto ai-glow-accent">
       {/* ── Gauge ── */}
       <div className="relative w-56 h-32 md:w-64 md:h-36 mx-auto">
         <svg viewBox="0 0 200 120" className="w-full h-full">

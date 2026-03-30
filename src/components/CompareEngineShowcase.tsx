@@ -65,7 +65,7 @@ const CompareEngineShowcase = () => {
           return (
             <div
               key={dev.name}
-              className="relative rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-lg hover:border-primary/30"
+              className="relative rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-[0_0_30px_-8px_hsl(var(--glow-primary)/0.25)] hover:border-primary/30 ai-grain"
             >
               {isWinner && (
                 <div className="absolute -top-3 right-4 flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-bold">

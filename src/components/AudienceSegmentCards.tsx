@@ -84,10 +84,10 @@ export const AudienceSegmentCards = () => {
               key={seg.key}
               onClick={() => navigate(seg.cta)}
               className={`
-                group relative cursor-pointer overflow-hidden border
+                group relative cursor-pointer overflow-hidden border ai-grain
                 bg-gradient-to-br ${seg.gradient} ${seg.borderHover}
                 transition-all duration-500 ease-out
-                hover:shadow-lg hover:-translate-y-1
+                hover:shadow-[0_0_24px_-6px_hsl(var(--glow-primary)/0.2)] hover:-translate-y-1
                 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
               `}
               style={{ transitionDelay: visible ? `${idx * 120}ms` : "0ms" }}
