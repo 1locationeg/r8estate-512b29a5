@@ -249,23 +249,18 @@ export function GuestTimerExpiredModal() {
           })()}
         </div>
 
-        {/* ── Benefits ── */}
+        {/* ── Benefits (icon row) ── */}
         <div className="px-4 pt-2 pb-1">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-px flex-1 bg-border" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
-              {isAr ? 'ماذا تفتح — مجاناً' : 'What you unlock — Free'}
-            </span>
-            <div className="h-px flex-1 bg-border" />
-          </div>
-          <div className="flex flex-col gap-1.5">
+          <div className="flex items-center justify-center gap-4">
             {BENEFITS.map((b, i) => (
-              <div key={i} className="flex items-center gap-2">
-                <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-md"
+              <div key={i} className="flex flex-col items-center gap-0.5" title={typeof b.text === 'string' ? b.text : ''}>
+                <div className="flex h-7 w-7 items-center justify-center rounded-full"
                   style={{ background: 'hsla(203,81%,12%,0.08)' }}>
-                  <b.icon className="h-3 w-3 text-primary" />
+                  <b.icon className="h-3.5 w-3.5 text-primary" />
                 </div>
-                <span className="text-[11px] font-medium text-foreground leading-snug">{b.text}</span>
+                <span className="text-[8px] text-muted-foreground font-medium text-center leading-tight max-w-[60px] truncate">
+                  {typeof b.text === 'string' ? b.text.split(' ').slice(0, 2).join(' ') : ''}
+                </span>
               </div>
             ))}
           </div>
