@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Star, MessageSquare, Building2, Users, ArrowRight, LogIn,
-  Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2
+  Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2, Gift, PartyPopper
 } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
@@ -112,12 +112,20 @@ function FeedbackPanel({
         </div>
       )}
 
-      {/* Step 3: Submit (visible after text) */}
+      {/* Step 3: Claim reward (visible after text) */}
       {rating > 0 && feedbackText.trim().length >= 5 && (
         <button onClick={onSubmit} disabled={submitting}
-          className="w-full flex items-center justify-center gap-2 font-bold py-2 rounded-lg transition-all active:scale-[0.98] text-xs disabled:opacity-50 animate-fade-in"
-          style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(40,90%,48%) 100%)', color: 'hsl(203,81%,12%)' }}>
-          {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Send className="w-3 h-3" />{isAr ? 'أرسل واحصل على وقت إضافي' : 'Submit for bonus time'}</>}
+          className="w-full relative overflow-hidden flex items-center justify-center gap-2 font-bold py-2.5 rounded-xl transition-all active:scale-[0.97] text-xs disabled:opacity-50 animate-fade-in group"
+          style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(38,92%,50%) 50%, hsl(45,96%,54%) 100%)', color: 'hsl(203,81%,12%)', boxShadow: '0 0 20px hsla(45,96%,54%,0.4), inset 0 1px 0 hsla(0,0%,100%,0.3)' }}>
+          <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+          {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : (
+            <>
+              <Gift className="w-4 h-4 animate-bounce" />
+              <span className="relative">
+                {isAr ? '🎁 اطلب مكافأتك — +2 دقيقة مجاناً' : '🎁 Claim Your Reward — +2 Min Free'}
+              </span>
+            </>
+          )}
         </button>
       )}
     </div>
