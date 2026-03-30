@@ -112,11 +112,18 @@ export function GuestTimerExpiredModal() {
   const [feedbackText, setFeedbackText] = useState('');
   const [feedbackType, setFeedbackType] = useState('general');
   const [submitting, setSubmitting] = useState(false);
+  const [testimonialIdx, setTestimonialIdx] = useState(0);
 
   const reviews = useCountUp(50000, 1600);
   const companies = useCountUp(1200, 1400);
   const users = useCountUp(100000, 1800);
   const trust = useCountUp(48, 1200);
+
+  useEffect(() => {
+    if (!expiredModalOpen) return;
+    const iv = setInterval(() => setTestimonialIdx(p => (p + 1) % 3), 2000);
+    return () => clearInterval(iv);
+  }, [expiredModalOpen]);
 
   if (!isGuest) return null;
 
@@ -217,8 +224,7 @@ export function GuestTimerExpiredModal() {
           </div>
         </div>
 
-
-        {/* ── Testimonials ── */}
+        {/* ── Testimonials Carousel ── */}
         <div className="px-4 pt-3 pb-1">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-px flex-1 bg-border" />
@@ -227,9 +233,10 @@ export function GuestTimerExpiredModal() {
             </span>
             <div className="h-px flex-1 bg-border" />
           </div>
-          <div className="flex flex-col gap-2">
-            {TESTIMONIALS.map((t, i) => (
-              <div key={i} className="flex items-start gap-2.5 rounded-xl p-2.5 border border-border bg-muted/30">
+          {(() => {
+            const t = TESTIMONIALS[testimonialIdx];
+            return (
+              <div key={testimonialIdx} className="flex items-start gap-2.5 rounded-xl p-2.5 border border-border bg-muted/30 animate-fade-in">
                 <img src={t.img} alt={t.name} className="w-9 h-9 rounded-full object-cover shrink-0 ring-1 ring-border" loading="lazy" width={36} height={36} />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5 mb-0.5">
@@ -245,8 +252,8 @@ export function GuestTimerExpiredModal() {
                   <p className="text-[10px] text-muted-foreground leading-snug">"{t.text}"</p>
                 </div>
               </div>
-            ))}
-          </div>
+            );
+          })()}
         </div>
 
         {/* ── Benefits ── */}
