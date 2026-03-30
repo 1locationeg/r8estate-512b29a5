@@ -38,12 +38,12 @@ const HowWeWork = () => {
                   <div className="w-px h-6 border-l-2 border-dashed border-border" />
                 </div>
               )}
-              <div
-                className={cn(
-                  "group relative rounded-xl border border-border bg-card p-5 md:p-6 cursor-pointer",
-                  "transition-all duration-300 ease-out",
-                  "hover:bg-primary hover:border-primary hover:scale-[1.03] hover:shadow-lg"
-                )}
+                <div
+                  className={cn(
+                    "group relative rounded-xl border border-border bg-card p-5 md:p-6 cursor-pointer ai-grain",
+                    "transition-all duration-300 ease-out",
+                    "hover:bg-primary hover:border-primary hover:scale-[1.03] hover:shadow-[0_0_30px_-8px_hsl(var(--glow-primary)/0.3)]"
+                  )}
               >
                 {/* Step number */}
                 <span className="font-mono text-[11px] font-bold text-accent group-hover:text-primary-foreground/60 transition-colors duration-300">
@@ -54,8 +54,8 @@ const HowWeWork = () => {
                 <div className="mt-3 mb-3">
                   <div
                     className={cn(
-                      "inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 group-hover:bg-primary-foreground/15 transition-colors duration-300",
-                      step.glow && "animate-pulse-glow"
+                      "inline-flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10 group-hover:bg-primary-foreground/15 transition-all duration-300 ai-icon-glow",
+                      step.glow && "animate-pulse-glow ai-float"
                     )}
                   >
                     <Icon className="w-5 h-5 text-primary group-hover:text-primary-foreground transition-colors duration-300" />

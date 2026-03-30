@@ -226,8 +226,8 @@ export function GuestTimerExpiredModal() {
         onPointerDownOutside={(e) => e.preventDefault()}
       >
         {/* ── Hero ── */}
-        <div className="relative px-5 pt-5 pb-4 text-center overflow-hidden"
-          style={{ background: 'linear-gradient(160deg, hsl(203,81%,12%) 0%, hsl(203,81%,21%) 40%, hsl(203,55%,28%) 100%)' }}>
+        <div className="relative px-5 pt-5 pb-4 text-center overflow-hidden ai-grain"
+          style={{ background: 'linear-gradient(160deg, hsl(203,81%,8%) 0%, hsl(203,81%,16%) 35%, hsl(203,55%,24%) 70%, hsl(203,45%,28%) 100%)' }}>
           <div className="pointer-events-none absolute inset-0"
             style={{ background: 'radial-gradient(ellipse 70% 50% at 50% 20%, hsla(45,96%,54%,0.1) 0%, transparent 70%)' }} />
           <div className="pointer-events-none absolute inset-0 opacity-[0.04]"

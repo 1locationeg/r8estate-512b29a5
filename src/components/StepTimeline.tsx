@@ -53,7 +53,7 @@ const StepTimeline = () => {
       <div className="hidden md:block">
         <div className="relative flex items-start justify-between gap-4">
           {/* Connector line */}
-          <div className="absolute top-6 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-primary/30 via-primary to-primary/30 z-0" />
+          <div className="absolute top-6 left-[calc(12.5%+20px)] right-[calc(12.5%+20px)] h-0.5 bg-gradient-to-r from-primary/30 via-primary to-primary/30 z-0 shadow-[0_0_8px_1px_hsl(var(--glow-primary)/0.2)]" />
 
           {steps.map((step, i) => {
             const Icon = step.icon;
@@ -68,7 +68,7 @@ const StepTimeline = () => {
               >
                 {/* Numbered circle */}
                 <div className="relative mb-4">
-                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-lg">
+                  <div className="w-12 h-12 rounded-full bg-primary text-primary-foreground flex items-center justify-center font-bold text-sm shadow-[0_0_20px_-4px_hsl(var(--glow-primary)/0.4)]">
                     {step.num}
                   </div>
                   <div className="absolute inset-0 rounded-full bg-primary/30 animate-ping opacity-20" />
@@ -100,7 +100,7 @@ const StepTimeline = () => {
           {/* Vertical glowing line */}
           <div
             className={cn(
-              "absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/40 via-primary to-primary/40",
+              "absolute top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary/40 via-primary to-primary/40 shadow-[0_0_6px_1px_hsl(var(--glow-primary)/0.15)]",
               isRtl ? "right-[15px]" : "left-[15px]"
             )}
           />

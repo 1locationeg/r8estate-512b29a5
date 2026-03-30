@@ -246,11 +246,11 @@ export const LiveMarketPulse = () => {
             className="relative flex items-center gap-2.5 py-3 px-4 rounded-[14px] bg-secondary dark:bg-card backdrop-blur-md cursor-pointer hover:bg-muted dark:hover:bg-muted transition-all duration-200 min-h-[48px]"
             onClick={handleDesktopClick}
           >
-            {/* Live pulse */}
+            {/* Live pulse — AI enhanced */}
             <span className="relative flex h-3 w-3 flex-shrink-0">
               <span className="absolute inline-flex h-full w-full rounded-full border-2 border-trust-excellent/60 animate-ping" />
               <span className="absolute inline-flex h-full w-full rounded-full border-2 border-trust-excellent/30 animate-[ping_1.5s_cubic-bezier(0,0,0.2,1)_infinite_0.5s]" style={{ transform: 'scale(1.3)' }} />
-              <span className="relative inline-flex rounded-full h-3 w-3 border-2 border-trust-excellent shadow-[0_0_6px_2px_hsl(var(--trust-excellent)/0.4)]" />
+              <span className="relative inline-flex rounded-full h-3 w-3 border-2 border-trust-excellent shadow-[0_0_8px_3px_hsl(var(--trust-excellent)/0.5)] ai-pulse-dot" />
             </span>
 
             <div key={current.id} className="flex items-center gap-2 flex-1 min-w-0 animate-fade-in">
