@@ -199,8 +199,8 @@ export function GuestTimerExpiredModal() {
               style={{ background: 'hsla(45,96%,54%,0.15)', border: '1px solid hsla(45,96%,54%,0.3)', boxShadow: '0 0 24px hsla(45,96%,54%,0.15)' }}>
               <Lock className="h-5 w-5" style={{ color: 'hsl(45,96%,54%)' }} />
             </div>
-            <h2 className="text-lg font-extrabold text-white tracking-tight mb-0.5">
-              {isAr ? 'انتهت المعاينة المجانية' : 'Preview Ended'}
+            <h2 className="text-lg font-extrabold text-white tracking-tight mb-0.5 whitespace-pre-line">
+              {isAr ? 'احمِ استثمارك العقاري' : 'Protect Your Investment'}
             </h2>
             <p className="text-white/60 text-[11px] leading-relaxed max-w-[260px] mx-auto mb-3">
               {isAr ? 'سجّل مجاناً لحماية استثمارك ومقارنة المطورين' : 'Sign up free to protect your investment — compare developers & reviews.'}
