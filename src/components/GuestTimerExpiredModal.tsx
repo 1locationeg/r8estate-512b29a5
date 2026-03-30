@@ -21,7 +21,7 @@ function getOrCreateSessionId(): string {
   return id;
 }
 
-/* ── Animated counter hook ── */
+/* ── Animated counter hook (stable) ── */
 function useCountUp(target: number, duration = 1200) {
   const [value, setValue] = useState(0);
   const ref = useRef<HTMLSpanElement>(null);
