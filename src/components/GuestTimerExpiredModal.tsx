@@ -119,6 +119,12 @@ export function GuestTimerExpiredModal() {
   const users = useCountUp(100000, 1800);
   const trust = useCountUp(48, 1200);
 
+  useEffect(() => {
+    if (!expiredModalOpen) return;
+    const iv = setInterval(() => setTestimonialIdx(p => (p + 1) % 3), 2000);
+    return () => clearInterval(iv);
+  }, [expiredModalOpen]);
+
   if (!isGuest) return null;
 
   const handleSignUp = () => { dismissExpiredModal(); navigate('/auth'); };
