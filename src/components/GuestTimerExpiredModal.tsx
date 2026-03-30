@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Star, MessageSquare, Building2, Users, ArrowRight, LogIn,
-  Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2
+  Send, Loader2, Shield, Search, AlertTriangle, Bell, Lock, CheckCircle2, Gift, PartyPopper
 } from 'lucide-react';
 import { useGuestTimer } from '@/contexts/GuestTimerContext';
 import { Dialog, DialogContent } from '@/components/ui/dialog';
