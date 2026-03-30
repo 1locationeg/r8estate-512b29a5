@@ -250,7 +250,7 @@ export function GuestTimerExpiredModal() {
         </div>
 
         {/* ── Benefits (icon row) ── */}
-        <div className="px-4 pt-2 pb-1">
+        <div className="px-4 pt-0.5 pb-0">
           <div className="flex items-center justify-center gap-4">
             {BENEFITS.map((b, i) => (
               <div key={i} className="flex flex-col items-center gap-0.5" title={typeof b.text === 'string' ? b.text : ''}>
