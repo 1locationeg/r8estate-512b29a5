@@ -217,17 +217,6 @@ export function GuestTimerExpiredModal() {
           </div>
         </div>
 
-        {/* ── Animated Stats ── */}
-        <div className="grid grid-cols-4 divide-x rtl:divide-x-reverse divide-border"
-          style={{ background: 'hsl(203,81%,12%)', borderTop: '1px solid hsla(0,0%,100%,0.06)' }}>
-          {STATS.map(({ icon: Icon, value, label }) => (
-            <div key={label} className="flex flex-col items-center py-2.5 px-1">
-              <Icon className="w-3 h-3 mb-0.5" style={{ color: 'hsl(45,96%,54%)' }} />
-              <span className="text-sm font-extrabold text-white leading-none">{value}</span>
-              <span className="text-[8px] text-white/45 text-center leading-tight mt-0.5">{label}</span>
-            </div>
-          ))}
-        </div>
 
         {/* ── Testimonials ── */}
         <div className="px-4 pt-3 pb-1">
