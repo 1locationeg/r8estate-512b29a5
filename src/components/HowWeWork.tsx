@@ -17,7 +17,7 @@ const HowWeWork = () => {
       {/* Headline */}
       <div className="flex flex-col items-center gap-1.5 mb-3 md:mb-4">
         <h2
-          className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer"
+          className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer py-0"
         >
           {t("howWeWork.headline")}
         </h2>
