@@ -13,9 +13,9 @@ const HowWeWork = () => {
   const isRtl = i18n.language === "ar";
 
   return (
-    <section className="w-full py-4 md:py-6" dir={isRtl ? "rtl" : "ltr"}>
+    <section className="w-full py-2 md:py-3" dir={isRtl ? "rtl" : "ltr"}>
       {/* Headline */}
-      <div className="flex flex-col items-center gap-1.5 mb-5 md:mb-6">
+      <div className="flex flex-col items-center gap-1.5 mb-3 md:mb-4">
         <h2
           className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer"
         >
