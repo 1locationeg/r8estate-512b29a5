@@ -62,13 +62,27 @@ function FeedbackPanel({
     { value: 'general', label: isAr ? 'عام' : 'General' },
   ];
 
+  const progress = rating > 0 ? (feedbackText.trim().length >= 5 ? 3 : 2) : 1;
+
   return (
     <div className="mx-4 mt-2 mb-1 rounded-xl p-3 space-y-2"
       style={{ background: 'hsla(203,81%,12%,0.06)', border: '1px solid hsla(203,81%,12%,0.1)' }}>
-      <p className="text-[11px] font-bold text-foreground flex items-center gap-1.5">
-        <Star className="w-3 h-3" style={{ color: 'hsl(45,96%,54%)' }} />
-        {isAr ? 'قيّم تجربتك واحصل على دقيقتين إضافيتين' : 'Rate & get 2 bonus minutes'}
-      </p>
+      {/* Progress bar */}
+      <div className="flex items-center gap-1.5">
+        <p className="text-[11px] font-bold text-foreground flex items-center gap-1.5 flex-1">
+          <Star className="w-3 h-3" style={{ color: 'hsl(45,96%,54%)' }} />
+          {isAr ? 'قيّم تجربتك واحصل على دقيقتين إضافيتين' : 'Rate & get 2 bonus minutes'}
+        </p>
+        <span className="text-[9px] text-muted-foreground font-medium">{Math.min(progress, 3)}/3</span>
+      </div>
+      <div className="flex gap-0.5">
+        {[1, 2, 3].map((step) => (
+          <div key={step} className="h-1 flex-1 rounded-full transition-all duration-300"
+            style={{ background: step <= progress ? 'hsl(45,96%,54%)' : 'hsla(203,81%,12%,0.1)' }} />
+        ))}
+      </div>
+
+      {/* Step 1: Stars */}
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((s) => (
           <button key={s} type="button"
@@ -79,23 +93,33 @@ function FeedbackPanel({
           </button>
         ))}
       </div>
-      <div className="flex flex-wrap gap-1">
-        {TYPES.map((ft) => (
-          <button key={ft.value} onClick={() => setFeedbackType(ft.value)}
-            className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${feedbackType === ft.value ? 'text-white border-transparent' : 'bg-background text-muted-foreground border-border hover:border-primary/40'}`}
-            style={feedbackType === ft.value ? { background: 'linear-gradient(135deg, hsl(203,81%,18%), hsl(203,55%,28%))' } : undefined}>
-            {ft.label}
-          </button>
-        ))}
-      </div>
-      <Textarea placeholder={isAr ? 'أخبرنا عن تجربتك...' : 'Tell us about your experience...'}
-        value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)}
-        className="min-h-[40px] text-xs resize-none bg-background" maxLength={500} />
-      <button onClick={onSubmit} disabled={submitting}
-        className="w-full flex items-center justify-center gap-2 font-bold py-2 rounded-lg transition-all active:scale-[0.98] text-xs disabled:opacity-50"
-        style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(40,90%,48%) 100%)', color: 'hsl(203,81%,12%)' }}>
-        {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Send className="w-3 h-3" />{isAr ? 'أرسل واحصل على وقت إضافي' : 'Submit for bonus time'}</>}
-      </button>
+
+      {/* Step 2: Type chips + Textarea (visible after rating) */}
+      {rating > 0 && (
+        <div className="space-y-2 animate-fade-in">
+          <div className="flex flex-wrap gap-1">
+            {TYPES.map((ft) => (
+              <button key={ft.value} onClick={() => setFeedbackType(ft.value)}
+                className={`text-[10px] px-2 py-0.5 rounded-full border transition-all ${feedbackType === ft.value ? 'text-white border-transparent' : 'bg-background text-muted-foreground border-border hover:border-primary/40'}`}
+                style={feedbackType === ft.value ? { background: 'linear-gradient(135deg, hsl(203,81%,18%), hsl(203,55%,28%))' } : undefined}>
+                {ft.label}
+              </button>
+            ))}
+          </div>
+          <Textarea placeholder={isAr ? 'أخبرنا عن تجربتك...' : 'Tell us about your experience...'}
+            value={feedbackText} onChange={(e) => setFeedbackText(e.target.value)}
+            className="min-h-[40px] text-xs resize-none bg-background" maxLength={500} />
+        </div>
+      )}
+
+      {/* Step 3: Submit (visible after text) */}
+      {rating > 0 && feedbackText.trim().length >= 5 && (
+        <button onClick={onSubmit} disabled={submitting}
+          className="w-full flex items-center justify-center gap-2 font-bold py-2 rounded-lg transition-all active:scale-[0.98] text-xs disabled:opacity-50 animate-fade-in"
+          style={{ background: 'linear-gradient(135deg, hsl(45,96%,54%) 0%, hsl(40,90%,48%) 100%)', color: 'hsl(203,81%,12%)' }}>
+          {submitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <><Send className="w-3 h-3" />{isAr ? 'أرسل واحصل على وقت إضافي' : 'Submit for bonus time'}</>}
+        </button>
+      )}
     </div>
   );
 }
