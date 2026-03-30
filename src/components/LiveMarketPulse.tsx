@@ -168,11 +168,26 @@ export const LiveMarketPulse = () => {
     fetch();
   }, []);
 
-  // Desktop cycling — 4s
+  // Desktop cycling — 4s + micro-fluctuate buyer_check counts
   useEffect(() => {
     if (events.length <= 1) return;
     cycleRef.current = setInterval(() => {
       setIdx((prev) => (prev + 1) % events.length);
+      // Nudge buyer_check counts by ±1–3 so numbers feel live
+      setEvents((prev) =>
+        prev.map((ev) => {
+          if (ev.type !== "buyer_check" || !ev.count) return ev;
+          const delta = Math.floor(Math.random() * 5) - 2; // -2 to +2
+          const newCount = Math.max(5, ev.count + delta);
+          const name = ev.entityName || "";
+          return {
+            ...ev,
+            count: newCount,
+            text: `${newCount} buyers checked ${name} in the last hour`,
+            textAr: `${newCount} مشتري تحققوا من ${name} في الساعة الأخيرة`,
+          };
+        })
+      );
     }, 4000);
     return () => { if (cycleRef.current) clearInterval(cycleRef.current); };
   }, [events.length]);
