@@ -1,20 +1,40 @@
 import { createRoot } from "react-dom/client";
-import { registerSW } from "virtual:pwa-register";
 import "./i18n"; // Must be first — sets up language detection, dir, and body class
 import App from "./App.tsx";
 import "./index.css";
 
-// Register service worker with auto-update
-// When a new version is deployed, the SW updates silently and reloads the page
-const updateSW = registerSW({
-  onNeedRefresh() {
-    // Auto-reload when new content is available
-    updateSW(true);
-  },
-  onOfflineReady() {
-    console.log("R8ESTATE is ready to work offline");
-  },
-});
+// Detect preview/iframe contexts where SW causes stale cache issues
+const isInIframe = (() => {
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+})();
+
+const isPreviewHost =
+  window.location.hostname.includes("id-preview--") ||
+  window.location.hostname.includes("lovableproject.com") ||
+  window.location.hostname.includes("lovable.app");
+
+if (isPreviewHost || isInIframe) {
+  // Unregister any existing service workers in preview/iframe contexts
+  navigator.serviceWorker?.getRegistrations().then((registrations) => {
+    registrations.forEach((r) => r.unregister());
+  });
+} else {
+  // Only register SW in production (not preview/iframe)
+  import("virtual:pwa-register").then(({ registerSW }) => {
+    const updateSW = registerSW({
+      onNeedRefresh() {
+        updateSW(true);
+      },
+      onOfflineReady() {
+        console.log("R8ESTATE is ready to work offline");
+      },
+    });
+  });
+}
 
 createRoot(document.getElementById("root")!).render(<App />);
 
