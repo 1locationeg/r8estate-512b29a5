@@ -380,3 +380,139 @@
   50%, 90% { transform: translateY(-38px); }
   100% { transform: translateY(0); }
 }
+
+/* ═══════════════════════════════════════════
+   AI-Vibe Design System — "Luminous Trust"
+   ═══════════════════════════════════════════ */
+
+:root {
+  --glow-primary: 203 81% 21%;
+  --glow-accent: 45 96% 54%;
+  --glow-subtle: 203 60% 40%;
+}
+
+.dark {
+  --glow-primary: 203 81% 40%;
+  --glow-accent: 45 96% 58%;
+  --glow-subtle: 203 50% 50%;
+}
+
+/* AI Radial Glow — behind sections */
+.ai-glow {
+  position: relative;
+}
+.ai-glow::before {
+  content: '';
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(ellipse 60% 50% at 50% 40%, hsla(var(--glow-primary), 0.08) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.ai-glow-accent::before {
+  background: radial-gradient(ellipse 50% 40% at 50% 50%, hsla(var(--glow-accent), 0.07) 0%, transparent 70%);
+}
+
+/* AI Glassmorphism */
+.ai-glass {
+  background: hsla(var(--card), 0.7);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border: 1px solid hsla(var(--border), 0.5);
+}
+
+/* AI Grain Texture Overlay */
+.ai-grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.025;
+  pointer-events: none;
+  z-index: 1;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 128px 128px;
+  border-radius: inherit;
+}
+
+/* AI Shimmer Border — animated conic gradient */
+.ai-shimmer-border {
+  position: relative;
+  overflow: hidden;
+}
+.ai-shimmer-border::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1.5px;
+  background: conic-gradient(
+    from var(--hero-glow-angle, 0deg),
+    hsla(var(--glow-primary), 0.4) 0%,
+    hsla(var(--glow-accent), 0.6) 25%,
+    hsla(var(--glow-primary), 0.2) 50%,
+    hsla(var(--glow-accent), 0.5) 75%,
+    hsla(var(--glow-primary), 0.4) 100%
+  );
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  animation: hero-glow-spin 3s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* AI Floating animation */
+@keyframes ai-float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-6px); }
+}
+.ai-float {
+  animation: ai-float 3s ease-in-out infinite;
+}
+
+/* AI Glow Pulse for dots/indicators */
+@keyframes ai-glow-pulse {
+  0%, 100% { box-shadow: 0 0 6px 2px hsla(var(--glow-accent), 0.3); }
+  50% { box-shadow: 0 0 14px 4px hsla(var(--glow-accent), 0.15); }
+}
+.ai-pulse-dot {
+  animation: ai-glow-pulse 2s ease-in-out infinite;
+}
+
+/* AI Scale-in for cards */
+@keyframes ai-scale-in {
+  from { transform: scale(0.92); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.ai-scale-in {
+  animation: ai-scale-in 0.5s ease-out both;
+}
+
+/* AI Slide-up */
+@keyframes ai-slide-up {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+.ai-slide-up {
+  animation: ai-slide-up 0.6s ease-out both;
+}
+
+/* AI Icon glow ring */
+.ai-icon-glow {
+  box-shadow: 0 0 0 4px hsla(var(--glow-primary), 0.08), 0 0 16px 4px hsla(var(--glow-primary), 0.06);
+}
+
+/* AI Section divider glow */
+.ai-divider-glow {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, hsla(var(--glow-accent), 0.3) 50%, transparent 100%);
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .ai-float, .ai-pulse-dot, .ai-shimmer-border::before {
+    animation: none;
+  }
+}
