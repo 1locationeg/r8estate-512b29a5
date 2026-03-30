@@ -325,10 +325,12 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   // Trending dot logic — show dot if any item in category has trendScore > 85
   const isTrending = (cat: Category) => cat.items.some(i => (i.trendScore || 0) > 85);
 
+  const totalItemsInStep = stepCategories.reduce((s, c) => s + c.items.length, 0);
+
   return (
-    <div className="w-full bg-card border-t border-border shadow-lg overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
-      {/* ── 4-Step Stepper ──────────────────────────────── */}
-      <div className="flex items-stretch border-b border-border">
+    <div className="w-full bg-card border-t border-border overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
+      {/* ── Compact Stepper ──────────────────────────────── */}
+      <div className="flex items-center border-b border-border">
         {journeySteps.map((step, i) => {
           const isActive = step.key === activeStep;
           const isPast = i < currentStepIndex;
@@ -337,87 +339,73 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
               key={step.key}
               onClick={() => { setActiveStep(step.key); setExpandedCategory(null); onInteraction?.(); }}
               className={cn(
-                "flex-1 flex flex-col items-center gap-0.5 py-2.5 md:py-3 transition-all relative",
-                isActive ? "bg-card" : "bg-muted/30 hover:bg-muted/50"
+                "flex-1 flex items-center justify-center gap-1 py-2 transition-all relative",
+                isActive ? "bg-card" : "bg-muted/20 hover:bg-muted/40"
               )}
             >
-              {/* Active indicator bar */}
               <div className={cn(
-                "absolute top-0 inset-x-0 h-[3px] transition-all",
-                isActive ? step.activeColor : isPast ? step.activeColor + " opacity-40" : "bg-border"
+                "absolute top-0 inset-x-0 h-[2px]",
+                isActive ? step.activeColor : isPast ? step.activeColor + " opacity-40" : "bg-transparent"
               )} />
-              {/* Step number circle */}
               <div className={cn(
-                "w-6 h-6 md:w-7 md:h-7 rounded-full flex items-center justify-center text-[11px] md:text-xs font-bold transition-all",
+                "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold",
                 isActive
-                  ? step.activeColor + " text-primary-foreground shadow-sm"
-                  : isPast
-                    ? step.color + " " + step.textColor
-                    : "bg-muted text-muted-foreground"
+                  ? step.activeColor + " text-primary-foreground"
+                  : isPast ? step.color + " " + step.textColor : "bg-muted text-muted-foreground"
               )}>
                 {i + 1}
               </div>
-              {/* Label + emoji */}
               <span className={cn(
-                "text-[10px] md:text-xs font-semibold transition-colors",
+                "text-[10px] font-semibold",
                 isActive ? step.textColor : "text-muted-foreground"
               )}>
                 {t(`journey.${step.key}.label`)}
               </span>
-              {!isActive && (
-                <span className="text-[10px] leading-none">{t(`journey.${step.key}.emoji`)}</span>
-              )}
             </button>
           );
         })}
       </div>
 
-      {/* ── Benefit Headline ─────────────────────────────── */}
-      <div className="px-4 pt-3 pb-1.5 md:px-6 md:pt-4 md:pb-2">
-        <h3 className="text-sm md:text-base font-extrabold text-foreground leading-tight">
+      {/* ── Benefit Headline — direct value ───────────────── */}
+      <div className="px-3 pt-2.5 pb-1 md:px-5">
+        <h3 className="text-[13px] md:text-sm font-extrabold text-foreground leading-tight">
           {t(`journey.${activeStep}.headline`)}
         </h3>
-        <p className="text-[11px] md:text-xs text-muted-foreground mt-0.5 leading-snug">
-          {t(`journey.${activeStep}.description`)}
+        <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug flex items-center gap-1">
+          <span>{t(`journey.${activeStep}.benefit`)}</span>
+          <span className="text-foreground/60">·</span>
+          <span className="font-semibold text-foreground/70">{totalItemsInStep} {t("journey.companiesReviewed")}</span>
         </p>
       </div>
 
-      {/* ── Category Pills Grid ──────────────────────────── */}
-      <div className="px-3 pb-2 md:px-5 md:pb-3">
-        <div className="grid grid-cols-2 gap-1.5 md:grid-cols-3 lg:grid-cols-4 md:gap-2">
+      {/* ── Category Pills — no stars, clean & compact ────── */}
+      <div className="px-3 pb-1.5 md:px-5">
+        <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4 md:gap-1.5">
           {stepCategories.map((cat) => {
-            const avgRating = getCategoryAvgRating(cat);
             const isExpanded = expandedCategory === cat.labelKey;
             const trending = isTrending(cat);
+            const count = cat.items.length;
             return (
               <button
                 key={cat.labelKey}
                 onClick={() => handlePillClick(cat.labelKey)}
                 className={cn(
-                  "group relative flex items-center gap-2 px-3 py-2 md:py-2.5 rounded-xl border transition-all duration-200",
+                  "group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all duration-150",
                   isExpanded
-                    ? "border-primary/50 bg-primary/5 shadow-sm"
-                    : "border-border/60 bg-card hover:border-primary/30 hover:bg-primary/5"
+                    ? "border-primary/50 bg-primary/10"
+                    : "border-border/50 bg-card hover:border-primary/30"
                 )}
               >
-                {/* Icon */}
                 <span className="shrink-0">{cat.icon}</span>
-                {/* Label */}
-                <span className="flex-1 text-start text-xs md:text-sm font-semibold text-foreground truncate">
+                <span className="flex-1 text-start text-[11px] font-semibold text-foreground truncate">
                   {t(cat.labelKey)}
                 </span>
-                {/* Trending dot */}
                 {trending && (
                   <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />
                 )}
-                {/* Rating */}
-                <span className={cn("flex items-center gap-0.5 text-[10px] md:text-xs font-bold shrink-0", getRatingColor(avgRating))}>
-                  <Star className="w-3 h-3 fill-current" />
-                  {avgRating.toFixed(1)}
-                </span>
-                {/* Expand chevron */}
+                <span className="text-[9px] text-muted-foreground font-medium shrink-0">{count}</span>
                 <ChevronDown className={cn(
-                  "w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-200",
+                  "w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-150",
                   isExpanded && "rotate-180"
                 )} />
               </button>
@@ -426,44 +414,29 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
         </div>
       </div>
 
-      {/* ── Expanded Items Grid ──────────────────────────── */}
+      {/* ── Expanded Items — compact cards ────────────────── */}
       {expandedCategoryData && (
-        <div className="border-t border-border bg-background/95 backdrop-blur-sm animate-in slide-in-from-top-2 duration-200">
-          <div className="p-3 md:p-5">
-            <div className="grid grid-cols-2 gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 md:gap-3">
+        <div className="border-t border-border bg-muted/30 animate-in slide-in-from-top-1 duration-150">
+          <div className="p-2 md:p-4">
+            <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-2">
               {expandedCategoryData.items.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => handleItemClick(item)}
-                  className="group flex w-full flex-col items-center rounded-xl border border-border bg-card px-2 py-3 md:px-3 md:py-4 text-center shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-md"
+                  className="group flex w-full flex-col items-center rounded-lg border border-border bg-card p-2 text-center transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-sm"
                 >
-                  <Avatar className="h-12 w-12 md:h-16 md:w-16 ring-2 ring-border transition-all group-hover:ring-primary/40">
+                  <Avatar className="h-9 w-9 md:h-12 md:w-12 ring-1 ring-border transition-all group-hover:ring-primary/40">
                     <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
-                    <AvatarFallback className="bg-secondary text-xs font-bold">
+                    <AvatarFallback className="bg-secondary text-[9px] font-bold">
                       {getLocalizedName(item).substring(0, 2)}
                     </AvatarFallback>
                   </Avatar>
-                  <p className="mt-2 line-clamp-1 text-xs md:text-sm font-bold text-foreground">
+                  <p className="mt-1 line-clamp-1 text-[10px] md:text-xs font-bold text-foreground">
                     {getLocalizedName(item)}
                   </p>
-                  <div className="mt-1 flex items-center gap-1">
-                    <Star className={cn("h-3 w-3 fill-current", getRatingColor(item.rating))} />
-                    <span className={cn("text-xs font-bold", getRatingColor(item.rating))}>{item.rating.toFixed(1)}</span>
-                    <span className="text-[10px] text-muted-foreground">
-                      ({item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")})
-                    </span>
-                  </div>
-                  <div className="mt-2 flex items-center justify-center gap-2 text-muted-foreground">
-                    <span className="flex items-center gap-0.5 text-[10px]">
-                      <Heart className="h-2.5 w-2.5" />{formatNumber(item.likes || 0)}
-                    </span>
-                    <span className="flex items-center gap-0.5 text-[10px]">
-                      <Share2 className="h-2.5 w-2.5" />{formatNumber(item.shares || 0)}
-                    </span>
-                    <span className="flex items-center gap-0.5 text-[10px]">
-                      <MessageCircle className="h-2.5 w-2.5" />{formatNumber(item.replies || 0)}
-                    </span>
-                  </div>
+                  <span className="text-[9px] text-muted-foreground mt-0.5">
+                    {item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")} {t("journey.reviews")}
+                  </span>
                 </button>
               ))}
             </div>
@@ -471,16 +444,16 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
         </div>
       )}
 
-      {/* ── Journey Nudge CTA ────────────────────────────── */}
+      {/* ── Journey Nudge — benefit-driven CTA ───────────── */}
       {nextStep && (
-        <div className="border-t border-border px-4 py-2 md:px-6 md:py-2.5 flex items-center justify-between">
-          <span className="text-[11px] md:text-xs text-muted-foreground">
+        <div className="border-t border-border px-3 py-1.5 md:px-5 flex items-center justify-between">
+          <span className="text-[10px] text-muted-foreground">
             {t(`journey.${activeStep}.nudge`)}
           </span>
           <button
             onClick={() => { setActiveStep(nextStep.key); setExpandedCategory(null); onInteraction?.(); }}
             className={cn(
-              "flex items-center gap-1 text-[11px] md:text-xs font-bold transition-colors underline underline-offset-2",
+              "flex items-center gap-0.5 text-[10px] font-bold transition-colors",
               nextStep.textColor, "hover:opacity-80"
             )}
           >
