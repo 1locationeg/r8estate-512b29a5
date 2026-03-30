@@ -107,7 +107,7 @@ export const CollectiveBuyerProtection = () => {
             </p>
 
             {/* Avatar row */}
-            <div className="flex items-center gap-2.5">
+            <div ref={buyerCount.ref} className="flex items-center gap-2.5">
               <div className="flex -space-x-2 rtl:space-x-reverse">
                 {avatars.map((src, i) => (
                   <img
