@@ -223,7 +223,6 @@ export function GuestTimerExpiredModal() {
             </div>
           </div>
         </div>
-  const [testimonialIdx, setTestimonialIdx] = useState(0);
 
         {/* ── Testimonials Carousel ── */}
         <div className="px-4 pt-3 pb-1">
