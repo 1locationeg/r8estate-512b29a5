@@ -200,7 +200,7 @@ export function GuestTimerExpiredModal() {
               <Lock className="h-5 w-5" style={{ color: 'hsl(45,96%,54%)' }} />
             </div>
             <h2 className="text-lg font-extrabold text-white tracking-tight mb-0.5 whitespace-pre-line">
-              {isAr ? 'احمِ استثمارك العقاري' : 'Protect Your Investment'}
+              {isAr ? "احمِ استثمارك العقاري\n" : "Protect Your Investment\n"}
             </h2>
             <p className="text-white/60 text-[11px] leading-relaxed max-w-[260px] mx-auto mb-3">
               {isAr ? 'سجّل مجاناً لحماية استثمارك ومقارنة المطورين' : 'Sign up free to protect your investment — compare developers & reviews.'}
