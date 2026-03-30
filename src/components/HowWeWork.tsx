@@ -13,15 +13,9 @@ const HowWeWork = () => {
   const isRtl = i18n.language === "ar";
 
   return (
-    <section className="w-full py-8 md:py-12" dir={isRtl ? "rtl" : "ltr"}>
+    <section className="w-full py-4 md:py-6" dir={isRtl ? "rtl" : "ltr"}>
       {/* Headline */}
-      <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-10">
-        <div className="inline-flex items-center gap-1.5 bg-primary/10 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/20">
-          <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse-glow" />
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
-            {t("howWeWork.subtitle")}
-          </span>
-        </div>
+      <div className="flex flex-col items-center gap-1.5 mb-5 md:mb-6">
         <h2
           className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer"
         >
