@@ -210,7 +210,7 @@ export function GuestTimerExpiredModal() {
               {isAr ? "احمِ استثمارك العقاري\n" : "Protect Your Investment\n"}
             </h2>
             <p className="text-white/60 text-[11px] leading-relaxed max-w-[260px] mx-auto mb-3">
-              {isAr ? 'سجّل مجاناً لحماية استثمارك ومقارنة المطورين' : 'Sign up free to protect your investment — compare developers & reviews.'}
+              {isAr ? 'ملايين على المحك. اعرف من تثق به قبل توقيع أي شيء.' : 'Millions at stake. Know who to trust before you sign anything.'}
             </p>
             <div className="flex flex-wrap justify-center gap-1.5">
               {PILLS.map((pill, i) => (
