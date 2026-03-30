@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Search, BrainCircuit, BadgeCheck, Sparkles } from "lucide-react";
+import { Search, BrainCircuit, BadgeCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const steps = [
