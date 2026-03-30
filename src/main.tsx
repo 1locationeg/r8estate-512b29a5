@@ -17,11 +17,32 @@ const isPreviewHost =
   window.location.hostname.includes("lovableproject.com") ||
   window.location.hostname.includes("lovable.app");
 
+const PREVIEW_SW_RESET_KEY = "__preview_sw_reset__";
+
 if (isPreviewHost || isInIframe) {
-  // Unregister any existing service workers in preview/iframe contexts
-  navigator.serviceWorker?.getRegistrations().then((registrations) => {
-    registrations.forEach((r) => r.unregister());
-  });
+  // Aggressively clean SW + caches in preview/iframe contexts so latest code is always shown
+  void (async () => {
+    const registrations =
+      "serviceWorker" in navigator
+        ? await navigator.serviceWorker.getRegistrations()
+        : [];
+
+    const hadActiveServiceWorker =
+      registrations.length > 0 || Boolean(navigator.serviceWorker?.controller);
+
+    await Promise.all(registrations.map((registration) => registration.unregister()));
+
+    if ("caches" in window) {
+      const cacheKeys = await caches.keys();
+      await Promise.all(cacheKeys.map((cacheKey) => caches.delete(cacheKey)));
+    }
+
+    // One-time hard refresh after cleanup to immediately escape stale SW-controlled render
+    if (hadActiveServiceWorker && !sessionStorage.getItem(PREVIEW_SW_RESET_KEY)) {
+      sessionStorage.setItem(PREVIEW_SW_RESET_KEY, "1");
+      window.location.reload();
+    }
+  })();
 } else {
   // Only register SW in production (not preview/iframe)
   import("virtual:pwa-register").then(({ registerSW }) => {
