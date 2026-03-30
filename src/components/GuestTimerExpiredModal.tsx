@@ -225,14 +225,7 @@ export function GuestTimerExpiredModal() {
         </div>
 
         {/* ── Testimonials Carousel ── */}
-        <div className="px-4 pt-3 pb-1">
-          <div className="flex items-center gap-2 mb-2">
-            <div className="h-px flex-1 bg-border" />
-            <span className="text-[9px] font-bold uppercase tracking-[0.1em] text-muted-foreground whitespace-nowrap">
-              {isAr ? 'ماذا يقول المشترون' : 'What buyers say'}
-            </span>
-            <div className="h-px flex-1 bg-border" />
-          </div>
+        <div className="px-4 pt-1 pb-0">
           {(() => {
             const t = TESTIMONIALS[testimonialIdx];
             return (
