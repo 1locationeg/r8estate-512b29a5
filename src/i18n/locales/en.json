@@ -1386,5 +1386,11 @@
   "pageHeader": {
     "home": "Home",
     "back": "Go back"
+  },
+  "station": {
+    "research": "Research",
+    "choose": "Choose",
+    "finance": "Finance",
+    "protect": "Protect"
   }
 }

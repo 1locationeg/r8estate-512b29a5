@@ -135,8 +135,9 @@ export const PageHeader = ({
                 })}
               </BreadcrumbList>
             </Breadcrumb>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
