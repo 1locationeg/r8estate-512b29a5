@@ -74,6 +74,12 @@ export default {
           DEFAULT: "hsl(var(--coin))",
           foreground: "hsl(var(--coin-foreground))",
         },
+        journey: {
+          research: "hsl(var(--journey-research))",
+          choose: "hsl(var(--journey-choose))",
+          finance: "hsl(var(--journey-finance))",
+          protect: "hsl(var(--journey-protect))",
+        },
         sidebar: {
           bg: "hsl(var(--sidebar-bg))",
           foreground: "hsl(var(--sidebar-foreground))",
