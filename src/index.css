@@ -71,6 +71,12 @@
     --coin: 38 91% 55%;
     --coin-foreground: 30 80% 20%;
 
+    /* Journey station colors */
+    --journey-research: 203 81% 21%;
+    --journey-choose: 45 96% 54%;
+    --journey-finance: 180 65% 35%;
+    --journey-protect: 152 60% 38%;
+
     /* Page background — light gray for PWA feel */
     --page-bg: 210 20% 98%;
 
