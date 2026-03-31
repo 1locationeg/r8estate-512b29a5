@@ -12,6 +12,7 @@ import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const Reviews = () => {
