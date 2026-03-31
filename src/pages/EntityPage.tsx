@@ -92,7 +92,7 @@ const EntityPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <StationPageWrapper className="min-h-screen bg-background pb-20">
       <PageHeader
         title={entity.name}
         breadcrumbs={[

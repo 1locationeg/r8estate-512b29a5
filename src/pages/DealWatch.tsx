@@ -80,7 +80,7 @@ const DealWatch = () => {
   const enrichedDeals = filtered.map((d) => ({ ...d, yesVotes: voteData[d.id]?.yes || 0, noVotes: voteData[d.id]?.no || 0 }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         <PageHeader
           title={t("dealWatch.title", "Deal Watch")}

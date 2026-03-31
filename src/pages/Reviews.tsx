@@ -87,7 +87,7 @@ const Reviews = () => {
   }, [allReviews]);
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={t("reviews.totalReviews", "Reviews")}
         breadcrumbs={[{ label: t("reviews.totalReviews", "Reviews") }]}

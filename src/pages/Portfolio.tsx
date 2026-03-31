@@ -210,7 +210,7 @@ const Portfolio = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={t("portfolio.myActivity", "My Activity")}
         breadcrumbs={[{ label: t("portfolio.myActivity", "My Activity") }]}

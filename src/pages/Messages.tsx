@@ -70,7 +70,7 @@ const Messages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       {/* Desktop: two-panel */}
       <div className="hidden md:flex h-screen max-w-6xl mx-auto border-x border-border">
         {/* Left panel */}

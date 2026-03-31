@@ -71,7 +71,7 @@ const Leaderboard = () => {
   const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <PageHeader
         title={t("leaderboard.title", "Leaderboard")}
         breadcrumbs={[{ label: t("leaderboard.title", "Leaderboard") }]}

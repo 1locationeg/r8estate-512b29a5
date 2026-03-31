@@ -309,7 +309,7 @@ const LaunchWatch = () => {
   const ratingLaunch = launches.find((l) => l.id === ratingLaunchId);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         <div className="space-y-2">
           <PageHeader

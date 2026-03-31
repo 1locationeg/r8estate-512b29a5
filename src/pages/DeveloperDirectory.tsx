@@ -16,7 +16,7 @@ const DeveloperDirectory = () => {
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <PageHeader
         title={t("directory.majorDevelopers", "Developer Directory")}
         breadcrumbs={[{ label: t("directory.majorDevelopers", "Developer Directory") }]}

@@ -128,7 +128,7 @@ const Community = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/50">
+    <StationPageWrapper className="min-h-screen bg-muted/50">
       <div className="max-w-[680px] mx-auto px-4 py-4 space-y-3">
         <PageHeader
           title={t("community.title", "Community")}
