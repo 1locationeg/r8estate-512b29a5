@@ -342,6 +342,12 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
             const isActive = expandedCategory !== null && stepCategories.some(c => c.labelKey === expandedCategory);
             const colors = STEP_COLORS[step.key];
             const activeColors = STEP_ACTIVE[step.key];
+            const BADGE_BG: Record<JourneyStepKey, string> = {
+              research: "bg-journey-research",
+              choose: "bg-journey-choose",
+              finance: "bg-journey-finance",
+              protect: "bg-journey-protect",
+            };
 
             return (
               <div key={step.key} className="flex items-center flex-1 last:flex-none">
@@ -353,31 +359,56 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
                       setExpandedCategory(expandedCategory === firstCat ? null : firstCat);
                     }
                   }}
-                  className="flex flex-col items-center gap-1.5 group"
+                  className="flex flex-col items-center gap-1 group cursor-pointer"
                 >
-                  {/* Circle icon */}
-                  <div className={cn(
-                    "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center ring-[1.5px] transition-all duration-300",
-                    isActive
-                      ? cn(activeColors.bg, activeColors.ring, colors.glow)
-                      : cn(colors.bg, colors.ring),
-                    "group-hover:scale-105",
-                    colors.text
-                  )}>
-                    {step.icon}
+                  {/* Circle icon with numbered badge */}
+                  <div className="relative">
+                    <div className={cn(
+                      "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center ring-2 transition-all duration-300",
+                      isActive
+                        ? cn(activeColors.bg, activeColors.ring, colors.glow, "scale-110")
+                        : cn(colors.bg, colors.ring),
+                      "group-hover:scale-110 group-active:scale-95",
+                      colors.text
+                    )}>
+                      {step.icon}
+                    </div>
+                    {/* Numbered badge */}
+                    <span className={cn(
+                      "absolute -top-1 -right-1 w-4.5 h-4.5 rounded-full text-[9px] font-bold text-white flex items-center justify-center shadow-sm",
+                      BADGE_BG[step.key]
+                    )}>
+                      {stepIdx + 1}
+                    </span>
+                    {/* Pulse ring on active */}
+                    {isActive && (
+                      <span className={cn(
+                        "absolute inset-0 rounded-full animate-ping opacity-20",
+                        BADGE_BG[step.key]
+                      )} />
+                    )}
                   </div>
-                  {/* Label */}
+                  {/* Label — always in station color */}
                   <span className={cn(
-                    "text-[10px] font-semibold transition-colors",
-                    isActive ? colors.text : "text-muted-foreground"
+                    "text-[10px] font-bold transition-colors",
+                    colors.text
                   )}>
                     {t(`journey.${step.key}.label`)}
                   </span>
+                  {/* Benefit subtitle / "You are here" */}
+                  <span className={cn(
+                    "text-[8px] leading-tight max-w-[60px] text-center",
+                    isActive ? cn(colors.text, "font-semibold") : "text-muted-foreground"
+                  )}>
+                    {isActive ? t("journey.youAreHere") : t(`journey.${step.key}.shortBenefit`)}
+                  </span>
                 </button>
 
-                {/* Connector line */}
+                {/* Arrow connector */}
                 {!isLast && (
-                  <div className="flex-1 h-px mx-1.5 -mt-4 bg-gradient-to-r from-border/60 via-border/30 to-border/60" />
+                  <div className="flex-1 flex items-center justify-center -mt-5">
+                    <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/40" />
+                  </div>
                 )}
               </div>
             );
