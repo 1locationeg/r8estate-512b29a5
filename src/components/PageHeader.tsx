@@ -33,8 +33,23 @@ export const PageHeader = ({
   showBack = true,
 }: PageHeaderProps) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
+  const station = getStationForRoute(pathname);
+
+  const BADGE_TEXT: Record<string, string> = {
+    research: "text-journey-research",
+    choose: "text-journey-choose",
+    finance: "text-journey-finance",
+    protect: "text-journey-protect",
+  };
+  const BADGE_BG: Record<string, string> = {
+    research: "bg-journey-research/10",
+    choose: "bg-journey-choose/10",
+    finance: "bg-journey-finance/10",
+    protect: "bg-journey-protect/10",
+  };
 
   const BackArrow = isRTL ? ChevronRight : ChevronLeft;
 
