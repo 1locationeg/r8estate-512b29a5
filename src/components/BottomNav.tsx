@@ -42,7 +42,7 @@ export const BottomNav = () => {
           <button
             onClick={() => navigate("/reviews")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isReviews ? "text-primary" : "text-muted-foreground"
+              isReviews ? activeColor : "text-muted-foreground"
             }`}
           >
             <MessageSquare className="h-5 w-5" strokeWidth={isReviews ? 2.5 : 2} />
