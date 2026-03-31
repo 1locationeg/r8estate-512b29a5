@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Home, ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -10,6 +10,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getStationForRoute } from "@/lib/journeyStations";
+import { MiniJourneyArc } from "@/components/MiniJourneyArc";
+import { cn } from "@/lib/utils";
 
 export interface BreadcrumbEntry {
   label: string;
@@ -30,8 +33,23 @@ export const PageHeader = ({
   showBack = true,
 }: PageHeaderProps) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
+  const station = getStationForRoute(pathname);
+
+  const BADGE_TEXT: Record<string, string> = {
+    research: "text-journey-research",
+    choose: "text-journey-choose",
+    finance: "text-journey-finance",
+    protect: "text-journey-protect",
+  };
+  const BADGE_BG: Record<string, string> = {
+    research: "bg-journey-research/10",
+    choose: "bg-journey-choose/10",
+    finance: "bg-journey-finance/10",
+    protect: "bg-journey-protect/10",
+  };
 
   const BackArrow = isRTL ? ChevronRight : ChevronLeft;
 
@@ -60,10 +78,17 @@ export const PageHeader = ({
             </button>
           )}
 
-          {/* Title */}
-          <h1 className="text-base font-bold text-foreground truncate flex-1">
-            {title}
-          </h1>
+          {/* Title + Station Badge */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            <h1 className="text-base font-bold text-foreground truncate">
+              {title}
+            </h1>
+            {station && (
+              <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0", BADGE_BG[station.key], BADGE_TEXT[station.key])}>
+                {station.emoji} {t(station.labelKey)}
+              </span>
+            )}
+          </div>
 
           {/* Right slot */}
           {rightSlot && (
@@ -73,9 +98,11 @@ export const PageHeader = ({
           )}
         </div>
 
-        {/* Breadcrumbs */}
-        {breadcrumbs && breadcrumbs.length > 0 && (
-          <div className="pb-2 -mt-1">
+        {/* Mini Journey Arc + Breadcrumbs */}
+        <div className="flex items-center gap-3 pb-2 -mt-1">
+          <MiniJourneyArc />
+          {breadcrumbs && breadcrumbs.length > 0 && (
+            <div className="border-l border-border/50 pl-3">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -108,8 +135,9 @@ export const PageHeader = ({
                 })}
               </BreadcrumbList>
             </Breadcrumb>
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

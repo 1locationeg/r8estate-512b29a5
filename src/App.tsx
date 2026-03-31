@@ -12,6 +12,7 @@ import { GuestTimerBanner } from "@/components/GuestTimerBanner";
 import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingChatFAB } from "./components/FloatingChatFAB";
+import { JourneyStripe } from "./components/JourneyStripe";
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
 import { TrackingManager } from "@/components/TrackingManager";
@@ -138,6 +139,7 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
+      <JourneyStripe />
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>

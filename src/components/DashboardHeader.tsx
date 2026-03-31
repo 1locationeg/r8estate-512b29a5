@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Menu, Home, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { NotificationBell } from '@/components/NotificationBell';
@@ -8,6 +8,9 @@ import { MobileNavSheet } from '@/components/MobileNavSheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { CoinCounter } from '@/components/CoinCounter';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
+import { getStationForRoute } from '@/lib/journeyStations';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface DashboardHeaderProps {
   title: string;
@@ -17,10 +20,26 @@ interface DashboardHeaderProps {
 
 export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHeaderProps) => {
   const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { t } = useTranslation();
   const { role, signOut, user } = useAuth();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const isBuyer = role === 'buyer' || role === 'user';
   const gamification = useBuyerGamification();
+  const station = getStationForRoute(pathname);
+
+  const BADGE_TEXT: Record<string, string> = {
+    research: "text-journey-research",
+    choose: "text-journey-choose",
+    finance: "text-journey-finance",
+    protect: "text-journey-protect",
+  };
+  const BADGE_BG: Record<string, string> = {
+    research: "bg-journey-research/10",
+    choose: "bg-journey-choose/10",
+    finance: "bg-journey-finance/10",
+    protect: "bg-journey-protect/10",
+  };
 
   const getDashboardRoute = () => {
     if (role === 'admin') return '/admin';
@@ -76,6 +95,11 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
                 <>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0 rtl-flip" />
                   <span className="text-foreground font-semibold truncate">{title}</span>
+                  {station && (
+                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ml-1.5", BADGE_BG[station.key], BADGE_TEXT[station.key])}>
+                      {station.emoji} {t(station.labelKey)}
+                    </span>
+                  )}
                 </>
               )}
             </nav>

@@ -1429,5 +1429,11 @@
   "pageHeader": {
     "home": "الرئيسية",
     "back": "رجوع"
+  },
+  "station": {
+    "research": "ابحث",
+    "choose": "اختر",
+    "finance": "موّل",
+    "protect": "احمِ"
   }
 }
