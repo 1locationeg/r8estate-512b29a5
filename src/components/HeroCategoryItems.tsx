@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Star, Heart, Share2, MessageCircle, ChevronRight, ChevronDown, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
+import { ChevronRight, ChevronDown, Search, Home, Banknote, ShieldCheck, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -35,7 +35,7 @@ interface Category {
 
 export const categories: Category[] = [
   {
-    icon: <LayoutGrid className="w-4 h-4 text-primary" />,
+    icon: <LayoutGrid className="w-4 h-4" />,
     labelKey: "categories.units",
     items: [
       { id: "studio", nameEn: "Studio", nameAr: "ستوديو", avatar: generateAvatar("Studio", "category"), rating: 4.2, reviewCount: 156, likes: 342, shares: 89, replies: 45, launchDate: "2025-01-15", trendScore: 78 },
@@ -49,7 +49,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Smartphone className="w-4 h-4 text-accent" />,
+    icon: <Smartphone className="w-4 h-4" />,
     labelKey: "categories.apps",
     items: [
       { id: "nawy", nameEn: "Nawy App", nameAr: "تطبيق ناوي", avatar: brandLogo("Nawy", "nawy.com"), rating: 4.6, reviewCount: 1250, likes: 3456, shares: 890, replies: 456, launchDate: "2024-03-10", trendScore: 97 },
@@ -59,7 +59,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <BarChart3 className="w-4 h-4 text-brand-red" />,
+    icon: <BarChart3 className="w-4 h-4" />,
     labelKey: "categories.shares",
     items: [
       { id: "orascom", nameEn: "Orascom Development", nameAr: "أوراسكوم للتنمية", avatar: brandLogo("Orascom", "orascomdh.com"), rating: 4.2, reviewCount: 456, likes: 1234, shares: 345, replies: 167, launchDate: "2023-05-01", trendScore: 60 },
@@ -69,7 +69,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Globe className="w-4 h-4 text-primary" />,
+    icon: <Globe className="w-4 h-4" />,
     labelKey: "categories.platforms",
     items: [
       { id: "aqarmap", nameEn: "Aqarmap", nameAr: "عقار ماب", avatar: brandLogo("Aqarmap", "aqarmap.com.eg"), rating: 4.5, reviewCount: 2340, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-01-01", trendScore: 88 },
@@ -79,7 +79,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Users className="w-4 h-4 text-accent" />,
+    icon: <Users className="w-4 h-4" />,
     labelKey: "categories.brokers",
     items: [
       { id: "the-address", nameEn: "The Address", nameAr: "ذا أدرس", avatar: brandLogo("The Address", "theaddress.ae"), rating: 4.7, reviewCount: 456, likes: 1234, shares: 345, replies: 167, launchDate: "2023-04-10", trendScore: 81 },
@@ -91,7 +91,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <CalendarDays className="w-4 h-4 text-brand-red" />,
+    icon: <CalendarDays className="w-4 h-4" />,
     labelKey: "categories.exhibitions",
     items: [
       { id: "cityscape", nameEn: "Cityscape", nameAr: "سيتي سكيب", avatar: brandLogo("Cityscape", "cityscapeglobal.com"), rating: 4.8, reviewCount: 3456, likes: 8901, shares: 2345, replies: 1234, launchDate: "2024-04-15", trendScore: 99 },
@@ -101,7 +101,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Tv className="w-4 h-4 text-primary" />,
+    icon: <Tv className="w-4 h-4" />,
     labelKey: "categories.channels",
     items: [
       { id: "property-insider", nameEn: "Property Insider", nameAr: "بروبرتي إنسايدر", avatar: brandLogo("Property Insider", "propertyinsider.com"), rating: 4.6, reviewCount: 5678, likes: 12345, shares: 3456, replies: 1567, launchDate: "2022-08-01", trendScore: 94 },
@@ -110,7 +110,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Scale className="w-4 h-4 text-accent" />,
+    icon: <Scale className="w-4 h-4" />,
     labelKey: "categories.lawFirms",
     items: [
       { id: "diyaa-eldin", nameEn: "Diyaa Eldin", nameAr: "ضياء الدين", avatar: brandLogo("Diyaa Eldin", "diyaaeldin.com"), rating: 4.6, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-03-01", trendScore: 80 },
@@ -120,7 +120,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <DollarSign className="w-4 h-4 text-brand-red" />,
+    icon: <DollarSign className="w-4 h-4" />,
     labelKey: "categories.valuation",
     items: [
       { id: "jll-val", nameEn: "JLL Valuation", nameAr: "جيه إل إل للتقييم", avatar: brandLogo("JLL", "jll.com"), rating: 4.6, reviewCount: 876, likes: 2345, shares: 567, replies: 234, launchDate: "2023-06-01", trendScore: 82 },
@@ -129,7 +129,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <GraduationCap className="w-4 h-4 text-primary" />,
+    icon: <GraduationCap className="w-4 h-4" />,
     labelKey: "categories.training",
     items: [
       { id: "reidin-academy", nameEn: "REIDIN Academy", nameAr: "أكاديمية ريدن", avatar: brandLogo("REIDIN", "reidin.com"), rating: 4.7, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-09-10", trendScore: 88 },
@@ -138,7 +138,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Gavel className="w-4 h-4 text-accent" />,
+    icon: <Gavel className="w-4 h-4" />,
     labelKey: "categories.auctions",
     items: [
       { id: "auction-house", nameEn: "Auction House Egypt", nameAr: "دار المزادات مصر", avatar: brandLogo("Auction House", "auctionhouseegypt.com"), rating: 4.4, reviewCount: 567, likes: 1567, shares: 389, replies: 156, launchDate: "2024-01-20", trendScore: 76 },
@@ -147,7 +147,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Landmark className="w-4 h-4 text-brand-red" />,
+    icon: <Landmark className="w-4 h-4" />,
     labelKey: "categories.mortgage",
     items: [
       { id: "nbe-mortgage", nameEn: "NBE Mortgage", nameAr: "تمويل البنك الأهلي", avatar: brandLogo("NBE", "nbe.com.eg"), rating: 4.3, reviewCount: 2345, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-01-01", trendScore: 79 },
@@ -156,7 +156,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <FlaskConical className="w-4 h-4 text-primary" />,
+    icon: <FlaskConical className="w-4 h-4" />,
     labelKey: "categories.research",
     items: [
       { id: "jll-research", nameEn: "JLL Research", nameAr: "أبحاث جيه إل إل", avatar: brandLogo("JLL", "jll.com"), rating: 4.7, reviewCount: 1567, likes: 4321, shares: 987, replies: 456, launchDate: "2023-01-01", trendScore: 90 },
@@ -165,7 +165,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Receipt className="w-4 h-4 text-accent" />,
+    icon: <Receipt className="w-4 h-4" />,
     labelKey: "categories.tax",
     items: [
       { id: "pwc-tax", nameEn: "PwC Tax Advisory", nameAr: "بي دبليو سي للضرائب", avatar: brandLogo("PwC", "pwc.com"), rating: 4.6, reviewCount: 987, likes: 2876, shares: 678, replies: 312, launchDate: "2023-01-10", trendScore: 81 },
@@ -174,7 +174,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Building2 className="w-4 h-4 text-brand-red" />,
+    icon: <Building2 className="w-4 h-4" />,
     labelKey: "categories.management",
     items: [
       { id: "cbre-mgmt", nameEn: "CBRE Management", nameAr: "سي بي آر إي للإدارة", avatar: brandLogo("CBRE", "cbre.com"), rating: 4.5, reviewCount: 1234, likes: 3456, shares: 789, replies: 345, launchDate: "2023-03-01", trendScore: 84 },
@@ -183,7 +183,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Key className="w-4 h-4 text-primary" />,
+    icon: <Key className="w-4 h-4" />,
     labelKey: "categories.leasing",
     items: [
       { id: "better-home", nameEn: "Better Home", nameAr: "بيتر هوم", avatar: brandLogo("Better Home", "betterhome.ae"), rating: 4.4, reviewCount: 2340, likes: 5678, shares: 1234, replies: 567, launchDate: "2022-05-01", trendScore: 82 },
@@ -192,7 +192,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <Link className="w-4 h-4 text-accent" />,
+    icon: <Link className="w-4 h-4" />,
     labelKey: "categories.blockchain",
     items: [
       { id: "propy", nameEn: "Propy", nameAr: "بروبي", avatar: brandLogo("Propy", "propy.com"), rating: 4.3, reviewCount: 567, likes: 1567, shares: 389, replies: 156, launchDate: "2024-02-10", trendScore: 91 },
@@ -201,7 +201,7 @@ export const categories: Category[] = [
     ],
   },
   {
-    icon: <MapPin className="w-4 h-4 text-brand-red" />,
+    icon: <MapPin className="w-4 h-4" />,
     labelKey: "categories.lands",
     items: [
       { id: "nuca", nameEn: "NUCA", nameAr: "هيئة المجتمعات العمرانية", avatar: brandLogo("NUCA", "newcities.gov.eg"), rating: 4.2, reviewCount: 3456, likes: 8901, shares: 2345, replies: 1234, launchDate: "2022-01-01", trendScore: 80 },
@@ -226,50 +226,64 @@ type JourneyStepKey = "research" | "choose" | "finance" | "protect";
 
 interface JourneyStep {
   key: JourneyStepKey;
-  color: string;
-  activeColor: string;
-  textColor: string;
-  bgMuted: string;
+  icon: React.ReactNode;
   categoryKeys: string[];
-  emoji: string;
 }
+
+const STEP_COLORS: Record<JourneyStepKey, { bg: string; ring: string; text: string; glow: string }> = {
+  research: {
+    bg: "bg-journey-research/10",
+    ring: "ring-journey-research/30",
+    text: "text-journey-research",
+    glow: "shadow-[0_0_12px_hsl(var(--journey-research)/0.25)]",
+  },
+  choose: {
+    bg: "bg-journey-choose/10",
+    ring: "ring-journey-choose/30",
+    text: "text-journey-choose",
+    glow: "shadow-[0_0_12px_hsl(var(--journey-choose)/0.25)]",
+  },
+  finance: {
+    bg: "bg-journey-finance/10",
+    ring: "ring-journey-finance/30",
+    text: "text-journey-finance",
+    glow: "shadow-[0_0_12px_hsl(var(--journey-finance)/0.25)]",
+  },
+  protect: {
+    bg: "bg-journey-protect/10",
+    ring: "ring-journey-protect/30",
+    text: "text-journey-protect",
+    glow: "shadow-[0_0_12px_hsl(var(--journey-protect)/0.25)]",
+  },
+};
+
+const STEP_ACTIVE: Record<JourneyStepKey, { bg: string; ring: string }> = {
+  research: { bg: "bg-journey-research/20", ring: "ring-journey-research" },
+  choose: { bg: "bg-journey-choose/20", ring: "ring-journey-choose" },
+  finance: { bg: "bg-journey-finance/20", ring: "ring-journey-finance" },
+  protect: { bg: "bg-journey-protect/20", ring: "ring-journey-protect" },
+};
 
 const journeySteps: JourneyStep[] = [
   {
     key: "research",
-    color: "bg-primary/20",
-    activeColor: "bg-primary",
-    textColor: "text-primary",
-    bgMuted: "bg-primary/5",
+    icon: <Search className="w-5 h-5" />,
     categoryKeys: ["categories.platforms", "categories.channels", "categories.research", "categories.exhibitions", "categories.apps", "categories.training"],
-    emoji: "🔍",
   },
   {
     key: "choose",
-    color: "bg-accent/20",
-    activeColor: "bg-accent",
-    textColor: "text-accent",
-    bgMuted: "bg-accent/5",
+    icon: <Home className="w-5 h-5" />,
     categoryKeys: ["categories.units", "categories.brokers", "categories.shares", "categories.lands", "categories.leasing"],
-    emoji: "🏠",
   },
   {
     key: "finance",
-    color: "bg-[hsl(var(--coin))]/20",
-    activeColor: "bg-[hsl(var(--coin))]",
-    textColor: "text-[hsl(var(--coin))]",
-    bgMuted: "bg-[hsl(var(--coin))]/5",
+    icon: <Banknote className="w-5 h-5" />,
     categoryKeys: ["categories.mortgage", "categories.valuation", "categories.auctions", "categories.blockchain"],
-    emoji: "💰",
   },
   {
     key: "protect",
-    color: "bg-brand-red/20",
-    activeColor: "bg-brand-red",
-    textColor: "text-brand-red",
-    bgMuted: "bg-brand-red/5",
+    icon: <ShieldCheck className="w-5 h-5" />,
     categoryKeys: ["categories.lawFirms", "categories.tax", "categories.management"],
-    emoji: "🛡️",
   },
 ];
 
@@ -303,18 +317,16 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     setExpandedCategory(expandedCategory === labelKey ? null : labelKey);
   };
 
-  const isTrending = (cat: Category) => cat.items.some(i => (i.trendScore || 0) > 85);
-
   return (
-    <div className="w-full bg-card border-t border-border overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
+    <div className="w-full bg-card/80 backdrop-blur-sm border-t border-border/50 overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
       {/* ── Title ─────────────────────────────────────── */}
       <div className="flex items-center justify-between px-4 pt-3 pb-1">
-        <h3 className="text-[11px] md:text-xs font-extrabold uppercase tracking-widest text-foreground/80">
+        <h3 className="text-[11px] md:text-xs font-bold tracking-wide text-foreground/70">
           {t("journey.corridorTitle")}
         </h3>
         <button
           onClick={() => navigate("/categories")}
-          className="text-[10px] font-semibold text-primary hover:underline flex items-center gap-0.5"
+          className="text-[10px] font-medium text-primary hover:underline flex items-center gap-0.5 opacity-70 hover:opacity-100 transition-opacity"
         >
           {t("journey.continueJourney")}
           <ChevronRight className="w-3 h-3" />
@@ -322,82 +334,50 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
       </div>
 
       {/* ── Horizontal step indicator ────────────────── */}
-      <div className="px-3 pt-1 pb-3">
-        <div className="flex items-center justify-between w-full max-w-lg mx-auto">
+      <div className="px-4 pt-1 pb-3">
+        <div className="flex items-center justify-between w-full max-w-md mx-auto">
           {journeySteps.map((step, stepIdx) => {
             const isLast = stepIdx === journeySteps.length - 1;
             const stepCategories = categories.filter(c => step.categoryKeys.includes(c.labelKey));
-            const totalItems = stepCategories.reduce((s, c) => s + c.items.length, 0);
             const isActive = expandedCategory !== null && stepCategories.some(c => c.labelKey === expandedCategory);
-
-            // Step-specific ring/bg colors
-            const ringColors: Record<JourneyStepKey, string> = {
-              research: "ring-primary/40 bg-primary/10",
-              choose: "ring-accent/40 bg-accent/10",
-              finance: "ring-[hsl(var(--coin))]/40 bg-[hsl(var(--coin))]/10",
-              protect: "ring-brand-red/40 bg-brand-red/10",
-            };
-            const activeRings: Record<JourneyStepKey, string> = {
-              research: "ring-primary bg-primary/20",
-              choose: "ring-accent bg-accent/20",
-              finance: "ring-[hsl(var(--coin))] bg-[hsl(var(--coin))]/20",
-              protect: "ring-brand-red bg-brand-red/20",
-            };
-            const badgeBg: Record<JourneyStepKey, string> = {
-              research: "bg-primary text-primary-foreground",
-              choose: "bg-accent text-accent-foreground",
-              finance: "bg-[hsl(var(--coin))] text-white",
-              protect: "bg-brand-red text-white",
-            };
+            const colors = STEP_COLORS[step.key];
+            const activeColors = STEP_ACTIVE[step.key];
 
             return (
               <div key={step.key} className="flex items-center flex-1 last:flex-none">
-                {/* Step circle + label */}
                 <button
                   onClick={() => {
                     onInteraction?.();
-                    // Toggle first category of this step
                     const firstCat = stepCategories[0]?.labelKey;
                     if (firstCat) {
                       setExpandedCategory(expandedCategory === firstCat ? null : firstCat);
                     }
                   }}
-                  className="flex flex-col items-center gap-1 group relative"
+                  className="flex flex-col items-center gap-1.5 group"
                 >
-                  {/* Number badge */}
-                  <div className={cn(
-                    "absolute -top-1 z-10 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold",
-                    badgeBg[step.key],
-                    isRTL ? "-left-0.5" : "-right-0.5"
-                  )}>
-                    {stepIdx + 1}
-                  </div>
                   {/* Circle icon */}
                   <div className={cn(
-                    "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center ring-2 transition-all duration-200",
-                    isActive ? activeRings[step.key] : ringColors[step.key],
-                    "group-hover:scale-105"
+                    "w-11 h-11 md:w-12 md:h-12 rounded-full flex items-center justify-center ring-[1.5px] transition-all duration-300",
+                    isActive
+                      ? cn(activeColors.bg, activeColors.ring, colors.glow)
+                      : cn(colors.bg, colors.ring),
+                    "group-hover:scale-105",
+                    colors.text
                   )}>
-                    <span className="text-xl md:text-2xl">{step.emoji}</span>
+                    {step.icon}
                   </div>
                   {/* Label */}
                   <span className={cn(
-                    "text-[10px] md:text-[11px] font-bold",
-                    isActive ? step.textColor : "text-foreground/70"
+                    "text-[10px] font-semibold transition-colors",
+                    isActive ? colors.text : "text-muted-foreground"
                   )}>
                     {t(`journey.${step.key}.label`)}
                   </span>
-                  {/* Subtitle */}
-                  <span className="text-[8px] md:text-[9px] text-muted-foreground leading-tight text-center max-w-[70px]">
-                    {t(`journey.${step.key}.benefit`)}
-                  </span>
                 </button>
 
-                {/* Arrow connector */}
+                {/* Connector line */}
                 {!isLast && (
-                  <div className="flex-1 flex items-center justify-center px-1 -mt-5">
-                    <ChevronRight className="w-4 h-4 text-muted-foreground/40" />
-                  </div>
+                  <div className="flex-1 h-px mx-1.5 -mt-4 bg-gradient-to-r from-border/60 via-border/30 to-border/60" />
                 )}
               </div>
             );
@@ -405,10 +385,9 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
         </div>
       </div>
 
-      {/* ── Expanded content below the steps ──────────── */}
+      {/* ── Expanded content ──────────────────────────── */}
       {expandedCategory && (
-        <div className="px-3 pb-3 animate-in slide-in-from-top-2 duration-200">
-          {/* Category pills for the active step */}
+        <div className="px-3 pb-3 animate-in fade-in slide-in-from-top-1 duration-200">
           {journeySteps.map((step) => {
             const stepCategories = categories.filter(c => step.categoryKeys.includes(c.labelKey));
             const hasActive = stepCategories.some(c => c.labelKey === expandedCategory);
@@ -416,28 +395,26 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
 
             return (
               <div key={step.key}>
-                {/* Pills row */}
+                {/* Pills */}
                 <div className="flex flex-wrap gap-1 mb-2">
                   {stepCategories.map((cat) => {
                     const isExpanded = expandedCategory === cat.labelKey;
-                    const trending = isTrending(cat);
                     return (
                       <button
                         key={cat.labelKey}
                         onClick={() => handlePillClick(cat.labelKey)}
                         className={cn(
-                          "flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-semibold transition-all duration-150",
+                          "flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-medium transition-all",
                           isExpanded
-                            ? "border-primary/50 bg-primary/10 text-foreground"
-                            : "border-border/50 bg-card hover:border-primary/30 text-foreground/80"
+                            ? cn("border-border bg-muted text-foreground")
+                            : "border-transparent bg-transparent hover:bg-muted/50 text-muted-foreground"
                         )}
                       >
-                        <span className="shrink-0 [&>svg]:w-3 [&>svg]:h-3">{cat.icon}</span>
+                        <span className="shrink-0 [&>svg]:w-3 [&>svg]:h-3 opacity-60">{cat.icon}</span>
                         <span className="truncate max-w-[80px]">{t(cat.labelKey)}</span>
-                        {trending && <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />}
-                        <span className="text-[8px] text-muted-foreground">{cat.items.length}</span>
+                        <span className="text-[8px] opacity-50">{cat.items.length}</span>
                         <ChevronDown className={cn(
-                          "w-2.5 h-2.5 text-muted-foreground shrink-0 transition-transform duration-150",
+                          "w-2.5 h-2.5 opacity-40 shrink-0 transition-transform",
                           isExpanded && "rotate-180"
                         )} />
                       </button>
@@ -445,25 +422,25 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
                   })}
                 </div>
 
-                {/* Expanded items grid */}
+                {/* Items grid */}
                 {stepCategories.map((cat) => {
                   if (expandedCategory !== cat.labelKey) return null;
                   return (
-                    <div key={cat.labelKey + "-items"} className="rounded-lg border border-border/50 bg-muted/30 p-2 animate-in slide-in-from-top-1 duration-150">
+                    <div key={cat.labelKey + "-items"} className="rounded-lg border border-border/40 bg-muted/20 p-2 animate-in fade-in duration-150">
                       <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
                         {cat.items.map((item) => (
                           <button
                             key={item.id}
                             onClick={() => handleItemClick(item)}
-                            className="group flex w-full flex-col items-center rounded-md border border-border bg-card p-1.5 text-center transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-sm"
+                            className="group flex w-full flex-col items-center rounded-md border border-border/30 bg-card p-1.5 text-center transition-all hover:-translate-y-0.5 hover:border-border hover:shadow-sm"
                           >
-                            <Avatar className="h-8 w-8 md:h-10 md:w-10 ring-1 ring-border transition-all group-hover:ring-primary/40">
+                            <Avatar className="h-8 w-8 md:h-9 md:w-9 ring-1 ring-border/50 transition-all group-hover:ring-primary/30">
                               <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
                               <AvatarFallback className="bg-secondary text-[8px] font-bold">
                                 {getLocalizedName(item).substring(0, 2)}
                               </AvatarFallback>
                             </Avatar>
-                            <p className="mt-1 line-clamp-1 text-[9px] md:text-[10px] font-bold text-foreground">
+                            <p className="mt-1 line-clamp-1 text-[9px] md:text-[10px] font-semibold text-foreground">
                               {getLocalizedName(item)}
                             </p>
                             <span className="text-[8px] text-muted-foreground">
