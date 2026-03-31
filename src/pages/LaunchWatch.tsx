@@ -12,6 +12,7 @@ import { LaunchCard } from "@/components/LaunchCard";
 import { LaunchRatingModal } from "@/components/LaunchRatingModal";
 import { LaunchComparePanel } from "@/components/LaunchComparePanel";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
