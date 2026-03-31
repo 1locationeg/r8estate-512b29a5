@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DealCard } from "@/components/DealCard";
 import { DealComparePanel } from "@/components/DealComparePanel";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 
 const DealWatch = () => {
