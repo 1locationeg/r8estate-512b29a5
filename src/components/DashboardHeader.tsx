@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Menu, Home, ChevronRight } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { NotificationBell } from '@/components/NotificationBell';
@@ -8,6 +8,9 @@ import { MobileNavSheet } from '@/components/MobileNavSheet';
 import { useAuth } from '@/contexts/AuthContext';
 import { CoinCounter } from '@/components/CoinCounter';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
+import { getStationForRoute } from '@/lib/journeyStations';
+import { useTranslation } from 'react-i18next';
+import { cn } from '@/lib/utils';
 
 interface DashboardHeaderProps {
   title: string;
