@@ -53,7 +53,7 @@ export const BottomNav = () => {
           <button
             onClick={() => navigate("/categories")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              location.pathname === "/categories" ? "text-primary" : "text-muted-foreground"
+              location.pathname === "/categories" ? activeColor : "text-muted-foreground"
             }`}
           >
             <LayoutGrid className="h-5 w-5" strokeWidth={location.pathname === "/categories" ? 2.5 : 2} />
