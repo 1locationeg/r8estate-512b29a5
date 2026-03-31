@@ -296,9 +296,11 @@
     "continueJourney": "Continue journey",
     "companiesReviewed": "reviewed",
     "reviews": "reviews",
+    "youAreHere": "— You are here",
     "research": {
       "label": "Research",
       "emoji": "🔍",
+      "shortBenefit": "Know who to trust",
       "headline": "Know who to trust before you visit",
       "benefit": "Save weeks of guesswork",
       "description": "Before you visit a sales office — know the platforms, channels & data buyers trust.",
@@ -308,6 +310,7 @@
     "choose": {
       "label": "Choose",
       "emoji": "🏠",
+      "shortBenefit": "Pick verified",
       "headline": "Pick confidently, skip the noise",
       "benefit": "Compare side-by-side with real ratings",
       "description": "Compare brokers, units & developers side-by-side with verified buyer ratings.",
@@ -317,6 +320,7 @@
     "finance": {
       "label": "Finance",
       "emoji": "💰",
+      "shortBenefit": "Fund safely",
       "headline": "Get the best deal, not the best pitch",
       "benefit": "Real terms from verified providers",
       "description": "Explore mortgage options, valuations & payment plans from verified providers.",
@@ -326,6 +330,7 @@
     "protect": {
       "label": "Protect",
       "emoji": "🛡️",
+      "shortBenefit": "Land secure",
       "headline": "Protect your money & your rights",
       "benefit": "Trusted legal & tax advisors",
       "description": "Get legal reviews, tax advice & property management you can trust.",
