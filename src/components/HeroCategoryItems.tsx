@@ -1,6 +1,6 @@
 import { useState, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { Star, Heart, Share2, MessageCircle, ChevronRight, ChevronDown, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin } from "lucide-react";
+import { Star, Heart, Share2, MessageCircle, ChevronRight, ChevronDown, LayoutGrid, Smartphone, BarChart3, Globe, Users, CalendarDays, Tv, Scale, DollarSign, GraduationCap, Gavel, Landmark, FlaskConical, Receipt, Building2, Key, Link, MapPin, Check } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
@@ -32,8 +32,6 @@ interface Category {
   labelKey: string;
   items: CategoryItem[];
 }
-
-// (duplicate interface removed)
 
 export const categories: Category[] = [
   {
@@ -228,10 +226,12 @@ type JourneyStepKey = "research" | "choose" | "finance" | "protect";
 
 interface JourneyStep {
   key: JourneyStepKey;
-  color: string; // tailwind bg class
+  color: string;
   activeColor: string;
   textColor: string;
-  categoryKeys: string[]; // which categories belong to this step
+  bgMuted: string;
+  categoryKeys: string[];
+  emoji: string;
 }
 
 const journeySteps: JourneyStep[] = [
@@ -240,28 +240,36 @@ const journeySteps: JourneyStep[] = [
     color: "bg-primary/20",
     activeColor: "bg-primary",
     textColor: "text-primary",
+    bgMuted: "bg-primary/5",
     categoryKeys: ["categories.platforms", "categories.channels", "categories.research", "categories.exhibitions", "categories.apps", "categories.training"],
+    emoji: "🔍",
   },
   {
     key: "choose",
     color: "bg-accent/20",
     activeColor: "bg-accent",
     textColor: "text-accent",
+    bgMuted: "bg-accent/5",
     categoryKeys: ["categories.units", "categories.brokers", "categories.shares", "categories.lands", "categories.leasing"],
+    emoji: "🏠",
   },
   {
     key: "finance",
     color: "bg-[hsl(var(--coin))]/20",
     activeColor: "bg-[hsl(var(--coin))]",
     textColor: "text-[hsl(var(--coin))]",
+    bgMuted: "bg-[hsl(var(--coin))]/5",
     categoryKeys: ["categories.mortgage", "categories.valuation", "categories.auctions", "categories.blockchain"],
+    emoji: "💰",
   },
   {
     key: "protect",
     color: "bg-brand-red/20",
     activeColor: "bg-brand-red",
     textColor: "text-brand-red",
+    bgMuted: "bg-brand-red/5",
     categoryKeys: ["categories.lawFirms", "categories.tax", "categories.management"],
+    emoji: "🛡️",
   },
 ];
 
@@ -278,34 +286,12 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
   const { getLogoOverride } = useBusinessLogo();
   const isRTL = i18n.language === "ar";
 
-  const [activeStep, setActiveStep] = useState<JourneyStepKey>("research");
   const [expandedCategory, setExpandedCategory] = useState<string | null>(null);
-
-  const currentStep = journeySteps.find(s => s.key === activeStep)!;
-  const currentStepIndex = journeySteps.findIndex(s => s.key === activeStep);
-  const nextStep = journeySteps[currentStepIndex + 1] ?? null;
-
-  // Categories for this journey step
-  const stepCategories = useMemo(() =>
-    categories.filter(c => currentStep.categoryKeys.includes(c.labelKey)),
-    [currentStep]
-  );
-
-  // Avg rating per category
-  const getCategoryAvgRating = useCallback((cat: Category) => {
-    const avg = cat.items.reduce((s, i) => s + i.rating, 0) / cat.items.length;
-    return avg;
-  }, []);
 
   const getLocalizedName = useCallback(
     (item: CategoryItem) => (isRTL ? item.nameAr : item.nameEn),
     [isRTL],
   );
-
-  const formatNumber = (num: number) => {
-    if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-    return num.toString();
-  };
 
   const handleItemClick = (item: CategoryItem) => {
     onInteraction?.();
@@ -317,151 +303,127 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
     setExpandedCategory(expandedCategory === labelKey ? null : labelKey);
   };
 
-  const expandedCategoryData = useMemo(
-    () => categories.find(c => c.labelKey === expandedCategory) ?? null,
-    [expandedCategory]
-  );
-
-  // Trending dot logic — show dot if any item in category has trendScore > 85
   const isTrending = (cat: Category) => cat.items.some(i => (i.trendScore || 0) > 85);
-
-  const totalItemsInStep = stepCategories.reduce((s, c) => s + c.items.length, 0);
 
   return (
     <div className="w-full bg-card border-t border-border overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
-      {/* ── Compact Stepper ──────────────────────────────── */}
-      <div className="flex items-center border-b border-border">
-        {journeySteps.map((step, i) => {
-          const isActive = step.key === activeStep;
-          const isPast = i < currentStepIndex;
-          return (
-            <button
-              key={step.key}
-              onClick={() => { setActiveStep(step.key); setExpandedCategory(null); onInteraction?.(); }}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-1 py-2 transition-all relative",
-                isActive ? "bg-card" : "bg-muted/20 hover:bg-muted/40"
-              )}
-            >
-              <div className={cn(
-                "absolute top-0 inset-x-0 h-[2px]",
-                isActive ? step.activeColor : isPast ? step.activeColor + " opacity-40" : "bg-transparent"
-              )} />
-              <div className={cn(
-                "w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-bold",
-                isActive
-                  ? step.activeColor + " text-primary-foreground"
-                  : isPast ? step.color + " " + step.textColor : "bg-muted text-muted-foreground"
-              )}>
-                {i + 1}
-              </div>
-              <span className={cn(
-                "text-[10px] font-semibold",
-                isActive ? step.textColor : "text-muted-foreground"
-              )}>
-                {t(`journey.${step.key}.label`)}
-              </span>
-            </button>
-          );
-        })}
-      </div>
+      {/* ── Scrollable corridor ──────────────────────────── */}
+      <div className="max-h-[60vh] overflow-y-auto relative" style={{
+        maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+        WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
+      }}>
+        <div className={cn(
+          "relative py-3",
+          isRTL ? "pr-6 pl-3 md:pr-8 md:pl-5" : "pl-6 pr-3 md:pl-8 md:pr-5"
+        )}>
+          {/* ── Vertical connector line ────────────────────── */}
+          <div className={cn(
+            "absolute top-0 bottom-0 w-px border-dashed border-primary/25",
+            isRTL
+              ? "right-[11px] md:right-[15px] border-r"
+              : "left-[11px] md:left-[15px] border-l"
+          )} />
 
-      {/* ── Benefit Headline — direct value ───────────────── */}
-      <div className="px-3 pt-2.5 pb-1 md:px-5">
-        <h3 className="text-[13px] md:text-sm font-extrabold text-foreground leading-tight">
-          {t(`journey.${activeStep}.headline`)}
-        </h3>
-        <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug flex items-center gap-1">
-          <span>{t(`journey.${activeStep}.benefit`)}</span>
-          <span className="text-foreground/60">·</span>
-          <span className="font-semibold text-foreground/70">{totalItemsInStep} {t("journey.companiesReviewed")}</span>
-        </p>
-      </div>
+          {journeySteps.map((step, stepIdx) => {
+            const stepCategories = categories.filter(c => step.categoryKeys.includes(c.labelKey));
+            const totalItems = stepCategories.reduce((s, c) => s + c.items.length, 0);
+            const isLast = stepIdx === journeySteps.length - 1;
 
-      {/* ── Category Pills — no stars, clean & compact ────── */}
-      <div className="px-3 pb-1.5 md:px-5">
-        <div className="grid grid-cols-2 gap-1 md:grid-cols-3 lg:grid-cols-4 md:gap-1.5">
-          {stepCategories.map((cat) => {
-            const isExpanded = expandedCategory === cat.labelKey;
-            const trending = isTrending(cat);
-            const count = cat.items.length;
             return (
-              <button
-                key={cat.labelKey}
-                onClick={() => handlePillClick(cat.labelKey)}
-                className={cn(
-                  "group flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border transition-all duration-150",
-                  isExpanded
-                    ? "border-primary/50 bg-primary/10"
-                    : "border-border/50 bg-card hover:border-primary/30"
-                )}
-              >
-                <span className="shrink-0">{cat.icon}</span>
-                <span className="flex-1 text-start text-[11px] font-semibold text-foreground truncate">
-                  {t(cat.labelKey)}
-                </span>
-                {trending && (
-                  <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />
-                )}
-                <span className="text-[9px] text-muted-foreground font-medium shrink-0">{count}</span>
-                <ChevronDown className={cn(
-                  "w-3 h-3 text-muted-foreground shrink-0 transition-transform duration-150",
-                  isExpanded && "rotate-180"
-                )} />
-              </button>
+              <div key={step.key} className={cn("relative", !isLast && "mb-5")}>
+                {/* ── Gate circle on the line ──────────────────── */}
+                <div className={cn(
+                  "absolute top-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold border-2 border-background z-10",
+                  step.activeColor, "text-primary-foreground",
+                  isRTL ? "-right-[14px] md:-right-[18px]" : "-left-[14px] md:-left-[18px]"
+                )}>
+                  {stepIdx + 1}
+                </div>
+
+                {/* ── Gate header ──────────────────────────────── */}
+                <div className="mb-1.5">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-sm">{step.emoji}</span>
+                    <h4 className={cn("text-[12px] md:text-[13px] font-extrabold uppercase tracking-wide", step.textColor)}>
+                      {t(`journey.${step.key}.label`)}
+                    </h4>
+                    <span className="text-[9px] text-muted-foreground font-medium px-1.5 py-0.5 rounded-full bg-muted">
+                      {totalItems}
+                    </span>
+                  </div>
+                  <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">
+                    {t(`journey.${step.key}.benefit`)}
+                  </p>
+                </div>
+
+                {/* ── Category pills for this gate ────────────── */}
+                <div className="flex flex-wrap gap-1 md:gap-1.5">
+                  {stepCategories.map((cat) => {
+                    const isExpanded = expandedCategory === cat.labelKey;
+                    const trending = isTrending(cat);
+                    const count = cat.items.length;
+                    return (
+                      <div key={cat.labelKey} className="contents">
+                        <button
+                          onClick={() => handlePillClick(cat.labelKey)}
+                          className={cn(
+                            "flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-semibold transition-all duration-150",
+                            isExpanded
+                              ? "border-primary/50 bg-primary/10 text-foreground"
+                              : "border-border/50 bg-card hover:border-primary/30 text-foreground/80"
+                          )}
+                        >
+                          <span className="shrink-0 [&>svg]:w-3 [&>svg]:h-3">{cat.icon}</span>
+                          <span className="truncate max-w-[80px]">{t(cat.labelKey)}</span>
+                          {trending && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />
+                          )}
+                          <span className="text-[8px] text-muted-foreground">{count}</span>
+                          <ChevronDown className={cn(
+                            "w-2.5 h-2.5 text-muted-foreground shrink-0 transition-transform duration-150",
+                            isExpanded && "rotate-180"
+                          )} />
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* ── Expanded items for any expanded pill in this gate ── */}
+                {stepCategories.map((cat) => {
+                  if (expandedCategory !== cat.labelKey) return null;
+                  return (
+                    <div key={cat.labelKey + "-items"} className="mt-1.5 rounded-lg border border-border/50 bg-muted/30 p-2 animate-in slide-in-from-top-1 duration-150">
+                      <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
+                        {cat.items.map((item) => (
+                          <button
+                            key={item.id}
+                            onClick={() => handleItemClick(item)}
+                            className="group flex w-full flex-col items-center rounded-md border border-border bg-card p-1.5 text-center transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-sm"
+                          >
+                            <Avatar className="h-8 w-8 md:h-10 md:w-10 ring-1 ring-border transition-all group-hover:ring-primary/40">
+                              <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
+                              <AvatarFallback className="bg-secondary text-[8px] font-bold">
+                                {getLocalizedName(item).substring(0, 2)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <p className="mt-1 line-clamp-1 text-[9px] md:text-[10px] font-bold text-foreground">
+                              {getLocalizedName(item)}
+                            </p>
+                            <span className="text-[8px] text-muted-foreground">
+                              {item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")} {t("journey.reviews")}
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             );
           })}
         </div>
       </div>
-
-      {/* ── Expanded Items — compact cards ────────────────── */}
-      {expandedCategoryData && (
-        <div className="border-t border-border bg-muted/30 animate-in slide-in-from-top-1 duration-150">
-          <div className="p-2 md:p-4">
-            <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 md:gap-2">
-              {expandedCategoryData.items.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => handleItemClick(item)}
-                  className="group flex w-full flex-col items-center rounded-lg border border-border bg-card p-2 text-center transition-all hover:-translate-y-0.5 hover:border-primary/40 hover:shadow-sm"
-                >
-                  <Avatar className="h-9 w-9 md:h-12 md:w-12 ring-1 ring-border transition-all group-hover:ring-primary/40">
-                    <AvatarImage src={getLogoOverride(item.id, getLocalizedName(item)) || item.avatar} alt={getLocalizedName(item)} className="object-cover" />
-                    <AvatarFallback className="bg-secondary text-[9px] font-bold">
-                      {getLocalizedName(item).substring(0, 2)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <p className="mt-1 line-clamp-1 text-[10px] md:text-xs font-bold text-foreground">
-                    {getLocalizedName(item)}
-                  </p>
-                  <span className="text-[9px] text-muted-foreground mt-0.5">
-                    {item.reviewCount.toLocaleString(isRTL ? "ar-EG" : "en-US")} {t("journey.reviews")}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── Journey Nudge — benefit-driven CTA ───────────── */}
-      {nextStep && (
-        <div className="border-t border-border px-3 py-1.5 md:px-5 flex items-center justify-between">
-          <span className="text-[10px] text-muted-foreground">
-            {t(`journey.${activeStep}.nudge`)}
-          </span>
-          <button
-            onClick={() => { setActiveStep(nextStep.key); setExpandedCategory(null); onInteraction?.(); }}
-            className={cn(
-              "flex items-center gap-0.5 text-[10px] font-bold transition-colors",
-              nextStep.textColor, "hover:opacity-80"
-            )}
-          >
-            {t(`journey.${activeStep}.nextAction`)}
-            <ChevronRight className={cn("w-3 h-3", isRTL && "rotate-180")} />
-          </button>
-        </div>
-      )}
     </div>
   );
 };
