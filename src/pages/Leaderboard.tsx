@@ -10,6 +10,7 @@ import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 interface LeaderboardEntry {
   user_id: string; full_name: string; avatar_url: string | null;
