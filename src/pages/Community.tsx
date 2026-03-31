@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Plus, Search, TrendingUp, Clock, MessageCircle, Users, X, Trophy, Edit3, ImageIcon, BarChart3 } from "lucide-react";
@@ -127,7 +128,7 @@ const Community = () => {
   }
 
   return (
-    <div className="min-h-screen bg-muted/50">
+    <StationPageWrapper className="min-h-screen bg-muted/50">
       <div className="max-w-[680px] mx-auto px-4 py-4 space-y-3">
         <PageHeader
           title={t("community.title", "Community")}
@@ -305,7 +306,7 @@ const Community = () => {
         prefillDeveloper={developerFilter}
         editPost={editingPost}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

@@ -12,6 +12,7 @@ import { LaunchCard } from "@/components/LaunchCard";
 import { LaunchRatingModal } from "@/components/LaunchRatingModal";
 import { LaunchComparePanel } from "@/components/LaunchComparePanel";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -308,7 +309,7 @@ const LaunchWatch = () => {
   const ratingLaunch = launches.find((l) => l.id === ratingLaunchId);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         <div className="space-y-2">
           <PageHeader
@@ -456,7 +457,7 @@ const LaunchWatch = () => {
         onClear={() => setCompareIds([])}
         allRatings={allRatings}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

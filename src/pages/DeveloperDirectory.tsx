@@ -8,6 +8,7 @@ import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { Footer } from "@/components/Footer";
 import { Developer } from "@/data/mockData";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 const DeveloperDirectory = () => {
   const { t } = useTranslation();
@@ -15,7 +16,7 @@ const DeveloperDirectory = () => {
   const [selectedDeveloper, setSelectedDeveloper] = useState<Developer | null>(null);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <PageHeader
         title={t("directory.majorDevelopers", "Developer Directory")}
         breadcrumbs={[{ label: t("directory.majorDevelopers", "Developer Directory") }]}
@@ -53,7 +54,7 @@ const DeveloperDirectory = () => {
         open={!!selectedDeveloper}
         onClose={() => setSelectedDeveloper(null)}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

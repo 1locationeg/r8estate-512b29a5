@@ -13,6 +13,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 interface SavedItem { id: string; item_id: string; item_type: string; item_name: string; item_image: string | null; created_at: string; }
 interface FollowedBusiness { id: string; business_id: string; business_name: string; created_at: string; }
@@ -209,7 +210,7 @@ const Portfolio = () => {
   if (!user) return null;
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={t("portfolio.myActivity", "My Activity")}
         breadcrumbs={[{ label: t("portfolio.myActivity", "My Activity") }]}
@@ -230,7 +231,7 @@ const Portfolio = () => {
           <div className="space-y-3">{[1, 2, 3].map((i) => <Skeleton key={i} className="h-20 w-full rounded-lg" />)}</div>
         ) : tabContent[activeTab]()}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 

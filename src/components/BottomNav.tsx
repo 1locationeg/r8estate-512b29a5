@@ -5,7 +5,15 @@ import { MessageSquare, LayoutGrid, Users } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
+import { getStationForRoute } from "@/lib/journeyStations";
 import logoIcon from "@/assets/logo-icon.png";
+
+const STATION_TEXT: Record<string, string> = {
+  research: "text-journey-research",
+  choose: "text-journey-choose",
+  finance: "text-journey-finance",
+  protect: "text-journey-protect",
+};
 
 export const BottomNav = () => {
   const { t } = useTranslation();
@@ -21,6 +29,8 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isCommunity = location.pathname === "/community";
+  const station = getStationForRoute(location.pathname);
+  const activeColor = station ? STATION_TEXT[station.key] : "text-primary";
 
   return (
     <>
@@ -32,7 +42,7 @@ export const BottomNav = () => {
           <button
             onClick={() => navigate("/reviews")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isReviews ? "text-primary" : "text-muted-foreground"
+              isReviews ? activeColor : "text-muted-foreground"
             }`}
           >
             <MessageSquare className="h-5 w-5" strokeWidth={isReviews ? 2.5 : 2} />
@@ -43,7 +53,7 @@ export const BottomNav = () => {
           <button
             onClick={() => navigate("/categories")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              location.pathname === "/categories" ? "text-primary" : "text-muted-foreground"
+              location.pathname === "/categories" ? activeColor : "text-muted-foreground"
             }`}
           >
             <LayoutGrid className="h-5 w-5" strokeWidth={location.pathname === "/categories" ? 2.5 : 2} />
@@ -67,7 +77,7 @@ export const BottomNav = () => {
           <button
             onClick={() => navigate("/community")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isCommunity ? "text-primary" : "text-muted-foreground"
+              isCommunity ? activeColor : "text-muted-foreground"
             }`}
           >
             <Users className="h-5 w-5" strokeWidth={isCommunity ? 2.5 : 2} />

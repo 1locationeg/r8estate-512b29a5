@@ -12,6 +12,7 @@ import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 
 const Reviews = () => {
@@ -86,7 +87,7 @@ const Reviews = () => {
   }, [allReviews]);
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={t("reviews.totalReviews", "Reviews")}
         breadcrumbs={[{ label: t("reviews.totalReviews", "Reviews") }]}
@@ -195,7 +196,7 @@ const Reviews = () => {
           }}
         />
       )}
-    </div>
+    </StationPageWrapper>
   );
 };
 

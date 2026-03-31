@@ -13,6 +13,7 @@ import {
   Crown, ArrowRight, ChevronRight, Gem
 } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
+import { StationPageWrapper } from '@/components/StationPageWrapper';
 import { toast } from 'sonner';
 
 interface Insight {
@@ -179,7 +180,7 @@ const InsightsPage = () => {
   const getRatingBg = (r: number) => r >= 4 ? 'bg-trust-excellent' : r >= 3 ? 'bg-accent' : 'bg-destructive';
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <StationPageWrapper className="min-h-screen bg-background pb-20">
       <PageHeader
         title={t('insights.title', 'AI Insights')}
         breadcrumbs={[{ label: t('insights.title', 'AI Insights') }]}
@@ -577,7 +578,7 @@ const InsightsPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 

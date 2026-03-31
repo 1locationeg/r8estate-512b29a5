@@ -10,6 +10,7 @@ import { getBuyerTier, BUYER_TIERS } from "@/lib/buyerGamification";
 import { Footer } from "@/components/Footer";
 import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 interface LeaderboardEntry {
   user_id: string; full_name: string; avatar_url: string | null;
@@ -70,7 +71,7 @@ const Leaderboard = () => {
   const daysUntilMonday = dayOfWeek === 0 ? 1 : (8 - dayOfWeek);
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <PageHeader
         title={t("leaderboard.title", "Leaderboard")}
         breadcrumbs={[{ label: t("leaderboard.title", "Leaderboard") }]}
@@ -209,7 +210,7 @@ const Leaderboard = () => {
         </div>
       </main>
       <Footer />
-    </div>
+    </StationPageWrapper>
   );
 };
 

@@ -3,6 +3,7 @@ import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { categories } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
@@ -91,7 +92,7 @@ const EntityPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <StationPageWrapper className="min-h-screen bg-background pb-20">
       <PageHeader
         title={entity.name}
         breadcrumbs={[
@@ -105,7 +106,7 @@ const EntityPage = () => {
         item={entity}
         onClose={() => navigate(-1)}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

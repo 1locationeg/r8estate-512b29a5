@@ -522,6 +522,54 @@
   background: linear-gradient(90deg, transparent 0%, hsla(var(--glow-accent), 0.3) 50%, transparent 100%);
 }
 
+/* ═══════════════════════════════════════════
+   Station Identity System — CSS Utilities
+   ═══════════════════════════════════════════ */
+
+.station-text {
+  color: hsl(var(--station-accent));
+}
+
+.station-bg-tint {
+  background-color: hsl(var(--station-accent) / 0.08);
+}
+
+.station-border {
+  border-color: hsl(var(--station-accent) / 0.2);
+}
+
+.station-border-strong {
+  border-color: hsl(var(--station-accent) / 0.4);
+}
+
+.station-ring:focus-within {
+  --tw-ring-color: hsl(var(--station-accent) / 0.3);
+}
+
+.station-pill-active {
+  background-color: hsl(var(--station-accent) / 0.12);
+  color: hsl(var(--station-accent));
+  font-weight: 600;
+}
+
+.station-pill-inactive {
+  background-color: transparent;
+  color: hsl(var(--muted-foreground));
+}
+
+.station-card-hover:hover {
+  border-color: hsl(var(--station-accent) / 0.35);
+  box-shadow: 0 0 0 1px hsl(var(--station-accent) / 0.08);
+}
+
+.station-accent-bg {
+  background-color: hsl(var(--station-accent));
+}
+
+.station-accent-bg-soft {
+  background-color: hsl(var(--station-accent) / 0.1);
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .ai-float, .ai-pulse-dot, .ai-shimmer-border::before {

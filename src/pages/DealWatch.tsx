@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { DealCard } from "@/components/DealCard";
 import { DealComparePanel } from "@/components/DealComparePanel";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 
 const DealWatch = () => {
@@ -79,7 +80,7 @@ const DealWatch = () => {
   const enrichedDeals = filtered.map((d) => ({ ...d, yesVotes: voteData[d.id]?.yes || 0, noVotes: voteData[d.id]?.no || 0 }));
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         <PageHeader
           title={t("dealWatch.title", "Deal Watch")}
@@ -120,7 +121,7 @@ const DealWatch = () => {
           <div className="space-y-4">{filtered.map((deal) => <DealCard key={deal.id} deal={deal} onRated={fetchDeals} compareMode={compareMode} isSelected={compareIds.includes(deal.id)} onToggleCompare={toggleCompare} />)}</div>
         )}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Search, X } from "lucide-react";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 const Categories = () => {
   const { i18n } = useTranslation();
@@ -20,7 +21,7 @@ const Categories = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={isRTL ? "الفئات" : "Categories"}
         breadcrumbs={[{ label: isRTL ? "الفئات" : "Categories" }]}
@@ -55,7 +56,7 @@ const Categories = () => {
         onSelectItem={handleSelectItem}
         searchQuery={search}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

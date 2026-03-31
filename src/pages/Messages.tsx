@@ -9,6 +9,7 @@ import { NewConversationDialog } from '@/components/NewConversationDialog';
 import { MessageSquare, Settings2, ArrowLeft } from 'lucide-react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { StationPageWrapper } from '@/components/StationPageWrapper';
 import { Button } from '@/components/ui/button';
 
 const Messages = () => {
@@ -69,7 +70,7 @@ const Messages = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <StationPageWrapper className="min-h-screen bg-background">
       {/* Desktop: two-panel */}
       <div className="hidden md:flex h-screen max-w-6xl mx-auto border-x border-border">
         {/* Left panel */}
@@ -174,7 +175,7 @@ const Messages = () => {
           </>
         )}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 
