@@ -196,7 +196,7 @@ const Reviews = () => {
           }}
         />
       )}
-    </div>
+    </StationPageWrapper>
   );
 };
 

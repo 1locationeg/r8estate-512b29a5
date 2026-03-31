@@ -56,7 +56,7 @@ const Categories = () => {
         onSelectItem={handleSelectItem}
         searchQuery={search}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

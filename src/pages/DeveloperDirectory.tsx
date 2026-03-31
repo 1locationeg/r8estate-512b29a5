@@ -54,7 +54,7 @@ const DeveloperDirectory = () => {
         open={!!selectedDeveloper}
         onClose={() => setSelectedDeveloper(null)}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

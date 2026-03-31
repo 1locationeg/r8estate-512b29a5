@@ -106,7 +106,7 @@ const EntityPage = () => {
         item={entity}
         onClose={() => navigate(-1)}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

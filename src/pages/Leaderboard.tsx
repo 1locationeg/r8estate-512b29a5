@@ -210,7 +210,7 @@ const Leaderboard = () => {
         </div>
       </main>
       <Footer />
-    </div>
+    </StationPageWrapper>
   );
 };
 

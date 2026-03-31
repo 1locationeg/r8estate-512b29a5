@@ -578,7 +578,7 @@ const InsightsPage = () => {
           </div>
         )}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 

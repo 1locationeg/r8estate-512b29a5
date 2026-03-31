@@ -457,7 +457,7 @@ const LaunchWatch = () => {
         onClear={() => setCompareIds([])}
         allRatings={allRatings}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 

@@ -121,7 +121,7 @@ const DealWatch = () => {
           <div className="space-y-4">{filtered.map((deal) => <DealCard key={deal.id} deal={deal} onRated={fetchDeals} compareMode={compareMode} isSelected={compareIds.includes(deal.id)} onToggleCompare={toggleCompare} />)}</div>
         )}
       </div>
-    </div>
+    </StationPageWrapper>
   );
 };
 

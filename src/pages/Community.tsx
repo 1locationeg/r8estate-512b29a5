@@ -306,7 +306,7 @@ const Community = () => {
         prefillDeveloper={developerFilter}
         editPost={editingPost}
       />
-    </div>
+    </StationPageWrapper>
   );
 };
 
