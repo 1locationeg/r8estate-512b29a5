@@ -21,7 +21,7 @@ const Categories = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background pb-16">
+    <StationPageWrapper className="min-h-screen bg-background pb-16">
       <PageHeader
         title={isRTL ? "الفئات" : "Categories"}
         breadcrumbs={[{ label: isRTL ? "الفئات" : "Categories" }]}
