@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Home, ChevronLeft, ChevronRight } from "lucide-react";
 import {
@@ -10,6 +10,9 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getStationForRoute } from "@/lib/journeyStations";
+import { MiniJourneyArc } from "@/components/MiniJourneyArc";
+import { cn } from "@/lib/utils";
 
 export interface BreadcrumbEntry {
   label: string;
