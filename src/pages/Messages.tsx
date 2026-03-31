@@ -9,6 +9,7 @@ import { NewConversationDialog } from '@/components/NewConversationDialog';
 import { MessageSquare, Settings2, ArrowLeft } from 'lucide-react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { StationPageWrapper } from '@/components/StationPageWrapper';
 import { Button } from '@/components/ui/button';
 
 const Messages = () => {
