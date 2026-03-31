@@ -292,6 +292,8 @@
     "lands": "الأراضي"
   },
   "journey": {
+    "corridorTitle": "طريقك لبيت آمن",
+    "continueJourney": "أكمل الرحلة",
     "companiesReviewed": "تم تقييمها",
     "reviews": "تقييم",
     "research": {

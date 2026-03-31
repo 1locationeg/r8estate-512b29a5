@@ -292,6 +292,8 @@
     "lands": "Lands"
   },
   "journey": {
+    "corridorTitle": "Your path to a safe home",
+    "continueJourney": "Continue journey",
     "companiesReviewed": "reviewed",
     "reviews": "reviews",
     "research": {
