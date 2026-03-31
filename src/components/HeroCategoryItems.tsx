@@ -307,93 +307,149 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
 
   return (
     <div className="w-full bg-card border-t border-border overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
-      {/* ── Scrollable corridor ──────────────────────────── */}
-      <div className="max-h-[60vh] overflow-y-auto relative" style={{
-        maskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
-        WebkitMaskImage: "linear-gradient(to bottom, black 85%, transparent 100%)",
-      }}>
-        <div className={cn(
-          "relative py-3",
-          isRTL ? "pr-6 pl-3 md:pr-8 md:pl-5" : "pl-6 pr-3 md:pl-8 md:pr-5"
-        )}>
-          {/* ── Vertical connector line ────────────────────── */}
-          <div className={cn(
-            "absolute top-0 bottom-0 w-px border-dashed border-primary/25",
-            isRTL
-              ? "right-[11px] md:right-[15px] border-r"
-              : "left-[11px] md:left-[15px] border-l"
-          )} />
+      {/* ── Title ─────────────────────────────────────── */}
+      <div className="flex items-center justify-between px-4 pt-3 pb-1">
+        <h3 className="text-[11px] md:text-xs font-extrabold uppercase tracking-widest text-foreground/80">
+          {t("journey.corridorTitle")}
+        </h3>
+        <button
+          onClick={() => navigate("/categories")}
+          className="text-[10px] font-semibold text-primary hover:underline flex items-center gap-0.5"
+        >
+          {t("journey.continueJourney")}
+          <ChevronRight className="w-3 h-3" />
+        </button>
+      </div>
 
+      {/* ── Horizontal step indicator ────────────────── */}
+      <div className="px-3 pt-1 pb-3">
+        <div className="flex items-center justify-between w-full max-w-lg mx-auto">
           {journeySteps.map((step, stepIdx) => {
+            const isLast = stepIdx === journeySteps.length - 1;
             const stepCategories = categories.filter(c => step.categoryKeys.includes(c.labelKey));
             const totalItems = stepCategories.reduce((s, c) => s + c.items.length, 0);
-            const isLast = stepIdx === journeySteps.length - 1;
+            const isActive = expandedCategory !== null && stepCategories.some(c => c.labelKey === expandedCategory);
+
+            // Step-specific ring/bg colors
+            const ringColors: Record<JourneyStepKey, string> = {
+              research: "ring-primary/40 bg-primary/10",
+              choose: "ring-accent/40 bg-accent/10",
+              finance: "ring-[hsl(var(--coin))]/40 bg-[hsl(var(--coin))]/10",
+              protect: "ring-brand-red/40 bg-brand-red/10",
+            };
+            const activeRings: Record<JourneyStepKey, string> = {
+              research: "ring-primary bg-primary/20",
+              choose: "ring-accent bg-accent/20",
+              finance: "ring-[hsl(var(--coin))] bg-[hsl(var(--coin))]/20",
+              protect: "ring-brand-red bg-brand-red/20",
+            };
+            const badgeBg: Record<JourneyStepKey, string> = {
+              research: "bg-primary text-primary-foreground",
+              choose: "bg-accent text-accent-foreground",
+              finance: "bg-[hsl(var(--coin))] text-white",
+              protect: "bg-brand-red text-white",
+            };
 
             return (
-              <div key={step.key} className={cn("relative", !isLast && "mb-5")}>
-                {/* ── Gate circle on the line ──────────────────── */}
-                <div className={cn(
-                  "absolute top-0 w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold border-2 border-background z-10",
-                  step.activeColor, "text-primary-foreground",
-                  isRTL ? "-right-[14px] md:-right-[18px]" : "-left-[14px] md:-left-[18px]"
-                )}>
-                  {stepIdx + 1}
-                </div>
-
-                {/* ── Gate header ──────────────────────────────── */}
-                <div className="mb-1.5">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-sm">{step.emoji}</span>
-                    <h4 className={cn("text-[12px] md:text-[13px] font-extrabold uppercase tracking-wide", step.textColor)}>
-                      {t(`journey.${step.key}.label`)}
-                    </h4>
-                    <span className="text-[9px] text-muted-foreground font-medium px-1.5 py-0.5 rounded-full bg-muted">
-                      {totalItems}
-                    </span>
+              <div key={step.key} className="flex items-center flex-1 last:flex-none">
+                {/* Step circle + label */}
+                <button
+                  onClick={() => {
+                    onInteraction?.();
+                    // Toggle first category of this step
+                    const firstCat = stepCategories[0]?.labelKey;
+                    if (firstCat) {
+                      setExpandedCategory(expandedCategory === firstCat ? null : firstCat);
+                    }
+                  }}
+                  className="flex flex-col items-center gap-1 group relative"
+                >
+                  {/* Number badge */}
+                  <div className={cn(
+                    "absolute -top-1 z-10 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-bold",
+                    badgeBg[step.key],
+                    isRTL ? "-left-0.5" : "-right-0.5"
+                  )}>
+                    {stepIdx + 1}
                   </div>
-                  <p className="text-[10px] text-muted-foreground mt-0.5 leading-snug">
+                  {/* Circle icon */}
+                  <div className={cn(
+                    "w-12 h-12 md:w-14 md:h-14 rounded-full flex items-center justify-center ring-2 transition-all duration-200",
+                    isActive ? activeRings[step.key] : ringColors[step.key],
+                    "group-hover:scale-105"
+                  )}>
+                    <span className="text-xl md:text-2xl">{step.emoji}</span>
+                  </div>
+                  {/* Label */}
+                  <span className={cn(
+                    "text-[10px] md:text-[11px] font-bold",
+                    isActive ? step.textColor : "text-foreground/70"
+                  )}>
+                    {t(`journey.${step.key}.label`)}
+                  </span>
+                  {/* Subtitle */}
+                  <span className="text-[8px] md:text-[9px] text-muted-foreground leading-tight text-center max-w-[70px]">
                     {t(`journey.${step.key}.benefit`)}
-                  </p>
-                </div>
+                  </span>
+                </button>
 
-                {/* ── Category pills for this gate ────────────── */}
-                <div className="flex flex-wrap gap-1 md:gap-1.5">
+                {/* Arrow connector */}
+                {!isLast && (
+                  <div className="flex-1 flex items-center justify-center px-1 -mt-5">
+                    <ChevronRight className="w-4 h-4 text-muted-foreground/40" />
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* ── Expanded content below the steps ──────────── */}
+      {expandedCategory && (
+        <div className="px-3 pb-3 animate-in slide-in-from-top-2 duration-200">
+          {/* Category pills for the active step */}
+          {journeySteps.map((step) => {
+            const stepCategories = categories.filter(c => step.categoryKeys.includes(c.labelKey));
+            const hasActive = stepCategories.some(c => c.labelKey === expandedCategory);
+            if (!hasActive) return null;
+
+            return (
+              <div key={step.key}>
+                {/* Pills row */}
+                <div className="flex flex-wrap gap-1 mb-2">
                   {stepCategories.map((cat) => {
                     const isExpanded = expandedCategory === cat.labelKey;
                     const trending = isTrending(cat);
-                    const count = cat.items.length;
                     return (
-                      <div key={cat.labelKey} className="contents">
-                        <button
-                          onClick={() => handlePillClick(cat.labelKey)}
-                          className={cn(
-                            "flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-semibold transition-all duration-150",
-                            isExpanded
-                              ? "border-primary/50 bg-primary/10 text-foreground"
-                              : "border-border/50 bg-card hover:border-primary/30 text-foreground/80"
-                          )}
-                        >
-                          <span className="shrink-0 [&>svg]:w-3 [&>svg]:h-3">{cat.icon}</span>
-                          <span className="truncate max-w-[80px]">{t(cat.labelKey)}</span>
-                          {trending && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />
-                          )}
-                          <span className="text-[8px] text-muted-foreground">{count}</span>
-                          <ChevronDown className={cn(
-                            "w-2.5 h-2.5 text-muted-foreground shrink-0 transition-transform duration-150",
-                            isExpanded && "rotate-180"
-                          )} />
-                        </button>
-                      </div>
+                      <button
+                        key={cat.labelKey}
+                        onClick={() => handlePillClick(cat.labelKey)}
+                        className={cn(
+                          "flex items-center gap-1 px-2 py-1 rounded-md border text-[10px] font-semibold transition-all duration-150",
+                          isExpanded
+                            ? "border-primary/50 bg-primary/10 text-foreground"
+                            : "border-border/50 bg-card hover:border-primary/30 text-foreground/80"
+                        )}
+                      >
+                        <span className="shrink-0 [&>svg]:w-3 [&>svg]:h-3">{cat.icon}</span>
+                        <span className="truncate max-w-[80px]">{t(cat.labelKey)}</span>
+                        {trending && <span className="w-1.5 h-1.5 rounded-full bg-brand-red shrink-0 animate-pulse" />}
+                        <span className="text-[8px] text-muted-foreground">{cat.items.length}</span>
+                        <ChevronDown className={cn(
+                          "w-2.5 h-2.5 text-muted-foreground shrink-0 transition-transform duration-150",
+                          isExpanded && "rotate-180"
+                        )} />
+                      </button>
                     );
                   })}
                 </div>
 
-                {/* ── Expanded items for any expanded pill in this gate ── */}
+                {/* Expanded items grid */}
                 {stepCategories.map((cat) => {
                   if (expandedCategory !== cat.labelKey) return null;
                   return (
-                    <div key={cat.labelKey + "-items"} className="mt-1.5 rounded-lg border border-border/50 bg-muted/30 p-2 animate-in slide-in-from-top-1 duration-150">
+                    <div key={cat.labelKey + "-items"} className="rounded-lg border border-border/50 bg-muted/30 p-2 animate-in slide-in-from-top-1 duration-150">
                       <div className="grid grid-cols-3 gap-1.5 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6">
                         {cat.items.map((item) => (
                           <button
@@ -423,7 +479,7 @@ export const HeroCategoryItems = ({ onInteraction, externalCategory, onSelectIte
             );
           })}
         </div>
-      </div>
+      )}
     </div>
   );
 };
