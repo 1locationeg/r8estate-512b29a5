@@ -13,6 +13,7 @@ import {
   Crown, ArrowRight, ChevronRight, Gem
 } from 'lucide-react';
 import { PageHeader } from '@/components/PageHeader';
+import { StationPageWrapper } from '@/components/StationPageWrapper';
 import { toast } from 'sonner';
 
 interface Insight {
