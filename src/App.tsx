@@ -139,6 +139,7 @@ const AppContent = () => {
   return (
     <>
       <ScrollToTop />
+      <JourneyStripe />
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>

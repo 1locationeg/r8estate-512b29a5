@@ -95,6 +95,11 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
                 <>
                   <ChevronRight className="w-3.5 h-3.5 text-muted-foreground/50 flex-shrink-0 rtl-flip" />
                   <span className="text-foreground font-semibold truncate">{title}</span>
+                  {station && (
+                    <span className={cn("text-[10px] font-bold px-2 py-0.5 rounded-full shrink-0 ml-1.5", BADGE_BG[station.key], BADGE_TEXT[station.key])}>
+                      {station.emoji} {t(station.labelKey)}
+                    </span>
+                  )}
                 </>
               )}
             </nav>
