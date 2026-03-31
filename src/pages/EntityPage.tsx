@@ -3,6 +3,7 @@ import { useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { categories } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
