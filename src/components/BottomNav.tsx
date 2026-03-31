@@ -5,7 +5,15 @@ import { MessageSquare, LayoutGrid, Users } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
+import { getStationForRoute } from "@/lib/journeyStations";
 import logoIcon from "@/assets/logo-icon.png";
+
+const STATION_TEXT: Record<string, string> = {
+  research: "text-journey-research",
+  choose: "text-journey-choose",
+  finance: "text-journey-finance",
+  protect: "text-journey-protect",
+};
 
 export const BottomNav = () => {
   const { t } = useTranslation();
