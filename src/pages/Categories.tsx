@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Search, X } from "lucide-react";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { PageHeader } from "@/components/PageHeader";
+import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 const Categories = () => {
   const { i18n } = useTranslation();
