@@ -1437,7 +1437,8 @@
       "bullet2": "Track price-per-meter changes over time",
       "bullet3": "Area insights with real transaction data",
       "bullet4": "Full cost calculator including fees",
-      "cta": "See Live Deals →"
+      "cta": "See Live Deals →",
+      "hook": "See deals"
     },
     "protect": {
       "stepLabel": "STEP 4 OF 4 · PROTECT",
