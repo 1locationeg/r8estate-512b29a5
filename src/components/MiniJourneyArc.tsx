@@ -48,7 +48,7 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
         </h3>
         <button
           onClick={onStartJourney}
-          className="group text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-journey-research to-journey-choose hover:from-journey-choose hover:to-journey-finance px-4 py-1.5 rounded-full transition-all duration-300 flex items-center gap-1.5 shadow-[0_0_16px_hsl(var(--journey-choose)/0.4)] hover:shadow-[0_0_24px_hsl(var(--journey-choose)/0.6)] hover:scale-105"
+          className="group text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-[#c026d3] via-[#7c3aed] to-[#06b6d4] hover:from-[#e879f9] hover:via-[#a78bfa] hover:to-[#22d3ee] px-4 py-1.5 rounded-full transition-all duration-500 flex items-center gap-1.5 shadow-[0_0_20px_rgba(192,38,211,0.5),0_0_40px_rgba(124,58,237,0.3)] hover:shadow-[0_0_28px_rgba(192,38,211,0.6),0_0_56px_rgba(124,58,237,0.4)] hover:scale-105 border border-white/10"
         >
           {t("journeyArc.startJourney")}
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
