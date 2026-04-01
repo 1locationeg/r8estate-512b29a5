@@ -580,16 +580,16 @@ export const HeroTrustShowcase = () => {
           <div className="flex-1 relative h-[18px] flex items-center">
             {/* Background track — inset so it doesn't bleed into thumb */}
             <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
-            {/* Colored fill track — also inset */}
+            {/* Colored fill track — stops before thumb circle */}
             <div
               className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
                 left: '9px',
-                width: `calc(${displayScore}% - ${displayScore * 0.18}px)`,
+                width: `max(0px, calc((${displayScore}% - 9px) * (100 - 18) / 100 - 9px))`,
                 background: getScoreColor(displayScore),
                 top: '50%',
                 transform: 'translateY(-50%)',
-                transition: 'background 0.3s, width 0.1s',
+                transition: 'background 0.3s',
               }}
             />
             <input
