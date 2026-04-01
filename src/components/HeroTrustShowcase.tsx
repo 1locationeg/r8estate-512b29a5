@@ -501,21 +501,53 @@ export const HeroTrustShowcase = () => {
         </div>
       </div>
 
-      {/* ── Controls ── */}
-      <div className="mt-1 mx-2 md:mx-0 space-y-1">
-        {/* Slider with hand icon */}
-        <div className="flex items-center gap-3 relative">
-          <span className="text-[10px] font-bold text-destructive w-6 text-end">0</span>
+      {/* ── Minimal Slider ── */}
+      <div className="mt-2 mx-2 md:mx-0">
+        <div className="flex items-center gap-2 relative">
           <div className="flex-1 relative">
-            <Slider
-              value={[score]}
+            <input
+              type="range"
               min={0}
               max={100}
               step={1}
-              onValueChange={handleSliderChange}
-              className="flex-1"
+              value={score}
+              onChange={(e) => handleSliderChange([Number(e.target.value)])}
+              className="w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
+              style={{
+                // @ts-ignore
+                '--thumb-color': getScoreColor(score),
+                WebkitAppearance: 'none',
+              }}
+              ref={(el) => {
+                if (el) {
+                  const color = getScoreColor(score);
+                  el.style.setProperty('--thumb-color', color);
+                  const style = document.getElementById('slider-thumb-style') || (() => {
+                    const s = document.createElement('style');
+                    s.id = 'slider-thumb-style';
+                    document.head.appendChild(s);
+                    return s;
+                  })();
+                  style.textContent = `
+                    input[type="range"]::-webkit-slider-thumb {
+                      background: ${color};
+                      box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40;
+                      animation: thumb-pulse 2s ease-in-out infinite;
+                    }
+                    input[type="range"]::-moz-range-thumb {
+                      background: ${color};
+                      box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40;
+                      animation: thumb-pulse 2s ease-in-out infinite;
+                    }
+                    @keyframes thumb-pulse {
+                      0%, 100% { box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40; transform: scale(1); }
+                      50% { box-shadow: 0 0 12px 5px ${color}90, 0 0 24px 10px ${color}50; transform: scale(1.15); }
+                    }
+                  `;
+                }
+              }}
             />
-            {/* Bouncing hand icon following the thumb */}
+            {/* Bouncing hand icon */}
             {!hasInteracted && phase === "interactive" && (
               <div
                 className="absolute pointer-events-none animate-bounce"
@@ -526,11 +558,10 @@ export const HeroTrustShowcase = () => {
                   animationDuration: '1.5s',
                 }}
               >
-                <Hand className="w-4 h-4 text-primary drop-shadow-md" />
+                <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
               </div>
             )}
           </div>
-          <span className="text-[10px] font-bold text-trust-excellent w-6">100</span>
         </div>
       </div>
     </div>
