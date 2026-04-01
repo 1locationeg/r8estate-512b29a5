@@ -26,7 +26,6 @@ const stats = [
   { target: 50000, icon: MessageSquare, suffix: "K+", labelKey: "stats.verifiedReviews" },
   { target: 1200, icon: Building2, suffix: "+", labelKey: "stats.trustedCompanies" },
   { target: 100000, icon: Users, suffix: "K+", labelKey: "stats.activeUsers" },
-  { target: 96, icon: CheckCircle, suffix: "%", labelKey: "stats.successRate" },
 ];
 
 export function TractionStats() {
