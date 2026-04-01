@@ -152,11 +152,7 @@ export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyAr
         })}
       </div>
 
-      {/* Mobile hint */}
-      <p className="text-[8px] text-muted-foreground/50 text-center mt-2 sm:hidden flex items-center justify-center gap-1">
-        {t("journeyArc.tapExplore")}
-        <ArrowRight className="w-2.5 h-2.5 animate-bounce" style={{ animationDirection: "alternate" }} />
-      </p>
+
     </div>
   );
 };
