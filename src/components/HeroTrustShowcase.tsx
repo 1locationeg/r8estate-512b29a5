@@ -376,9 +376,12 @@ export const HeroTrustShowcase = () => {
         </svg>
 
         {/* Center score */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-7">
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-5">
           <span className="text-2xl md:text-3xl font-black tabular-nums leading-none transition-colors duration-300" style={{ color }}>
             {displayScore}
+          </span>
+          <span className="text-[9px] md:text-[10px] font-bold mt-0.5 tracking-wide transition-colors duration-300" style={{ color }}>
+            {t(scenario.trustLabelKey)}
           </span>
         </div>
       </div>
