@@ -535,7 +535,9 @@ export const HeroTrustShowcase = () => {
                     return s;
                   })();
                   styleEl.textContent = `
-                    .trust-slider { transition: none; }
+                    .trust-slider { transition: none; background: transparent !important; }
+                    .trust-slider::-webkit-slider-runnable-track { background: hsl(var(--border)); height: 3px; border-radius: 9999px; }
+                    .trust-slider::-moz-range-track { background: hsl(var(--border)); height: 3px; border-radius: 9999px; }
                     .trust-slider::-webkit-slider-thumb {
                       -webkit-appearance: none;
                       appearance: none;
