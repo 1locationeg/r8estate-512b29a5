@@ -47,8 +47,7 @@ export function TractionStats() {
   const v1 = useCountUp(50, 1800, visible);
   const v2 = useCountUp(1200, 1800, visible);
   const v3 = useCountUp(100, 1800, visible);
-  const v4 = useCountUp(96, 1800, visible);
-  const values = [v1, v2, v3, v4];
+  const values = [v1, v2, v3];
 
   const visibleStats = stats.filter((s, i) => {
     // On render we include all, CSS handles hideMobile
