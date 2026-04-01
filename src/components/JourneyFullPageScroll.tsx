@@ -4,11 +4,10 @@ import { useTranslation } from "react-i18next";
 import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { HeroSearchBar } from "@/components/HeroSearchBar";
+import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 
 /* ─── Lazy-loaded expanded components ─── */
-const BrowseCategoriesGrid = lazy(() =>
-  import("@/components/BrowseCategoriesGrid").then(m => ({ default: m.BrowseCategoriesGrid }))
-);
 const LaunchWatchWidget = lazy(() =>
   import("@/components/LaunchWatchWidget").then(m => ({ default: m.LaunchWatchWidget }))
 );
@@ -37,20 +36,27 @@ const STATIONS: StationData[] = [
 ];
 
 /* ─── Expanded Content per Station ─── */
-const StationExpandedContent = ({ stationKey }: { stationKey: string }) => {
+const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string; onCollapse: () => void }) => {
+  const navigate = useNavigate();
   const fallback = (
     <div className="flex items-center justify-center py-12">
       <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
+  if (stationKey === "research") {
+    return (
+      <div className="space-y-4">
+        <HeroSearchBar
+          onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
+          onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
+        />
+        <BrowseCategoriesGrid />
+      </div>
+    );
+  }
+
   switch (stationKey) {
-    case "research":
-      return (
-        <Suspense fallback={fallback}>
-          <BrowseCategoriesGrid />
-        </Suspense>
-      );
     case "choose":
       return (
         <Suspense fallback={fallback}>
@@ -220,7 +226,7 @@ const JourneyStepSection = ({
 
             {/* Content area */}
             <div className="overflow-y-auto max-h-[65dvh] rounded-xl border border-border bg-card/60 backdrop-blur-sm p-3 text-start">
-              <StationExpandedContent stationKey={station.key} />
+              <StationExpandedContent stationKey={station.key} onCollapse={onCollapse} />
             </div>
           </div>
         )}
