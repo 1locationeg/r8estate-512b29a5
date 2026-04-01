@@ -504,7 +504,7 @@ export const HeroTrustShowcase = () => {
       <div className="mt-0 mx-2 md:mx-0">
         <div className="flex items-center gap-3 relative">
           {/* House SVG visualization */}
-          <div className="flex-shrink-0 relative w-10 h-10 sm:w-12 sm:h-12">
+          <div className="flex-shrink-0 relative w-7 h-7 sm:w-8 sm:h-8">
             <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
               {/* Foundation — visible at 10%+ */}
               <rect
