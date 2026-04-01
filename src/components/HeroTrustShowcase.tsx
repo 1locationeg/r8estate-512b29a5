@@ -505,6 +505,16 @@ export const HeroTrustShowcase = () => {
       <div className="mt-2 mx-2 md:mx-0">
         <div className="flex items-center gap-2 relative">
           <div className="flex-1 relative">
+            {/* Colored fill track */}
+            <div
+              className="absolute top-1/2 left-0 h-[3px] rounded-full pointer-events-none"
+              style={{
+                width: `${displayScore}%`,
+                background: getScoreColor(displayScore),
+                transform: 'translateY(-50%)',
+                transition: 'background 0.3s',
+              }}
+            />
             <input
               type="range"
               min={0}
@@ -513,7 +523,8 @@ export const HeroTrustShowcase = () => {
               value={displayScore}
               onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])}
               onChange={(e) => handleSliderChange([Number(e.target.value)])}
-              className="trust-slider w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer"
+              className="trust-slider w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer relative z-10"
+              style={{ background: 'transparent' }}
               ref={(el) => {
                 if (el) {
                   const c = getScoreColor(displayScore);
