@@ -228,8 +228,9 @@ const Index = () => {
             backgroundSize: '20px 20px'
           }} />
           <div className="relative text-center">
-            <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-              <span className="pb-1 font-semibold">{t('hero.platformDescriptor')}</span>
+            <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both] border border-border/60 rounded-full px-3 py-1 bg-background/60 backdrop-blur-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse shrink-0" />
+              <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
 
             {userMode === "buyers" && (
