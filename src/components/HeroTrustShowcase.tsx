@@ -577,18 +577,19 @@ export const HeroTrustShowcase = () => {
           </div>
 
           {/* Slider track */}
-          <div className="flex-1 relative">
-            {/* Background track */}
-            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
-            {/* Colored fill track */}
+          <div className="flex-1 relative h-[18px] flex items-center">
+            {/* Background track — inset so it doesn't bleed into thumb */}
+            <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
+            {/* Colored fill track — also inset */}
             <div
-              className="absolute left-0 h-[3px] rounded-full pointer-events-none z-[11]"
+              className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
-                width: `${displayScore}%`,
+                left: '9px',
+                width: `calc(${displayScore}% - ${displayScore * 0.18}px)`,
                 background: getScoreColor(displayScore),
                 top: '50%',
                 transform: 'translateY(-50%)',
-                transition: 'background 0.3s',
+                transition: 'background 0.3s, width 0.1s',
               }}
             />
             <input
@@ -599,7 +600,7 @@ export const HeroTrustShowcase = () => {
               value={displayScore}
               onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])}
               onChange={(e) => handleSliderChange([Number(e.target.value)])}
-              className="trust-slider w-full h-[18px] appearance-none bg-transparent rounded-full outline-none cursor-pointer relative z-10"
+              className="trust-slider w-full h-[18px] appearance-none bg-transparent outline-none cursor-pointer relative z-10"
               style={{ background: 'transparent' }}
               ref={(el) => {
                 if (el) {
@@ -612,8 +613,8 @@ export const HeroTrustShowcase = () => {
                   })();
                   styleEl.textContent = `
                     .trust-slider { transition: none; background: transparent !important; }
-                    .trust-slider::-webkit-slider-runnable-track { background: transparent; height: 3px; border-radius: 9999px; }
-                    .trust-slider::-moz-range-track { background: transparent; height: 3px; border-radius: 9999px; }
+                    .trust-slider::-webkit-slider-runnable-track { background: transparent; height: 18px; border-radius: 9999px; }
+                    .trust-slider::-moz-range-track { background: transparent; height: 18px; border-radius: 9999px; }
                     .trust-slider::-webkit-slider-thumb {
                       -webkit-appearance: none;
                       appearance: none;
@@ -623,7 +624,7 @@ export const HeroTrustShowcase = () => {
                       border: 3px solid ${c};
                       box-shadow: 0 0 8px 2px ${c}40;
                       cursor: pointer;
-                      margin-top: -7.5px;
+                      margin-top: 0;
                       transition: border-color 0.3s, box-shadow 0.3s;
                     }
                     .trust-slider::-moz-range-thumb {
