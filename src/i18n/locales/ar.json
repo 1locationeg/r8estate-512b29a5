@@ -1438,12 +1438,8 @@
   },
   "journeyArc": {
     "title": "طريقك لبيت آمن",
-    "trustPromise": "نحمي كل خطوة",
     "startJourney": "← ابدأ الرحلة",
     "tapExplore": "← اضغط لاستكشاف",
-    "proofBuyers": "+١٠٠ ألف مشتري يثقون بنا",
-    "proofReviews": "+٥٠ ألف تقييم موثق",
-    "proofProtected": "٨٤٧ مليون ج.م محمية",
     "research": { "subtitle": "اعرف مين تثق فيه" },
     "choose": { "subtitle": "اختار مشاريع موثوقة" },
     "finance": { "subtitle": "موّل بأمان" },
