@@ -546,6 +546,7 @@ export const HeroTrustShowcase = () => {
                       border: 3px solid ${c};
                       box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30;
                       cursor: pointer;
+                      margin-top: -7.5px;
                       animation: thumb-impulse 2.5s ease-in-out infinite;
                     }
                     .trust-slider::-moz-range-thumb {
