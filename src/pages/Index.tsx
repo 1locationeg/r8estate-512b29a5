@@ -233,7 +233,7 @@ const Index = () => {
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
 
-            <div className="mb-1.5 max-w-[1100px] mx-auto">
+            <div className="mb-0 max-w-[1100px] mx-auto">
               {userMode === "buyers" ? (
                 <>
                   <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
@@ -241,9 +241,6 @@ const Index = () => {
                   </p>
                   <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
                     {t("hero.tagline_line2")}
-                  </p>
-                  <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                    {t("hero.joinBuyers")}.
                   </p>
                 </>
               ) : (
