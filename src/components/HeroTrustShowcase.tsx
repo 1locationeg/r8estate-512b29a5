@@ -73,7 +73,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     dimensions: [
       { labelKey: "showcase.delivery", valueKey: "showcase.onTime", positive: true },
       { labelKey: "showcase.quality", valueKey: "showcase.excellent", positive: true },
-      { labelKey: "showcase.response", valueKey: "showcase.fast", positive: true },
     ],
     trustLabelKey: "showcase.highTrust",
   },
