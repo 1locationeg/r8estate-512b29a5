@@ -274,7 +274,7 @@ const Index = () => {
             </div>
 
             {/* Journey Station Arc — after trust showcase & stats */}
-            <div className="mt-3 mb-2 animate-fade-in-up w-full" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
+            <div className="mt-2 mb-1 animate-fade-in-up w-full" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
               <MiniJourneyArc onStartJourney={() => {
                 const el = document.getElementById('journey-section-1');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
