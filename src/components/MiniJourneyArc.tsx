@@ -27,9 +27,10 @@ const TINT_MAP: Record<string, string> = {
 
 interface MiniJourneyArcProps {
   onStartJourney?: () => void;
+  onStationClick?: (index: number) => void;
 }
 
-export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
+export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyArcProps) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
