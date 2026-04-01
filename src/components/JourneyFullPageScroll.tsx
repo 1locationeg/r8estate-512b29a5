@@ -4,11 +4,10 @@ import { useTranslation } from "react-i18next";
 import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+import { HeroSearchBar } from "@/components/HeroSearchBar";
+import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 
 /* ─── Lazy-loaded expanded components ─── */
-const BrowseCategoriesGrid = lazy(() =>
-  import("@/components/BrowseCategoriesGrid").then(m => ({ default: m.BrowseCategoriesGrid }))
-);
 const LaunchWatchWidget = lazy(() =>
   import("@/components/LaunchWatchWidget").then(m => ({ default: m.LaunchWatchWidget }))
 );
