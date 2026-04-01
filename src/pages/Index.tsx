@@ -268,12 +268,7 @@ const Index = () => {
 
             <div id="trust-showcase"><HeroTrustShowcase /></div>
 
-            {/* Traction Stats — inside hero for first-scroll visibility */}
-            <div className={cn("w-full mt-1 mb-0 transition-all duration-300 animate-fade-in-up", searchFocused && "opacity-30 pointer-events-none")} style={{ animationDelay: '1000ms', animationDuration: '0.6s' }}>
-              <TractionStats />
-            </div>
-
-            {/* Journey Station Arc — after trust showcase & stats */}
+            {/* Journey Station Arc — before traction stats */}
             <div className="mt-1 mb-0 animate-fade-in-up w-full relative" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
               {/* Glow backdrop */}
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-journey-research/20 via-journey-choose/20 via-journey-finance/20 to-journey-protect/20 blur-xl opacity-60 pointer-events-none" />
@@ -289,6 +284,11 @@ const Index = () => {
                   }}
                 />
               </div>
+            </div>
+
+            {/* Traction Stats — after journey arc */}
+            <div className={cn("w-full mt-1 mb-0 transition-all duration-300 animate-fade-in-up", searchFocused && "opacity-30 pointer-events-none")} style={{ animationDelay: '1000ms', animationDuration: '0.6s' }}>
+              <TractionStats />
             </div>
           </div>
         </div>
