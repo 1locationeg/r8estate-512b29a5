@@ -43,7 +43,7 @@ export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyAr
   return (
     <div className="w-full" role="navigation" aria-label="Journey progress">
       {/* Header */}
-      <div className="flex items-center justify-between mb-4 px-1">
+      <div className="flex items-center justify-between mb-1 px-1">
         <button
           onClick={onStartJourney}
           className="group text-[9px] sm:text-xs font-bold uppercase tracking-wide text-white bg-gradient-to-r from-[#c026d3] via-[#7c3aed] to-[#06b6d4] hover:from-[#e879f9] hover:via-[#a78bfa] hover:to-[#22d3ee] px-2.5 sm:px-3.5 py-1 rounded-full transition-all duration-300 flex items-center gap-1 shadow-[0_0_12px_rgba(124,58,237,0.4)] hover:shadow-[0_0_20px_rgba(124,58,237,0.5)] hover:scale-105 border border-white/10"
@@ -152,11 +152,7 @@ export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyAr
         })}
       </div>
 
-      {/* Mobile hint */}
-      <p className="text-[8px] text-muted-foreground/50 text-center mt-2 sm:hidden flex items-center justify-center gap-1">
-        {t("journeyArc.tapExplore")}
-        <ArrowRight className="w-2.5 h-2.5 animate-bounce" style={{ animationDirection: "alternate" }} />
-      </p>
+
     </div>
   );
 };
