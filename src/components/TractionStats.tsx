@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { MessageSquare, Building2, Users, CheckCircle } from "lucide-react";
+
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "@/utils/formatArabic";
 
