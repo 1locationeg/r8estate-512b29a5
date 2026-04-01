@@ -269,7 +269,7 @@ export const CommunityNewPost = ({ open, onOpenChange, onCreated, prefillDevelop
             _title: `📢 ${title.trim()}`,
             _message: isPoll ? "New poll in community — share your vote!" : (body.trim().slice(0, 100) || "New discussion in community"),
             _type: "announcement",
-            _metadata: JSON.stringify({ link: `/community?post=${result.id}` }),
+            _metadata: { link: `/community?post=${result.id}` },
           });
         }
         resetForm();
