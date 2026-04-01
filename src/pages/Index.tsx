@@ -219,10 +219,10 @@ const Index = () => {
 
   /* ─── Hero content block (passed into snap container) ─── */
   const heroBlock = (
-    <div className="flex-1 flex flex-col items-center justify-start pt-2 md:justify-center md:pt-0 px-4 md:px-8 lg:px-12">
+    <div className="flex-1 flex flex-col items-center justify-start pt-2 md:justify-center md:pt-0 px-4 md:px-6 lg:px-8">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
         {/* Hero Card */}
-        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
+        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-3 md:p-4 mt-1 md:mt-1 overflow-hidden my-[2px] py-[3px] bg-card shadow-sm ai-grain ai-glow">
           <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
             backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
             backgroundSize: '20px 20px'
@@ -256,7 +256,7 @@ const Index = () => {
                 {searchFocused && (
                   <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
                 )}
-                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
+                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-2 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
                   <HeroSearchBar
                     onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
                     onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
@@ -274,7 +274,7 @@ const Index = () => {
             </div>
 
             {/* Journey Station Arc — after trust showcase & stats */}
-            <div className="mt-3 mb-2 animate-fade-in-up w-full" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
+            <div className="mt-2 mb-1 animate-fade-in-up w-full" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
               <MiniJourneyArc onStartJourney={() => {
                 const el = document.getElementById('journey-section-1');
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
@@ -284,7 +284,7 @@ const Index = () => {
         </div>
 
         {/* Live Market Pulse */}
-        <div className={cn("mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+        <div className={cn("mt-1 mb-1 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
           <LiveMarketPulse />
         </div>
       </div>
