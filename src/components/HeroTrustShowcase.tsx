@@ -501,7 +501,7 @@ export const HeroTrustShowcase = () => {
       </div>
 
       {/* ── House Builder Slider ── */}
-      <div className="mt-2 mx-2 md:mx-0">
+      <div className="mt-0 mx-2 md:mx-0">
         <div className="flex items-center gap-3 relative">
           {/* House SVG visualization */}
           <div className="flex-shrink-0 relative w-10 h-10 sm:w-12 sm:h-12">
@@ -664,14 +664,6 @@ export const HeroTrustShowcase = () => {
           </div>
         </div>
 
-        {/* Build progress hint */}
-        <p className="text-[9px] text-muted-foreground/60 text-center mt-1">
-          {displayScore < 25 ? "🧱 Laying foundation…" :
-           displayScore < 50 ? "🏗️ Building walls…" :
-           displayScore < 65 ? "🪟 Adding details…" :
-           displayScore < 80 ? "🏠 Raising the roof…" :
-           "✅ Fully secured home!"}
-        </p>
       </div>
     </div>
   );
