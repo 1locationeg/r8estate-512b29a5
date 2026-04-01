@@ -664,14 +664,6 @@ export const HeroTrustShowcase = () => {
           </div>
         </div>
 
-        {/* Build progress hint */}
-        <p className="text-[9px] text-muted-foreground/60 text-center mt-1">
-          {displayScore < 25 ? "🧱 Laying foundation…" :
-           displayScore < 50 ? "🏗️ Building walls…" :
-           displayScore < 65 ? "🪟 Adding details…" :
-           displayScore < 80 ? "🏠 Raising the roof…" :
-           "✅ Fully secured home!"}
-        </p>
       </div>
     </div>
   );
