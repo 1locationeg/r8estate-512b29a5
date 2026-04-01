@@ -26,7 +26,6 @@ const stats = [
   { target: 50000, icon: MessageSquare, suffix: "K+", labelKey: "stats.verifiedReviews" },
   { target: 1200, icon: Building2, suffix: "+", labelKey: "stats.trustedCompanies" },
   { target: 100000, icon: Users, suffix: "K+", labelKey: "stats.activeUsers" },
-  { target: 96, icon: CheckCircle, suffix: "%", labelKey: "stats.successRate" },
 ];
 
 export function TractionStats() {
@@ -48,8 +47,7 @@ export function TractionStats() {
   const v1 = useCountUp(50, 1800, visible);
   const v2 = useCountUp(1200, 1800, visible);
   const v3 = useCountUp(100, 1800, visible);
-  const v4 = useCountUp(96, 1800, visible);
-  const values = [v1, v2, v3, v4];
+  const values = [v1, v2, v3];
 
   const visibleStats = stats.filter((s, i) => {
     // On render we include all, CSS handles hideMobile
@@ -58,7 +56,7 @@ export function TractionStats() {
 
   return (
     <div ref={ref} className="w-full max-w-[1100px] mx-auto">
-      <div className="grid grid-cols-4 gap-1 sm:gap-3">
+      <div className="grid grid-cols-3 gap-3 sm:gap-6">
         {stats.map((s, i) => {
           const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
