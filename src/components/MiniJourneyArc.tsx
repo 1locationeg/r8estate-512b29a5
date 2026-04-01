@@ -2,7 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { JOURNEY_STATIONS, getStationForRoute } from "@/lib/journeyStations";
 import { cn } from "@/lib/utils";
-import { ChevronRight, ArrowRight } from "lucide-react";
+import { ChevronRight, ArrowRight, ShieldCheck, CheckCircle2, Users, Star } from "lucide-react";
 
 const FILL_MAP: Record<string, string> = {
   research: "bg-journey-research",
@@ -41,8 +41,18 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
 
   return (
     <div className="w-full" role="navigation" aria-label="Journey progress">
+      {/* Trust Promise Banner */}
+      <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-journey-protect/10 border border-journey-protect/20">
+          <ShieldCheck className="w-3.5 h-3.5 text-journey-protect" />
+          <span className="text-[10px] sm:text-xs font-bold text-journey-protect tracking-wide">
+            {t("journeyArc.trustPromise")}
+          </span>
+        </div>
+      </div>
+
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 px-1">
+      <div className="flex items-center justify-between mb-2 px-1">
         <h3 className="text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase text-foreground/70">
           {t("journeyArc.title")}
         </h3>
@@ -93,14 +103,14 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
                       isActive || isPast ? "text-white" : ""
                     )} />
                   </div>
-                  {/* Number badge */}
+                  {/* Verified check badge */}
                   <span
                     className={cn(
-                      "absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black text-white shadow-sm",
+                      "absolute -top-1 -right-1 w-5 h-5 rounded-full flex items-center justify-center shadow-sm",
                       FILL_MAP[station.key]
                     )}
                   >
-                    {idx + 1}
+                    <CheckCircle2 className="w-3.5 h-3.5 text-white" />
                   </span>
                   {/* Active pulse */}
                   {isActive && (
@@ -149,8 +159,32 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
         })}
       </div>
 
+      {/* Trust social proof bar */}
+      <div className="flex items-center justify-center gap-3 sm:gap-5 mt-2 py-1.5 px-3 rounded-lg bg-secondary/50">
+        <div className="flex items-center gap-1">
+          <Users className="w-3 h-3 text-journey-research" />
+          <span className="text-[9px] sm:text-[11px] font-semibold text-foreground/70">
+            {t("journeyArc.proofBuyers")}
+          </span>
+        </div>
+        <div className="w-px h-3 bg-border" />
+        <div className="flex items-center gap-1">
+          <Star className="w-3 h-3 text-journey-choose fill-journey-choose" />
+          <span className="text-[9px] sm:text-[11px] font-semibold text-foreground/70">
+            {t("journeyArc.proofReviews")}
+          </span>
+        </div>
+        <div className="w-px h-3 bg-border" />
+        <div className="flex items-center gap-1">
+          <ShieldCheck className="w-3 h-3 text-journey-protect" />
+          <span className="text-[9px] sm:text-[11px] font-semibold text-foreground/70">
+            {t("journeyArc.proofProtected")}
+          </span>
+        </div>
+      </div>
+
       {/* Mobile hint */}
-      <p className="text-[8px] text-muted-foreground/50 text-center mt-2 sm:hidden flex items-center justify-center gap-1">
+      <p className="text-[8px] text-muted-foreground/50 text-center mt-1.5 sm:hidden flex items-center justify-center gap-1">
         {t("journeyArc.tapExplore")}
         <ArrowRight className="w-2.5 h-2.5 animate-bounce" style={{ animationDirection: "alternate" }} />
       </p>
