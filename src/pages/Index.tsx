@@ -4,6 +4,7 @@ import { JourneyFullPageScroll } from "@/components/JourneyFullPageScroll";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
+import { MiniJourneyArc } from "@/components/MiniJourneyArc";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -268,6 +269,11 @@ const Index = () => {
             </div>
 
             <div id="trust-showcase"><HeroTrustShowcase /></div>
+
+            {/* Journey Station Arc — visible on first load */}
+            <div className="mt-3 mb-1 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
+              <MiniJourneyArc />
+            </div>
           </div>
         </div>
 

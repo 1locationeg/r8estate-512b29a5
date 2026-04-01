@@ -128,34 +128,74 @@ const JourneyStepSection = ({
   );
 };
 
-/* ─── Dot Navigation ─── */
-const DotNav = ({
+/* ─── Station Ring Navigation ─── */
+const StationRingNav = ({
   activeIndex,
-  onDotClick,
+  onRingClick,
 }: {
   activeIndex: number;
-  onDotClick: (idx: number) => void;
-}) => (
-  <div className="fixed right-3 sm:right-5 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-3">
-    {STATIONS.map((s, idx) => (
-      <button
-        key={s.key}
-        onClick={() => onDotClick(idx)}
-        aria-label={`Go to section ${s.step}`}
-        className={cn(
-          "w-3 h-3 rounded-full border-2 transition-all duration-300",
-          activeIndex === idx
-            ? "scale-125"
-            : "opacity-40 hover:opacity-70"
-        )}
-        style={{
-          borderColor: `hsl(${s.hslVar})`,
-          backgroundColor: activeIndex === idx ? `hsl(${s.hslVar})` : "transparent",
-        }}
-      />
-    ))}
-  </div>
-);
+  onRingClick: (idx: number) => void;
+}) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="fixed right-2 sm:right-4 top-1/2 -translate-y-1/2 z-50 flex flex-col items-center">
+      {STATIONS.map((s, idx) => {
+        const isActive = activeIndex === idx;
+        const Icon = s.icon;
+        const prefix = `journeyScroll.${s.key}`;
+
+        return (
+          <div key={s.key} className="flex flex-col items-center">
+            {/* Connecting line above (skip first) */}
+            {idx > 0 && (
+              <div
+                className="w-[2px] h-6 sm:h-8 transition-colors duration-500"
+                style={{
+                  backgroundColor: activeIndex >= idx
+                    ? `hsl(${s.hslVar})`
+                    : `hsl(${s.hslVar} / 0.15)`,
+                }}
+              />
+            )}
+
+            {/* Ring button */}
+            <button
+              onClick={() => onRingClick(idx)}
+              aria-label={`${s.step}. ${t(`${prefix}.stepLabel`)}`}
+              className={cn(
+                "relative w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-400 group",
+                isActive ? "scale-110 shadow-lg" : "opacity-50 hover:opacity-80 hover:scale-105"
+              )}
+              style={{
+                borderColor: `hsl(${s.hslVar})`,
+                backgroundColor: isActive ? `hsl(${s.hslVar})` : "hsl(var(--background))",
+              }}
+            >
+              <Icon
+                className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-colors"
+                style={{ color: isActive ? "white" : `hsl(${s.hslVar})` }}
+              />
+
+              {/* Tooltip label on active */}
+              {isActive && (
+                <span
+                  className="absolute right-full mr-2 whitespace-nowrap text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md animate-fade-in"
+                  style={{
+                    backgroundColor: `hsl(${s.hslVar})`,
+                    color: "white",
+                  }}
+                >
+                  {s.step}. {t(`${prefix}.stepLabel`)}
+                </span>
+              )}
+            </button>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
 
 /* ─── Main Container ─── */
 interface Props {
@@ -184,19 +224,19 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
           }
         }
       },
-      { root: container, threshold: 0.5 }
+      { root: container, threshold: 0.3 }
     );
 
     sectionEls.forEach((el) => observer.observe(el));
 
-    // Also observe hero to reset dot nav
+    // Also observe hero to reset nav
     const hero = container.querySelector("#journey-hero");
     if (hero) {
       const heroObs = new IntersectionObserver(
         (entries) => {
           if (entries[0]?.isIntersecting) setActiveSection(-1);
         },
-        { root: container, threshold: 0.5 }
+        { root: container, threshold: 0.3 }
       );
       heroObs.observe(hero);
       return () => { observer.disconnect(); heroObs.disconnect(); };
@@ -214,6 +254,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
     <div
       ref={containerRef}
       className="h-[100dvh] overflow-y-auto snap-y snap-mandatory scrollbar-hide"
+      style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
     >
       {/* Section 1 — Hero (existing content passed in) */}
       <section id="journey-hero" className="min-h-[100dvh] w-full snap-start flex flex-col">
@@ -230,10 +271,8 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
         />
       ))}
 
-      {/* Dot navigation — only visible when past hero */}
-      {activeSection >= 0 && (
-        <DotNav activeIndex={activeSection} onDotClick={scrollToSection} />
-      )}
+      {/* Station Ring Navigation — always visible */}
+      <StationRingNav activeIndex={activeSection} onRingClick={scrollToSection} />
     </div>
   );
 };
