@@ -114,7 +114,7 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
                 {/* Label */}
                 <span className={cn(
                   "text-[10px] sm:text-xs font-bold leading-tight mt-0.5",
-                  isActive || isPast ? TEXT_MAP[station.key] : "text-foreground/80"
+                  TEXT_MAP[station.key]
                 )}>
                   {t(station.labelKey)}
                 </span>
