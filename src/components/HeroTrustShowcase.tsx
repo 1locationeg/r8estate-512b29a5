@@ -476,14 +476,61 @@ export const HeroTrustShowcase = () => {
             })}
           </div>
 
-          {/* Row 5: Footer — developer + trust badge */}
+          {/* Row 5: Footer — developer + house + trust badge */}
           <div
             className={`flex items-center justify-between pt-1.5 border-t border-border transition-all duration-300 ${
               rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
             <div className="flex items-center gap-2">
-              <Building2 className="w-4 h-4 text-muted-foreground" />
+              {/* House SVG — builds with score */}
+              <div className="flex-shrink-0 relative w-6 h-6">
+                <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="8" y="38" width="32" height="6" rx="1"
+                    fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    opacity={displayScore >= 10 ? 1 : 0.25}
+                    style={{ transition: 'all 0.4s ease' }}
+                  />
+                  <rect x="10" y="20" width="6" height="18" rx="1"
+                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    opacity={displayScore >= 25 ? 0.85 : 0.15}
+                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+                  />
+                  <rect x="32" y="20" width="6" height="18" rx="1"
+                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    opacity={displayScore >= 25 ? 0.85 : 0.15}
+                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+                  />
+                  <rect x="20" y="28" width="8" height="10" rx="1"
+                    fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    opacity={displayScore >= 40 ? 0.7 : 0.1}
+                    style={{ transition: 'all 0.4s ease' }}
+                  />
+                  <rect x="12" y="24" width="5" height="5" rx="0.5"
+                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
+                    style={{ transition: 'all 0.4s ease' }}
+                  />
+                  <rect x="31" y="24" width="5" height="5" rx="0.5"
+                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
+                    style={{ transition: 'all 0.4s ease' }}
+                  />
+                  <polygon points="24,6 4,22 44,22"
+                    fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                    opacity={displayScore >= 65 ? 1 : 0.15}
+                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
+                  />
+                  {displayScore >= 80 && (
+                    <g style={{ animation: 'fade-in 0.4s ease-out' }}>
+                      <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
+                      <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </g>
+                  )}
+                </svg>
+              </div>
               <span className="text-xs font-semibold text-foreground">{scenario.developer}</span>
             </div>
             <span
@@ -497,90 +544,10 @@ export const HeroTrustShowcase = () => {
               {t(scenario.trustLabelKey)} · {displayScore}
             </span>
           </div>
-        </div>
-      </div>
 
-      {/* ── House Builder Slider ── */}
-      <div className="mt-0 mx-2 md:mx-0">
-        <div className="flex items-center gap-3 relative">
-          {/* House SVG visualization */}
-          <div className="flex-shrink-0 relative w-7 h-7 sm:w-8 sm:h-8">
-            <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              {/* Foundation — visible at 10%+ */}
-              <rect
-                x="8" y="38" width="32" height="6" rx="1"
-                fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                opacity={displayScore >= 10 ? 1 : 0.25}
-                style={{ transition: 'all 0.4s ease' }}
-              />
-              {/* Left wall — visible at 25%+ */}
-              <rect
-                x="10" y="20" width="6" height="18" rx="1"
-                fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                opacity={displayScore >= 25 ? 0.85 : 0.15}
-                style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-              />
-              {/* Right wall — visible at 25%+ */}
-              <rect
-                x="32" y="20" width="6" height="18" rx="1"
-                fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                opacity={displayScore >= 25 ? 0.85 : 0.15}
-                style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-              />
-              {/* Door — visible at 40%+ */}
-              <rect
-                x="20" y="28" width="8" height="10" rx="1"
-                fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                opacity={displayScore >= 40 ? 0.7 : 0.1}
-                style={{ transition: 'all 0.4s ease' }}
-              />
-              {/* Window left — visible at 50%+ */}
-              <rect
-                x="12" y="24" width="5" height="5" rx="0.5"
-                fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                strokeWidth="1"
-                opacity={displayScore >= 50 ? 1 : 0.1}
-                style={{ transition: 'all 0.4s ease' }}
-              />
-              {/* Window right — visible at 50%+ */}
-              <rect
-                x="31" y="24" width="5" height="5" rx="0.5"
-                fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                strokeWidth="1"
-                opacity={displayScore >= 50 ? 1 : 0.1}
-                style={{ transition: 'all 0.4s ease' }}
-              />
-              {/* Roof — visible at 65%+ */}
-              <polygon
-                points="24,6 4,22 44,22"
-                fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                opacity={displayScore >= 65 ? 1 : 0.15}
-                style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
-              />
-              {/* Checkmark — visible at 80%+ */}
-              {displayScore >= 80 && (
-                <g style={{ animation: 'fade-in 0.4s ease-out' }}>
-                  <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
-                  <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                </g>
-              )}
-            </svg>
-            {/* Glow effect at high scores */}
-            {displayScore >= 80 && (
-              <div
-                className="absolute inset-0 rounded-full blur-lg opacity-30 pointer-events-none animate-pulse"
-                style={{ background: getScoreColor(displayScore) }}
-              />
-            )}
-          </div>
-
-          {/* Slider track */}
-          <div className="flex-1 relative h-[18px] flex items-center">
-            {/* Background track — inset so it doesn't bleed into thumb */}
+          {/* Slider track — card bottom edge */}
+          <div className="relative h-[18px] flex items-center mt-1">
             <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
-            {/* Colored fill track — stops before thumb circle */}
             <div
               className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
@@ -647,7 +614,6 @@ export const HeroTrustShowcase = () => {
                 }
               }}
             />
-            {/* Bouncing hand icon */}
             {!hasInteracted && phase === "interactive" && (
               <div
                 className="absolute pointer-events-none animate-bounce"
@@ -663,7 +629,6 @@ export const HeroTrustShowcase = () => {
             )}
           </div>
         </div>
-
       </div>
     </div>
   );
