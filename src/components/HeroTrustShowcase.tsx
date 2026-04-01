@@ -541,7 +541,7 @@ export const HeroTrustShowcase = () => {
                 backgroundColor: `${color}15`,
               }}
             >
-              {t(scenario.trustLabelKey)} · {displayScore}
+              {t(scenario.trustLabelKey)}
             </span>
           </div>
 
