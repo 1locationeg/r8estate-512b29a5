@@ -1412,7 +1412,9 @@
       "bullet2": "AI-powered trust scores for every developer",
       "bullet3": "Red-flag alerts on risky companies",
       "bullet4": "Compare developers side-by-side",
-      "cta": "Start Researching →"
+      "cta": "Start Researching →",
+      "hook": "Search developers & projects",
+      "searchPlaceholder": "Search developers, projects..."
     },
     "choose": {
       "stepLabel": "STEP 2 OF 4 · CHOOSE",
