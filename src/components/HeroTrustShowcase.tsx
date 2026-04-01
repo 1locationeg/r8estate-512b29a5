@@ -41,7 +41,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     dimensions: [
       { labelKey: "showcase.delivery", valueKey: "showcase.18moLate", positive: false },
       { labelKey: "showcase.quality", valueKey: "showcase.poor", positive: false },
-      { labelKey: "showcase.response", valueKey: "showcase.noReply", positive: false },
     ],
     trustLabelKey: "showcase.lowTrust",
   },
@@ -58,7 +57,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     dimensions: [
       { labelKey: "showcase.delivery", valueKey: "showcase.3moLate", positive: false },
       { labelKey: "showcase.quality", valueKey: "showcase.average", positive: false },
-      { labelKey: "showcase.response", valueKey: "showcase.slow", positive: false },
     ],
     trustLabelKey: "showcase.mixed",
   },
@@ -75,7 +73,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     dimensions: [
       { labelKey: "showcase.delivery", valueKey: "showcase.onTime", positive: true },
       { labelKey: "showcase.quality", valueKey: "showcase.excellent", positive: true },
-      { labelKey: "showcase.response", valueKey: "showcase.fast", positive: true },
     ],
     trustLabelKey: "showcase.highTrust",
   },
@@ -92,7 +89,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     dimensions: [
       { labelKey: "showcase.delivery", valueKey: "showcase.early", positive: true },
       { labelKey: "showcase.quality", valueKey: "showcase.premium", positive: true },
-      { labelKey: "showcase.response", valueKey: "showcase.instant", positive: true },
     ],
     trustLabelKey: "showcase.exceptional",
   },
@@ -457,7 +453,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 4: Dimension pills */}
           <div
-            className={`flex flex-nowrap gap-1 overflow-hidden transition-all duration-300 ${
+            className={`flex flex-nowrap gap-2 justify-center overflow-hidden transition-all duration-300 ${
               rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
