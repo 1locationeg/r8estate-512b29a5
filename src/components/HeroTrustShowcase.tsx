@@ -630,6 +630,7 @@ export const HeroTrustShowcase = () => {
             )}
             </div>
           </div>
+        </div>
       </div>
     </div>
   );
