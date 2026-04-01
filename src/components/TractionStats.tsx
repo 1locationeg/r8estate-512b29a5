@@ -67,8 +67,8 @@ export function TractionStats() {
               key={s.labelKey}
               className="flex flex-col items-center gap-1 py-0 px-2"
             >
-              <Icon className="w-4 h-4 text-primary/70" />
-              <span className="text-sm md:text-lg font-extrabold text-foreground tabular-nums leading-none">
+              <Icon className="w-3.5 h-3.5 text-cyan-400 drop-shadow-[0_0_6px_rgba(34,211,238,0.5)]" />
+              <span className="text-xs md:text-base font-bold text-foreground tabular-nums leading-none">
                 {displayVal}
               </span>
               <span className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-none text-center">
