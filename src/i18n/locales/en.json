@@ -1449,7 +1449,11 @@
       "bullet2": "Construction progress tracking",
       "bullet3": "Community alerts & buyer protection",
       "bullet4": "Earn trust points for contributing",
-      "cta": "Create Free Account →"
-    }
+      "cta": "Create Free Account →",
+      "hook": "Join community"
+    },
+    "tapToExplore": "Tap to explore",
+    "close": "Close",
+    "goToPage": "Go to full page"
   }
 }
