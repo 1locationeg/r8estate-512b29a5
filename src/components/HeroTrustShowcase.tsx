@@ -585,11 +585,13 @@ export const HeroTrustShowcase = () => {
               className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
                 left: '9px',
-                width: `max(0px, calc((${displayScore}% - 9px) * (100 - 18) / 100 - 9px))`,
-                background: getScoreColor(displayScore),
+                width: `calc(${displayScore}% * (1 - 18px / 100%) - 9px)`,
+                background: displayScore <= 2 ? 'transparent' : getScoreColor(displayScore),
                 top: '50%',
                 transform: 'translateY(-50%)',
                 transition: 'background 0.3s',
+                maxWidth: 'calc(100% - 27px)',
+                minWidth: 0,
               }}
             />
             <input
