@@ -242,9 +242,6 @@ const Index = () => {
                   <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
                     {t("hero.tagline_line2")}
                   </p>
-                  <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                    {t("hero.joinBuyers")}.
-                  </p>
                 </>
               ) : (
                 <>
