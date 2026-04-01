@@ -1436,6 +1436,15 @@
     "finance": "موّل",
     "protect": "احمِ"
   },
+  "journeyArc": {
+    "title": "طريقك لبيت آمن",
+    "startJourney": "← ابدأ الرحلة",
+    "tapExplore": "← اضغط لاستكشاف",
+    "research": { "subtitle": "اعرف مين تثق فيه" },
+    "choose": { "subtitle": "اختار مشاريع موثوقة" },
+    "finance": { "subtitle": "موّل بأمان" },
+    "protect": { "subtitle": "أمّن حقوقك" }
+  },
   "journeyScroll": {
     "research": {
       "stepLabel": "الخطوة ١ من ٤ · ابحث",

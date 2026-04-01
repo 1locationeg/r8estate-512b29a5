@@ -272,8 +272,11 @@ const Index = () => {
             <div id="trust-showcase"><HeroTrustShowcase /></div>
 
             {/* Journey Station Arc — visible on first load */}
-            <div className="mt-3 mb-1 animate-fade-in-up" style={{ animationDelay: '800ms' }}>
-              <MiniJourneyArc />
+            <div className="mt-4 mb-1 animate-fade-in-up w-full" style={{ animationDelay: '800ms', animationDuration: '0.8s' }}>
+              <MiniJourneyArc onStartJourney={() => {
+                const el = document.getElementById('journey-section-1');
+                if (el) el.scrollIntoView({ behavior: 'smooth' });
+              }} />
             </div>
           </div>
         </div>
