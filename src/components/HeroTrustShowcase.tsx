@@ -453,7 +453,7 @@ export const HeroTrustShowcase = () => {
 
           {/* Row 4: Dimension pills */}
           <div
-            className={`flex flex-nowrap gap-1 overflow-hidden transition-all duration-300 ${
+            className={`flex flex-nowrap gap-2 justify-center overflow-hidden transition-all duration-300 ${
               rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
