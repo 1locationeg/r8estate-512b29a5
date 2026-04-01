@@ -127,19 +127,21 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
 
               {/* Arrow connector between stations */}
               {idx < JOURNEY_STATIONS.length - 1 && (
-                <div className="flex items-center self-center mt-2 mx-0.5 sm:mx-1.5 md:mx-3">
+                <div className="flex items-center self-center mt-2 mx-1 sm:mx-2 md:mx-4">
                   <div className={cn(
                     "flex items-center transition-all duration-500",
-                    isPast ? "opacity-80" : "opacity-30"
+                    isPast ? "opacity-90" : "opacity-40"
                   )}>
                     <div className={cn(
-                      "w-3 sm:w-5 md:w-8 h-[2px] rounded-full",
-                      isPast ? FILL_MAP[station.key] : "bg-muted-foreground/20"
+                      "w-4 sm:w-6 md:w-10 h-[3px] rounded-full transition-all duration-500",
+                      isPast
+                        ? `bg-gradient-to-r ${idx === 0 ? 'from-journey-research to-journey-choose' : idx === 1 ? 'from-journey-choose to-journey-finance' : 'from-journey-finance to-journey-protect'}`
+                        : "bg-muted-foreground/15"
                     )} />
                     <ChevronRight className={cn(
-                      "w-4 h-4 sm:w-5 sm:h-5 -ml-1",
-                      isPast ? TEXT_MAP[station.key] : "text-muted-foreground/30",
-                      isActive && "animate-pulse"
+                      "w-4 h-4 sm:w-5 sm:h-5 -ml-1 transition-all duration-300",
+                      isPast ? TEXT_MAP[station.key] : "text-muted-foreground/25",
+                      isActive && "animate-pulse text-primary"
                     )} />
                   </div>
                 </div>
