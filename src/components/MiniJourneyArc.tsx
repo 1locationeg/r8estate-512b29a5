@@ -42,16 +42,16 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
   return (
     <div className="w-full" role="navigation" aria-label="Journey progress">
       {/* Header */}
-      <div className="flex items-center justify-between mb-3 px-1">
-        <h3 className="text-[10px] sm:text-xs font-bold tracking-[0.15em] uppercase text-foreground/70">
+      <div className="flex items-center justify-between mb-4 px-1">
+        <h3 className="text-[11px] sm:text-xs font-black tracking-[0.2em] uppercase bg-gradient-to-r from-journey-research via-journey-choose to-journey-protect bg-clip-text text-transparent">
           {t("journeyArc.title")}
         </h3>
         <button
           onClick={onStartJourney}
-          className="text-[10px] sm:text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-0.5"
+          className="group text-[10px] sm:text-xs font-bold text-white bg-gradient-to-r from-journey-research to-journey-choose hover:from-journey-choose hover:to-journey-finance px-3 py-1 rounded-full transition-all duration-300 flex items-center gap-1 shadow-md hover:shadow-lg hover:scale-105"
         >
           {t("journeyArc.startJourney")}
-          <ArrowRight className="w-3 h-3" />
+          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
         </button>
       </div>
 
