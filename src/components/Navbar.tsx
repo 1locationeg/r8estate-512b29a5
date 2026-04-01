@@ -51,8 +51,8 @@ export const Navbar = ({
   const navLinks = user ? userNavLinks : guestNavLinks;
 
   return (
-    <header className="bg-background shadow-sm border-b border-border">
-      <div className="container mx-auto px-3 flex items-center justify-between gap-2 py-0">
+    <header className="bg-background shadow-sm border-b border-border leading-none">
+      <div className="container mx-auto px-2 flex items-center justify-between gap-1 py-0">
         {/* Logo */}
         <button
           onClick={() => navigate("/")}
