@@ -1412,7 +1412,9 @@
       "bullet2": "AI-powered trust scores for every developer",
       "bullet3": "Red-flag alerts on risky companies",
       "bullet4": "Compare developers side-by-side",
-      "cta": "Start Researching →"
+      "cta": "Start Researching →",
+      "hook": "Search developers & projects",
+      "searchPlaceholder": "Search developers, projects..."
     },
     "choose": {
       "stepLabel": "STEP 2 OF 4 · CHOOSE",
@@ -1423,7 +1425,8 @@
       "bullet2": "Red-flag detection on project promises",
       "bullet3": "AI risk assessment for every launch",
       "bullet4": "Confirmed buyer counts per project",
-      "cta": "Explore Live Launches →"
+      "cta": "Explore Live Launches →",
+      "hook": "Browse launches"
     },
     "finance": {
       "stepLabel": "STEP 3 OF 4 · FINANCE",
@@ -1434,7 +1437,8 @@
       "bullet2": "Track price-per-meter changes over time",
       "bullet3": "Area insights with real transaction data",
       "bullet4": "Full cost calculator including fees",
-      "cta": "See Live Deals →"
+      "cta": "See Live Deals →",
+      "hook": "See deals"
     },
     "protect": {
       "stepLabel": "STEP 4 OF 4 · PROTECT",
@@ -1445,7 +1449,11 @@
       "bullet2": "Construction progress tracking",
       "bullet3": "Community alerts & buyer protection",
       "bullet4": "Earn trust points for contributing",
-      "cta": "Create Free Account →"
-    }
+      "cta": "Create Free Account →",
+      "hook": "Join community"
+    },
+    "tapToExplore": "Tap to explore",
+    "close": "Close",
+    "goToPage": "Go to full page"
   }
 }
