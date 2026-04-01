@@ -547,17 +547,17 @@ export const HeroTrustShowcase = () => {
 
           {/* Slider track — card bottom edge */}
           <div className="relative h-[18px] flex items-center mt-1">
-            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
+            <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
             <div
               className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
-                left: 0,
-                width: `${displayScore}%`,
+                left: '9px',
+                width: `calc(${displayScore}% * (1 - 18px / 100%) - 9px)`,
                 background: displayScore <= 2 ? 'transparent' : getScoreColor(displayScore),
                 top: '50%',
                 transform: 'translateY(-50%)',
-                transition: 'background 0.3s, width 0.15s',
-                maxWidth: '100%',
+                transition: 'background 0.3s',
+                maxWidth: 'calc(100% - 27px)',
                 minWidth: 0,
               }}
             />
@@ -587,17 +587,28 @@ export const HeroTrustShowcase = () => {
                     .trust-slider::-webkit-slider-thumb {
                       -webkit-appearance: none;
                       appearance: none;
-                      width: 0; height: 0;
-                      border: none;
-                      background: transparent;
+                      width: 18px; height: 18px;
+                      border-radius: 50%;
+                      background: hsl(var(--background));
+                      border: 3px solid ${c};
+                      box-shadow: 0 0 8px 2px ${c}40;
                       cursor: pointer;
                       margin-top: 0;
+                      transition: border-color 0.3s, box-shadow 0.3s;
                     }
                     .trust-slider::-moz-range-thumb {
-                      width: 0; height: 0;
-                      border: none;
-                      background: transparent;
+                      width: 18px; height: 18px;
+                      border-radius: 50%;
+                      background: hsl(var(--background));
+                      border: 3px solid ${c};
+                      box-shadow: 0 0 8px 2px ${c}40;
                       cursor: pointer;
+                      transition: border-color 0.3s, box-shadow 0.3s;
+                    }
+                    .trust-slider:active::-webkit-slider-thumb,
+                    .trust-slider:active::-moz-range-thumb {
+                      transform: scale(1.15);
+                      box-shadow: 0 0 12px 4px ${c}60;
                     }
                   `;
                 }
