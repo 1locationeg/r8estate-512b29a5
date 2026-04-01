@@ -43,7 +43,7 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
     <div className="w-full" role="navigation" aria-label="Journey progress">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-1">
-        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text text-transparent drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)]" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
+        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)] text-blue-900" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
           {t("journeyArc.title")}
         </h3>
         <button
