@@ -43,15 +43,15 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
     <div className="w-full" role="navigation" aria-label="Journey progress">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-1">
-        <h3 className="text-[11px] sm:text-xs font-black tracking-[0.2em] uppercase bg-gradient-to-r from-journey-research via-journey-choose to-journey-protect bg-clip-text text-transparent">
+        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text text-transparent drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)]" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
           {t("journeyArc.title")}
         </h3>
         <button
           onClick={onStartJourney}
-          className="group text-[10px] sm:text-xs font-bold text-white bg-gradient-to-r from-journey-research to-journey-choose hover:from-journey-choose hover:to-journey-finance px-3 py-1 rounded-full transition-all duration-300 flex items-center gap-1 shadow-md hover:shadow-lg hover:scale-105"
+          className="group text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-journey-research to-journey-choose hover:from-journey-choose hover:to-journey-finance px-4 py-1.5 rounded-full transition-all duration-300 flex items-center gap-1.5 shadow-[0_0_16px_hsl(var(--journey-choose)/0.4)] hover:shadow-[0_0_24px_hsl(var(--journey-choose)/0.6)] hover:scale-105"
         >
           {t("journeyArc.startJourney")}
-          <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" />
+          <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </button>
       </div>
 
