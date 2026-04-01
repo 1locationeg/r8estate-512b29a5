@@ -71,7 +71,7 @@ export function TractionStats() {
               <span className="text-xs md:text-base font-bold text-foreground tabular-nums leading-none">
                 {displayVal}
               </span>
-              <span className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-none text-center">
+              <span className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-none text-center whitespace-nowrap">
                 {t(s.labelKey)}
               </span>
             </div>
