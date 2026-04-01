@@ -1392,5 +1392,51 @@
     "choose": "Choose",
     "finance": "Finance",
     "protect": "Protect"
+  },
+  "journeyScroll": {
+    "research": {
+      "stepLabel": "STEP 1 OF 4 · RESEARCH",
+      "tagline": "Know before you go",
+      "heading": "Find Developers You Can Trust",
+      "description": "Read verified reviews from real buyers, check trust scores, and investigate any developer before you commit.",
+      "bullet1": "Verified reviews from confirmed buyers",
+      "bullet2": "AI-powered trust scores for every developer",
+      "bullet3": "Red-flag alerts on risky companies",
+      "bullet4": "Compare developers side-by-side",
+      "cta": "Start Researching →"
+    },
+    "choose": {
+      "stepLabel": "STEP 2 OF 4 · CHOOSE",
+      "tagline": "Pick verified projects",
+      "heading": "Pick a Project You Can Rely On",
+      "description": "Browse live launches with verified timelines, pricing transparency, and buyer ratings.",
+      "bullet1": "Verified delivery timelines & milestones",
+      "bullet2": "Red-flag detection on project promises",
+      "bullet3": "AI risk assessment for every launch",
+      "bullet4": "Confirmed buyer counts per project",
+      "cta": "Explore Live Launches →"
+    },
+    "finance": {
+      "stepLabel": "STEP 3 OF 4 · FINANCE",
+      "tagline": "Fund safely",
+      "heading": "Fund Your Purchase Safely",
+      "description": "Compare payment plans, track price changes, and get full cost breakdowns before you sign.",
+      "bullet1": "Compare payment plans across developers",
+      "bullet2": "Track price-per-meter changes over time",
+      "bullet3": "Area insights with real transaction data",
+      "bullet4": "Full cost calculator including fees",
+      "cta": "See Live Deals →"
+    },
+    "protect": {
+      "stepLabel": "STEP 4 OF 4 · PROTECT",
+      "tagline": "Land secure",
+      "heading": "Land Secure. Stay Protected.",
+      "description": "Check your contract, track construction progress, and join a community that has your back.",
+      "bullet1": "AI contract clause checker",
+      "bullet2": "Construction progress tracking",
+      "bullet3": "Community alerts & buyer protection",
+      "bullet4": "Earn trust points for contributing",
+      "cta": "Create Free Account →"
+    }
   }
 }
