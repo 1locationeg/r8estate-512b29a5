@@ -226,7 +226,7 @@ const JourneyStepSection = ({
 
             {/* Content area */}
             <div className="overflow-y-auto max-h-[65dvh] rounded-xl border border-border bg-card/60 backdrop-blur-sm p-3 text-start">
-              <StationExpandedContent stationKey={station.key} />
+              <StationExpandedContent stationKey={station.key} onCollapse={onCollapse} />
             </div>
           </div>
         )}
