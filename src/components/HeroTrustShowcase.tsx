@@ -506,10 +506,11 @@ export const HeroTrustShowcase = () => {
           <div className="flex-1 relative">
             {/* Colored fill track */}
             <div
-              className="absolute top-1/2 left-0 h-[3px] rounded-full pointer-events-none"
+              className="absolute left-0 h-[3px] rounded-full pointer-events-none z-[11]"
               style={{
                 width: `${displayScore}%`,
                 background: getScoreColor(displayScore),
+                top: '50%',
                 transform: 'translateY(-50%)',
                 transition: 'background 0.3s',
               }}
