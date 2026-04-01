@@ -43,9 +43,6 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
     <div className="w-full" role="navigation" aria-label="Journey progress">
       {/* Header */}
       <div className="flex items-center justify-between mb-4 px-1">
-        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)] text-blue-900" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
-          {t("journeyArc.title")}
-        </h3>
         <button
           onClick={onStartJourney}
           className="group text-[10px] sm:text-xs font-black uppercase tracking-wider text-white bg-gradient-to-r from-[#c026d3] via-[#7c3aed] to-[#06b6d4] hover:from-[#e879f9] hover:via-[#a78bfa] hover:to-[#22d3ee] px-4 py-1.5 rounded-full transition-all duration-500 flex items-center gap-1.5 shadow-[0_0_20px_rgba(192,38,211,0.5),0_0_40px_rgba(124,58,237,0.3)] hover:shadow-[0_0_28px_rgba(192,38,211,0.6),0_0_56px_rgba(124,58,237,0.4)] hover:scale-105 border border-white/10"
@@ -53,6 +50,9 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
           {t("journeyArc.startJourney")}
           <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform duration-300" />
         </button>
+        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)] text-blue-900" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
+          {t("journeyArc.title")}
+        </h3>
       </div>
 
       {/* Stations with arrows */}
