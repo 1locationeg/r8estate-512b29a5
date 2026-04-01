@@ -500,10 +500,86 @@ export const HeroTrustShowcase = () => {
         </div>
       </div>
 
-      {/* ── Minimal Slider ── */}
+      {/* ── House Builder Slider ── */}
       <div className="mt-2 mx-2 md:mx-0">
-        <div className="flex items-center gap-2 relative">
+        <div className="flex items-center gap-3 relative">
+          {/* House SVG visualization */}
+          <div className="flex-shrink-0 relative w-10 h-10 sm:w-12 sm:h-12">
+            <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+              {/* Foundation — visible at 10%+ */}
+              <rect
+                x="8" y="38" width="32" height="6" rx="1"
+                fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                opacity={displayScore >= 10 ? 1 : 0.25}
+                style={{ transition: 'all 0.4s ease' }}
+              />
+              {/* Left wall — visible at 25%+ */}
+              <rect
+                x="10" y="20" width="6" height="18" rx="1"
+                fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                opacity={displayScore >= 25 ? 0.85 : 0.15}
+                style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+              />
+              {/* Right wall — visible at 25%+ */}
+              <rect
+                x="32" y="20" width="6" height="18" rx="1"
+                fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                opacity={displayScore >= 25 ? 0.85 : 0.15}
+                style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+              />
+              {/* Door — visible at 40%+ */}
+              <rect
+                x="20" y="28" width="8" height="10" rx="1"
+                fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                opacity={displayScore >= 40 ? 0.7 : 0.1}
+                style={{ transition: 'all 0.4s ease' }}
+              />
+              {/* Window left — visible at 50%+ */}
+              <rect
+                x="12" y="24" width="5" height="5" rx="0.5"
+                fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                strokeWidth="1"
+                opacity={displayScore >= 50 ? 1 : 0.1}
+                style={{ transition: 'all 0.4s ease' }}
+              />
+              {/* Window right — visible at 50%+ */}
+              <rect
+                x="31" y="24" width="5" height="5" rx="0.5"
+                fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                strokeWidth="1"
+                opacity={displayScore >= 50 ? 1 : 0.1}
+                style={{ transition: 'all 0.4s ease' }}
+              />
+              {/* Roof — visible at 65%+ */}
+              <polygon
+                points="24,6 4,22 44,22"
+                fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                opacity={displayScore >= 65 ? 1 : 0.15}
+                style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
+              />
+              {/* Checkmark — visible at 80%+ */}
+              {displayScore >= 80 && (
+                <g style={{ animation: 'fade-in 0.4s ease-out' }}>
+                  <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
+                  <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                </g>
+              )}
+            </svg>
+            {/* Glow effect at high scores */}
+            {displayScore >= 80 && (
+              <div
+                className="absolute inset-0 rounded-full blur-lg opacity-30 pointer-events-none animate-pulse"
+                style={{ background: getScoreColor(displayScore) }}
+              />
+            )}
+          </div>
+
+          {/* Slider track */}
           <div className="flex-1 relative">
+            {/* Background track */}
+            <div className="absolute left-0 right-0 top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
             {/* Colored fill track */}
             <div
               className="absolute left-0 h-[3px] rounded-full pointer-events-none z-[11]"
@@ -543,34 +619,26 @@ export const HeroTrustShowcase = () => {
                       appearance: none;
                       width: 18px; height: 18px;
                       border-radius: 50%;
-                      background: transparent;
+                      background: hsl(var(--background));
                       border: 3px solid ${c};
-                      box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30;
+                      box-shadow: 0 0 8px 2px ${c}40;
                       cursor: pointer;
                       margin-top: -7.5px;
-                      animation: thumb-impulse 2.5s ease-in-out infinite;
+                      transition: border-color 0.3s, box-shadow 0.3s;
                     }
                     .trust-slider::-moz-range-thumb {
                       width: 18px; height: 18px;
                       border-radius: 50%;
-                      background: transparent;
+                      background: hsl(var(--background));
                       border: 3px solid ${c};
-                      box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30;
+                      box-shadow: 0 0 8px 2px ${c}40;
                       cursor: pointer;
-                      animation: thumb-impulse 2.5s ease-in-out infinite;
+                      transition: border-color 0.3s, box-shadow 0.3s;
                     }
                     .trust-slider:active::-webkit-slider-thumb,
                     .trust-slider:active::-moz-range-thumb {
-                      animation: none;
-                      transform: scale(1.1);
-                      box-shadow: 0 0 12px 4px ${c}80, 0 0 24px 8px ${c}40;
-                    }
-                    @keyframes thumb-impulse {
-                      0%, 100% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
-                      15% { transform: scale(1.25); box-shadow: 0 0 14px 5px ${c}80, 0 0 28px 10px ${c}50; }
-                      30% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
-                      40% { transform: scale(1.15); box-shadow: 0 0 10px 3px ${c}70, 0 0 20px 6px ${c}40; }
-                      55% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
+                      transform: scale(1.15);
+                      box-shadow: 0 0 12px 4px ${c}60;
                     }
                   `;
                 }
@@ -592,6 +660,15 @@ export const HeroTrustShowcase = () => {
             )}
           </div>
         </div>
+
+        {/* Build progress hint */}
+        <p className="text-[9px] text-muted-foreground/60 text-center mt-1">
+          {displayScore < 25 ? "🧱 Laying foundation…" :
+           displayScore < 50 ? "🏗️ Building walls…" :
+           displayScore < 65 ? "🪟 Adding details…" :
+           displayScore < 80 ? "🏠 Raising the roof…" :
+           "✅ Fully secured home!"}
+        </p>
       </div>
     </div>
   );
