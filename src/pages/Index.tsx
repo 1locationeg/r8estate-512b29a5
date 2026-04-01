@@ -278,12 +278,12 @@ const Index = () => {
                 if (el) el.scrollIntoView({ behavior: 'smooth' });
               }} />
             </div>
-          </div>
-        </div>
 
-        {/* Traction Stats */}
-        <div className={cn("w-full max-w-[1100px] mt-0 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-          <TractionStats />
+            {/* Traction Stats — inside hero for first-scroll visibility */}
+            <div className={cn("w-full mt-1 mb-0 transition-all duration-300 animate-fade-in-up", searchFocused && "opacity-30 pointer-events-none")} style={{ animationDelay: '1000ms', animationDuration: '0.6s' }}>
+              <TractionStats />
+            </div>
+          </div>
         </div>
 
         {/* Live Market Pulse */}
