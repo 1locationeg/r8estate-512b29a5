@@ -37,7 +37,7 @@ export const JOURNEY_STATIONS: JourneyStation[] = [
     textClass: "text-journey-choose",
     bgTintClass: "bg-journey-choose/10",
     homeRoute: "/portfolio",
-    routePatterns: ["/entity/", "/portfolio", "/launch-watch"],
+    routePatterns: ["/entity/", "/portfolio", "/launch-watch", "/business"],
   },
   {
     key: "finance",
@@ -61,7 +61,7 @@ export const JOURNEY_STATIONS: JourneyStation[] = [
     textClass: "text-journey-protect",
     bgTintClass: "bg-journey-protect/10",
     homeRoute: "/buyer",
-    routePatterns: ["/buyer", "/community", "/reviews", "/messages"],
+    routePatterns: ["/buyer", "/community", "/reviews", "/messages", "/review"],
   },
 ];
 
