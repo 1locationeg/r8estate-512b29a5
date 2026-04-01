@@ -67,7 +67,7 @@ export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyAr
             <div key={station.key} className="flex items-start">
               {/* Station */}
               <button
-                onClick={() => navigate(station.homeRoute)}
+                onClick={() => onStationClick ? onStationClick(idx) : navigate(station.homeRoute)}
                 className="flex flex-col items-center gap-1 group min-w-0 flex-shrink-0"
                 title={t(station.labelKey)}
                 aria-label={t(station.labelKey)}
