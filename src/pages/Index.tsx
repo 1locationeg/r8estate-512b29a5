@@ -233,21 +233,6 @@ const Index = () => {
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
 
-            {userMode === "buyers" && (
-              <>
-                {searchFocused && (
-                  <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
-                )}
-                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
-                  <HeroSearchBar
-                    onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
-                    onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
-                    onFocusChange={setSearchFocused}
-                  />
-                </div>
-              </>
-            )}
-
             <div className="mb-1.5 max-w-[1100px] mx-auto">
               {userMode === "buyers" ? (
                 <>
@@ -268,6 +253,21 @@ const Index = () => {
                 </>
               )}
             </div>
+
+            {userMode === "buyers" && (
+              <>
+                {searchFocused && (
+                  <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
+                )}
+                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
+                  <HeroSearchBar
+                    onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
+                    onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
+                    onFocusChange={setSearchFocused}
+                  />
+                </div>
+              </>
+            )}
 
             <div id="trust-showcase"><HeroTrustShowcase /></div>
 
