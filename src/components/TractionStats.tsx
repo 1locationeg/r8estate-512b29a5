@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-
+import { MessageSquare, Building2, Users, CheckCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { formatNumber } from "@/utils/formatArabic";
 
@@ -23,10 +23,10 @@ function useCountUp(target: number, duration = 2000, start = false) {
 }
 
 const stats = [
-  { target: 50000, suffix: "K+", labelKey: "stats.verifiedReviews" },
-  { target: 1200, suffix: "+", labelKey: "stats.trustedCompanies" },
-  { target: 100000, suffix: "K+", labelKey: "stats.activeUsers" },
-  { target: 96, suffix: "%", labelKey: "stats.successRate" },
+  { target: 50000, icon: MessageSquare, suffix: "K+", labelKey: "stats.verifiedReviews" },
+  { target: 1200, icon: Building2, suffix: "+", labelKey: "stats.trustedCompanies" },
+  { target: 100000, icon: Users, suffix: "K+", labelKey: "stats.activeUsers" },
+  { target: 96, icon: CheckCircle, suffix: "%", labelKey: "stats.successRate" },
 ];
 
 export function TractionStats() {
@@ -51,22 +51,29 @@ export function TractionStats() {
   const v4 = useCountUp(96, 1800, visible);
   const values = [v1, v2, v3, v4];
 
+  const visibleStats = stats.filter((s, i) => {
+    // On render we include all, CSS handles hideMobile
+    return true;
+  });
+
   return (
     <div ref={ref} className="w-full max-w-[1100px] mx-auto">
-      <div className="flex items-center justify-center gap-3 sm:gap-5">
+      <div className="grid grid-cols-4 gap-1 sm:gap-3">
         {stats.map((s, i) => {
+          const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
-            <div key={s.labelKey} className="flex items-center gap-1.5">
-              <span className="text-sm md:text-base font-bold text-primary tabular-nums leading-none">
+            <div
+              key={s.labelKey}
+              className="flex flex-col items-center gap-1 py-0 px-2"
+            >
+              <Icon className="w-4 h-4 text-primary/70" />
+              <span className="text-sm md:text-lg font-extrabold text-foreground tabular-nums leading-none">
                 {displayVal}
               </span>
-              <span className="text-[8px] md:text-[10px] text-muted-foreground leading-tight">
+              <span className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-none text-center">
                 {t(s.labelKey)}
               </span>
-              {i < stats.length - 1 && (
-                <span className="text-muted-foreground/30 text-xs ms-1.5">·</span>
-              )}
             </div>
           );
         })}
