@@ -216,6 +216,74 @@ const Index = () => {
   { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle }];
 
 
+  /* ─── Hero content block (passed into snap container) ─── */
+  const heroBlock = (
+    <div className="flex-1 flex flex-col items-center justify-center px-4 md:px-8 lg:px-12">
+      <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
+        {/* Hero Card */}
+        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
+          <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+            backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
+            backgroundSize: '20px 20px'
+          }} />
+          <div className="relative text-center">
+            <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+              <span className="pb-1 font-semibold">{t('hero.platformDescriptor')}</span>
+            </p>
+
+            {userMode === "buyers" && (
+              <>
+                {searchFocused && (
+                  <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
+                )}
+                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
+                  <HeroSearchBar
+                    onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
+                    onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
+                    onFocusChange={setSearchFocused}
+                  />
+                </div>
+              </>
+            )}
+
+            <div className="mb-1.5 max-w-[1100px] mx-auto">
+              {userMode === "buyers" ? (
+                <>
+                  <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
+                    {t("hero.tagline_line1")}
+                  </p>
+                  <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
+                    {t("hero.tagline_line2")}
+                  </p>
+                  <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+                    {t("hero.joinBuyers")}.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">{t("hero.industryTitle1")}</p>
+                  <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">{t("hero.industryTitle2")}</p>
+                </>
+              )}
+            </div>
+
+            <div id="trust-showcase"><HeroTrustShowcase /></div>
+          </div>
+        </div>
+
+        {/* Traction Stats */}
+        <div className={cn("w-full max-w-[1100px] mt-0 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+          <TractionStats />
+        </div>
+
+        {/* Live Market Pulse */}
+        <div className={cn("mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+          <LiveMarketPulse />
+        </div>
+      </div>
+    </div>
+  );
+
   return (
     <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full">
       <Navbar
@@ -227,101 +295,16 @@ const Index = () => {
         getDashboardRoute={getDashboardRoute}
       />
 
-      {/* Global centered container */}
-      <section className="flex-1 flex flex-col">
-       <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-0 pb-0 sm:pt-1 sm:pb-1 md:py-2">
-              {/* Hero Card with dot-grid background */}
-              <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
-               {/* Dot-grid SVG texture */}
-               <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-              backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
-              backgroundSize: '20px 20px'
-            }} />
-               
-                <div className="relative text-center">
-                    {/* Platform descriptor */}
-                     <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
-                       <span className="pb-1 border-b-2 border-accent/60 font-semibold border-0 border-none">{t('hero.platformDescriptor')}</span>
-                     </p>
+      {userMode === "buyers" ? (
+        <>
+          {/* ─── Snap-scroll container: Hero + 4 station sections ─── */}
+          <JourneyFullPageScroll heroContent={heroBlock} />
 
-                    {/* Search Bar — between descriptor and tagline */}
-                    {userMode === "buyers" && (
-                      <>
-                        {searchFocused && (
-                          <div
-                            className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block"
-                            onClick={() => setSearchFocused(false)}
-                          />
-                        )}
-                        <div className={cn(
-                          "w-full max-w-[700px] mx-auto mt-1 mb-3 transition-all duration-300 ease-in-out",
-                          searchFocused && "relative z-50"
-                        )}>
-                          <HeroSearchBar
-                            onSelectDeveloper={(id) => {
-                              setSpecialViewItem(null);
-                              setActiveView(null);
-                              setSelectedDeveloperId(id);
-                            }}
-                            onSelectItem={(item) => {
-                              setSelectedDeveloperId(null);
-                              setActiveView(null);
-                              setSpecialViewItem(item);
-                            }}
-                            onFocusChange={setSearchFocused}
-                          />
-                        </div>
-                      </>
-                    )}
-
-                  {/* Hero Tagline */}
-                   <div className="mb-1.5 max-w-[1100px] mx-auto">
-                    {userMode === "buyers" ?
-                <>
-                    <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
-                          {t("hero.tagline_line1")}
-                         </p>
-                    <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
-                          {t("hero.tagline_line2")}
-                         </p>
-
-                           {/* Social proof CTA text */}
-                            <p className="text-[11px] sm:text-xs md:text-sm text-muted-foreground/80 mt-2.5 mb-1 animate-fade-in-up" style={{ animationDelay: '100ms' }}>
-                              {t("hero.joinBuyers")}.
-                            </p>
-                      </> :
-                <>
-                        <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">
-                          {t("hero.industryTitle1")}
-                        </p>
-                        <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">
-                          {t("hero.industryTitle2")}
-                        </p>
-                      </>
-                }
-                   </div>
-
-                    {/* Interactive Trust Showcase — Gauge as Proof */}
-                    <div id="trust-showcase"><HeroTrustShowcase /></div>
-               </div>
-             </div>
-
-          {/* Platform Traction Stats — below hero card */}
-          <div className={cn("w-full max-w-[1100px] mt-0 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-            <TractionStats />
-          </div>
-
-          {/* Live Market Pulse — desktop marquee */}
-          <div className={cn("mt-2 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-            <LiveMarketPulse />
-          </div>
-
-          {userMode === "buyers" ?
-          <>
-
-
-               {/* Trust Strip — dark bar with pill items */}
-               <div className={cn("w-full max-w-[1100px] mb-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+          {/* ─── Below-the-fold: existing components (normal scroll) ─── */}
+          <section className="flex-1 flex flex-col">
+            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-4 pb-0">
+              {/* Trust Strip */}
+              <div className="w-full max-w-[1100px] mb-3">
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
                   <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
@@ -338,57 +321,33 @@ const Index = () => {
                 </div>
               </div>
 
-
-              {/* How We Work */}
               <HowWeWork />
-
-              {/* Collective Buyer Protection */}
               <CollectiveBuyerProtection />
 
-              {/* Category Links + Special View Grid */}
-              <div className={cn("transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <HeroCategoryLinks
-              activeView={activeView}
-              onViewSelect={(view) => {
-                setActiveView((prev) => prev === view ? null : view);
-                setSelectedDeveloperId(null);
-                setSpecialViewItem(null);
-              }}
-              onSelectItem={(item) => {
-                setSpecialViewItem(item);
-                setActiveView(null);
-                setSelectedDeveloperId(null);
-              }}
-              onCategorySelect={(catKey) => {
-                setExternalCategory(catKey);
-                setActiveView(null);
-                setSelectedDeveloperId(null);
-                setSpecialViewItem(null);
-                setTimeout(() => setExternalCategory(null), 100);
-              }} />
+              <div>
+                <HeroCategoryLinks
+                  activeView={activeView}
+                  onViewSelect={(view) => { setActiveView((prev) => prev === view ? null : view); setSelectedDeveloperId(null); setSpecialViewItem(null); }}
+                  onSelectItem={(item) => { setSpecialViewItem(item); setActiveView(null); setSelectedDeveloperId(null); }}
+                  onCategorySelect={(catKey) => { setExternalCategory(catKey); setActiveView(null); setSelectedDeveloperId(null); setSpecialViewItem(null); setTimeout(() => setExternalCategory(null), 100); }}
+                />
               </div>
 
-
-
-              {/* Quick Actions Grid */}
+              {/* Quick Actions + Widgets */}
               <div className="w-full max-w-[1100px] mb-4 py-[5px] pb-0">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                   {quickActions.map((action) => {
-                  const Icon = action.icon;
-                  return (
-                    <button
-                      key={action.title}
-                      onClick={() => handleQuickAction(action.key)}
-                      className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group">
-                      
+                    const Icon = action.icon;
+                    return (
+                      <button key={action.title} onClick={() => handleQuickAction(action.key)} className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group">
                         <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
                           <Icon className={`w-4 h-4 ${action.color}`} />
                         </div>
                         <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
                         <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
-                      </button>);
-
-                })}
+                      </button>
+                    );
+                  })}
                   <DealWatchWidget />
                   <LaunchWatchWidget />
                   <ContractCheckCard onClick={() => setShowContractModal(true)} />
@@ -397,107 +356,91 @@ const Index = () => {
               </div>
 
               {/* Special View Item Detail */}
-              {specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <ItemDetailSection
-                item={specialViewItem}
-                onClose={() => setSpecialViewItem(null)} />
-              
+              {specialViewItem && (
+                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                  <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
                 </div>
-            }
+              )}
 
               {/* Developer Detail Card */}
-              {selectedDeveloper && !specialViewItem &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <DeveloperDetailCard
-                developer={selectedDeveloper}
-                onClose={() => setSelectedDeveloperId(null)} />
-              
+              {selectedDeveloper && !specialViewItem && (
+                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                  <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
                 </div>
-            }
+              )}
 
-              {/* Step Timeline */}
-              <div className="w-full max-w-[1100px]">
-                <StepTimeline />
-              </div>
+              <div className="w-full max-w-[1100px]"><StepTimeline /></div>
+              <div className="w-full max-w-[1100px]"><CompareEngineShowcase /></div>
+              <div className="w-full max-w-[1100px]"><AudienceSegmentCards /></div>
 
-              {/* Compare Engine Showcase */}
-              <div className="w-full max-w-[1100px]">
-                <CompareEngineShowcase />
-              </div>
+              {!specialViewItem && !selectedDeveloper && (
+                <>
+                  <FeaturedIdentitySpotlight />
+                  <div className="w-full max-w-[1100px]"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+                  <div className="w-full max-w-[1100px] mt-4"><CommunityHighlights /></div>
+                </>
+              )}
 
-
-              {/* Audience Segmentation Cards */}
-              <div className="w-full max-w-[1100px]">
-                <AudienceSegmentCards />
-              </div>
-
-              {/* Featured Identity Spotlight */}
-              {!specialViewItem && !selectedDeveloper &&
-            <>
-              <FeaturedIdentitySpotlight />
-              <div className="w-full max-w-[1100px]">
-                <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
-              </div>
-              <div className="w-full max-w-[1100px] mt-4">
-                <CommunityHighlights />
-              </div>
-            </>
-            }
-
-              {/* Category Bar */}
               <div data-hero-categories className="w-full max-w-[1100px]">
-              <HeroCategoryItems
-              onInteraction={() => {setSelectedDeveloperId(null);setSpecialViewItem(null);setActiveView(null);}}
-              externalCategory={externalCategory}
-              onSelectItem={(item) => {
-                setSpecialViewItem(item);
-                setActiveView(null);
-                setSelectedDeveloperId(null);
-              }} />
+                <HeroCategoryItems
+                  onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }}
+                  externalCategory={externalCategory}
+                  onSelectItem={(item) => { setSpecialViewItem(item); setActiveView(null); setSelectedDeveloperId(null); }}
+                />
               </div>
-            
-            </> :
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="flex-1 flex flex-col">
+          <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-0 pb-0 sm:pt-1 sm:pb-1 md:py-2">
+            {/* Hero Card for business mode */}
+            <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
+              <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
+                backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
+                backgroundSize: '20px 20px'
+              }} />
+              <div className="relative text-center">
+                <p className="text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both]">
+                  <span className="pb-1 font-semibold">{t('hero.platformDescriptor')}</span>
+                </p>
+                <div className="mb-1.5 max-w-[1100px] mx-auto">
+                  <p className="text-sm sm:text-lg md:text-xl text-foreground leading-tight">{t("hero.industryTitle1")}</p>
+                  <p className="text-sm sm:text-lg md:text-xl text-accent font-semibold leading-tight">{t("hero.industryTitle2")}</p>
+                </div>
+                <div id="trust-showcase"><HeroTrustShowcase /></div>
+              </div>
+            </div>
 
-          <>
-          {/* ── Business / Industry View ── */}
-          {/* Back to Buyer View banner for non-business users */}
-          {role !== 'business' && role !== 'admin' &&
-            <button
-              onClick={switchToBuyerView}
-              className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors">
-              
-              <ArrowRight className="w-3.5 h-3.5 rotate-180" />
-              Not a business? Switch to Buyer View
-            </button>
-            }
-          <div className="w-full max-w-[1100px] mb-4">
-              {/* Business Feature Cards */}
+            <div className="w-full max-w-[1100px] mt-0 mb-0"><TractionStats /></div>
+            <div className="mt-2 mb-2"><LiveMarketPulse /></div>
+
+            {/* Business view */}
+            {role !== 'business' && role !== 'admin' && (
+              <button onClick={switchToBuyerView} className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors">
+                <ArrowRight className="w-3.5 h-3.5 rotate-180" />
+                Not a business? Switch to Buyer View
+              </button>
+            )}
+            <div className="w-full max-w-[1100px] mb-4">
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
                 <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <BarChart3 className="w-5 h-5 text-primary" />
-                  </div>
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><BarChart3 className="w-5 h-5 text-primary" /></div>
                   <h3 className="text-sm font-bold text-foreground">Reputation Analytics</h3>
                   <p className="text-xs text-muted-foreground leading-snug">Track your trust score, review trends, and buyer sentiment in real time.</p>
                 </div>
                 <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center">
-                    <Shield className="w-5 h-5 text-accent" />
-                  </div>
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center"><Shield className="w-5 h-5 text-accent" /></div>
                   <h3 className="text-sm font-bold text-foreground">Verified Profile</h3>
                   <p className="text-xs text-muted-foreground leading-snug">Claim and verify your business identity to build buyer confidence.</p>
                 </div>
                 <div className="flex flex-col items-center gap-2 p-4 rounded-xl bg-card border border-border text-center">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <TrendingUp className="w-5 h-5 text-primary" />
-                  </div>
+                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center"><TrendingUp className="w-5 h-5 text-primary" /></div>
                   <h3 className="text-sm font-bold text-foreground">Lead Generation</h3>
                   <p className="text-xs text-muted-foreground leading-snug">Convert trust into sales — high-intent buyers discover you organically.</p>
                 </div>
               </div>
 
-              {/* Business Stats */}
               <div className="flex items-center justify-center gap-6 mb-6">
                 <div className="text-center">
                   <p className="text-2xl md:text-3xl font-black text-primary">2,500+</p>
@@ -518,69 +461,41 @@ const Index = () => {
                 </div>
               </div>
 
-              {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button
-                  onClick={() => navigate(role === 'business' || role === 'admin' ? role === 'admin' ? '/admin' : '/business' : '/auth?type=business')}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
-                   {role === 'business' || role === 'admin' ? 'Go to Dashboard' : 'Claim Your Business Profile'}
-                   <ArrowRight className="w-4 h-4" />
-                 </button>
-                <button
-                  onClick={() => {
-                    setShowIndustryCategories((prev) => !prev);
-                    setTimeout(() => {
-                      document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                    }, 100);
-                  }}
-                  className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
-                
-                  Browse Categories   
+                <button onClick={() => navigate(role === 'business' || role === 'admin' ? role === 'admin' ? '/admin' : '/business' : '/auth?type=business')} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                  {role === 'business' || role === 'admin' ? 'Go to Dashboard' : 'Claim Your Business Profile'}
+                  <ArrowRight className="w-4 h-4" />
+                </button>
+                <button onClick={() => { setShowIndustryCategories((prev) => !prev); setTimeout(() => { document.getElementById('industry-categories-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); }} className="inline-flex items-center gap-2 px-6 py-3 bg-secondary text-foreground rounded-lg font-semibold hover:bg-secondary/80 transition-colors text-sm">
+                  Browse Categories
                 </button>
               </div>
             </div>
 
-            {showIndustryCategories &&
-            <div id="industry-categories-section" className="w-full scroll-mt-24">
+            {showIndustryCategories && (
+              <div id="industry-categories-section" className="w-full scroll-mt-24">
                 <BrowseCategoriesGrid
-                onSelectCategory={(index) => {
-                  setShowIndustryCategories(false);
-                  setExternalCategory?.(undefined);
-                  setTimeout(() => {
-                    setShowIndustryCategories(false);
-                  }, 0);
-                }}
-                onSelectItem={(item) => {
-                  setSpecialViewItem(item as any);
-                  setTimeout(() => {
-                    document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }, 100);
-                }} />
-              
+                  onSelectCategory={(index) => { setShowIndustryCategories(false); setExternalCategory?.(undefined); }}
+                  onSelectItem={(item) => { setSpecialViewItem(item as any); setTimeout(() => { document.getElementById('item-detail-section')?.scrollIntoView({ behavior: 'smooth', block: 'start' }); }, 100); }}
+                />
               </div>
-            }
+            )}
 
-            {specialViewItem && showIndustryCategories &&
-            <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
-                <ItemDetailSection
-                item={specialViewItem}
-                onClose={() => setSpecialViewItem(null)} />
+            {specialViewItem && showIndustryCategories && (
+              <div className="w-full max-w-[1100px] mt-8 scroll-mt-24" id="item-detail-section">
+                <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
               </div>
-            }
-          </>
-          }
-        </div>
-      </section>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Quick Action Modals */}
       <TrustInsightsModal open={showInsightsModal} onOpenChange={setShowInsightsModal} />
       <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
-
-      
-
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
 
-      {/* Trust Badges — end of page */}
+      {/* Trust Badges */}
       <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8">
         <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
           <Shield className="w-3.5 h-3.5 text-verified" />
@@ -593,8 +508,8 @@ const Index = () => {
       </div>
 
       <Footer />
-
-    </div>);
+    </div>
+  );
 
 };
 
