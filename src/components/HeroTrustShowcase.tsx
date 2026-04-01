@@ -522,7 +522,7 @@ export const HeroTrustShowcase = () => {
               value={displayScore}
               onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])}
               onChange={(e) => handleSliderChange([Number(e.target.value)])}
-              className="trust-slider w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer relative z-10"
+              className="trust-slider w-full h-[18px] appearance-none bg-transparent rounded-full outline-none cursor-pointer relative z-10"
               style={{ background: 'transparent' }}
               ref={(el) => {
                 if (el) {
