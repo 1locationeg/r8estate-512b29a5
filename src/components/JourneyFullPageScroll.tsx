@@ -10,10 +10,10 @@ const BrowseCategoriesGrid = lazy(() =>
   import("@/components/BrowseCategoriesGrid").then(m => ({ default: m.BrowseCategoriesGrid }))
 );
 const LaunchWatchWidget = lazy(() =>
-  import("@/components/LaunchWatchWidget").then(m => ({ default: m.default }))
+  import("@/components/LaunchWatchWidget").then(m => ({ default: m.LaunchWatchWidget }))
 );
 const DealWatchWidget = lazy(() =>
-  import("@/components/DealWatchWidget").then(m => ({ default: m.default }))
+  import("@/components/DealWatchWidget").then(m => ({ default: m.DealWatchWidget }))
 );
 const CommunityHighlights = lazy(() =>
   import("@/components/CommunityHighlights").then(m => ({ default: m.CommunityHighlights }))
