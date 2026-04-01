@@ -476,74 +476,75 @@ export const HeroTrustShowcase = () => {
             })}
           </div>
 
-          {/* Row 5: Footer — developer + house + trust badge */}
+          {/* Row 5: Footer — developer name, slider, trust label */}
           <div
-            className={`flex items-center justify-between pt-1.5 border-t border-border transition-all duration-300 ${
+            className={`pt-1.5 border-t border-border transition-all duration-300 ${
               rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             }`}
           >
-            <div className="flex items-center gap-2">
-              {/* House SVG — builds with score */}
-              <div className="flex-shrink-0 relative w-6 h-6">
-                <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="8" y="38" width="32" height="6" rx="1"
-                    fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 10 ? 1 : 0.25}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="10" y="20" width="6" height="18" rx="1"
-                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 25 ? 0.85 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-                  />
-                  <rect x="32" y="20" width="6" height="18" rx="1"
-                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 25 ? 0.85 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-                  />
-                  <rect x="20" y="28" width="8" height="10" rx="1"
-                    fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 40 ? 0.7 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="12" y="24" width="5" height="5" rx="0.5"
-                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="31" y="24" width="5" height="5" rx="0.5"
-                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <polygon points="24,6 4,22 44,22"
-                    fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 65 ? 1 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
-                  />
-                  {displayScore >= 80 && (
-                    <g style={{ animation: 'fade-in 0.4s ease-out' }}>
-                      <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
-                      <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </g>
-                  )}
-                </svg>
+            <div className="flex items-center justify-between mb-1">
+              <div className="flex items-center gap-2">
+                {/* House SVG — builds with score */}
+                <div className="flex-shrink-0 relative w-5 h-5">
+                  <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="38" width="32" height="6" rx="1"
+                      fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      opacity={displayScore >= 10 ? 1 : 0.25}
+                      style={{ transition: 'all 0.4s ease' }}
+                    />
+                    <rect x="10" y="20" width="6" height="18" rx="1"
+                      fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      opacity={displayScore >= 25 ? 0.85 : 0.15}
+                      style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+                    />
+                    <rect x="32" y="20" width="6" height="18" rx="1"
+                      fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      opacity={displayScore >= 25 ? 0.85 : 0.15}
+                      style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
+                    />
+                    <rect x="20" y="28" width="8" height="10" rx="1"
+                      fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      opacity={displayScore >= 40 ? 0.7 : 0.1}
+                      style={{ transition: 'all 0.4s ease' }}
+                    />
+                    <rect x="12" y="24" width="5" height="5" rx="0.5"
+                      fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                      stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
+                      style={{ transition: 'all 0.4s ease' }}
+                    />
+                    <rect x="31" y="24" width="5" height="5" rx="0.5"
+                      fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
+                      stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
+                      style={{ transition: 'all 0.4s ease' }}
+                    />
+                    <polygon points="24,6 4,22 44,22"
+                      fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
+                      opacity={displayScore >= 65 ? 1 : 0.15}
+                      style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
+                    />
+                    {displayScore >= 80 && (
+                      <g style={{ animation: 'fade-in 0.4s ease-out' }}>
+                        <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
+                        <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </g>
+                    )}
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-foreground">{scenario.developer}</span>
               </div>
-              <span className="text-xs font-semibold text-foreground">{scenario.developer}</span>
+              <span
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
+                style={{
+                  color,
+                  borderColor: color,
+                  backgroundColor: `${color}15`,
+                }}
+              >
+                {t(scenario.trustLabelKey)}
+              </span>
             </div>
-            <span
-              className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border"
-              style={{
-                color,
-                borderColor: color,
-                backgroundColor: `${color}15`,
-              }}
-            >
-              {t(scenario.trustLabelKey)}
-            </span>
-          </div>
 
           {/* Slider track — card bottom edge, padded to align with gauge arc */}
           <div className="relative h-[18px] flex items-center mt-1 px-[5%]">
