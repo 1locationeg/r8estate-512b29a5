@@ -1425,7 +1425,8 @@
       "bullet2": "Red-flag detection on project promises",
       "bullet3": "AI risk assessment for every launch",
       "bullet4": "Confirmed buyer counts per project",
-      "cta": "Explore Live Launches →"
+      "cta": "Explore Live Launches →",
+      "hook": "Browse launches"
     },
     "finance": {
       "stepLabel": "STEP 3 OF 4 · FINANCE",
