@@ -1393,6 +1393,15 @@
     "finance": "Finance",
     "protect": "Protect"
   },
+  "journeyArc": {
+    "title": "YOUR PATH TO A SAFE HOME",
+    "startJourney": "Start Journey →",
+    "tapExplore": "Tap to explore →",
+    "research": { "subtitle": "Know who to trust" },
+    "choose": { "subtitle": "Pick verified projects" },
+    "finance": { "subtitle": "Fund safely" },
+    "protect": { "subtitle": "Land secure" }
+  },
   "journeyScroll": {
     "research": {
       "stepLabel": "STEP 1 OF 4 · RESEARCH",
