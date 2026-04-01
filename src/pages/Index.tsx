@@ -274,10 +274,10 @@ const Index = () => {
             </div>
 
             {/* Journey Station Arc — after trust showcase & stats */}
-            <div className="mt-3 mb-1 animate-fade-in-up w-full relative" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
+            <div className="mt-1 mb-0 animate-fade-in-up w-full relative" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
               {/* Glow backdrop */}
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-journey-research/20 via-journey-choose/20 via-journey-finance/20 to-journey-protect/20 blur-xl opacity-60 pointer-events-none" />
-              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm p-3 md:p-4 shadow-[0_4px_30px_-8px_hsl(var(--primary)/0.15)]">
+              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 shadow-[0_4px_30px_-8px_hsl(var(--primary)/0.15)]">
                 <MiniJourneyArc onStartJourney={() => {
                   const el = document.getElementById('journey-section-1');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
