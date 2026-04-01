@@ -1,52 +1,29 @@
 
 
-# Redesign MiniJourneyArc as the Hero Centerpiece
+## Fix: Slider inline between developer name and trust label (same row)
 
-## What Changes
-
-Transform the small 4-dot `MiniJourneyArc` into a prominent, full-width journey strip matching the reference image — large colored icon circles with numbered badges, labels, subtitles, chevron connectors, and a header row with "YOUR PATH TO A SAFE HOME" + "Start Journey →" CTA.
-
-### 1. Redesign `MiniJourneyArc.tsx` — Full Journey Strip
-
-Replace the tiny circles with a full-width horizontal strip:
-
-- **Header row**: "YOUR PATH TO A SAFE HOME" on the left, "Start Journey →" link on the right (scrolls to first snap section)
-- **4 large station circles** (~56px mobile, ~72px desktop) with:
-  - Station-colored background tint ring + white inner circle + colored icon
-  - Numbered badge (1-4) in station color, top-right corner
-  - Station name label below (bold)
-  - Subtitle below label (e.g., "Know who to trust", "Pick verified projects", "Fund safely", "Land secure")
-- **Chevron connectors** (`>`) between stations in muted color
-- **"Tap to explore →"** hint text at the far right on mobile
-- Entire strip sits inside a subtle bordered container with rounded corners
-
-### 2. Update `Index.tsx` — Positioning & Animation
-
-- Keep the MiniJourneyArc between the trust showcase and traction stats
-- Add a subtle entrance animation (fade-in-up with delay)
-- Pass a callback prop so clicking "Start Journey →" scrolls to the first snap section
-
-### 3. Add Translation Keys in `en.json`
-
-Add subtitle keys for each station:
-```
-"journeyArc.title": "YOUR PATH TO A SAFE HOME"
-"journeyArc.startJourney": "Start Journey →"  
-"journeyArc.tapExplore": "Tap to explore →"
-"journeyArc.research.subtitle": "Know who to trust"
-"journeyArc.choose.subtitle": "Pick verified projects"
-"journeyArc.finance.subtitle": "Fund safely"
-"journeyArc.protect.subtitle": "Land secure"
+Currently the layout is:
+```text
+Row: [🏠 Developer Name]     [Trust Label]
+Row: [========= slider ===========]
 ```
 
-Also add Arabic equivalents in `ar.json`.
+The user wants everything on **one single line**:
+```text
+[🏠 Developer Name] [=== slider ===] [Trust Label]
+```
 
-## Files
+### Changes — `src/components/HeroTrustShowcase.tsx`
 
-| File | Action |
-|------|--------|
-| `src/components/MiniJourneyArc.tsx` | **Rewrite** — large icon circles, labels, subtitles, connectors, header row |
-| `src/pages/Index.tsx` | **Edit** — adjust wrapper styling, pass scroll callback |
-| `src/i18n/locales/en.json` | **Edit** — add journeyArc keys |
-| `src/i18n/locales/ar.json` | **Edit** — add Arabic journeyArc keys |
+1. **Merge the two containers** (name row + slider row) into a single `flex items-center` row
+2. Developer name + house SVG on the left (flex-shrink-0)
+3. Slider in the middle (flex-1, taking remaining space)
+4. Trust label on the right (flex-shrink-0)
+5. Remove the `mb-1` from the name row and the `mt-1` from the slider container
+6. Remove the outer `px-[5%]` wrapper — the slider sits naturally between the two text elements
+7. Adjust slider height to fit inline (keep `h-[18px]`)
+
+### File: `src/components/HeroTrustShowcase.tsx` (lines ~480-598)
+
+Replace the two-row structure with a single flex row containing: house+name → slider → trust label, all `items-center` aligned.
 
