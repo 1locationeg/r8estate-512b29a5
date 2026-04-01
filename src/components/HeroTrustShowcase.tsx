@@ -628,8 +628,8 @@ export const HeroTrustShowcase = () => {
                 <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
               </div>
             )}
+            </div>
           </div>
-        </div>
       </div>
     </div>
   );
