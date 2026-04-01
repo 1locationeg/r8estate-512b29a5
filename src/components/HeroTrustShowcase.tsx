@@ -545,8 +545,9 @@ export const HeroTrustShowcase = () => {
             </span>
           </div>
 
-          {/* Slider track — card bottom edge */}
-          <div className="relative h-[18px] flex items-center mt-1">
+          {/* Slider track — card bottom edge, padded to align with gauge arc */}
+          <div className="relative h-[18px] flex items-center mt-1 px-[5%]">
+            <div className="relative w-full h-[18px] flex items-center">
             <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
             <div
               className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
@@ -627,6 +628,7 @@ export const HeroTrustShowcase = () => {
                 <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
