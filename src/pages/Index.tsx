@@ -278,10 +278,16 @@ const Index = () => {
               {/* Glow backdrop */}
               <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-journey-research/20 via-journey-choose/20 via-journey-finance/20 to-journey-protect/20 blur-xl opacity-60 pointer-events-none" />
               <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 shadow-[0_4px_30px_-8px_hsl(var(--primary)/0.15)]">
-                <MiniJourneyArc onStartJourney={() => {
-                  const el = document.getElementById('journey-section-1');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }} />
+                <MiniJourneyArc
+                  onStartJourney={() => {
+                    const el = document.getElementById('journey-section-0');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                  onStationClick={(idx) => {
+                    const el = document.getElementById(`journey-section-${idx}`);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                />
               </div>
             </div>
           </div>

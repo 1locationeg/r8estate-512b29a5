@@ -27,9 +27,10 @@ const TINT_MAP: Record<string, string> = {
 
 interface MiniJourneyArcProps {
   onStartJourney?: () => void;
+  onStationClick?: (index: number) => void;
 }
 
-export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
+export const MiniJourneyArc = ({ onStartJourney, onStationClick }: MiniJourneyArcProps) => {
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const { t } = useTranslation();
@@ -66,7 +67,7 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
             <div key={station.key} className="flex items-start">
               {/* Station */}
               <button
-                onClick={() => navigate(station.homeRoute)}
+                onClick={() => onStationClick ? onStationClick(idx) : navigate(station.homeRoute)}
                 className="flex flex-col items-center gap-1 group min-w-0 flex-shrink-0"
                 title={t(station.labelKey)}
                 aria-label={t(station.labelKey)}
