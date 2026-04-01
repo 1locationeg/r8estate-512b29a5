@@ -233,7 +233,7 @@ const Index = () => {
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
 
-            <div className="mb-1.5 max-w-[1100px] mx-auto">
+            <div className="mb-0 max-w-[1100px] mx-auto">
               {userMode === "buyers" ? (
                 <>
                   <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
