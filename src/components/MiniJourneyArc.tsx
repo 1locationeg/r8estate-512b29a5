@@ -50,7 +50,7 @@ export const MiniJourneyArc = ({ onStartJourney }: MiniJourneyArcProps) => {
           {t("journeyArc.startJourney")}
           <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform duration-300" />
         </button>
-        <h3 className="text-xs sm:text-sm font-black tracking-[0.18em] uppercase bg-gradient-to-r from-journey-research via-[hsl(var(--journey-choose))] via-60% to-journey-protect bg-clip-text drop-shadow-[0_0_12px_hsl(var(--journey-choose)/0.5)] [text-shadow:0_0_20px_hsl(var(--journey-choose)/0.3)] text-blue-900" style={{ fontFamily: "'Inter', system-ui, sans-serif", letterSpacing: '0.22em' }}>
+        <h3 className="text-[9px] sm:text-xs font-black tracking-[0.15em] uppercase text-foreground/80 whitespace-nowrap" style={{ fontFamily: "'Inter', system-ui, sans-serif" }}>
           {t("journeyArc.title")}
         </h3>
       </div>
