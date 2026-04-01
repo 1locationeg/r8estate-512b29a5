@@ -36,20 +36,27 @@ const STATIONS: StationData[] = [
 ];
 
 /* ─── Expanded Content per Station ─── */
-const StationExpandedContent = ({ stationKey }: { stationKey: string }) => {
+const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string; onCollapse: () => void }) => {
+  const navigate = useNavigate();
   const fallback = (
     <div className="flex items-center justify-center py-12">
       <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
+  if (stationKey === "research") {
+    return (
+      <div className="space-y-4">
+        <HeroSearchBar
+          onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
+          onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
+        />
+        <BrowseCategoriesGrid />
+      </div>
+    );
+  }
+
   switch (stationKey) {
-    case "research":
-      return (
-        <Suspense fallback={fallback}>
-          <BrowseCategoriesGrid />
-        </Suspense>
-      );
     case "choose":
       return (
         <Suspense fallback={fallback}>
