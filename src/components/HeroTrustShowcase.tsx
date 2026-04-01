@@ -587,28 +587,17 @@ export const HeroTrustShowcase = () => {
                     .trust-slider::-webkit-slider-thumb {
                       -webkit-appearance: none;
                       appearance: none;
-                      width: 18px; height: 18px;
-                      border-radius: 50%;
-                      background: hsl(var(--background));
-                      border: 3px solid ${c};
-                      box-shadow: 0 0 8px 2px ${c}40;
+                      width: 0; height: 0;
+                      border: none;
+                      background: transparent;
                       cursor: pointer;
                       margin-top: 0;
-                      transition: border-color 0.3s, box-shadow 0.3s;
                     }
                     .trust-slider::-moz-range-thumb {
-                      width: 18px; height: 18px;
-                      border-radius: 50%;
-                      background: hsl(var(--background));
-                      border: 3px solid ${c};
-                      box-shadow: 0 0 8px 2px ${c}40;
+                      width: 0; height: 0;
+                      border: none;
+                      background: transparent;
                       cursor: pointer;
-                      transition: border-color 0.3s, box-shadow 0.3s;
-                    }
-                    .trust-slider:active::-webkit-slider-thumb,
-                    .trust-slider:active::-moz-range-thumb {
-                      transform: scale(1.15);
-                      box-shadow: 0 0 12px 4px ${c}60;
                     }
                   `;
                 }
