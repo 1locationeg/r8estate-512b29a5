@@ -510,38 +510,53 @@ export const HeroTrustShowcase = () => {
               min={0}
               max={100}
               step={1}
-              value={score}
+              value={displayScore}
+              onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])}
               onChange={(e) => handleSliderChange([Number(e.target.value)])}
-              className="w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:cursor-pointer [&::-moz-range-thumb]:w-4 [&::-moz-range-thumb]:h-4 [&::-moz-range-thumb]:rounded-full [&::-moz-range-thumb]:border-0 [&::-moz-range-thumb]:cursor-pointer"
-              style={{
-                // @ts-ignore
-                '--thumb-color': getScoreColor(score),
-                WebkitAppearance: 'none',
-              }}
+              className="trust-slider w-full h-[3px] appearance-none bg-border rounded-full outline-none cursor-pointer"
               ref={(el) => {
                 if (el) {
-                  const color = getScoreColor(score);
-                  el.style.setProperty('--thumb-color', color);
-                  const style = document.getElementById('slider-thumb-style') || (() => {
+                  const c = getScoreColor(displayScore);
+                  const styleEl = document.getElementById('slider-thumb-style') || (() => {
                     const s = document.createElement('style');
                     s.id = 'slider-thumb-style';
                     document.head.appendChild(s);
                     return s;
                   })();
-                  style.textContent = `
-                    input[type="range"]::-webkit-slider-thumb {
-                      background: ${color};
-                      box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40;
-                      animation: thumb-pulse 2s ease-in-out infinite;
+                  styleEl.textContent = `
+                    .trust-slider { transition: none; }
+                    .trust-slider::-webkit-slider-thumb {
+                      -webkit-appearance: none;
+                      appearance: none;
+                      width: 18px; height: 18px;
+                      border-radius: 50%;
+                      background: transparent;
+                      border: 3px solid ${c};
+                      box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30;
+                      cursor: pointer;
+                      animation: thumb-impulse 2.5s ease-in-out infinite;
                     }
-                    input[type="range"]::-moz-range-thumb {
-                      background: ${color};
-                      box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40;
-                      animation: thumb-pulse 2s ease-in-out infinite;
+                    .trust-slider::-moz-range-thumb {
+                      width: 18px; height: 18px;
+                      border-radius: 50%;
+                      background: transparent;
+                      border: 3px solid ${c};
+                      box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30;
+                      cursor: pointer;
+                      animation: thumb-impulse 2.5s ease-in-out infinite;
                     }
-                    @keyframes thumb-pulse {
-                      0%, 100% { box-shadow: 0 0 8px 3px ${color}80, 0 0 16px 6px ${color}40; transform: scale(1); }
-                      50% { box-shadow: 0 0 12px 5px ${color}90, 0 0 24px 10px ${color}50; transform: scale(1.15); }
+                    .trust-slider:active::-webkit-slider-thumb,
+                    .trust-slider:active::-moz-range-thumb {
+                      animation: none;
+                      transform: scale(1.1);
+                      box-shadow: 0 0 12px 4px ${c}80, 0 0 24px 8px ${c}40;
+                    }
+                    @keyframes thumb-impulse {
+                      0%, 100% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
+                      15% { transform: scale(1.25); box-shadow: 0 0 14px 5px ${c}80, 0 0 28px 10px ${c}50; }
+                      30% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
+                      40% { transform: scale(1.15); box-shadow: 0 0 10px 3px ${c}70, 0 0 20px 6px ${c}40; }
+                      55% { transform: scale(1); box-shadow: 0 0 8px 2px ${c}60, 0 0 16px 4px ${c}30; }
                     }
                   `;
                 }
@@ -552,7 +567,7 @@ export const HeroTrustShowcase = () => {
               <div
                 className="absolute pointer-events-none animate-bounce"
                 style={{
-                  left: `${score}%`,
+                  left: `${displayScore}%`,
                   top: '-18px',
                   transform: 'translateX(-50%)',
                   animationDuration: '1.5s',
