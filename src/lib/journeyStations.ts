@@ -37,7 +37,7 @@ export const JOURNEY_STATIONS: JourneyStation[] = [
     textClass: "text-journey-choose",
     bgTintClass: "bg-journey-choose/10",
     homeRoute: "/portfolio",
-    routePatterns: ["/entity/", "/portfolio", "/launch-watch"],
+    routePatterns: ["/entity/", "/portfolio", "/launch-watch", "/business"],
   },
   {
     key: "finance",
