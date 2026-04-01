@@ -1438,7 +1438,7 @@
   },
   "journeyArc": {
     "title": "طريقك لبيت آمن",
-    "startJourney": "← ابدأ الرحلة",
+    "startJourney": "ابدأ الرحلة",
     "tapExplore": "← اضغط لاستكشاف",
     "research": { "subtitle": "اعرف مين تثق فيه" },
     "choose": { "subtitle": "اختار مشاريع موثوقة" },
