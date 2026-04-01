@@ -232,7 +232,6 @@ const Index = () => {
               <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse shrink-0" />
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
-            </p>
 
             {userMode === "buyers" && (
               <>
