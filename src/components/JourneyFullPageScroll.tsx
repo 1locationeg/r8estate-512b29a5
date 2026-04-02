@@ -406,7 +406,7 @@ const JourneyStepSection = ({
             </p>
 
             {/* Station testimonial + trust signals */}
-            {["research", "choose", "fund", "protect"].includes(station.key) && (
+            {["research", "choose", "finance", "protect"].includes(station.key) && (
               <StationTrustBlock stationKey={station.key} />
             )}
           </div>
