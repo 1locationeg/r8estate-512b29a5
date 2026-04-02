@@ -200,6 +200,11 @@ const JourneyStepSection = ({
             <p className="text-[11px] text-muted-foreground mt-2 animate-pulse">
               {t("journeyScroll.tapToExplore", "Tap to explore")}
             </p>
+
+            {/* Research station: testimonial + trust signals */}
+            {station.key === "research" && (
+              <ResearchTrustBlock />
+            )}
           </div>
         )}
 
