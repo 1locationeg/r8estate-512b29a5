@@ -277,11 +277,35 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
     <div className="w-full max-w-3xl mx-auto">
       {/* Search + Suggestions anchor */}
       <div className="relative">
-        {/* Search Container with glow on focus */}
-        <div className={cn(
-          "relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
-          isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
-        )}>
+        {/* Search row with flanking quick-access icons */}
+        <div className="flex items-center gap-1.5 md:gap-2 w-full">
+          {/* Left icons */}
+          <TooltipProvider delayDuration={200}>
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
+                    <Zap className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Trending</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })} className="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer flex items-center justify-center">
+                    <Trophy className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>BEST OF 2026</TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
+
+          {/* Search Container with glow on focus */}
+          <div className={cn(
+            "relative flex-1 flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
+            isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
+          )}>
           {/* Ask AI Button */}
           <button 
             onClick={() => setIsAIModalOpen(true)}
@@ -352,66 +376,42 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
           >
             {t("hero.validateDecision")}
           </button>
-        </div>
+          </div>
 
-      {/* SearchSuggestions anchored directly under input */}
-        <SearchSuggestions
-          query={query}
-          isOpen={isFocused}
-          onSelect={handleSelect}
-          onCorrection={handleCorrection}
-          onWriteReview={handleWriteReview}
-          onCompare={handleCompare}
-          selectedIndex={selectedIndex}
-        />
+          {/* SearchSuggestions anchored directly under input */}
+          <SearchSuggestions
+            query={query}
+            isOpen={isFocused}
+            onSelect={handleSelect}
+            onCorrection={handleCorrection}
+            onWriteReview={handleWriteReview}
+            onCompare={handleCompare}
+            selectedIndex={selectedIndex}
+          />
+
+          {/* Right icons */}
+          <TooltipProvider delayDuration={200}>
+            <div className="flex items-center gap-1">
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => searchNavigate("/categories", { state: { view: "trending" } })} className="w-8 h-8 rounded-full bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-colors cursor-pointer flex items-center justify-center">
+                    <TrendingUp className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>Trending Projects</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button onClick={() => searchNavigate("/launch-watch")} className="w-8 h-8 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer flex items-center justify-center">
+                    <Rocket className="w-4 h-4" />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>New Launches</TooltipContent>
+              </Tooltip>
+            </div>
+          </TooltipProvider>
+        </div>
       </div>
-
-      {/* Quick access chips - always visible below search */}
-      <TooltipProvider delayDuration={200}>
-        <div className="flex items-center justify-center gap-2 md:gap-3 mt-1">
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
-                <Zap className="w-4 h-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Trending</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })} className="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer flex items-center justify-center">
-                <Trophy className="w-4 h-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>BEST OF 2026</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button onClick={() => searchNavigate("/categories", { state: { view: "trending" } })} className="w-8 h-8 rounded-full bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-colors cursor-pointer flex items-center justify-center">
-                <TrendingUp className="w-4 h-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Trending Projects</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button onClick={() => searchNavigate("/launch-watch")} className="w-8 h-8 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer flex items-center justify-center">
-                <Rocket className="w-4 h-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>New Launches</TooltipContent>
-          </Tooltip>
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer flex items-center justify-center">
-                <Star className="w-4 h-4" />
-              </button>
-            </TooltipTrigger>
-            <TooltipContent>Deals</TooltipContent>
-          </Tooltip>
-        </div>
-      </TooltipProvider>
-
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
