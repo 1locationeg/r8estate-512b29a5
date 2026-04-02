@@ -399,13 +399,6 @@ const Index = () => {
                 </>
               )}
 
-              <div data-hero-categories className="w-full max-w-[1100px]">
-                <HeroCategoryItems
-                  onInteraction={() => { setSelectedDeveloperId(null); setSpecialViewItem(null); setActiveView(null); }}
-                  externalCategory={externalCategory}
-                  onSelectItem={(item) => { setSpecialViewItem(item); setActiveView(null); setSelectedDeveloperId(null); }}
-                />
-              </div>
             </div>
           </section>
         </>
