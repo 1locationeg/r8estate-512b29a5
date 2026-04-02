@@ -81,80 +81,73 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
   }
 };
 
-/* ─── Research Station: Testimonial + Trust Signals ─── */
-const TESTIMONIALS = [
-  {
-    initials: "OD",
-    name: "Omar & Dina H.",
-    location: "6th October City",
-    quote: "We almost signed with a developer rated 2.1/5. The reviews said no keys delivered in 4 years. We checked R8ESTATE first — avoided a nightmare.",
-    badge: "Saved EGP 1.2M deal",
-  },
-  {
-    initials: "SA",
-    name: "Sara A.",
-    location: "New Cairo",
-    quote: "Found verified buyer reviews that exposed hidden fees. R8ESTATE saved us from a bad contract.",
-    badge: "Saved EGP 850K",
-  },
-  {
-    initials: "MK",
-    name: "Mohamed K.",
-    location: "North Coast",
-    quote: "Compared 3 developers side-by-side. The trust scores made the decision obvious.",
-    badge: "Smart decision",
-  },
-];
+/* ─── Station Testimonials + Trust Signals ─── */
+import testimonialOmar from "@/assets/testimonial-omar.jpg";
+import testimonialSara from "@/assets/testimonial-sara.jpg";
+import testimonialMohamed from "@/assets/testimonial-mohamed.jpg";
+import testimonialNour from "@/assets/testimonial-nour.jpg";
+import testimonialHassan from "@/assets/testimonial-hassan.jpg";
+import testimonialLayla from "@/assets/testimonial-layla.jpg";
+import testimonialYoussef from "@/assets/testimonial-youssef.jpg";
 
-const ResearchTrustBlock = () => {
+type TestimonialItem = { photo: string; name: string; quote: string; badge: string };
+
+const STATION_TESTIMONIALS: Record<string, TestimonialItem[]> = {
+  research: [
+    { photo: testimonialOmar, name: "Omar H.", quote: "R8ESTATE exposed a 2.1-rated developer — saved my family's entire savings.", badge: "Saved EGP 1.2M" },
+    { photo: testimonialSara, name: "Sara A.", quote: "One search revealed hidden fees no agent ever mentioned — crisis averted.", badge: "Saved EGP 850K" },
+    { photo: testimonialMohamed, name: "Mohamed K.", quote: "Compared 3 developers in minutes — the trust scores made choosing effortless.", badge: "Smart choice" },
+  ],
+  choose: [
+    { photo: testimonialNour, name: "Nour E.", quote: "Side-by-side comparison showed me the honest developer — best decision of my life.", badge: "Saved EGP 2M" },
+    { photo: testimonialHassan, name: "Hassan R.", quote: "Verified reviews helped me choose a builder who actually delivered on time.", badge: "On-time delivery" },
+    { photo: testimonialOmar, name: "Omar H.", quote: "I almost picked the cheapest — R8ESTATE showed me why quality matters more.", badge: "Saved EGP 900K" },
+  ],
+  fund: [
+    { photo: testimonialLayla, name: "Layla M.", quote: "Found a payment plan that cut my down payment in half — life-changing.", badge: "50% less upfront" },
+    { photo: testimonialYoussef, name: "Youssef T.", quote: "R8ESTATE flagged a deal with hidden interest — saved me from a money trap.", badge: "Saved EGP 600K" },
+    { photo: testimonialSara, name: "Sara A.", quote: "Compared financing options across 5 developers — picked the one that fit my budget.", badge: "Best terms" },
+  ],
+  protect: [
+    { photo: testimonialMohamed, name: "Mohamed K.", quote: "The community warned me about a contract clause that could've cost me everything.", badge: "Contract saved" },
+    { photo: testimonialNour, name: "Nour E.", quote: "Real buyers shared their delivery horror stories — I avoided the same fate.", badge: "Risk avoided" },
+    { photo: testimonialHassan, name: "Hassan R.", quote: "Collective protection gave me leverage I never had alone as a single buyer.", badge: "Protected" },
+  ],
+};
+
+const StationTrustBlock = ({ stationKey }: { stationKey: string }) => {
+  const testimonials = STATION_TESTIMONIALS[stationKey] || STATION_TESTIMONIALS.research;
   const [idx, setIdx] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => setIdx((p) => (p + 1) % TESTIMONIALS.length), 5000);
+    const timer = setInterval(() => setIdx((p) => (p + 1) % testimonials.length), 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [testimonials.length]);
 
-  const t = TESTIMONIALS[idx];
+  const t = testimonials[idx];
 
   return (
-    <div className="mt-4 w-full max-w-md mx-auto space-y-3">
+    <div className="mt-3 w-full max-w-md mx-auto space-y-2">
       {/* Testimonial card */}
-      <div className="relative bg-card/70 backdrop-blur-sm border border-border/50 rounded-xl px-4 py-3 text-start transition-all duration-500 animate-fade-in" key={idx}>
-        <div className="flex items-start gap-3">
-          {/* Avatar initials */}
-          <div className="shrink-0 w-9 h-9 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
-            <span className="text-[11px] font-bold text-primary">{t.initials}</span>
-          </div>
+      <div className="relative bg-card/70 backdrop-blur-sm border border-border/50 rounded-xl px-3 py-2.5 text-start transition-all duration-500 animate-fade-in" key={`${stationKey}-${idx}`}>
+        <div className="flex items-center gap-2.5">
+          <img src={t.photo} alt={t.name} loading="lazy" width={36} height={36} className="shrink-0 w-9 h-9 rounded-full object-cover border-2 border-primary/30" />
           <div className="flex-1 min-w-0">
-            <div className="flex items-center justify-between gap-2">
-              <div>
-                <span className="text-xs font-semibold text-foreground">{t.name}</span>
-                <span className="text-[10px] text-muted-foreground ms-1.5">{t.location}</span>
-              </div>
-              <span className="shrink-0 text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">
-                {t.badge}
-              </span>
+            <div className="flex items-center justify-between gap-1.5">
+              <span className="text-xs font-semibold text-foreground">{t.name}</span>
+              <span className="shrink-0 text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-1.5 py-0.5 rounded-full whitespace-nowrap">{t.badge}</span>
             </div>
-            <p className="text-[11px] leading-relaxed text-muted-foreground mt-1 italic line-clamp-2">
-              "{t.quote}"
-            </p>
+            <p className="text-[11px] text-muted-foreground italic truncate">"{t.quote}"</p>
           </div>
         </div>
-        {/* Dots indicator */}
-        <div className="flex items-center justify-center gap-1.5 mt-2">
-          {TESTIMONIALS.map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                "w-1.5 h-1.5 rounded-full transition-all",
-                i === idx ? "bg-primary w-3" : "bg-muted-foreground/30"
-              )}
-            />
+        <div className="flex items-center justify-center gap-1.5 mt-1.5">
+          {testimonials.map((_, i) => (
+            <div key={i} className={cn("w-1.5 h-1.5 rounded-full transition-all", i === idx ? "bg-primary w-3" : "bg-muted-foreground/30")} />
           ))}
         </div>
       </div>
 
-      {/* Trust signal icons row */}
+      {/* Trust signal icons */}
       <TooltipProvider delayDuration={300}>
         <div className="flex items-center justify-center gap-4">
           {[
