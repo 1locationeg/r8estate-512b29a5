@@ -401,6 +401,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
               </TooltipTrigger>
               <TooltipContent>New Launches</TooltipContent>
             </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
 
