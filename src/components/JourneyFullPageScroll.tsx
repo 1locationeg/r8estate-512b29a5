@@ -104,7 +104,7 @@ const STATION_TESTIMONIALS: Record<string, TestimonialItem[]> = {
     { photo: testimonialHassan, name: "Hassan R.", quote: "Verified reviews helped me choose a builder who actually delivered on time.", badge: "On-time delivery" },
     { photo: testimonialOmar, name: "Omar H.", quote: "I almost picked the cheapest — R8ESTATE showed me why quality matters more.", badge: "Saved EGP 900K" },
   ],
-  fund: [
+  finance: [
     { photo: testimonialLayla, name: "Layla M.", quote: "Found a payment plan that cut my down payment in half — life-changing.", badge: "50% less upfront" },
     { photo: testimonialYoussef, name: "Youssef T.", quote: "R8ESTATE flagged a deal with hidden interest — saved me from a money trap.", badge: "Saved EGP 600K" },
     { photo: testimonialSara, name: "Sara A.", quote: "Compared financing options across 5 developers — picked the one that fit my budget.", badge: "Best terms" },
