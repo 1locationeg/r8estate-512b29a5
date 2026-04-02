@@ -292,9 +292,9 @@ const JourneyStepSection = ({
               {t("journeyScroll.tapToExplore", "Tap to explore")}
             </p>
 
-            {/* Research station: testimonial + trust signals */}
-            {station.key === "research" && (
-              <ResearchTrustBlock />
+            {/* Station testimonial + trust signals */}
+            {["research", "choose", "fund", "protect"].includes(station.key) && (
+              <StationTrustBlock stationKey={station.key} />
             )}
           </div>
         )}
