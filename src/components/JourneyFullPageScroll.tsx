@@ -37,49 +37,161 @@ const STATIONS: StationData[] = [
   { key: "protect",  step: 4, icon: ShieldCheck,  color: "journey-protect",  hslVar: "var(--journey-protect)",  route: "/auth",         hookLabelKey: "journeyScroll.protect.hook" },
 ];
 
-/* ─── Expanded Content per Station ─── */
+/* ─── Expanded Content per Station (mini-app pattern) ─── */
 const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string; onCollapse: () => void }) => {
   const navigate = useNavigate();
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
   const fallback = (
     <div className="flex items-center justify-center py-12">
       <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
   );
 
+  const sectionTitle = (en: string, ar: string) => (
+    <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mt-4 mb-2 px-1">{isRTL ? ar : en}</h3>
+  );
+
   if (stationKey === "research") {
     return (
-      <div className="space-y-4">
+      <div className="space-y-3">
+        {/* 1. Hero action */}
         <HeroSearchBar
           onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
           onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
         />
-        <BrowseCategoriesGrid />
+        {/* 2. Quick stats */}
+        <div className="flex items-center justify-center gap-4 py-2">
+          <div className="text-center">
+            <span className="text-lg font-black text-foreground">18</span>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "فئة" : "Categories"}</p>
+          </div>
+          <div className="w-px h-8 bg-border" />
+          <div className="text-center">
+            <span className="text-lg font-black text-foreground">70+</span>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "شركة مقيّمة" : "Businesses Rated"}</p>
+          </div>
+          <div className="w-px h-8 bg-border" />
+          <div className="text-center">
+            <span className="text-lg font-black text-foreground">7</span>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "مطور" : "Developers"}</p>
+          </div>
+        </div>
+        {/* 3. Research categories only */}
+        {sectionTitle("Research Categories", "فئات البحث")}
+        <BrowseCategoriesGrid stationFilter="research" />
       </div>
     );
   }
 
-  switch (stationKey) {
-    case "choose":
-      return (
+  if (stationKey === "choose") {
+    return (
+      <div className="space-y-3">
+        {/* 1. Comparison teaser */}
+        <button
+          onClick={() => { onCollapse(); navigate("/directory"); }}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-all group"
+        >
+          <div className="w-10 h-10 rounded-full bg-journey-choose/10 flex items-center justify-center shrink-0">
+            <Building2 className="w-5 h-5 text-journey-choose" />
+          </div>
+          <div className="text-start flex-1">
+            <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+              {isRTL ? "قارن بين المطورين في 30 ثانية" : "Compare developers in 30 seconds"}
+            </p>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "اعثر على الأنسب لك" : "Find the right fit for you"}</p>
+          </div>
+          <ArrowRight className={cn("w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors", isRTL && "rotate-180")} />
+        </button>
+
+        {/* 2. Choose categories */}
+        {sectionTitle("Choose Categories", "فئات الاختيار")}
+        <BrowseCategoriesGrid stationFilter="choose" />
+
+        {/* 3. Launch Watch widget */}
+        {sectionTitle("Latest Launches", "أحدث الإطلاقات")}
         <Suspense fallback={fallback}>
           <LaunchWatchWidget />
         </Suspense>
-      );
-    case "finance":
-      return (
+      </div>
+    );
+  }
+
+  if (stationKey === "finance") {
+    return (
+      <div className="space-y-3">
+        {/* 1. Deal calculator teaser */}
+        <button
+          onClick={() => { onCollapse(); navigate("/deal-watch"); }}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-all group"
+        >
+          <div className="w-10 h-10 rounded-full bg-journey-finance/10 flex items-center justify-center shrink-0">
+            <Wallet className="w-5 h-5 text-journey-finance" />
+          </div>
+          <div className="text-start flex-1">
+            <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+              {isRTL ? "قارن خطط السداد — وفّر أكثر" : "Compare payment plans — save more"}
+            </p>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "اعرف الفرق قبل أن توقّع" : "Know the difference before you sign"}</p>
+          </div>
+          <ArrowRight className={cn("w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors", isRTL && "rotate-180")} />
+        </button>
+
+        {/* 2. Finance categories */}
+        {sectionTitle("Finance & Valuation", "التمويل والتقييم")}
+        <BrowseCategoriesGrid stationFilter="finance" />
+
+        {/* 3. Deal Watch widget */}
+        {sectionTitle("Active Deals", "العروض النشطة")}
         <Suspense fallback={fallback}>
           <DealWatchWidget />
         </Suspense>
-      );
-    case "protect":
-      return (
+      </div>
+    );
+  }
+
+  if (stationKey === "protect") {
+    return (
+      <div className="space-y-3">
+        {/* 1. Contract check teaser */}
+        <button
+          onClick={() => { onCollapse(); navigate("/buyer"); }}
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-all group"
+        >
+          <div className="w-10 h-10 rounded-full bg-journey-protect/10 flex items-center justify-center shrink-0">
+            <ShieldCheck className="w-5 h-5 text-journey-protect" />
+          </div>
+          <div className="text-start flex-1">
+            <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+              {isRTL ? "ارفع عقدك — نكشف لك المخاطر" : "Upload your contract — we flag the risks"}
+            </p>
+            <p className="text-[10px] text-muted-foreground">{isRTL ? "حماية جماعية للمشترين" : "Collective buyer protection"}</p>
+          </div>
+          <ArrowRight className={cn("w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors", isRTL && "rotate-180")} />
+        </button>
+
+        {/* 2. Review CTA */}
+        <button
+          onClick={() => { onCollapse(); navigate("/reviews"); }}
+          className="w-full text-center py-2.5 rounded-lg bg-journey-protect/10 text-journey-protect text-xs font-bold hover:bg-journey-protect/20 transition-colors"
+        >
+          {isRTL ? "شارك تجربتك — احمِ غيرك 🛡️" : "Share your experience — protect others 🛡️"}
+        </button>
+
+        {/* 3. Protect categories */}
+        {sectionTitle("Legal & Management", "القانون والإدارة")}
+        <BrowseCategoriesGrid stationFilter="protect" />
+
+        {/* 4. Community highlights */}
+        {sectionTitle("Community Warnings", "تحذيرات المجتمع")}
         <Suspense fallback={fallback}>
           <CommunityHighlights />
         </Suspense>
-      );
-    default:
-      return null;
+      </div>
+    );
   }
+
+  return null;
 };
 
 /* ─── Station Testimonials + Trust Signals ─── */
