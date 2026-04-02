@@ -2,7 +2,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { categories } from "@/components/HeroCategoryItems";
 import { cn } from "@/lib/utils";
-import { ChevronRight } from "lucide-react";
 
 interface BrowseCategoriesGridProps {
   onSelectCategory?: (categoryIndex: number) => void;
@@ -10,27 +9,35 @@ interface BrowseCategoriesGridProps {
   searchQuery?: string;
 }
 
-// Soft pastel backgrounds that cycle through categories — matching R8ESTATE's trust palette
-const categoryColors = [
-  "bg-primary/8",
-  "bg-accent/10",
-  "bg-[hsl(150,60%,95%)]",
-  "bg-[hsl(340,50%,95%)]",
-  "bg-[hsl(200,60%,94%)]",
-  "bg-[hsl(30,60%,95%)]",
-  "bg-primary/6",
-  "bg-accent/8",
-  "bg-[hsl(160,50%,94%)]",
-  "bg-[hsl(280,40%,95%)]",
-  "bg-[hsl(210,50%,94%)]",
-  "bg-[hsl(20,50%,95%)]",
-  "bg-primary/5",
-  "bg-accent/6",
-  "bg-[hsl(140,50%,94%)]",
-  "bg-[hsl(350,40%,95%)]",
-  "bg-[hsl(190,50%,94%)]",
-  "bg-[hsl(40,50%,95%)]",
-];
+type JourneyKey = "research" | "choose" | "finance" | "protect";
+
+const journeyMap: Record<string, JourneyKey> = {
+  "categories.platforms": "research",
+  "categories.channels": "research",
+  "categories.research": "research",
+  "categories.exhibitions": "research",
+  "categories.apps": "research",
+  "categories.training": "research",
+  "categories.units": "choose",
+  "categories.brokers": "choose",
+  "categories.shares": "choose",
+  "categories.lands": "choose",
+  "categories.leasing": "choose",
+  "categories.mortgage": "finance",
+  "categories.valuation": "finance",
+  "categories.auctions": "finance",
+  "categories.blockchain": "finance",
+  "categories.lawFirms": "protect",
+  "categories.tax": "protect",
+  "categories.management": "protect",
+};
+
+const stationCircle: Record<JourneyKey, { bg: string; text: string }> = {
+  research: { bg: "bg-journey-research/15", text: "text-journey-research" },
+  choose: { bg: "bg-journey-choose/15", text: "text-journey-choose" },
+  finance: { bg: "bg-journey-finance/15", text: "text-journey-finance" },
+  protect: { bg: "bg-journey-protect/15", text: "text-journey-protect" },
+};
 
 export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "" }: BrowseCategoriesGridProps) => {
   const { t, i18n } = useTranslation();
@@ -48,7 +55,7 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
   }).filter(({ matchingItems, categoryMatches }) => !q || categoryMatches || matchingItems.length > 0);
 
   return (
-    <div className="w-full max-w-5xl mx-auto px-4 py-4">
+    <div className="w-full max-w-5xl mx-auto px-4 py-3">
       <h2 className="text-base md:text-lg font-bold text-foreground mb-3">
         {isRTL ? "استكشف حسب الفئة" : "Explore by category"}
       </h2>
@@ -59,24 +66,25 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
         </p>
       )}
 
-      <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-9 gap-2">
+      <div className="flex flex-wrap justify-center gap-x-4 gap-y-3">
         {filteredCategories.map(({ category, originalIndex }) => {
-          const colorClass = categoryColors[originalIndex % categoryColors.length];
+          const journeyKey = journeyMap[category.labelKey] || "research";
+          const colors = stationCircle[journeyKey];
           const categoryName = t(category.labelKey);
 
           return (
             <button
               key={category.labelKey}
               onClick={() => onSelectCategory?.(originalIndex)}
-              className={cn(
-                "flex flex-col items-center gap-1.5 px-2 py-3 rounded-xl border border-border bg-card transition-all hover:shadow-md hover:scale-105 cursor-pointer",
-                colorClass
-              )}
+              className="flex flex-col items-center gap-1 w-14 md:w-16 group cursor-pointer"
             >
-              <div className="w-8 h-8 rounded-lg bg-background/60 backdrop-blur-sm flex items-center justify-center shadow-sm">
+              <div className={cn(
+                "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-md",
+                colors.bg, colors.text
+              )}>
                 {category.icon}
               </div>
-              <span className="text-[10px] md:text-xs font-semibold text-foreground text-center leading-tight line-clamp-2">
+              <span className="text-[9px] md:text-[10px] font-medium text-foreground text-center leading-tight line-clamp-2">
                 {categoryName}
               </span>
             </button>
