@@ -25,7 +25,7 @@ interface HeroSearchBarProps {
   showQuickIcons?: boolean;
 }
 
-export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }: HeroSearchBarProps) => {
+export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, showQuickIcons = true }: HeroSearchBarProps) => {
   const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
