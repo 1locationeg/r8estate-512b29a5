@@ -2,7 +2,7 @@
 import { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight, Shield, Lock, BadgeCheck, Eye, UserCheck } from "lucide-react";
+import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight, Shield, Lock, BadgeCheck, Eye, UserCheck, BarChart3, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { HeroSearchBar } from "@/components/HeroSearchBar";
@@ -108,11 +108,40 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
         {sectionTitle("Choose Categories", "فئات الاختيار")}
         <BrowseCategoriesGrid stationFilter="choose" />
 
-        {/* 3. Launch Watch widget */}
+        {/* 3. Launch Watch + AI Insights side by side */}
         {sectionTitle("Latest Launches", "أحدث الإطلاقات")}
-        <Suspense fallback={fallback}>
-          <LaunchWatchWidget />
-        </Suspense>
+        <div className="grid grid-cols-2 gap-2">
+          <Suspense fallback={fallback}>
+            <LaunchWatchWidget />
+          </Suspense>
+          <button
+            onClick={() => { onCollapse(); navigate("/insights"); }}
+            className="relative flex flex-col items-center gap-1.5 p-3 pt-4 rounded-xl border ring-1 ring-journey-choose/20 border-journey-choose/40 bg-gradient-to-br from-journey-choose/10 via-journey-choose/5 to-transparent hover:shadow-lg transition-all text-center group overflow-hidden"
+          >
+            <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
+            <div className="flex items-center gap-1.5">
+              <BarChart3 className="w-4 h-4 text-journey-choose transition-transform group-hover:scale-110" />
+              <span className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground whitespace-nowrap">
+                {isRTL ? "رؤى ذكية" : "AI Insights"}
+              </span>
+              <span className="flex items-center gap-1 bg-journey-choose text-white text-[7px] font-bold px-1.5 py-0.5 rounded-full leading-none">
+                <Sparkles className="w-2 h-2" />
+                AI
+              </span>
+            </div>
+            <span className="text-2xl md:text-3xl font-black leading-none tracking-tight text-journey-choose">
+              {isRTL ? "تحليل" : "Smart"}
+            </span>
+            <span className="text-[10px] md:text-xs text-muted-foreground leading-snug">
+              {isRTL ? "اتخذ قرارات مبنية على البيانات" : "Data-driven decisions"}
+            </span>
+            <div className="flex gap-1 mt-0.5">
+              {["Trends", "Scores", "Alerts"].map((label) => (
+                <span key={label} className="text-[7px] bg-journey-choose/10 text-journey-choose px-1.5 py-0.5 rounded-full font-medium">{isRTL ? "●" : label}</span>
+              ))}
+            </div>
+          </button>
+        </div>
       </div>
     );
   }
