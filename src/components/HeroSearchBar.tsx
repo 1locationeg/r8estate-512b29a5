@@ -365,46 +365,44 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
         />
       </div>
 
-      {/* Quick access chips */}
-      {!isFocused && (
-        <div className="flex items-center justify-center gap-2 md:gap-3 mt-2 flex-wrap">
-          <button
-            onClick={() => searchNavigate("/deal-watch")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors"
-          >
-            <Zap className="w-3 h-3" />
-            {t("hero.trending", "Trending")}
-          </button>
-          <button
-            onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
-          >
-            <Trophy className="w-3 h-3" />
-            {t("hero.bestOf", "BEST OF 2026")}
-          </button>
-          <button
-            onClick={() => searchNavigate("/categories", { state: { view: "trending" } })}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-accent-foreground hover:bg-accent/10 transition-colors"
-          >
-            <TrendingUp className="w-3 h-3" />
-            {t("hero.trendingProjects", "Trending Projects")}
-          </button>
-          <button
-            onClick={() => searchNavigate("/launch-watch")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
-          >
-            <Rocket className="w-3 h-3" />
-            {t("hero.newLaunches", "New Launches")}
-          </button>
-          <button
-            onClick={() => searchNavigate("/deal-watch")}
-            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 transition-colors"
-          >
-            <Star className="w-3 h-3" />
-            {t("hero.deals", "Deals")}
-          </button>
-        </div>
-      )}
+      {/* Quick access chips - always visible below search */}
+      <div className="flex items-center justify-center gap-1.5 md:gap-2 mt-2 flex-wrap">
+        <button
+          onClick={() => searchNavigate("/deal-watch")}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-semibold bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer"
+        >
+          <Zap className="w-3 h-3" />
+          Trending
+        </button>
+        <button
+          onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-semibold bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer"
+        >
+          <Trophy className="w-3 h-3" />
+          BEST OF 2026
+        </button>
+        <button
+          onClick={() => searchNavigate("/categories", { state: { view: "trending" } })}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-semibold bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-colors cursor-pointer"
+        >
+          <TrendingUp className="w-3 h-3" />
+          Trending Projects
+        </button>
+        <button
+          onClick={() => searchNavigate("/launch-watch")}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-semibold bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer"
+        >
+          <Rocket className="w-3 h-3" />
+          New Launches
+        </button>
+        <button
+          onClick={() => searchNavigate("/deal-watch")}
+          className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-semibold bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer"
+        >
+          <Star className="w-3 h-3" />
+          Deals
+        </button>
+      </div>
 
 
       {/* AI Trust Insights Modal */}
