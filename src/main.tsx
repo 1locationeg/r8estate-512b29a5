@@ -38,9 +38,11 @@ if (isPreviewHost || isInIframe) {
 } else {
   // Only register SW in production (not preview/iframe)
   import("virtual:pwa-register").then(({ registerSW }) => {
-    const updateSW = registerSW({
+    registerSW({
       onNeedRefresh() {
-        updateSW(true);
+        // Don't force-reload mid-session; the next natural navigation/reload
+        // will pick up the new SW automatically.
+        console.log("R8ESTATE: new version available — will activate on next visit");
       },
       onOfflineReady() {
         console.log("R8ESTATE is ready to work offline");
