@@ -368,7 +368,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
 
       {/* Quick access chips - always visible below search */}
       <TooltipProvider delayDuration={200}>
-        <div className="flex items-center justify-center gap-2 md:gap-3 mt-2">
+        <div className="flex items-center justify-center gap-2 md:gap-3 mt-1">
           <Tooltip>
             <TooltipTrigger asChild>
               <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
