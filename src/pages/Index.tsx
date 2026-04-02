@@ -256,11 +256,12 @@ const Index = () => {
                 {searchFocused && (
                   <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
                 )}
-                <div className={cn("w-full max-w-[700px] mx-auto mt-1 mb-2 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
+                <div className={cn("w-full max-w-[700px] mx-auto transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
                   <HeroSearchBar
                     onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
                     onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
                     onFocusChange={setSearchFocused}
+                    showQuickIcons={false}
                   />
                 </div>
               </>

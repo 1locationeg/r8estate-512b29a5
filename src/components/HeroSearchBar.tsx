@@ -22,6 +22,7 @@ interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
   onSelectItem?: (item: SearchItem) => void;
   onFocusChange?: (focused: boolean) => void;
+  showQuickIcons?: boolean;
 }
 
 export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }: HeroSearchBarProps) => {
