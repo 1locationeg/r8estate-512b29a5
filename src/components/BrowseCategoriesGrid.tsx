@@ -43,7 +43,7 @@ const stationCircle: Record<JourneyKey, { bg: string; text: string }> = {
   protect: { bg: "bg-journey-protect/15", text: "text-journey-protect" },
 };
 
-export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "" }: BrowseCategoriesGridProps) => {
+export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "", stationFilter }: BrowseCategoriesGridProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const isRTL = i18n.dir() === "rtl";
