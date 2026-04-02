@@ -277,35 +277,11 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
     <div className="w-full max-w-3xl mx-auto">
       {/* Search + Suggestions anchor */}
       <div className="relative">
-        {/* Search row with flanking quick-access icons */}
-        <div className="flex items-center gap-1.5 md:gap-2 w-full">
-          {/* Left icons */}
-          <TooltipProvider delayDuration={200}>
-            <div className="flex items-center gap-1">
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
-                    <Zap className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Trending</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })} className="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer flex items-center justify-center">
-                    <Trophy className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>BEST OF 2026</TooltipContent>
-              </Tooltip>
-            </div>
-          </TooltipProvider>
-
-          {/* Search Container with glow on focus */}
-          <div className={cn(
-            "relative flex-1 flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out",
-            isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
-          )}>
+        {/* Search Container with glow on focus */}
+        <div className={cn(
+          "relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full",
+          isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
+        )}>
           {/* Ask AI Button */}
           <button 
             onClick={() => setIsAIModalOpen(true)}
