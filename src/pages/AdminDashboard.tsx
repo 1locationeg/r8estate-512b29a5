@@ -37,6 +37,7 @@ import AdminReferrals from '@/components/AdminReferrals';
 import AdminUpsell from '@/components/AdminUpsell';
 import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
+import AdminGuestTimer from '@/components/AdminGuestTimer';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
