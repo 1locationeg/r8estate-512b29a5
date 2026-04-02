@@ -1,11 +1,12 @@
 import { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight } from "lucide-react";
+import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight, Shield, Lock, BadgeCheck, Eye, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 import { HeroSearchBar } from "@/components/HeroSearchBar";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
+import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 
 /* ─── Lazy-loaded expanded components ─── */
 const LaunchWatchWidget = lazy(() =>
@@ -80,7 +81,105 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
   }
 };
 
-/* ─── Compact Hook (clickable interactive element) ─── */
+/* ─── Research Station: Testimonial + Trust Signals ─── */
+const TESTIMONIALS = [
+  {
+    initials: "OD",
+    name: "Omar & Dina H.",
+    location: "6th October City",
+    quote: "We almost signed with a developer rated 2.1/5. The reviews said no keys delivered in 4 years. We checked R8ESTATE first — avoided a nightmare.",
+    badge: "Saved EGP 1.2M deal",
+  },
+  {
+    initials: "SA",
+    name: "Sara A.",
+    location: "New Cairo",
+    quote: "Found verified buyer reviews that exposed hidden fees. R8ESTATE saved us from a bad contract.",
+    badge: "Saved EGP 850K",
+  },
+  {
+    initials: "MK",
+    name: "Mohamed K.",
+    location: "North Coast",
+    quote: "Compared 3 developers side-by-side. The trust scores made the decision obvious.",
+    badge: "Smart decision",
+  },
+];
+
+const ResearchTrustBlock = () => {
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setIdx((p) => (p + 1) % TESTIMONIALS.length), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const t = TESTIMONIALS[idx];
+
+  return (
+    <div className="mt-4 w-full max-w-md mx-auto space-y-3">
+      {/* Testimonial card */}
+      <div className="relative bg-card/70 backdrop-blur-sm border border-border/50 rounded-xl px-4 py-3 text-start transition-all duration-500 animate-fade-in" key={idx}>
+        <div className="flex items-start gap-3">
+          {/* Avatar initials */}
+          <div className="shrink-0 w-9 h-9 rounded-full bg-primary/10 border-2 border-primary/30 flex items-center justify-center">
+            <span className="text-[11px] font-bold text-primary">{t.initials}</span>
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center justify-between gap-2">
+              <div>
+                <span className="text-xs font-semibold text-foreground">{t.name}</span>
+                <span className="text-[10px] text-muted-foreground ms-1.5">{t.location}</span>
+              </div>
+              <span className="shrink-0 text-[10px] font-bold text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full whitespace-nowrap">
+                {t.badge}
+              </span>
+            </div>
+            <p className="text-[11px] leading-relaxed text-muted-foreground mt-1 italic line-clamp-2">
+              "{t.quote}"
+            </p>
+          </div>
+        </div>
+        {/* Dots indicator */}
+        <div className="flex items-center justify-center gap-1.5 mt-2">
+          {TESTIMONIALS.map((_, i) => (
+            <div
+              key={i}
+              className={cn(
+                "w-1.5 h-1.5 rounded-full transition-all",
+                i === idx ? "bg-primary w-3" : "bg-muted-foreground/30"
+              )}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Trust signal icons row */}
+      <TooltipProvider delayDuration={300}>
+        <div className="flex items-center justify-center gap-4">
+          {[
+            { icon: Shield, tip: "Verified Reviews", color: "text-primary" },
+            { icon: Lock, tip: "256-bit Encrypted", color: "text-emerald-500" },
+            { icon: BadgeCheck, tip: "Trusted Platform", color: "text-blue-500" },
+            { icon: Eye, tip: "Transparent Ratings", color: "text-amber-500" },
+            { icon: UserCheck, tip: "Identity Verified", color: "text-violet-500" },
+          ].map(({ icon: Icon, tip, color }) => (
+            <Tooltip key={tip}>
+              <TooltipTrigger asChild>
+                <div className={cn("w-6 h-6 flex items-center justify-center opacity-60 hover:opacity-100 transition-opacity cursor-default", color)}>
+                  <Icon className="w-4 h-4" />
+                </div>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" className="text-[10px]">{tip}</TooltipContent>
+            </Tooltip>
+          ))}
+        </div>
+      </TooltipProvider>
+    </div>
+  );
+};
+
+
 const StationCompactHook = ({
   station,
   onExpand,
@@ -199,6 +298,11 @@ const JourneyStepSection = ({
             <p className="text-[11px] text-muted-foreground mt-2 animate-pulse">
               {t("journeyScroll.tapToExplore", "Tap to explore")}
             </p>
+
+            {/* Research station: testimonial + trust signals */}
+            {station.key === "research" && (
+              <ResearchTrustBlock />
+            )}
           </div>
         )}
 
