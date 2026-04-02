@@ -353,7 +353,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
           </button>
         </div>
 
-        {/* SearchSuggestions anchored directly under input */}
+      {/* SearchSuggestions anchored directly under input */}
         <SearchSuggestions
           query={query}
           isOpen={isFocused}
@@ -364,6 +364,47 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
           selectedIndex={selectedIndex}
         />
       </div>
+
+      {/* Quick access chips */}
+      {!isFocused && (
+        <div className="flex items-center justify-center gap-2 md:gap-3 mt-2 flex-wrap">
+          <button
+            onClick={() => searchNavigate("/deal-watch")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-destructive hover:bg-destructive/10 transition-colors"
+          >
+            <Zap className="w-3 h-3" />
+            {t("hero.trending", "Trending")}
+          </button>
+          <button
+            onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-primary hover:bg-primary/10 transition-colors"
+          >
+            <Trophy className="w-3 h-3" />
+            {t("hero.bestOf", "BEST OF 2026")}
+          </button>
+          <button
+            onClick={() => searchNavigate("/categories", { state: { view: "trending" } })}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-accent-foreground hover:bg-accent/10 transition-colors"
+          >
+            <TrendingUp className="w-3 h-3" />
+            {t("hero.trendingProjects", "Trending Projects")}
+          </button>
+          <button
+            onClick={() => searchNavigate("/launch-watch")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-emerald-600 dark:text-emerald-400 hover:bg-emerald-500/10 transition-colors"
+          >
+            <Rocket className="w-3 h-3" />
+            {t("hero.newLaunches", "New Launches")}
+          </button>
+          <button
+            onClick={() => searchNavigate("/deal-watch")}
+            className="flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] md:text-xs font-medium text-amber-600 dark:text-amber-400 hover:bg-amber-500/10 transition-colors"
+          >
+            <Star className="w-3 h-3" />
+            {t("hero.deals", "Deals")}
+          </button>
+        </div>
+      )}
 
 
       {/* AI Trust Insights Modal */}
