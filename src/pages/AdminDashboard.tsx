@@ -2168,6 +2168,7 @@ const AdminDashboard = () => {
           <Route path="upsell" element={<AdminUpsell />} />
           <Route path="community-moderation" element={<AdminCommunityModeration />} />
           <Route path="content-reports" element={<AdminContentReports />} />
+          <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
