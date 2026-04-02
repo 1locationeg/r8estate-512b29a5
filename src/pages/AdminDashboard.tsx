@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -37,6 +37,7 @@ import AdminReferrals from '@/components/AdminReferrals';
 import AdminUpsell from '@/components/AdminUpsell';
 import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
+import AdminGuestTimer from '@/components/AdminGuestTimer';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2106,6 +2107,7 @@ const AdminDashboard = () => {
       items: [
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
         { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
+        { icon: <Timer className="w-4 h-4" />, label: 'Guest Timer', path: '/admin/guest-timer' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
     },
@@ -2166,6 +2168,7 @@ const AdminDashboard = () => {
           <Route path="upsell" element={<AdminUpsell />} />
           <Route path="community-moderation" element={<AdminCommunityModeration />} />
           <Route path="content-reports" element={<AdminContentReports />} />
+          <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>

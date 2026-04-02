@@ -1,9 +1,10 @@
 import { createContext, useContext, useEffect, useState, useRef, ReactNode, useCallback } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { checkDeviceRegistered } from '@/utils/deviceAuth';
+import { supabase } from '@/integrations/supabase/client';
 
-const GUEST_DURATION_SECONDS = 3 * 60; // 3 minutes
-const BONUS_SECONDS = 2 * 60; // 2 minutes
+const DEFAULT_GUEST_DURATION = 3 * 60;
+const DEFAULT_BONUS = 2 * 60;
 const STORAGE_KEY = 'r8estate_guest_start';
 const BONUS_USED_KEY = 'r8estate_guest_bonus_used';
 export const DEVICE_REGISTERED_KEY = 'r8estate_device_registered';
@@ -22,16 +23,40 @@ const GuestTimerContext = createContext<GuestTimerContextType | undefined>(undef
 
 export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const { user, isLoading } = useAuth();
-  const [secondsLeft, setSecondsLeft] = useState(GUEST_DURATION_SECONDS);
+  const [secondsLeft, setSecondsLeft] = useState(DEFAULT_GUEST_DURATION);
   const [expiredModalOpen, setExpiredModalOpen] = useState(false);
   const [hasBonusBeenUsed, setHasBonusBeenUsed] = useState(() => localStorage.getItem(BONUS_USED_KEY) === '1');
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const hasExpiredRef = useRef(false);
 
-  // Use shared device-auth helper instead of duplicating fingerprint logic
+  // Remote settings
+  const [timerEnabled, setTimerEnabled] = useState(true);
+  const [guestDuration, setGuestDuration] = useState(DEFAULT_GUEST_DURATION);
+  const [bonusDuration, setBonusDuration] = useState(DEFAULT_BONUS);
+  const [settingsLoaded, setSettingsLoaded] = useState(false);
+
+  // Fetch timer settings from platform_settings
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data } = await supabase
+        .from('platform_settings')
+        .select('key, value')
+        .in('key', ['guest_timer_enabled', 'guest_timer_duration_seconds', 'guest_timer_bonus_seconds']);
+
+      if (data) {
+        data.forEach((row) => {
+          if (row.key === 'guest_timer_enabled') setTimerEnabled(row.value === 'true');
+          if (row.key === 'guest_timer_duration_seconds') setGuestDuration(parseInt(row.value) || DEFAULT_GUEST_DURATION);
+          if (row.key === 'guest_timer_bonus_seconds') setBonusDuration(parseInt(row.value) || DEFAULT_BONUS);
+        });
+      }
+      setSettingsLoaded(true);
+    };
+    fetchSettings();
+  }, []);
+
   const device = checkDeviceRegistered();
-  // Only suppress guest timer for actively registered devices, NOT for logged-out devices
-  const isGuest = !isLoading && !user && !device.registered;
+  const isGuest = !isLoading && !user && !device.registered && timerEnabled && settingsLoaded;
 
   const clearTimer = useCallback(() => {
     if (intervalRef.current) {
@@ -61,18 +86,18 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   }, [clearTimer]);
 
   useEffect(() => {
-    if (!isGuest || isLoading) {
+    if (!isGuest || isLoading || !settingsLoaded) {
       clearTimer();
       hasExpiredRef.current = false;
       setExpiredModalOpen(false);
-      setSecondsLeft(GUEST_DURATION_SECONDS);
+      setSecondsLeft(guestDuration);
       return;
     }
 
     let startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
     const now = Date.now();
     const bonusUsed = localStorage.getItem(BONUS_USED_KEY) === '1';
-    const totalDuration = bonusUsed ? GUEST_DURATION_SECONDS + BONUS_SECONDS : GUEST_DURATION_SECONDS;
+    const totalDuration = bonusUsed ? guestDuration + bonusDuration : guestDuration;
 
     if (!startTime || now - startTime > totalDuration * 1000) {
       startTime = now;
@@ -83,7 +108,7 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
 
     startCountdown(startTime, totalDuration);
     return clearTimer;
-  }, [isGuest, isLoading, clearTimer, startCountdown]);
+  }, [isGuest, isLoading, clearTimer, startCountdown, settingsLoaded, guestDuration, bonusDuration]);
 
   useEffect(() => {
     if (user) {
@@ -106,7 +131,7 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
 
     const startTime = parseInt(localStorage.getItem(STORAGE_KEY) || '0', 10);
     const elapsed = Math.floor((Date.now() - startTime) / 1000);
-    const newTotalDuration = elapsed + BONUS_SECONDS;
+    const newTotalDuration = elapsed + bonusDuration;
 
     const newStartTime = Date.now() - elapsed * 1000;
     localStorage.setItem(STORAGE_KEY, String(newStartTime));
@@ -114,7 +139,7 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
     setExpiredModalOpen(false);
     hasExpiredRef.current = false;
     startCountdown(newStartTime, newTotalDuration);
-  }, [hasBonusBeenUsed, startCountdown]);
+  }, [hasBonusBeenUsed, startCountdown, bonusDuration]);
 
   return (
     <GuestTimerContext.Provider
