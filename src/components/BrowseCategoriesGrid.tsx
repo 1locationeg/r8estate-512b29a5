@@ -10,6 +10,7 @@ interface BrowseCategoriesGridProps {
   onSelectCategory?: (categoryIndex: number) => void;
   onSelectItem?: (item: { id: string; nameEn: string; nameAr: string }) => void;
   searchQuery?: string;
+  stationFilter?: "research" | "choose" | "finance" | "protect";
 }
 
 type JourneyKey = "research" | "choose" | "finance" | "protect";
@@ -42,7 +43,7 @@ const stationCircle: Record<JourneyKey, { bg: string; text: string }> = {
   protect: { bg: "bg-journey-protect/15", text: "text-journey-protect" },
 };
 
-export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "" }: BrowseCategoriesGridProps) => {
+export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQuery = "", stationFilter }: BrowseCategoriesGridProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const isRTL = i18n.dir() === "rtl";
@@ -55,8 +56,12 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
       item => item.nameEn.toLowerCase().includes(q) || item.nameAr.includes(q)
     );
     const categoryMatches = categoryName.includes(q);
-    return { category, originalIndex, matchingItems, categoryMatches };
-  }).filter(({ matchingItems, categoryMatches }) => !q || categoryMatches || matchingItems.length > 0);
+    const journeyKey = journeyMap[category.labelKey] || "research";
+    return { category, originalIndex, matchingItems, categoryMatches, journeyKey };
+  }).filter(({ matchingItems, categoryMatches, journeyKey }) => {
+    if (stationFilter && journeyKey !== stationFilter) return false;
+    return !q || categoryMatches || matchingItems.length > 0;
+  });
 
   const handleCategoryClick = (originalIndex: number) => {
     setExpandedIdx(prev => prev === originalIndex ? null : originalIndex);
