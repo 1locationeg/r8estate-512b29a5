@@ -10,6 +10,7 @@ interface BrowseCategoriesGridProps {
   onSelectCategory?: (categoryIndex: number) => void;
   onSelectItem?: (item: { id: string; nameEn: string; nameAr: string }) => void;
   searchQuery?: string;
+  stationFilter?: "research" | "choose" | "finance" | "protect";
 }
 
 type JourneyKey = "research" | "choose" | "finance" | "protect";
