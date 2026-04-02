@@ -403,7 +403,6 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange }
             </Tooltip>
           </TooltipProvider>
         </div>
-      </div>
 
       {/* AI Trust Insights Modal */}
       <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
