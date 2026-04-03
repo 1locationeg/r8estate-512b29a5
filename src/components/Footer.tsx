@@ -180,13 +180,13 @@ export const Footer = () => {
       </div>
 
       {/* Copyright Bar */}
-      <div className="border-t border-slate-800">
+      <div className="border-t border-border bg-background">
         <div className="container mx-auto px-4 py-5 flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <BrandLogo size="hero" className="hover:scale-105 transition-transform duration-200" />
           </div>
-          <div className="flex items-center gap-4 text-xs text-slate-500">
-            <Link to="/sitemap" className="hover:text-white transition-colors">
+          <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <Link to="/sitemap" className="hover:text-foreground transition-colors">
               Sitemap
             </Link>
             <p>{t("footer.copyright")}</p>
