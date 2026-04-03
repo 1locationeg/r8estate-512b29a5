@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Briefcase, Sparkles } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
