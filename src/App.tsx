@@ -135,6 +135,7 @@ const AppContent = () => {
           <Route path="/review/:token?" element={<FrictionlessReview />} />
           <Route path="/review" element={<FrictionlessReview />} />
           <Route path="/go/:slug" element={<SmartLinkRedirect />} />
+          <Route path="/go" element={<Navigate to="/" replace />} />
         </Routes>
       </Suspense>
     );
