@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
 import { BrandLogo } from "@/components/BrandLogo";
 import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 
@@ -16,9 +17,14 @@ export const Footer = () => {
           <div className="flex items-center gap-0">
             <BrandLogo size="hero" className="hover:scale-105 transition-transform duration-200" />
           </div>
-          <p className="text-xs md:text-sm text-muted-foreground text-center">
-            {t("footer.copyright")}
-          </p>
+          <div className="flex items-center gap-4">
+            <Link to="/sitemap" className="text-xs md:text-sm text-muted-foreground hover:text-primary transition-colors">
+              Sitemap
+            </Link>
+            <p className="text-xs md:text-sm text-muted-foreground text-center">
+              {t("footer.copyright")}
+            </p>
+          </div>
         </div>
       </div>
     </footer>

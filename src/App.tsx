@@ -54,6 +54,7 @@ const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
+const Sitemap = lazy(() => import("./pages/Sitemap"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -168,6 +169,7 @@ const AppContent = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/rewards" element={<Rewards />} />
+          <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="*" element={<NotFound />} />
