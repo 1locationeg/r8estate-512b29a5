@@ -55,6 +55,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
+const StaticPage = lazy(() => import("./pages/StaticPage"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
