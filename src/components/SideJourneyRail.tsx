@@ -3,18 +3,18 @@ import { useTranslation } from "react-i18next";
 import { JOURNEY_STATIONS, getStationForRoute } from "@/lib/journeyStations";
 import { cn } from "@/lib/utils";
 
-const BG: Record<string, string> = {
+const FILL: Record<string, string> = {
   research: "bg-journey-research",
   choose: "bg-journey-choose",
   finance: "bg-journey-finance",
   protect: "bg-journey-protect",
 };
 
-const RING: Record<string, string> = {
-  research: "ring-journey-research/40",
-  choose: "ring-journey-choose/40",
-  finance: "ring-journey-finance/40",
-  protect: "ring-journey-protect/40",
+const TINT: Record<string, string> = {
+  research: "bg-journey-research/10",
+  choose: "bg-journey-choose/10",
+  finance: "bg-journey-finance/10",
+  protect: "bg-journey-protect/10",
 };
 
 const TEXT: Record<string, string> = {
@@ -30,7 +30,6 @@ export const SideJourneyRail = () => {
   const { i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
 
-  // Hide on homepage, auth, embed, review (frictionless), forgot/reset password
   if (
     pathname === "/" ||
     pathname.startsWith("/auth") ||
@@ -50,47 +49,67 @@ export const SideJourneyRail = () => {
   return (
     <div
       className={cn(
-        "fixed top-1/2 -translate-y-1/2 z-30 flex-col items-center gap-0 hidden min-[360px]:flex",
-        isRTL ? "right-1.5" : "left-1.5"
+        "fixed top-1/2 -translate-y-1/2 z-30 flex-col items-center hidden min-[360px]:flex",
+        isRTL ? "right-1" : "left-1"
       )}
     >
       {JOURNEY_STATIONS.map((station, idx) => {
         const isActive = idx === currentIdx;
         const isPast = idx < currentIdx;
         const isLast = idx === JOURNEY_STATIONS.length - 1;
+        const Icon = station.icon;
 
         return (
           <div key={station.key} className="flex flex-col items-center">
-            {/* Dot */}
+            {/* Station dot — same circle + icon style as homepage MiniJourneyArc */}
             <button
               onClick={() => navigate(station.homeRoute)}
-              className={cn(
-                "rounded-full transition-all duration-300 relative group",
-                isActive
-                  ? cn("w-3.5 h-3.5 ring-4", BG[station.key], RING[station.key], "animate-pulse")
-                  : isPast
-                  ? cn("w-2.5 h-2.5", BG[station.key])
-                  : "w-2.5 h-2.5 bg-muted-foreground/25"
-              )}
+              className="relative"
               aria-label={station.key}
             >
-              {/* Tooltip on hover */}
-              <span
+              <div
                 className={cn(
-                  "absolute top-1/2 -translate-y-1/2 whitespace-nowrap text-[10px] font-semibold opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none px-1.5 py-0.5 rounded bg-popover text-popover-foreground shadow-sm",
-                  isRTL ? "right-full mr-2" : "left-full ml-2"
+                  "w-9 h-9 rounded-full flex items-center justify-center transition-all duration-300 border-2 border-background shadow-sm",
+                  isActive
+                    ? cn(FILL[station.key], "text-white shadow-lg scale-110 ring-2 ring-offset-1 ring-offset-background",
+                        station.key === "research" ? "ring-journey-research/30" :
+                        station.key === "choose" ? "ring-journey-choose/30" :
+                        station.key === "finance" ? "ring-journey-finance/30" :
+                        "ring-journey-protect/30")
+                    : isPast
+                      ? cn(FILL[station.key], "text-white opacity-75")
+                      : cn(TINT[station.key], TEXT[station.key])
                 )}
               >
-                {station.emoji} {station.key.charAt(0).toUpperCase() + station.key.slice(1)}
+                <Icon className={cn(
+                  "w-4 h-4",
+                  isActive || isPast ? "text-white" : ""
+                )} />
+              </div>
+              {/* Number badge */}
+              <span
+                className={cn(
+                  "absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full flex items-center justify-center text-[8px] font-black text-white shadow-sm",
+                  FILL[station.key]
+                )}
+              >
+                {idx + 1}
               </span>
+              {/* Active pulse */}
+              {isActive && (
+                <div className={cn(
+                  "absolute inset-0 rounded-full animate-ping opacity-20",
+                  FILL[station.key]
+                )} />
+              )}
             </button>
 
             {/* Connecting line */}
             {!isLast && (
               <div
                 className={cn(
-                  "w-0.5 h-6 transition-colors duration-300",
-                  idx < currentIdx ? BG[station.key] : "bg-muted-foreground/15"
+                  "w-0.5 h-3 transition-colors duration-300",
+                  idx < currentIdx ? FILL[station.key] : "bg-muted-foreground/15"
                 )}
               />
             )}
