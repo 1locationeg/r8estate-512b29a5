@@ -55,6 +55,7 @@ const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
+const StaticPage = lazy(() => import("./pages/StaticPage"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -171,6 +172,18 @@ const AppContent = () => {
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
+          <Route path="/about" element={<StaticPage />} />
+          <Route path="/careers" element={<StaticPage />} />
+          <Route path="/contact" element={<StaticPage />} />
+          <Route path="/press" element={<StaticPage />} />
+          <Route path="/privacy" element={<StaticPage />} />
+          <Route path="/terms" element={<StaticPage />} />
+          <Route path="/cookies-policy" element={<StaticPage />} />
+          <Route path="/copyright" element={<StaticPage />} />
+          <Route path="/help" element={<StaticPage />} />
+          <Route path="/customer-service" element={<StaticPage />} />
+          <Route path="/faq" element={<StaticPage />} />
+          <Route path="/report" element={<StaticPage />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

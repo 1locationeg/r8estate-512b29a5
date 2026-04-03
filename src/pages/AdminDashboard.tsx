@@ -39,6 +39,7 @@ import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
+import AdminFooterSettings from '@/components/AdminFooterSettings';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2110,6 +2111,7 @@ const AdminDashboard = () => {
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
         { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
         { icon: <Timer className="w-4 h-4" />, label: 'Guest Timer', path: '/admin/guest-timer' },
+        { icon: <Layout className="w-4 h-4" />, label: 'Footer', path: '/admin/footer' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
     },
@@ -2172,6 +2174,7 @@ const AdminDashboard = () => {
           <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
+          <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
