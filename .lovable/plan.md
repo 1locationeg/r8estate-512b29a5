@@ -1,46 +1,44 @@
 
 
-# Auto-Updating Sitemap
+# Fix Scroll Trap After Station 4 + Mobile PWA Polish
 
 ## Problem
 
-The sitemap has a hardcoded `STATIC_PAGES` array that gets out of sync whenever new routes are added to `App.tsx`. New entities already auto-update (via `getSearchIndex()`), but pages do not.
+The `JourneyFullPageScroll` component uses `h-[100dvh] overflow-y-auto` — creating a **self-contained scroll container** that traps the user. After scrolling through the 4 stations, the user cannot continue to the rest of the page (HowWeWork, Footer, etc.) because the snap container captures all scroll events.
+
+Additionally, the current layout has horizontal padding on mobile that wastes screen space.
 
 ## Solution
 
-Create a centralized **route registry** (`src/data/routeRegistry.ts`) that both `App.tsx` and `Sitemap.tsx` import from. This is the single source of truth — when you add a new page, you add it to the registry, and both the router and sitemap pick it up automatically.
-
-Additionally, the sitemap will also pull in category items from `HeroCategoryItems.tsx` (which aren't in the search index) so nothing is missed.
+Remove the fixed-height inner scroll container. Instead, let the journey sections flow naturally within the page layout and apply `snap-y snap-mandatory` to the **outer page wrapper** in `Index.tsx`. This way:
+- Each station is still a full-screen snap section
+- After station 4, the user naturally scrolls into the remaining content (no trap)
+- The snap behavior stops after the journey sections (remaining content scrolls normally)
 
 ## File Changes
 
 | Action | File | Details |
 |---|---|---|
-| New | `src/data/routeRegistry.ts` | Central array of `{ name, path, isPublic }` for all public routes |
-| Edit | `src/pages/Sitemap.tsx` | Import from registry instead of hardcoded list; also include HeroCategoryItems |
-| Edit | `src/App.tsx` | Import route list from registry (for reference/consistency) |
+| Edit | `src/components/JourneyFullPageScroll.tsx` | Remove `h-[100dvh] overflow-y-auto` wrapper; export sections as a flat fragment; remove IntersectionObserver root (use viewport instead) |
+| Edit | `src/pages/Index.tsx` | Wrap the hero + journey + below-fold content in a single scroll container with conditional snap; remove horizontal padding on mobile for full-bleed; ensure `overflow-x-hidden` and `w-full` |
 
-## How the Registry Works
+## Key Changes in JourneyFullPageScroll
 
-```typescript
-// src/data/routeRegistry.ts
-export const PUBLIC_ROUTES = [
-  { name: "Home", path: "/" },
-  { name: "Reviews", path: "/reviews" },
-  { name: "Directory", path: "/directory" },
-  // ... all public routes
-];
-```
+1. Replace the `div` with `h-[100dvh] overflow-y-auto` → use a simple wrapper `div` with no fixed height
+2. IntersectionObserver: change `root: container` → `root: null` (viewport)
+3. Each section keeps `min-h-[100dvh] snap-start` for screen-by-screen snapping
+4. Add a "sentinel" empty section at the end that does NOT snap, allowing scroll to continue past
 
-- `Sitemap.tsx` imports `PUBLIC_ROUTES` — always in sync
-- Entity items come from `getSearchIndex()` — already dynamic
-- Category items from `HeroCategoryItems.categories` are merged in to catch any items not in the search index
-- Adding a new page = add one entry to `routeRegistry.ts` + the route in `App.tsx` — sitemap updates automatically
+## Mobile PWA Responsiveness
 
-## What Auto-Updates
+- Remove `px-4` padding on mobile for journey sections → full-bleed edge-to-edge
+- Ensure `max-w-full w-full overflow-x-hidden` on the outer container
+- StationRingNav: hide on very small screens or reduce size
+- Below-fold content keeps its existing padding for readability
 
-1. **Pages** — driven by `PUBLIC_ROUTES` registry (single source of truth)
-2. **Entities** (developers, projects, etc.) — driven by `getSearchIndex()` (already dynamic)
-3. **Category items** — driven by `categories` from `HeroCategoryItems.tsx` (merged + deduplicated)
-4. **XML download** — regenerated on every click from the same live data
+## What This Fixes
+
+1. **Scroll trap** — user can now scroll past station 4 to see Footer, HowWeWork, etc.
+2. **Screen-by-screen mobile feel** — snap-start on each station maintains the PWA app-like scroll
+3. **Edge-to-edge mobile** — no wasted space on left/right on smart devices
 
