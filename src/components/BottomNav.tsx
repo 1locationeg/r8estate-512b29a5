@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users, Briefcase } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Briefcase, Sparkles } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
@@ -96,12 +96,15 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
           </button>
 
+          {/* Copilot / Agentic */}
           <button
-            onClick={() => setMoreOpen(true)}
-            className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 text-muted-foreground"
+            onClick={() => navigate("/copilot")}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+              location.pathname === "/copilot" ? "text-primary" : "text-muted-foreground"
+            }`}
           >
-            <MoreHorizontal className="h-5 w-5" strokeWidth={2} />
-            <span className="text-[10px] font-medium">{t("nav.more", "More")}</span>
+            <Sparkles className="h-5 w-5" strokeWidth={location.pathname === "/copilot" ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.copilot", "Copilot")}</span>
           </button>
         </div>
       </nav>
