@@ -3,6 +3,9 @@ import { useState, useRef, useEffect } from "react";
 import { Bot, Send, Loader2, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
+import { useLocation } from "react-router-dom";
+import { getStationForRoute } from "@/lib/journeyStations";
+import { COPILOT_QUESTIONS, COPILOT_DEFAULT_QUESTIONS } from "@/lib/copilotQuestions";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
