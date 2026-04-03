@@ -132,6 +132,7 @@ const AppContent = () => {
           <Route path="/embed/widget/:token" element={<EmbedWidget />} />
           <Route path="/review/:token?" element={<FrictionlessReview />} />
           <Route path="/review" element={<FrictionlessReview />} />
+          <Route path="/go/:slug" element={<SmartLinkRedirect />} />
         </Routes>
       </Suspense>
     );
