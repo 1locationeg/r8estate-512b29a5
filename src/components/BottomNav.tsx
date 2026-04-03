@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { MessageSquare, LayoutGrid, Users } from "lucide-react";
+import { MessageSquare, LayoutGrid, Users, Sparkles } from "lucide-react";
 import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,6 +29,7 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isCommunity = location.pathname === "/community";
+  const isCopilot = location.pathname === "/copilot";
   const station = getStationForRoute(location.pathname);
   const activeColor = station ? STATION_TEXT[station.key] : "text-primary";
 
@@ -73,15 +74,15 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Community */}
+          {/* Copilot */}
           <button
-            onClick={() => navigate("/community")}
+            onClick={() => navigate("/copilot")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isCommunity ? activeColor : "text-muted-foreground"
+              isCopilot ? "text-primary" : "text-muted-foreground"
             }`}
           >
-            <Users className="h-5 w-5" strokeWidth={isCommunity ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
+            <Sparkles className="h-5 w-5" strokeWidth={isCopilot ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.copilot", "Copilot")}</span>
           </button>
 
           {/* More Menu */}

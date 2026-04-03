@@ -55,6 +55,7 @@ const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
+const CopilotPage = lazy(() => import("./pages/CopilotPage"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const StaticPage = lazy(() => import("./pages/StaticPage"));
 
@@ -172,6 +173,7 @@ const AppContent = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/rewards" element={<Rewards />} />
+          <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/about" element={<StaticPage />} />
