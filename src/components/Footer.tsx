@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { BrandLogo } from "@/components/BrandLogo";
-import { ReviewsCarousel } from "@/components/ReviewsCarousel";
+
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -89,8 +89,6 @@ export const Footer = () => {
 
   return (
     <footer className="bg-slate-900 text-slate-200 safe-bottom">
-      {/* Reviews Carousel */}
-      <ReviewsCarousel />
 
       {/* Main Footer Content */}
       <div className="container mx-auto px-4 py-10 md:py-14">
