@@ -74,15 +74,15 @@ export const BottomNav = () => {
             </div>
           </button>
 
-          {/* Copilot */}
+          {/* Portfolio */}
           <button
-            onClick={() => navigate("/copilot")}
+            onClick={() => navigate("/portfolio")}
             className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
-              isCopilot ? "text-primary" : "text-muted-foreground"
+              location.pathname === "/portfolio" ? activeColor : "text-muted-foreground"
             }`}
           >
-            <Sparkles className="h-5 w-5" strokeWidth={isCopilot ? 2.5 : 2} />
-            <span className="text-[10px] font-medium">{t("nav.copilot", "Copilot")}</span>
+            <Briefcase className="h-5 w-5" strokeWidth={location.pathname === "/portfolio" ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
           </button>
 
           {/* More Menu */}
