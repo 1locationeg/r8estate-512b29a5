@@ -38,6 +38,7 @@ import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/comp
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
+import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 
 const Index = () => {
   const { t } = useTranslation();
