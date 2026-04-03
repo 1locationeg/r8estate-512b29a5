@@ -3,33 +3,12 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 import { getSearchIndex, type SearchCategory } from "@/data/searchIndex";
+import { PUBLIC_ROUTES } from "@/data/routeRegistry";
+import { categories as heroCats } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Download, Map, Globe, ExternalLink } from "lucide-react";
 
 const BASE_URL = "https://meter.r8estate.com";
-
-interface StaticPage {
-  name: string;
-  path: string;
-}
-
-const STATIC_PAGES: StaticPage[] = [
-  { name: "Home", path: "/" },
-  { name: "Authentication", path: "/auth" },
-  { name: "Reviews", path: "/reviews" },
-  { name: "Directory", path: "/directory" },
-  { name: "Community", path: "/community" },
-  { name: "Leaderboard", path: "/leaderboard" },
-  { name: "Rewards", path: "/rewards" },
-  { name: "Deal Watch", path: "/deal-watch" },
-  { name: "Launch Watch", path: "/launch-watch" },
-  { name: "Categories", path: "/categories" },
-  { name: "Messages", path: "/messages" },
-  { name: "Install App", path: "/install" },
-  { name: "Portfolio", path: "/portfolio" },
-  { name: "Insights", path: "/insights" },
-  { name: "Sitemap", path: "/sitemap" },
-];
 
 const CATEGORY_LABELS: Record<SearchCategory, string> = {
   developers: "Developers",
@@ -43,13 +22,39 @@ const CATEGORY_LABELS: Record<SearchCategory, string> = {
   reviews: "Reviews",
 };
 
-function generateXml(staticPages: StaticPage[], grouped: Record<string, { name: string; path: string }[]>) {
+/** Merge search-index entities with hero-category items (deduplicated). */
+function buildGrouped() {
+  const index = getSearchIndex();
+  const grouped: Record<string, { name: string; path: string }[]> = {};
+
+  for (const item of index) {
+    if (!grouped[item.category]) grouped[item.category] = [];
+    grouped[item.category].push({ name: item.name, path: `/entity/${item.id}` });
+  }
+
+  // Merge hero category items that may not be in the search index
+  for (const cat of heroCats) {
+    for (const item of cat.items) {
+      const path = `/entity/${item.id}`;
+      const existing = Object.values(grouped).flat();
+      if (!existing.some((e) => e.path === path)) {
+        const key = item.categoryKey || "categories";
+        if (!grouped[key]) grouped[key] = [];
+        grouped[key].push({ name: item.nameEn, path });
+      }
+    }
+  }
+
+  return grouped;
+}
+
+function generateXml(grouped: Record<string, { name: string; path: string }[]>) {
   const urls: string[] = [];
   const add = (loc: string, priority: string, changefreq: string) => {
     urls.push(`  <url>\n    <loc>${loc}</loc>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`);
   };
 
-  for (const page of staticPages) {
+  for (const page of PUBLIC_ROUTES) {
     add(`${BASE_URL}${page.path}`, page.path === "/" ? "1.0" : "0.8", "weekly");
   }
 
@@ -83,16 +88,10 @@ const CollapsibleSection = ({ title, count, children }: { title: string; count: 
 
 const Sitemap = () => {
   const { t } = useTranslation();
-  const index = getSearchIndex();
-
-  const grouped: Record<string, { name: string; path: string }[]> = {};
-  for (const item of index) {
-    if (!grouped[item.category]) grouped[item.category] = [];
-    grouped[item.category].push({ name: item.name, path: `/entity/${item.id}` });
-  }
+  const grouped = buildGrouped();
 
   const handleDownload = () => {
-    const xml = generateXml(STATIC_PAGES, grouped);
+    const xml = generateXml(grouped);
     const blob = new Blob([xml], { type: "text/xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -105,7 +104,6 @@ const Sitemap = () => {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <main className="flex-1 container mx-auto px-4 py-8 pb-24">
-        {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
             <Map className="h-7 w-7 text-primary" />
@@ -121,9 +119,8 @@ const Sitemap = () => {
         </div>
 
         <div className="space-y-4">
-          {/* Static Pages */}
-          <CollapsibleSection title="Pages" count={STATIC_PAGES.length}>
-            {STATIC_PAGES.map((page) => (
+          <CollapsibleSection title="Pages" count={PUBLIC_ROUTES.length}>
+            {PUBLIC_ROUTES.map((page) => (
               <Link
                 key={page.path}
                 to={page.path}
@@ -135,7 +132,6 @@ const Sitemap = () => {
             ))}
           </CollapsibleSection>
 
-          {/* Entity Groups */}
           {Object.entries(CATEGORY_LABELS).map(([key, label]) => {
             const items = grouped[key];
             if (!items || items.length === 0) return null;
