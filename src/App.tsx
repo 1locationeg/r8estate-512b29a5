@@ -148,6 +148,7 @@ const AppContent = () => {
     <>
       <ScrollToTop />
       <JourneyStripe />
+      <SideJourneyRail />
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>
