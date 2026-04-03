@@ -1000,6 +1000,47 @@ export type Database = {
           },
         ]
       }
+      link_clicks: {
+        Row: {
+          browser: string | null
+          clicked_at: string
+          device_type: string | null
+          id: string
+          ip_country: string | null
+          link_id: string
+          referrer_url: string | null
+          user_agent: string | null
+        }
+        Insert: {
+          browser?: string | null
+          clicked_at?: string
+          device_type?: string | null
+          id?: string
+          ip_country?: string | null
+          link_id: string
+          referrer_url?: string | null
+          user_agent?: string | null
+        }
+        Update: {
+          browser?: string | null
+          clicked_at?: string
+          device_type?: string | null
+          id?: string
+          ip_country?: string | null
+          link_id?: string
+          referrer_url?: string | null
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "link_clicks_link_id_fkey"
+            columns: ["link_id"]
+            isOneToOne: false
+            referencedRelation: "smart_links"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       messages: {
         Row: {
           content: string
@@ -1594,6 +1635,42 @@ export type Database = {
           notify_enabled?: boolean
           query?: string
           user_id?: string
+        }
+        Relationships: []
+      }
+      smart_links: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          destination_url: string
+          id: string
+          is_active: boolean
+          og_description: string | null
+          og_image: string | null
+          og_title: string | null
+          slug: string
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          destination_url: string
+          id?: string
+          is_active?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          slug: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          destination_url?: string
+          id?: string
+          is_active?: boolean
+          og_description?: string | null
+          og_image?: string | null
+          og_title?: string | null
+          slug?: string
         }
         Relationships: []
       }
