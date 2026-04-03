@@ -39,6 +39,7 @@ import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
+import AdminFooterSettings from '@/components/AdminFooterSettings';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({

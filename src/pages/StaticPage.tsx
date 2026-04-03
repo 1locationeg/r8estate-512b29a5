@@ -1,5 +1,4 @@
 import { useParams } from "react-router-dom";
-import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 
 const PAGES: Record<string, { title: string; content: string }> = {
@@ -59,7 +58,6 @@ const StaticPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold text-foreground mb-6">{page.title}</h1>
         <div className="prose prose-slate dark:prose-invert max-w-none">
