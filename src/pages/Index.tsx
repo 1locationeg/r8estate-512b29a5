@@ -318,8 +318,8 @@ const Index = () => {
           {/* ─── Snap-scroll container: Hero + 4 station sections ─── */}
           <JourneyFullPageScroll heroContent={heroBlock} />
 
-          {/* ─── Below-the-fold: existing components (normal scroll) ─── */}
-          <section className="flex-1 flex flex-col">
+          {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
+          <section className="flex-1 flex flex-col snap-start">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-4 pb-0">
               {/* Trust Strip */}
               <div className="w-full max-w-[1100px] mb-3">
