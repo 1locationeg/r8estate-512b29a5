@@ -1,5 +1,5 @@
 /* refreshed */
-import { useRef, useState, useEffect, useCallback, lazy, Suspense } from "react";
+import { useState, useEffect, useCallback, lazy, Suspense } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, Building2, Wallet, ShieldCheck, ChevronUp, X, ArrowRight, Shield, Lock, BadgeCheck, Eye, UserCheck, BarChart3, Sparkles } from "lucide-react";
@@ -396,7 +396,7 @@ const JourneyStepSection = ({
       />
 
       <div className={cn(
-        "relative z-10 flex flex-col items-center text-center px-4 w-full max-w-xl mx-auto transition-all duration-500",
+        "relative z-10 flex flex-col items-center text-center px-2 sm:px-4 w-full max-w-xl mx-auto transition-all duration-500",
         isActive ? "opacity-100 translate-y-0" : "opacity-60 translate-y-4"
       )}>
         {/* Step badge */}
@@ -541,16 +541,12 @@ interface Props {
 }
 
 export const JourneyFullPageScroll = ({ heroContent }: Props) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState(-1);
   const [expandedSection, setExpandedSection] = useState<number | null>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     const sectionEls = STATIONS.map((_, i) =>
-      container.querySelector(`#journey-section-${i}`)
+      document.getElementById(`journey-section-${i}`)
     ).filter(Boolean) as Element[];
 
     const observer = new IntersectionObserver(
@@ -562,18 +558,18 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
           }
         }
       },
-      { root: container, threshold: 0.3 }
+      { root: null, threshold: 0.3 }
     );
 
     sectionEls.forEach((el) => observer.observe(el));
 
-    const hero = container.querySelector("#journey-hero");
+    const hero = document.getElementById("journey-hero");
     if (hero) {
       const heroObs = new IntersectionObserver(
         (entries) => {
           if (entries[0]?.isIntersecting) setActiveSection(-1);
         },
-        { root: container, threshold: 0.3 }
+        { root: null, threshold: 0.3 }
       );
       heroObs.observe(hero);
       return () => { observer.disconnect(); heroObs.disconnect(); };
@@ -583,7 +579,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
   }, []);
 
   const scrollToSection = useCallback((idx: number) => {
-    const el = containerRef.current?.querySelector(`#journey-section-${idx}`);
+    const el = document.getElementById(`journey-section-${idx}`);
     el?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
@@ -596,14 +592,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "h-[100dvh] overflow-y-auto scrollbar-hide",
-        expandedSection === null ? "snap-y snap-mandatory" : ""
-      )}
-      style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
-    >
+    <>
       <section id="journey-hero" className="min-h-[100dvh] w-full snap-start flex flex-col">
         {heroContent}
       </section>
@@ -620,7 +609,10 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
         />
       ))}
 
+      {/* Sentinel — no snap-start so scroll continues past stations */}
+      <div className="h-1 w-full" aria-hidden="true" />
+
       <StationRingNav activeIndex={activeSection} onRingClick={scrollToSection} />
-    </div>
+    </>
   );
 };
