@@ -103,7 +103,7 @@ const AdminSmartLinks = () => {
   };
 
   const copyLink = (slug: string) => {
-    navigator.clipboard.writeText(`https://r8estate.lovable.app/go/${slug}`);
+    navigator.clipboard.writeText(`https://meter.r8estate.com/go/${slug}`);
     toast.success('Link copied!');
   };
 
@@ -307,7 +307,7 @@ const AdminSmartLinks = () => {
                   <div className="p-3">
                     <p className="text-sm font-semibold text-foreground">{selectedLink.og_title || selectedLink.slug}</p>
                     <p className="text-xs text-muted-foreground mt-1">{selectedLink.og_description || selectedLink.destination_url}</p>
-                    <p className="text-[10px] text-muted-foreground/60 mt-1">r8estate.lovable.app/go/{selectedLink.slug}</p>
+                    <p className="text-[10px] text-muted-foreground/60 mt-1">meter.r8estate.com/go/{selectedLink.slug}</p>
                   </div>
                 </div>
               </CardContent>
@@ -335,7 +335,7 @@ const AdminSmartLinks = () => {
               <div>
                 <label className="text-xs font-medium text-foreground">Slug *</label>
                 <div className="flex items-center gap-1 mt-1">
-                  <span className="text-xs text-muted-foreground">r8estate.lovable.app/go/</span>
+                  <span className="text-xs text-muted-foreground">meter.r8estate.com/go/</span>
                   <Input value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} placeholder="spring-promo" className="flex-1" />
                 </div>
               </div>
