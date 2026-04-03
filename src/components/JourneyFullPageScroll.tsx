@@ -396,7 +396,7 @@ const JourneyStepSection = ({
       />
 
       <div className={cn(
-        "relative z-10 flex flex-col items-center text-center px-4 w-full max-w-xl mx-auto transition-all duration-500",
+        "relative z-10 flex flex-col items-center text-center px-2 sm:px-4 w-full max-w-xl mx-auto transition-all duration-500",
         isActive ? "opacity-100 translate-y-0" : "opacity-60 translate-y-4"
       )}>
         {/* Step badge */}
