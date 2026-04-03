@@ -541,16 +541,12 @@ interface Props {
 }
 
 export const JourneyFullPageScroll = ({ heroContent }: Props) => {
-  const containerRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState(-1);
   const [expandedSection, setExpandedSection] = useState<number | null>(null);
 
   useEffect(() => {
-    const container = containerRef.current;
-    if (!container) return;
-
     const sectionEls = STATIONS.map((_, i) =>
-      container.querySelector(`#journey-section-${i}`)
+      document.getElementById(`journey-section-${i}`)
     ).filter(Boolean) as Element[];
 
     const observer = new IntersectionObserver(
@@ -562,18 +558,18 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
           }
         }
       },
-      { root: container, threshold: 0.3 }
+      { root: null, threshold: 0.3 }
     );
 
     sectionEls.forEach((el) => observer.observe(el));
 
-    const hero = container.querySelector("#journey-hero");
+    const hero = document.getElementById("journey-hero");
     if (hero) {
       const heroObs = new IntersectionObserver(
         (entries) => {
           if (entries[0]?.isIntersecting) setActiveSection(-1);
         },
-        { root: container, threshold: 0.3 }
+        { root: null, threshold: 0.3 }
       );
       heroObs.observe(hero);
       return () => { observer.disconnect(); heroObs.disconnect(); };
@@ -583,7 +579,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
   }, []);
 
   const scrollToSection = useCallback((idx: number) => {
-    const el = containerRef.current?.querySelector(`#journey-section-${idx}`);
+    const el = document.getElementById(`journey-section-${idx}`);
     el?.scrollIntoView({ behavior: "smooth" });
   }, []);
 
@@ -596,14 +592,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={cn(
-        "h-[100dvh] overflow-y-auto scrollbar-hide",
-        expandedSection === null ? "snap-y snap-mandatory" : ""
-      )}
-      style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" }}
-    >
+    <>
       <section id="journey-hero" className="min-h-[100dvh] w-full snap-start flex flex-col">
         {heroContent}
       </section>
@@ -620,7 +609,10 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
         />
       ))}
 
+      {/* Sentinel — no snap-start so scroll continues past stations */}
+      <div className="h-1 w-full" aria-hidden="true" />
+
       <StationRingNav activeIndex={activeSection} onRingClick={scrollToSection} />
-    </div>
+    </>
   );
 };
