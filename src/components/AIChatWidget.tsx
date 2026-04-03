@@ -129,10 +129,17 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
       {/* Messages */}
       <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
         {messages.length === 0 && (
-          <div className="text-center py-8">
+          <div className="text-center py-6">
             <Bot className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">How can I help you today?</p>
-            <p className="text-xs text-muted-foreground/60 mt-1">Ask about developers, trust scores, or finding the right property</p>
+            <p className="text-xs text-muted-foreground/60 mt-1 mb-3">Ask about developers, trust scores, or finding the right property</p>
+            <div className="flex flex-wrap gap-1.5 justify-center px-2">
+              {suggestedQuestions.map((q, i) => (
+                <button key={i} onClick={() => { setInput(q); }} className="text-[11px] px-2.5 py-1 rounded-full border border-primary/20 bg-primary/[0.04] text-primary hover:bg-primary/10 transition-colors">
+                  {q}
+                </button>
+              ))}
+            </div>
           </div>
         )}
 
