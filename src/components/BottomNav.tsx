@@ -29,6 +29,7 @@ export const BottomNav = () => {
 
   const isReviews = location.pathname === "/reviews";
   const isCommunity = location.pathname === "/community";
+  const isCopilot = location.pathname === "/copilot";
   const station = getStationForRoute(location.pathname);
   const activeColor = station ? STATION_TEXT[station.key] : "text-primary";
 
