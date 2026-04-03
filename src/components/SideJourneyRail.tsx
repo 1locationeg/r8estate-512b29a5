@@ -50,8 +50,13 @@ export const SideJourneyRail = () => {
     <div
       className={cn(
         "fixed top-1/2 -translate-y-1/2 z-30 flex-col items-center hidden min-[360px]:flex",
-        isRTL ? "right-1" : "left-1"
+        isRTL ? "left-1" : "right-1"
       )}
+      style={{
+        paddingRight: !isRTL ? "env(safe-area-inset-right, 0px)" : undefined,
+        paddingLeft: isRTL ? "env(safe-area-inset-left, 0px)" : undefined,
+        marginTop: "calc(env(safe-area-inset-top, 0px) / 2)",
+      }}
     >
       {JOURNEY_STATIONS.map((station, idx) => {
         const isActive = idx === currentIdx;
