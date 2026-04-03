@@ -2082,6 +2082,7 @@ const AdminDashboard = () => {
         { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
         { icon: <Code className="w-4 h-4" />, label: 'Widgets', path: '/admin/widgets' },
         { icon: <TrendingUp className="w-4 h-4" />, label: 'Upsell Teaser', path: '/admin/upsell' },
+        { icon: <LinkIcon className="w-4 h-4" />, label: 'Smart Links', path: '/admin/smart-links' },
       ],
     },
     {
