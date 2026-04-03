@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
@@ -38,6 +38,7 @@ import AdminUpsell from '@/components/AdminUpsell';
 import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
+import AdminSmartLinks from '@/components/AdminSmartLinks';
 
 const AdminOverview = () => {
   const [dashData, setDashData] = useState({
@@ -2081,6 +2082,7 @@ const AdminDashboard = () => {
         { icon: <Search className="w-4 h-4" />, label: 'Search Phrases', path: '/admin/search-phrases' },
         { icon: <Code className="w-4 h-4" />, label: 'Widgets', path: '/admin/widgets' },
         { icon: <TrendingUp className="w-4 h-4" />, label: 'Upsell Teaser', path: '/admin/upsell' },
+        { icon: <LinkIcon className="w-4 h-4" />, label: 'Smart Links', path: '/admin/smart-links' },
       ],
     },
     {
@@ -2169,6 +2171,7 @@ const AdminDashboard = () => {
           <Route path="community-moderation" element={<AdminCommunityModeration />} />
           <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="guest-timer" element={<AdminGuestTimer />} />
+          <Route path="smart-links" element={<AdminSmartLinks />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>

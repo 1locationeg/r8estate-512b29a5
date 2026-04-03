@@ -52,6 +52,7 @@ const Categories = lazy(() => import("./pages/Categories"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
+const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -123,14 +124,16 @@ const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
   const isReviewRoute = location.pathname.startsWith("/review");
+  const isGoRoute = location.pathname.startsWith("/go/");
 
-  if (isEmbed || isReviewRoute) {
+  if (isEmbed || isReviewRoute || isGoRoute) {
     return (
       <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4" />}>
         <Routes>
           <Route path="/embed/widget/:token" element={<EmbedWidget />} />
           <Route path="/review/:token?" element={<FrictionlessReview />} />
           <Route path="/review" element={<FrictionlessReview />} />
+          <Route path="/go/:slug" element={<SmartLinkRedirect />} />
         </Routes>
       </Suspense>
     );
