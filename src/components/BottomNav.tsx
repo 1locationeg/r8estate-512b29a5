@@ -85,7 +85,17 @@ export const BottomNav = () => {
             <span className="text-[10px] font-medium">{t("nav.portfolio", "Portfolio")}</span>
           </button>
 
-          {/* More Menu */}
+          {/* Community */}
+          <button
+            onClick={() => navigate("/community")}
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+              location.pathname === "/community" ? activeColor : "text-muted-foreground"
+            }`}
+          >
+            <Users className="h-5 w-5" strokeWidth={location.pathname === "/community" ? 2.5 : 2} />
+            <span className="text-[10px] font-medium">{t("nav.community", "Community")}</span>
+          </button>
+
           <button
             onClick={() => setMoreOpen(true)}
             className="flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 text-muted-foreground"
