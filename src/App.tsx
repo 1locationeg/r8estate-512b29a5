@@ -126,7 +126,7 @@ const ScrollToTop = () => {
 const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
-  const isReviewRoute = location.pathname.startsWith("/review");
+  const isReviewRoute = location.pathname === "/review" || location.pathname.startsWith("/review/");
   const isGoRoute = location.pathname.startsWith("/go/");
 
   if (isEmbed || isReviewRoute || isGoRoute) {
