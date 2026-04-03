@@ -124,8 +124,9 @@ const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
 
   const isReviewRoute = location.pathname.startsWith("/review");
+  const isGoRoute = location.pathname.startsWith("/go/");
 
-  if (isEmbed || isReviewRoute) {
+  if (isEmbed || isReviewRoute || isGoRoute) {
     return (
       <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4" />}>
         <Routes>
