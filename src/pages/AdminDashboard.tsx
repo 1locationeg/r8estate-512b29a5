@@ -2174,6 +2174,7 @@ const AdminDashboard = () => {
           <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
+          <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
