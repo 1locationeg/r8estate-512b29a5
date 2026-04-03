@@ -518,6 +518,7 @@ const Index = () => {
         </button>
       </div>
 
+      <ReviewsCarousel />
       <Footer />
     </div>
   );
