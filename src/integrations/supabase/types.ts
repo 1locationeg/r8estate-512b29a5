@@ -1695,6 +1695,39 @@ export type Database = {
         }
         Relationships: []
       }
+      trust_score_snapshots: {
+        Row: {
+          avg_rating: number | null
+          business_id: string
+          computed_score: number | null
+          created_at: string | null
+          id: string
+          review_count: number | null
+          snapshot_date: string
+          verified_pct: number | null
+        }
+        Insert: {
+          avg_rating?: number | null
+          business_id: string
+          computed_score?: number | null
+          created_at?: string | null
+          id?: string
+          review_count?: number | null
+          snapshot_date?: string
+          verified_pct?: number | null
+        }
+        Update: {
+          avg_rating?: number | null
+          business_id?: string
+          computed_score?: number | null
+          created_at?: string | null
+          id?: string
+          review_count?: number | null
+          snapshot_date?: string
+          verified_pct?: number | null
+        }
+        Relationships: []
+      }
       user_interests: {
         Row: {
           created_at: string
