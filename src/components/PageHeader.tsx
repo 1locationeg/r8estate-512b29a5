@@ -11,7 +11,7 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 import { getStationForRoute } from "@/lib/journeyStations";
-import { MiniJourneyArc } from "@/components/MiniJourneyArc";
+
 import { cn } from "@/lib/utils";
 
 export interface BreadcrumbEntry {
