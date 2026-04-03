@@ -335,7 +335,7 @@ const AdminSmartLinks = () => {
               <div>
                 <label className="text-xs font-medium text-foreground">Slug *</label>
                 <div className="flex items-center gap-1 mt-1">
-                  <span className="text-xs text-muted-foreground">{window.location.host}/go/</span>
+                  <span className="text-xs text-muted-foreground">r8estate.lovable.app/go/</span>
                   <Input value={form.slug} onChange={e => setForm(p => ({ ...p, slug: e.target.value }))} placeholder="spring-promo" className="flex-1" />
                 </div>
               </div>
