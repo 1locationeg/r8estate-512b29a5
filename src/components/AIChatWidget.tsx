@@ -21,6 +21,9 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
   const [isLoading, setIsLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const location = useLocation();
+  const station = getStationForRoute(location.pathname);
+  const suggestedQuestions = station ? (COPILOT_QUESTIONS[station.key] || COPILOT_DEFAULT_QUESTIONS).slice(0, 3) : COPILOT_DEFAULT_QUESTIONS.slice(0, 3);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
