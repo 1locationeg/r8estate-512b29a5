@@ -1,16 +1,40 @@
 
 
-# Theme-Aware Footer Copyright Bar
+# Side Vertical Journey Arc for Inner Pages
 
-## What Changes
+## Concept
 
-The bottom copyright bar area of the footer (containing the BrandLogo, Sitemap link, and copyright text) will use theme-aware colors instead of hardcoded dark slate. This makes it white in light mode and will automatically adapt if dark mode is added later.
+Replace the full horizontal `MiniJourneyArc` in `PageHeader` with a **fixed vertical side rail** — a slim column of 4 station dots connected by a vertical line, pinned to the left edge (or right in RTL). The current station glows and pulses; past stations are filled; future ones are dimmed. Clicking a dot navigates to that station's home route.
 
-## Changes
+```text
+  ┌─────────────────────────────────┐
+  │ ●  [Home] ← Reviews    [+]     │  ← PageHeader (no arc)
+  │ │  ─────────────────────────    │
+  │ ●                               │
+  │ │   Stats · Filters · Cards     │  ← Page content
+  │ ●                               │
+  │ │                               │
+  │ ●► ← active (Protect, glowing) │
+  └─────────────────────────────────┘
+```
 
-| File | Details |
+## Design Details
+
+- **Position**: `fixed left-2 top-1/2 -translate-y-1/2` (RTL: `right-2`)
+- **Width**: ~32px — dots are 10px, active dot 14px with ring
+- **Vertical line**: 2px connecting dots, filled up to current station, dimmed after
+- **Active dot**: station color + pulse animation + tiny label tooltip on hover
+- **Mobile**: Show on screens ≥ 360px wide (hidden on very tiny screens)
+- **Z-index**: Below modals/sheets (`z-30`)
+- **Hidden on**: homepage, auth, embed routes (same logic as `JourneyStripe`)
+
+## File Changes
+
+| File | Change |
 |---|---|
-| `src/components/Footer.tsx` | Change the copyright bar wrapper from `border-slate-800` → `bg-background border-border` with `text-foreground`/`text-muted-foreground` for text. The Sitemap link hover changes to `hover:text-foreground`. This uses the existing CSS variable system so it's white now and auto-adapts to any future theme. |
+| `src/components/SideJourneyRail.tsx` | **New** — Fixed vertical rail with 4 station dots, connecting line, active highlight, click-to-navigate, RTL support |
+| `src/components/PageHeader.tsx` | Remove `<MiniJourneyArc />` import and usage from the breadcrumb row |
+| `src/App.tsx` | Add `<SideJourneyRail />` alongside `<JourneyStripe />` in `AppContent` so it appears on all inner pages automatically |
 
-The main footer body (newsletter, columns) stays dark navy as designed — only the bottom copyright strip becomes theme-aware.
+The full `MiniJourneyArc` component remains untouched for homepage use. The `JourneyStripe` (top color bar) also stays — the side rail complements it as a clickable navigator.
 
