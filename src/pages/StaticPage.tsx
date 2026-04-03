@@ -53,8 +53,9 @@ const PAGES: Record<string, { title: string; content: string }> = {
 };
 
 const StaticPage = () => {
-  const { slug } = useParams<{ slug: string }>();
-  const page = PAGES[slug || ""] || { title: "Page Not Found", content: "The page you're looking for doesn't exist." };
+  const { pathname } = useLocation();
+  const slug = pathname.replace(/^\//, "");
+  const page = PAGES[slug] || { title: "Page Not Found", content: "The page you're looking for doesn't exist." };
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
