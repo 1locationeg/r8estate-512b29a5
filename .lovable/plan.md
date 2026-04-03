@@ -1,80 +1,46 @@
 
 
-# Redesign Footer — Full Navigation + Newsletter + Admin-Managed Social Links
+# Auto-Updating Sitemap
 
-## What This Is
+## Problem
 
-Replace the current minimal footer with a full-featured footer matching the reference design: dark background, newsletter subscription, organized link columns (Company, Legal, Support), social media icons, copyright bar, and admin control for social links and footer content.
+The sitemap has a hardcoded `STATIC_PAGES` array that gets out of sync whenever new routes are added to `App.tsx`. New entities already auto-update (via `getSearchIndex()`), but pages do not.
 
-## Layout (Reference Image)
+## Solution
 
-```text
-┌──────────────────────────────────────────────────────────────────┐
-│  [Reviews Carousel - keep existing]                              │
-├──────────────────────────────────────────────────────────────────┤
-│  Subscribe to Our Newsletter     │  Company    │ Legal    │ Support│
-│  description text                │  Our Story  │ Privacy  │ Help   │
-│  [email input] [Subscribe btn]   │  Join Team  │ Terms    │ Service │
-│                                  │  Contact Us │ Cookies  │ FAQ     │
-│  Follow Us:                      │  Press Room │ Copyright│ Report  │
-│  [fb][x][in][yt][ig][tt][etc]    │             │          │         │
-├──────────────────────────────────────────────────────────────────┤
-│  © 2026 R8ESTATE - All rights reserved.          [Sitemap]       │
-└──────────────────────────────────────────────────────────────────┘
-```
+Create a centralized **route registry** (`src/data/routeRegistry.ts`) that both `App.tsx` and `Sitemap.tsx` import from. This is the single source of truth — when you add a new page, you add it to the registry, and both the router and sitemap pick it up automatically.
 
-## Features
-
-1. **Newsletter subscription** — email input stored in a new `newsletter_subscribers` DB table
-2. **Link columns** — Company, Legal, Support with links to actual pages (some will be placeholder pages)
-3. **Social media icons** — loaded from `platform_settings` (key: `footer_social_links`), admin-editable
-4. **Admin panel** — new "Footer Settings" section in admin dashboard to manage social links (platform, URL pairs)
-5. **Copyright bar** — kept with BrandLogo and Sitemap link
-
-## Pages Needed for Footer Links
-
-Most links need simple static pages. Create these as minimal placeholder pages:
-- `/about` — Our Story
-- `/careers` — Join Our Team
-- `/contact` — Contact Us
-- `/press` — Press Room
-- `/privacy` — Privacy Policy
-- `/terms` — Terms of Use
-- `/cookies-policy` — Cookies Policy
-- `/copyright` — Copyright Policy
-- `/help` — Help Center
-- `/customer-service` — Customer Service
-- `/faq` — Frequently Asked Questions
-- `/report` — Report a Problem
-
-## Database Changes
-
-1. **New table: `newsletter_subscribers`** — `id`, `email` (unique), `subscribed_at`, `is_active`
-2. **platform_settings row** for `footer_social_links` — JSON array of `{ platform, url, enabled }` objects
-
-## Admin Panel Addition
-
-Add "Footer" section under Settings in admin sidebar → new `AdminFooterSettings` component:
-- Manage social links (add/remove/edit platform + URL)
-- Social platforms supported: Facebook, X/Twitter, LinkedIn, YouTube, Instagram, TikTok, Threads, Pinterest
-- Toggle each link on/off
+Additionally, the sitemap will also pull in category items from `HeroCategoryItems.tsx` (which aren't in the search index) so nothing is missed.
 
 ## File Changes
 
 | Action | File | Details |
 |---|---|---|
-| Migration | DB | Create `newsletter_subscribers` table with RLS |
-| Rewrite | `src/components/Footer.tsx` | Full redesign with newsletter, columns, social icons |
-| New | `src/components/AdminFooterSettings.tsx` | Admin UI for social links |
-| New | `src/pages/StaticPage.tsx` | Reusable static page shell for About/Privacy/Terms/etc. |
-| Edit | `src/App.tsx` | Add routes for all new static pages |
-| Edit | `src/pages/AdminDashboard.tsx` | Add Footer Settings nav item + route |
+| New | `src/data/routeRegistry.ts` | Central array of `{ name, path, isPublic }` for all public routes |
+| Edit | `src/pages/Sitemap.tsx` | Import from registry instead of hardcoded list; also include HeroCategoryItems |
+| Edit | `src/App.tsx` | Import route list from registry (for reference/consistency) |
 
-## Technical Notes
+## How the Registry Works
 
-- Social icons use lucide-react icons where available, custom SVG for X/TikTok/Threads
-- Newsletter subscribe does a simple insert into `newsletter_subscribers` with duplicate email handling
-- Footer background uses dark navy (`bg-slate-900 text-white`) to match reference
-- All footer links use `<Link to="...">` for SPA navigation
-- Static pages use a shared `StaticPage` component with title + placeholder content
+```typescript
+// src/data/routeRegistry.ts
+export const PUBLIC_ROUTES = [
+  { name: "Home", path: "/" },
+  { name: "Reviews", path: "/reviews" },
+  { name: "Directory", path: "/directory" },
+  // ... all public routes
+];
+```
+
+- `Sitemap.tsx` imports `PUBLIC_ROUTES` — always in sync
+- Entity items come from `getSearchIndex()` — already dynamic
+- Category items from `HeroCategoryItems.categories` are merged in to catch any items not in the search index
+- Adding a new page = add one entry to `routeRegistry.ts` + the route in `App.tsx` — sitemap updates automatically
+
+## What Auto-Updates
+
+1. **Pages** — driven by `PUBLIC_ROUTES` registry (single source of truth)
+2. **Entities** (developers, projects, etc.) — driven by `getSearchIndex()` (already dynamic)
+3. **Category items** — driven by `categories` from `HeroCategoryItems.tsx` (merged + deduplicated)
+4. **XML download** — regenerated on every click from the same live data
 
