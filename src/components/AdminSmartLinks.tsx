@@ -307,7 +307,7 @@ const AdminSmartLinks = () => {
                   <div className="p-3">
                     <p className="text-sm font-semibold text-foreground">{selectedLink.og_title || selectedLink.slug}</p>
                     <p className="text-xs text-muted-foreground mt-1">{selectedLink.og_description || selectedLink.destination_url}</p>
-                    <p className="text-[10px] text-muted-foreground/60 mt-1">{window.location.host}/go/{selectedLink.slug}</p>
+                    <p className="text-[10px] text-muted-foreground/60 mt-1">r8estate.lovable.app/go/{selectedLink.slug}</p>
                   </div>
                 </div>
               </CardContent>
