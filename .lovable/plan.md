@@ -1,38 +1,80 @@
 
 
-# Sitemap Page
+# Redesign Footer — Full Navigation + Newsletter + Admin-Managed Social Links
 
 ## What This Is
 
-A public `/sitemap` page that lists every page and entity on the R8ESTATE platform in an organized, browsable layout. Users can also download the sitemap as an XML file (standard SEO sitemap format).
+Replace the current minimal footer with a full-featured footer matching the reference design: dark background, newsletter subscription, organized link columns (Company, Legal, Support), social media icons, copyright bar, and admin control for social links and footer content.
 
-## Pages & Data Sources
+## Layout (Reference Image)
 
-The sitemap will aggregate:
+```text
+┌──────────────────────────────────────────────────────────────────┐
+│  [Reviews Carousel - keep existing]                              │
+├──────────────────────────────────────────────────────────────────┤
+│  Subscribe to Our Newsletter     │  Company    │ Legal    │ Support│
+│  description text                │  Our Story  │ Privacy  │ Help   │
+│  [email input] [Subscribe btn]   │  Join Team  │ Terms    │ Service │
+│                                  │  Contact Us │ Cookies  │ FAQ     │
+│  Follow Us:                      │  Press Room │ Copyright│ Report  │
+│  [fb][x][in][yt][ig][tt][etc]    │             │          │         │
+├──────────────────────────────────────────────────────────────────┤
+│  © 2026 R8ESTATE - All rights reserved.          [Sitemap]       │
+└──────────────────────────────────────────────────────────────────┘
+```
 
-1. **Static pages** — hardcoded list: Home, Auth, Reviews, Directory, Community, Leaderboard, Rewards, Deal Watch, Launch Watch, Categories, Messages, Install, Portfolio, Insights
-2. **Entity pages** — pulled from `getSearchIndex()` (developers, projects, locations, brokers, apps, units, property-types, categories) → all render at `/entity/:id`
-3. **Category items** — pulled from `categories` in `HeroCategoryItems.tsx` → also at `/entity/:id`
+## Features
 
-## UI Design
+1. **Newsletter subscription** — email input stored in a new `newsletter_subscribers` DB table
+2. **Link columns** — Company, Legal, Support with links to actual pages (some will be placeholder pages)
+3. **Social media icons** — loaded from `platform_settings` (key: `footer_social_links`), admin-editable
+4. **Admin panel** — new "Footer Settings" section in admin dashboard to manage social links (platform, URL pairs)
+5. **Copyright bar** — kept with BrandLogo and Sitemap link
 
-- **Header** with page title "Sitemap" and a "Download XML" button
-- **Grouped sections** — one collapsible section per category (Pages, Developers, Projects, Locations, etc.)
-- Each item is a clickable link to its actual route
-- Shows item count per section
-- Download button generates a standard `sitemap.xml` file with all URLs using `meter.r8estate.com` as the base domain
+## Pages Needed for Footer Links
+
+Most links need simple static pages. Create these as minimal placeholder pages:
+- `/about` — Our Story
+- `/careers` — Join Our Team
+- `/contact` — Contact Us
+- `/press` — Press Room
+- `/privacy` — Privacy Policy
+- `/terms` — Terms of Use
+- `/cookies-policy` — Cookies Policy
+- `/copyright` — Copyright Policy
+- `/help` — Help Center
+- `/customer-service` — Customer Service
+- `/faq` — Frequently Asked Questions
+- `/report` — Report a Problem
+
+## Database Changes
+
+1. **New table: `newsletter_subscribers`** — `id`, `email` (unique), `subscribed_at`, `is_active`
+2. **platform_settings row** for `footer_social_links` — JSON array of `{ platform, url, enabled }` objects
+
+## Admin Panel Addition
+
+Add "Footer" section under Settings in admin sidebar → new `AdminFooterSettings` component:
+- Manage social links (add/remove/edit platform + URL)
+- Social platforms supported: Facebook, X/Twitter, LinkedIn, YouTube, Instagram, TikTok, Threads, Pinterest
+- Toggle each link on/off
 
 ## File Changes
 
 | Action | File | Details |
 |---|---|---|
-| New | `src/pages/Sitemap.tsx` | Full sitemap page with grouped links + XML download |
-| Edit | `src/App.tsx` | Add lazy `/sitemap` route |
-| Edit | `src/components/Footer.tsx` | Add "Sitemap" link in footer |
+| Migration | DB | Create `newsletter_subscribers` table with RLS |
+| Rewrite | `src/components/Footer.tsx` | Full redesign with newsletter, columns, social icons |
+| New | `src/components/AdminFooterSettings.tsx` | Admin UI for social links |
+| New | `src/pages/StaticPage.tsx` | Reusable static page shell for About/Privacy/Terms/etc. |
+| Edit | `src/App.tsx` | Add routes for all new static pages |
+| Edit | `src/pages/AdminDashboard.tsx` | Add Footer Settings nav item + route |
 
 ## Technical Notes
 
-- XML download uses `Blob` + `URL.createObjectURL` with proper `text/xml` mime type
-- Base URL for XML: `https://meter.r8estate.com`
-- No database changes needed — all data comes from existing search index and static routes
+- Social icons use lucide-react icons where available, custom SVG for X/TikTok/Threads
+- Newsletter subscribe does a simple insert into `newsletter_subscribers` with duplicate email handling
+- Footer background uses dark navy (`bg-slate-900 text-white`) to match reference
+- All footer links use `<Link to="...">` for SPA navigation
+- Static pages use a shared `StaticPage` component with title + placeholder content
 
