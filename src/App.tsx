@@ -173,6 +173,7 @@ const AppContent = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/rewards" element={<Rewards />} />
+          <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/about" element={<StaticPage />} />
