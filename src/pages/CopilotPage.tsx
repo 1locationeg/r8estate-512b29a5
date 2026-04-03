@@ -112,7 +112,7 @@ const CopilotPage = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
-      <Navbar onSignOut={() => {}} getDashboardRoute={() => user ? "/buyer" : "/auth"} />
+      <Navbar userMode="buyers" onSwitchToBusinessView={() => {}} onSwitchToBuyerView={() => {}} togglePulse={false} onSignOut={() => {}} getDashboardRoute={() => user ? "/buyer" : "/auth"} />
 
       <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
         {/* Header */}

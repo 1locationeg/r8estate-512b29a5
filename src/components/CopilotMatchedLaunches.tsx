@@ -23,7 +23,7 @@ export const CopilotMatchedLaunches = () => {
       const { data } = await supabase
         .from("launches")
         .select("id, project_name, location_district, current_price_per_m2, units_remaining, total_units")
-        .in("status", ["reservations_open", "launch_date_set"])
+        .in("status", ["reservations_open", "upcoming"])
         .order("created_at", { ascending: false })
         .limit(6);
       setLaunches(data || []);

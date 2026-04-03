@@ -69,7 +69,7 @@ export const TrustRadarAlerts = () => {
   }, [user]);
 
   const iconMap = {
-    up: <TrendingUp className="w-4 h-4 text-trust-excellent" />,
+    up: <TrendingUp className="w-4 h-4 text-primary" />,
     down: <TrendingDown className="w-4 h-4 text-destructive" />,
     review: <Star className="w-4 h-4 text-amber-500" />,
     price: <AlertTriangle className="w-4 h-4 text-orange-500" />,
