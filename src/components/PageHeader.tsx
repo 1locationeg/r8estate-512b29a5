@@ -98,11 +98,9 @@ export const PageHeader = ({
           )}
         </div>
 
-        {/* Mini Journey Arc + Breadcrumbs */}
-        <div className="flex items-center gap-3 pb-2 -mt-1">
-          <MiniJourneyArc />
-          {breadcrumbs && breadcrumbs.length > 0 && (
-            <div className="border-l border-border/50 pl-3">
+        {/* Breadcrumbs */}
+        {breadcrumbs && breadcrumbs.length > 0 && (
+          <div className="pb-2 -mt-1">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
