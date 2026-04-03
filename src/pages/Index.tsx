@@ -16,6 +16,7 @@ import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { ViewToggle } from "@/components/ViewToggle";
 import { Footer } from "@/components/Footer";
+import { ReviewsCarousel } from "@/components/ReviewsCarousel";
 import { SmartRecommendations } from "@/components/SmartRecommendations";
 import { CommunityHighlights } from "@/components/CommunityHighlights";
 import { MarketPulseWidget } from "@/components/MarketPulseWidget";
