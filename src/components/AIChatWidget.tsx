@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useState, useRef, useEffect } from "react";
-import { Bot, Send, Loader2, X } from "lucide-react";
+import { Bot, Send, Loader2, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { useLocation } from "react-router-dom";
@@ -13,12 +13,13 @@ interface Message {
   content: string;
 }
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/copilot-agent`;
 
 export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toolStatus, setToolStatus] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const location = useLocation();
@@ -41,6 +42,7 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+    setToolStatus(null);
 
     let assistantSoFar = "";
 
@@ -82,6 +84,14 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
 
           try {
             const parsed = JSON.parse(jsonStr);
+            // Handle tool_status events
+            if (parsed.tool_status) {
+              if (parsed.tools_used?.length) {
+                setToolStatus("Searching database...");
+                setTimeout(() => setToolStatus(null), 3000);
+              }
+              continue;
+            }
             const content = parsed.choices?.[0]?.delta?.content as string | undefined;
             if (content) {
               assistantSoFar += content;
@@ -107,6 +117,7 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
       ]);
     } finally {
       setIsLoading(false);
+      setToolStatus(null);
     }
   };
 
@@ -115,10 +126,13 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
       {/* Header */}
       <div className="bg-primary px-4 py-3 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
-          <Bot className="w-5 h-5 text-primary-foreground" />
+          <div className="relative">
+            <Bot className="w-5 h-5 text-primary-foreground" />
+            <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+          </div>
           <div>
-            <p className="text-sm font-bold text-primary-foreground">Trust Chat</p>
-            <p className="text-[10px] text-primary-foreground/70">Platform help & real estate advisory</p>
+            <p className="text-sm font-bold text-primary-foreground">R8 Agent</p>
+            <p className="text-[10px] text-primary-foreground/70">AI-powered • Live data</p>
           </div>
         </div>
         <button onClick={onClose} className="text-primary-foreground/70 hover:text-primary-foreground transition-colors">
@@ -132,7 +146,7 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
           <div className="text-center py-6">
             <Bot className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
             <p className="text-sm text-muted-foreground">How can I help you today?</p>
-            <p className="text-xs text-muted-foreground/60 mt-1 mb-3">Ask about developers, trust scores, or finding the right property</p>
+            <p className="text-xs text-muted-foreground/60 mt-1 mb-3">I query live data — reviews, scores, launches</p>
             <div className="flex flex-wrap gap-1.5 justify-center px-2">
               {suggestedQuestions.map((q, i) => (
                 <button key={i} onClick={() => { setInput(q); }} className="text-[11px] px-2.5 py-1 rounded-full border border-primary/20 bg-primary/[0.04] text-primary hover:bg-primary/10 transition-colors">
@@ -163,7 +177,17 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
           </div>
         ))}
 
-        {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+        {/* Tool status indicator */}
+        {isLoading && toolStatus && (
+          <div className="flex justify-start">
+            <div className="flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-3 py-1.5 text-xs text-primary">
+              <Search className="w-3 h-3 animate-pulse" />
+              <span>{toolStatus}</span>
+            </div>
+          </div>
+        )}
+
+        {isLoading && messages[messages.length - 1]?.role !== "assistant" && !toolStatus && (
           <div className="flex justify-start">
             <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-3">
               <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
@@ -182,7 +206,7 @@ export const AIChatWidget = ({ onClose }: { onClose: () => void }) => {
             ref={inputRef}
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Type your message..."
+            placeholder="Ask your agent..."
             className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             maxLength={1000}
           />

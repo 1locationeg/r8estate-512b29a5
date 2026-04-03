@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Sparkles, Bot, Send, Loader2, ArrowLeft } from "lucide-react";
+import { Sparkles, Bot, Send, Loader2, ArrowLeft, Search } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { getStationForRoute } from "@/lib/journeyStations";
 import { COPILOT_QUESTIONS, COPILOT_DEFAULT_QUESTIONS } from "@/lib/copilotQuestions";
+import { toast } from "sonner";
 import ReactMarkdown from "react-markdown";
 
 interface Message {
@@ -18,7 +19,18 @@ interface Message {
   content: string;
 }
 
-const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/ai-chat`;
+interface RiskFlag {
+  business: string;
+  business_id: string;
+  risk: "High" | "Medium" | "Low";
+  reason: string;
+  delta: number;
+  current_avg: number | null;
+  prior_avg: number | null;
+}
+
+const AGENT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/copilot-agent`;
+const RISK_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trust-risk-scan`;
 
 const CopilotPage = () => {
   const { user, profile } = useAuth();
@@ -27,6 +39,9 @@ const CopilotPage = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toolStatus, setToolStatus] = useState<string | null>(null);
+  const [riskFlags, setRiskFlags] = useState<RiskFlag[]>([]);
+  const [isScanning, setIsScanning] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -41,6 +56,44 @@ const CopilotPage = () => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages]);
 
+  // Proactive risk scan on mount
+  useEffect(() => {
+    if (!user) return;
+    const runScan = async () => {
+      setIsScanning(true);
+      try {
+        const session = await supabase.auth.getSession();
+        const token = session.data.session?.access_token;
+        const resp = await fetch(RISK_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+          },
+          body: JSON.stringify({}),
+        });
+        const data = await resp.json();
+        if (data.risk_flags?.length) {
+          setRiskFlags(data.risk_flags);
+          data.risk_flags.forEach((flag: RiskFlag) => {
+            const icon = flag.delta < 0 ? "⚠️" : "📈";
+            toast(`${icon} ${flag.business} — ${Math.abs(flag.delta)}% ${flag.delta < 0 ? "drop" : "rise"}`, {
+              description: flag.reason,
+              duration: 6000,
+            });
+          });
+        } else if (data.scanned > 0) {
+          toast.success(`Scanned ${data.scanned} followed developer${data.scanned > 1 ? "s" : ""} — all stable`, { duration: 3000 });
+        }
+      } catch (e) {
+        console.error("Risk scan failed:", e);
+      } finally {
+        setIsScanning(false);
+      }
+    };
+    runScan();
+  }, [user]);
+
   const sendMessage = async (text?: string) => {
     const msg = (text || input).trim();
     if (!msg || isLoading) return;
@@ -49,6 +102,7 @@ const CopilotPage = () => {
     setMessages(prev => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+    setToolStatus(null);
 
     let assistantSoFar = "";
 
@@ -56,7 +110,7 @@ const CopilotPage = () => {
       const session = await supabase.auth.getSession();
       const token = session.data.session?.access_token;
 
-      const resp = await fetch(CHAT_URL, {
+      const resp = await fetch(AGENT_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -86,6 +140,14 @@ const CopilotPage = () => {
           if (json === "[DONE]") break;
           try {
             const parsed = JSON.parse(json);
+            // Handle tool_status events
+            if (parsed.tool_status) {
+              if (parsed.tools_used?.length) {
+                setToolStatus(`Queried: ${parsed.tools_used.join(", ")}`);
+                setTimeout(() => setToolStatus(null), 3000);
+              }
+              continue;
+            }
             const content = parsed.choices?.[0]?.delta?.content;
             if (content) {
               assistantSoFar += content;
@@ -107,6 +169,7 @@ const CopilotPage = () => {
       setMessages(prev => [...prev, { role: "assistant", content: "Sorry, I'm having trouble. Please try again." }]);
     } finally {
       setIsLoading(false);
+      setToolStatus(null);
     }
   };
 
@@ -120,13 +183,22 @@ const CopilotPage = () => {
           <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground">
             <ArrowLeft className="w-5 h-5" />
           </button>
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
             <Sparkles className="w-5 h-5 text-primary-foreground" />
+            {/* Agentic pulse dot */}
+            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-2 ring-background" title="Actively monitoring your portfolio" />
           </div>
           <div>
-            <h1 className="text-lg font-bold text-foreground">R8 Copilot</h1>
+            <div className="flex items-center gap-2">
+              <h1 className="text-lg font-bold text-foreground">R8 Agent</h1>
+              {isScanning && (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-primary/10 text-primary animate-pulse">
+                  Scanning...
+                </span>
+              )}
+            </div>
             <p className="text-xs text-muted-foreground">
-              {greeting}{name ? `, ${name}` : ""}. Your AI-powered real estate assistant.
+              {greeting}{name ? `, ${name}` : ""}. Autonomously monitoring your portfolio.
             </p>
           </div>
         </div>
@@ -140,7 +212,7 @@ const CopilotPage = () => {
                 <div className="text-center py-10">
                   <Bot className="w-12 h-12 text-muted-foreground/20 mx-auto mb-4" />
                   <p className="text-sm text-muted-foreground mb-1">What would you like to know?</p>
-                  <p className="text-xs text-muted-foreground/60 mb-6">Ask about developers, trust scores, market trends, or your property journey</p>
+                  <p className="text-xs text-muted-foreground/60 mb-6">I can query live data — reviews, trust scores, launches, comparisons</p>
                   <div className="flex flex-wrap gap-2 justify-center max-w-lg mx-auto">
                     {questions.map((q, i) => (
                       <button
@@ -169,7 +241,18 @@ const CopilotPage = () => {
                   </div>
                 </div>
               ))}
-              {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
+
+              {/* Tool status indicator */}
+              {isLoading && toolStatus && (
+                <div className="flex justify-start">
+                  <div className="flex items-center gap-2 bg-primary/5 border border-primary/10 rounded-full px-3 py-1.5 text-xs text-primary">
+                    <Search className="w-3 h-3 animate-pulse" />
+                    <span>Searching database...</span>
+                  </div>
+                </div>
+              )}
+
+              {isLoading && messages[messages.length - 1]?.role !== "assistant" && !toolStatus && (
                 <div className="flex justify-start">
                   <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-3">
                     <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
@@ -185,7 +268,7 @@ const CopilotPage = () => {
                   ref={inputRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask your copilot anything..."
+                  placeholder="Ask your agent anything..."
                   className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
                   maxLength={1000}
                 />
@@ -198,7 +281,7 @@ const CopilotPage = () => {
 
           {/* Sidebar */}
           <div className="space-y-4">
-            <TrustRadarAlerts />
+            <TrustRadarAlerts riskFlags={riskFlags} onAskCopilot={(q) => { setInput(q); inputRef.current?.focus(); }} />
             <CopilotWeeklyDigest />
           </div>
         </div>
