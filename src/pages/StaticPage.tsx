@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { Footer } from "@/components/Footer";
 
 const PAGES: Record<string, { title: string; content: string }> = {
