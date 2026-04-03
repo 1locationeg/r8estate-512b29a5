@@ -103,7 +103,7 @@ const AdminSmartLinks = () => {
   };
 
   const copyLink = (slug: string) => {
-    navigator.clipboard.writeText(`https://r8estate.lovable.app/go/${slug}`);
+    navigator.clipboard.writeText(`https://meter.r8estate.com/go/${slug}`);
     toast.success('Link copied!');
   };
 
