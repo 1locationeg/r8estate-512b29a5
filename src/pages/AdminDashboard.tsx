@@ -920,6 +920,20 @@ const AdminUsers = () => {
           </table>
         </div>
       </div>
+
+      <AdminUserDetailSheet
+        user={selectedUser}
+        open={!!selectedUser}
+        onOpenChange={(open) => { if (!open) setSelectedUser(null); }}
+        onRoleChange={async (userId, role, action) => {
+          await handleRoleChange(userId, role, action);
+          // Refresh selected user after role change
+          const updated = users.find(u => u.id === userId);
+          if (updated) setSelectedUser({ ...updated });
+        }}
+        manageableRoles={manageableRoles}
+        updatingId={updatingId}
+      />
     </div>
   );
 };
