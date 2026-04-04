@@ -39,6 +39,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
+import { HeroAgentDemo } from "@/components/HeroAgentDemo";
 
 const Index = () => {
   const { t } = useTranslation();
