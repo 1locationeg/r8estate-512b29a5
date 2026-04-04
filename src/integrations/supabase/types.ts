@@ -113,6 +113,13 @@ export type Database = {
             referencedRelation: "business_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "business_claims_business_profile_id_fkey"
+            columns: ["business_profile_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       business_profiles: {
@@ -182,6 +189,13 @@ export type Database = {
             columns: ["parent_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_profiles_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -723,6 +737,13 @@ export type Database = {
             referencedRelation: "business_profiles"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "deals_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       followed_businesses: {
@@ -1029,6 +1050,13 @@ export type Database = {
             columns: ["business_id"]
             isOneToOne: false
             referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "launches_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -2020,7 +2048,108 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_business_profiles: {
+        Row: {
+          company_name: string | null
+          created_at: string | null
+          description: string | null
+          employees: number | null
+          id: string | null
+          is_reviewable: boolean | null
+          location: string | null
+          logo_url: string | null
+          parent_id: string | null
+          social_links: Json | null
+          specialties: string[] | null
+          updated_at: string | null
+          website: string | null
+          year_established: number | null
+        }
+        Insert: {
+          company_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          employees?: number | null
+          id?: string | null
+          is_reviewable?: boolean | null
+          location?: string | null
+          logo_url?: string | null
+          parent_id?: string | null
+          social_links?: Json | null
+          specialties?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+          year_established?: number | null
+        }
+        Update: {
+          company_name?: string | null
+          created_at?: string | null
+          description?: string | null
+          employees?: number | null
+          id?: string | null
+          is_reviewable?: boolean | null
+          location?: string | null
+          logo_url?: string | null
+          parent_id?: string | null
+          social_links?: Json | null
+          specialties?: string[] | null
+          updated_at?: string | null
+          website?: string | null
+          year_established?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "business_profiles_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "business_profiles_parent_id_fkey"
+            columns: ["parent_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          buyer_type: string | null
+          created_at: string | null
+          full_name: string | null
+          identity_provider: string | null
+          identity_verified: boolean | null
+          interests: string[] | null
+          kyc_verified: boolean | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          buyer_type?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          identity_provider?: string | null
+          identity_verified?: boolean | null
+          interests?: string[] | null
+          kyc_verified?: boolean | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          buyer_type?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          identity_provider?: string | null
+          identity_verified?: boolean | null
+          interests?: string[] | null
+          kyc_verified?: boolean | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       broadcast_notification: {
@@ -2090,6 +2219,7 @@ export type Database = {
         }
         Returns: boolean
       }
+      increment_engagement: { Args: { _field: string }; Returns: undefined }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
       set_my_account_type: {
         Args: { _account_type: string }
