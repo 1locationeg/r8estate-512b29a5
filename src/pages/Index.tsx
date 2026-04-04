@@ -321,8 +321,8 @@ const Index = () => {
           <JourneyFullPageScroll heroContent={heroBlock} />
 
           {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
-          <section className="flex-1 flex flex-col snap-start">
-            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-4 pb-0">
+          <section className="flex-1 flex flex-col snap-start" style={{ scrollSnapAlign: 'start' }}>
+            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-4 pb-safe gap-4 md:gap-6">
               {/* Trust Strip */}
               <div className="w-full max-w-[1100px] mb-3">
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
