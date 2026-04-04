@@ -928,7 +928,6 @@ const AdminUsers = () => {
         onRoleChange={async (userId, role, action) => {
           await handleRoleChange(userId, role, action);
           setSelectedUser(null);
-        }
         }}
         manageableRoles={manageableRoles}
         updatingId={updatingId}
