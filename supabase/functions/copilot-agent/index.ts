@@ -235,7 +235,11 @@ serve(async (req) => {
     }
 
     // Step 1: Call LLM with tools
-    const aiMessages = [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
+    let systemPrompt = SYSTEM_PROMPT;
+    if (preferences) {
+      systemPrompt += `\n\nUser Profile: Purpose: ${preferences.purpose || "unknown"}, Budget: ${preferences.budget_range || "unknown"}, Preferred Locations: ${(preferences.preferred_locations || []).join(", ") || "any"}, Concerns: ${(preferences.concerns || []).join(", ") || "none specified"}. Tailor your answers to this profile.`;
+    }
+    const aiMessages = [{ role: "system", content: systemPrompt }, ...messages];
     const firstResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
