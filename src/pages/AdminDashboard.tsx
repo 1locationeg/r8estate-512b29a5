@@ -832,7 +832,7 @@ const AdminUsers = () => {
             </thead>
             <tbody className="divide-y divide-border">
               {nonAdminUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
+                <tr key={u.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => setSelectedUser(u)}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
