@@ -257,7 +257,13 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
                   <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                 </div>
               ) : !profile ? (
-                <p className="text-xs text-muted-foreground text-center py-4">No business profile found.</p>
+                <div className="text-center py-4 space-y-2">
+                  <p className="text-xs text-muted-foreground">No business profile found.</p>
+                  <Button size="sm" onClick={handleCreateProfile} disabled={saving} className="gap-1.5">
+                    {saving ? <Loader2 className="w-3 h-3 animate-spin" /> : <Plus className="w-3 h-3" />}
+                    Create Business Profile
+                  </Button>
+                </div>
               ) : (
                 <div className="space-y-3">
                   <div>
