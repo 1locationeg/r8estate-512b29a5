@@ -453,6 +453,9 @@ const AdminUsers = () => {
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
 
   const isSuperAdmin = callerPermission === 'super_admin';
+  const manageableRoles = isSuperAdmin
+    ? availableRoles
+    : availableRoles.filter((role) => role.value !== 'admin');
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
@@ -820,7 +823,7 @@ const AdminUsers = () => {
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">User</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Current Roles</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Joined</th>
-                {isSuperAdmin && (
+                {manageableRoles.length > 0 && (
                   <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Manage Roles</th>
                 )}
               </tr>
@@ -871,10 +874,10 @@ const AdminUsers = () => {
                   <td className="px-4 py-3 text-xs text-muted-foreground">
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
-                  {isSuperAdmin && (
+                  {manageableRoles.length > 0 && (
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 justify-end flex-wrap">
-                        {availableRoles.map(ar => {
+                        {manageableRoles.map(ar => {
                           const hasRole = u.roles.includes(ar.value);
                           const isUpdating = updatingId === u.id;
                           return (
