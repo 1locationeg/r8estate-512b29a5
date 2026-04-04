@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Sparkles } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
@@ -36,27 +36,20 @@ const CopilotPage = () => {
   const [riskFlags, setRiskFlags] = useState<RiskFlag[]>([]);
   const [editMode, setEditMode] = useState(false);
 
-  // Load preferences
   useEffect(() => {
-    if (!user) {
-      setLoading(false);
-      return;
-    }
+    if (!user) { setLoading(false); return; }
     const load = async () => {
       const { data } = await supabase
         .from("copilot_preferences")
         .select("purpose, budget_range, preferred_locations, concerns")
         .eq("user_id", user.id)
         .maybeSingle();
-      if (data?.purpose) {
-        setPreferences(data as Preferences);
-      }
+      if (data?.purpose) setPreferences(data as Preferences);
       setLoading(false);
     };
     load();
   }, [user]);
 
-  // Risk scan
   useEffect(() => {
     if (!user || !preferences) return;
     const runScan = async () => {
@@ -101,7 +94,7 @@ const CopilotPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar userMode="buyers" onSwitchToBusinessView={() => {}} onSwitchToBuyerView={() => {}} togglePulse={false} onSignOut={() => {}} getDashboardRoute={() => user ? "/buyer" : "/auth"} />
 
-      <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 ai-glow relative">
         {/* Back button */}
         <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm">
           <ArrowLeft className="w-4 h-4" /> Back
@@ -109,12 +102,18 @@ const CopilotPage = () => {
 
         {loading && (
           <div className="flex-1 flex items-center justify-center py-20">
-            <Loader2 className="w-6 h-6 animate-spin text-primary" />
+            <div className="relative">
+              <Loader2 className="w-6 h-6 animate-spin text-primary" />
+              <div className="absolute inset-0 w-6 h-6 rounded-full shadow-[0_0_16px_4px_hsla(var(--glow-primary),0.15)]" />
+            </div>
           </div>
         )}
 
         {!loading && !user && (
-          <div className="text-center py-20">
+          <div className="text-center py-20 ai-slide-up">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-4 ai-float ai-icon-glow">
+              <Sparkles className="w-8 h-8 text-primary-foreground" />
+            </div>
             <p className="text-muted-foreground mb-4">Sign in to activate your personal R8 Agent</p>
             <button onClick={() => navigate("/auth")} className="text-primary font-medium hover:underline">Sign In →</button>
           </div>
