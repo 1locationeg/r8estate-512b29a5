@@ -40,6 +40,7 @@ import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
+import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 
 const AdminOverview = () => {
   const navigate = useNavigate();
@@ -451,6 +452,7 @@ const AdminUsers = () => {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
@@ -830,7 +832,7 @@ const AdminUsers = () => {
             </thead>
             <tbody className="divide-y divide-border">
               {nonAdminUsers.map((u) => (
-                <tr key={u.id} className="hover:bg-secondary/30 transition-colors">
+                <tr key={u.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => setSelectedUser(u)}>
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <Avatar className="h-8 w-8">
@@ -875,7 +877,7 @@ const AdminUsers = () => {
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
                   {manageableRoles.length > 0 && (
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1 justify-end flex-wrap">
                         {manageableRoles.map(ar => {
                           const hasRole = u.roles.includes(ar.value);
@@ -918,6 +920,18 @@ const AdminUsers = () => {
           </table>
         </div>
       </div>
+
+      <AdminUserDetailSheet
+        user={selectedUser}
+        open={!!selectedUser}
+        onOpenChange={(open) => { if (!open) setSelectedUser(null); }}
+        onRoleChange={async (userId, role, action) => {
+          await handleRoleChange(userId, role, action);
+          setSelectedUser(null);
+        }}
+        manageableRoles={manageableRoles}
+        updatingId={updatingId}
+      />
     </div>
   );
 };
