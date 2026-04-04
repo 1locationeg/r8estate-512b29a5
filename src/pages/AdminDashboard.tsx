@@ -233,7 +233,7 @@ const AdminOverview = () => {
               <p className="text-xs text-muted-foreground text-center py-6">No users yet</p>
             ) : (
               dashData.recentUsers.map((u) => (
-                <div key={u.id} className="flex items-center justify-between">
+                <div key={u.id} className="flex items-center justify-between cursor-pointer hover:bg-secondary/40 rounded-lg p-1 -mx-1 transition-colors" onClick={() => navigate('/admin/users')}>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-9 w-9">
                       {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
@@ -242,7 +242,7 @@ const AdminOverview = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-xs font-medium text-foreground">{u.full_name || 'Anonymous'}</p>
+                      <p className="text-xs font-medium text-foreground hover:underline">{u.full_name || 'Anonymous'}</p>
                       <p className="text-[10px] text-muted-foreground">{timeAgo(u.created_at)}</p>
                     </div>
                   </div>
