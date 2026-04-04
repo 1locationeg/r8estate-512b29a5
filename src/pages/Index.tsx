@@ -405,7 +405,7 @@ const Index = () => {
           </section>
         </>
       ) : (
-        <section className="flex-1 flex flex-col">
+        <section className="flex-1 flex flex-col business-mode">
           <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-0 pb-0 sm:pt-1 sm:pb-1 md:py-2">
             {/* Hero Card for business mode */}
             <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
