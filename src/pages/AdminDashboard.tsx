@@ -40,6 +40,7 @@ import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
+import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 
 const AdminOverview = () => {
   const navigate = useNavigate();
