@@ -79,8 +79,8 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
       
       if (userIds.length > 0) {
         const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, full_name, avatar_url, email")
+          .from("public_profiles")
+          .select("user_id, full_name, avatar_url")
           .in("user_id", userIds as string[]);
         if (profiles) {
           profileMap = Object.fromEntries(profiles.map((p: any) => [p.user_id, p]));
