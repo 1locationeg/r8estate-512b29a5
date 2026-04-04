@@ -215,7 +215,7 @@ export function useCommunityPost(postId: string | null) {
 
       const enriched: CommunityReply[] = repliesData.map((r: any) => ({
         ...r,
-        author_name: profileMap[r.user_id]?.full_name || profileMap[r.user_id]?.email?.split('@')[0] || "User",
+        author_name: profileMap[r.user_id]?.full_name || "User",
         author_avatar: profileMap[r.user_id]?.avatar_url || undefined,
         user_voted: votedReplyIds.has(r.id),
       }));
