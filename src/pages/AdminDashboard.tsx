@@ -42,6 +42,7 @@ import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 
 const AdminOverview = () => {
+  const navigate = useNavigate();
   const [dashData, setDashData] = useState({
     totalUsers: 0,
     totalBusinesses: 0,
