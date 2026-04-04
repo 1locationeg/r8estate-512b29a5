@@ -115,7 +115,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
         })
         .map((p: any) => ({
           ...p,
-          author_name: profileMap[p.user_id]?.full_name || profileMap[p.user_id]?.email?.split('@')[0] || "User",
+          author_name: profileMap[p.user_id]?.full_name || "User",
           author_avatar: profileMap[p.user_id]?.avatar_url || undefined,
           user_voted: votedPostIds.has(p.id),
         }));
