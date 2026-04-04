@@ -53,7 +53,7 @@ const Index = () => { // hero-phase-v2
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const [togglePulse, setTogglePulse] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [heroPhase, setHeroPhase] = useState<"gauge" | "agent" | "gauge-final">("gauge");
+  
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
