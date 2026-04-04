@@ -163,8 +163,8 @@ export function useCommunityPost(postId: string | null) {
 
     // Author info
     const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url, email")
+      .from("public_profiles")
+      .select("full_name, avatar_url")
       .eq("user_id", postData.user_id)
       .single();
 
