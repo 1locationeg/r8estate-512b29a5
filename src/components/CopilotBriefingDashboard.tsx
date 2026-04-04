@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from "react";
-import { Sparkles, MapPin, TrendingUp, Shield, AlertTriangle, MessageCircle, Settings2, Loader2, Send, Bot } from "lucide-react";
+import { Sparkles, MapPin, TrendingUp, Shield, AlertTriangle, MessageCircle, Settings2, Loader2, Send, Bot, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { TrustRadarAlerts } from "@/components/TrustRadarAlerts";
+import { CopilotWeeklyDigest } from "@/components/CopilotWeeklyDigest";
+import { CopilotMatchedLaunches } from "@/components/CopilotMatchedLaunches";
 import ReactMarkdown from "react-markdown";
 
 interface RiskFlag {
@@ -53,14 +55,21 @@ const PURPOSE_LABELS: Record<string, string> = {
   commercial: "Commercial",
 };
 
+const QUICK_PROMPTS = [
+  "Top-rated developers in my areas",
+  "New launches matching my budget",
+  "Compare 2 developers for me",
+  "What should I watch out for?",
+];
+
 export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPreferences }: CopilotBriefingDashboardProps) => {
   const { user, profile } = useAuth();
   const [insights, setInsights] = useState<string[]>([]);
   const [loadingInsights, setLoadingInsights] = useState(true);
-  const [chatOpen, setChatOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [toolStatus, setToolStatus] = useState<string | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -84,10 +93,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             "Content-Type": "application/json",
             Authorization: `Bearer ${token || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
           },
-          body: JSON.stringify({
-            messages: [{ role: "user", content: prompt }],
-            preferences,
-          }),
+          body: JSON.stringify({ messages: [{ role: "user", content: prompt }], preferences }),
         });
 
         if (!resp.ok || !resp.body) throw new Error("Failed");
@@ -121,7 +127,11 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
         setInsights(lines.slice(0, 3));
       } catch (e) {
         console.error("Insights error:", e);
-        setInsights(["📊 Check the latest launches in your preferred areas", "🛡️ Monitor developer trust scores for your followed companies", "💡 Ask me anything about the market"]);
+        setInsights([
+          "📊 Check the latest launches in your preferred areas",
+          "🛡️ Monitor developer trust scores for your followed companies",
+          "💡 Ask me anything about the market",
+        ]);
       } finally {
         setLoadingInsights(false);
       }
@@ -140,6 +150,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
     setMessages((prev) => [...prev, userMsg]);
     setInput("");
     setIsLoading(true);
+    setToolStatus(null);
     let assistantSoFar = "";
     try {
       const session = await supabase.auth.getSession();
@@ -167,7 +178,13 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
           if (json === "[DONE]") break;
           try {
             const parsed = JSON.parse(json);
-            if (parsed.tool_status) continue;
+            if (parsed.tool_status) {
+              if (parsed.tools_used?.length) {
+                setToolStatus(`Queried: ${parsed.tools_used.join(", ")}`);
+                setTimeout(() => setToolStatus(null), 3000);
+              }
+              continue;
+            }
             const content = parsed.choices?.[0]?.delta?.content;
             if (content) {
               assistantSoFar += content;
@@ -185,6 +202,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
       setMessages((prev) => [...prev, { role: "assistant", content: "Sorry, I'm having trouble. Please try again." }]);
     } finally {
       setIsLoading(false);
+      setToolStatus(null);
     }
   };
 
@@ -215,102 +233,127 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
 
       {/* Insight Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-        {loadingInsights ? (
-          [0, 1, 2].map((i) => (
-            <Card key={i} className="animate-pulse">
-              <CardContent className="p-4">
-                <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                <div className="h-3 bg-muted rounded w-full" />
-                <div className="h-3 bg-muted rounded w-2/3 mt-1" />
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          insights.map((insight, i) => {
-            const Icon = INSIGHT_ICONS[i % INSIGHT_ICONS.length];
-            return (
-              <Card key={i} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => { setChatOpen(true); sendMessage(`Tell me more: ${insight}`); }}>
+        {loadingInsights
+          ? [0, 1, 2].map((i) => (
+              <Card key={i} className="animate-pulse">
                 <CardContent className="p-4">
-                  <Icon className="w-5 h-5 text-primary mb-2" />
-                  <p className="text-sm text-foreground leading-relaxed">{insight}</p>
+                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
+                  <div className="h-3 bg-muted rounded w-full" />
+                  <div className="h-3 bg-muted rounded w-2/3 mt-1" />
                 </CardContent>
               </Card>
-            );
-          })
-        )}
+            ))
+          : insights.map((insight, i) => {
+              const Icon = INSIGHT_ICONS[i % INSIGHT_ICONS.length];
+              return (
+                <Card
+                  key={i}
+                  className="hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => sendMessage(`Tell me more: ${insight}`)}
+                >
+                  <CardContent className="p-4">
+                    <Icon className="w-5 h-5 text-primary mb-2" />
+                    <p className="text-sm text-foreground leading-relaxed">{insight}</p>
+                  </CardContent>
+                </Card>
+              );
+            })}
       </div>
 
-      {/* Risk Alerts */}
-      {riskFlags.length > 0 && (
-        <div className="space-y-2">
-          <h3 className="text-sm font-semibold text-foreground flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-destructive" />
-            Risk Alerts
-          </h3>
+      {/* Main 2-column layout: Chat + Sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Chat Panel */}
+        <div className="lg:col-span-2 flex flex-col rounded-xl border border-border bg-card overflow-hidden" style={{ minHeight: 420 }}>
+          {/* Chat header */}
+          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border">
+            <MessageCircle className="w-4 h-4 text-primary" />
+            <span className="text-sm font-semibold text-foreground">R8 Agent</span>
+            {isLoading && toolStatus && (
+              <span className="ml-auto flex items-center gap-1.5 text-[10px] text-primary bg-primary/5 border border-primary/10 rounded-full px-2 py-0.5">
+                <Search className="w-3 h-3 animate-pulse" />
+                Searching database...
+              </span>
+            )}
+          </div>
+
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+            {messages.length === 0 && (
+              <div className="text-center py-8">
+                <Bot className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
+                <p className="text-sm text-muted-foreground mb-1">What would you like to know?</p>
+                <p className="text-xs text-muted-foreground/60 mb-5">I can query live data — reviews, trust scores, launches, comparisons</p>
+                <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
+                  {QUICK_PROMPTS.map((q, i) => (
+                    <button
+                      key={i}
+                      onClick={() => sendMessage(q)}
+                      className="text-xs px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.04] text-primary hover:bg-primary/10 transition-colors"
+                    >
+                      {q}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+            {messages.map((msg, i) => (
+              <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div
+                  className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${
+                    msg.role === "user"
+                      ? "bg-primary text-primary-foreground rounded-br-md"
+                      : "bg-secondary text-foreground rounded-bl-md"
+                  }`}
+                >
+                  {msg.role === "assistant" ? (
+                    <div className="prose prose-sm dark:prose-invert max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0">
+                      <ReactMarkdown>{msg.content}</ReactMarkdown>
+                    </div>
+                  ) : (
+                    msg.content
+                  )}
+                </div>
+              </div>
+            ))}
+            {isLoading && messages[messages.length - 1]?.role !== "assistant" && !toolStatus && (
+              <div className="flex justify-start">
+                <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-3">
+                  <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
+                </div>
+              </div>
+            )}
+          </div>
+
+          {/* Input */}
+          <div className="border-t border-border p-3">
+            <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex items-center gap-2">
+              <input
+                ref={inputRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                placeholder="Ask your agent anything..."
+                className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                maxLength={1000}
+              />
+              <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="shrink-0">
+                <Send className="w-4 h-4" />
+              </Button>
+            </form>
+          </div>
+        </div>
+
+        {/* Sidebar */}
+        <div className="space-y-4">
           <TrustRadarAlerts
             riskFlags={riskFlags}
-            onAskCopilot={(q) => { setChatOpen(true); setInput(q); inputRef.current?.focus(); }}
+            onAskCopilot={(q) => { setInput(q); inputRef.current?.focus(); }}
           />
+          <CopilotWeeklyDigest />
         </div>
-      )}
-
-      {/* Expandable Chat */}
-      <div className="rounded-xl border border-border bg-card overflow-hidden">
-        <button
-          onClick={() => setChatOpen(!chatOpen)}
-          className="w-full flex items-center gap-2 px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition-colors"
-        >
-          <MessageCircle className="w-4 h-4 text-primary" />
-          Ask R8 Agent
-          <span className="ml-auto text-xs text-muted-foreground">{chatOpen ? "▲" : "▼"}</span>
-        </button>
-
-        {chatOpen && (
-          <div className="border-t border-border">
-            <div ref={scrollRef} className="max-h-80 overflow-y-auto p-4 space-y-3">
-              {messages.length === 0 && (
-                <div className="text-center py-6">
-                  <Bot className="w-8 h-8 text-muted-foreground/20 mx-auto mb-2" />
-                  <p className="text-xs text-muted-foreground">Ask me anything about the market, developers, or launches</p>
-                </div>
-              )}
-              {messages.map((msg, i) => (
-                <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
-                  <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${msg.role === "user" ? "bg-primary text-primary-foreground rounded-br-md" : "bg-secondary text-foreground rounded-bl-md"}`}>
-                    {msg.role === "assistant" ? (
-                      <div className="prose prose-sm dark:prose-invert max-w-none [&>p]:mb-1 [&>p:last-child]:mb-0">
-                        <ReactMarkdown>{msg.content}</ReactMarkdown>
-                      </div>
-                    ) : msg.content}
-                  </div>
-                </div>
-              ))}
-              {isLoading && messages[messages.length - 1]?.role !== "assistant" && (
-                <div className="flex justify-start">
-                  <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-3">
-                    <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
-                  </div>
-                </div>
-              )}
-            </div>
-            <div className="border-t border-border p-3">
-              <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex items-center gap-2">
-                <input
-                  ref={inputRef}
-                  value={input}
-                  onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ask your agent..."
-                  className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-                  maxLength={1000}
-                />
-                <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="shrink-0">
-                  <Send className="w-4 h-4" />
-                </Button>
-              </form>
-            </div>
-          </div>
-        )}
       </div>
+
+      {/* Matched Launches */}
+      <CopilotMatchedLaunches />
     </div>
   );
 };

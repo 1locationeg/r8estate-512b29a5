@@ -6,7 +6,6 @@ import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { CopilotOnboarding } from "@/components/CopilotOnboarding";
 import { CopilotBriefingDashboard } from "@/components/CopilotBriefingDashboard";
-import { CopilotMatchedLaunches } from "@/components/CopilotMatchedLaunches";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -102,7 +101,7 @@ const CopilotPage = () => {
     <div className="min-h-screen bg-background flex flex-col">
       <Navbar userMode="buyers" onSwitchToBusinessView={() => {}} onSwitchToBuyerView={() => {}} togglePulse={false} onSignOut={() => {}} getDashboardRoute={() => user ? "/buyer" : "/auth"} />
 
-      <div className="flex-1 w-full max-w-4xl mx-auto px-4 py-6">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-6">
         {/* Back button */}
         <button onClick={() => navigate(-1)} className="text-muted-foreground hover:text-foreground mb-4 inline-flex items-center gap-1 text-sm">
           <ArrowLeft className="w-4 h-4" /> Back
@@ -126,16 +125,11 @@ const CopilotPage = () => {
         )}
 
         {showDashboard && (
-          <>
-            <CopilotBriefingDashboard
-              preferences={preferences}
-              riskFlags={riskFlags}
-              onEditPreferences={() => setEditMode(true)}
-            />
-            <div className="mt-6">
-              <CopilotMatchedLaunches />
-            </div>
-          </>
+          <CopilotBriefingDashboard
+            preferences={preferences}
+            riskFlags={riskFlags}
+            onEditPreferences={() => setEditMode(true)}
+          />
         )}
       </div>
 
