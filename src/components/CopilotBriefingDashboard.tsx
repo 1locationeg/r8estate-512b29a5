@@ -77,7 +77,6 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const name = profile?.full_name?.split(" ")[0] || "";
 
-  // Generate personalized insights on mount
   useEffect(() => {
     if (!user) return;
     const generateInsights = async () => {
@@ -209,13 +208,13 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
   const INSIGHT_ICONS = [MapPin, TrendingUp, Shield];
 
   return (
-    <div className="space-y-6">
-      {/* Personalized Header */}
-      <div className="flex items-center justify-between">
+    <div className="space-y-6 relative">
+      {/* Personalized Header with glow */}
+      <div className="flex items-center justify-between ai-slide-up">
         <div className="flex items-center gap-3">
-          <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-primary-foreground" />
-            <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse ring-2 ring-background" />
+          <div className="relative w-11 h-11 rounded-xl bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center ai-icon-glow ai-shimmer-border">
+            <Sparkles className="w-5 h-5 text-primary-foreground relative z-10" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-emerald-500 ai-pulse-dot ring-2 ring-background z-10" />
           </div>
           <div>
             <h1 className="text-lg font-bold text-foreground">
@@ -226,50 +225,55 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             </p>
           </div>
         </div>
-        <Button variant="ghost" size="icon" onClick={onEditPreferences} title="Edit preferences">
+        <Button variant="ghost" size="icon" onClick={onEditPreferences} title="Edit preferences" className="hover:bg-primary/5">
           <Settings2 className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Insight Cards */}
+      {/* Insight Cards with glass + glow */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {loadingInsights
           ? [0, 1, 2].map((i) => (
-              <Card key={i} className="animate-pulse">
-                <CardContent className="p-4">
-                  <div className="h-4 bg-muted rounded w-3/4 mb-2" />
-                  <div className="h-3 bg-muted rounded w-full" />
-                  <div className="h-3 bg-muted rounded w-2/3 mt-1" />
-                </CardContent>
-              </Card>
+              <div key={i} className="rounded-xl ai-glass p-4 animate-pulse">
+                <div className="h-4 bg-muted/50 rounded w-3/4 mb-2" />
+                <div className="h-3 bg-muted/50 rounded w-full" />
+                <div className="h-3 bg-muted/50 rounded w-2/3 mt-1" />
+              </div>
             ))
           : insights.map((insight, i) => {
               const Icon = INSIGHT_ICONS[i % INSIGHT_ICONS.length];
               return (
-                <Card
+                <div
                   key={i}
-                  className="hover:shadow-md transition-shadow cursor-pointer"
+                  className="relative rounded-xl ai-glass p-4 cursor-pointer group hover:shadow-[0_0_20px_-4px_hsla(var(--glow-primary),0.15)] transition-all duration-300 ai-scale-in"
+                  style={{ animationDelay: `${i * 0.12}s` }}
                   onClick={() => sendMessage(`Tell me more: ${insight}`)}
                 >
-                  <CardContent className="p-4">
-                    <Icon className="w-5 h-5 text-primary mb-2" />
-                    <p className="text-sm text-foreground leading-relaxed">{insight}</p>
-                  </CardContent>
-                </Card>
+                  <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center mb-2 group-hover:bg-primary/15 transition-colors group-hover:shadow-[0_0_10px_2px_hsla(var(--glow-primary),0.1)]">
+                    <Icon className="w-4 h-4 text-primary" />
+                  </div>
+                  <p className="text-sm text-foreground leading-relaxed">{insight}</p>
+                </div>
               );
             })}
       </div>
 
+      {/* AI divider */}
+      <div className="ai-divider-glow" />
+
       {/* Main 2-column layout: Chat + Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Chat Panel */}
-        <div className="lg:col-span-2 flex flex-col rounded-xl border border-border bg-card overflow-hidden" style={{ minHeight: 420 }}>
+        {/* Chat Panel with shimmer border */}
+        <div className="lg:col-span-2 flex flex-col rounded-xl overflow-hidden ai-glass ai-shimmer-border relative" style={{ minHeight: 420 }}>
           {/* Chat header */}
-          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border">
-            <MessageCircle className="w-4 h-4 text-primary" />
+          <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border/30 relative z-10">
+            <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
+              <MessageCircle className="w-3.5 h-3.5 text-primary-foreground" />
+            </div>
             <span className="text-sm font-semibold text-foreground">R8 Agent</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ai-pulse-dot" />
             {isLoading && toolStatus && (
-              <span className="ml-auto flex items-center gap-1.5 text-[10px] text-primary bg-primary/5 border border-primary/10 rounded-full px-2 py-0.5">
+              <span className="ml-auto flex items-center gap-1.5 text-[10px] text-primary ai-glass rounded-full px-2.5 py-1 shadow-[0_0_8px_1px_hsla(var(--glow-primary),0.1)]">
                 <Search className="w-3 h-3 animate-pulse" />
                 Searching database...
               </span>
@@ -277,18 +281,20 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto p-4 space-y-3 relative z-10">
             {messages.length === 0 && (
-              <div className="text-center py-8">
-                <Bot className="w-10 h-10 text-muted-foreground/20 mx-auto mb-3" />
+              <div className="text-center py-8 ai-slide-up">
+                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mx-auto mb-3 ai-float">
+                  <Bot className="w-6 h-6 text-muted-foreground/40" />
+                </div>
                 <p className="text-sm text-muted-foreground mb-1">What would you like to know?</p>
-                <p className="text-xs text-muted-foreground/60 mb-5">I can query live data — reviews, trust scores, launches, comparisons</p>
+                <p className="text-xs text-muted-foreground/60 mb-5">I query live data — reviews, trust scores, launches, comparisons</p>
                 <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
                   {QUICK_PROMPTS.map((q, i) => (
                     <button
                       key={i}
                       onClick={() => sendMessage(q)}
-                      className="text-xs px-3 py-1.5 rounded-full border border-primary/20 bg-primary/[0.04] text-primary hover:bg-primary/10 transition-colors"
+                      className="text-xs px-3 py-1.5 rounded-full ai-glass border border-primary/15 text-primary hover:bg-primary/10 hover:shadow-[0_0_8px_1px_hsla(var(--glow-primary),0.1)] transition-all duration-200"
                     >
                       {q}
                     </button>
@@ -301,8 +307,8 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
                 <div
                   className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${
                     msg.role === "user"
-                      ? "bg-primary text-primary-foreground rounded-br-md"
-                      : "bg-secondary text-foreground rounded-bl-md"
+                      ? "bg-gradient-to-br from-primary to-primary/90 text-primary-foreground rounded-br-md shadow-[0_2px_12px_-2px_hsla(var(--glow-primary),0.3)]"
+                      : "ai-glass text-foreground rounded-bl-md"
                   }`}
                 >
                   {msg.role === "assistant" ? (
@@ -317,7 +323,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             ))}
             {isLoading && messages[messages.length - 1]?.role !== "assistant" && !toolStatus && (
               <div className="flex justify-start">
-                <div className="bg-secondary rounded-2xl rounded-bl-md px-4 py-3">
+                <div className="ai-glass rounded-2xl rounded-bl-md px-4 py-3">
                   <Loader2 className="w-4 h-4 animate-spin text-muted-foreground" />
                 </div>
               </div>
@@ -325,35 +331,44 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
           </div>
 
           {/* Input */}
-          <div className="border-t border-border p-3">
+          <div className="border-t border-border/30 p-3 relative z-10">
             <form onSubmit={(e) => { e.preventDefault(); sendMessage(); }} className="flex items-center gap-2">
               <input
                 ref={inputRef}
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
                 placeholder="Ask your agent anything..."
-                className="flex-1 px-3 py-2 rounded-lg border border-border bg-background text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+                className="flex-1 px-3 py-2 rounded-lg border border-border/50 bg-background/50 text-foreground text-sm placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary/30 focus:shadow-[0_0_10px_1px_hsla(var(--glow-primary),0.08)] transition-all"
                 maxLength={1000}
               />
-              <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="shrink-0">
+              <Button type="submit" size="icon" disabled={!input.trim() || isLoading} className="shrink-0 shadow-[0_2px_10px_-2px_hsla(var(--glow-primary),0.25)]">
                 <Send className="w-4 h-4" />
               </Button>
             </form>
           </div>
         </div>
 
-        {/* Sidebar */}
+        {/* Sidebar with glass */}
         <div className="space-y-4">
-          <TrustRadarAlerts
-            riskFlags={riskFlags}
-            onAskCopilot={(q) => { setInput(q); inputRef.current?.focus(); }}
-          />
-          <CopilotWeeklyDigest />
+          <div className="ai-scale-in" style={{ animationDelay: "0.15s" }}>
+            <TrustRadarAlerts
+              riskFlags={riskFlags}
+              onAskCopilot={(q) => { setInput(q); inputRef.current?.focus(); }}
+            />
+          </div>
+          <div className="ai-scale-in" style={{ animationDelay: "0.25s" }}>
+            <CopilotWeeklyDigest />
+          </div>
         </div>
       </div>
 
+      {/* AI divider */}
+      <div className="ai-divider-glow" />
+
       {/* Matched Launches */}
-      <CopilotMatchedLaunches />
+      <div className="ai-slide-up" style={{ animationDelay: "0.3s" }}>
+        <CopilotMatchedLaunches />
+      </div>
     </div>
   );
 };

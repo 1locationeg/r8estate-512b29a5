@@ -112,7 +112,6 @@ export const CopilotOnboarding = ({ onComplete }: CopilotOnboardingProps) => {
       return;
     }
 
-    // Final step — save
     setSaving(true);
     try {
       const prefs = {
@@ -142,31 +141,36 @@ export const CopilotOnboarding = ({ onComplete }: CopilotOnboardingProps) => {
   };
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 animate-in fade-in duration-500">
-      {/* Agent avatar */}
-      <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mb-6">
-        <Sparkles className="w-7 h-7 text-primary-foreground" />
-        <span className="absolute -top-0.5 -right-0.5 w-3 h-3 rounded-full bg-emerald-500 animate-pulse ring-2 ring-background" />
+    <div className="flex-1 flex flex-col items-center justify-center px-4 py-8 ai-glow relative">
+      {/* Agent avatar with glow */}
+      <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center mb-6 ai-float ai-icon-glow ai-shimmer-border">
+        <Sparkles className="w-8 h-8 text-primary-foreground relative z-10" />
+        <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 ai-pulse-dot ring-2 ring-background z-10" />
       </div>
 
       {/* Step title */}
-      <h2 className="text-xl font-bold text-foreground mb-1 text-center">{current.title}</h2>
-      <p className="text-sm text-muted-foreground mb-8 text-center">{current.subtitle}</p>
+      <h2 className="text-xl font-bold text-foreground mb-1 text-center ai-slide-up" key={`title-${step}`}>
+        {current.title}
+      </h2>
+      <p className="text-sm text-muted-foreground mb-8 text-center ai-slide-up" style={{ animationDelay: "0.1s" }} key={`sub-${step}`}>
+        {current.subtitle}
+      </p>
 
-      {/* Preference clouds */}
-      <div className="flex flex-wrap gap-3 justify-center max-w-md mb-8">
-        {current.options.map((opt) => (
+      {/* Preference clouds with glow effects */}
+      <div className="flex flex-wrap gap-3 justify-center max-w-md mb-8" key={`opts-${step}`}>
+        {current.options.map((opt, idx) => (
           <button
             key={opt.value}
             onClick={() => toggleSelection(opt.value)}
             className={`
               relative px-4 py-2.5 rounded-full text-sm font-medium
-              border transition-all duration-200
+              transition-all duration-300 ai-scale-in
               ${isSelected(opt.value)
-                ? "border-primary bg-primary/10 text-primary shadow-sm scale-105"
-                : "border-border bg-card text-foreground hover:border-primary/40 hover:bg-primary/[0.04]"
+                ? "bg-primary/15 text-primary shadow-[0_0_12px_2px_hsla(var(--glow-primary),0.15)] border border-primary/40 scale-105"
+                : "ai-glass border border-border/50 text-foreground hover:border-primary/30 hover:shadow-[0_0_8px_1px_hsla(var(--glow-primary),0.08)]"
               }
             `}
+            style={{ animationDelay: `${idx * 0.06}s` }}
           >
             {isSelected(opt.value) && (
               <Check className="inline w-3.5 h-3.5 mr-1 -mt-0.5" />
@@ -177,23 +181,27 @@ export const CopilotOnboarding = ({ onComplete }: CopilotOnboardingProps) => {
       </div>
 
       {/* Progress + Next */}
-      <div className="flex flex-col items-center gap-4">
+      <div className="flex flex-col items-center gap-4 ai-slide-up" style={{ animationDelay: "0.3s" }}>
         <Button
           onClick={handleNext}
           disabled={!canProceed() || saving}
-          className="min-w-[160px] gap-2"
+          className="min-w-[160px] gap-2 shadow-[0_4px_20px_-4px_hsla(var(--glow-primary),0.3)] hover:shadow-[0_4px_24px_-2px_hsla(var(--glow-primary),0.4)] transition-shadow"
         >
           {saving ? "Saving..." : step < STEPS.length - 1 ? "Next" : "Let's Go"}
           <ArrowRight className="w-4 h-4" />
         </Button>
 
-        {/* Progress dots */}
+        {/* Progress dots with glow */}
         <div className="flex gap-2">
           {STEPS.map((_, i) => (
             <div
               key={i}
-              className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                i === step ? "bg-primary w-6" : i < step ? "bg-primary/60" : "bg-muted-foreground/20"
+              className={`h-2 rounded-full transition-all duration-500 ${
+                i === step
+                  ? "bg-primary w-6 shadow-[0_0_8px_2px_hsla(var(--glow-primary),0.3)]"
+                  : i < step
+                  ? "bg-primary/60 w-2"
+                  : "bg-muted-foreground/20 w-2"
               }`}
             />
           ))}
