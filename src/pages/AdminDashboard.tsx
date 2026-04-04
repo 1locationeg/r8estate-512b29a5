@@ -452,16 +452,16 @@ const AdminUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
 
-  const isSuperAdmin = callerPermission === 'super_admin';
-  const manageableRoles = isSuperAdmin
-    ? availableRoles
-    : availableRoles.filter((role) => role.value !== 'admin');
-
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
     { value: 'business', label: 'Business', color: 'bg-primary/10 text-primary' },
     { value: 'admin', label: 'Admin', color: 'bg-brand-red/10 text-brand-red' },
   ];
+
+  const isSuperAdmin = callerPermission === 'super_admin';
+  const manageableRoles = isSuperAdmin
+    ? availableRoles
+    : availableRoles.filter((role) => role.value !== 'admin');
 
   const fetchUsers = async () => {
     setLoading(true);
