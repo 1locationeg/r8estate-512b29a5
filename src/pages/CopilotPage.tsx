@@ -138,10 +138,14 @@ const CopilotPage = () => {
   const handleOnboardingComplete = (prefs: Preferences) => {
     setPreferences(prefs);
     setEditMode(false);
+    setInitializing(true);
   };
 
-  const showOnboarding = !loading && user && (!preferences || editMode);
-  const showDashboard = !loading && user && preferences && !editMode;
+  const handleInitDone = () => setInitializing(false);
+
+  const showOnboarding = !loading && user && (!preferences || editMode) && !initializing;
+  const showDashboard = !loading && user && preferences && !editMode && !initializing;
+  const showInit = !loading && user && initializing;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
