@@ -126,7 +126,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
         supabase.from("launches").select("id, project_name, location_district, current_price_per_m2, status, down_payment_pct, installment_years")
           .in("status", ["reservations_open", "upcoming"]).order("created_at", { ascending: false }).limit(5),
         supabase.from("deals").select("id, headline, business_id, price, down_payment_percent, deal_type")
-          .eq("status", "approved").order("created_at", { ascending: false }).limit(5),
+          .eq("status", "verified").order("created_at", { ascending: false }).limit(5),
       ]);
       setRecentReviewCount(revRes.count || 0);
       setActiveLaunches(launchRes.data || []);
