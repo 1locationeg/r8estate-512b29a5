@@ -241,7 +241,42 @@ export const HeroTrustShowcase = () => {
     };
   }, [runEntrance]);
 
-  // ── Interactive score animation ──
+  // ── Agent teaser typing effect ──
+  useEffect(() => {
+    if (cardPhase !== "agent") return;
+    setTeaserTypedChars(0);
+    setTeaserShowAnswer(false);
+    const q = agentTeaserPairs[teaserIdx].question;
+    let charIdx = 0;
+    const typeInterval = setInterval(() => {
+      charIdx++;
+      setTeaserTypedChars(charIdx);
+      if (charIdx >= q.length) {
+        clearInterval(typeInterval);
+        setTimeout(() => setTeaserShowAnswer(true), 400);
+      }
+    }, 25);
+    return () => clearInterval(typeInterval);
+  }, [cardPhase, teaserIdx]);
+
+  // ── Agent teaser: cycle questions then return to reviews ──
+  useEffect(() => {
+    if (cardPhase !== "agent" || !teaserShowAnswer) return;
+    const timer = setTimeout(() => {
+      if (teaserIdx < agentTeaserPairs.length - 1) {
+        setTeaserIdx(i => i + 1);
+        setTeaserShowAnswer(false);
+      } else {
+        // Return to reviews permanently
+        setCardPhase("reviews");
+        setTransitioning(false);
+        startCycling();
+      }
+    }, 2500);
+    return () => clearTimeout(timer);
+  }, [cardPhase, teaserShowAnswer, teaserIdx, startCycling]);
+
+
   const animateToScore = useCallback((target: number) => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
     const startVal = displayScore;
