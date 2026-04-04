@@ -117,7 +117,11 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
 };
 
 // ── Component ──
-export const HeroTrustShowcase = () => {
+interface HeroTrustShowcaseProps {
+  onCycleComplete?: () => void;
+}
+
+export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = {}) => {
   const { t } = useTranslation();
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
@@ -131,6 +135,10 @@ export const HeroTrustShowcase = () => {
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runEntranceRef = useRef<(() => void) | null>(null);
+  const cycleCountRef = useRef(0);
+  const cycleCompleteCalledRef = useRef(false);
+  const onCycleCompleteRef = useRef(onCycleComplete);
+  onCycleCompleteRef.current = onCycleComplete;
   const entranceTarget = 88;
 
   // ── Auto-cycle logic ──
