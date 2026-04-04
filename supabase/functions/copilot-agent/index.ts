@@ -16,7 +16,10 @@ Guidelines:
 - Always cite real numbers from tool results
 - Respond in the same language as the user (Arabic or English)
 - For investment advice, recommend due diligence
-- If a tool returns no data, say so honestly`;
+- If a tool returns no data, say so honestly
+- IMPORTANT: You have full context of the user's activity on the platform. Use it to give personalized, relevant answers.
+- Reference specific saved items, followed developers, or past reviews when relevant.
+- Proactively suggest actions based on their activity patterns.`;
 
 const TOOLS = [
   {
@@ -94,6 +97,14 @@ const TOOLS = [
       },
     },
   },
+  {
+    type: "function",
+    function: {
+      name: "get_user_portfolio",
+      description: "Get the current user's full activity: saved items, followed developers, reviews written, interests, and engagement stats.",
+      parameters: { type: "object", properties: {} },
+    },
+  },
 ];
 
 async function computeTrustScore(db: any, businessName: string) {
@@ -124,7 +135,27 @@ async function computeTrustScore(db: any, businessName: string) {
   return { found: true, business: businessName, avg_rating: avgRating, review_count: total, verified_pct: verifiedPct, trust_score: score };
 }
 
-async function executeTool(db: any, name: string, args: any): Promise<string> {
+async function fetchUserActivity(db: any, userId: string) {
+  const [savedRes, followedRes, reviewsRes, interestsRes, engagementRes, streakRes] = await Promise.all([
+    db.from("saved_items").select("item_name, item_type, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(20),
+    db.from("followed_businesses").select("business_name, business_id, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(20),
+    db.from("reviews").select("developer_name, rating, title, experience_type, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(10),
+    db.from("user_interests").select("entity_name, interest_type, strength").eq("user_id", userId).order("strength", { ascending: false }).limit(15),
+    db.from("buyer_engagement").select("developers_viewed, projects_saved, reports_unlocked, helpful_votes, community_posts, community_replies").eq("user_id", userId).maybeSingle(),
+    db.from("user_streaks").select("current_streak, longest_streak").eq("user_id", userId).maybeSingle(),
+  ]);
+
+  return {
+    saved_items: savedRes.data || [],
+    followed_developers: followedRes.data || [],
+    user_reviews: reviewsRes.data || [],
+    interests: interestsRes.data || [],
+    engagement: engagementRes.data || null,
+    streak: streakRes.data || null,
+  };
+}
+
+async function executeTool(db: any, name: string, args: any, userId?: string | null): Promise<string> {
   switch (name) {
     case "query_reviews": {
       let query = db
@@ -187,9 +218,40 @@ async function executeTool(db: any, name: string, args: any): Promise<string> {
         interest_rate: rate,
       });
     }
+    case "get_user_portfolio": {
+      if (!userId) return JSON.stringify({ error: "User not authenticated" });
+      const activity = await fetchUserActivity(db, userId);
+      return JSON.stringify(activity);
+    }
     default:
       return JSON.stringify({ error: "Unknown tool" });
   }
+}
+
+function buildUserActivityContext(activity: any): string {
+  const parts: string[] = [];
+
+  if (activity.saved_items?.length) {
+    parts.push(`Saved Items (${activity.saved_items.length}): ${activity.saved_items.map((i: any) => `${i.item_name} (${i.item_type})`).join(", ")}`);
+  }
+  if (activity.followed_developers?.length) {
+    parts.push(`Following Developers (${activity.followed_developers.length}): ${activity.followed_developers.map((f: any) => f.business_name).join(", ")}`);
+  }
+  if (activity.user_reviews?.length) {
+    parts.push(`Reviews Written (${activity.user_reviews.length}): ${activity.user_reviews.map((r: any) => `${r.developer_name} (${r.rating}★)`).join(", ")}`);
+  }
+  if (activity.interests?.length) {
+    parts.push(`Top Interests: ${activity.interests.slice(0, 8).map((i: any) => `${i.entity_name} (strength: ${i.strength})`).join(", ")}`);
+  }
+  if (activity.engagement) {
+    const e = activity.engagement;
+    parts.push(`Engagement: ${e.developers_viewed} developers viewed, ${e.projects_saved} projects saved, ${e.community_posts} community posts, ${e.helpful_votes} helpful votes`);
+  }
+  if (activity.streak) {
+    parts.push(`Streak: ${activity.streak.current_streak} days active (longest: ${activity.streak.longest_streak})`);
+  }
+
+  return parts.length ? `\n\nUser Platform Activity:\n${parts.join("\n")}` : "";
 }
 
 serve(async (req) => {
@@ -234,11 +296,24 @@ serve(async (req) => {
       await db.from("ai_usage").insert({ user_id: userId, function_name: "copilot-agent", tokens_used: 1 });
     }
 
+    // Fetch user activity for context enrichment
+    let activityContext = "";
+    if (userId) {
+      try {
+        const activity = await fetchUserActivity(db, userId);
+        activityContext = buildUserActivityContext(activity);
+      } catch (e) {
+        console.error("Failed to fetch user activity:", e);
+      }
+    }
+
     // Step 1: Call LLM with tools
     let systemPrompt = SYSTEM_PROMPT;
     if (preferences) {
       systemPrompt += `\n\nUser Profile: Purpose: ${preferences.purpose || "unknown"}, Budget: ${preferences.budget_range || "unknown"}, Preferred Locations: ${(preferences.preferred_locations || []).join(", ") || "any"}, Concerns: ${(preferences.concerns || []).join(", ") || "none specified"}. Tailor your answers to this profile.`;
     }
+    systemPrompt += activityContext;
+
     const aiMessages = [{ role: "system", content: systemPrompt }, ...messages];
     const firstResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -259,7 +334,6 @@ serve(async (req) => {
 
     // If no tool calls, stream the direct response
     if (!choice?.message?.tool_calls?.length) {
-      // Return as SSE for compatibility
       const content = choice?.message?.content || "I couldn't process that request.";
       const sseData = `data: ${JSON.stringify({ choices: [{ delta: { content } }] })}\n\ndata: [DONE]\n\n`;
       return new Response(sseData, {
@@ -269,12 +343,10 @@ serve(async (req) => {
 
     // Step 2: Execute tool calls
     const toolCalls = choice.message.tool_calls;
-    
-    // Send tool_status event first, then execute tools
     const toolResults: any[] = [];
     for (const tc of toolCalls) {
       const args = typeof tc.function.arguments === "string" ? JSON.parse(tc.function.arguments) : tc.function.arguments;
-      const result = await executeTool(db, tc.function.name, args);
+      const result = await executeTool(db, tc.function.name, args, userId);
       toolResults.push({
         role: "tool",
         tool_call_id: tc.id,

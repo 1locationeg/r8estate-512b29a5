@@ -3,7 +3,8 @@ import {
   Sparkles, MapPin, TrendingUp, Shield, MessageCircle, Settings2,
   Loader2, Send, Bot, Search, AlertTriangle, Info, Zap, Clock,
   Rocket, Tag, CreditCard, TrendingDown, FileCheck, Users,
-  ArrowRight, Eye, Scale, ChevronRight
+  ArrowRight, Eye, Scale, ChevronRight, Bookmark, Heart, Star,
+  Activity, Target, BarChart3
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,6 +34,15 @@ interface Message {
   content: string;
 }
 
+interface UserActivity {
+  savedItems: any[];
+  followedDevelopers: any[];
+  userReviews: any[];
+  interests: any[];
+  engagement: any | null;
+  streak: any | null;
+}
+
 interface CopilotBriefingDashboardProps {
   preferences: Preferences;
   riskFlags: RiskFlag[];
@@ -50,26 +60,21 @@ const PURPOSE_LABELS: Record<string, string> = {
   vacation: "Vacation Home", commercial: "Commercial",
 };
 
-const QUICK_PROMPTS = [
-  "Top-rated developers in my areas",
-  "New launches matching my budget",
-  "Compare 2 developers for me",
-  "What should I watch out for?",
-];
-
-/* ── Alert Card (yellow/blue tinted) ── */
+/* ── Alert Card ── */
 interface AlertCardProps {
   icon: React.ReactNode;
   title: string;
   description: string;
   linkText: string;
   onLink: () => void;
-  variant?: "warning" | "info";
+  variant?: "warning" | "info" | "success";
 }
 const AlertCard = ({ icon, title, description, linkText, onLink, variant = "info" }: AlertCardProps) => (
   <div className={`rounded-lg border-l-4 px-4 py-3 ${
     variant === "warning"
       ? "border-l-amber-400 bg-amber-50 dark:bg-amber-950/20"
+      : variant === "success"
+      ? "border-l-emerald-400 bg-emerald-50 dark:bg-emerald-950/20"
       : "border-l-primary/60 bg-primary/5 dark:bg-primary/10"
   }`}>
     <div className="flex items-start gap-2">
@@ -96,6 +101,17 @@ const SectionHeading = ({ icon, title, subtitle }: { icon: React.ReactNode; titl
   </div>
 );
 
+/* ── Activity Stat Pill ── */
+const StatPill = ({ icon, label, value }: { icon: React.ReactNode; label: string; value: number | string }) => (
+  <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-3 py-2">
+    <span className="text-muted-foreground">{icon}</span>
+    <div>
+      <p className="text-lg font-bold text-foreground leading-none">{value}</p>
+      <p className="text-[10px] text-muted-foreground">{label}</p>
+    </div>
+  </div>
+);
+
 export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPreferences }: CopilotBriefingDashboardProps) => {
   const { user, profile } = useAuth();
   const navigate = useNavigate();
@@ -112,26 +128,45 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
   const [activeDeals, setActiveDeals] = useState<any[]>([]);
   const [trustDropCount, setTrustDropCount] = useState(0);
 
+  // User activity
+  const [activity, setActivity] = useState<UserActivity>({
+    savedItems: [], followedDevelopers: [], userReviews: [], interests: [], engagement: null, streak: null,
+  });
+
   const hour = new Date().getHours();
   const greeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
   const name = profile?.full_name?.split(" ")[0] || "";
 
-  // Fetch live data
+  // Fetch live data + user activity
   useEffect(() => {
     if (!user) return;
     const weekAgo = new Date(Date.now() - 7 * 86400000).toISOString();
     const load = async () => {
-      const [revRes, launchRes, dealRes] = await Promise.all([
+      const [revRes, launchRes, dealRes, savedRes, followedRes, reviewsRes, interestsRes, engRes, streakRes] = await Promise.all([
         supabase.from("reviews").select("id", { count: "exact", head: true }).eq("status", "approved").gte("created_at", weekAgo),
         supabase.from("launches").select("id, project_name, location_district, current_price_per_m2, status, down_payment_pct, installment_years")
           .in("status", ["reservations_open", "upcoming"]).order("created_at", { ascending: false }).limit(5),
         supabase.from("deals").select("id, headline, business_id, price, down_payment_percent, deal_type")
           .eq("status", "verified").order("created_at", { ascending: false }).limit(5),
+        supabase.from("saved_items").select("item_name, item_type, item_id, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(10),
+        supabase.from("followed_businesses").select("business_name, business_id, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(10),
+        supabase.from("reviews").select("developer_name, rating, title, created_at").eq("user_id", user.id).order("created_at", { ascending: false }).limit(5),
+        supabase.from("user_interests").select("entity_name, interest_type, strength").eq("user_id", user.id).order("strength", { ascending: false }).limit(10),
+        supabase.from("buyer_engagement").select("developers_viewed, projects_saved, reports_unlocked, helpful_votes, community_posts, community_replies").eq("user_id", user.id).maybeSingle(),
+        supabase.from("user_streaks").select("current_streak, longest_streak").eq("user_id", user.id).maybeSingle(),
       ]);
       setRecentReviewCount(revRes.count || 0);
       setActiveLaunches(launchRes.data || []);
       setActiveDeals(dealRes.data || []);
       setTrustDropCount(riskFlags.filter(f => f.delta < 0).length);
+      setActivity({
+        savedItems: savedRes.data || [],
+        followedDevelopers: followedRes.data || [],
+        userReviews: reviewsRes.data || [],
+        interests: interestsRes.data || [],
+        engagement: engRes.data || null,
+        streak: streakRes.data || null,
+      });
     };
     load();
   }, [user, riskFlags]);
@@ -204,6 +239,26 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
   };
 
   const budgetLabel = BUDGET_LABELS[preferences.budget_range] || preferences.budget_range;
+  const hasActivity = activity.savedItems.length > 0 || activity.followedDevelopers.length > 0 || activity.userReviews.length > 0;
+  const eng = activity.engagement;
+
+  // Build dynamic quick prompts based on user activity
+  const dynamicPrompts: string[] = [];
+  if (activity.followedDevelopers.length > 0) {
+    dynamicPrompts.push(`Trust update on ${activity.followedDevelopers[0].business_name}`);
+  }
+  if (activity.savedItems.length > 0) {
+    dynamicPrompts.push("Compare my saved projects");
+  }
+  if (activity.userReviews.length > 0) {
+    dynamicPrompts.push("How do my reviewed developers rank?");
+  }
+  if (activity.interests.length > 0) {
+    dynamicPrompts.push(`New launches near ${activity.interests[0]?.entity_name || "my interests"}`);
+  }
+  dynamicPrompts.push("Top-rated developers in my areas");
+  dynamicPrompts.push("What should I watch out for?");
+  const quickPrompts = dynamicPrompts.slice(0, 5);
 
   return (
     <div className="space-y-8 relative">
@@ -225,6 +280,163 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
           <Settings2 className="w-4 h-4" />
         </Button>
       </div>
+
+      {/* ── Your Activity Context ── */}
+      <section className="ai-scale-in">
+        <SectionHeading
+          icon={<Activity className="w-5 h-5" />}
+          title="Your Profile"
+          subtitle="Everything you do on R8Estate makes your agent smarter"
+        />
+
+        {/* Stats Row */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+          <StatPill icon={<Heart className="w-4 h-4" />} label="Following" value={activity.followedDevelopers.length} />
+          <StatPill icon={<Bookmark className="w-4 h-4" />} label="Saved" value={activity.savedItems.length} />
+          <StatPill icon={<Star className="w-4 h-4" />} label="Reviews" value={activity.userReviews.length} />
+          <StatPill icon={<Zap className="w-4 h-4" />} label="Day Streak" value={activity.streak?.current_streak || 0} />
+        </div>
+
+        {/* Engagement insights */}
+        {eng && (eng.developers_viewed > 0 || eng.community_posts > 0) && (
+          <div className="rounded-lg border border-border bg-card p-3 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <BarChart3 className="w-4 h-4 text-muted-foreground" />
+              <p className="text-sm font-semibold text-foreground">Your Engagement</p>
+            </div>
+            <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+              {eng.developers_viewed > 0 && <span>{eng.developers_viewed} developers viewed</span>}
+              {eng.projects_saved > 0 && <span>· {eng.projects_saved} projects saved</span>}
+              {eng.community_posts > 0 && <span>· {eng.community_posts} community posts</span>}
+              {eng.helpful_votes > 0 && <span>· {eng.helpful_votes} helpful votes received</span>}
+            </div>
+          </div>
+        )}
+
+        {/* Followed Developers */}
+        {activity.followedDevelopers.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Target className="w-4 h-4 text-muted-foreground" />
+                <h3 className="text-sm font-bold text-foreground">Developers You Follow</h3>
+              </div>
+              <button onClick={() => navigate("/portfolio")} className="text-xs text-primary hover:underline flex items-center gap-0.5">
+                View all <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {activity.followedDevelopers.map((dev, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(`What's the latest trust score and reviews for ${dev.business_name}?`)}
+                  className="text-xs px-3 py-1.5 rounded-full ai-glass border border-primary/15 text-foreground hover:bg-primary/10 hover:border-primary/30 transition-all flex items-center gap-1.5"
+                >
+                  <Heart className="w-3 h-3 text-primary" />
+                  {dev.business_name}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Saved Items */}
+        {activity.savedItems.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <Bookmark className="w-4 h-4 text-muted-foreground" />
+                <h3 className="text-sm font-bold text-foreground">Saved Items</h3>
+              </div>
+              <button onClick={() => navigate("/portfolio")} className="text-xs text-primary hover:underline flex items-center gap-0.5">
+                View all <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {activity.savedItems.slice(0, 6).map((item, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(`Tell me about ${item.item_name}`)}
+                  className="text-xs px-3 py-1.5 rounded-full border border-border bg-card text-foreground hover:bg-muted/50 transition-all flex items-center gap-1.5"
+                >
+                  <Bookmark className="w-3 h-3 text-muted-foreground" />
+                  {item.item_name}
+                  <span className="text-[10px] text-muted-foreground capitalize">({item.item_type})</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Interests cloud */}
+        {activity.interests.length > 0 && (
+          <div className="mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <Eye className="w-4 h-4 text-muted-foreground" />
+              <h3 className="text-sm font-bold text-foreground">Your Interest Map</h3>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {activity.interests.slice(0, 8).map((interest, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(`Show me updates on ${interest.entity_name}`)}
+                  className="text-xs px-3 py-1.5 rounded-full ai-glass border border-accent/15 text-foreground hover:bg-accent/10 transition-all"
+                  style={{ opacity: 0.6 + (interest.strength / 10) * 0.4 }}
+                >
+                  {interest.entity_name}
+                  <span className="ml-1 text-[9px] text-muted-foreground">
+                    {"●".repeat(Math.min(Math.ceil(interest.strength / 2), 5))}
+                  </span>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Your Reviews */}
+        {activity.userReviews.length > 0 && (
+          <div>
+            <div className="flex items-center gap-2 mb-2">
+              <Star className="w-4 h-4 text-muted-foreground" />
+              <h3 className="text-sm font-bold text-foreground">Your Reviews</h3>
+            </div>
+            <div className="space-y-1.5">
+              {activity.userReviews.slice(0, 3).map((rev, i) => (
+                <button
+                  key={i}
+                  onClick={() => sendMessage(`How is ${rev.developer_name} doing compared to when I reviewed them?`)}
+                  className="w-full text-left rounded-md border border-border bg-card px-3 py-2 hover:bg-muted/30 transition-colors"
+                >
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm font-medium text-foreground">{rev.developer_name}</span>
+                    <span className="text-xs text-amber-500">{"★".repeat(rev.rating)}{"☆".repeat(5 - rev.rating)}</span>
+                  </div>
+                  {rev.title && <p className="text-xs text-muted-foreground truncate">{rev.title}</p>}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Empty state */}
+        {!hasActivity && (
+          <div className="rounded-lg border border-dashed border-border bg-card/50 p-6 text-center">
+            <Activity className="w-8 h-8 text-muted-foreground/30 mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground mb-1">Start exploring to personalize your agent</p>
+            <p className="text-xs text-muted-foreground/60">Save items, follow developers, write reviews — every action makes R8 Agent smarter for you.</p>
+            <div className="flex flex-wrap gap-2 justify-center mt-3">
+              <Button variant="outline" size="sm" onClick={() => navigate("/developers")} className="text-xs">
+                <Eye className="w-3 h-3 mr-1" /> Browse Developers
+              </Button>
+              <Button variant="outline" size="sm" onClick={() => navigate("/launch-watch")} className="text-xs">
+                <Rocket className="w-3 h-3 mr-1" /> View Launches
+              </Button>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <div className="ai-divider-glow" />
 
       {/* ── Profile Match Bar ── */}
       <div className="flex items-center gap-3 flex-wrap rounded-lg border border-border bg-card px-4 py-2.5 ai-scale-in">
@@ -257,9 +469,19 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             <AlertCard
               icon={<Info className="w-4 h-4 text-primary" />}
               title="New Verified Reviews"
-              description={`${recentReviewCount} new verified reviews added for developers on your shortlist.`}
+              description={`${recentReviewCount} new verified reviews added this week.`}
               linkText="View Reviews"
               onLink={() => navigate("/reviews")}
+            />
+          )}
+          {activity.followedDevelopers.length > 0 && (
+            <AlertCard
+              icon={<Heart className="w-4 h-4 text-emerald-600" />}
+              title="Agent is Monitoring"
+              description={`Actively tracking ${activity.followedDevelopers.length} developer${activity.followedDevelopers.length > 1 ? "s" : ""} you follow for trust score changes and new reviews.`}
+              linkText="View Portfolio"
+              onLink={() => navigate("/portfolio")}
+              variant="success"
             />
           )}
         </div>
@@ -289,7 +511,7 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
           )}
         </div>
 
-        {/* Developer DNA Cards placeholder */}
+        {/* Developer DNA */}
         <div className="flex items-center gap-2 mb-2">
           <Eye className="w-4 h-4 text-muted-foreground" />
           <h3 className="text-base font-bold text-foreground">Developer DNA Cards</h3>
@@ -411,7 +633,6 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
 
         <p className="text-sm text-muted-foreground mb-4">Compare payment plans across your watchlisted projects matched to your profile and budget.</p>
 
-        {/* Payment Plan Comparison placeholder */}
         <div className="mb-5">
           <h3 className="text-base font-bold text-foreground mb-2">Payment Plan Comparison</h3>
           <div className="rounded-lg border border-border bg-card p-6 text-center">
@@ -444,7 +665,6 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {/* Milestones */}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Clock className="w-4 h-4 text-muted-foreground" />
@@ -456,7 +676,6 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             </div>
           </div>
 
-          {/* Community Alerts */}
           <div>
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4 text-muted-foreground" />
@@ -477,19 +696,23 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
       <div className="ai-divider-glow" />
 
       {/* ════════════════════════════════════════════
-          AGENT CHAT (collapsible at bottom)
+          AGENT CHAT
          ════════════════════════════════════════════ */}
       <section>
         <SectionHeading icon={<MessageCircle className="w-5 h-5" />} title="Ask R8 Agent" subtitle="Query live data — reviews, trust scores, launches, comparisons" />
 
         <div className="rounded-xl overflow-hidden ai-glass ai-shimmer-border relative" style={{ minHeight: 380 }}>
-          {/* Chat header */}
           <div className="flex items-center gap-2 px-4 py-2.5 border-b border-border/30 relative z-10">
             <div className="w-6 h-6 rounded-md bg-gradient-to-br from-primary to-accent flex items-center justify-center">
               <Bot className="w-3.5 h-3.5 text-primary-foreground" />
             </div>
             <span className="text-sm font-semibold text-foreground">R8 Agent</span>
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 ai-pulse-dot" />
+            {hasActivity && (
+              <span className="ml-1 text-[10px] text-muted-foreground">
+                · Knows your {activity.followedDevelopers.length} follows, {activity.savedItems.length} saves
+              </span>
+            )}
             {isLoading && toolStatus && (
               <span className="ml-auto flex items-center gap-1.5 text-[10px] text-primary ai-glass rounded-full px-2.5 py-1 shadow-[0_0_8px_1px_hsla(var(--glow-primary),0.1)]">
                 <Search className="w-3 h-3 animate-pulse" /> Searching database...
@@ -497,17 +720,23 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             )}
           </div>
 
-          {/* Messages */}
           <div ref={scrollRef} className="overflow-y-auto p-4 space-y-3 relative z-10" style={{ maxHeight: 320 }}>
             {messages.length === 0 && (
               <div className="text-center py-6 ai-slide-up">
                 <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mx-auto mb-3 ai-float">
                   <Bot className="w-6 h-6 text-muted-foreground/40" />
                 </div>
-                <p className="text-sm text-muted-foreground mb-1">What would you like to know?</p>
-                <p className="text-xs text-muted-foreground/60 mb-4">I query live data — reviews, trust scores, launches, comparisons</p>
+                <p className="text-sm text-muted-foreground mb-1">
+                  {hasActivity ? "I know your preferences. Ask me anything!" : "What would you like to know?"}
+                </p>
+                <p className="text-xs text-muted-foreground/60 mb-4">
+                  {hasActivity
+                    ? `Based on your ${activity.followedDevelopers.length} follows and ${activity.savedItems.length} saved items`
+                    : "I query live data — reviews, trust scores, launches, comparisons"
+                  }
+                </p>
                 <div className="flex flex-wrap gap-2 justify-center max-w-md mx-auto">
-                  {QUICK_PROMPTS.map((q, i) => (
+                  {quickPrompts.map((q, i) => (
                     <button key={i} onClick={() => sendMessage(q)} className="text-xs px-3 py-1.5 rounded-full ai-glass border border-primary/15 text-primary hover:bg-primary/10 transition-all">
                       {q}
                     </button>
@@ -539,7 +768,6 @@ export const CopilotBriefingDashboard = ({ preferences, riskFlags, onEditPrefere
             )}
           </div>
 
-          {/* Input */}
           <div className="border-t border-border/30 p-3 relative z-10">
             <form onSubmit={e => { e.preventDefault(); sendMessage(); }} className="flex items-center gap-2">
               <input
