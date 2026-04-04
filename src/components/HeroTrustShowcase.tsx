@@ -101,13 +101,17 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
   "showcase.response": MessageCircle,
 };
 
-// ── Component ──
-interface HeroTrustShowcaseProps {
-  onCycleComplete?: () => void;
-}
+// ── Agent teaser data ──
+const agentTeaserPairs = [
+  { question: "Is Ora Developers safe?", answer: "⚠️ 3 red flags found — 18mo delivery delay" },
+  { question: "Best compounds in New Cairo?", answer: "✅ Mivida tops with 98% on-time delivery" },
+  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads in finishing quality by 12%" },
+];
 
-export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = {}) => {
+// ── Component ──
+export const HeroTrustShowcase = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const [score, setScore] = useState(0);
   const [displayScore, setDisplayScore] = useState(0);
   const [phase, setPhase] = useState<"entrance" | "interactive">("entrance");
@@ -115,15 +119,17 @@ export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = 
   const [rowsVisible, setRowsVisible] = useState(0);
   const [transitioning, setTransitioning] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
+  const [cardPhase, setCardPhase] = useState<"reviews" | "agent">("reviews");
+  const [teaserIdx, setTeaserIdx] = useState(0);
+  const [teaserTypedChars, setTeaserTypedChars] = useState(0);
+  const [teaserShowAnswer, setTeaserShowAnswer] = useState(false);
   const animRef = useRef<number | null>(null);
   const cycleIdxRef = useRef(1);
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runEntranceRef = useRef<(() => void) | null>(null);
   const cycleCountRef = useRef(0);
-  const cycleCompleteCalledRef = useRef(false);
-  const onCycleCompleteRef = useRef(onCycleComplete);
-  onCycleCompleteRef.current = onCycleComplete;
+  const agentShownRef = useRef(false);
   const entranceTarget = 88;
 
   // ── Auto-cycle logic ──
