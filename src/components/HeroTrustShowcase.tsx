@@ -115,7 +115,7 @@ export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = 
   const [transitioning, setTransitioning] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const animRef = useRef<number | null>(null);
-  const cycleIdxRef = useRef(2);
+  const cycleIdxRef = useRef(1);
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runEntranceRef = useRef<(() => void) | null>(null);
