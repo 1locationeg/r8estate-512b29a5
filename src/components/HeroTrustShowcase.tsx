@@ -45,22 +45,6 @@ const scenarioDefs: ReviewScenarioDef[] = [
     trustLabelKey: "showcase.lowTrust",
   },
   {
-    score: 55,
-    reviewer: "Sara M.",
-    initial: "S",
-    avatar: "https://i.pravatar.cc/80?img=5",
-    project: "Open Air Mall",
-    location: "New Cairo",
-    developer: "Marakez",
-    rating: 3,
-    commentKey: "showcase.comment2",
-    dimensions: [
-      { labelKey: "showcase.delivery", valueKey: "showcase.3moLate", positive: false },
-      { labelKey: "showcase.quality", valueKey: "showcase.average", positive: false },
-    ],
-    trustLabelKey: "showcase.mixed",
-  },
-  {
     score: 88,
     reviewer: "Noor M.",
     initial: "F",
@@ -94,7 +78,7 @@ const scenarioDefs: ReviewScenarioDef[] = [
   },
 ];
 
-const presets = [25, 55, 88, 97];
+const presets = [25, 88, 97];
 
 function getClosestScenario(score: number): ReviewScenarioDef {
   let closest = scenarioDefs[0];
