@@ -487,6 +487,16 @@ const AdminUsers = () => {
 
   useEffect(() => { fetchUsers(); }, []);
 
+  useEffect(() => {
+    if (!selectedUser) return;
+
+    const refreshedUser = users.find((candidate) => candidate.id === selectedUser.id);
+
+    if (refreshedUser && refreshedUser !== selectedUser) {
+      setSelectedUser(refreshedUser);
+    }
+  }, [users, selectedUser]);
+
   const openBusinessProfile = async (targetUser: {
     id: string;
     full_name: string | null;
@@ -834,29 +844,30 @@ const AdminUsers = () => {
               {nonAdminUsers.map((u) => (
                 <tr key={u.id} className="hover:bg-secondary/30 transition-colors cursor-pointer" onClick={() => setSelectedUser(u)}>
                   <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-8 w-8">
+                    <button
+                      type="button"
+                      className="flex w-full items-center gap-3 text-start group"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedUser(u);
+                      }}
+                    >
+                      <Avatar className="h-8 w-8 shrink-0">
                         {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
                         <AvatarFallback className="text-[10px] bg-primary/10 text-primary">
                           {(u.full_name || u.email || '?')[0].toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                         <button
-                           type="button"
-                           className="text-start group"
-                           onClick={() => void openBusinessProfile(u)}
-                         >
-                           <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary group-hover:underline">
-                             {u.full_name || 'No name'}
-                           </p>
-                         </button>
-                         {u.business_company_name && (
-                           <p className="text-[10px] text-primary font-medium">{u.business_company_name}</p>
-                         )}
+                        <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary group-hover:underline">
+                          {u.full_name || 'No name'}
+                        </p>
+                        {u.business_company_name && (
+                          <p className="text-[10px] text-primary font-medium">{u.business_company_name}</p>
+                        )}
                         <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
-                    </div>
+                    </button>
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex flex-wrap gap-1">
@@ -879,17 +890,33 @@ const AdminUsers = () => {
                   {manageableRoles.length > 0 && (
                     <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1 justify-end flex-wrap">
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="outline"
+                          className="text-[10px] h-7 px-2"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedUser(u);
+                          }}
+                        >
+                          <Eye className="w-3 h-3 me-1" />Manage
+                        </Button>
                         {manageableRoles.map(ar => {
                           const hasRole = u.roles.includes(ar.value);
                           const isUpdating = updatingId === u.id;
                           return (
                             <Button
+                              type="button"
                               key={ar.value}
                               size="sm"
                               variant={hasRole ? 'default' : 'outline'}
                               disabled={isUpdating}
                               className="text-[10px] h-7 px-2"
-                              onClick={() => handleRoleChange(u.id, ar.value, hasRole ? 'remove' : 'add')}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                void handleRoleChange(u.id, ar.value, hasRole ? 'remove' : 'add');
+                              }}
                             >
                               {isUpdating ? (
                                 <Loader2 className="w-3 h-3 animate-spin" />
@@ -903,10 +930,14 @@ const AdminUsers = () => {
                         })}
                         {(u.roles.includes('business') || u.business_profile_id) && (
                           <Button
+                            type="button"
                             size="sm"
                             variant="ghost"
                             className="text-[10px] h-7 px-2"
-                            onClick={() => void openBusinessProfile(u)}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              void openBusinessProfile(u);
+                            }}
                           >
                             <ExternalLink className="w-3 h-3 me-1" />Open Page
                           </Button>
@@ -925,10 +956,7 @@ const AdminUsers = () => {
         user={selectedUser}
         open={!!selectedUser}
         onOpenChange={(open) => { if (!open) setSelectedUser(null); }}
-        onRoleChange={async (userId, role, action) => {
-          await handleRoleChange(userId, role, action);
-          setSelectedUser(null);
-        }}
+        onRoleChange={handleRoleChange}
         manageableRoles={manageableRoles}
         updatingId={updatingId}
       />
