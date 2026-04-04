@@ -75,7 +75,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
     } else {
       // Enrich with author info
       const userIds = [...new Set((data || []).map((p: any) => p.user_id))];
-      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null; email: string | null }> = {};
+      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null }> = {};
       
       if (userIds.length > 0) {
         const { data: profiles } = await supabase
