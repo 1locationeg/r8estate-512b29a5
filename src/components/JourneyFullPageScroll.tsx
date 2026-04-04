@@ -382,8 +382,8 @@ const JourneyStepSection = ({
     <section
       id={id}
       className={cn(
-        "w-full flex items-center justify-center relative overflow-hidden transition-all duration-500",
-        isExpanded ? "min-h-[100dvh]" : "min-h-[100dvh] snap-start"
+        "w-full flex items-center justify-center relative overflow-hidden transition-all duration-500 py-10 md:py-16",
+        isExpanded ? "min-h-[80dvh]" : "snap-start"
       )}
       style={{
         background: `linear-gradient(135deg, hsl(${station.hslVar} / 0.06) 0%, hsl(${station.hslVar} / 0.02) 50%, transparent 100%)`,
