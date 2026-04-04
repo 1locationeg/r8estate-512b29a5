@@ -182,7 +182,7 @@ export function useCommunityPost(postId: string | null) {
 
     setPost({
       ...postData,
-      author_name: profile?.full_name || (profile as any)?.email?.split('@')[0] || "User",
+      author_name: profile?.full_name || "User",
       author_avatar: profile?.avatar_url || undefined,
       user_voted: userVoted,
     } as CommunityPost);
