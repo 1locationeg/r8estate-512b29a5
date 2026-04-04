@@ -41,7 +41,7 @@ import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroAgentDemo } from "@/components/HeroAgentDemo";
 
-const Index = () => {
+const Index = () => { // hero-phase-v2
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
