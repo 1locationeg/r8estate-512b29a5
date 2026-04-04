@@ -144,8 +144,19 @@ export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = 
   // ── Auto-cycle logic ──
   const startCycling = useCallback(() => {
     if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    cycleCountRef.current = 0;
+    cycleCompleteCalledRef.current = false;
     cycleIntervalRef.current = setInterval(() => {
       cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarioDefs.length;
+      cycleCountRef.current += 1;
+
+      // After showing all 4 scenarios (entrance shows idx=2, then cycle shows 3,0,1,2 = 4 transitions)
+      if (cycleCountRef.current >= scenarioDefs.length && !cycleCompleteCalledRef.current) {
+        cycleCompleteCalledRef.current = true;
+        if (onCycleCompleteRef.current) {
+          onCycleCompleteRef.current();
+        }
+      }
 
       // When wrapping back to start, just crossfade like any other transition (no replay reset)
       const nextScore = scenarioDefs[cycleIdxRef.current].score;
