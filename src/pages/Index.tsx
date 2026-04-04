@@ -430,7 +430,7 @@ const Index = () => {
 
             {/* Business view */}
             {role !== 'business' && role !== 'admin' && (
-              <button onClick={switchToBuyerView} className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors">
+              <button onClick={switchToBuyerView} className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-business-border/30 bg-business text-business-foreground text-xs font-semibold hover:bg-business/80 transition-colors">
                 <ArrowRight className="w-3.5 h-3.5 rotate-180" />
                 Not a business? Switch to Buyer View
               </button>
