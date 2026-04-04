@@ -391,255 +391,137 @@ export const HeroTrustShowcase = () => {
         </div>
       </div>
 
-      {/* ── Review Card ── */}
-      <div
-        className={`relative -mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden transition-all min-h-[180px] ${
-          transitioning ? "opacity-40" : "opacity-100"
-        }`}
-        style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
-      >
-        <div className="p-3 space-y-1.5">
-          {/* Row 1: Project location - centered & bold */}
-          <div
-            className={`flex justify-center transition-all duration-300 ${
-              rowsVisible >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-          >
-            <span className="text-xs md:text-sm font-bold text-foreground flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-primary" />
-              {scenario.project} · {scenario.location}
-            </span>
-          </div>
+      {/* ── Review Card / Agent Teaser ── */}
+      <div className="relative -mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden min-h-[180px]">
+        {/* Reviews content */}
+        <div
+          className={`transition-opacity duration-500 ${
+            cardPhase === "reviews" ? "opacity-100" : "opacity-0 absolute inset-0 pointer-events-none"
+          } ${transitioning ? "opacity-40" : ""}`}
+          style={{ transitionDuration: transitioning ? "200ms" : "600ms" }}
+        >
+          <div className="p-3 space-y-1.5">
+            {/* Row 1: Project location */}
+            <div className={`flex justify-center transition-all duration-300 ${rowsVisible >= 1 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+              <span className="text-xs md:text-sm font-bold text-foreground flex items-center gap-1.5">
+                <MapPin className="w-3.5 h-3.5 text-primary" />
+                {scenario.project} · {scenario.location}
+              </span>
+            </div>
 
-          {/* Row 2: Reviewer info */}
-          <div
-            className={`flex items-center gap-2 transition-all duration-300 ${
-              rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-          >
-            <img
-              src={scenario.avatar}
-              alt={scenario.reviewer}
-              className="w-7 h-7 rounded-full object-cover flex-shrink-0"
-            />
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
-                {/* Facebook-style verified badge */}
-                <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
-                  <path d="M12 2L14.09 4.26L17 3.29L17.47 6.29L20.39 7.1L19.42 10L21.68 12L19.42 14L20.39 16.9L17.47 17.71L17 20.71L14.09 19.74L12 22L9.91 19.74L7 20.71L6.53 17.71L3.61 16.9L4.58 14L2.32 12L4.58 10L3.61 7.1L6.53 6.29L7 3.29L9.91 4.26L12 2Z" fill="#1877F2"/>
-                  <path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <div className="flex items-center gap-0.5">
-                  {Array.from({ length: 5 }).map((_, i) => (
-                    <Star
-                      key={i}
-                      className={`w-3 h-3 ${
-                        i < Math.floor(scenario.rating)
-                          ? "text-accent fill-accent"
-                          : i < scenario.rating
-                          ? "text-accent fill-accent/50"
-                          : "text-muted-foreground/30"
-                      }`}
-                    />
-                  ))}
+            {/* Row 2: Reviewer info */}
+            <div className={`flex items-center gap-2 transition-all duration-300 ${rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+              <img src={scenario.avatar} alt={scenario.reviewer} className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
+                  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+                    <path d="M12 2L14.09 4.26L17 3.29L17.47 6.29L20.39 7.1L19.42 10L21.68 12L19.42 14L20.39 16.9L17.47 17.71L17 20.71L14.09 19.74L12 22L9.91 19.74L7 20.71L6.53 17.71L3.61 16.9L4.58 14L2.32 12L4.58 10L3.61 7.1L6.53 6.29L7 3.29L9.91 4.26L12 2Z" fill="#1877F2"/>
+                    <path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                  <div className="flex items-center gap-0.5">
+                    {Array.from({ length: 5 }).map((_, i) => (
+                      <Star key={i} className={`w-3 h-3 ${i < Math.floor(scenario.rating) ? "text-accent fill-accent" : i < scenario.rating ? "text-accent fill-accent/50" : "text-muted-foreground/30"}`} />
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-muted-foreground">{t("showcase.weeksAgo")}</span>
                 </div>
-                <span className="text-[10px] text-muted-foreground">{t("showcase.weeksAgo")}</span>
               </div>
             </div>
-          </div>
 
-          {/* Row 3: Quote */}
-          <div
-            className={`transition-all duration-300 ${
-              rowsVisible >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-          >
-            <p className="text-xs md:text-base text-foreground/80 italic leading-relaxed line-clamp-2">
-              {t(scenario.commentKey)}
-            </p>
-          </div>
-
-          {/* Row 4: Dimension pills */}
-          <div
-            className={`flex flex-nowrap gap-2 justify-center overflow-hidden transition-all duration-300 ${
-              rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-          >
-            {scenario.dimensions.map((dim) => {
-              const Icon = dimensionIconKeys[dim.labelKey] || Clock;
-              return (
-                <span
-                  key={dim.labelKey}
-                  className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[10px] font-semibold border ${
-                    dim.positive
-                      ? "bg-trust-excellent/10 text-trust-excellent border-trust-excellent/20"
-                      : "bg-destructive/10 text-destructive border-destructive/20"
-                  }`}
-                >
-                  <Icon className="w-3 h-3" />
-                  <span className="text-foreground/60">{t(dim.labelKey)}</span>
-                  <span className="font-bold">{t(dim.valueKey)}</span>
-                </span>
-              );
-            })}
-          </div>
-
-          {/* Row 5: Footer — developer name, slider, trust label */}
-          <div
-            className={`pt-1.5 border-t border-border transition-all duration-300 flex items-center gap-2 ${
-              rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
-            }`}
-          >
-            {/* Left: House + Name */}
-            <div className="flex-shrink-0 flex items-center gap-1.5">
-              <div className="relative w-5 h-5">
-                <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                  <rect x="8" y="38" width="32" height="6" rx="1"
-                    fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 10 ? 1 : 0.25}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="10" y="20" width="6" height="18" rx="1"
-                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 25 ? 0.85 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-                  />
-                  <rect x="32" y="20" width="6" height="18" rx="1"
-                    fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 25 ? 0.85 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }}
-                  />
-                  <rect x="20" y="28" width="8" height="10" rx="1"
-                    fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 40 ? 0.7 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="12" y="24" width="5" height="5" rx="0.5"
-                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <rect x="31" y="24" width="5" height="5" rx="0.5"
-                    fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"}
-                    stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1}
-                    style={{ transition: 'all 0.4s ease' }}
-                  />
-                  <polygon points="24,6 4,22 44,22"
-                    fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"}
-                    opacity={displayScore >= 65 ? 1 : 0.15}
-                    style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }}
-                  />
-                  {displayScore >= 80 && (
-                    <g style={{ animation: 'fade-in 0.4s ease-out' }}>
-                      <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
-                      <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    </g>
-                  )}
-                </svg>
-              </div>
-              <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">{scenario.developer}</span>
+            {/* Row 3: Quote */}
+            <div className={`transition-all duration-300 ${rowsVisible >= 3 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+              <p className="text-xs md:text-base text-foreground/80 italic leading-relaxed line-clamp-2">{t(scenario.commentKey)}</p>
             </div>
 
-            {/* Middle: Slider */}
-            <div className="flex-1 relative h-[18px] flex items-center min-w-0">
-              <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
-              <div
-                className="absolute h-[3px] rounded-full pointer-events-none z-[11]"
-                style={{
-                  left: '9px',
-                  width: `calc(${displayScore}% * (1 - 18px / 100%) - 9px)`,
-                  background: displayScore <= 2 ? 'transparent' : getScoreColor(displayScore),
-                  top: '50%',
-                  transform: 'translateY(-50%)',
-                  transition: 'background 0.3s',
-                  maxWidth: 'calc(100% - 27px)',
-                  minWidth: 0,
-                }}
-              />
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={1}
-                value={displayScore}
-                onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])}
-                onChange={(e) => handleSliderChange([Number(e.target.value)])}
-                className="trust-slider w-full h-[18px] appearance-none bg-transparent outline-none cursor-pointer relative z-10"
-                style={{ background: 'transparent' }}
-                ref={(el) => {
+            {/* Row 4: Dimension pills */}
+            <div className={`flex flex-nowrap gap-2 justify-center overflow-hidden transition-all duration-300 ${rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+              {scenario.dimensions.map((dim) => {
+                const Icon = dimensionIconKeys[dim.labelKey] || Clock;
+                return (
+                  <span key={dim.labelKey} className={`inline-flex items-center gap-1 px-1.5 py-0.5 rounded-lg text-[10px] font-semibold border ${dim.positive ? "bg-trust-excellent/10 text-trust-excellent border-trust-excellent/20" : "bg-destructive/10 text-destructive border-destructive/20"}`}>
+                    <Icon className="w-3 h-3" />
+                    <span className="text-foreground/60">{t(dim.labelKey)}</span>
+                    <span className="font-bold">{t(dim.valueKey)}</span>
+                  </span>
+                );
+              })}
+            </div>
+
+            {/* Row 5: Footer — developer name, slider, trust label */}
+            <div className={`pt-1.5 border-t border-border transition-all duration-300 flex items-center gap-2 ${rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+              <div className="flex-shrink-0 flex items-center gap-1.5">
+                <div className="relative w-5 h-5">
+                  <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="8" y="38" width="32" height="6" rx="1" fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 10 ? 1 : 0.25} style={{ transition: 'all 0.4s ease' }} />
+                    <rect x="10" y="20" width="6" height="18" rx="1" fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 25 ? 0.85 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }} />
+                    <rect x="32" y="20" width="6" height="18" rx="1" fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 25 ? 0.85 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }} />
+                    <rect x="20" y="28" width="8" height="10" rx="1" fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 40 ? 0.7 : 0.1} style={{ transition: 'all 0.4s ease' }} />
+                    <rect x="12" y="24" width="5" height="5" rx="0.5" fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"} stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"} strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1} style={{ transition: 'all 0.4s ease' }} />
+                    <rect x="31" y="24" width="5" height="5" rx="0.5" fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"} stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"} strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1} style={{ transition: 'all 0.4s ease' }} />
+                    <polygon points="24,6 4,22 44,22" fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 65 ? 1 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }} />
+                    {displayScore >= 80 && (
+                      <g style={{ animation: 'fade-in 0.4s ease-out' }}>
+                        <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
+                        <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </g>
+                    )}
+                  </svg>
+                </div>
+                <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">{scenario.developer}</span>
+              </div>
+
+              <div className="flex-1 relative h-[18px] flex items-center min-w-0">
+                <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
+                <div className="absolute h-[3px] rounded-full pointer-events-none z-[11]" style={{ left: '9px', width: `calc(${displayScore}% * (1 - 18px / 100%) - 9px)`, background: displayScore <= 2 ? 'transparent' : getScoreColor(displayScore), top: '50%', transform: 'translateY(-50%)', transition: 'background 0.3s', maxWidth: 'calc(100% - 27px)', minWidth: 0 }} />
+                <input type="range" min={0} max={100} step={1} value={displayScore} onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])} onChange={(e) => handleSliderChange([Number(e.target.value)])} className="trust-slider w-full h-[18px] appearance-none bg-transparent outline-none cursor-pointer relative z-10" style={{ background: 'transparent' }} ref={(el) => {
                   if (el) {
                     const c = getScoreColor(displayScore);
-                    const styleEl = document.getElementById('slider-thumb-style') || (() => {
-                      const s = document.createElement('style');
-                      s.id = 'slider-thumb-style';
-                      document.head.appendChild(s);
-                      return s;
-                    })();
-                    styleEl.textContent = `
-                      .trust-slider { transition: none; background: transparent !important; }
-                      .trust-slider::-webkit-slider-runnable-track { background: transparent; height: 18px; border-radius: 9999px; }
-                      .trust-slider::-moz-range-track { background: transparent; height: 18px; border-radius: 9999px; }
-                      .trust-slider::-webkit-slider-thumb {
-                        -webkit-appearance: none;
-                        appearance: none;
-                        width: 18px; height: 18px;
-                        border-radius: 50%;
-                        background: hsl(var(--background));
-                        border: 3px solid ${c};
-                        box-shadow: 0 0 8px 2px ${c}40;
-                        cursor: pointer;
-                        margin-top: 0;
-                        transition: border-color 0.3s, box-shadow 0.3s;
-                      }
-                      .trust-slider::-moz-range-thumb {
-                        width: 18px; height: 18px;
-                        border-radius: 50%;
-                        background: hsl(var(--background));
-                        border: 3px solid ${c};
-                        box-shadow: 0 0 8px 2px ${c}40;
-                        cursor: pointer;
-                        transition: border-color 0.3s, box-shadow 0.3s;
-                      }
-                      .trust-slider:active::-webkit-slider-thumb,
-                      .trust-slider:active::-moz-range-thumb {
-                        transform: scale(1.15);
-                        box-shadow: 0 0 12px 4px ${c}60;
-                      }
-                    `;
+                    const styleEl = document.getElementById('slider-thumb-style') || (() => { const s = document.createElement('style'); s.id = 'slider-thumb-style'; document.head.appendChild(s); return s; })();
+                    styleEl.textContent = `.trust-slider { transition: none; background: transparent !important; } .trust-slider::-webkit-slider-runnable-track { background: transparent; height: 18px; border-radius: 9999px; } .trust-slider::-moz-range-track { background: transparent; height: 18px; border-radius: 9999px; } .trust-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--background)); border: 3px solid ${c}; box-shadow: 0 0 8px 2px ${c}40; cursor: pointer; margin-top: 0; transition: border-color 0.3s, box-shadow 0.3s; } .trust-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--background)); border: 3px solid ${c}; box-shadow: 0 0 8px 2px ${c}40; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s; } .trust-slider:active::-webkit-slider-thumb, .trust-slider:active::-moz-range-thumb { transform: scale(1.15); box-shadow: 0 0 12px 4px ${c}60; }`;
                   }
-                }}
-              />
-              {!hasInteracted && phase === "interactive" && (
-                <div
-                  className="absolute pointer-events-none animate-bounce"
-                  style={{
-                    left: `${displayScore}%`,
-                    top: '-18px',
-                    transform: 'translateX(-50%)',
-                    animationDuration: '1.5s',
-                  }}
-                >
-                  <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
-                </div>
-              )}
-            </div>
+                }} />
+                {!hasInteracted && phase === "interactive" && (
+                  <div className="absolute pointer-events-none animate-bounce" style={{ left: `${displayScore}%`, top: '-18px', transform: 'translateX(-50%)', animationDuration: '1.5s' }}>
+                    <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
+                  </div>
+                )}
+              </div>
 
-            {/* Right: Trust Label */}
-            <span
-              className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap"
-              style={{
-                color,
-                borderColor: color,
-                backgroundColor: `${color}15`,
-              }}
-            >
-              {t(scenario.trustLabelKey)}
-            </span>
+              <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap" style={{ color, borderColor: color, backgroundColor: `${color}15` }}>
+                {t(scenario.trustLabelKey)}
+              </span>
+            </div>
           </div>
         </div>
+
+        {/* Agent Teaser content */}
+        {cardPhase === "agent" && (
+          <div className="p-3 flex flex-col justify-center min-h-[180px] animate-fade-in">
+            <div className="flex items-center gap-1.5 mb-3">
+              <Sparkles className="w-3.5 h-3.5 text-primary" />
+              <span className="text-[10px] font-bold text-primary tracking-wide uppercase">R8 Agent</span>
+              <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse" />
+            </div>
+
+            <p className="text-sm md:text-base font-semibold text-foreground mb-1.5">
+              "{agentTeaserPairs[teaserIdx].question.slice(0, teaserTypedChars)}"
+              {teaserTypedChars < agentTeaserPairs[teaserIdx].question.length && <span className="animate-pulse text-primary">|</span>}
+            </p>
+
+            <div className={`transition-opacity duration-500 ${teaserShowAnswer ? "opacity-100" : "opacity-0"}`}>
+              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{agentTeaserPairs[teaserIdx].answer}</p>
+            </div>
+
+            <button
+              onClick={() => navigate("/copilot")}
+              className="mt-3 self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+            >
+              Try R8 Agent
+              <ArrowRight className="w-3 h-3" />
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
