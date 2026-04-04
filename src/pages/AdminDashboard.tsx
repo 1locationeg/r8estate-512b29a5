@@ -42,6 +42,7 @@ import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 
 const AdminOverview = () => {
+  const navigate = useNavigate();
   const [dashData, setDashData] = useState({
     totalUsers: 0,
     totalBusinesses: 0,
@@ -233,7 +234,7 @@ const AdminOverview = () => {
               <p className="text-xs text-muted-foreground text-center py-6">No users yet</p>
             ) : (
               dashData.recentUsers.map((u) => (
-                <div key={u.id} className="flex items-center justify-between">
+                <div key={u.id} className="flex items-center justify-between cursor-pointer hover:bg-secondary/40 rounded-lg p-1 -mx-1 transition-colors" onClick={() => navigate('/admin/users')}>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-9 w-9">
                       {u.avatar_url && <img src={u.avatar_url} alt="" className="w-full h-full object-cover rounded-full" />}
@@ -242,7 +243,7 @@ const AdminOverview = () => {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="text-xs font-medium text-foreground">{u.full_name || 'Anonymous'}</p>
+                      <p className="text-xs font-medium text-foreground hover:underline">{u.full_name || 'Anonymous'}</p>
                       <p className="text-[10px] text-muted-foreground">{timeAgo(u.created_at)}</p>
                     </div>
                   </div>
@@ -266,7 +267,7 @@ const AdminOverview = () => {
               <p className="text-xs text-muted-foreground text-center py-6">No businesses yet</p>
             ) : (
               dashData.recentBusinesses.map((b) => (
-                <div key={b.id} className="flex items-center gap-3">
+                <div key={b.id} className="flex items-center gap-3 cursor-pointer hover:bg-secondary/40 rounded-lg p-1 -mx-1 transition-colors" onClick={() => navigate(`/entity/${b.id}`)}>
                   <Avatar className="h-9 w-9">
                     {b.logo_url && <img src={b.logo_url} alt="" className="w-full h-full object-cover rounded-full" />}
                     <AvatarFallback className="text-[10px] font-bold bg-accent/20 text-accent-foreground">
@@ -274,9 +275,10 @@ const AdminOverview = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-foreground truncate">{b.company_name || 'Unnamed'}</p>
+                    <p className="text-xs font-medium text-foreground truncate hover:underline">{b.company_name || 'Unnamed'}</p>
                     <p className="text-[10px] text-muted-foreground">{timeAgo(b.created_at)}</p>
                   </div>
+                  <Eye className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 </div>
               ))
             )}
@@ -433,6 +435,7 @@ const PERMISSION_LEVELS = [
 
 const AdminUsers = () => {
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<Array<{
     id: string;
     email: string;
@@ -786,7 +789,19 @@ const AdminUsers = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium text-foreground">{u.full_name || 'No name'}</p>
+                        <p className="text-sm font-medium text-foreground cursor-pointer hover:underline hover:text-primary transition-colors"
+                           onClick={() => {
+                             if (u.roles.includes('business')) {
+                               // Navigate to the business entity page
+                               supabase.from('business_profiles').select('id').eq('user_id', u.id).maybeSingle().then(({ data }) => {
+                                 if (data) navigate(`/entity/${data.id}`);
+                                 else toast.info('No business profile found for this user');
+                               });
+                             } else {
+                               toast.info(`${u.full_name || 'User'} — ${u.email}`);
+                             }
+                           }}
+                        >{u.full_name || 'No name'}</p>
                         <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
                     </div>
