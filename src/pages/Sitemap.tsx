@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
+import { PageHeader } from "@/components/PageHeader";
 import { getSearchIndex, type SearchCategory } from "@/data/searchIndex";
 import { PUBLIC_ROUTES } from "@/data/routeRegistry";
 import { categories as heroCats } from "@/components/HeroCategoryItems";
@@ -103,6 +105,8 @@ const Sitemap = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <Navbar userMode="buyers" onSwitchToBusinessView={() => {}} onSwitchToBuyerView={() => {}} togglePulse={false} onSignOut={() => {}} getDashboardRoute={() => "/buyer"} />
+      <PageHeader title="Sitemap" breadcrumbs={[{ label: "Sitemap" }]} />
       <main className="flex-1 container mx-auto px-4 py-8 pb-24">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div className="flex items-center gap-3">
