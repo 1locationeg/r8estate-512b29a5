@@ -75,12 +75,12 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
     } else {
       // Enrich with author info
       const userIds = [...new Set((data || []).map((p: any) => p.user_id))];
-      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null; email: string | null }> = {};
+      let profileMap: Record<string, { full_name: string | null; avatar_url: string | null }> = {};
       
       if (userIds.length > 0) {
         const { data: profiles } = await supabase
-          .from("profiles")
-          .select("user_id, full_name, avatar_url, email")
+          .from("public_profiles")
+          .select("user_id, full_name, avatar_url")
           .in("user_id", userIds as string[]);
         if (profiles) {
           profileMap = Object.fromEntries(profiles.map((p: any) => [p.user_id, p]));
@@ -115,7 +115,7 @@ export function useCommunityPosts(category?: CommunityPostCategory, sortBy: 'tre
         })
         .map((p: any) => ({
           ...p,
-          author_name: profileMap[p.user_id]?.full_name || profileMap[p.user_id]?.email?.split('@')[0] || "User",
+          author_name: profileMap[p.user_id]?.full_name || "User",
           author_avatar: profileMap[p.user_id]?.avatar_url || undefined,
           user_voted: votedPostIds.has(p.id),
         }));
@@ -163,8 +163,8 @@ export function useCommunityPost(postId: string | null) {
 
     // Author info
     const { data: profile } = await supabase
-      .from("profiles")
-      .select("full_name, avatar_url, email")
+      .from("public_profiles")
+      .select("full_name, avatar_url")
       .eq("user_id", postData.user_id)
       .single();
 
@@ -182,7 +182,7 @@ export function useCommunityPost(postId: string | null) {
 
     setPost({
       ...postData,
-      author_name: profile?.full_name || (profile as any)?.email?.split('@')[0] || "User",
+      author_name: profile?.full_name || "User",
       author_avatar: profile?.avatar_url || undefined,
       user_voted: userVoted,
     } as CommunityPost);
@@ -197,8 +197,8 @@ export function useCommunityPost(postId: string | null) {
     if (repliesData && repliesData.length > 0) {
       const replyUserIds = [...new Set(repliesData.map((r: any) => r.user_id))];
       const { data: replyProfiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, email")
+        .from("public_profiles")
+        .select("user_id, full_name, avatar_url")
         .in("user_id", replyUserIds);
       const profileMap = Object.fromEntries((replyProfiles || []).map((p: any) => [p.user_id, p]));
 
@@ -215,7 +215,7 @@ export function useCommunityPost(postId: string | null) {
 
       const enriched: CommunityReply[] = repliesData.map((r: any) => ({
         ...r,
-        author_name: profileMap[r.user_id]?.full_name || profileMap[r.user_id]?.email?.split('@')[0] || "User",
+        author_name: profileMap[r.user_id]?.full_name || "User",
         author_avatar: profileMap[r.user_id]?.avatar_url || undefined,
         user_voted: votedReplyIds.has(r.id),
       }));

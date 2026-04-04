@@ -47,7 +47,7 @@ export const NewConversationDialog = ({ onStartConversation }: NewConversationDi
 
     // Fetch profiles
     let profileQuery = supabase
-      .from('profiles')
+      .from('public_profiles')
       .select('user_id, full_name, avatar_url')
       .neq('user_id', user.id)
       .limit(20);
