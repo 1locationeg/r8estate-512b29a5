@@ -298,10 +298,8 @@ const Index = () => {
     </div>
   );
 
-  console.log('[Index] rendering, userMode:', userMode);
-
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full" style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" as any }}>
+    <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full snap-y snap-mandatory" style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" as any }}>
       <Navbar
         userMode={userMode}
         onSwitchToBusinessView={switchToBusinessView}
@@ -313,9 +311,7 @@ const Index = () => {
 
       {userMode === "buyers" ? (
         <>
-          <section id="journey-hero" className="w-full flex flex-col">
-            {heroBlock}
-          </section>
+          <JourneyFullPageScroll heroContent={heroBlock} />
 
           {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
           <section className="flex-1 flex flex-col snap-start" style={{ scrollSnapAlign: 'start' }}>
