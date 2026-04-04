@@ -176,6 +176,10 @@ const CopilotPage = () => {
           </div>
         )}
 
+        {showInit && (
+          <AgentInitScreen onDone={handleInitDone} />
+        )}
+
         {showOnboarding && (
           <CopilotOnboarding onComplete={handleOnboardingComplete} />
         )}
