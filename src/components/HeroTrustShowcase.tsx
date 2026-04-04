@@ -276,7 +276,7 @@ export const HeroTrustShowcase = ({ onCycleComplete }: HeroTrustShowcaseProps = 
     if (animRef.current) cancelAnimationFrame(animRef.current);
     if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
-    cycleIdxRef.current = 2;
+    cycleIdxRef.current = 1;
     runEntrance();
   };
 
