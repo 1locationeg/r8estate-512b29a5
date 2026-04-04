@@ -1,45 +1,88 @@
 
 
-# Apply Full Business Theme When User Switches to Business Mode
+# Live Agentic Demo — Hero Right Panel (Gauge Untouched)
 
-## Problem
-When a user toggles to "Business" mode on the homepage, the content still uses the buyer's navy/primary color palette. Cards, stats, CTAs, icons, gradients, and the hero section all remain in the buyer theme. The user should feel an immediate visual shift — everything should turn "Forest Green" to signal they're in a different world.
+## Overview
 
-## Approach
-Wrap the entire business section in a CSS class (e.g., `business-mode`) that overrides CSS custom properties, flipping `--primary`, `--accent`, and related tokens to the business green palette. This way, every component inside automatically inherits the business theme without editing each individual component.
+Add a **Live Agent Demo** component to the right side of the hero section, while keeping the existing `HeroTrustShowcase` (gauge + slider + review card) **exactly as-is** on the left side. The demo simulates a real-time R8 Agent conversation to create an immediate "agentic" first impression.
 
-## Changes
+## Layout Change
 
-### 1. Add Business Mode CSS Override (`src/index.css`)
-Add a `.business-mode` class that remaps core CSS variables:
-- `--primary` → business green (`93 72% 25%` / #3B6D11)
-- `--primary-foreground` → white
-- `--accent` → lighter business green
-- `--secondary` → business fill (#EAF3DE)
-- Subtle green-tinted backgrounds
+The hero card interior (line 228 in `Index.tsx`) becomes a **2-column grid on desktop**, stacked on mobile:
 
-This single class cascades through all child components (buttons, badges, cards, stats, gradients).
+```text
+┌──────────────────────────────────────────────────────┐
+│  Platform Badge + Headline + Search Bar              │
+├──────────────────────────┬───────────────────────────┤
+│  LEFT (existing)         │  RIGHT (new)              │
+│                          │                           │
+│  HeroTrustShowcase       │  ┌─ Agent Window ───────┐ │
+│  (gauge, slider,         │  │ ✦ R8 Agent · Online  │ │
+│   review card —          │  │                       │ │
+│   UNTOUCHED)             │  │ User typing...        │ │
+│                          │  │ Agent thinking...     │ │
+│                          │  │ Result card slides in │ │
+│                          │  │ Agent recommendation  │ │
+│                          │  │ [Compare] [Reviews]   │ │
+│                          │  └───────────────────────┘ │
+├──────────────────────────┴───────────────────────────┤
+│  MiniJourneyArc + TractionStats (full width)         │
+└──────────────────────────────────────────────────────┘
+```
 
-### 2. Apply `business-mode` class to Industry Section (`src/pages/Index.tsx`)
-- Wrap the entire `userMode === "industry"` block (lines 408–503) in a `div` with `className="business-mode"`
-- Update the hero card gradient from `from-primary/[0.03]` to use business-specific greens
-- Change the CTA button from `bg-primary` to `bg-business-border` with `text-white`
-- Update stat numbers from `text-primary` / `text-accent` to `text-business-border` / `text-business-foreground`
-- Update icon backgrounds from `bg-primary/10` to `bg-business-border/10` with `text-business-border` icons
-- Change the "Not a business?" banner from primary tints to business tints
-- Update the hero `ai-glow` to use a green glow variant
+Mobile: stacked — gauge first, then agent demo below.
 
-### 3. Update Navbar Business Toggle Feedback (`src/components/Navbar.tsx`)
-When in business/industry mode, tint the navbar bottom border green:
-- Add a conditional class on the `<header>` to show a green bottom border when `userMode === "industry"`
+## New File: `src/components/HeroAgentDemo.tsx`
 
-### 4. Trust Badges Footer Section (`src/pages/Index.tsx`)
-When in business mode, change the trust badge strip (lines 512–521) from `border-verified` / `border-accent` to business green variants.
+A self-contained ~280-line component with a scripted auto-playing conversation loop.
 
-## File Summary
-| File | Change |
-|---|---|
-| `src/index.css` | Add `.business-mode` CSS variable overrides |
-| `src/pages/Index.tsx` | Wrap industry section with `business-mode` class, update hardcoded colors to business tokens |
-| `src/components/Navbar.tsx` | Add green border accent when in industry mode |
+### Auto-play Script (loops every ~18s, 2 alternating scenarios)
+
+**Scenario 1 — Trust Recommendation:**
+1. User typing (1.5s): *"Show me compounds in New Cairo with proven on-time delivery"*
+2. Agent thinking (2s): Shimmer + cycling status — *"Scanning 452 developer reports..." → "Analyzing 1,200+ reviews..."*
+3. Result card slides in: Mivida by Emaar — Trust 97, ★4.8, badges (On-Time 98%, Finishing: Excellent)
+4. Agent reply types in (2s): *"I recommend Mivida by Emaar. 98% on-time delivery, 4.8/5 finishing quality."*
+5. Action chips fade in: "Compare alternatives" · "View reviews"
+6. Hold 4s, crossfade to scenario 2
+
+**Scenario 2 — Risk Alert:**
+1. User typing: *"Any red flags for Ora Developers?"*
+2. Agent thinking: *"Running risk assessment..."*
+3. Risk card: Ora Developers — Trust 25, ⚠️ flags
+4. Agent: *"⚠️ Caution: Multiple verified complaints about delivery delays."*
+5. Chips: "See reviews" · "Compare alternatives"
+
+### Visual Design
+- Window chrome with glassmorphism border, `bg-card` background
+- Header: Sparkles icon + "R8 Agent" + pulsing green dot + "Online"
+- User bubbles right-aligned (`bg-primary`), Agent bubbles left-aligned (`bg-secondary`)
+- Thinking state: existing `shimmer` keyframe + `Search` icon pulse
+- Result cards: bordered mini-card with trust score color ring, star rating, dimension badges
+- Action chips: small rounded `border-primary/20` buttons with hover glow
+- **Pause on hover**, resume 3s after mouse leaves
+
+### Animations (using existing Tailwind keyframes)
+- Typing cursor: blinking `|` with `animate-pulse`
+- Thinking shimmer: existing CSS `shimmer` keyframe
+- Card entrance: `animate-fade-in` + `translate-y-2`
+- Text streaming: character-by-character at 30ms
+- Chip entrance: staggered `animate-fade-in` with 100ms delay
+
+## Changes to `src/pages/Index.tsx`
+
+1. Import `HeroAgentDemo`
+2. Wrap the `HeroTrustShowcase` div and a new `HeroAgentDemo` div in a `md:grid md:grid-cols-2 md:gap-4 items-start` container (line 268 area)
+3. `HeroTrustShowcase` stays in the left column — **zero changes** to that component
+4. `HeroAgentDemo` in the right column
+5. On mobile: single column, gauge on top, agent demo below (compact ~260px height)
+
+## Files Summary
+
+| File | Action |
+|------|--------|
+| `src/components/HeroAgentDemo.tsx` | **Create** — new live agent demo component |
+| `src/pages/Index.tsx` | **Edit** — 2-col grid around showcase + demo |
+| `src/components/HeroTrustShowcase.tsx` | **No changes** |
+| `src/components/HeroTrustGauge.tsx` | **No changes** |
 
