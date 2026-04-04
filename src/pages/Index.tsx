@@ -39,6 +39,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
+import { HeroAgentDemo } from "@/components/HeroAgentDemo";
 
 const Index = () => {
   const { t } = useTranslation();
@@ -265,7 +266,12 @@ const Index = () => {
               </>
             )}
 
-            <div id="trust-showcase"><HeroTrustShowcase /></div>
+            <div id="trust-showcase" className="grid grid-cols-1 md:grid-cols-2 md:gap-4 items-start mt-1">
+              <HeroTrustShowcase />
+              <div className="mt-2 md:mt-0">
+                <HeroAgentDemo />
+              </div>
+            </div>
 
             {/* Journey Station Arc */}
             <div className="mt-1 mb-0 w-full relative">
