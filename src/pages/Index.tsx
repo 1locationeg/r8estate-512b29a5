@@ -266,10 +266,13 @@ const Index = () => {
               </>
             )}
 
-            <div id="trust-showcase" className="grid grid-cols-1 md:grid-cols-2 md:gap-4 items-start mt-1">
-              <HeroTrustShowcase />
-              <div className="mt-2 md:mt-0">
-                <HeroAgentDemo />
+            <div id="trust-showcase" className="mt-1">
+              <HeroAgentDemo onRevealShowcase={() => setShowcaseRevealed(true)} />
+              <div className={cn(
+                "transition-all duration-700 ease-out overflow-hidden",
+                showcaseRevealed ? "max-h-[600px] opacity-100 mt-2" : "max-h-0 opacity-0"
+              )}>
+                <HeroTrustShowcase />
               </div>
             </div>
 
