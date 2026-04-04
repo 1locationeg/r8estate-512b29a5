@@ -83,10 +83,10 @@ const AgentStatusBar = ({ preferences, name, onEdit, followCount }: {
   return (
     <div className="flex items-center justify-between ai-slide-up">
       <div className="flex items-center gap-3">
-        <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-primary via-primary/80 to-accent flex items-center justify-center ai-breathe ai-shimmer-border">
-          <Sparkles className="w-5 h-5 text-primary-foreground relative z-10" />
-          <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-emerald-500 ring-2 ring-background z-10">
-            <span className="absolute inset-0 rounded-full bg-emerald-500 animate-ping opacity-40" />
+        <div className="relative w-12 h-12 rounded-xl flex items-center justify-center ai-breathe ai-shimmer-border" style={{ background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--glow-subtle)) 40%, hsl(var(--accent)) 70%, hsl(var(--brand-red)) 100%)' }}>
+          <Sparkles className="w-5 h-5 text-primary-foreground relative z-10 drop-shadow-[0_0_6px_hsla(var(--accent),0.6)]" />
+          <span className="absolute -top-1 -right-1 w-3 h-3 rounded-full ring-2 ring-background z-10" style={{ background: 'linear-gradient(135deg, hsl(var(--accent)), hsl(var(--trust-excellent)))' }}>
+            <span className="absolute inset-0 rounded-full animate-ping opacity-40" style={{ background: 'hsl(var(--accent))' }} />
           </span>
         </div>
         <div>
