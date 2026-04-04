@@ -493,14 +493,46 @@ const AdminUsers = () => {
     setUpdatingId(userId);
     try {
       if (action === 'add') {
+        // If upgrading to business, remove buyer/user roles first
+        if (targetRole === 'business') {
+          await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'buyer' as any);
+          await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'user' as any);
+        }
+
         const { error } = await supabase
           .from('user_roles')
           .insert({ user_id: userId, role: targetRole as any });
         if (error) throw error;
+
         // If adding admin role, also add admin_permissions entry
         if (targetRole === 'admin') {
           await supabase.from('admin_permissions' as any).insert({ user_id: userId, permission_level: 'view_only' });
         }
+
+        // If adding business role, create a business profile and notify the user
+        if (targetRole === 'business') {
+          const userName = targetUser?.full_name || '';
+          // Create empty business profile for the user
+          const { error: profileError } = await supabase
+            .from('business_profiles')
+            .insert({
+              user_id: userId,
+              company_name: userName ? `${userName}'s Business` : 'My Business',
+            });
+          if (profileError && profileError.code !== '23505') {
+            console.error('Failed to create business profile:', profileError);
+          }
+
+          // Notify the user to complete their business profile
+          await supabase.from('notifications').insert({
+            user_id: userId,
+            type: 'review_status',
+            title: 'Welcome to Business! 🎉',
+            message: 'Your account has been upgraded to a Business account. Please complete your business profile to get started.',
+            metadata: { link: '/business' },
+          });
+        }
+
         toast.success(`Role "${targetRole}" added`);
       } else {
         const { error } = await supabase
@@ -518,11 +550,12 @@ const AdminUsers = () => {
       // Update local state
       setUsers(prev => prev.map(u => {
         if (u.id !== userId) return u;
+        const newRoles = action === 'add'
+          ? [...u.roles.filter(r => targetRole === 'business' ? r !== 'buyer' && r !== 'user' : true), targetRole]
+          : u.roles.filter(r => r !== targetRole);
         return {
           ...u,
-          roles: action === 'add'
-            ? [...u.roles, targetRole]
-            : u.roles.filter(r => r !== targetRole),
+          roles: newRoles,
           admin_permission: targetRole === 'admin'
             ? (action === 'add' ? 'view_only' : null)
             : u.admin_permission,
