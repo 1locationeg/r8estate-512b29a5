@@ -197,8 +197,8 @@ export function useCommunityPost(postId: string | null) {
     if (repliesData && repliesData.length > 0) {
       const replyUserIds = [...new Set(repliesData.map((r: any) => r.user_id))];
       const { data: replyProfiles } = await supabase
-        .from("profiles")
-        .select("user_id, full_name, avatar_url, email")
+        .from("public_profiles")
+        .select("user_id, full_name, avatar_url")
         .in("user_id", replyUserIds);
       const profileMap = Object.fromEntries((replyProfiles || []).map((p: any) => [p.user_id, p]));
 
