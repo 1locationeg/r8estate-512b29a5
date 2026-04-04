@@ -267,21 +267,8 @@ const Index = () => { // hero-phase-v2
               </>
             )}
 
-            <div id="trust-showcase" className="relative mt-1">
-              {/* Gauge — visible in "gauge" and "gauge-final" phases */}
-              <div className={cn(
-                "transition-all duration-700 ease-out",
-                heroPhase !== "agent" ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0"
-              )}>
-                <HeroTrustShowcase onCycleComplete={() => setHeroPhase("agent")} />
-              </div>
-
-              {/* Agent — mounted only in "agent" phase */}
-              {heroPhase === "agent" && (
-                <div className="animate-fade-in">
-                  <HeroAgentDemo onComplete={() => setHeroPhase("gauge-final")} />
-                </div>
-              )}
+            <div id="trust-showcase" className="mt-1">
+              <HeroTrustShowcase />
             </div>
 
             {/* Journey Station Arc */}
