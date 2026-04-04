@@ -452,6 +452,7 @@ const AdminUsers = () => {
   const [updatingId, setUpdatingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
