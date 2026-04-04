@@ -65,7 +65,7 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
     if (isBusiness) {
       fetchBusinessProfile(user.id);
     }
-  }, [open, user?.id, isBusiness]);
+  }, [open, user?.id, isBusiness, user?.roles?.length]);
 
   const fetchBusinessProfile = async (userId: string) => {
     setLoadingProfile(true);
@@ -92,8 +92,37 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
         website: data.website ?? "",
         license_url: data.license_url ?? "",
       });
+    } else {
+      setProfile(null);
     }
     setLoadingProfile(false);
+  };
+
+  const handleCreateProfile = async () => {
+    if (!user) return;
+    setSaving(true);
+    const fallbackName = user.full_name?.trim()
+      ? `${user.full_name}'s Business`
+      : user.email?.split("@")[0]
+        ? `${user.email.split("@")[0]}'s Business`
+        : "My Business";
+
+    const { error } = await supabase
+      .from("business_profiles")
+      .insert({
+        user_id: user.id,
+        company_name: fallbackName,
+        specialties: [],
+        social_links: {},
+      });
+
+    if (error) {
+      toast.error("Failed to create profile: " + error.message);
+    } else {
+      toast.success("Business profile created");
+      await fetchBusinessProfile(user.id);
+    }
+    setSaving(false);
   };
 
   const updateField = (field: keyof BusinessProfileData, value: any) => {
