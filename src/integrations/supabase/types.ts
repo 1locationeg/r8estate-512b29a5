@@ -551,6 +551,39 @@ export type Database = {
         }
         Relationships: []
       }
+      copilot_preferences: {
+        Row: {
+          budget_range: string | null
+          concerns: string[] | null
+          created_at: string | null
+          id: string
+          preferred_locations: string[] | null
+          purpose: string | null
+          updated_at: string | null
+          user_id: string
+        }
+        Insert: {
+          budget_range?: string | null
+          concerns?: string[] | null
+          created_at?: string | null
+          id?: string
+          preferred_locations?: string[] | null
+          purpose?: string | null
+          updated_at?: string | null
+          user_id: string
+        }
+        Update: {
+          budget_range?: string | null
+          concerns?: string[] | null
+          created_at?: string | null
+          id?: string
+          preferred_locations?: string[] | null
+          purpose?: string | null
+          updated_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       deal_ratings: {
         Row: {
           created_at: string

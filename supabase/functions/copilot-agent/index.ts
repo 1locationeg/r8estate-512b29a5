@@ -198,7 +198,7 @@ serve(async (req) => {
   }
 
   try {
-    const { messages } = await req.json();
+    const { messages, preferences } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY not configured");
 
@@ -235,7 +235,11 @@ serve(async (req) => {
     }
 
     // Step 1: Call LLM with tools
-    const aiMessages = [{ role: "system", content: SYSTEM_PROMPT }, ...messages];
+    let systemPrompt = SYSTEM_PROMPT;
+    if (preferences) {
+      systemPrompt += `\n\nUser Profile: Purpose: ${preferences.purpose || "unknown"}, Budget: ${preferences.budget_range || "unknown"}, Preferred Locations: ${(preferences.preferred_locations || []).join(", ") || "any"}, Concerns: ${(preferences.concerns || []).join(", ") || "none specified"}. Tailor your answers to this profile.`;
+    }
+    const aiMessages = [{ role: "system", content: systemPrompt }, ...messages];
     const firstResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: { Authorization: `Bearer ${LOVABLE_API_KEY}`, "Content-Type": "application/json" },
