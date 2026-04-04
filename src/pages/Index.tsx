@@ -219,18 +219,14 @@ const Index = () => {
   { label: t("hero.badgeVerifiedBuyer"), icon: CheckCircle }];
 
 
-  /* ─── Hero content block (passed into snap container) ─── */
+  /* ─── Hero content block ─── */
   const heroBlock = (
-    <div className="flex-1 flex flex-col items-center justify-start pt-2 px-4 md:px-6 lg:px-8 overflow-y-auto">
+    <div className="w-full flex flex-col items-center pt-2 px-4 md:px-6 lg:px-8">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
         {/* Hero Card */}
-        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-3 md:p-4 mt-1 md:mt-1 overflow-hidden my-[2px] py-[3px] bg-card shadow-sm ai-grain ai-glow">
-          <div className="absolute inset-0 opacity-[0.04] pointer-events-none" style={{
-            backgroundImage: 'radial-gradient(circle, hsl(var(--primary)) 1px, transparent 1px)',
-            backgroundSize: '20px 20px'
-          }} />
+        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-3 md:p-4 mt-1 md:mt-1">
           <div className="relative text-center">
-            <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 animate-[fadeInUp_0.6s_ease-out_0.2s_both] border border-border/60 rounded-full px-3 py-1 bg-background/60 backdrop-blur-sm">
+            <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 border border-border/60 rounded-full px-3 py-1 bg-background/60 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse shrink-0" />
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
@@ -238,10 +234,10 @@ const Index = () => {
             <div className="mb-0 max-w-[1100px] mx-auto">
               {userMode === "buyers" ? (
                 <>
-                  <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent animate-fade-in-up" style={{ animationDelay: '300ms', animationDuration: '0.7s' }}>
+                  <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent">
                     {t("hero.tagline_line1")}
                   </p>
-                  <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90 animate-fade-in-up" style={{ animationDelay: '650ms', animationDuration: '0.6s' }}>
+                  <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90">
                     {t("hero.tagline_line2")}
                   </p>
                 </>
@@ -256,7 +252,7 @@ const Index = () => {
             {userMode === "buyers" && (
               <>
                 {searchFocused && (
-                  <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out animate-fade-in hidden md:block" onClick={() => setSearchFocused(false)} />
+                  <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out hidden md:block" onClick={() => setSearchFocused(false)} />
                 )}
                 <div className={cn("w-full max-w-[700px] mx-auto transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
                   <HeroSearchBar
@@ -271,11 +267,9 @@ const Index = () => {
 
             <div id="trust-showcase"><HeroTrustShowcase /></div>
 
-            {/* Journey Station Arc — before traction stats */}
-            <div className="mt-1 mb-0 animate-fade-in-up w-full relative" style={{ animationDelay: '600ms', animationDuration: '0.8s' }}>
-              {/* Glow backdrop */}
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-journey-research/20 via-journey-choose/20 via-journey-finance/20 to-journey-protect/20 blur-xl opacity-60 pointer-events-none" />
-              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2 shadow-[0_4px_30px_-8px_hsl(var(--primary)/0.15)]">
+            {/* Journey Station Arc */}
+            <div className="mt-1 mb-0 w-full relative">
+              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
                 <MiniJourneyArc
                   onStartJourney={() => {
                     const el = document.getElementById('journey-section-0');
@@ -289,8 +283,8 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Traction Stats — after journey arc */}
-            <div className={cn("w-full mt-1 mb-0 transition-all duration-300 animate-fade-in-up", searchFocused && "opacity-30 pointer-events-none")} style={{ animationDelay: '1000ms', animationDuration: '0.6s' }}>
+            {/* Traction Stats */}
+            <div className={cn("w-full mt-1 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <TractionStats />
             </div>
           </div>
