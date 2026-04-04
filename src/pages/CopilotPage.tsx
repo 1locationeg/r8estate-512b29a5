@@ -28,6 +28,58 @@ interface RiskFlag {
 
 const RISK_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/trust-risk-scan`;
 
+const INIT_STEPS = [
+  "Learning your preferences...",
+  "Scanning market data...",
+  "Building your profile...",
+  "Connecting to trust network...",
+  "Ready!",
+];
+
+const AgentInitScreen = ({ onDone }: { onDone: () => void }) => {
+  const [step, setStep] = useState(0);
+
+  useEffect(() => {
+    if (step < INIT_STEPS.length - 1) {
+      const t = setTimeout(() => setStep(s => s + 1), 700);
+      return () => clearTimeout(t);
+    } else {
+      const t = setTimeout(onDone, 600);
+      return () => clearTimeout(t);
+    }
+  }, [step, onDone]);
+
+  return (
+    <div className="flex-1 flex items-center justify-center py-20">
+      <div className="text-center ai-slide-up">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-primary to-accent flex items-center justify-center mx-auto mb-6 ai-breathe">
+          <Sparkles className="w-8 h-8 text-primary-foreground" />
+        </div>
+        <p className="text-lg font-bold text-foreground mb-6">Agent Initializing</p>
+        <div className="space-y-2 max-w-xs mx-auto text-left">
+          {INIT_STEPS.map((label, i) => (
+            <div
+              key={i}
+              className={`flex items-center gap-2 text-sm transition-all duration-300 ${
+                i < step ? "text-primary" : i === step ? "text-foreground" : "text-muted-foreground/30"
+              }`}
+            >
+              {i < step ? (
+                <span className="w-4 h-4 rounded-full bg-primary/20 flex items-center justify-center text-[10px] text-primary">✓</span>
+              ) : i === step ? (
+                <Loader2 className="w-4 h-4 animate-spin text-primary" />
+              ) : (
+                <span className="w-4 h-4 rounded-full border border-border" />
+              )}
+              {label}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const CopilotPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -35,6 +87,7 @@ const CopilotPage = () => {
   const [loading, setLoading] = useState(true);
   const [riskFlags, setRiskFlags] = useState<RiskFlag[]>([]);
   const [editMode, setEditMode] = useState(false);
+  const [initializing, setInitializing] = useState(false);
 
   useEffect(() => {
     if (!user) { setLoading(false); return; }
@@ -85,10 +138,14 @@ const CopilotPage = () => {
   const handleOnboardingComplete = (prefs: Preferences) => {
     setPreferences(prefs);
     setEditMode(false);
+    setInitializing(true);
   };
 
-  const showOnboarding = !loading && user && (!preferences || editMode);
-  const showDashboard = !loading && user && preferences && !editMode;
+  const handleInitDone = () => setInitializing(false);
+
+  const showOnboarding = !loading && user && (!preferences || editMode) && !initializing;
+  const showDashboard = !loading && user && preferences && !editMode && !initializing;
+  const showInit = !loading && user && initializing;
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -117,6 +174,10 @@ const CopilotPage = () => {
             <p className="text-muted-foreground mb-4">Sign in to activate your personal R8 Agent</p>
             <button onClick={() => navigate("/auth")} className="text-primary font-medium hover:underline">Sign In →</button>
           </div>
+        )}
+
+        {showInit && (
+          <AgentInitScreen onDone={handleInitDone} />
         )}
 
         {showOnboarding && (
