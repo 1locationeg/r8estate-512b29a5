@@ -570,9 +570,65 @@
   background-color: hsl(var(--station-accent) / 0.1);
 }
 
+/* AI Thinking dots — sequential pulse */
+@keyframes ai-thinking-dot {
+  0%, 80%, 100% { opacity: 0.2; transform: scale(0.8); }
+  40% { opacity: 1; transform: scale(1); }
+}
+.ai-thinking span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: hsl(var(--primary));
+  animation: ai-thinking-dot 1.4s ease-in-out infinite;
+}
+.ai-thinking span:nth-child(1) { animation-delay: 0s; }
+.ai-thinking span:nth-child(2) { animation-delay: 0.2s; }
+.ai-thinking span:nth-child(3) { animation-delay: 0.4s; }
+
+/* AI Scan Line — sweeps across cards */
+@keyframes ai-scan-line {
+  0% { transform: translateX(-100%); opacity: 0; }
+  20% { opacity: 0.6; }
+  80% { opacity: 0.6; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+.ai-scan-line {
+  position: relative;
+  overflow: hidden;
+}
+.ai-scan-line::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, hsla(var(--glow-primary), 0.08), hsla(var(--glow-accent), 0.06), transparent);
+  animation: ai-scan-line 2.5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Agent breathing avatar */
+@keyframes ai-breathe {
+  0%, 100% { box-shadow: 0 0 0 0 hsla(var(--glow-primary), 0.4); }
+  50% { box-shadow: 0 0 0 8px hsla(var(--glow-primary), 0); }
+}
+.ai-breathe {
+  animation: ai-breathe 2.5s ease-in-out infinite;
+}
+
+/* Agent activity log reveal */
+@keyframes ai-log-reveal {
+  from { opacity: 0; transform: translateX(-8px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.ai-log-reveal {
+  animation: ai-log-reveal 0.4s ease-out both;
+}
+
 /* Reduced motion */
 @media (prefers-reduced-motion: reduce) {
-  .ai-float, .ai-pulse-dot, .ai-shimmer-border::before {
+  .ai-float, .ai-pulse-dot, .ai-shimmer-border::before, .ai-breathe, .ai-scan-line::after, .ai-thinking span {
     animation: none;
   }
 }
