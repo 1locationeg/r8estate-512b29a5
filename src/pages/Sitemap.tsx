@@ -2,6 +2,8 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/Footer";
+import { Navbar } from "@/components/Navbar";
+import { PageHeader } from "@/components/PageHeader";
 import { getSearchIndex, type SearchCategory } from "@/data/searchIndex";
 import { PUBLIC_ROUTES } from "@/data/routeRegistry";
 import { categories as heroCats } from "@/components/HeroCategoryItems";
