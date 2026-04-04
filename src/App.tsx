@@ -29,9 +29,9 @@ import {
   InstallSkeleton,
   NotFoundSkeleton,
 } from "@/components/PageSkeletons";
+import Index from "./pages/Index";
 
 // Lazy-loaded pages for code splitting
-const Index = lazy(() => import("./pages/Index"));
 const Auth = lazy(() => import("./pages/Auth"));
 const ForgotPassword = lazy(() => import("./pages/ForgotPassword"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
