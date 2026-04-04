@@ -39,7 +39,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
-import { HeroAgentDemo } from "@/components/HeroAgentDemo";
+
 
 const Index = () => { // hero-phase-v2
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ const Index = () => { // hero-phase-v2
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const [togglePulse, setTogglePulse] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
-  const [heroPhase, setHeroPhase] = useState<"gauge" | "agent" | "gauge-final">("gauge");
+  
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
@@ -267,21 +267,8 @@ const Index = () => { // hero-phase-v2
               </>
             )}
 
-            <div id="trust-showcase" className="relative mt-1">
-              {/* Gauge — visible in "gauge" and "gauge-final" phases */}
-              <div className={cn(
-                "transition-all duration-700 ease-out",
-                heroPhase !== "agent" ? "opacity-100" : "opacity-0 pointer-events-none absolute inset-0"
-              )}>
-                <HeroTrustShowcase onCycleComplete={() => setHeroPhase("agent")} />
-              </div>
-
-              {/* Agent — mounted only in "agent" phase */}
-              {heroPhase === "agent" && (
-                <div className="animate-fade-in">
-                  <HeroAgentDemo onComplete={() => setHeroPhase("gauge-final")} />
-                </div>
-              )}
+            <div id="trust-showcase" className="mt-1">
+              <HeroTrustShowcase />
             </div>
 
             {/* Journey Station Arc */}
