@@ -80,8 +80,13 @@ const BadgeIcon = ({ icon }: { icon: string }) => {
   return <AlertTriangle className={cls} />;
 };
 
-export const HeroAgentDemo = () => {
+interface HeroAgentDemoProps {
+  onRevealShowcase?: () => void;
+}
+
+export const HeroAgentDemo = ({ onRevealShowcase }: HeroAgentDemoProps) => {
   const [scenarioIdx, setScenarioIdx] = useState(0);
+  const revealedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>("typing");
   const [typedChars, setTypedChars] = useState(0);
   const [thinkStep, setThinkStep] = useState(0);
@@ -126,12 +131,16 @@ export const HeroAgentDemo = () => {
     return () => clearTimeout(t);
   }, [phase, thinkStep, sc.thinkingSteps.length, paused]);
 
-  /* ── result → reply ── */
+  /* ── result → reply + reveal showcase ── */
   useEffect(() => {
     if (phase !== "result" || paused) return;
+    if (!revealedRef.current && onRevealShowcase) {
+      revealedRef.current = true;
+      onRevealShowcase();
+    }
     const t = setTimeout(() => setPhase("reply"), 800);
     return () => clearTimeout(t);
-  }, [phase, paused]);
+  }, [phase, paused, onRevealShowcase]);
 
   /* ── reply typing ── */
   useEffect(() => {
