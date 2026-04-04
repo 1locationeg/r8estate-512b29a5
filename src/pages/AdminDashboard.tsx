@@ -435,6 +435,7 @@ const PERMISSION_LEVELS = [
 
 const AdminUsers = () => {
   const { user: currentUser } = useAuth();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<Array<{
     id: string;
     email: string;
