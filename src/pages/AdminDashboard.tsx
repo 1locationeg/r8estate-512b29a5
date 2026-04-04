@@ -788,7 +788,19 @@ const AdminUsers = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium text-foreground">{u.full_name || 'No name'}</p>
+                        <p className="text-sm font-medium text-foreground cursor-pointer hover:underline hover:text-primary transition-colors"
+                           onClick={() => {
+                             if (u.roles.includes('business')) {
+                               // Navigate to the business entity page
+                               supabase.from('business_profiles').select('id').eq('user_id', u.id).maybeSingle().then(({ data }) => {
+                                 if (data) navigate(`/entity/${data.id}`);
+                                 else toast.info('No business profile found for this user');
+                               });
+                             } else {
+                               toast.info(`${u.full_name || 'User'} — ${u.email}`);
+                             }
+                           }}
+                        >{u.full_name || 'No name'}</p>
                         <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
                     </div>
