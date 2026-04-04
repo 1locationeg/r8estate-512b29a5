@@ -266,7 +266,7 @@ const AdminOverview = () => {
               <p className="text-xs text-muted-foreground text-center py-6">No businesses yet</p>
             ) : (
               dashData.recentBusinesses.map((b) => (
-                <div key={b.id} className="flex items-center gap-3">
+                <div key={b.id} className="flex items-center gap-3 cursor-pointer hover:bg-secondary/40 rounded-lg p-1 -mx-1 transition-colors" onClick={() => navigate(`/entity/${b.id}`)}>
                   <Avatar className="h-9 w-9">
                     {b.logo_url && <img src={b.logo_url} alt="" className="w-full h-full object-cover rounded-full" />}
                     <AvatarFallback className="text-[10px] font-bold bg-accent/20 text-accent-foreground">
@@ -274,9 +274,10 @@ const AdminOverview = () => {
                     </AvatarFallback>
                   </Avatar>
                   <div className="min-w-0 flex-1">
-                    <p className="text-xs font-medium text-foreground truncate">{b.company_name || 'Unnamed'}</p>
+                    <p className="text-xs font-medium text-foreground truncate hover:underline">{b.company_name || 'Unnamed'}</p>
                     <p className="text-[10px] text-muted-foreground">{timeAgo(b.created_at)}</p>
                   </div>
+                  <Eye className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                 </div>
               ))
             )}
