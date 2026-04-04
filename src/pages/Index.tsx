@@ -405,7 +405,7 @@ const Index = () => {
           </section>
         </>
       ) : (
-        <section className="flex-1 flex flex-col">
+        <section className="flex-1 flex flex-col business-mode">
           <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-4 md:px-8 lg:px-12 pt-0 pb-0 sm:pt-1 sm:pb-1 md:py-2">
             {/* Hero Card for business mode */}
             <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-gradient-to-b from-primary/[0.03] to-transparent backdrop-blur-sm p-4 md:p-5 mt-1 md:mt-2 overflow-hidden my-[4px] py-[4px] bg-card shadow-sm ai-grain ai-glow">
@@ -430,7 +430,7 @@ const Index = () => {
 
             {/* Business view */}
             {role !== 'business' && role !== 'admin' && (
-              <button onClick={switchToBuyerView} className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-primary/20 bg-primary/5 text-primary text-xs font-semibold hover:bg-primary/10 transition-colors">
+              <button onClick={switchToBuyerView} className="inline-flex items-center gap-2 mb-4 px-4 py-2 rounded-lg border border-business-border/30 bg-business text-business-foreground text-xs font-semibold hover:bg-business/80 transition-colors">
                 <ArrowRight className="w-3.5 h-3.5 rotate-180" />
                 Not a business? Switch to Buyer View
               </button>
@@ -509,7 +509,7 @@ const Index = () => {
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
 
       {/* Trust Badges */}
-      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8">
+      <div className={cn("flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8", userMode === "industry" && "business-mode")}>
         <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
           <Shield className="w-3.5 h-3.5 text-verified" />
           {t("hero.benefit_zero_risk")}
