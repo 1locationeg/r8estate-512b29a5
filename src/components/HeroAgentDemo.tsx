@@ -82,9 +82,10 @@ const BadgeIcon = ({ icon }: { icon: string }) => {
 
 interface HeroAgentDemoProps {
   onRevealShowcase?: () => void;
+  onComplete?: () => void;
 }
 
-export const HeroAgentDemo = ({ onRevealShowcase }: HeroAgentDemoProps) => {
+export const HeroAgentDemo = ({ onRevealShowcase, onComplete }: HeroAgentDemoProps) => {
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const revealedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>("typing");
