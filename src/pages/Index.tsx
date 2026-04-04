@@ -319,7 +319,9 @@ const Index = () => {
 
       {userMode === "buyers" ? (
         <>
-          <JourneyFullPageScroll heroContent={heroBlock} />
+          <section id="journey-hero" className="w-full flex flex-col">
+            {heroBlock}
+          </section>
 
           {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
           <section className="flex-1 flex flex-col snap-start" style={{ scrollSnapAlign: 'start' }}>
