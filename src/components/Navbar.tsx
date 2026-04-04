@@ -51,7 +51,7 @@ export const Navbar = ({
   const navLinks = user ? userNavLinks : guestNavLinks;
 
   return (
-    <header className="bg-background shadow-sm border-b border-border leading-none">
+    <header className={`bg-background shadow-sm border-b leading-none ${userMode === "industry" ? "border-business-border/50" : "border-border"}`}>
       <div className="container mx-auto px-2 flex items-center justify-between gap-1 py-0">
         {/* Logo */}
         <button

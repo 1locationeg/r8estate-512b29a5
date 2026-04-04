@@ -90,6 +90,30 @@
     --radius: 0.75rem;
   }
 
+  /* ─── Business Mode: remap all primary tokens to Forest Green ─── */
+  .business-mode {
+    --primary: 93 72% 25%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 93 50% 40%;
+    --accent-foreground: 93 66% 17%;
+    --secondary: 93 40% 92%;
+    --secondary-foreground: 93 66% 17%;
+    --ring: 93 72% 25%;
+    --verified: 93 72% 25%;
+    --verified-foreground: 0 0% 100%;
+    --border: 93 30% 80%;
+    --muted: 93 25% 93%;
+    --muted-foreground: 93 30% 35%;
+  }
+
+  .business-mode .ai-glow::before {
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 50%,
+      hsl(93 72% 25% / 0.10) 0%,
+      transparent 70%
+    ) !important;
+  }
+
   .dark {
     --background: 203 50% 8%;
     --foreground: 203 10% 95%;
