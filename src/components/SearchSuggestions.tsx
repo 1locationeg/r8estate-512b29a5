@@ -7,6 +7,7 @@ import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { getSearchHistory } from "@/lib/searchHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
+import { mapPublicBusinessProfileToSearchItem } from "@/lib/businessProfileSearch";
 
 import { getRatingColorClass } from "@/lib/ratingColors";
 import { Button } from "./ui/button";
@@ -62,7 +63,9 @@ export const SearchSuggestions = ({
   const [aiCorrection, setAiCorrection] = useState<string | null>(null);
   const [aiLoading, setAiLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<SearchCategory | 'all'>('all');
+  const [remoteBusinessItems, setRemoteBusinessItems] = useState<SearchItem[]>([]);
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const businessDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { trackSearch } = useTrackInterest();
 
   const handleSelect = (item: SearchItem) => {
@@ -74,6 +77,36 @@ export const SearchSuggestions = ({
   useEffect(() => {
     setActiveCategory('all');
   }, [query]);
+
+  useEffect(() => {
+    if (businessDebounceRef.current) clearTimeout(businessDebounceRef.current);
+
+    const normalizedQuery = query.trim().replace(/[,%_'"\\]/g, " ").replace(/\s+/g, " ").trim();
+
+    if (!isOpen || normalizedQuery.length < 2) {
+      setRemoteBusinessItems([]);
+      return;
+    }
+
+    businessDebounceRef.current = setTimeout(async () => {
+      const { data, error } = await supabase
+        .from('public_business_profiles')
+        .select('id, company_name, location, logo_url, website, specialties, year_established, description')
+        .or(`company_name.ilike.%${normalizedQuery}%,location.ilike.%${normalizedQuery}%,website.ilike.%${normalizedQuery}%`)
+        .limit(6);
+
+      if (error || !data) {
+        setRemoteBusinessItems([]);
+        return;
+      }
+
+      setRemoteBusinessItems(data.map(mapPublicBusinessProfileToSearchItem));
+    }, 250);
+
+    return () => {
+      if (businessDebounceRef.current) clearTimeout(businessDebounceRef.current);
+    };
+  }, [isOpen, query]);
 
   // Debounced AI autocomplete
   useEffect(() => {
@@ -107,19 +140,27 @@ export const SearchSuggestions = ({
   }, [query, isOpen]);
   
   // Perform search or get popular items
-  const { results, popular, flatItems } = useMemo(() => {
+  const { results, popular, flatItems, groupedResults } = useMemo(() => {
     if (query.trim().length > 0) {
       const searchResults = performSearch(query);
+      const mergedDevelopers = [...remoteBusinessItems, ...searchResults.groupedResults.developers].filter(
+        (item, index, all) => all.findIndex((candidate) => candidate.id === item.id) === index,
+      );
+      const mergedGroupedResults = {
+        ...searchResults.groupedResults,
+        developers: mergedDevelopers,
+      };
       const flat: SearchItem[] = [];
       
       // Flatten grouped results in category order
       for (const cat of categoryOrder) {
-        flat.push(...searchResults.groupedResults[cat]);
+        flat.push(...mergedGroupedResults[cat]);
       }
       
       return { 
         results: searchResults, 
         popular: null, 
+        groupedResults: mergedGroupedResults,
         flatItems: flat 
       };
     } else {
@@ -133,10 +174,11 @@ export const SearchSuggestions = ({
       return { 
         results: null, 
         popular: popularItems,
+        groupedResults: popularItems,
         flatItems: flat 
       };
     }
-  }, [query]);
+  }, [query, remoteBusinessItems]);
   
   // Scroll selected item into view
   useEffect(() => {
@@ -363,9 +405,7 @@ export const SearchSuggestions = ({
     );
   };
   
-  const groupedToRender = query.trim() 
-    ? results?.groupedResults 
-    : popular;
+  const groupedToRender = groupedResults;
   
   return (
     <div 

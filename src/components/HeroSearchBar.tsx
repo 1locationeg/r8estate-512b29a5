@@ -66,6 +66,11 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
     addToSearchHistory(item.name);
     setQuery("");
     setIsFocused(false);
+
+    if (item.meta?.dynamicBusinessProfile) {
+      searchNavigate(`/entity/${item.id}`);
+      return;
+    }
     
     if (item.category === 'developers') {
       onSelectDeveloper(item.id);

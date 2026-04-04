@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { PageHeader } from "@/components/PageHeader";
@@ -7,8 +7,10 @@ import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { getSearchIndex, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { categories } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
+import { supabase } from "@/integrations/supabase/client";
+import { mapPublicBusinessProfileToSearchItem } from "@/lib/businessProfileSearch";
 
 const categoryToSearchCategory = (labelKey: string): SearchCategory => {
   const map: Record<string, SearchCategory> = {
@@ -30,6 +32,8 @@ const EntityPage = () => {
   const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   const { getLogoOverride } = useBusinessLogo();
+  const [remoteEntity, setRemoteEntity] = useState<SearchItem | null>(null);
+  const [isRemoteLoading, setIsRemoteLoading] = useState(false);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -37,7 +41,7 @@ const EntityPage = () => {
 
   const logoOverride = id ? getLogoOverride(id) : null;
 
-  const entity = useMemo((): SearchItem | null => {
+  const staticEntity = useMemo((): SearchItem | null => {
     if (!id) return null;
 
     // First check the search index
@@ -73,6 +77,57 @@ const EntityPage = () => {
 
     return null;
   }, [id, isRTL, t, logoOverride]);
+
+  useEffect(() => {
+    if (!id || staticEntity) {
+      setRemoteEntity(null);
+      setIsRemoteLoading(false);
+      return;
+    }
+
+    let isActive = true;
+
+    const loadRemoteEntity = async () => {
+      setIsRemoteLoading(true);
+
+      const { data, error } = await supabase
+        .from('public_business_profiles')
+        .select('id, company_name, location, logo_url, website, specialties, year_established, description')
+        .eq('id', id)
+        .maybeSingle();
+
+      if (!isActive) return;
+
+      if (error || !data) {
+        setRemoteEntity(null);
+        setIsRemoteLoading(false);
+        return;
+      }
+
+      const mapped = mapPublicBusinessProfileToSearchItem(data);
+      setRemoteEntity(logoOverride ? { ...mapped, image: logoOverride } : mapped);
+      setIsRemoteLoading(false);
+    };
+
+    void loadRemoteEntity();
+
+    return () => {
+      isActive = false;
+    };
+  }, [id, staticEntity, logoOverride]);
+
+  const entity = staticEntity || remoteEntity;
+
+  if (!entity && isRemoteLoading) {
+    return (
+      <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-4">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+        <p className="text-sm text-muted-foreground">
+          {isRTL ? "جارٍ تحميل الصفحة..." : "Loading business page..."}
+        </p>
+      </div>
+    );
+  }
 
   if (!entity) {
     return (

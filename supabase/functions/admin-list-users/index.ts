@@ -74,6 +74,21 @@ Deno.serve(async (req) => {
       profileMap[p.user_id] = { full_name: p.full_name, avatar_url: p.avatar_url };
     }
 
+    // Fetch business profiles for direct navigation
+    const { data: businessProfiles } = await adminClient
+      .from("business_profiles")
+      .select("id, user_id, company_name, created_at")
+      .order("created_at", { ascending: true });
+    const businessProfileMap: Record<string, { id: string; company_name: string | null }> = {};
+    for (const profile of businessProfiles || []) {
+      if (!businessProfileMap[profile.user_id]) {
+        businessProfileMap[profile.user_id] = {
+          id: profile.id,
+          company_name: profile.company_name,
+        };
+      }
+    }
+
     // Fetch admin permissions
     const { data: adminPerms } = await adminClient.from("admin_permissions").select("user_id, permission_level");
     const permMap: Record<string, string> = {};
@@ -88,6 +103,8 @@ Deno.serve(async (req) => {
       avatar_url: profileMap[u.id]?.avatar_url || null,
       roles: roleMap[u.id] || [],
       admin_permission: permMap[u.id] || null,
+      business_profile_id: businessProfileMap[u.id]?.id || null,
+      business_company_name: businessProfileMap[u.id]?.company_name || null,
       created_at: u.created_at,
     }));
 
