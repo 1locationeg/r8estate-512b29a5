@@ -131,12 +131,16 @@ export const HeroAgentDemo = ({ onRevealShowcase }: HeroAgentDemoProps) => {
     return () => clearTimeout(t);
   }, [phase, thinkStep, sc.thinkingSteps.length, paused]);
 
-  /* ── result → reply ── */
+  /* ── result → reply + reveal showcase ── */
   useEffect(() => {
     if (phase !== "result" || paused) return;
+    if (!revealedRef.current && onRevealShowcase) {
+      revealedRef.current = true;
+      onRevealShowcase();
+    }
     const t = setTimeout(() => setPhase("reply"), 800);
     return () => clearTimeout(t);
-  }, [phase, paused]);
+  }, [phase, paused, onRevealShowcase]);
 
   /* ── reply typing ── */
   useEffect(() => {
