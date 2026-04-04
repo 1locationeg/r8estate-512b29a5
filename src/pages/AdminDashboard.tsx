@@ -443,6 +443,8 @@ const AdminUsers = () => {
     avatar_url: string | null;
     roles: string[];
     admin_permission: string | null;
+    business_profile_id?: string | null;
+    business_company_name?: string | null;
     created_at: string;
   }>>([]);
   const [loading, setLoading] = useState(true);
@@ -450,13 +452,16 @@ const AdminUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
 
-  const isSuperAdmin = callerPermission === 'super_admin';
-
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
     { value: 'business', label: 'Business', color: 'bg-primary/10 text-primary' },
     { value: 'admin', label: 'Admin', color: 'bg-brand-red/10 text-brand-red' },
   ];
+
+  const isSuperAdmin = callerPermission === 'super_admin';
+  const manageableRoles = isSuperAdmin
+    ? availableRoles
+    : availableRoles.filter((role) => role.value !== 'admin');
 
   const fetchUsers = async () => {
     setLoading(true);
@@ -480,6 +485,37 @@ const AdminUsers = () => {
 
   useEffect(() => { fetchUsers(); }, []);
 
+  const openBusinessProfile = async (targetUser: {
+    id: string;
+    full_name: string | null;
+    email: string;
+    roles: string[];
+    business_profile_id?: string | null;
+  }) => {
+    let profileId = targetUser.business_profile_id ?? null;
+
+    if (!profileId) {
+      const { data } = await supabase
+        .from('business_profiles')
+        .select('id')
+        .eq('user_id', targetUser.id)
+        .order('created_at', { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      profileId = data?.id ?? null;
+    }
+
+    if (profileId) {
+      navigate(`/entity/${profileId}`);
+      return;
+    }
+
+    toast.info(targetUser.roles.includes('business')
+      ? 'This business profile is being prepared.'
+      : 'Upgrade this user to Business first.');
+  };
+
   const handleRoleChange = async (userId: string, targetRole: string, action: 'add' | 'remove') => {
     // Only super_admin can add/remove admin role
     if (targetRole === 'admin' && !isSuperAdmin) {
@@ -498,8 +534,10 @@ const AdminUsers = () => {
       if (action === 'add') {
         // If upgrading to business, remove buyer/user roles first
         if (targetRole === 'business') {
-          await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'buyer' as any);
-          await supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'user' as any);
+          await Promise.all([
+            supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'buyer' as any),
+            supabase.from('user_roles').delete().eq('user_id', userId).eq('role', 'user' as any),
+          ]);
         }
 
         const { error } = await supabase
@@ -514,26 +552,54 @@ const AdminUsers = () => {
 
         // If adding business role, create a business profile and notify the user
         if (targetRole === 'business') {
-          const userName = targetUser?.full_name || '';
-          // Create empty business profile for the user
-          const { error: profileError } = await supabase
-            .from('business_profiles')
-            .insert({
-              user_id: userId,
-              company_name: userName ? `${userName}'s Business` : 'My Business',
-            });
-          if (profileError && profileError.code !== '23505') {
-            console.error('Failed to create business profile:', profileError);
+          const fallbackName = targetUser?.full_name?.trim()
+            ? `${targetUser.full_name}'s Business`
+            : targetUser?.email?.split('@')[0]
+              ? `${targetUser.email.split('@')[0]}'s Business`
+              : 'My Business';
+
+          let businessProfileId = targetUser?.business_profile_id ?? null;
+
+          if (!businessProfileId) {
+            const { data: existingProfile, error: existingProfileError } = await supabase
+              .from('business_profiles')
+              .select('id')
+              .eq('user_id', userId)
+              .order('created_at', { ascending: true })
+              .limit(1)
+              .maybeSingle();
+
+            if (existingProfileError) throw existingProfileError;
+
+            if (existingProfile) {
+              businessProfileId = existingProfile.id;
+            } else {
+              const { data: createdProfile, error: profileError } = await supabase
+                .from('business_profiles')
+                .insert({
+                  user_id: userId,
+                  company_name: fallbackName,
+                  specialties: [],
+                  social_links: {},
+                })
+                .select('id')
+                .single();
+
+              if (profileError) throw profileError;
+              businessProfileId = createdProfile.id;
+            }
           }
 
           // Notify the user to complete their business profile
-          await supabase.from('notifications').insert({
+          const { error: notificationError } = await supabase.from('notifications').insert({
             user_id: userId,
             type: 'review_status',
             title: 'Welcome to Business! 🎉',
             message: 'Your account has been upgraded to a Business account. Please complete your business profile to get started.',
-            metadata: { link: '/business' },
+            metadata: { link: '/business/profile', business_profile_id: businessProfileId },
           });
+
+          if (notificationError) throw notificationError;
         }
 
         toast.success(`Role "${targetRole}" added`);
@@ -550,20 +616,7 @@ const AdminUsers = () => {
         }
         toast.success(`Role "${targetRole}" removed`);
       }
-      // Update local state
-      setUsers(prev => prev.map(u => {
-        if (u.id !== userId) return u;
-        const newRoles = action === 'add'
-          ? [...u.roles.filter(r => targetRole === 'business' ? r !== 'buyer' && r !== 'user' : true), targetRole]
-          : u.roles.filter(r => r !== targetRole);
-        return {
-          ...u,
-          roles: newRoles,
-          admin_permission: targetRole === 'admin'
-            ? (action === 'add' ? 'view_only' : null)
-            : u.admin_permission,
-        };
-      }));
+      await fetchUsers();
     } catch (err: any) {
       toast.error(`Failed to ${action} role: ${err.message}`);
     } finally {
@@ -594,7 +647,7 @@ const AdminUsers = () => {
         .eq('user_id', userId);
       if (error) throw error;
       toast.success(`Permission updated to "${newLevel.replace('_', ' ')}"`);
-      setUsers(prev => prev.map(u => u.id === userId ? { ...u, admin_permission: newLevel } : u));
+      await fetchUsers();
     } catch (err: any) {
       toast.error(`Failed to update permission: ${err.message}`);
     } finally {
@@ -620,10 +673,7 @@ const AdminUsers = () => {
       // Remove admin permissions
       await supabase.from('admin_permissions' as any).delete().eq('user_id', userId);
       toast.success('Admin access removed');
-      setUsers(prev => prev.map(u => u.id === userId
-        ? { ...u, roles: u.roles.filter(r => r !== 'admin'), admin_permission: null }
-        : u
-      ));
+      await fetchUsers();
     } catch (err: any) {
       toast.error(`Failed to remove admin: ${err.message}`);
     } finally {
@@ -637,6 +687,7 @@ const AdminUsers = () => {
     return (
       u.email?.toLowerCase().includes(q) ||
       u.full_name?.toLowerCase().includes(q) ||
+        u.business_company_name?.toLowerCase().includes(q) ||
       u.roles.some(r => r.toLowerCase().includes(q))
     );
   });
@@ -772,7 +823,7 @@ const AdminUsers = () => {
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">User</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Current Roles</th>
                 <th className="text-start px-4 py-3 text-xs font-semibold text-muted-foreground">Joined</th>
-                {isSuperAdmin && (
+                {manageableRoles.length > 0 && (
                   <th className="text-end px-4 py-3 text-xs font-semibold text-muted-foreground">Manage Roles</th>
                 )}
               </tr>
@@ -789,19 +840,18 @@ const AdminUsers = () => {
                         </AvatarFallback>
                       </Avatar>
                       <div>
-                        <p className="text-sm font-medium text-foreground cursor-pointer hover:underline hover:text-primary transition-colors"
-                           onClick={() => {
-                             if (u.roles.includes('business')) {
-                               // Navigate to the business entity page
-                               supabase.from('business_profiles').select('id').eq('user_id', u.id).maybeSingle().then(({ data }) => {
-                                 if (data) navigate(`/entity/${data.id}`);
-                                 else toast.info('No business profile found for this user');
-                               });
-                             } else {
-                               toast.info(`${u.full_name || 'User'} — ${u.email}`);
-                             }
-                           }}
-                        >{u.full_name || 'No name'}</p>
+                         <button
+                           type="button"
+                           className="text-start group"
+                           onClick={() => void openBusinessProfile(u)}
+                         >
+                           <p className="text-sm font-medium text-foreground transition-colors group-hover:text-primary group-hover:underline">
+                             {u.full_name || 'No name'}
+                           </p>
+                         </button>
+                         {u.business_company_name && (
+                           <p className="text-[10px] text-primary font-medium">{u.business_company_name}</p>
+                         )}
                         <p className="text-[10px] text-muted-foreground">{u.email}</p>
                       </div>
                     </div>
@@ -824,10 +874,10 @@ const AdminUsers = () => {
                   <td className="px-4 py-3 text-xs text-muted-foreground">
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
-                  {isSuperAdmin && (
+                  {manageableRoles.length > 0 && (
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-1 justify-end flex-wrap">
-                        {availableRoles.map(ar => {
+                        {manageableRoles.map(ar => {
                           const hasRole = u.roles.includes(ar.value);
                           const isUpdating = updatingId === u.id;
                           return (
@@ -849,6 +899,16 @@ const AdminUsers = () => {
                             </Button>
                           );
                         })}
+                        {(u.roles.includes('business') || u.business_profile_id) && (
+                          <Button
+                            size="sm"
+                            variant="ghost"
+                            className="text-[10px] h-7 px-2"
+                            onClick={() => void openBusinessProfile(u)}
+                          >
+                            <ExternalLink className="w-3 h-3 me-1" />Open Page
+                          </Button>
+                        )}
                       </div>
                     </td>
                   )}
