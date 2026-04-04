@@ -286,9 +286,10 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           {/* Ask AI Button */}
           <button 
             onClick={() => setIsAIModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all"
+            className="group flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all relative overflow-hidden"
           >
-            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:animate-spin" style={{ animationDuration: '1.5s' }} />
             <span>{t("hero.askAI")}</span>
           </button>
 
