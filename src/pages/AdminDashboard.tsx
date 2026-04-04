@@ -877,7 +877,7 @@ const AdminUsers = () => {
                     {new Date(u.created_at).toLocaleDateString()}
                   </td>
                   {manageableRoles.length > 0 && (
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-1 justify-end flex-wrap">
                         {manageableRoles.map(ar => {
                           const hasRole = u.roles.includes(ar.value);
