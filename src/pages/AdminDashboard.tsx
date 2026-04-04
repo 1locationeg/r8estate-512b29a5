@@ -927,9 +927,8 @@ const AdminUsers = () => {
         onOpenChange={(open) => { if (!open) setSelectedUser(null); }}
         onRoleChange={async (userId, role, action) => {
           await handleRoleChange(userId, role, action);
-          // Refresh selected user after role change
-          const updated = users.find(u => u.id === userId);
-          if (updated) setSelectedUser({ ...updated });
+          setSelectedUser(null);
+        }
         }}
         manageableRoles={manageableRoles}
         updatingId={updatingId}
