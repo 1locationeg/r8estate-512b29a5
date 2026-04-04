@@ -82,9 +82,10 @@ const BadgeIcon = ({ icon }: { icon: string }) => {
 
 interface HeroAgentDemoProps {
   onRevealShowcase?: () => void;
+  onComplete?: () => void;
 }
 
-export const HeroAgentDemo = ({ onRevealShowcase }: HeroAgentDemoProps) => {
+export const HeroAgentDemo = ({ onRevealShowcase, onComplete }: HeroAgentDemoProps) => {
   const [scenarioIdx, setScenarioIdx] = useState(0);
   const revealedRef = useRef(false);
   const [phase, setPhase] = useState<Phase>("typing");
@@ -164,12 +165,18 @@ export const HeroAgentDemo = ({ onRevealShowcase }: HeroAgentDemoProps) => {
     return () => clearTimeout(t);
   }, [phase, chipsVisible, sc.chips.length, paused]);
 
-  /* ── hold → next ── */
+  /* ── hold → complete (single scenario, no loop) ── */
   useEffect(() => {
     if (phase !== "hold" || paused) return;
-    const t = setTimeout(nextScenario, HOLD_DURATION);
+    const t = setTimeout(() => {
+      if (onComplete) {
+        onComplete();
+      } else {
+        nextScenario();
+      }
+    }, HOLD_DURATION);
     return () => clearTimeout(t);
-  }, [phase, paused, nextScenario]);
+  }, [phase, paused, nextScenario, onComplete]);
 
   /* ── pause on hover ── */
   const resumeTimer = useRef<ReturnType<typeof setTimeout>>();
