@@ -22,7 +22,7 @@ export function mapPublicBusinessProfileToSearchItem(
   return {
     id: profile.id,
     name: profile.company_name?.trim() || "Business profile",
-    category: "developers",
+    category: ((profile.categories && profile.categories.length > 0 ? profile.categories[0] : "developers") as SearchCategory),
     subtitle: profile.location?.trim() || websiteLabel || "Verified business profile",
     image: profile.logo_url || undefined,
     rating: 0,
