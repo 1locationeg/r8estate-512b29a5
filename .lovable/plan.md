@@ -1,73 +1,41 @@
 
 
-## Plan: Create a "Businesses" Directory Page
+## Fix: Profile Completion 0% and Inconsistent Avatar Dropdown
 
-### Overview
-Create a new `/businesses` page that displays all business profiles from the database in a professional grid layout inspired by the Trustbob reference. The page features a left sidebar with filters (search, rating, categories, verification) and a right content area with paginated business cards. Each card links to the entity page (`/entity/:id`). Update navigation links throughout the site to point to this new page.
+### Root Cause
 
-### Page Layout (Trustbob-inspired)
+The `useBusinessProfile` hook depends on `user` from `useAuth()`, but it starts fetching before auth is fully initialized. During the race window:
+- `user` is null → `fetchProfile` returns early → `profile` stays `null` → `calcProfileCompletion({})` returns **0%**
+- `isLoading` stays `true` forever (never set to `false` when user is null)
+- Once auth resolves, the hook re-fetches, but if the component already rendered with 0%, it may not update in time (or if multiple instances of `useBusinessProfile` across the dashboard compete)
+
+Additionally, the avatar dropdown may render inconsistently because auth state (`profile`, `role`) arrives after the initial render via a deferred `setTimeout`.
+
+### Plan
+
+**File 1: `src/hooks/useBusinessProfile.ts`**
+- Import `isLoading` from `useAuth()` alongside `user`
+- Guard `fetchProfile` to wait until auth is done loading (`!isLoading`)
+- When `user` is null AND auth is done loading, explicitly set `isLoading: false` and `profile: null` (don't leave isLoading stuck at `true`)
+- Add `isLoading` from auth to the `useCallback` dependency array
+
+**File 2: `src/hooks/useGamification.ts`**
+- When `isLoading` is true, return safe defaults immediately (don't compute from empty profile)
+- This prevents the brief 0% flash while data is loading
+
+**File 3: `src/components/UserAvatarAnchor.tsx`**
+- Add a guard: if `user` exists but `role` is still null (auth loading), show a loading skeleton instead of the dropdown — prevents rendering an incomplete menu
+- This ensures the dropdown always shows Dashboard + Messages + Sign Out consistently
+
+### Technical Detail
+
+The core fix is ensuring `useBusinessProfile` never computes from stale/empty state by gating on auth readiness:
 
 ```text
-┌──────────────────────────────────────────────────┐
-│  PageHeader: "Explore high rated businesses"     │
-├──────────┬───────────────────────────────────────┤
-│ SIDEBAR  │  "All Businesses"    [Sort ▼] [⊞][≡] │
-│          │  ┌────────┐┌────────┐┌────────┐       │
-│ Search   │  │ Card 1 ││ Card 2 ││ Card 3 │       │
-│ ──────── │  └────────┘└────────┘└────────┘       │
-│ Rating   │  ┌────────┐┌────────┐┌────────┐       │
-│ ○ 5★     │  │ Card 4 ││ Card 5 ││ Card 6 │       │
-│ ○ 4★     │  └────────┘└────────┘└────────┘       │
-│ ──────── │                                       │
-│ Category │  [1] [2] [3] [>]  (pagination)        │
-│ □ Apps   │                                       │
-│ □ Devs   │  ┌─────────────────────────────┐      │
-│ □ Broker │  │ Can't find a business?      │      │
-│ ──────── │  │ + Add Business              │      │
-│ Verified │  └─────────────────────────────┘      │
-│ ○ Yes    │                                       │
-│ ○ No     │  Popular searches: [chips...]         │
-└──────────┴───────────────────────────────────────┘
-│  Footer                                          │
-└──────────────────────────────────────────────────┘
+Auth loading? → skip fetch, keep isLoading=true
+Auth done, no user? → set isLoading=false, profile=null  
+Auth done, user present? → fetch business profile
 ```
 
-### Business Card Design
-Each card shows: logo/avatar, company name, website domain, star rating with count, description snippet (2 lines), and a verified badge if applicable. Clicking navigates to `/entity/:id`.
-
-### Data Source
-- Fetch all rows from `public_business_profiles` view (or `business_profiles` table)
-- Compute avg rating and review count per business from the `reviews` table
-- Client-side filtering and pagination (12 per page)
-
-### Files to Create/Edit
-
-| File | Change |
-|------|--------|
-| `src/pages/Businesses.tsx` | **New** — Full page with sidebar filters, business card grid, pagination, "Add Business" CTA, popular category chips |
-| `src/App.tsx` | Add lazy import + route `/businesses` |
-| `src/components/Navbar.tsx` | Update "Businesses" nav link from `/directory` to `/businesses` |
-| `src/components/Footer.tsx` | Add "Businesses" link |
-| `src/data/routeRegistry.ts` | Add `/businesses` route entry |
-
-### Filter Sidebar
-- **Search**: text input filtering by company name
-- **Rating**: radio buttons (Excellent 5★, Great 4★, Average 3★, Fair 2★, Poor 1★)
-- **Categories**: checkboxes from the categories data (Apps, Developers, Brokers, etc.) — links to `/categories` page
-- **Verification**: Verified / Unverified toggle
-
-### Sorting
-- Sort dropdown: Best Rating, Most Reviews, Newest, A-Z
-
-### Pagination
-- 12 businesses per page
-- Numbered page buttons with prev/next arrows
-
-### Mobile Responsive
-- Sidebar collapses into a filter drawer/sheet on mobile
-- Cards go from 3-column to 1-column grid
-
-### Category Integration
-- Category chips in sidebar and "Popular searches" section at bottom link to `/categories` with a filter param
-- Maintains consistency with existing BrowseCategoriesGrid navigation
+This eliminates the 0% → 80% flash and ensures the avatar dropdown only renders once auth state is complete.
 
