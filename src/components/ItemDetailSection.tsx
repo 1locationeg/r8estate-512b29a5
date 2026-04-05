@@ -181,17 +181,24 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     const replies = (item.meta?.replies as number) || (isDynamicProfile ? 0 : Math.abs((hash >> 5) % 60));
 
     // --- Trust Score Formula ---
-    const ratingScore = (baseRating / 5) * 40;
-    const reviewScore = Math.min(30, (Math.log10(Math.max(1, reviewCount)) / Math.log10(500)) * 30);
+    // For dynamic profiles: rating is the primary driver (0-70), volume adds up to 30
+    const ratingScore = isDynamicProfile
+      ? (baseRating / 5) * 70
+      : (baseRating / 5) * 40;
+    const reviewScore = isDynamicProfile
+      ? Math.min(30, reviewCount > 0 ? (Math.log10(reviewCount + 1) / Math.log10(100)) * 30 : 0)
+      : Math.min(30, (Math.log10(Math.max(1, reviewCount)) / Math.log10(500)) * 30);
     const engagementRaw = (likes * 1) + (shares * 3) + (replies * 2);
-    const engagementScore = Math.min(30, (Math.log10(Math.max(1, engagementRaw)) / Math.log10(5000)) * 30);
+    const engagementScore = isDynamicProfile ? 0 : Math.min(30, (Math.log10(Math.max(1, engagementRaw)) / Math.log10(5000)) * 30);
     const computedScore = Math.round(Math.min(100, Math.max(0, ratingScore + reviewScore + engagementScore)));
     
     const keys = getCategoryMetricKeys(item.category);
     const scores: Record<string, number> = {};
     keys.forEach((key, idx) => {
       if (isDynamicProfile) {
-        scores[key] = computedScore;
+        // Derive category scores from rating with slight variance per category
+        const variance = [0, -3, 2, -1][idx % 4];
+        scores[key] = reviewCount > 0 ? Math.max(0, Math.min(100, Math.round((baseRating / 5) * 100) + variance)) : 0;
       } else {
         const variance = ((hash >> (idx * 4)) % 30) - 15;
         scores[key] = Math.max(30, Math.min(95, computedScore + variance));
