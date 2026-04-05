@@ -103,6 +103,7 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
         phone: data.phone ?? "",
         website: data.website ?? "",
         license_url: data.license_url ?? "",
+        categories: (data as any).categories ?? [],
       });
     } else {
       setProfile(null);
