@@ -23,6 +23,7 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [existingRequest, setExistingRequest] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [justSubmitted, setJustSubmitted] = useState(false);
 
   useEffect(() => {
     if (!user || !open) {
