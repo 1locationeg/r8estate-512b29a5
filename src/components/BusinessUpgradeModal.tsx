@@ -109,22 +109,46 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
     rejected: { icon: XCircle, color: "text-destructive", label: "Rejected" },
   };
 
+  const handleClose = () => {
+    setJustSubmitted(false);
+    onOpenChange(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Building2 className="w-5 h-5 text-primary" />
-            Upgrade to Business Account
+            {justSubmitted ? "Request Submitted" : "Upgrade to Business Account"}
           </DialogTitle>
           <DialogDescription>
-            Submit your company details and a verification document for admin review.
+            {justSubmitted
+              ? "Your upgrade request is now under review."
+              : "Submit your company details and a verification document for admin review."}
           </DialogDescription>
         </DialogHeader>
 
         {loading ? (
           <div className="flex items-center justify-center py-8">
             <Loader2 className="w-5 h-5 animate-spin text-muted-foreground" />
+          </div>
+        ) : justSubmitted ? (
+          <div className="text-center py-6 space-y-4">
+            <div className="w-16 h-16 mx-auto rounded-full bg-amber-500/10 flex items-center justify-center">
+              <Clock className="w-8 h-8 text-amber-500" />
+            </div>
+            <div>
+              <h3 className="font-semibold text-foreground">Under Review</h3>
+              <p className="text-sm text-muted-foreground mt-1">
+                Our team is reviewing your business upgrade request. You'll receive a notification once it's approved. This usually takes 1–2 business days.
+              </p>
+            </div>
+            <Badge variant="secondary" className="gap-1">
+              <Clock className="w-3 h-3 text-amber-500" />
+              Pending Review
+            </Badge>
+            <Button onClick={handleClose} className="w-full mt-4">Done</Button>
           </div>
         ) : existingRequest ? (
           <div className="space-y-4">
