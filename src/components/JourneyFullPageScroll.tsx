@@ -524,7 +524,7 @@ const StationRingNav = ({
                   className="absolute right-full mr-2 whitespace-nowrap text-[10px] sm:text-xs font-bold px-2 py-0.5 rounded-md animate-fade-in"
                   style={{ backgroundColor: `hsl(${s.hslVar})`, color: "white" }}
                 >
-                  {s.step}. {t(`${prefix}.stepLabel`)}
+                  {s.step}/{STATIONS.length} · {t(`journeyScroll.${s.key}.title`)}
                 </span>
               )}
             </button>
