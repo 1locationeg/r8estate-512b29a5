@@ -91,7 +91,7 @@ export const SearchSuggestions = ({
     businessDebounceRef.current = setTimeout(async () => {
       const { data, error } = await supabase
         .from('public_business_profiles')
-        .select('id, company_name, location, logo_url, website, specialties, year_established, description')
+        .select('id, company_name, location, logo_url, website, specialties, year_established, description, categories')
         .or(`company_name.ilike.%${normalizedQuery}%,location.ilike.%${normalizedQuery}%,website.ilike.%${normalizedQuery}%`)
         .limit(6);
 

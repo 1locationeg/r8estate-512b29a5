@@ -124,6 +124,7 @@ export type Database = {
       }
       business_profiles: {
         Row: {
+          categories: string[]
           company_name: string | null
           created_at: string
           description: string | null
@@ -144,6 +145,7 @@ export type Database = {
           year_established: number | null
         }
         Insert: {
+          categories?: string[]
           company_name?: string | null
           created_at?: string
           description?: string | null
@@ -164,6 +166,7 @@ export type Database = {
           year_established?: number | null
         }
         Update: {
+          categories?: string[]
           company_name?: string | null
           created_at?: string
           description?: string | null
@@ -2050,6 +2053,7 @@ export type Database = {
     Views: {
       public_business_profiles: {
         Row: {
+          categories: string[] | null
           company_name: string | null
           created_at: string | null
           description: string | null
@@ -2066,6 +2070,7 @@ export type Database = {
           year_established: number | null
         }
         Insert: {
+          categories?: string[] | null
           company_name?: string | null
           created_at?: string | null
           description?: string | null
@@ -2082,6 +2087,7 @@ export type Database = {
           year_established?: number | null
         }
         Update: {
+          categories?: string[] | null
           company_name?: string | null
           created_at?: string | null
           description?: string | null

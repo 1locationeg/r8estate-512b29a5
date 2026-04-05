@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
   Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag,
 } from "lucide-react";
@@ -24,6 +25,17 @@ interface UserInfo {
   created_at: string;
 }
 
+const BUSINESS_CATEGORIES = [
+  { value: "developers", label: "Developers" },
+  { value: "apps", label: "Apps" },
+  { value: "brokers", label: "Brokers" },
+  { value: "units", label: "Units" },
+  { value: "projects", label: "Projects" },
+  { value: "locations", label: "Locations" },
+  { value: "property-types", label: "Property Types" },
+  { value: "categories", label: "Categories" },
+];
+
 interface BusinessProfileData {
   id: string;
   company_name: string;
@@ -37,6 +49,7 @@ interface BusinessProfileData {
   phone: string;
   website: string;
   license_url: string;
+  categories: string[];
 }
 
 interface Props {
@@ -91,6 +104,7 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
         phone: data.phone ?? "",
         website: data.website ?? "",
         license_url: data.license_url ?? "",
+        categories: (data as any).categories ?? [],
       });
     } else {
       setProfile(null);
@@ -147,6 +161,7 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
         phone: profile.phone,
         website: profile.website,
         license_url: profile.license_url,
+        categories: profile.categories,
       })
       .eq("id", profile.id);
 
@@ -282,6 +297,36 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
                       className="text-sm"
                       rows={3}
                     />
+                  </div>
+                  {/* Category Picker */}
+                  <div>
+                    <label className="text-[10px] font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
+                      <Tag className="w-3 h-3" />Business Categories
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {BUSINESS_CATEGORIES.map(cat => {
+                        const isActive = profile.categories.includes(cat.value);
+                        return (
+                          <Badge
+                            key={cat.value}
+                            variant={isActive ? "default" : "outline"}
+                            className={cn(
+                              "text-[10px] cursor-pointer transition-colors select-none",
+                              isActive ? "bg-primary text-primary-foreground hover:bg-primary/80" : "hover:bg-secondary"
+                            )}
+                            onClick={() => {
+                              const newCats = isActive
+                                ? profile.categories.filter(c => c !== cat.value)
+                                : [...profile.categories, cat.value];
+                              updateField("categories", newCats);
+                            }}
+                          >
+                            {isActive ? <CheckCircle className="w-3 h-3 me-1" /> : <Plus className="w-3 h-3 me-1" />}
+                            {cat.label}
+                          </Badge>
+                        );
+                      })}
+                    </div>
                   </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>

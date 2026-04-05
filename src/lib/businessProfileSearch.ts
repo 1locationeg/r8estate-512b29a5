@@ -1,4 +1,4 @@
-import type { SearchItem } from "@/data/searchIndex";
+import type { SearchItem, SearchCategory } from "@/data/searchIndex";
 
 export interface PublicBusinessProfileSearchRow {
   id: string;
@@ -9,6 +9,7 @@ export interface PublicBusinessProfileSearchRow {
   specialties: string[] | null;
   year_established: number | null;
   description: string | null;
+  categories?: string[] | null;
 }
 
 export function mapPublicBusinessProfileToSearchItem(
@@ -21,7 +22,7 @@ export function mapPublicBusinessProfileToSearchItem(
   return {
     id: profile.id,
     name: profile.company_name?.trim() || "Business profile",
-    category: "developers",
+    category: ((profile.categories && profile.categories.length > 0 ? profile.categories[0] : "developers") as SearchCategory),
     subtitle: profile.location?.trim() || websiteLabel || "Verified business profile",
     image: profile.logo_url || undefined,
     rating: 0,
@@ -35,6 +36,7 @@ export function mapPublicBusinessProfileToSearchItem(
       specialties: profile.specialties ?? [],
       yearEstablished: profile.year_established ?? undefined,
       description: profile.description ?? undefined,
+      categories: profile.categories ?? [],
     },
   };
 }
