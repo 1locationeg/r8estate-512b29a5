@@ -42,6 +42,7 @@ import { MyDeals } from '@/components/MyDeals';
 import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { AddBusinessModal } from '@/components/AddBusinessModal';
+import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -437,53 +438,121 @@ const DevOverview = () => {
 
 const DevReviews = () => {
   const [socialReview, setSocialReview] = useState<{ author: string; rating: number; comment: string; project?: string } | null>(null);
+  const { user } = useAuth();
+  const { profile: businessProfile } = useBusinessProfile();
+  const [dbReviews, setDbReviews] = useState<any[]>([]);
+  const [dbReplies, setDbReplies] = useState<Record<string, any[]>>({});
+  const [loadingDb, setLoadingDb] = useState(true);
+
+  const fetchReviews = async () => {
+    if (!businessProfile?.id) return;
+    setLoadingDb(true);
+    // Fetch reviews where developer_id matches business profile id
+    const { data: revs } = await supabase
+      .from('reviews')
+      .select('*')
+      .eq('developer_id', businessProfile.id)
+      .order('created_at', { ascending: false });
+
+    const reviewsList = revs || [];
+    setDbReviews(reviewsList);
+
+    // Fetch replies for these reviews
+    if (reviewsList.length > 0) {
+      const ids = reviewsList.map((r: any) => r.id);
+      const { data: replies } = await supabase
+        .from('review_replies')
+        .select('*')
+        .in('review_id', ids)
+        .order('created_at', { ascending: true });
+      
+      const grouped: Record<string, any[]> = {};
+      (replies || []).forEach((rep: any) => {
+        if (!grouped[rep.review_id]) grouped[rep.review_id] = [];
+        grouped[rep.review_id].push(rep);
+      });
+      setDbReplies(grouped);
+    }
+    setLoadingDb(false);
+  };
+
+  useEffect(() => { fetchReviews(); }, [businessProfile?.id]);
+
+  // Merge mock + db reviews
+  const allReviews = [
+    ...dbReviews.map((r: any) => ({
+      id: r.id,
+      author: r.author_name || 'Anonymous',
+      rating: r.rating,
+      comment: r.comment,
+      project: r.developer_name || '',
+      date: new Date(r.created_at).toLocaleDateString(),
+      isDb: true,
+      developerReply: dbReplies[r.id]?.[0] || null,
+    })),
+    ...myReviews.map(r => ({ ...r, isDb: false })),
+  ];
 
   return (
     <div>
       <h2 className="text-2xl font-bold text-foreground mb-4">Reviews Management</h2>
-      <div className="space-y-4">
-        {myReviews.map((r) => (
-          <div key={r.id} className="bg-card border border-border rounded-xl p-5">
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-3">
-                <Avatar className="h-10 w-10">
-                  {r.avatar && <img src={r.avatar} alt={r.author} className="w-full h-full object-cover rounded-full" />}
-                  <AvatarFallback className="bg-accent text-accent-foreground text-sm">{r.author.split(' ').map(n=>n[0]).join('')}</AvatarFallback>
-                </Avatar>
-                <div>
-                  <p className="font-semibold text-foreground text-sm">{r.author}</p>
-                  <p className="text-xs text-muted-foreground">{r.project} · {r.date}</p>
+      {loadingDb ? (
+        <div className="flex justify-center py-12"><Loader2 className="w-6 h-6 animate-spin text-muted-foreground" /></div>
+      ) : (
+        <div className="space-y-4">
+          {allReviews.length === 0 && (
+            <p className="text-sm text-muted-foreground text-center py-8">No reviews yet.</p>
+          )}
+          {allReviews.map((r) => (
+            <div key={r.id} className="bg-card border border-border rounded-xl p-5">
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-3">
+                  <Avatar className="h-10 w-10">
+                    <AvatarFallback className="bg-accent text-accent-foreground text-sm">{r.author.split(' ').map((n: string) => n[0]).join('')}</AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="font-semibold text-foreground text-sm">{r.author}</p>
+                    <p className="text-xs text-muted-foreground">{r.project} · {r.date}</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className={`w-4 h-4 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
+                  ))}
                 </div>
               </div>
-              <div className="flex items-center gap-1">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className={`w-4 h-4 ${i < r.rating ? getRatingColorClass(r.rating) : 'text-muted'}`} />
-                ))}
-              </div>
-            </div>
-            <p className="text-sm text-muted-foreground mb-3">{r.comment}</p>
-            <div className="flex items-center gap-2">
-              {r.developerReply ? (
-                <div className="flex-1 p-3 bg-secondary rounded-lg">
+              <p className="text-sm text-muted-foreground mb-3">{r.comment}</p>
+
+              {/* Existing reply */}
+              {r.developerReply && (
+                <div className="p-3 bg-secondary rounded-lg mb-3">
                   <p className="text-xs font-semibold text-primary mb-1">↩ Your Reply</p>
-                  <p className="text-xs text-muted-foreground">{r.developerReply.comment}</p>
+                  <p className="text-xs text-muted-foreground">{r.developerReply.body || r.developerReply.comment}</p>
                 </div>
-              ) : (
-                <Button size="sm" variant="outline"><MessageSquare className="w-3 h-3 me-1" /> Reply</Button>
               )}
-              <Button
-                size="sm"
-                variant="outline"
-                onClick={() => setSocialReview({ author: r.author, rating: r.rating, comment: r.comment, project: r.project })}
-                className="gap-1.5"
-              >
-                <Share2 className="w-3 h-3" />
-                Share as Post
-              </Button>
+
+              <div className="flex items-center gap-2">
+                {/* Reply button — only for DB reviews without a reply */}
+                {r.isDb && !r.developerReply && (
+                  <ReviewReplyForm reviewId={r.id} onReplySubmitted={fetchReviews} />
+                )}
+                {!r.isDb && !r.developerReply && (
+                  <Button size="sm" variant="outline" disabled><MessageSquare className="w-3 h-3 me-1" /> Reply (mock)</Button>
+                )}
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => setSocialReview({ author: r.author, rating: r.rating, comment: r.comment, project: r.project })}
+                  className="gap-1.5"
+                >
+                  <Share2 className="w-3 h-3" />
+                  Share as Post
+                </Button>
+              </div>
             </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       <ReviewToSocialModal
         open={!!socialReview}
