@@ -555,7 +555,29 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
           <Badge variant="secondary" className="text-xs">
             {t(`search.${item.category}`)}
           </Badge>
+          {/* Display business categories */}
+          {(item.meta?.categories as string[] | undefined)?.map((catValue: string) => {
+            const catDef = BUSINESS_CATEGORIES.find(c => c.value === catValue);
+            if (!catDef) return null;
+            return (
+              <Badge key={catValue} variant="secondary" className="text-xs gap-1">
+                <Tag className="w-3 h-3" />
+                {catDef.label}
+              </Badge>
+            );
+          })}
         </div>
+
+        {/* Owner category editor */}
+        {isOwner && item.id && (
+          <div className="mt-2">
+            <BusinessCategoryPicker
+              businessId={item.id}
+              currentCategories={(item.meta?.categories as string[]) || []}
+              onUpdated={() => window.location.reload()}
+            />
+          </div>
+        )}
 
         {/* Company name */}
         <h2 className="text-xl md:text-2xl font-bold text-foreground mt-2">
