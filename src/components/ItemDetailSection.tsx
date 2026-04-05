@@ -139,6 +139,27 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const { isReviewable, parentName, childProjects } = useReviewability(item?.id);
   const { startChatWithBusinessId } = useStartChat();
+  const [isOwner, setIsOwner] = useState(false);
+  const [coverImageUrl, setCoverImageUrl] = useState<string | undefined>(item?.meta?.coverImage as string | undefined);
+  const [logoUrl, setLogoUrl] = useState<string | undefined>(item?.image);
+
+  // Check if current user owns this business profile
+  useEffect(() => {
+    if (!user || !item?.id) { setIsOwner(false); return; }
+    supabase
+      .from('business_profiles')
+      .select('id')
+      .eq('id', item.id)
+      .eq('user_id', user.id)
+      .maybeSingle()
+      .then(({ data }) => setIsOwner(!!data));
+  }, [user, item?.id]);
+
+  // Sync image urls when item changes
+  useEffect(() => {
+    setCoverImageUrl(item?.meta?.coverImage as string | undefined);
+    setLogoUrl(item?.image);
+  }, [item?.image, item?.meta?.coverImage]);
 
   // Track implicit interest when item detail is opened
   const { trackClick } = useTrackInterest();
