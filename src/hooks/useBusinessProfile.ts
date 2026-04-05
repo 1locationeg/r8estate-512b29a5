@@ -14,6 +14,7 @@ export interface BusinessProfile {
   year_established: number | null;
   employees: number | null;
   specialties: string[];
+  categories: string[];
   email: string;
   phone: string;
   website: string;
@@ -31,6 +32,7 @@ const emptyProfile = (userId: string): BusinessProfile => ({
   year_established: null,
   employees: null,
   specialties: [],
+  categories: [],
   email: '',
   phone: '',
   website: '',
