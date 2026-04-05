@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import { generateAvatar } from "@/lib/avatarUtils";
 import { useTrackInterest } from "@/hooks/useTrackInterest";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
@@ -69,6 +69,8 @@ import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { useStartChat } from "@/hooks/useStartChat";
+import { supabase } from "@/integrations/supabase/client";
+import { BusinessImageUpload } from "./BusinessImageUpload";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
