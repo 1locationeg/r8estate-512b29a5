@@ -5,6 +5,7 @@ export interface PublicBusinessProfileSearchRow {
   company_name: string | null;
   location: string | null;
   logo_url: string | null;
+  cover_image_url?: string | null;
   website: string | null;
   specialties: string[] | null;
   year_established: number | null;
@@ -37,6 +38,7 @@ export function mapPublicBusinessProfileToSearchItem(
       yearEstablished: profile.year_established ?? undefined,
       description: profile.description ?? undefined,
       categories: profile.categories ?? [],
+      coverImage: profile.cover_image_url ?? undefined,
     },
   };
 }

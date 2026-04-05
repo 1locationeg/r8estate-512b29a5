@@ -126,6 +126,7 @@ export type Database = {
         Row: {
           categories: string[]
           company_name: string | null
+          cover_image_url: string | null
           created_at: string
           description: string | null
           email: string | null
@@ -147,6 +148,7 @@ export type Database = {
         Insert: {
           categories?: string[]
           company_name?: string | null
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
@@ -168,6 +170,7 @@ export type Database = {
         Update: {
           categories?: string[]
           company_name?: string | null
+          cover_image_url?: string | null
           created_at?: string
           description?: string | null
           email?: string | null
@@ -2061,6 +2064,7 @@ export type Database = {
         Row: {
           categories: string[] | null
           company_name: string | null
+          cover_image_url: string | null
           created_at: string | null
           description: string | null
           employees: number | null
@@ -2078,6 +2082,7 @@ export type Database = {
         Insert: {
           categories?: string[] | null
           company_name?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
           employees?: number | null
@@ -2095,6 +2100,7 @@ export type Database = {
         Update: {
           categories?: string[] | null
           company_name?: string | null
+          cover_image_url?: string | null
           created_at?: string | null
           description?: string | null
           employees?: number | null

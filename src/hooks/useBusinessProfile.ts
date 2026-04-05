@@ -9,6 +9,7 @@ export interface BusinessProfile {
   company_name: string;
   description: string;
   logo_url: string;
+  cover_image_url: string;
   location: string;
   year_established: number | null;
   employees: number | null;
@@ -25,6 +26,7 @@ const emptyProfile = (userId: string): BusinessProfile => ({
   company_name: '',
   description: '',
   logo_url: '',
+  cover_image_url: '',
   location: '',
   year_established: null,
   employees: null,
@@ -61,6 +63,7 @@ export function useBusinessProfile() {
         company_name: data.company_name ?? '',
         description: data.description ?? '',
         logo_url: data.logo_url ?? '',
+        cover_image_url: (data as any).cover_image_url ?? '',
         location: data.location ?? '',
         specialties: data.specialties ?? [],
         email: data.email ?? '',
@@ -84,6 +87,7 @@ export function useBusinessProfile() {
       company_name: updates.company_name ?? profile?.company_name ?? '',
       description: updates.description ?? profile?.description ?? '',
       logo_url: updates.logo_url ?? profile?.logo_url ?? '',
+      cover_image_url: updates.cover_image_url ?? profile?.cover_image_url ?? '',
       location: updates.location ?? profile?.location ?? '',
       year_established: updates.year_established ?? profile?.year_established,
       employees: updates.employees ?? profile?.employees,
