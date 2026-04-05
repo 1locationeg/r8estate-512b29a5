@@ -160,19 +160,25 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
     if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
 
-    // Dynamic hash for deterministic variance
+    const isDynamicProfile = !!item.meta?.dynamicBusinessProfile;
+
+    // Dynamic hash for deterministic variance (only for static/mock entities)
     let hash = 0;
-    for (let i = 0; i < item.id.length; i++) {
-      hash = ((hash << 5) - hash) + item.id.charCodeAt(i);
-      hash = hash & hash;
+    if (!isDynamicProfile) {
+      for (let i = 0; i < item.id.length; i++) {
+        hash = ((hash << 5) - hash) + item.id.charCodeAt(i);
+        hash = hash & hash;
+      }
     }
     
     // --- Dynamic inputs ---
     const reviewCount = item.reviewCount || 0;
-    const baseRating = item.rating || (3 + Math.abs(hash % 20) / 10);
-    const likes = (item.meta?.likes as number) || Math.abs(hash % 200);
-    const shares = (item.meta?.shares as number) || Math.abs((hash >> 3) % 80);
-    const replies = (item.meta?.replies as number) || Math.abs((hash >> 5) % 60);
+    const baseRating = isDynamicProfile
+      ? (item.rating || 0)
+      : (item.rating || (3 + Math.abs(hash % 20) / 10));
+    const likes = (item.meta?.likes as number) || (isDynamicProfile ? 0 : Math.abs(hash % 200));
+    const shares = (item.meta?.shares as number) || (isDynamicProfile ? 0 : Math.abs((hash >> 3) % 80));
+    const replies = (item.meta?.replies as number) || (isDynamicProfile ? 0 : Math.abs((hash >> 5) % 60));
 
     // --- Trust Score Formula ---
     // Rating component (0-40): rating out of 5 scaled to 40
@@ -191,23 +197,34 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     const keys = getCategoryMetricKeys(item.category);
     const scores: Record<string, number> = {};
     keys.forEach((key, idx) => {
-      const variance = ((hash >> (idx * 4)) % 30) - 15;
-      scores[key] = Math.max(30, Math.min(95, computedScore + variance));
+      if (isDynamicProfile) {
+        scores[key] = computedScore;
+      } else {
+        const variance = ((hash >> (idx * 4)) % 30) - 15;
+        scores[key] = Math.max(30, Math.min(95, computedScore + variance));
+      }
     });
     
     // Generate star distribution
-    const dist5 = Math.round(computedScore * 0.8 + Math.abs(hash % 10));
-    const dist4 = Math.round((100 - dist5) * 0.5);
-    const dist3 = Math.round((100 - dist5 - dist4) * 0.5);
-    const dist2 = Math.round((100 - dist5 - dist4 - dist3) * 0.6);
-    const dist1 = 100 - dist5 - dist4 - dist3 - dist2;
-    
-    const reviewsList = mockReviewerData.map((reviewer, idx) => ({
-      ...reviewer,
-      rating: Math.max(1, Math.min(5, Math.round(baseRating + (idx % 3) - 1))),
-      reviewIndex: idx,
-      date: new Date(Date.now() - (idx * 7 * 24 * 60 * 60 * 1000)),
-    }));
+    let dist5 = 0, dist4 = 0, dist3 = 0, dist2 = 0, dist1 = 0;
+    let reviewsList: Array<typeof mockReviewerData[0] & { rating: number; reviewIndex: number; date: Date }> = [];
+
+    if (isDynamicProfile && reviewCount === 0) {
+      // New business — no mock data
+    } else {
+      dist5 = Math.round(computedScore * 0.8 + Math.abs(hash % 10));
+      dist4 = Math.round((100 - dist5) * 0.5);
+      dist3 = Math.round((100 - dist5 - dist4) * 0.5);
+      dist2 = Math.round((100 - dist5 - dist4 - dist3) * 0.6);
+      dist1 = 100 - dist5 - dist4 - dist3 - dist2;
+
+      reviewsList = mockReviewerData.map((reviewer, idx) => ({
+        ...reviewer,
+        rating: Math.max(1, Math.min(5, Math.round(baseRating + (idx % 3) - 1))),
+        reviewIndex: idx,
+        date: new Date(Date.now() - (idx * 7 * 24 * 60 * 60 * 1000)),
+      }));
+    }
     
     return {
       trustScore: computedScore,
@@ -551,7 +568,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </div>
             <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
             <span className="text-sm text-muted-foreground">
-              ({(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()} {t("reviews.title", "reviews")})
+              ({(item.reviewCount || (item.meta?.dynamicBusinessProfile ? 0 : Math.abs(parseInt(item.id, 36)) % 5000 + 100)).toLocaleString()} {t("reviews.title", "reviews")})
             </span>
           </div>
         </div>
@@ -857,7 +874,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                 </div>
                 <p className="text-sm font-semibold text-foreground mt-0.5">{getRatingLabel(rating)}</p>
                 <p className="text-xs text-muted-foreground">
-                  {(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()} {t("reviews.title", "reviews")}
+                  {(item.reviewCount || (item.meta?.dynamicBusinessProfile ? 0 : Math.abs(parseInt(item.id, 36)) % 5000 + 100)).toLocaleString()} {t("reviews.title", "reviews")}
                 </p>
               </div>
             </div>

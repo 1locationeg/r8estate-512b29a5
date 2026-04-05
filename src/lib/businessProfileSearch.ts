@@ -11,8 +11,6 @@ export interface PublicBusinessProfileSearchRow {
   description: string | null;
 }
 
-const DEFAULT_BUSINESS_TRUST_SCORE = 78;
-
 export function mapPublicBusinessProfileToSearchItem(
   profile: PublicBusinessProfileSearchRow,
 ): SearchItem {
@@ -26,9 +24,11 @@ export function mapPublicBusinessProfileToSearchItem(
     category: "developers",
     subtitle: profile.location?.trim() || websiteLabel || "Verified business profile",
     image: profile.logo_url || undefined,
+    rating: 0,
+    reviewCount: 0,
     meta: {
       dynamicBusinessProfile: true,
-      trustScore: DEFAULT_BUSINESS_TRUST_SCORE,
+      trustScore: 0,
       verified: true,
       location: profile.location ?? undefined,
       website: profile.website ?? undefined,
