@@ -824,6 +824,38 @@ const DevBusinessProfile = () => {
               </div>
             </div>
 
+            {/* Cover Image Upload */}
+            <div>
+              <Label className="text-xs font-medium text-muted-foreground">Cover Image</Label>
+              <div className="mt-2">
+                <div className="w-full h-24 rounded-xl bg-secondary border-2 border-dashed border-border flex items-center justify-center overflow-hidden relative group">
+                  {bp?.cover_image_url ? (
+                    <img src={bp.cover_image_url} alt="Cover" className="w-full h-full object-cover rounded-xl" />
+                  ) : (
+                    <div className="flex flex-col items-center gap-1 text-muted-foreground">
+                      <Image className="w-5 h-5" />
+                      <span className="text-[10px]">No cover image</span>
+                    </div>
+                  )}
+                  {bp?.id && (
+                    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-background/40 transition-opacity rounded-xl">
+                      {(() => {
+                        const { BusinessImageUpload } = require('@/components/BusinessImageUpload');
+                        return (
+                          <BusinessImageUpload
+                            businessId={bp.id}
+                            type="cover"
+                            currentUrl={bp.cover_image_url}
+                            onUploaded={() => window.location.reload()}
+                          />
+                        );
+                      })()}
+                    </div>
+                  )}
+                </div>
+                <p className="text-[10px] text-muted-foreground mt-1">Recommended: 1200×300px, JPG or PNG up to 5MB</p>
+              </div>
+
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <Label className="text-xs font-medium text-muted-foreground">Company Name</Label>
