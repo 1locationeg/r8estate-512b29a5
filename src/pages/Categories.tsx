@@ -42,8 +42,6 @@ const Categories = () => {
 
       {/* Grid */}
       <BrowseCategoriesGrid
-        onSelectCategory={handleSelectCategory}
-        onSelectItem={handleSelectItem}
         searchQuery={search}
       />
     </StationPageWrapper>
