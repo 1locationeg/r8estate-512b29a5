@@ -1,61 +1,66 @@
 
 
-# Agent Teaser: Inside the Review Card Only
+## Plan: Multi-Category Business Assignment & Category-Aware Trust Metrics
 
-## Concept
+### Problem
+1. All dynamic business profiles are hardcoded as `"developers"` category
+2. Admin has no way to assign/change categories for a business
+3. A business can only belong to one category
+4. Trust category bars show generic developer metrics regardless of actual business type
 
-Instead of a separate component that replaces or sits outside the showcase, the agent teaser lives **inside the review card rectangle itself** — the exact same card area (lines 388–637 of `HeroTrustShowcase`). The gauge stays permanently visible above; only the card content swaps.
+### Solution
 
-After the 3 review scenarios cycle once, the card content cross-fades to a compact agent teaser **within the same card dimensions** (~180px min-height, same padding/border/shadow). Then it fades back to reviews permanently.
+#### 1. Database: Add `categories` column to `business_profiles`
+- Add a new `text[]` column `categories` (default `'{}'`) to `business_profiles` table
+- This allows a business to belong to multiple categories (e.g., "apps", "brokers", "developers")
+- Update the `public_business_profiles` view to expose this column
 
-```text
-┌──────────────────────────────┐
-│        GAUGE (always)        │  ← never changes
-├──────────────────────────────┤
-│  ┌────────────────────────┐  │
-│  │  Review Card area      │  │  ← THIS rectangle only
-│  │  (cycles 3 reviews)    │  │
-│  │  then becomes:         │  │
-│  │  Agent teaser content  │  │
-│  │  then back to reviews  │  │
-│  └────────────────────────┘  │
-└──────────────────────────────┘
+**Migration SQL:**
+```sql
+ALTER TABLE public.business_profiles 
+  ADD COLUMN categories text[] NOT NULL DEFAULT '{}';
+
+-- Update the public view
+CREATE OR REPLACE VIEW public.public_business_profiles AS
+  SELECT id, company_name, location, logo_url, website, 
+         specialties, year_established, description, categories
+  FROM public.business_profiles
+  WHERE is_reviewable = true OR is_reviewable IS NULL;
 ```
 
-## Agent Teaser Content (inside the card)
+#### 2. Admin UI: Category Picker in `AdminUserDetailSheet`
+- Add a multi-select category picker below the "Description" field
+- Available categories: Developers, Apps, Brokers, Units, Projects, Locations, Property Types, Categories (matching `SearchCategory` type)
+- Each category rendered as a toggleable chip/badge — click to add/remove
+- Selected categories are highlighted; saved with the profile
+- The **first** category in the array is treated as the "primary" category
 
-A minimal, motivating layout within the same card dimensions:
+#### 3. Update `businessProfileSearch.ts`
+- Read the `categories` array from the profile row
+- Use the first category as the `SearchItem.category` (instead of hardcoded `"developers"`)
+- Pass all categories in `meta.categories` for multi-category display
 
-- **Sparkles icon + "R8 Agent"** label (small, top-left)
-- **Rotating question** with typing effect: e.g. *"Is Ora Developers safe?"*
-- **One-line answer** fading in: *"⚠️ 3 red flags found — 18mo delivery delay"*
-- **CTA button**: "Try R8 Agent →" linking to `/copilot`
-- Same card border, radius, shadow, padding — visually seamless
+#### 4. Update `ItemDetailSection` Trust Category Bars
+- When rendering a dynamic business profile, use `item.category` to pick the correct metric keys via `getCategoryMetricKeys()`
+- This already works once the category is correct — the fix is upstream in step 3
 
-## Changes
+#### 5. Update `EntityPage.tsx`
+- Ensure the Supabase query for `public_business_profiles` also selects the `categories` column
+- Pass it through to `mapPublicBusinessProfileToSearchItem`
 
-### `src/components/HeroTrustShowcase.tsx`
-- Add internal phase: after 3 reviews cycle, set `cardPhase` to `"agent"` for ~8s, then `"reviews"` permanently
-- The gauge section (lines 296–386) stays untouched and always visible
-- The review card container (line 389–637) gets a `position: relative` wrapper with two children:
-  - Review content (visible when `cardPhase !== "agent"`)
-  - Agent teaser content (visible when `cardPhase === "agent"`)
-- Cross-fade via opacity transition within the same fixed-height container
-- Remove `onCycleComplete` prop (no longer needed externally)
-
-### `src/pages/Index.tsx`
-- Remove `heroPhase` state machine entirely
-- Remove `HeroAgentDemo` import and conditional rendering
-- Render `<HeroTrustShowcase />` directly without phase wrappers — no opacity toggling, no absolute positioning
-
-### `src/components/HeroAgentDemo.tsx`
-- **Delete** — no longer needed as a standalone component
-
-### Files Summary
-
-| File | Action |
+### Files to Change
+| File | Change |
 |------|--------|
-| `src/components/HeroTrustShowcase.tsx` | Edit — add inline agent teaser phase inside the card |
-| `src/pages/Index.tsx` | Edit — simplify, remove phase logic |
-| `src/components/HeroAgentDemo.tsx` | Delete |
+| Migration SQL | Add `categories text[]` column, update view |
+| `src/components/AdminUserDetailSheet.tsx` | Add category toggle chips UI + save logic |
+| `src/lib/businessProfileSearch.ts` | Use `categories[0]` as primary category |
+| `src/pages/EntityPage.tsx` | Select `categories` in query |
+| `src/components/SearchSuggestions.tsx` | Select `categories` in remote search query |
+
+### Admin Workflow
+1. Open Admin Dashboard → Users tab
+2. Click "Manage" on a user → Detail sheet opens
+3. Upgrade user to "Business" role → Create profile
+4. In the profile editor, toggle category chips (e.g., select "Apps" instead of "Developers")
+5. Save → Entity page now shows correct category label, icon, and trust metric bars
 
