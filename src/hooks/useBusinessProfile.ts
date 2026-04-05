@@ -95,6 +95,7 @@ export function useBusinessProfile() {
       year_established: updates.year_established ?? profile?.year_established,
       employees: updates.employees ?? profile?.employees,
       specialties: updates.specialties ?? profile?.specialties ?? [],
+      categories: updates.categories ?? profile?.categories ?? [],
       email: updates.email ?? profile?.email ?? '',
       phone: updates.phone ?? profile?.phone ?? '',
       website: updates.website ?? profile?.website ?? '',
