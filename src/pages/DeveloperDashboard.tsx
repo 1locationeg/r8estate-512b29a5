@@ -88,6 +88,18 @@ const DevOverview = () => {
   const { t } = useTranslation();
   const { profile, user } = useAuth();
   const { profileCompletion, missingFields, currentTier, nextTier, pointsToNext, totalPoints, earnedBadges, lockedBadges, allBadges } = useGamification();
+  const { profile: businessProfile } = useBusinessProfile();
+  const [subBusinesses, setSubBusinesses] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!businessProfile?.id) return;
+    supabase
+      .from('business_profiles')
+      .select('id, company_name, logo_url, location, categories, created_at')
+      .eq('parent_id', businessProfile.id)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setSubBusinesses(data || []));
+  }, [businessProfile?.id]);
 
   const currentTierIdx = TIERS.findIndex(ti => ti.id === currentTier.id);
 
