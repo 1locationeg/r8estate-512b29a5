@@ -157,8 +157,8 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(item?.id || "", item?.category || "item");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(item?.id || "");
 
-  const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution } = useMemo(() => {
-    if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0] };
+  const { trustScore, rating, categoryScores, reviews, metricKeys, starDistribution, liveReviewCount } = useMemo(() => {
+    if (!item) return { trustScore: 0, rating: 0, categoryScores: {}, reviews: [], metricKeys: [], starDistribution: [0,0,0,0,0], liveReviewCount: 0 };
 
     const isDynamicProfile = !!item.meta?.dynamicBusinessProfile;
 
@@ -171,27 +171,20 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       }
     }
     
-    // --- Dynamic inputs ---
-    const reviewCount = item.reviewCount || 0;
+    // --- Dynamic inputs: use real dbReviews for dynamic profiles ---
+    const reviewCount = isDynamicProfile ? dbReviews.length : (item.reviewCount || 0);
     const baseRating = isDynamicProfile
-      ? (item.rating || 0)
+      ? (dbReviews.length > 0 ? dbReviews.reduce((sum, r) => sum + r.rating, 0) / dbReviews.length : 0)
       : (item.rating || (3 + Math.abs(hash % 20) / 10));
     const likes = (item.meta?.likes as number) || (isDynamicProfile ? 0 : Math.abs(hash % 200));
     const shares = (item.meta?.shares as number) || (isDynamicProfile ? 0 : Math.abs((hash >> 3) % 80));
     const replies = (item.meta?.replies as number) || (isDynamicProfile ? 0 : Math.abs((hash >> 5) % 60));
 
     // --- Trust Score Formula ---
-    // Rating component (0-40): rating out of 5 scaled to 40
     const ratingScore = (baseRating / 5) * 40;
-
-    // Review volume component (0-30): logarithmic scale, caps at ~500 reviews
     const reviewScore = Math.min(30, (Math.log10(Math.max(1, reviewCount)) / Math.log10(500)) * 30);
-
-    // Engagement component (0-30): weighted engagement normalized
     const engagementRaw = (likes * 1) + (shares * 3) + (replies * 2);
     const engagementScore = Math.min(30, (Math.log10(Math.max(1, engagementRaw)) / Math.log10(5000)) * 30);
-
-    // Final trust score (0-100)
     const computedScore = Math.round(Math.min(100, Math.max(0, ratingScore + reviewScore + engagementScore)));
     
     const keys = getCategoryMetricKeys(item.category);
@@ -209,8 +202,21 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     let dist5 = 0, dist4 = 0, dist3 = 0, dist2 = 0, dist1 = 0;
     let reviewsList: Array<typeof mockReviewerData[0] & { rating: number; reviewIndex: number; date: Date }> = [];
 
-    if (isDynamicProfile && reviewCount === 0) {
-      // New business — no mock data
+    if (isDynamicProfile) {
+      // Compute real star distribution from dbReviews
+      if (dbReviews.length > 0) {
+        const counts = [0, 0, 0, 0, 0];
+        dbReviews.forEach(r => {
+          const star = Math.max(1, Math.min(5, Math.round(r.rating)));
+          counts[star - 1]++;
+        });
+        const total = dbReviews.length;
+        dist1 = Math.round((counts[0] / total) * 100);
+        dist2 = Math.round((counts[1] / total) * 100);
+        dist3 = Math.round((counts[2] / total) * 100);
+        dist4 = Math.round((counts[3] / total) * 100);
+        dist5 = 100 - dist1 - dist2 - dist3 - dist4;
+      }
     } else {
       dist5 = Math.round(computedScore * 0.8 + Math.abs(hash % 10));
       dist4 = Math.round((100 - dist5) * 0.5);
@@ -233,8 +239,9 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       reviews: reviewsList,
       metricKeys: keys,
       starDistribution: [dist1, dist2, dist3, dist4, dist5],
+      liveReviewCount: reviewCount,
     };
-  }, [item]);
+  }, [item, dbReviews]);
 
   if (!item) return null;
 
@@ -874,8 +881,8 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                 </div>
                 <p className="text-sm font-semibold text-foreground mt-0.5">{getRatingLabel(rating)}</p>
                 <p className="text-xs text-muted-foreground">
-                  {(item.reviewCount || (item.meta?.dynamicBusinessProfile ? 0 : Math.abs(parseInt(item.id, 36)) % 5000 + 100)).toLocaleString()} {t("reviews.title", "reviews")}
-                </p>
+                   {(item.meta?.dynamicBusinessProfile ? liveReviewCount : (item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100)).toLocaleString()} {t("reviews.title", "reviews")}
+                 </p>
               </div>
             </div>
             
