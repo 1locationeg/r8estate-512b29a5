@@ -568,7 +568,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
             </div>
             <span className="text-lg font-bold text-foreground">{rating.toFixed(1)}</span>
             <span className="text-sm text-muted-foreground">
-              ({(item.reviewCount || Math.abs(parseInt(item.id, 36)) % 5000 + 100).toLocaleString()} {t("reviews.title", "reviews")})
+              ({(item.reviewCount || (item.meta?.dynamicBusinessProfile ? 0 : Math.abs(parseInt(item.id, 36)) % 5000 + 100)).toLocaleString()} {t("reviews.title", "reviews")})
             </span>
           </div>
         </div>
