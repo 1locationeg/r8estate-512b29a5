@@ -1,66 +1,36 @@
 
 
-## Plan: Multi-Category Business Assignment & Category-Aware Trust Metrics
+## Plan: Make Reviews & Ratings Update Live on Entity Pages
 
 ### Problem
-1. All dynamic business profiles are hardcoded as `"developers"` category
-2. Admin has no way to assign/change categories for a business
-3. A business can only belong to one category
-4. Trust category bars show generic developer metrics regardless of actual business type
+When a user submits a review for a dynamic business profile, the rating (0.0), trust score (0), star distribution bars, and review count all remain at zero. This is because:
+1. The entity page loads business profiles with hardcoded `rating: 0, reviewCount: 0`
+2. The `useMemo` that computes trust score, rating, and star distribution only reads from `item.rating` and `item.reviewCount` — it never uses the actual `dbReviews` fetched from the database
+3. After a review is submitted, `refetchReviews` updates `dbReviews`, but nothing recalculates the displayed metrics
 
 ### Solution
+Update `ItemDetailSection.tsx` to incorporate real review data (`dbReviews`) into the trust score, rating, and star distribution calculations for dynamic business profiles.
 
-#### 1. Database: Add `categories` column to `business_profiles`
-- Add a new `text[]` column `categories` (default `'{}'`) to `business_profiles` table
-- This allows a business to belong to multiple categories (e.g., "apps", "brokers", "developers")
-- Update the `public_business_profiles` view to expose this column
+### Changes
 
-**Migration SQL:**
-```sql
-ALTER TABLE public.business_profiles 
-  ADD COLUMN categories text[] NOT NULL DEFAULT '{}';
+**File: `src/components/ItemDetailSection.tsx`**
 
--- Update the public view
-CREATE OR REPLACE VIEW public.public_business_profiles AS
-  SELECT id, company_name, location, logo_url, website, 
-         specialties, year_established, description, categories
-  FROM public.business_profiles
-  WHERE is_reviewable = true OR is_reviewable IS NULL;
-```
+1. Add `dbReviews` to the `useMemo` dependency array
+2. For dynamic profiles, compute real metrics from `dbReviews`:
+   - **Rating**: average of all `dbReviews` star ratings (instead of hardcoded 0)
+   - **Review count**: `dbReviews.length` (instead of 0)
+   - **Star distribution**: actual percentage breakdown from real review ratings
+   - **Trust score**: recalculated using the real rating and review count through the existing formula
+3. Update the review count display (line ~877) to also use `dbReviews.length` for dynamic profiles
+4. The existing `refetchReviews` callback (already wired to `WriteReviewModal.onReviewSubmitted`) will trigger `dbReviews` to update → `useMemo` recalculates → UI updates automatically
 
-#### 2. Admin UI: Category Picker in `AdminUserDetailSheet`
-- Add a multi-select category picker below the "Description" field
-- Available categories: Developers, Apps, Brokers, Units, Projects, Locations, Property Types, Categories (matching `SearchCategory` type)
-- Each category rendered as a toggleable chip/badge — click to add/remove
-- Selected categories are highlighted; saved with the profile
-- The **first** category in the array is treated as the "primary" category
+### What changes for users
+- After writing a review, the rating gauge, trust score, star bars, and review count will update immediately
+- All computed metrics (trust category bars, response rate) will reflect the real review data
+- Static/mock entities remain unaffected — changes only apply when `isDynamicProfile` is true
 
-#### 3. Update `businessProfileSearch.ts`
-- Read the `categories` array from the profile row
-- Use the first category as the `SearchItem.category` (instead of hardcoded `"developers"`)
-- Pass all categories in `meta.categories` for multi-category display
-
-#### 4. Update `ItemDetailSection` Trust Category Bars
-- When rendering a dynamic business profile, use `item.category` to pick the correct metric keys via `getCategoryMetricKeys()`
-- This already works once the category is correct — the fix is upstream in step 3
-
-#### 5. Update `EntityPage.tsx`
-- Ensure the Supabase query for `public_business_profiles` also selects the `categories` column
-- Pass it through to `mapPublicBusinessProfileToSearchItem`
-
-### Files to Change
+### Files to edit
 | File | Change |
 |------|--------|
-| Migration SQL | Add `categories text[]` column, update view |
-| `src/components/AdminUserDetailSheet.tsx` | Add category toggle chips UI + save logic |
-| `src/lib/businessProfileSearch.ts` | Use `categories[0]` as primary category |
-| `src/pages/EntityPage.tsx` | Select `categories` in query |
-| `src/components/SearchSuggestions.tsx` | Select `categories` in remote search query |
-
-### Admin Workflow
-1. Open Admin Dashboard → Users tab
-2. Click "Manage" on a user → Detail sheet opens
-3. Upgrade user to "Business" role → Create profile
-4. In the profile editor, toggle category chips (e.g., select "Apps" instead of "Developers")
-5. Save → Entity page now shows correct category label, icon, and trust metric bars
+| `src/components/ItemDetailSection.tsx` | Use `dbReviews` in the `useMemo` to compute live rating, trust score, star distribution for dynamic profiles |
 
