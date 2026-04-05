@@ -18,6 +18,13 @@ export const ReviewReplyForm = ({ reviewId, onReplySubmitted }: ReviewReplyFormP
   const editorRef = useRef<HTMLDivElement>(null);
   const [isEmpty, setIsEmpty] = useState(true);
 
+  const getContent = () => editorRef.current?.innerHTML?.trim() ?? "";
+  const getTextContent = () => editorRef.current?.textContent?.trim() ?? "";
+
+  const checkEmpty = useCallback(() => {
+    setIsEmpty(!getTextContent());
+  }, []);
+
   if (!user || (role !== "business" && role !== "admin")) return null;
 
   const getContent = () => editorRef.current?.innerHTML?.trim() ?? "";
