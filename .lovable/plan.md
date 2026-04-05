@@ -1,55 +1,73 @@
 
 
-## Plan: 3-Phase Progressive Review Modal with Category Sub-Ratings
+## Plan: Create a "Businesses" Directory Page
 
 ### Overview
-Replace the current monolithic `WriteReviewModal` with a 3-phase progressive flow that reduces friction and collects category-specific ratings. Uses CSS transitions (not Framer Motion — avoiding a new dependency for simple slide animations).
+Create a new `/businesses` page that displays all business profiles from the database in a professional grid layout inspired by the Trustbob reference. The page features a left sidebar with filters (search, rating, categories, verification) and a right content area with paginated business cards. Each card links to the entity page (`/entity/:id`). Update navigation links throughout the site to point to this new page.
 
-### Phase 1: Star Rating
-- Large interactive 5-star picker centered in the modal
-- Progress bar at top: "Step 1 of 3"
-- "Continue" button appears after star selection
-- Rating saved to local state immediately
+### Page Layout (Trustbob-inspired)
 
-### Phase 2: AI-Powered Narrative
-- Smooth slide-left transition from Phase 1
-- Fields: Unit Type selector, Review Title input, Review Text textarea
-- "AI Suggest" button calls the existing `review-ai-assist` edge function with `action: "suggest"`, passing rating + unit type + business name
-- 3 AI-generated title suggestions rendered as clickable chips; clicking one auto-fills Title and seeds Review Text
-- CTA: "Next: Add Details"
+```text
+┌──────────────────────────────────────────────────┐
+│  PageHeader: "Explore high rated businesses"     │
+├──────────┬───────────────────────────────────────┤
+│ SIDEBAR  │  "All Businesses"    [Sort ▼] [⊞][≡] │
+│          │  ┌────────┐┌────────┐┌────────┐       │
+│ Search   │  │ Card 1 ││ Card 2 ││ Card 3 │       │
+│ ──────── │  └────────┘└────────┘└────────┘       │
+│ Rating   │  ┌────────┐┌────────┐┌────────┐       │
+│ ○ 5★     │  │ Card 4 ││ Card 5 ││ Card 6 │       │
+│ ○ 4★     │  └────────┘└────────┘└────────┘       │
+│ ──────── │                                       │
+│ Category │  [1] [2] [3] [>]  (pagination)        │
+│ □ Apps   │                                       │
+│ □ Devs   │  ┌─────────────────────────────┐      │
+│ □ Broker │  │ Can't find a business?      │      │
+│ ──────── │  │ + Add Business              │      │
+│ Verified │  └─────────────────────────────┘      │
+│ ○ Yes    │                                       │
+│ ○ No     │  Popular searches: [chips...]         │
+└──────────┴───────────────────────────────────────┘
+│  Footer                                          │
+└──────────────────────────────────────────────────┘
+```
 
-### Phase 3: Category Deep-Dive
-- Horizontal sliders (using existing `Slider` component) for category-specific metrics
-- Metrics are dynamic based on business category (uses existing `getCategoryMetricKeys`)
-- Labels mapped per category (e.g., Apps → Usability, Performance, Features, Support)
-- Disclaimer checkbox + Submit button
-- On submit: inserts review with `category_ratings` JSON into the `reviews` or `guest_reviews` table
+### Business Card Design
+Each card shows: logo/avatar, company name, website domain, star rating with count, description snippet (2 lines), and a verified badge if applicable. Clicking navigates to `/entity/:id`.
 
-### Database Change
-- Add `category_ratings jsonb DEFAULT '{}'` to both `reviews` and `guest_reviews` tables via migration
+### Data Source
+- Fetch all rows from `public_business_profiles` view (or `business_profiles` table)
+- Compute avg rating and review count per business from the `reviews` table
+- Client-side filtering and pagination (12 per page)
 
-### Technical Details
-
-**Files to create/edit:**
+### Files to Create/Edit
 
 | File | Change |
 |------|--------|
-| Migration SQL | Add `category_ratings jsonb` to `reviews` and `guest_reviews` |
-| `src/components/WriteReviewModal.tsx` | Full rewrite to 3-phase flow with progress bar, phase transitions via CSS `translate`, AI chips, category sliders |
-| `src/components/ItemDetailSection.tsx` | Pass `entityCategory` prop to `WriteReviewModal`; compute `categoryScores` from real `category_ratings` in `dbReviews` |
-| `src/hooks/useReviews.ts` | Include `category_ratings` in select/mapping |
+| `src/pages/Businesses.tsx` | **New** — Full page with sidebar filters, business card grid, pagination, "Add Business" CTA, popular category chips |
+| `src/App.tsx` | Add lazy import + route `/businesses` |
+| `src/components/Navbar.tsx` | Update "Businesses" nav link from `/directory` to `/businesses` |
+| `src/components/Footer.tsx` | Add "Businesses" link |
+| `src/data/routeRegistry.ts` | Add `/businesses` route entry |
 
-**Key implementation notes:**
-- Phase transitions use Tailwind `transition-transform duration-300` with `translateX` — no new dependency needed
-- Progress bar uses existing `Progress` component from shadcn/ui
-- Category sliders use existing `Slider` component (1-5 scale, step 1)
-- AI suggest reuses the existing `review-ai-assist` edge function
-- `entityCategory` prop added to `WriteReviewModal` interface; defaults to `"developers"` if not provided
-- Review count on entity page (`(0 Reviews)`) will update from `liveReviewCount` which already reads `dbReviews.length`
+### Filter Sidebar
+- **Search**: text input filtering by company name
+- **Rating**: radio buttons (Excellent 5★, Great 4★, Average 3★, Fair 2★, Poor 1★)
+- **Categories**: checkboxes from the categories data (Apps, Developers, Brokers, etc.) — links to `/categories` page
+- **Verification**: Verified / Unverified toggle
 
-**Trust score update flow:**
-- Submit stores `category_ratings: { usability: 4, performance: 5, ... }` in DB
-- `useReviews` fetches `category_ratings` per review
-- `ItemDetailSection` useMemo aggregates real sub-ratings: averages each key across all reviews → converts to 0-100 for trust bars
-- Falls back to rating-derived scores when no sub-ratings exist
+### Sorting
+- Sort dropdown: Best Rating, Most Reviews, Newest, A-Z
+
+### Pagination
+- 12 businesses per page
+- Numbered page buttons with prev/next arrows
+
+### Mobile Responsive
+- Sidebar collapses into a filter drawer/sheet on mobile
+- Cards go from 3-column to 1-column grid
+
+### Category Integration
+- Category chips in sidebar and "Popular searches" section at bottom link to `/categories` with a filter param
+- Maintains consistency with existing BrowseCategoriesGrid navigation
 
