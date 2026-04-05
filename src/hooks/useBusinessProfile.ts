@@ -49,6 +49,7 @@ export function useBusinessProfile() {
       .from('business_profiles')
       .select('*')
       .eq('user_id', user.id)
+      .is('parent_id', null)
       .maybeSingle();
 
     if (error) {
