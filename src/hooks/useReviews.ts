@@ -2,12 +2,16 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import type { Review, ReviewerTier } from '@/data/mockData';
+
+export interface ReviewWithCategories extends Review {
+  categoryRatings?: Record<string, number>;
+}
 import { reviews as mockReviews } from '@/data/mockData';
 import { localizeStoredReviewValue } from '@/lib/reviewCopy';
 
 export function useReviews(developerId: string | undefined) {
   const { t } = useTranslation();
-  const [dbReviews, setDbReviews] = useState<Review[]>([]);
+  const [dbReviews, setDbReviews] = useState<ReviewWithCategories[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchReviews = useCallback(async () => {
@@ -25,7 +29,7 @@ export function useReviews(developerId: string | undefined) {
         return;
       }
 
-      const mapped: Review[] = (data || []).map((r: any) => ({
+      const mapped: ReviewWithCategories[] = (data || []).map((r: any) => ({
         id: r.id,
         developerId: r.developer_id,
         author: r.is_anonymous ? t('reviews.anonymousUser', 'Anonymous user') : r.author_name,
@@ -36,6 +40,7 @@ export function useReviews(developerId: string | undefined) {
         project: localizeStoredReviewValue(r.experience_type, t),
         comment: r.comment,
         verified: r.is_verified,
+        categoryRatings: r.category_ratings || {},
       }));
 
       setDbReviews(mapped);
