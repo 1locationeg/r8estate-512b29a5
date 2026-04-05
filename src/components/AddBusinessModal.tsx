@@ -10,7 +10,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Loader2, Building2, Plus, Clock, CheckCircle, Crown } from "lucide-react";
-import { CATEGORIES } from "@/data/businessCategories";
+import { BUSINESS_CATEGORIES } from "@/data/businessCategories";
 
 interface AddBusinessModalProps {
   open: boolean;
@@ -126,7 +126,7 @@ export const AddBusinessModal = ({ open, onOpenChange, parentBusinessId, mode = 
                 <Select value={category} onValueChange={setCategory}>
                   <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
                   <SelectContent>
-                    {CATEGORIES.map((c) => (
+                    {BUSINESS_CATEGORIES.map((c) => (
                       <SelectItem key={c.value} value={c.value}>{c.label}</SelectItem>
                     ))}
                   </SelectContent>
