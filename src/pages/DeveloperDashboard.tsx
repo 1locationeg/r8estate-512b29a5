@@ -44,6 +44,7 @@ import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { AddBusinessModal } from '@/components/AddBusinessModal';
 import { BusinessImageUpload } from '@/components/BusinessImageUpload';
 import { ReviewReplyForm } from '@/components/ReviewReplyForm';
+import { BusinessCategoryPicker } from '@/components/BusinessCategoryPicker';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -600,17 +601,34 @@ const DevEmployees = () => (
   </div>
 );
 
-const DevCategories = () => (
-  <div>
-    <h2 className="text-2xl font-bold text-foreground mb-4">Categories</h2>
-    <div className="bg-card border border-border rounded-xl p-12 text-center">
-      <Tag className="w-12 h-12 text-muted-foreground/30 mx-auto mb-3" />
-      <h3 className="font-semibold text-foreground mb-1">Manage Categories</h3>
-      <p className="text-sm text-muted-foreground mb-4">Organize your projects by category</p>
-      <Button><Plus className="w-4 h-4 me-1" /> Add Category</Button>
+const DevCategories = () => {
+  const { profile: bp, refetch } = useBusinessProfile();
+
+  if (!bp?.id) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-4">Business Categories</h2>
+      <div className="bg-card border border-border rounded-xl p-5">
+        <p className="text-sm text-muted-foreground mb-4">
+          Select the categories that best describe your business. These appear on your public profile and help buyers find you.
+        </p>
+        <BusinessCategoryPicker
+          businessId={bp.id}
+          currentCategories={bp.categories || []}
+          onUpdated={() => refetch()}
+          compact
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const DevIntegration = () => (
   <div>
@@ -881,6 +899,21 @@ const DevBusinessProfile = () => {
                 <Input className="mt-1" value={form.specialties} onChange={(e) => handleChange('specialties', e.target.value)} placeholder="Comma separated" />
               </div>
             </div>
+
+            {/* Categories */}
+            {bp?.id && (
+              <div>
+                <Label className="text-xs font-medium text-muted-foreground flex items-center gap-1.5 mb-2">
+                  <Tag className="w-3 h-3" /> Business Categories
+                </Label>
+                <BusinessCategoryPicker
+                  businessId={bp.id}
+                  currentCategories={bp.categories || []}
+                  onUpdated={() => refetch()}
+                  compact
+                />
+              </div>
+            )}
           </div>
         </div>
 
