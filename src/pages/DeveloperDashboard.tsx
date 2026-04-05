@@ -775,8 +775,8 @@ const DevBusinessProfile = () => {
     setForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleSave = () => {
-    saveProfile({
+  const handleSave = async () => {
+    await saveProfile({
       company_name: form.company_name,
       description: form.description,
       location: form.location,
