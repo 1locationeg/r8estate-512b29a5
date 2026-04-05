@@ -924,10 +924,15 @@ const DeveloperDashboard = () => {
         bottomAction: {
           icon: <Plus className="w-4 h-4" />,
           label: 'Add Business',
-          onClick: () => {},
+          onClick: () => setAddBusinessOpen(true),
         },
       }}
     >
+      <AddBusinessModal
+        open={addBusinessOpen}
+        onOpenChange={setAddBusinessOpen}
+        parentBusinessId={businessProfile?.id}
+      />
       <Routes>
         <Route index element={<DevOverview />} />
         <Route path="profile" element={<DevBusinessProfile />} />
