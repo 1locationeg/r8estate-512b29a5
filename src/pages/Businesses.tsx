@@ -36,10 +36,9 @@ interface BusinessWithStats {
 
 const ITEMS_PER_PAGE = 12;
 
-const CATEGORY_OPTIONS = [
-  "Developers", "Apps", "Brokers", "Projects", "Contractors",
-  "Interior Design", "Property Management", "Legal", "Finance",
-];
+import { BUSINESS_CATEGORIES } from "@/data/businessCategories";
+
+const CATEGORY_OPTIONS = BUSINESS_CATEGORIES.map(c => c.label);
 
 const RATING_OPTIONS = [
   { label: "Excellent", min: 4.5, stars: 5 },
