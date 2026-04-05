@@ -1,4 +1,4 @@
-import type { SearchItem } from "@/data/searchIndex";
+import type { SearchItem, SearchCategory } from "@/data/searchIndex";
 
 export interface PublicBusinessProfileSearchRow {
   id: string;
