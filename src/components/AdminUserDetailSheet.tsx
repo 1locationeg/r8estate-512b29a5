@@ -26,16 +26,7 @@ interface UserInfo {
   created_at: string;
 }
 
-const BUSINESS_CATEGORIES = [
-  { value: "developers", label: "Developers" },
-  { value: "apps", label: "Apps" },
-  { value: "brokers", label: "Brokers" },
-  { value: "units", label: "Units" },
-  { value: "projects", label: "Projects" },
-  { value: "locations", label: "Locations" },
-  { value: "property-types", label: "Property Types" },
-  { value: "categories", label: "Categories" },
-];
+import { BUSINESS_CATEGORIES } from "@/data/businessCategories";
 
 interface BusinessProfileData {
   id: string;
