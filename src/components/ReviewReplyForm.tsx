@@ -25,15 +25,6 @@ export const ReviewReplyForm = ({ reviewId, onReplySubmitted }: ReviewReplyFormP
     setIsEmpty(!getTextContent());
   }, []);
 
-  if (!user || (role !== "business" && role !== "admin")) return null;
-
-  const getContent = () => editorRef.current?.innerHTML?.trim() ?? "";
-  const getTextContent = () => editorRef.current?.textContent?.trim() ?? "";
-
-  const checkEmpty = useCallback(() => {
-    setIsEmpty(!getTextContent());
-  }, []);
-
   const exec = (command: string, value?: string) => {
     document.execCommand(command, false, value);
     editorRef.current?.focus();
@@ -53,7 +44,7 @@ export const ReviewReplyForm = ({ reviewId, onReplySubmitted }: ReviewReplyFormP
     try {
       const { error } = await supabase.from("review_replies").insert({
         review_id: reviewId,
-        user_id: user.id,
+        user_id: user!.id,
         body: html,
       });
       if (error) throw error;
@@ -68,6 +59,8 @@ export const ReviewReplyForm = ({ reviewId, onReplySubmitted }: ReviewReplyFormP
       setSubmitting(false);
     }
   };
+
+  if (!user || (role !== "business" && role !== "admin")) return null;
 
   if (!isOpen) {
     return (
