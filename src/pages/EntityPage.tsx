@@ -92,7 +92,7 @@ const EntityPage = () => {
 
       const { data, error } = await supabase
         .from('public_business_profiles')
-        .select('id, company_name, location, logo_url, website, specialties, year_established, description')
+        .select('id, company_name, location, logo_url, website, specialties, year_established, description, categories')
         .eq('id', id)
         .maybeSingle();
 

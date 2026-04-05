@@ -160,6 +160,7 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
         phone: profile.phone,
         website: profile.website,
         license_url: profile.license_url,
+        categories: profile.categories,
       })
       .eq("id", profile.id);
 

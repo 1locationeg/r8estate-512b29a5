@@ -36,6 +36,7 @@ export function mapPublicBusinessProfileToSearchItem(
       specialties: profile.specialties ?? [],
       yearEstablished: profile.year_established ?? undefined,
       description: profile.description ?? undefined,
+      categories: profile.categories ?? [],
     },
   };
 }
