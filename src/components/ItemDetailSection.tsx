@@ -485,11 +485,16 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
       
       {/* ===== TRUSTPILOT-STYLE BANNER ===== */}
       <div className={cn("relative h-24 md:h-32 bg-gradient-to-r overflow-hidden", getCategoryBannerStyle(item.category))}>
-        <div className="absolute inset-0 flex items-center justify-center opacity-10 overflow-hidden">
-          <div className="text-[clamp(40px,15vw,120px)] font-black text-foreground tracking-widest uppercase truncate max-w-full px-4">
-            {item.name.substring(0, 8)}
+        {coverImageUrl && (
+          <img src={coverImageUrl} alt="Cover" className="absolute inset-0 w-full h-full object-cover" />
+        )}
+        {!coverImageUrl && (
+          <div className="absolute inset-0 flex items-center justify-center opacity-10 overflow-hidden">
+            <div className="text-[clamp(40px,15vw,120px)] font-black text-foreground tracking-widest uppercase truncate max-w-full px-4">
+              {item.name.substring(0, 8)}
+            </div>
           </div>
-        </div>
+        )}
         <Button
           variant="ghost"
           size="icon"
@@ -498,16 +503,26 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         >
           <X className="w-4 h-4" />
         </Button>
+        {isOwner && item.id && (
+          <div className="absolute bottom-3 end-3 z-10">
+            <BusinessImageUpload
+              businessId={item.id}
+              type="cover"
+              currentUrl={coverImageUrl}
+              onUploaded={(url) => setCoverImageUrl(url)}
+            />
+          </div>
+        )}
       </div>
 
       {/* ===== COMPANY HEADER (Trustpilot style) ===== */}
       <div className="px-4 md:px-6 -mt-8 relative z-10">
         <div className="flex items-end gap-4">
           {/* Logo */}
-          <div className="flex-shrink-0">
-            {item.image ? (
+          <div className="flex-shrink-0 relative group">
+            {(logoUrl || item.image) ? (
               <img
-                src={item.image}
+                src={logoUrl || item.image}
                 alt={item.name}
                 className="w-16 h-16 md:w-20 md:h-20 rounded-xl object-cover border-4 border-card shadow-lg"
               />
