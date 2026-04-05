@@ -877,6 +877,8 @@ const DeveloperDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, role, profile, isLoading } = useAuth();
+  const [addBusinessOpen, setAddBusinessOpen] = useState(false);
+  const { profile: businessProfile } = useBusinessProfile();
 
   useEffect(() => {
     if (!isLoading) {
