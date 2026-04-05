@@ -2,6 +2,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { supabase } from '@/integrations/supabase/client';
 import type { Review, ReviewerTier } from '@/data/mockData';
+
+export interface ReviewWithCategories extends Review {
+  categoryRatings?: Record<string, number>;
+}
 import { reviews as mockReviews } from '@/data/mockData';
 import { localizeStoredReviewValue } from '@/lib/reviewCopy';
 
