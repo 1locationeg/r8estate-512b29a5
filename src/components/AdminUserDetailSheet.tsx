@@ -8,10 +8,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
-  Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag,
+  Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag, MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useStartChat } from "@/hooks/useStartChat";
 
 interface UserInfo {
   id: string;
