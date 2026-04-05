@@ -670,7 +670,7 @@ const DevSettings = () => (
 
 // Business Profile Page
 const DevBusinessProfile = () => {
-  const { profile: bp, isLoading: bpLoading, isSaving, saveProfile } = useBusinessProfile();
+  const { profile: bp, isLoading: bpLoading, isSaving, saveProfile, refetch } = useBusinessProfile();
   const navigate = useNavigate();
   const { user } = useAuth();
   const logoInputRef = useRef<HTMLInputElement>(null);
