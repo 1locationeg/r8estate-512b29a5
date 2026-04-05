@@ -642,31 +642,65 @@ const DevIntegration = () => (
   </div>
 );
 
-const DevSettings = () => (
-  <div>
-    <h2 className="text-2xl font-bold text-foreground mb-4">Business Settings</h2>
-    <div className="max-w-lg space-y-6">
-      <div className="bg-card border border-border rounded-xl p-5">
-        <h3 className="font-semibold text-foreground mb-4">Company Information</h3>
-        <div className="space-y-3">
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">Company Name</label>
-            <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={myDev.name} />
+const DevSettings = () => {
+  const { profile: bp, isSaving, saveProfile } = useBusinessProfile();
+  const { profile: userProfile } = useAuth();
+  const [form, setForm] = useState({
+    company_name: '',
+    location: '',
+    specialties: '',
+  });
+
+  useEffect(() => {
+    if (bp) {
+      setForm({
+        company_name: bp.company_name || '',
+        location: bp.location || '',
+        specialties: (bp.specialties || []).join(', '),
+      });
+    }
+  }, [bp]);
+
+  const handleChange = (field: string, value: string) => {
+    setForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleSave = async () => {
+    await saveProfile({
+      company_name: form.company_name,
+      location: form.location,
+      specialties: form.specialties.split(',').map(s => s.trim()).filter(Boolean),
+    });
+  };
+
+  return (
+    <div>
+      <h2 className="text-2xl font-bold text-foreground mb-4">Account Details</h2>
+      <div className="max-w-lg space-y-6">
+        <div className="bg-card border border-border rounded-xl p-5">
+          <h3 className="font-semibold text-foreground mb-4">Company Information</h3>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Company Name</label>
+              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" value={form.company_name} onChange={e => handleChange('company_name', e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Location</label>
+              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" value={form.location} onChange={e => handleChange('location', e.target.value)} />
+            </div>
+            <div>
+              <label className="text-xs font-medium text-muted-foreground">Specialties</label>
+              <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" value={form.specialties} onChange={e => handleChange('specialties', e.target.value)} />
+            </div>
+            <Button onClick={handleSave} disabled={isSaving}>
+              {isSaving ? <><Loader2 className="w-4 h-4 animate-spin me-1" /> Saving...</> : 'Save Changes'}
+            </Button>
           </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">Location</label>
-            <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={myDev.location} />
-          </div>
-          <div>
-            <label className="text-xs font-medium text-muted-foreground">Specialties</label>
-            <input className="w-full mt-1 px-3 py-2 bg-secondary rounded-lg text-sm text-foreground border border-border" defaultValue={myDev.specialties.join(', ')} />
-          </div>
-          <Button>Save Changes</Button>
         </div>
       </div>
     </div>
-  </div>
-);
+  );
+};
 
 // Business Profile Page
 const DevBusinessProfile = () => {
