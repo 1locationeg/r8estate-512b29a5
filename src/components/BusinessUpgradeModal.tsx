@@ -25,15 +25,24 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user || !open) return;
+    if (!user || !open) {
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     supabase
-      .from("business_upgrade_requests" as any)
+      .from("business_upgrade_requests")
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false })
       .limit(1)
-      .then(({ data }) => {
+      .then(({ data, error }) => {
+        if (error) {
+          console.error("Failed to fetch upgrade requests:", error);
+          setExistingRequest(null);
+          setLoading(false);
+          return;
+        }
         const latest = (data as any[])?.[0];
         if (latest && latest.status === "pending") {
           setExistingRequest(latest);
