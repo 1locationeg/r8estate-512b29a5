@@ -12,6 +12,7 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { name: "Authentication", path: "/auth" },
   { name: "Reviews", path: "/reviews" },
   { name: "Directory", path: "/directory" },
+  { name: "Businesses", path: "/businesses" },
   { name: "Community", path: "/community" },
   { name: "Leaderboard", path: "/leaderboard" },
   { name: "Rewards", path: "/rewards" },

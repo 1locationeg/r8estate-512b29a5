@@ -58,6 +58,7 @@ const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
 const CopilotPage = lazy(() => import("./pages/CopilotPage"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const StaticPage = lazy(() => import("./pages/StaticPage"));
+const Businesses = lazy(() => import("./pages/Businesses"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -174,6 +175,7 @@ const AppContent = () => {
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/copilot" element={<CopilotPage />} />
+          <Route path="/businesses" element={<Businesses />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/about" element={<StaticPage />} />
