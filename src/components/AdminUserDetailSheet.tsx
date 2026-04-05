@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { cn } from "@/lib/utils";
 import {
   Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag,
 } from "lucide-react";
