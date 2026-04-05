@@ -71,6 +71,9 @@ import { useNavigate } from "react-router-dom";
 import { useStartChat } from "@/hooks/useStartChat";
 import { supabase } from "@/integrations/supabase/client";
 import { BusinessImageUpload } from "./BusinessImageUpload";
+import { BusinessCategoryPicker } from "./BusinessCategoryPicker";
+import { BUSINESS_CATEGORIES } from "@/data/businessCategories";
+import { Tag } from "lucide-react";
 
 interface ItemDetailSectionProps {
   item: SearchItem | null;
