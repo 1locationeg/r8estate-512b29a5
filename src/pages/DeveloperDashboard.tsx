@@ -2,6 +2,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { NavGroup } from '@/components/DashboardSidebar';
 import { Button } from '@/components/ui/button';
@@ -88,6 +89,18 @@ const DevOverview = () => {
   const { t } = useTranslation();
   const { profile, user } = useAuth();
   const { profileCompletion, missingFields, currentTier, nextTier, pointsToNext, totalPoints, earnedBadges, lockedBadges, allBadges } = useGamification();
+  const { profile: businessProfile } = useBusinessProfile();
+  const [subBusinesses, setSubBusinesses] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (!businessProfile?.id) return;
+    supabase
+      .from('business_profiles')
+      .select('id, company_name, logo_url, location, categories, created_at')
+      .eq('parent_id', businessProfile.id)
+      .order('created_at', { ascending: false })
+      .then(({ data }) => setSubBusinesses(data || []));
+  }, [businessProfile?.id]);
 
   const currentTierIdx = TIERS.findIndex(ti => ti.id === currentTier.id);
 
@@ -282,6 +295,44 @@ const DevOverview = () => {
 
       {/* Business Activity Cards */}
       <BusinessActivityCards currentTierIndex={currentTierIdx} />
+
+      {/* Sub-Businesses */}
+      {subBusinesses.length > 0 && (
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <h3 className="text-lg font-semibold text-foreground flex items-center gap-2">
+              <Building2 className="w-5 h-5 text-business-border" />
+              My Sub-Businesses
+            </h3>
+            <Badge variant="secondary" className="text-xs">{subBusinesses.length}</Badge>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {subBusinesses.map((sb: any) => (
+              <div
+                key={sb.id}
+                onClick={() => navigate(`/entity/${sb.id}`)}
+                className="bg-card border border-border rounded-xl p-4 hover:shadow-md transition-shadow cursor-pointer"
+              >
+                <div className="flex items-center gap-3">
+                  {sb.logo_url ? (
+                    <img src={sb.logo_url} alt={sb.company_name} className="w-10 h-10 rounded-lg object-cover" />
+                  ) : (
+                    <div className="w-10 h-10 rounded-lg bg-business/30 flex items-center justify-center">
+                      <Building2 className="w-5 h-5 text-business-border" />
+                    </div>
+                  )}
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold truncate text-foreground">{sb.company_name}</p>
+                    <p className="text-xs text-muted-foreground truncate">
+                      {sb.location || 'No location'} · {sb.categories?.[0] || 'Uncategorized'}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Charts + Reviews + Sidebar */}
       <div className="grid lg:grid-cols-3 gap-6">
