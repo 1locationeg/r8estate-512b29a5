@@ -80,14 +80,14 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
 
       // Insert request
       const { error } = await supabase
-        .from("business_upgrade_requests" as any)
+        .from("business_upgrade_requests")
         .insert({
           user_id: user.id,
           company_name: companyName.trim(),
           description: description.trim() || null,
           document_url: urlData.publicUrl,
           status: "pending",
-        } as any);
+        });
       if (error) throw error;
 
       toast.success("Business upgrade request submitted! You'll be notified once reviewed.");
