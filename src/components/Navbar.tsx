@@ -37,7 +37,7 @@ export const Navbar = ({
   const guestNavLinks = [
     { label: t("nav.home"), href: "/" },
     { label: t("nav.categories"), href: "/directory" },
-    { label: t("nav.businesses"), href: "/directory" },
+    { label: t("nav.businesses"), href: "/businesses" },
     { label: t("nav.blog"), href: "/community" },
   ];
 
