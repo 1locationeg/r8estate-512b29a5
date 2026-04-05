@@ -68,6 +68,7 @@ export function useBusinessProfile() {
         cover_image_url: (data as any).cover_image_url ?? '',
         location: data.location ?? '',
         specialties: data.specialties ?? [],
+        categories: data.categories ?? [],
         email: data.email ?? '',
         phone: data.phone ?? '',
         website: data.website ?? '',
