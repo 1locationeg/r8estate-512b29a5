@@ -24,6 +24,7 @@ const SOCIAL_ICONS: Record<string, React.ReactNode> = {
 
 const COMPANY_LINKS = [
   { label: "Our Story", to: "/about" },
+  { label: "Businesses", to: "/businesses" },
   { label: "Join Our Team", to: "/careers" },
   { label: "Contact Us", to: "/contact" },
   { label: "Press Room", to: "/press" },
