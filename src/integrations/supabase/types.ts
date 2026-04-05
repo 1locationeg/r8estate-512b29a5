@@ -805,6 +805,7 @@ export type Database = {
       }
       guest_reviews: {
         Row: {
+          category_ratings: Json | null
           claimed_by: string | null
           comment: string
           created_at: string
@@ -820,6 +821,7 @@ export type Database = {
           title: string | null
         }
         Insert: {
+          category_ratings?: Json | null
           claimed_by?: string | null
           comment: string
           created_at?: string
@@ -835,6 +837,7 @@ export type Database = {
           title?: string | null
         }
         Update: {
+          category_ratings?: Json | null
           claimed_by?: string | null
           comment?: string
           created_at?: string
@@ -1604,6 +1607,7 @@ export type Database = {
         Row: {
           attachment_urls: string[] | null
           author_name: string
+          category_ratings: Json | null
           comment: string
           created_at: string
           developer_id: string
@@ -1624,6 +1628,7 @@ export type Database = {
         Insert: {
           attachment_urls?: string[] | null
           author_name: string
+          category_ratings?: Json | null
           comment: string
           created_at?: string
           developer_id: string
@@ -1644,6 +1649,7 @@ export type Database = {
         Update: {
           attachment_urls?: string[] | null
           author_name?: string
+          category_ratings?: Json | null
           comment?: string
           created_at?: string
           developer_id?: string
