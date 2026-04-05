@@ -531,6 +531,15 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
                 {categoryIcons[item.category]}
               </div>
             )}
+            {isOwner && item.id && (
+              <BusinessImageUpload
+                businessId={item.id}
+                type="logo"
+                currentUrl={logoUrl}
+                onUploaded={(url) => setLogoUrl(url)}
+                className="absolute -bottom-1 -end-1 opacity-0 group-hover:opacity-100 transition-opacity"
+              />
+            )}
           </div>
         </div>
 
