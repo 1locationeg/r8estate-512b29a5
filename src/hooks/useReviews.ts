@@ -29,7 +29,7 @@ export function useReviews(developerId: string | undefined) {
         return;
       }
 
-      const mapped: Review[] = (data || []).map((r: any) => ({
+      const mapped: ReviewWithCategories[] = (data || []).map((r: any) => ({
         id: r.id,
         developerId: r.developer_id,
         author: r.is_anonymous ? t('reviews.anonymousUser', 'Anonymous user') : r.author_name,
@@ -40,6 +40,7 @@ export function useReviews(developerId: string | undefined) {
         project: localizeStoredReviewValue(r.experience_type, t),
         comment: r.comment,
         verified: r.is_verified,
+        categoryRatings: r.category_ratings || {},
       }));
 
       setDbReviews(mapped);
