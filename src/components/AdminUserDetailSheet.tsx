@@ -64,6 +64,7 @@ interface Props {
 
 export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, manageableRoles, updatingId }: Props) {
   const navigate = useNavigate();
+  const { startChat } = useStartChat();
   const [profile, setProfile] = useState<BusinessProfileData | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [saving, setSaving] = useState(false);
