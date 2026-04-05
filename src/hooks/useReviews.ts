@@ -11,7 +11,7 @@ import { localizeStoredReviewValue } from '@/lib/reviewCopy';
 
 export function useReviews(developerId: string | undefined) {
   const { t } = useTranslation();
-  const [dbReviews, setDbReviews] = useState<Review[]>([]);
+  const [dbReviews, setDbReviews] = useState<ReviewWithCategories[]>([]);
   const [loading, setLoading] = useState(false);
 
   const fetchReviews = useCallback(async () => {
