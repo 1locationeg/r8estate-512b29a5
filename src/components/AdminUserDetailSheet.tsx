@@ -218,6 +218,18 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
                 <Badge variant="outline" className="text-[10px]">No role</Badge>
               )}
             </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full mt-2 gap-1.5 text-xs"
+              onClick={() => {
+                onOpenChange(false);
+                startChat(user.id);
+              }}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              Send Message
+            </Button>
           </div>
 
           {/* Role Management */}
