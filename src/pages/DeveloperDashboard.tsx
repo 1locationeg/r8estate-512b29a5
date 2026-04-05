@@ -42,6 +42,7 @@ import { MyDeals } from '@/components/MyDeals';
 import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { AddBusinessModal } from '@/components/AddBusinessModal';
+import { BusinessImageUpload } from '@/components/BusinessImageUpload';
 import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
@@ -839,17 +840,12 @@ const DevBusinessProfile = () => {
                   )}
                   {bp?.id && (
                     <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 bg-background/40 transition-opacity rounded-xl">
-                      {(() => {
-                        const { BusinessImageUpload } = require('@/components/BusinessImageUpload');
-                        return (
-                          <BusinessImageUpload
-                            businessId={bp.id}
-                            type="cover"
-                            currentUrl={bp.cover_image_url}
-                            onUploaded={() => window.location.reload()}
-                          />
-                        );
-                      })()}
+                      <BusinessImageUpload
+                        businessId={bp.id}
+                        type="cover"
+                        currentUrl={bp.cover_image_url}
+                        onUploaded={() => window.location.reload()}
+                      />
                     </div>
                   )}
                 </div>
