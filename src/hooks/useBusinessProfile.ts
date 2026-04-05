@@ -54,26 +54,30 @@ export function useBusinessProfile() {
       .select('*')
       .eq('user_id', user.id)
       .is('parent_id', null)
-      .maybeSingle();
+      .order('updated_at', { ascending: false })
+      .order('created_at', { ascending: false })
+      .limit(1);
 
     if (error) {
       console.error('Error fetching business profile:', error);
       setProfile(emptyProfile(user.id));
     } else {
-      setProfile(data ? {
-        ...data,
-        company_name: data.company_name ?? '',
-        description: data.description ?? '',
-        logo_url: data.logo_url ?? '',
-        cover_image_url: (data as any).cover_image_url ?? '',
-        location: data.location ?? '',
-        specialties: data.specialties ?? [],
-        categories: data.categories ?? [],
-        email: data.email ?? '',
-        phone: data.phone ?? '',
-        website: data.website ?? '',
-        social_links: (data.social_links as Record<string, string>) ?? {},
-        license_url: data.license_url ?? '',
+      const row = data?.[0];
+
+      setProfile(row ? {
+        ...row,
+        company_name: row.company_name ?? '',
+        description: row.description ?? '',
+        logo_url: row.logo_url ?? '',
+        cover_image_url: row.cover_image_url ?? '',
+        location: row.location ?? '',
+        specialties: row.specialties ?? [],
+        categories: row.categories ?? [],
+        email: row.email ?? '',
+        phone: row.phone ?? '',
+        website: row.website ?? '',
+        social_links: (row.social_links as Record<string, string>) ?? {},
+        license_url: row.license_url ?? '',
       } : emptyProfile(user.id));
     }
     setIsLoading(false);
