@@ -196,9 +196,16 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
     const scores: Record<string, number> = {};
     keys.forEach((key, idx) => {
       if (isDynamicProfile) {
-        // Derive category scores from rating with slight variance per category
-        const variance = [0, -3, 2, -1][idx % 4];
-        scores[key] = reviewCount > 0 ? Math.max(0, Math.min(100, Math.round((baseRating / 5) * 100) + variance)) : 0;
+        // Aggregate real category_ratings from dbReviews if available
+        const reviewsWithKey = dbReviews.filter(r => r.categoryRatings && typeof r.categoryRatings[key] === 'number' && r.categoryRatings[key] > 0);
+        if (reviewsWithKey.length > 0) {
+          const avg = reviewsWithKey.reduce((sum, r) => sum + (r.categoryRatings![key] || 0), 0) / reviewsWithKey.length;
+          scores[key] = Math.max(0, Math.min(100, Math.round((avg / 5) * 100)));
+        } else {
+          // Fallback: derive from overall rating with slight variance
+          const variance = [0, -3, 2, -1][idx % 4];
+          scores[key] = reviewCount > 0 ? Math.max(0, Math.min(100, Math.round((baseRating / 5) * 100) + variance)) : 0;
+        }
       } else {
         const variance = ((hash >> (idx * 4)) % 30) - 15;
         scores[key] = Math.max(30, Math.min(95, computedScore + variance));
