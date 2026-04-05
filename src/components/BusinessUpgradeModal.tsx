@@ -91,8 +91,8 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
         });
       if (error) throw error;
 
-      toast.success("Business upgrade request submitted! You'll be notified once reviewed.");
-      onOpenChange(false);
+      toast.success("Business upgrade request submitted!");
+      setJustSubmitted(true);
       setCompanyName("");
       setDescription("");
       setFile(null);
