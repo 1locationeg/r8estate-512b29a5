@@ -8,10 +8,11 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
-  Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag,
+  Loader2, Building2, Save, ExternalLink, Mail, Phone, Globe, MapPin, Calendar, Users as UsersIcon, CheckCircle, Plus, Tag, MessageSquare,
 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate } from "react-router-dom";
+import { useStartChat } from "@/hooks/useStartChat";
 
 interface UserInfo {
   id: string;
@@ -63,6 +64,7 @@ interface Props {
 
 export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, manageableRoles, updatingId }: Props) {
   const navigate = useNavigate();
+  const { startChat } = useStartChat();
   const [profile, setProfile] = useState<BusinessProfileData | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -216,6 +218,18 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
                 <Badge variant="outline" className="text-[10px]">No role</Badge>
               )}
             </div>
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-full mt-2 gap-1.5 text-xs"
+              onClick={() => {
+                onOpenChange(false);
+                startChat(user.id);
+              }}
+            >
+              <MessageSquare className="w-3.5 h-3.5" />
+              Send Message
+            </Button>
           </div>
 
           {/* Role Management */}
