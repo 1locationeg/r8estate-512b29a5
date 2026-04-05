@@ -40,6 +40,7 @@ import { LaunchSubmitForm } from '@/components/LaunchSubmitForm';
 import { MyDeals } from '@/components/MyDeals';
 import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
+import { AddBusinessModal } from '@/components/AddBusinessModal';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -876,6 +877,8 @@ const DeveloperDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, role, profile, isLoading } = useAuth();
+  const [addBusinessOpen, setAddBusinessOpen] = useState(false);
+  const { profile: businessProfile } = useBusinessProfile();
 
   useEffect(() => {
     if (!isLoading) {
@@ -921,10 +924,15 @@ const DeveloperDashboard = () => {
         bottomAction: {
           icon: <Plus className="w-4 h-4" />,
           label: 'Add Business',
-          onClick: () => {},
+          onClick: () => setAddBusinessOpen(true),
         },
       }}
     >
+      <AddBusinessModal
+        open={addBusinessOpen}
+        onOpenChange={setAddBusinessOpen}
+        parentBusinessId={businessProfile?.id}
+      />
       <Routes>
         <Route index element={<DevOverview />} />
         <Route path="profile" element={<DevBusinessProfile />} />
