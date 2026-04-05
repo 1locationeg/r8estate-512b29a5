@@ -408,7 +408,7 @@ const JourneyStepSection = ({
             backgroundColor: `hsl(${station.hslVar} / 0.08)`,
           }}
         >
-          {t(`${prefix}.stepLabel`)}
+          {station.step}/{STATIONS.length} · {t(`journeyScroll.${station.key}.title`)}
         </span>
 
         {/* Heading */}
@@ -505,7 +505,7 @@ const StationRingNav = ({
             )}
             <button
               onClick={() => onRingClick(idx)}
-              aria-label={`${s.step}. ${t(`${prefix}.stepLabel`)}`}
+              aria-label={`${s.step}/${STATIONS.length} · ${t(`journeyScroll.${s.key}.title`)}`}
               className={cn(
                 "relative w-8 h-8 sm:w-10 sm:h-10 rounded-full border-2 flex items-center justify-center transition-all duration-400 group",
                 isActive ? "scale-110 shadow-lg" : "opacity-50 hover:opacity-80 hover:scale-105"
