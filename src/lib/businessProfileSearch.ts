@@ -9,6 +9,7 @@ export interface PublicBusinessProfileSearchRow {
   specialties: string[] | null;
   year_established: number | null;
   description: string | null;
+  categories?: string[] | null;
 }
 
 export function mapPublicBusinessProfileToSearchItem(
