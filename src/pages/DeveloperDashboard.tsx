@@ -42,6 +42,7 @@ import { MyDeals } from '@/components/MyDeals';
 import { MyLaunches } from '@/components/MyLaunches';
 import { OnboardingWizard } from '@/components/OnboardingWizard';
 import { AddBusinessModal } from '@/components/AddBusinessModal';
+import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
