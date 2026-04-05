@@ -297,6 +297,36 @@ export function AdminUserDetailSheet({ user, open, onOpenChange, onRoleChange, m
                       rows={3}
                     />
                   </div>
+                  {/* Category Picker */}
+                  <div>
+                    <label className="text-[10px] font-medium text-muted-foreground mb-1.5 flex items-center gap-1">
+                      <Tag className="w-3 h-3" />Business Categories
+                    </label>
+                    <div className="flex flex-wrap gap-1.5">
+                      {BUSINESS_CATEGORIES.map(cat => {
+                        const isActive = profile.categories.includes(cat.value);
+                        return (
+                          <Badge
+                            key={cat.value}
+                            variant={isActive ? "default" : "outline"}
+                            className={cn(
+                              "text-[10px] cursor-pointer transition-colors select-none",
+                              isActive ? "bg-primary text-primary-foreground hover:bg-primary/80" : "hover:bg-secondary"
+                            )}
+                            onClick={() => {
+                              const newCats = isActive
+                                ? profile.categories.filter(c => c !== cat.value)
+                                : [...profile.categories, cat.value];
+                              updateField("categories", newCats);
+                            }}
+                          >
+                            {isActive ? <CheckCircle className="w-3 h-3 me-1" /> : <Plus className="w-3 h-3 me-1" />}
+                            {cat.label}
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  </div>
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="text-[10px] font-medium text-muted-foreground mb-1 flex items-center gap-1"><MapPin className="w-3 h-3" />Location</label>
