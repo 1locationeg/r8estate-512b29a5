@@ -851,6 +851,7 @@ const DevBusinessProfile = () => {
                 </div>
                 <p className="text-[10px] text-muted-foreground mt-1">Recommended: 1200×300px, JPG or PNG up to 5MB</p>
               </div>
+            </div>
 
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
