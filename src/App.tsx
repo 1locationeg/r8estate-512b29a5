@@ -162,7 +162,7 @@ const AppContent = () => {
           <Route path="/buyer/*" element={<BuyerDashboard />} />
           <Route path="/business/*" element={<DeveloperDashboard />} />
           <Route path="/admin/*" element={<AdminDashboard />} />
-          <Route path="/directory" element={<DeveloperDirectory />} />
+          <Route path="/directory" element={<Categories />} />
           <Route path="/reviews" element={<Reviews />} />
           <Route path="/install" element={<Install />} />
           <Route path="/portfolio" element={<Portfolio />} />
