@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Search, X } from "lucide-react";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
@@ -8,17 +7,8 @@ import { StationPageWrapper } from "@/components/StationPageWrapper";
 
 const Categories = () => {
   const { i18n } = useTranslation();
-  const navigate = useNavigate();
   const isRTL = i18n.dir() === "rtl";
   const [search, setSearch] = useState("");
-
-  const handleSelectCategory = (categoryIndex: number) => {
-    navigate("/", { state: { scrollToCategory: categoryIndex } });
-  };
-
-  const handleSelectItem = (item: { id: string; nameEn: string; nameAr: string }) => {
-    navigate("/", { state: { openItemId: item.id, openItemName: isRTL ? item.nameAr : item.nameEn } });
-  };
 
   return (
     <StationPageWrapper className="min-h-screen bg-background pb-16">
