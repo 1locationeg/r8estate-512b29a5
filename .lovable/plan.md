@@ -1,36 +1,55 @@
 
 
-## Plan: Make Reviews & Ratings Update Live on Entity Pages
+## Plan: 3-Phase Progressive Review Modal with Category Sub-Ratings
 
-### Problem
-When a user submits a review for a dynamic business profile, the rating (0.0), trust score (0), star distribution bars, and review count all remain at zero. This is because:
-1. The entity page loads business profiles with hardcoded `rating: 0, reviewCount: 0`
-2. The `useMemo` that computes trust score, rating, and star distribution only reads from `item.rating` and `item.reviewCount` — it never uses the actual `dbReviews` fetched from the database
-3. After a review is submitted, `refetchReviews` updates `dbReviews`, but nothing recalculates the displayed metrics
+### Overview
+Replace the current monolithic `WriteReviewModal` with a 3-phase progressive flow that reduces friction and collects category-specific ratings. Uses CSS transitions (not Framer Motion — avoiding a new dependency for simple slide animations).
 
-### Solution
-Update `ItemDetailSection.tsx` to incorporate real review data (`dbReviews`) into the trust score, rating, and star distribution calculations for dynamic business profiles.
+### Phase 1: Star Rating
+- Large interactive 5-star picker centered in the modal
+- Progress bar at top: "Step 1 of 3"
+- "Continue" button appears after star selection
+- Rating saved to local state immediately
 
-### Changes
+### Phase 2: AI-Powered Narrative
+- Smooth slide-left transition from Phase 1
+- Fields: Unit Type selector, Review Title input, Review Text textarea
+- "AI Suggest" button calls the existing `review-ai-assist` edge function with `action: "suggest"`, passing rating + unit type + business name
+- 3 AI-generated title suggestions rendered as clickable chips; clicking one auto-fills Title and seeds Review Text
+- CTA: "Next: Add Details"
 
-**File: `src/components/ItemDetailSection.tsx`**
+### Phase 3: Category Deep-Dive
+- Horizontal sliders (using existing `Slider` component) for category-specific metrics
+- Metrics are dynamic based on business category (uses existing `getCategoryMetricKeys`)
+- Labels mapped per category (e.g., Apps → Usability, Performance, Features, Support)
+- Disclaimer checkbox + Submit button
+- On submit: inserts review with `category_ratings` JSON into the `reviews` or `guest_reviews` table
 
-1. Add `dbReviews` to the `useMemo` dependency array
-2. For dynamic profiles, compute real metrics from `dbReviews`:
-   - **Rating**: average of all `dbReviews` star ratings (instead of hardcoded 0)
-   - **Review count**: `dbReviews.length` (instead of 0)
-   - **Star distribution**: actual percentage breakdown from real review ratings
-   - **Trust score**: recalculated using the real rating and review count through the existing formula
-3. Update the review count display (line ~877) to also use `dbReviews.length` for dynamic profiles
-4. The existing `refetchReviews` callback (already wired to `WriteReviewModal.onReviewSubmitted`) will trigger `dbReviews` to update → `useMemo` recalculates → UI updates automatically
+### Database Change
+- Add `category_ratings jsonb DEFAULT '{}'` to both `reviews` and `guest_reviews` tables via migration
 
-### What changes for users
-- After writing a review, the rating gauge, trust score, star bars, and review count will update immediately
-- All computed metrics (trust category bars, response rate) will reflect the real review data
-- Static/mock entities remain unaffected — changes only apply when `isDynamicProfile` is true
+### Technical Details
 
-### Files to edit
+**Files to create/edit:**
+
 | File | Change |
 |------|--------|
-| `src/components/ItemDetailSection.tsx` | Use `dbReviews` in the `useMemo` to compute live rating, trust score, star distribution for dynamic profiles |
+| Migration SQL | Add `category_ratings jsonb` to `reviews` and `guest_reviews` |
+| `src/components/WriteReviewModal.tsx` | Full rewrite to 3-phase flow with progress bar, phase transitions via CSS `translate`, AI chips, category sliders |
+| `src/components/ItemDetailSection.tsx` | Pass `entityCategory` prop to `WriteReviewModal`; compute `categoryScores` from real `category_ratings` in `dbReviews` |
+| `src/hooks/useReviews.ts` | Include `category_ratings` in select/mapping |
+
+**Key implementation notes:**
+- Phase transitions use Tailwind `transition-transform duration-300` with `translateX` — no new dependency needed
+- Progress bar uses existing `Progress` component from shadcn/ui
+- Category sliders use existing `Slider` component (1-5 scale, step 1)
+- AI suggest reuses the existing `review-ai-assist` edge function
+- `entityCategory` prop added to `WriteReviewModal` interface; defaults to `"developers"` if not provided
+- Review count on entity page (`(0 Reviews)`) will update from `liveReviewCount` which already reads `dbReviews.length`
+
+**Trust score update flow:**
+- Submit stores `category_ratings: { usability: 4, performance: 5, ... }` in DB
+- `useReviews` fetches `category_ratings` per review
+- `ItemDetailSection` useMemo aggregates real sub-ratings: averages each key across all reviews → converts to 0-100 for trust bars
+- Falls back to rating-derived scores when no sub-ratings exist
 
