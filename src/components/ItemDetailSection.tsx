@@ -973,6 +973,7 @@ export const ItemDetailSection = ({ item, onClose }: ItemDetailSectionProps) => 
         developerName={item?.name || ""}
         developerId={item?.id || ""}
         onReviewSubmitted={refetchReviews}
+        entityCategory={item?.category || "developers"}
       />
       <ReviewBlockedModal
         open={isReviewBlockedOpen}
