@@ -1405,6 +1405,7 @@
   },
   "journeyScroll": {
     "research": {
+      "title": "RESEARCH",
       "stepLabel": "STEP 1 OF 4 · RESEARCH",
       "tagline": "Know before you go",
       "heading": "Find Developers You Can Trust",
@@ -1418,6 +1419,7 @@
       "searchPlaceholder": "Search developers, projects..."
     },
     "choose": {
+      "title": "CHOOSE",
       "stepLabel": "STEP 2 OF 4 · CHOOSE",
       "tagline": "verified projects",
       "heading": "Pick a Project You Can Rely On",
@@ -1430,6 +1432,7 @@
       "hook": "Browse launches"
     },
     "finance": {
+      "title": "FINANCE",
       "stepLabel": "STEP 3 OF 4 · FINANCE",
       "tagline": "Fund safely",
       "heading": "Fund Your Purchase Safely",
@@ -1442,6 +1445,7 @@
       "hook": "See deals"
     },
     "protect": {
+      "title": "PROTECT",
       "stepLabel": "STEP 4 OF 4 · PROTECT",
       "tagline": "Land secure",
       "heading": "Land Secure. Stay Protected.",
