@@ -1,46 +1,74 @@
 
 
-## Plan: Insert "i" into business/developer names for legal differentiation
+## Plan: Professional Contact Page with Admin Control
 
-### Approach
-Insert the letter **"i"** into the middle of each business/developer name to create a subtle but clear distinction from genuine company names during testing. For example:
-- "Palm Hills Developments" → "Palim Hills Developments"
-- "Emaar Misr" → "Emiaar Misr"  
-- "SODIC" → "SODiIC"
-- "Ora Developers" → "Oria Developers"
-- "Mountain View" → "Mouintain View"
-- "Hyde Park Developments" → "Hyide Park Developments"
-- "Tatweer Misr" → "Tatiweir Misr"
-- "Coldwell Banker" → "Colidwell Banker"
-- "RE/MAX" → "RE/iMAX"
-- etc.
+### What we're building
+A dedicated, professional Contact Us page (replacing the current static placeholder) with a contact form, WhatsApp/Facebook Messenger integration, office info, and a full admin panel to control all content dynamically.
 
-**Regarding bold "i"**: Since names are stored as plain strings and rendered across 15+ components, making one character bold everywhere would require a global name-rendering utility wrapping each name in JSX. This is high-effort and fragile. Instead, the inserted "i" will naturally stand out because it breaks the expected spelling. If you really want visual emphasis, we can explore it as a follow-up.
+### 1. Database — New table + settings
 
-### Files to edit
+**New `contact_submissions` table** to store form submissions:
+- `id`, `user_id` (nullable — guests can submit), `name`, `email`, `phone`, `subject`, `message`, `status` (new/read/replied/archived), `admin_notes`, `created_at`
+- RLS: authenticated admins can read all; anyone can insert; users can read their own
 
-1. **`src/data/mockData.ts`** — All developer names, project names, brokerage names, app names, review project references, and developer reply author names (~50+ name occurrences)
+**Platform settings keys** (stored in existing `platform_settings`):
+- `contact_page_title` — page heading (AR/EN)
+- `contact_page_subtitle` — descriptive text below heading
+- `contact_page_body` — rich text (Markdown) for additional info
+- `contact_email` — display email
+- `contact_phone` — display phone
+- `contact_whatsapp` — WhatsApp number (opens wa.me link)
+- `contact_facebook_messenger` — Messenger page username (opens m.me link)
+- `contact_office_address` — office location text
+- `contact_office_hours` — working hours text
+- `contact_map_embed` — optional Google Maps embed URL
 
-2. **`src/components/HeroCategoryItems.tsx`** — All `nameEn` values in category items (brokers, apps, platforms, exhibitions, channels, law firms, valuation, training, auctions, mortgage, research, tax, management, shares, leasing, blockchain, lands — ~60+ items)
+### 2. Contact Page (`src/pages/ContactPage.tsx`)
 
-3. **`src/components/CompareEngineShowcase.tsx`** — DEVELOPERS array names (2 items)
+Professional layout following best practices (HubSpot, Intercom, Zendesk patterns):
 
-4. **`src/components/LiveMarketPulse.tsx`** — FALLBACK_EVENTS text and entityName fields (2 items)
+- **Hero section**: Configurable title + subtitle with gradient/glassmorphism styling
+- **Two-column layout** (desktop):
+  - **Left**: Contact form (Name, Email, Phone, Subject dropdown, Message textarea, Submit button) with validation and success feedback
+  - **Right**: Contact info cards — Email, Phone, WhatsApp (tap to open wa.me), Facebook Messenger (tap to open m.me), Office address, Working hours
+- **Rich text body** below (rendered from Markdown via `react-markdown`)
+- **Optional map embed** section
+- Fully responsive (stacks on mobile), RTL-aware, bilingual (AR/EN)
+- Navbar + Footer included for standard navigation
 
-5. **`src/lib/fuzzySearch.ts`** — commonMisspellings values to match the new names
+### 3. Where users find it (discoverability)
 
-6. **`src/components/ReviewsCarousel.tsx`** — TESTIMONIALS business author names
+- Already in **Footer** → "Contact Us" link (exists, points to `/contact`)
+- Already in **route registry** (exists)
+- Add to **Navbar guest links** as a visible item for easy access
+- The `/contact` route in `App.tsx` will point to the new `ContactPage` instead of `StaticPage`
 
-7. **`src/components/BusinessUpgradeModal.tsx`** — placeholder text example
+### 4. Admin Panel (`src/components/AdminContactSettings.tsx`)
 
-### What stays unchanged
-- Arabic names (بالم هيلز, إعمار, etc.) — these are transliterations and don't carry the same trademark risk
-- Unit type names (Studio, Villa, etc.) — generic terms, not trademarks
-- Location names (New Cairo, etc.) — geographic, no legal risk
-- User/reviewer names (Ahmed, Sara, etc.) — fictional already
+Two tabs:
 
-### Notes
-- IDs remain unchanged (e.g., `palm-hills`) so no routing/linking breaks
-- Only display names are modified
-- The "i" placement will be in the first word of each name, roughly in the middle, to keep names readable
+**Tab 1 — Page Settings**: 
+- Rich text editor (same pattern as AdminWelcomeMessage) for title, subtitle, body
+- Input fields for email, phone, WhatsApp number, Messenger username, address, hours, map URL
+- Save button with toast feedback
+
+**Tab 2 — Submissions Inbox**:
+- Table of contact form submissions with status badges (New/Read/Replied/Archived)
+- Click to expand: full message, admin notes field, status change dropdown
+- Unread count badge in sidebar nav
+
+### 5. Admin Dashboard integration
+
+- Add "Contact Page" nav item under **Communications** group with `Phone` icon
+- Add route `/admin/contact` → `AdminContactSettings`
+
+### Files to create/edit
+
+| File | Action |
+|------|--------|
+| `supabase/migrations/..._contact_submissions.sql` | Create table + RLS + seed settings |
+| `src/pages/ContactPage.tsx` | New professional contact page |
+| `src/components/AdminContactSettings.tsx` | New admin panel (settings + inbox) |
+| `src/pages/AdminDashboard.tsx` | Add nav item + route |
+| `src/App.tsx` | Change `/contact` route from StaticPage to ContactPage |
 
