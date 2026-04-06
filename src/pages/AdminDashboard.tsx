@@ -41,6 +41,7 @@ import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
+import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
 const AdminOverview = () => {
   const navigate = useNavigate();
@@ -1820,6 +1821,7 @@ const AdminBusiness = () => {
   const [selectedBusiness, setSelectedBusiness] = useState<any | null>(null);
   const [editData, setEditData] = useState<any>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const openDetail = (b: any) => {
     setSelectedBusiness(b);
@@ -1898,6 +1900,9 @@ const AdminBusiness = () => {
           <h2 className="text-2xl font-bold text-foreground">Business Management</h2>
           <p className="text-sm text-muted-foreground">{businesses.length} registered businesses</p>
         </div>
+        <Button onClick={() => setShowCreateModal(true)} className="gap-2">
+          <Plus className="w-4 h-4" /> Create Business
+        </Button>
       </div>
 
       {/* Search & Filters */}
@@ -2160,6 +2165,12 @@ const AdminBusiness = () => {
           </div>
         </div>
       )}
+
+      <AdminCreateBusinessModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+        onCreated={fetchBusinesses}
+      />
     </div>
   );
 };
