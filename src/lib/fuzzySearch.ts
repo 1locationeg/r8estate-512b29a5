@@ -164,18 +164,18 @@ export function findSpellCorrection(
 
 // Common misspelling patterns for Egypt real estate
 export const commonMisspellings: Record<string, string> = {
-  'palm hills': 'Palm Hills Developments',
-  'palmhills': 'Palm Hills Developments',
-  'palm hils': 'Palm Hills Developments',
-  'emaar': 'Emaar Misr',
-  'emar': 'Emaar Misr',
-  'sodec': 'SODIC',
-  'sodik': 'SODIC',
-  'ora': 'Ora Developers',
-  'tatwir': 'Tatweer Misr',
-  'tatwer': 'Tatweer Misr',
-  'mountain veiw': 'Mountain View',
-  'hyde parl': 'Hyde Park Developments',
+  'palm hills': 'Palim Hills Developments',
+  'palmhills': 'Palim Hills Developments',
+  'palm hils': 'Palim Hills Developments',
+  'emaar': 'Emiaar Misr',
+  'emar': 'Emiaar Misr',
+  'sodec': 'SODiIC',
+  'sodik': 'SODiIC',
+  'ora': 'Oria Developers',
+  'tatwir': 'Tatiweer Misr',
+  'tatwer': 'Tatiweer Misr',
+  'mountain veiw': 'Mouintain View',
+  'hyde parl': 'Hyide Park Developments',
   'new cayro': 'New Cairo',
   'sheik zayed': 'Sheikh Zayed',
   'sheikh zaied': 'Sheikh Zayed',
@@ -184,8 +184,8 @@ export const commonMisspellings: Record<string, string> = {
   'sahel': 'North Coast',
   'north coast': 'North Coast',
   'new capital': 'New Administrative Capital',
-  'marassi': 'Marassi',
-  'marasi': 'Marassi',
+  'marassi': 'Mariassi',
+  'marasi': 'Mariassi',
 };
 
 // Check common misspellings first
