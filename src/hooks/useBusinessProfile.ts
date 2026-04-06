@@ -3,6 +3,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/contexts/AuthContext';
 import { toast } from 'sonner';
 
+
 export interface BusinessProfile {
   id?: string;
   user_id: string;
@@ -41,13 +42,18 @@ const emptyProfile = (userId: string): BusinessProfile => ({
 });
 
 export function useBusinessProfile() {
-  const { user } = useAuth();
+  const { user, isLoading: authLoading } = useAuth();
   const [profile, setProfile] = useState<BusinessProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
 
   const fetchProfile = useCallback(async () => {
-    if (!user) return;
+    if (authLoading) return;
+    if (!user) {
+      setProfile(null);
+      setIsLoading(false);
+      return;
+    }
     setIsLoading(true);
     const { data, error } = await supabase
       .from('business_profiles')
@@ -81,7 +87,7 @@ export function useBusinessProfile() {
       } : emptyProfile(user.id));
     }
     setIsLoading(false);
-  }, [user]);
+  }, [user, authLoading]);
 
   useEffect(() => { fetchProfile(); }, [fetchProfile]);
 

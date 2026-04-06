@@ -8,6 +8,7 @@ import {
   getNextTier,
   calcMissionProgress,
   BADGES,
+  TIERS,
   type GamificationInput,
   type MissionProgress,
   type Tier,
@@ -23,6 +24,22 @@ export function useGamification() {
   const { profile, isLoading } = useBusinessProfile();
 
   return useMemo(() => {
+    if (isLoading) {
+      return {
+        isLoading: true,
+        profileCompletion: 0,
+        missingFields: [],
+        totalPoints: 0,
+        currentTier: TIERS[0],
+        nextTier: TIERS[1],
+        pointsToNext: TIERS[1].minPoints,
+        earnedBadges: [],
+        lockedBadges: BADGES,
+        missions: [],
+        allBadges: BADGES,
+      };
+    }
+
     const profileFields = profile ?? {};
     const { percent: profileCompletion, missing } = calcProfileCompletion(profileFields);
 
