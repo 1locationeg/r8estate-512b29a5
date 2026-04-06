@@ -41,6 +41,7 @@ import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
+import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
 const AdminOverview = () => {
   const navigate = useNavigate();
