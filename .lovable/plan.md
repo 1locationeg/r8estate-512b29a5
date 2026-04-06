@@ -1,32 +1,46 @@
 
 
-## Redesign Registration Slots Banner — Floating Overlay with Color-Sensitive Progress
+## Plan: Insert "i" into business/developer names for legal differentiation
 
-### What changes
+### Approach
+Insert the letter **"i"** into the middle of each business/developer name to create a subtle but clear distinction from genuine company names during testing. For example:
+- "Palm Hills Developments" → "Palim Hills Developments"
+- "Emaar Misr" → "Emiaar Misr"  
+- "SODIC" → "SODiIC"
+- "Ora Developers" → "Oria Developers"
+- "Mountain View" → "Mouintain View"
+- "Hyde Park Developments" → "Hyide Park Developments"
+- "Tatweer Misr" → "Tatiweir Misr"
+- "Coldwell Banker" → "Colidwell Banker"
+- "RE/MAX" → "RE/iMAX"
+- etc.
 
-Replace the inline banner with a **floating overlay card** (bottom-right corner, like a toast/notification) that:
-- Stays visible but **does not block** the sign-up form
-- Has a **dismissible close button** (user can hide it)
-- Shows the **color-sensitive progress bar** matching the admin panel's 4-tier system:
-  - **Green** (>60% remaining) → calm, plenty of slots
-  - **Amber** (30–60%) → moderate urgency
-  - **Orange** (10–30%) → filling up
-  - **Red** (<10%) → pulsing urgent warning
-- Includes a subtle entrance animation (slide-in from bottom)
-- When slots are full, shows a "sold out" state but still allows sign-up (doesn't block the form)
+**Regarding bold "i"**: Since names are stored as plain strings and rendered across 15+ components, making one character bold everywhere would require a global name-rendering utility wrapping each name in JSX. This is high-effort and fragile. Instead, the inserted "i" will naturally stand out because it breaks the expected spelling. If you really want visual emphasis, we can explore it as a follow-up.
 
 ### Files to edit
 
-**`src/components/RegistrationSlotsBanner.tsx`** — Full rewrite:
-- Position: `fixed bottom-4 right-4 z-50` (or `left-4` in RTL)
-- Card with shadow, rounded corners, close button (X)
-- Progress bar color driven by `remainPct` thresholds (same logic as admin panel)
-- Label color matches bar color
-- Dismissible via local state (close button sets `dismissed=true`, returns null)
-- Animate in with `animate-slide-in` or Tailwind transition
+1. **`src/data/mockData.ts`** — All developer names, project names, brokerage names, app names, review project references, and developer reply author names (~50+ name occurrences)
 
-**`src/pages/Auth.tsx`** — Minor: remove the banner from inline position, keep the import (it's now fixed-position so placement in JSX doesn't matter, but move it outside the form card area)
+2. **`src/components/HeroCategoryItems.tsx`** — All `nameEn` values in category items (brokers, apps, platforms, exhibitions, channels, law firms, valuation, training, auctions, mortgage, research, tax, management, shares, leasing, blockchain, lands — ~60+ items)
 
-### No other files needed
-No database or admin changes — just the public-facing component redesign.
+3. **`src/components/CompareEngineShowcase.tsx`** — DEVELOPERS array names (2 items)
+
+4. **`src/components/LiveMarketPulse.tsx`** — FALLBACK_EVENTS text and entityName fields (2 items)
+
+5. **`src/lib/fuzzySearch.ts`** — commonMisspellings values to match the new names
+
+6. **`src/components/ReviewsCarousel.tsx`** — TESTIMONIALS business author names
+
+7. **`src/components/BusinessUpgradeModal.tsx`** — placeholder text example
+
+### What stays unchanged
+- Arabic names (بالم هيلز, إعمار, etc.) — these are transliterations and don't carry the same trademark risk
+- Unit type names (Studio, Villa, etc.) — generic terms, not trademarks
+- Location names (New Cairo, etc.) — geographic, no legal risk
+- User/reviewer names (Ahmed, Sara, etc.) — fictional already
+
+### Notes
+- IDs remain unchanged (e.g., `palm-hills`) so no routing/linking breaks
+- Only display names are modified
+- The "i" placement will be in the first word of each name, roughly in the middle, to keep names readable
 
