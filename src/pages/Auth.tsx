@@ -9,6 +9,7 @@ import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
 import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff, Star, CheckCircle, UserCheck, BarChart3 } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
+import { RegistrationSlotsBanner } from '@/components/RegistrationSlotsBanner';
 import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
 import { z } from 'zod';
 
@@ -292,8 +293,8 @@ const Auth = () => {
 
           {/* RIGHT — Auth form card */}
           <div className={`w-full max-w-[420px] mx-auto ${isAr ? 'order-1' : 'order-2'}`}>
-            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-lg">
-              {/* Logo inside card */}
+            <RegistrationSlotsBanner />
+            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-lg mt-4">
               <button
                 onClick={() => navigate('/')}
                 className="flex items-center justify-center mx-auto mb-5 hover:opacity-80 transition-opacity"
