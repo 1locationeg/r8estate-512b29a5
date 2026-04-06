@@ -51,6 +51,9 @@ export default function AdminRegistrationSlots() {
 
   const pct = total > 0 ? Math.min((registered / total) * 100, 100) : 0;
   const remaining = Math.max(total - registered, 0);
+  const remainPct = total > 0 ? (remaining / total) * 100 : 100;
+  const barColor = remainPct <= 10 ? 'bg-destructive' : remainPct <= 30 ? 'bg-[hsl(30,90%,50%)]' : remainPct <= 60 ? 'bg-accent' : 'bg-primary';
+  const labelColor = remainPct <= 10 ? 'text-destructive' : remainPct <= 30 ? 'text-[hsl(30,90%,50%)]' : remainPct <= 60 ? 'text-accent' : 'text-primary';
 
   return (
     <div className="space-y-6 max-w-2xl">
@@ -89,11 +92,14 @@ export default function AdminRegistrationSlots() {
           <CardTitle className="text-lg flex items-center gap-2"><Users className="w-5 h-5" /> Live Progress</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Progress value={pct} className="h-5" />
+          <div className="relative h-5 w-full overflow-hidden rounded-full bg-secondary">
+            <div className={`h-full rounded-full transition-all duration-700 ${barColor}`} style={{ width: `${pct}%` }} />
+          </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">{registered} registered</span>
-            <span className="font-bold text-foreground">{remaining} slots remaining</span>
+            <span className={`font-bold ${labelColor}`}>{remaining} slots remaining</span>
           </div>
+          {remainPct <= 10 && <p className="text-xs text-destructive font-semibold text-center animate-pulse">⚠️ Almost full!</p>}
           <p className="text-xs text-muted-foreground">Counts actual rows in the profiles table — only completed registrations.</p>
         </CardContent>
       </Card>
