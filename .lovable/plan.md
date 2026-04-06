@@ -1,60 +1,39 @@
 
-Root cause is likely deeper than the earlier loading guard.
 
-What I found:
-- `useBusinessProfile()` is used in multiple places (`DevOverview`, `DevReviews`, `DevCategories`, `DevSettings`, `DevBusinessProfile`, `DeveloperDashboard`, `useGamification`).
-- Because it is a custom hook with local `useState`, every usage creates its own separate profile state and its own fetch/save lifecycle.
-- `business_profiles.user_id` was originally unique, but that constraint was later removed. So one user can now have multiple root business profiles.
-- Current fetch logic picks the latest root row with `.is('parent_id', null).order(...).limit(1)`, but save logic updates `profile.id` from the local hook instance or inserts a new row if that instance still has no `id`.
-- That means different components can read/write different rows or one hook can still think “no profile exists” and insert another row. This matches the symptom: saved form data exists, but completion still shows `0%` in another part of the app.
-- The “Messages under Dashboard” issue is partly UI behavior: on desktop the avatar opens a dropdown with Messages; on mobile the small avatar goes directly to dashboard and Messages is a separate icon. But there is also inconsistency because user/profile/role/menu state is not centralized cleanly.
+## Registration Slot Counter — Admin Control + Public Display
 
-Plan
+### What it does
+A "Registration Slots" system similar to the Guest Timer panel. The admin sets a total slot count (e.g. 100) and toggles the feature on/off. A public-facing banner/widget shows visitors how many slots remain, counting only actual registered users (rows in `profiles` table), not just sign-up clicks. The bar fills up as real users complete registration.
 
-1. Centralize business profile state
-- Create a shared business-profile context/provider or equivalent single-source store.
-- Move fetch, save, loading, and refetch logic out of the repeated per-component hook state.
-- Make `useBusinessProfile()` read from that shared source instead of creating isolated state each time.
+### Implementation
 
-2. Make profile selection deterministic
-- Always load one canonical primary business profile for the signed-in business user.
-- Prefer an existing root profile (`parent_id IS NULL`) and never let normal profile editing accidentally target a child business row.
-- Ensure save always updates that canonical row after the first fetch.
+**1. Admin Panel — `AdminRegistrationSlots.tsx`**
+- Similar structure to `AdminGuestTimer.tsx`
+- Settings stored in `platform_settings` table (no migration needed):
+  - `registration_slots_enabled` → `"true"/"false"`
+  - `registration_slots_total` → e.g. `"100"`
+- Toggle switch to enable/disable
+- Numeric input + slider for total slots (range 10–1000)
+- Live display: queries `profiles` table count to show current registrations vs total
+- Save button upserts to `platform_settings`
 
-3. Stop accidental duplicate root profile creation
-- Change save flow so it does not insert a new root profile just because one component mounted before another finished fetching.
-- Add a backend migration to enforce only one root business profile per user, while still allowing child rows for sub-businesses/projects.
-- Clean up policy/constraint design so the dashboard profile editor and categories editor both operate on the same row.
+**2. Public-facing Banner — `RegistrationSlotsBanner.tsx`**
+- Shown on homepage and/or auth page when enabled
+- Fetches `registration_slots_enabled` and `registration_slots_total` from `platform_settings`
+- Counts registered users via `supabase.from('profiles').select('id', { count: 'exact', head: true })`
+- Displays: "X of 100 slots claimed" with a progress bar
+- When slots are full, shows "All slots taken" state
+- Urgent styling when <10% slots remain
 
-4. Make gamification read the shared profile
-- Update `useGamification()` to consume the centralized business profile state instead of spinning up its own independent fetch.
-- Keep the loading state explicit so completion is never computed from an empty fallback while the canonical profile is unresolved.
+**3. Wiring**
+- Add route `/admin/registration-slots` in `AdminDashboard.tsx`
+- Add nav item under "Settings" group with a `Users` icon
+- Add `RegistrationSlotsBanner` to `Auth.tsx` page (above the form) and optionally to the homepage
+- No database migration needed — uses existing `platform_settings` table
 
-5. Make avatar/menu behavior consistent
-- Refactor `UserAvatarAnchor` so behavior is explicit by mode:
-  - desktop: dropdown with Dashboard, Messages, Sign Out
-  - mobile: keep direct dashboard tap only if intended, otherwise add a consistent sheet/dropdown action path
-- Avoid showing partial auth/profile UI before auth and role are fully resolved.
-- Add missing translation key for `nav.messages`, since it is currently referenced with fallback text only and not defined in locale files.
+**4. Files to create/edit**
+- **Create**: `src/components/AdminRegistrationSlots.tsx`
+- **Create**: `src/components/RegistrationSlotsBanner.tsx`
+- **Edit**: `src/pages/AdminDashboard.tsx` — add nav item + route + import
+- **Edit**: `src/pages/Auth.tsx` — render `RegistrationSlotsBanner` at top
 
-6. Wire dashboard screens to the same source
-- Update `DevBusinessProfile`, `DevSettings`, `DevOverview`, and any category/image upload refresh logic to use the shared business profile store.
-- Replace full-page reload style refreshes (like cover upload callback) with shared refetch/update so completion updates immediately everywhere.
-
-7. Verify against the reported bug
-- Check these exact scenarios after implementation:
-  - fill profile fields and save → completion percentage updates immediately
-  - refresh page → completion stays correct
-  - open avatar menu on desktop → Dashboard + Messages + Sign Out always visible
-  - mobile header still behaves intentionally and consistently
-  - category/logo/cover/license updates also affect completion without needing repeated saves
-
-Technical details
-- Best long-term fix is not another loading tweak; it is removing duplicated local business-profile state.
-- Backend migration should enforce “one root profile per user” using a partial unique index on root rows, while preserving child records:
-```text
-unique root row per user where parent_id is null
-child rows allowed where parent_id is not null
-```
-- This will prevent the app from drifting into multiple competing “main” profiles again.
-- The existing removed `user_id` uniqueness is likely what allowed this bug to become persistent.
