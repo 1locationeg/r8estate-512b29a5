@@ -8,6 +8,7 @@ import {
   getNextTier,
   calcMissionProgress,
   BADGES,
+  TIERS,
   type GamificationInput,
   type MissionProgress,
   type Tier,
