@@ -40,6 +40,7 @@ import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
+import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
@@ -2272,6 +2273,7 @@ const AdminDashboard = () => {
         { icon: <Globe className="w-4 h-4" />, label: 'SEO & Sharing', path: '/admin/seo' },
         { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
         { icon: <Timer className="w-4 h-4" />, label: 'Guest Timer', path: '/admin/guest-timer' },
+        { icon: <Users className="w-4 h-4" />, label: 'Registration Slots', path: '/admin/registration-slots' },
         { icon: <Layout className="w-4 h-4" />, label: 'Footer', path: '/admin/footer' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
@@ -2336,6 +2338,7 @@ const AdminDashboard = () => {
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
           <Route path="footer" element={<AdminFooterSettings />} />
+          <Route path="registration-slots" element={<AdminRegistrationSlots />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
