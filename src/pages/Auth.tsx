@@ -536,6 +536,7 @@ const Auth = () => {
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} R8ESTATE. {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}</p>
         </div>
       </div>
+      <RegistrationSlotsBanner />
     </div>
   );
 };
