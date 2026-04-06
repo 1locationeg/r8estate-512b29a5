@@ -7,6 +7,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { BusinessLogoProvider } from "@/contexts/BusinessLogoContext";
+import { BusinessProfileProvider } from "@/contexts/BusinessProfileContext";
 import { GuestTimerProvider } from "@/contexts/GuestTimerContext";
 import { GuestTimerBanner } from "@/components/GuestTimerBanner";
 import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
@@ -98,6 +99,7 @@ const App = () => (
     <TooltipProvider>
       <CookieConsentProvider>
         <AuthProvider>
+          <BusinessProfileProvider>
           <BusinessLogoProvider>
           <GuestTimerProvider>
             <Toaster />
@@ -109,6 +111,7 @@ const App = () => (
             </BrowserRouter>
           </GuestTimerProvider>
           </BusinessLogoProvider>
+          </BusinessProfileProvider>
         </AuthProvider>
       </CookieConsentProvider>
     </TooltipProvider>

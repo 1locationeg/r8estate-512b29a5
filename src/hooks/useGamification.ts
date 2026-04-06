@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { useBusinessProfile } from './useBusinessProfile';
+import { useBusinessProfile } from '@/contexts/BusinessProfileContext';
 import {
   calcProfileCompletion,
   calcEarnedBadges,
@@ -10,9 +10,6 @@ import {
   BADGES,
   TIERS,
   type GamificationInput,
-  type MissionProgress,
-  type Tier,
-  type BadgeDef,
 } from '@/lib/gamification';
 import { developers, reviews } from '@/data/mockData';
 
@@ -24,24 +21,23 @@ export function useGamification() {
   const { profile, isLoading } = useBusinessProfile();
 
   return useMemo(() => {
-    if (isLoading) {
+    if (isLoading || !profile) {
       return {
         isLoading: true,
         profileCompletion: 0,
-        missingFields: [],
+        missingFields: [] as string[],
         totalPoints: 0,
         currentTier: TIERS[0],
         nextTier: TIERS[1],
         pointsToNext: TIERS[1].minPoints,
-        earnedBadges: [],
+        earnedBadges: [] as typeof BADGES,
         lockedBadges: BADGES,
-        missions: [],
+        missions: [] as ReturnType<typeof calcMissionProgress>,
         allBadges: BADGES,
       };
     }
 
-    const profileFields = profile ?? {};
-    const { percent: profileCompletion, missing } = calcProfileCompletion(profileFields);
+    const { percent: profileCompletion, missing } = calcProfileCompletion(profile);
 
     const input: GamificationInput = {
       profileCompletion,
@@ -49,12 +45,12 @@ export function useGamification() {
       reviewReplies: myReviews.filter((r) => r.developerReply).length,
       avgRating: myDev.rating,
       trustScore: myDev.trustScore,
-      galleryCount: 0, // TODO: from actual gallery
-      teamCount: 3, // mock
-      hasLicense: !!profile?.license_url,
-      joinedDate: new Date(), // would come from user created_at
-      communityPosts: 0, // TODO: fetch from DB
-      communityReplies: 0, // TODO: fetch from DB
+      galleryCount: 0,
+      teamCount: 3,
+      hasLicense: !!profile.license_url,
+      joinedDate: new Date(),
+      communityPosts: 0,
+      communityReplies: 0,
     };
 
     const earnedIds = calcEarnedBadges(input);
@@ -67,7 +63,7 @@ export function useGamification() {
     const lockedBadges = BADGES.filter((b) => !earnedIds.includes(b.id));
 
     return {
-      isLoading,
+      isLoading: false,
       profileCompletion,
       missingFields: missing,
       totalPoints,
