@@ -41,6 +41,7 @@ import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
+import AdminContactSettings from '@/components/AdminContactSettings';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
@@ -2258,6 +2259,7 @@ const AdminDashboard = () => {
         { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
         { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
         { icon: <Gift className="w-4 h-4" />, label: 'Welcome Message', path: '/admin/welcome-message' },
+        { icon: <Phone className="w-4 h-4" />, label: 'Contact Page', path: '/admin/contact' },
       ],
     },
     {
@@ -2342,6 +2344,7 @@ const AdminDashboard = () => {
           <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />
           <Route path="welcome-message" element={<AdminWelcomeMessage />} />
+          <Route path="contact" element={<AdminContactSettings />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
