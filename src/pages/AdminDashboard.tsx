@@ -172,7 +172,7 @@ const AdminOverview = () => {
       {/* Hero Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {heroStats.map((s) => (
-          <div key={s.label} className={`bg-gradient-to-br ${s.gradient} rounded-xl p-5 text-primary-foreground`}>
+          <div key={s.label} className={`bg-gradient-to-br ${s.gradient} rounded-xl p-5 text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center backdrop-blur-sm">
                 <s.icon className="w-5 h-5" />
@@ -187,7 +187,7 @@ const AdminOverview = () => {
       {/* Mid Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {midStats.map((s) => (
-          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+          <div key={s.label} className={`${s.color} rounded-xl p-4 cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="w-4 h-4 opacity-80" />
               <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
@@ -200,7 +200,7 @@ const AdminOverview = () => {
       {/* Bottom Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {bottomStats.map((s) => (
-          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+          <div key={s.label} className={`${s.color} rounded-xl p-4 cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="w-4 h-4 opacity-80" />
               <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
