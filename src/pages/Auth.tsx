@@ -288,7 +288,7 @@ const Auth = () => {
             {/* Bottom trust line */}
             <div className="flex items-center gap-4 mt-6 text-xs text-muted-foreground">
               <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-accent" /> {isAr ? 'مجاني للأبد' : 'Free forever'}</span>
-              <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-accent" /> {isAr ? 'بدون بطاقة ائتمان' : 'No credit card'}</span>
+              <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-accent" /> {isAr ? 'بدون تحيز' : 'Unbiased'}</span>
               <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-accent" /> {isAr ? 'إلغاء في أي وقت' : 'Cancel anytime'}</span>
             </div>
           </div>
