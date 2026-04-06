@@ -51,8 +51,7 @@ export function RegistrationSlotsBanner() {
 
   return (
     <div
-      className={`fixed bottom-4 right-4 z-50 w-72 rounded-xl border ${borderColor} bg-card shadow-xl p-4 space-y-2.5 animate-[slideUp_0.4s_ease-out]`}
-      style={{ animationFillMode: 'both' }}
+      className={`fixed bottom-4 right-4 z-50 w-72 rounded-xl border ${borderColor} bg-card shadow-xl p-4 space-y-2.5 animate-slide-up`}
     >
       {/* Close button */}
       <button

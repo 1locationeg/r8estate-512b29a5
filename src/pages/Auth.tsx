@@ -293,8 +293,7 @@ const Auth = () => {
 
           {/* RIGHT — Auth form card */}
           <div className={`w-full max-w-[420px] mx-auto ${isAr ? 'order-1' : 'order-2'}`}>
-            <RegistrationSlotsBanner />
-            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-lg mt-4">
+            <div className="bg-card border border-border rounded-2xl p-6 sm:p-8 shadow-lg">
               <button
                 onClick={() => navigate('/')}
                 className="flex items-center justify-center mx-auto mb-5 hover:opacity-80 transition-opacity"
