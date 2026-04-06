@@ -185,7 +185,7 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
               <Label htmlFor="company-name" className="text-sm font-medium">Company Name *</Label>
               <Input
                 id="company-name"
-                placeholder="e.g. Palm Hills Developments"
+                placeholder="e.g. Palim Hills Developments"
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 className="mt-1"

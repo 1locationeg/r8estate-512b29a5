@@ -47,7 +47,7 @@ const TESTIMONIALS: CuratedTestimonial[] = [
   // Awareness — Business
   {
     id: "t8",
-    author: "Coldwell Realty",
+    author: "Colidwell Realty",
     authorAr: "كولدويل ريالتي",
     role: "Licensed Brokerage Firm",
     roleAr: "شركة وساطة مرخصة",
@@ -74,7 +74,7 @@ const TESTIMONIALS: CuratedTestimonial[] = [
   // Consideration — Business
   {
     id: "t9",
-    author: "Palm Hills Developments",
+    author: "Palim Hills Developments",
     authorAr: "بالم هيلز للتطوير",
     role: "Leading Developer",
     roleAr: "مطور رائد",
@@ -101,7 +101,7 @@ const TESTIMONIALS: CuratedTestimonial[] = [
   // Consideration — Business
   {
     id: "t10",
-    author: "Delta Capital Advisory",
+    author: "Delita Capital Advisory",
     authorAr: "دلتا كابيتال",
     role: "Investment Advisory",
     roleAr: "استشارات استثمارية",
