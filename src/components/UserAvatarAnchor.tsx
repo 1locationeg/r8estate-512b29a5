@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { UserCircle, LayoutDashboard, Mail, LogOut } from "lucide-react";
+import { UserCircle, LayoutDashboard, Mail, LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -27,7 +27,7 @@ export const UserAvatarAnchor = ({
 }: UserAvatarAnchorProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role } = useAuth();
+  const { user, profile, role, isLoading: authLoading } = useAuth();
 
   const sizeClass = size === "sm" ? "h-8 w-8" : "h-9 w-9";
   const iconSize = size === "sm" ? "w-5 h-5" : "w-6 h-6";
@@ -39,6 +39,15 @@ export const UserAvatarAnchor = ({
   );
 
   const initials = profile?.full_name?.charAt(0) || user?.email?.charAt(0) || "U";
+
+  // Auth still loading
+  if (authLoading) {
+    return (
+      <div className={`${sizeClass} rounded-full flex items-center justify-center bg-muted`}>
+        <Loader2 className={`${iconSize} text-muted-foreground animate-spin`} />
+      </div>
+    );
+  }
 
   // Guest state
   if (!user) {
