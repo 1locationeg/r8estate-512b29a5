@@ -27,7 +27,7 @@ export default function AdminRegistrationSlots() {
       ]);
       setEnabled(enabledRes.data?.value === 'true');
       setTotal(totalRes.data?.value ? Number(totalRes.data.value) : 100);
-      setRegistered(countRes.count ?? 0);
+      setRegistered(countRes.data ?? 0);
       setLoading(false);
     };
     load();
