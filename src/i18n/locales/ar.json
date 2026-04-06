@@ -215,7 +215,8 @@
     "blog": "المدونة",
     "signUp": "إنشاء حساب",
     "forBusinesses": "للشركات",
-    "language": "العربية"
+    "language": "العربية",
+    "messages": "الرسائل"
   },
   "hero": {
     "platformDescriptor": "منصة مصر للمراجعات العقارية الموثوقة\n",

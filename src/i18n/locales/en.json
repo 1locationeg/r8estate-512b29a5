@@ -215,7 +215,8 @@
     "blog": "Blog",
     "signUp": "Sign up",
     "forBusinesses": "For Businesses",
-    "language": "English"
+    "language": "English",
+    "messages": "Messages"
   },
   "hero": {
     "platformDescriptor": "Real Estate Trust Platform\n",

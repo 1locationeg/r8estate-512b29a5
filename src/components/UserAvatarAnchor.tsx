@@ -81,7 +81,7 @@ export const UserAvatarAnchor = ({
     );
   }
 
-  // Desktop: dropdown menu
+  // Desktop: always show full dropdown with Dashboard + Messages + Sign Out
   return (
     <DropdownMenu>
       <DropdownMenuTrigger className="focus:outline-none">
@@ -105,10 +105,13 @@ export const UserAvatarAnchor = ({
           {t("nav.messages", "Messages")}
         </DropdownMenuItem>
         {onSignOut && (
-          <DropdownMenuItem onClick={onSignOut} className="text-destructive cursor-pointer">
-            <LogOut className="w-4 h-4 me-2" />
-            {t("common.signOut", "Sign Out")}
-          </DropdownMenuItem>
+          <>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onSignOut} className="text-destructive cursor-pointer">
+              <LogOut className="w-4 h-4 me-2" />
+              {t("common.signOut", "Sign Out")}
+            </DropdownMenuItem>
+          </>
         )}
       </DropdownMenuContent>
     </DropdownMenu>
