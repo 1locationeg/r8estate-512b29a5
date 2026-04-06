@@ -92,11 +92,14 @@ export default function AdminRegistrationSlots() {
           <CardTitle className="text-lg flex items-center gap-2"><Users className="w-5 h-5" /> Live Progress</CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <Progress value={pct} className="h-5" />
+          <div className="relative h-5 w-full overflow-hidden rounded-full bg-secondary">
+            <div className={`h-full rounded-full transition-all duration-700 ${barColor}`} style={{ width: `${pct}%` }} />
+          </div>
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">{registered} registered</span>
-            <span className="font-bold text-foreground">{remaining} slots remaining</span>
+            <span className={`font-bold ${labelColor}`}>{remaining} slots remaining</span>
           </div>
+          {remainPct <= 10 && <p className="text-xs text-destructive font-semibold text-center animate-pulse">⚠️ Almost full!</p>}
           <p className="text-xs text-muted-foreground">Counts actual rows in the profiles table — only completed registrations.</p>
         </CardContent>
       </Card>
