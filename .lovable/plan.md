@@ -1,39 +1,32 @@
 
 
-## Registration Slot Counter — Admin Control + Public Display
+## Redesign Registration Slots Banner — Floating Overlay with Color-Sensitive Progress
 
-### What it does
-A "Registration Slots" system similar to the Guest Timer panel. The admin sets a total slot count (e.g. 100) and toggles the feature on/off. A public-facing banner/widget shows visitors how many slots remain, counting only actual registered users (rows in `profiles` table), not just sign-up clicks. The bar fills up as real users complete registration.
+### What changes
 
-### Implementation
+Replace the inline banner with a **floating overlay card** (bottom-right corner, like a toast/notification) that:
+- Stays visible but **does not block** the sign-up form
+- Has a **dismissible close button** (user can hide it)
+- Shows the **color-sensitive progress bar** matching the admin panel's 4-tier system:
+  - **Green** (>60% remaining) → calm, plenty of slots
+  - **Amber** (30–60%) → moderate urgency
+  - **Orange** (10–30%) → filling up
+  - **Red** (<10%) → pulsing urgent warning
+- Includes a subtle entrance animation (slide-in from bottom)
+- When slots are full, shows a "sold out" state but still allows sign-up (doesn't block the form)
 
-**1. Admin Panel — `AdminRegistrationSlots.tsx`**
-- Similar structure to `AdminGuestTimer.tsx`
-- Settings stored in `platform_settings` table (no migration needed):
-  - `registration_slots_enabled` → `"true"/"false"`
-  - `registration_slots_total` → e.g. `"100"`
-- Toggle switch to enable/disable
-- Numeric input + slider for total slots (range 10–1000)
-- Live display: queries `profiles` table count to show current registrations vs total
-- Save button upserts to `platform_settings`
+### Files to edit
 
-**2. Public-facing Banner — `RegistrationSlotsBanner.tsx`**
-- Shown on homepage and/or auth page when enabled
-- Fetches `registration_slots_enabled` and `registration_slots_total` from `platform_settings`
-- Counts registered users via `supabase.from('profiles').select('id', { count: 'exact', head: true })`
-- Displays: "X of 100 slots claimed" with a progress bar
-- When slots are full, shows "All slots taken" state
-- Urgent styling when <10% slots remain
+**`src/components/RegistrationSlotsBanner.tsx`** — Full rewrite:
+- Position: `fixed bottom-4 right-4 z-50` (or `left-4` in RTL)
+- Card with shadow, rounded corners, close button (X)
+- Progress bar color driven by `remainPct` thresholds (same logic as admin panel)
+- Label color matches bar color
+- Dismissible via local state (close button sets `dismissed=true`, returns null)
+- Animate in with `animate-slide-in` or Tailwind transition
 
-**3. Wiring**
-- Add route `/admin/registration-slots` in `AdminDashboard.tsx`
-- Add nav item under "Settings" group with a `Users` icon
-- Add `RegistrationSlotsBanner` to `Auth.tsx` page (above the form) and optionally to the homepage
-- No database migration needed — uses existing `platform_settings` table
+**`src/pages/Auth.tsx`** — Minor: remove the banner from inline position, keep the import (it's now fixed-position so placement in JSX doesn't matter, but move it outside the form card area)
 
-**4. Files to create/edit**
-- **Create**: `src/components/AdminRegistrationSlots.tsx`
-- **Create**: `src/components/RegistrationSlotsBanner.tsx`
-- **Edit**: `src/pages/AdminDashboard.tsx` — add nav item + route + import
-- **Edit**: `src/pages/Auth.tsx` — render `RegistrationSlotsBanner` at top
+### No other files needed
+No database or admin changes — just the public-facing component redesign.
 
