@@ -14,7 +14,7 @@ export function RegistrationSlotsBanner() {
       const [enabledRes, totalRes, countRes] = await Promise.all([
         supabase.from('platform_settings').select('value').eq('key', 'registration_slots_enabled').maybeSingle(),
         supabase.from('platform_settings').select('value').eq('key', 'registration_slots_total').maybeSingle(),
-        supabase.from('profiles').select('id', { count: 'exact', head: true }),
+        supabase.rpc('get_profiles_count'),
       ]);
       setEnabled(enabledRes.data?.value === 'true');
       setTotal(totalRes.data?.value ? Number(totalRes.data.value) : 100);
