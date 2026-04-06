@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
-import { Users, X } from 'lucide-react';
+import { Users, X, Flame, Clock, Zap } from 'lucide-react';
 
 export function RegistrationSlotsBanner() {
   const [enabled, setEnabled] = useState(false);
@@ -31,70 +31,103 @@ export function RegistrationSlotsBanner() {
   const remainPct = total > 0 ? (remaining / total) * 100 : 100;
   const isFull = remaining <= 0;
 
-  const barColor =
-    remainPct <= 10 ? 'bg-destructive'
-    : remainPct <= 30 ? 'bg-[hsl(30,90%,50%)]'
-    : remainPct <= 60 ? 'bg-[hsl(45,90%,50%)]'
-    : 'bg-primary';
+  // 4-tier urgency system
+  const tier = remainPct <= 10 ? 'critical' : remainPct <= 30 ? 'high' : remainPct <= 60 ? 'moderate' : 'calm';
 
-  const labelColor =
-    remainPct <= 10 ? 'text-destructive'
-    : remainPct <= 30 ? 'text-[hsl(30,90%,50%)]'
-    : remainPct <= 60 ? 'text-[hsl(45,90%,50%)]'
-    : 'text-primary';
+  const bgGradient = {
+    critical: 'from-red-600/95 via-red-500/95 to-orange-500/95',
+    high: 'from-orange-600/95 via-orange-500/95 to-amber-400/95',
+    moderate: 'from-amber-500/95 via-yellow-400/95 to-lime-400/95',
+    calm: 'from-emerald-600/95 via-green-500/95 to-teal-400/95',
+  }[tier];
 
-  const borderColor =
-    remainPct <= 10 ? 'border-destructive/40'
-    : remainPct <= 30 ? 'border-[hsl(30,90%,50%)]/40'
-    : remainPct <= 60 ? 'border-[hsl(45,90%,50%)]/40'
-    : 'border-primary/30';
+  const barBg = {
+    critical: 'bg-white/90',
+    high: 'bg-white/90',
+    moderate: 'bg-white/80',
+    calm: 'bg-white/70',
+  }[tier];
+
+  const barFill = {
+    critical: 'bg-red-300',
+    high: 'bg-orange-300',
+    moderate: 'bg-amber-300',
+    calm: 'bg-emerald-300',
+  }[tier];
+
+  const pulseClass = tier === 'critical' ? 'animate-pulse' : '';
+
+  const urgencyText = {
+    critical: '🔥 Almost gone! Claim yours NOW',
+    high: '⚡ Filling up fast — don\'t miss out',
+    moderate: '⏳ Spots are going — secure yours',
+    calm: '✅ Spots available — join now',
+  }[tier];
+
+  const urgencyIcon = {
+    critical: <Flame className="w-4 h-4 text-yellow-200 animate-bounce" />,
+    high: <Zap className="w-4 h-4 text-yellow-100" />,
+    moderate: <Clock className="w-4 h-4 text-white/80" />,
+    calm: <Users className="w-4 h-4 text-white/80" />,
+  }[tier];
 
   return (
-    <div
-      className={`fixed bottom-4 right-4 z-50 w-72 rounded-xl border ${borderColor} bg-card shadow-xl p-4 space-y-2.5 animate-slide-up`}
-    >
-      {/* Close button */}
-      <button
-        onClick={() => setDismissed(true)}
-        className="absolute top-2 right-2 p-1 rounded-full hover:bg-muted transition-colors"
-        aria-label="Dismiss"
-      >
-        <X className="w-3.5 h-3.5 text-muted-foreground" />
-      </button>
-
-      {isFull ? (
-        <div className="text-center py-1">
-          <p className="text-sm font-bold text-destructive">🚫 All {total} slots claimed!</p>
-          <p className="text-xs text-muted-foreground mt-1">You can still sign up for the waitlist</p>
-        </div>
-      ) : (
-        <>
-          <div className="flex items-center justify-between pr-4">
-            <div className="flex items-center gap-2">
-              <Users className={`w-4 h-4 ${labelColor}`} />
-              <span className="text-sm font-bold text-foreground">
-                {registered} / {total} slots
-              </span>
-            </div>
-            <span className={`text-xs font-semibold ${labelColor}`}>
-              {remaining} left
+    <div className={`
+      w-full bg-gradient-to-r ${bgGradient}
+      backdrop-blur-sm shadow-lg
+      px-4 py-3
+      ${pulseClass}
+      transition-all duration-700
+    `}>
+      <div className="max-w-2xl mx-auto space-y-2">
+        {/* Top row: urgency message + close */}
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            {urgencyIcon}
+            <span className="text-white text-xs sm:text-sm font-bold tracking-wide">
+              {isFull ? '🚫 All slots claimed!' : urgencyText}
             </span>
           </div>
+          <button
+            onClick={() => setDismissed(true)}
+            className="p-1 rounded-full hover:bg-white/20 transition-colors"
+            aria-label="Dismiss"
+          >
+            <X className="w-3.5 h-3.5 text-white/70" />
+          </button>
+        </div>
 
-          <div className="relative h-3 w-full overflow-hidden rounded-full bg-secondary">
-            <div
-              className={`h-full rounded-full transition-all duration-700 ${barColor}`}
-              style={{ width: `${pct}%` }}
-            />
-          </div>
+        {!isFull && (
+          <>
+            {/* Progress bar */}
+            <div className={`relative h-3 w-full overflow-hidden rounded-full ${barBg}`}>
+              <div
+                className={`h-full rounded-full transition-all duration-1000 ease-out ${barFill}`}
+                style={{ width: `${pct}%` }}
+              />
+              {/* Animated shimmer */}
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite] rounded-full" />
+            </div>
 
-          {remainPct <= 10 && (
-            <p className="text-xs text-destructive font-medium text-center animate-pulse">
-              ⚠️ Almost full — hurry!
-            </p>
-          )}
-        </>
-      )}
+            {/* Bottom row: counts */}
+            <div className="flex items-center justify-between text-white">
+              <span className="text-[11px] sm:text-xs font-medium opacity-90">
+                <span className="font-extrabold text-sm sm:text-base">{registered}</span>
+                <span className="opacity-70"> / {total} joined</span>
+              </span>
+              <span className={`text-xs sm:text-sm font-extrabold ${tier === 'critical' ? 'text-yellow-200' : 'text-white'} ${pulseClass}`}>
+                Only {remaining} left!
+              </span>
+            </div>
+          </>
+        )}
+
+        {isFull && (
+          <p className="text-white/80 text-xs text-center">
+            You can still join the waitlist below
+          </p>
+        )}
+      </div>
     </div>
   );
 }
