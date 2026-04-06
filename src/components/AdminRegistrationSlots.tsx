@@ -51,6 +51,9 @@ export default function AdminRegistrationSlots() {
 
   const pct = total > 0 ? Math.min((registered / total) * 100, 100) : 0;
   const remaining = Math.max(total - registered, 0);
+  const remainPct = total > 0 ? (remaining / total) * 100 : 100;
+  const barColor = remainPct <= 10 ? 'bg-destructive' : remainPct <= 30 ? 'bg-[hsl(30,90%,50%)]' : remainPct <= 60 ? 'bg-accent' : 'bg-primary';
+  const labelColor = remainPct <= 10 ? 'text-destructive' : remainPct <= 30 ? 'text-[hsl(30,90%,50%)]' : remainPct <= 60 ? 'text-accent' : 'text-primary';
 
   return (
     <div className="space-y-6 max-w-2xl">
