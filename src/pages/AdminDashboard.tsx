@@ -2165,6 +2165,12 @@ const AdminBusiness = () => {
           </div>
         </div>
       )}
+
+      <AdminCreateBusinessModal
+        open={showCreateModal}
+        onOpenChange={setShowCreateModal}
+        onCreated={fetchBusinesses}
+      />
     </div>
   );
 };
