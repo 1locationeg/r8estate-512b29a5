@@ -2210,6 +2210,7 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_profiles_count: { Args: never; Returns: number }
       get_user_role: {
         Args: { _user_id: string }
         Returns: Database["public"]["Enums"]["app_role"]
