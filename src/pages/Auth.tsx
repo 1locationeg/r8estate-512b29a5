@@ -191,7 +191,7 @@ const Auth = () => {
     : [
         { icon: Shield, title: isAr ? '50,000+ تقييم موثق' : '50K+ verified reviews', desc: isAr ? 'اقرأ تقييمات حقيقية من مشترين مصريين حقيقيين' : 'Read 50,000+ verified reviews from real Egyptian buyers' },
         { icon: BarChart3, title: isAr ? 'متتبع البناء' : 'Construction Tracker', desc: isAr ? 'تتبع مواعيد التسليم مقابل وعود المطور — قبل التوقيع' : 'Track delivery dates vs. developer promises — before you sign' },
-        { icon: UserCheck, title: isAr ? 'يمكنك المراجعة كمجهول' : 'Review anonymously', desc: isAr ? 'هويتك تبقى مجهولة. نحن نحمي خصوصيتك' : 'Your identity stays anonymous. We protect your privacy.' },
+        { icon: UserCheck, title: isAr ? 'يمكنك المراجعة كمجهول' : 'Review anonymously', desc: isAr ? 'نحن نحمي خصوصيتك' : 'Your identity stays anonymous. We protect your privacy.' },
       ];
 
   const testimonial = {
