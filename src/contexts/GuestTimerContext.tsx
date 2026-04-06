@@ -30,7 +30,7 @@ export function GuestTimerProvider({ children }: { children: ReactNode }) {
   const hasExpiredRef = useRef(false);
 
   // Remote settings
-  const [timerEnabled, setTimerEnabled] = useState(true);
+  const [timerEnabled, setTimerEnabled] = useState(false);
   const [guestDuration, setGuestDuration] = useState(DEFAULT_GUEST_DURATION);
   const [bonusDuration, setBonusDuration] = useState(DEFAULT_BONUS);
   const [settingsLoaded, setSettingsLoaded] = useState(false);
