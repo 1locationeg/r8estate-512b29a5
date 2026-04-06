@@ -2257,6 +2257,7 @@ const AdminDashboard = () => {
         { icon: <Phone className="w-4 h-4" />, label: 'WhatsApp', path: '/admin/whatsapp' },
         { icon: <Mail className="w-4 h-4" />, label: 'Newsletter', path: '/admin/newsletter' },
         { icon: <Mail className="w-4 h-4" />, label: 'Email Branding', path: '/admin/email-branding' },
+        { icon: <Gift className="w-4 h-4" />, label: 'Welcome Message', path: '/admin/welcome-message' },
       ],
     },
     {
@@ -2340,6 +2341,7 @@ const AdminDashboard = () => {
           <Route path="smart-links" element={<AdminSmartLinks />} />
           <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />
+          <Route path="welcome-message" element={<AdminWelcomeMessage />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
