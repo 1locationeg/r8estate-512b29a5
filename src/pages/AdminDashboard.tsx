@@ -40,6 +40,7 @@ import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
+import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
