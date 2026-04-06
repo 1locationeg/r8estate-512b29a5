@@ -479,7 +479,7 @@ const Auth = () => {
               )}
 
               {/* Trust Signals */}
-              <div className="flex items-center justify-center gap-6 mt-6 pt-5 border-t border-border">
+              <div className="flex items-center justify-center gap-8 mt-6 pt-5 border-t border-border">
                 <div className="flex flex-col items-center gap-1.5">
                   <Shield className="w-5 h-5 text-accent" />
                   <span className="text-[10px] text-muted-foreground font-medium">{t('trustSignals.short.protected', 'Protected')}</span>
@@ -491,10 +491,6 @@ const Auth = () => {
                 <div className="flex flex-col items-center gap-1.5">
                   <Mail className="w-5 h-5 text-accent" />
                   <span className="text-[10px] text-muted-foreground font-medium">{t('trustSignals.short.noSpam', 'No spam')}</span>
-                </div>
-                <div className="flex flex-col items-center gap-1.5">
-                  <Eye className="w-5 h-5 text-muted-foreground" />
-                  <span className="text-[10px] text-muted-foreground font-medium">{t('trustSignals.short.anonymous', 'Anonymous')}</span>
                 </div>
               </div>
 
