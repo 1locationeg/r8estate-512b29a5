@@ -5,8 +5,8 @@ import { Sparkles, Lock, GitCompare, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const DEVELOPERS = [
-  { name: "Palm Hills", metrics: [4.2, 78, 85] },
-  { name: "Ora Developers", metrics: [3.1, 52, 61] },
+  { name: "Palim Hills", metrics: [4.2, 78, 85] },
+  { name: "Oria Developers", metrics: [3.1, 52, 61] },
 ];
 
 const CompareEngineShowcase = () => {

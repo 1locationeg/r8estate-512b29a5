@@ -20,10 +20,10 @@ interface PulseEvent {
 }
 
 const FALLBACK_EVENTS: Omit<PulseEvent, "icon">[] = [
-  { id: "f1", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "47 buyers checked Mountain View recently", textAr: "٤٧ مشتري تحققوا من ماونتن فيو مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 47, entityName: "Mountain View" },
+  { id: "f1", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "47 buyers checked Mouintain View recently", textAr: "٤٧ مشتري تحققوا من ماونتن فيو مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 47, entityName: "Mouintain View" },
   { id: "f2", type: "review", keyword: "REVIEW", keywordAr: "تقييم", text: "New reviews submitted today", textAr: "تقييمات جديدة اليوم", timestamp: new Date().toISOString(), link: "/reviews" },
   { id: "f3", type: "deal", keyword: "HOT DEAL", keywordAr: "عرض حصري", text: "Exclusive deals from verified businesses", textAr: "عروض حصرية من شركات موثقة", timestamp: new Date().toISOString(), link: "/deal-watch" },
-  { id: "f4", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "23 buyers checked Palm Hills recently", textAr: "٢٣ مشتري تحققوا من بالم هيلز مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 23, entityName: "Palm Hills" },
+  { id: "f4", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "23 buyers checked Palim Hills recently", textAr: "٢٣ مشتري تحققوا من بالم هيلز مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 23, entityName: "Palim Hills" },
 ];
 
 const getIcon = (type: string) => {
