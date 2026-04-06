@@ -1821,6 +1821,7 @@ const AdminBusiness = () => {
   const [selectedBusiness, setSelectedBusiness] = useState<any | null>(null);
   const [editData, setEditData] = useState<any>({});
   const [isSaving, setIsSaving] = useState(false);
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   const openDetail = (b: any) => {
     setSelectedBusiness(b);
