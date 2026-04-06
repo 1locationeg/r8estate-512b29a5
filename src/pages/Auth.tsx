@@ -206,6 +206,8 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      {/* Registration slots urgency banner */}
+      <RegistrationSlotsBanner />
       {/* Top announcement bar */}
       <div className="bg-primary text-primary-foreground py-2.5 px-4 flex items-center justify-between text-xs sm:text-sm">
         <div className="flex items-center gap-2">
@@ -536,7 +538,7 @@ const Auth = () => {
           <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} R8ESTATE. {isAr ? 'جميع الحقوق محفوظة.' : 'All rights reserved.'}</p>
         </div>
       </div>
-      <RegistrationSlotsBanner />
+      
     </div>
   );
 };
