@@ -1900,6 +1900,9 @@ const AdminBusiness = () => {
           <h2 className="text-2xl font-bold text-foreground">Business Management</h2>
           <p className="text-sm text-muted-foreground">{businesses.length} registered businesses</p>
         </div>
+        <Button onClick={() => setShowCreateModal(true)} className="gap-2">
+          <Plus className="w-4 h-4" /> Create Business
+        </Button>
       </div>
 
       {/* Search & Filters */}
