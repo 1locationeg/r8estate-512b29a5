@@ -140,23 +140,23 @@ const AdminOverview = () => {
   };
 
   const heroStats = [
-    { icon: DollarSign, label: 'EARNINGS', value: '$0.00', gradient: 'from-trust-excellent to-trust-excellent/80' },
-    { icon: Receipt, label: 'SUBSCRIPTIONS', value: '0', gradient: 'from-primary to-primary/80' },
-    { icon: CreditCard, label: 'TRANSACTIONS', value: '0', gradient: 'from-brand-red to-brand-red/80' },
+    { icon: DollarSign, label: 'EARNINGS', value: '$0.00', gradient: 'from-trust-excellent to-trust-excellent/80', path: '/admin/transactions' },
+    { icon: Receipt, label: 'SUBSCRIPTIONS', value: '0', gradient: 'from-primary to-primary/80', path: '/admin/subscriptions' },
+    { icon: CreditCard, label: 'TRANSACTIONS', value: '0', gradient: 'from-brand-red to-brand-red/80', path: '/admin/transactions' },
   ];
 
   const midStats = [
-    { icon: Briefcase, label: 'TOTAL BUSINESSES', value: dashData.totalBusinesses.toString(), color: 'bg-primary text-primary-foreground' },
-    { icon: Star, label: 'TOTAL REVIEWS', value: dashData.totalReviews.toString(), color: 'bg-accent text-accent-foreground' },
-    { icon: MessageSquare, label: 'PENDING REVIEWS', value: dashData.pendingReviews.toString(), color: 'bg-muted text-foreground' },
-    { icon: AlertTriangle, label: 'REPORTED REVIEWS', value: '0', color: 'bg-brand-red/90 text-primary-foreground' },
+    { icon: Briefcase, label: 'TOTAL BUSINESSES', value: dashData.totalBusinesses.toString(), color: 'bg-primary text-primary-foreground', path: '/admin/business' },
+    { icon: Star, label: 'TOTAL REVIEWS', value: dashData.totalReviews.toString(), color: 'bg-accent text-accent-foreground', path: '/admin/reviews' },
+    { icon: MessageSquare, label: 'PENDING REVIEWS', value: dashData.pendingReviews.toString(), color: 'bg-muted text-foreground', path: '/admin/moderation' },
+    { icon: AlertTriangle, label: 'REPORTED REVIEWS', value: '0', color: 'bg-brand-red/90 text-primary-foreground', path: '/admin/content-reports' },
   ];
 
   const bottomStats = [
-    { icon: Building2, label: 'BUSINESS OWNERS', value: dashData.totalBusinesses.toString(), color: 'bg-primary/90 text-primary-foreground' },
-    { icon: Users, label: 'USERS', value: dashData.totalUsers.toString(), color: 'bg-accent/90 text-accent-foreground' },
-    { icon: Shield, label: 'KYC VERIFICATIONS', value: '0', color: 'bg-trust-excellent/90 text-primary-foreground' },
-    { icon: Loader2, label: 'KYC PENDING', value: '0', color: 'bg-brand-red/80 text-primary-foreground' },
+    { icon: Building2, label: 'BUSINESS OWNERS', value: dashData.totalBusinesses.toString(), color: 'bg-primary/90 text-primary-foreground', path: '/admin/business' },
+    { icon: Users, label: 'USERS', value: dashData.totalUsers.toString(), color: 'bg-accent/90 text-accent-foreground', path: '/admin/users' },
+    { icon: Shield, label: 'KYC VERIFICATIONS', value: '0', color: 'bg-trust-excellent/90 text-primary-foreground', path: '/admin/reviewer-verification' },
+    { icon: Loader2, label: 'KYC PENDING', value: '0', color: 'bg-brand-red/80 text-primary-foreground', path: '/admin/reviewer-verification' },
   ];
 
   if (loading) {
@@ -172,7 +172,7 @@ const AdminOverview = () => {
       {/* Hero Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {heroStats.map((s) => (
-          <div key={s.label} className={`bg-gradient-to-br ${s.gradient} rounded-xl p-5 text-primary-foreground`}>
+          <div key={s.label} className={`bg-gradient-to-br ${s.gradient} rounded-xl p-5 text-primary-foreground cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 bg-white/15 rounded-lg flex items-center justify-center backdrop-blur-sm">
                 <s.icon className="w-5 h-5" />
@@ -187,7 +187,7 @@ const AdminOverview = () => {
       {/* Mid Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {midStats.map((s) => (
-          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+          <div key={s.label} className={`${s.color} rounded-xl p-4 cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="w-4 h-4 opacity-80" />
               <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
@@ -200,7 +200,7 @@ const AdminOverview = () => {
       {/* Bottom Stats Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {bottomStats.map((s) => (
-          <div key={s.label} className={`${s.color} rounded-xl p-4`}>
+          <div key={s.label} className={`${s.color} rounded-xl p-4 cursor-pointer hover:opacity-90 transition-opacity`} onClick={() => navigate(s.path)}>
             <div className="flex items-center gap-2 mb-1">
               <s.icon className="w-4 h-4 opacity-80" />
               <span className="text-[9px] font-bold tracking-wider uppercase opacity-80">{s.label}</span>
