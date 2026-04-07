@@ -505,20 +505,22 @@ const Index = () => { // hero-phase-v2
       <CompareModal item={null} open={showCompareModal} onClose={() => setShowCompareModal(false)} />
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
 
-      {/* Trust Badges */}
-      <div className={cn("flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8", userMode === "industry" && "business-mode")}>
-        <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
-          <Shield className="w-3.5 h-3.5 text-verified" />
-          {t("hero.benefit_zero_risk")}
-        </button>
-        <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
-          <CheckCircle className="w-3.5 h-3.5 text-accent" />
-          {t("hero.benefit_confident")}
-        </button>
-      </div>
+      {/* Trust Badges + Reviews + Footer — wrapped for scroll-snap reachability */}
+      <div className="snap-start">
+        <div className={cn("flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8", userMode === "industry" && "business-mode")}>
+          <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
+            <Shield className="w-3.5 h-3.5 text-verified" />
+            {t("hero.benefit_zero_risk")}
+          </button>
+          <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
+            <CheckCircle className="w-3.5 h-3.5 text-accent" />
+            {t("hero.benefit_confident")}
+          </button>
+        </div>
 
-      <ReviewsCarousel />
-      <Footer />
+        <ReviewsCarousel />
+        <Footer />
+      </div>
     </div>
   );
 
