@@ -303,7 +303,7 @@ const Index = () => { // hero-phase-v2
   );
 
   return (
-    <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full snap-y snap-mandatory" style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" as any }}>
+    <div className="min-h-screen min-h-[100dvh] bg-[hsl(210,20%,98%)] flex flex-col overflow-x-hidden w-full max-w-full" style={{ scrollBehavior: "smooth", WebkitOverflowScrolling: "touch" as any }}>
       <Navbar
         userMode={userMode}
         onSwitchToBusinessView={switchToBusinessView}
