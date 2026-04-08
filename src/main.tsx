@@ -51,15 +51,19 @@ if (isPreviewHost || isInIframe) {
   });
 }
 
+const dismissBootShell = () => {
+  const shell = document.getElementById("boot-shell");
+  if (!shell) return;
+  shell.classList.add("fade-out");
+  setTimeout(() => shell.remove(), 450);
+};
+
 createRoot(document.getElementById("root")!).render(<App />);
 
-// Fade out boot shell after React has painted
 requestAnimationFrame(() => {
-  requestAnimationFrame(() => {
-    const shell = document.getElementById("boot-shell");
-    if (shell) {
-      shell.classList.add("fade-out");
-      setTimeout(() => shell.remove(), 450);
-    }
-  });
+  requestAnimationFrame(dismissBootShell);
 });
+
+window.addEventListener("load", dismissBootShell, { once: true });
+setTimeout(dismissBootShell, 1200);
+(window as any).__dismissBootShell?.();
