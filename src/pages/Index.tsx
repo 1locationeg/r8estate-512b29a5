@@ -1,6 +1,5 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { JourneyFullPageScroll } from "@/components/JourneyFullPageScroll";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
@@ -315,10 +314,10 @@ const Index = () => { // hero-phase-v2
 
       {userMode === "buyers" ? (
         <>
-          <JourneyFullPageScroll heroContent={heroBlock} />
+          {heroBlock}
 
           {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
-          <section className="flex-1 flex flex-col snap-start" style={{ scrollSnapAlign: 'start' }}>
+          <section className="flex-1 flex flex-col">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-4 pb-safe gap-4 md:gap-6">
               {/* Trust Strip */}
               <div className="w-full max-w-[1100px] mb-3">
