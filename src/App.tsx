@@ -31,6 +31,7 @@ import {
   NotFoundSkeleton,
 } from "@/components/PageSkeletons";
 import Index from "./pages/Index";
+import Categories from "./pages/Categories";
 
 // Lazy-loaded pages for code splitting
 const Auth = lazy(() => import("./pages/Auth"));
@@ -51,7 +52,6 @@ const Rewards = lazy(() => import("./pages/Rewards"));
 const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
 const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
-const Categories = lazy(() => import("./pages/Categories"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
