@@ -383,7 +383,7 @@ const JourneyStepSection = ({
       id={id}
       className={cn(
         "w-full flex items-center justify-center relative overflow-hidden transition-all duration-500",
-        isExpanded ? "min-h-[100dvh]" : "min-h-[100dvh] snap-start"
+        isExpanded ? "min-h-[78dvh] md:min-h-[88dvh]" : "min-h-[68dvh] md:min-h-[78dvh] snap-start"
       )}
       style={{
         background: `linear-gradient(135deg, hsl(${station.hslVar} / 0.06) 0%, hsl(${station.hslVar} / 0.02) 50%, transparent 100%)`,
@@ -593,7 +593,7 @@ export const JourneyFullPageScroll = ({ heroContent }: Props) => {
 
   return (
     <>
-      <section id="journey-hero" className="min-h-[100dvh] w-full snap-start flex flex-col">
+      <section id="journey-hero" className="w-full snap-start flex flex-col pt-3 md:pt-4 pb-4 md:pb-6">
         {heroContent}
       </section>
 
