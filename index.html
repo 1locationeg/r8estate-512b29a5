@@ -34,16 +34,8 @@
     <!-- Boot shell styles - renders instantly before JS -->
     <style>
       html, body { margin: 0; padding: 0; background: #0a3d62; min-height: 100vh; }
-      #boot-shell {
-        position: fixed; inset: 0; z-index: 9999;
-        background: linear-gradient(135deg, #0a3d62 0%, #0d4f7e 100%);
-        display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
-        padding-top: env(safe-area-inset-top, 0px);
-        font-family: 'Montserrat', system-ui, sans-serif;
-        transition: opacity 0.4s ease-out;
-        overflow-y: auto;
-      }
-      #boot-shell.fade-out { opacity: 0; pointer-events: none; }
+      #boot-shell { display: none !important; }
+      #boot-shell.fade-out { display: none !important; opacity: 0; visibility: hidden; pointer-events: none; }
       .boot-header {
         width: 100%; padding: 12px 16px;
         display: flex; align-items: center; justify-content: space-between;
@@ -230,7 +222,26 @@
         </div>
       </div>
     </div>
-    </div>
+
+    <script>
+      (function () {
+        function dismissBootShell() {
+          var shell = document.getElementById('boot-shell');
+          if (!shell || shell.dataset.dismissed === '1') return;
+          shell.dataset.dismissed = '1';
+          shell.classList.add('fade-out');
+          window.setTimeout(function () {
+            shell.remove();
+          }, 500);
+        }
+
+        window.__dismissBootShell = dismissBootShell;
+        window.addEventListener('load', function () {
+          window.setTimeout(dismissBootShell, 120);
+        }, { once: true });
+        window.setTimeout(dismissBootShell, 1800);
+      })();
+    </script>
 
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
