@@ -483,50 +483,6 @@ export const HeroTrustShowcase = () => {
               })}
             </div>
 
-            {/* Row 5: Footer — developer name, slider, trust label */}
-            <div className={`pt-1.5 border-t border-border transition-all duration-300 flex items-center gap-2 ${rowsVisible >= 5 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
-              <div className="flex-shrink-0 flex items-center gap-1.5">
-                <div className="relative w-5 h-5">
-                  <svg viewBox="0 0 48 48" className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="8" y="38" width="32" height="6" rx="1" fill={displayScore >= 10 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 10 ? 1 : 0.25} style={{ transition: 'all 0.4s ease' }} />
-                    <rect x="10" y="20" width="6" height="18" rx="1" fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 25 ? 0.85 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }} />
-                    <rect x="32" y="20" width="6" height="18" rx="1" fill={displayScore >= 25 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 25 ? 0.85 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 25 ? 'scaleY(1)' : 'scaleY(0)', transformOrigin: 'bottom' }} />
-                    <rect x="20" y="28" width="8" height="10" rx="1" fill={displayScore >= 40 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 40 ? 0.7 : 0.1} style={{ transition: 'all 0.4s ease' }} />
-                    <rect x="12" y="24" width="5" height="5" rx="0.5" fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"} stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"} strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1} style={{ transition: 'all 0.4s ease' }} />
-                    <rect x="31" y="24" width="5" height="5" rx="0.5" fill={displayScore >= 50 ? 'hsl(var(--background))' : "hsl(var(--muted))"} stroke={displayScore >= 50 ? getScoreColor(displayScore) : "hsl(var(--muted))"} strokeWidth="1" opacity={displayScore >= 50 ? 1 : 0.1} style={{ transition: 'all 0.4s ease' }} />
-                    <polygon points="24,6 4,22 44,22" fill={displayScore >= 65 ? getScoreColor(displayScore) : "hsl(var(--muted))"} opacity={displayScore >= 65 ? 1 : 0.15} style={{ transition: 'all 0.4s ease', transform: displayScore >= 65 ? 'translateY(0)' : 'translateY(-4px)', transformOrigin: 'center bottom' }} />
-                    {displayScore >= 80 && (
-                      <g style={{ animation: 'fade-in 0.4s ease-out' }}>
-                        <circle cx="37" cy="10" r="6" fill={getScoreColor(displayScore)} />
-                        <polyline points="34,10 36,12.5 40,7.5" fill="none" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                      </g>
-                    )}
-                  </svg>
-                </div>
-                <span className="text-[11px] font-semibold text-foreground whitespace-nowrap">{scenario.developer}</span>
-              </div>
-
-              <div className="flex-1 relative h-[18px] flex items-center min-w-0">
-                <div className="absolute left-[9px] right-[9px] top-1/2 -translate-y-1/2 h-[3px] rounded-full bg-muted" />
-                <div className="absolute h-[3px] rounded-full pointer-events-none z-[11]" style={{ left: '9px', width: `calc(${displayScore}% * (1 - 18px / 100%) - 9px)`, background: displayScore <= 2 ? 'transparent' : getScoreColor(displayScore), top: '50%', transform: 'translateY(-50%)', transition: 'background 0.3s', maxWidth: 'calc(100% - 27px)', minWidth: 0 }} />
-                <input type="range" min={0} max={100} step={1} value={displayScore} onInput={(e) => handleSliderChange([Number((e.target as HTMLInputElement).value)])} onChange={(e) => handleSliderChange([Number(e.target.value)])} className="trust-slider w-full h-[18px] appearance-none bg-transparent outline-none cursor-pointer relative z-10" style={{ background: 'transparent' }} ref={(el) => {
-                  if (el) {
-                    const c = getScoreColor(displayScore);
-                    const styleEl = document.getElementById('slider-thumb-style') || (() => { const s = document.createElement('style'); s.id = 'slider-thumb-style'; document.head.appendChild(s); return s; })();
-                    styleEl.textContent = `.trust-slider { transition: none; background: transparent !important; } .trust-slider::-webkit-slider-runnable-track { background: transparent; height: 18px; border-radius: 9999px; } .trust-slider::-moz-range-track { background: transparent; height: 18px; border-radius: 9999px; } .trust-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--background)); border: 3px solid ${c}; box-shadow: 0 0 8px 2px ${c}40; cursor: pointer; margin-top: 0; transition: border-color 0.3s, box-shadow 0.3s; } .trust-slider::-moz-range-thumb { width: 18px; height: 18px; border-radius: 50%; background: hsl(var(--background)); border: 3px solid ${c}; box-shadow: 0 0 8px 2px ${c}40; cursor: pointer; transition: border-color 0.3s, box-shadow 0.3s; } .trust-slider:active::-webkit-slider-thumb, .trust-slider:active::-moz-range-thumb { transform: scale(1.15); box-shadow: 0 0 12px 4px ${c}60; }`;
-                  }
-                }} />
-                {!hasInteracted && phase === "interactive" && (
-                  <div className="absolute pointer-events-none animate-bounce" style={{ left: `${displayScore}%`, top: '-18px', transform: 'translateX(-50%)', animationDuration: '1.5s' }}>
-                    <Hand className="w-4 h-4 text-muted-foreground drop-shadow-md" />
-                  </div>
-                )}
-              </div>
-
-              <span className="flex-shrink-0 inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-bold border whitespace-nowrap" style={{ color, borderColor: color, backgroundColor: `${color}15` }}>
-                {t(scenario.trustLabelKey)}
-              </span>
-            </div>
           </div>
         </div>
 
