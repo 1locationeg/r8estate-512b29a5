@@ -101,8 +101,8 @@ const ContactPage = () => {
     }
   };
 
-  const title = settings.contact_page_title || (isRTL ? "تواصل معنا" : "​Contact Us ");
-  const subtitle = settings.contact_page_subtitle || (isRTL ? "نحن هنا لمساعدتك. لا تتردد فى طلب المساعدة فوراَ" : "We’re here to help. Please don’t hesitate to ask for help straight away.");
+  const title = isRTL ? "تواصل معنا" : (settings.contact_page_title || "Contact Us");
+  const subtitle = isRTL ? "نحن هنا لمساعدتك. لا تتردد فى طلب المساعدة فوراَ" : (settings.contact_page_subtitle || "We're here to help. Please don't hesitate to ask for help straight away.");
   const body = settings.contact_page_body || "";
   const whatsapp = settings.contact_whatsapp;
   const messenger = settings.contact_facebook_messenger;
