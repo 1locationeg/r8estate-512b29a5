@@ -233,7 +233,7 @@ const Index = () => { // hero-phase-v2
               <span className="pb-0 font-semibold">{t('hero.platformDescriptor')}</span>
             </p>
 
-            <div className="mb-0 max-w-[1100px] mx-auto">
+            <div className="mb-0 max-w-[1100px] mx-auto py-3 md:py-4">
               {userMode === "buyers" ? (
                 <>
                   <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent">
