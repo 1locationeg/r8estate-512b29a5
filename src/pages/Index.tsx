@@ -267,26 +267,26 @@ const Index = () => { // hero-phase-v2
               </>
             )}
 
-            <div id="trust-showcase" className="mt-1">
+            <div id="trust-showcase" className="mt-4">
               <HeroTrustShowcase />
             </div>
 
             {/* Journey Station Arc */}
-            <div className="mt-1 mb-0 w-full relative">
+            <div className="mt-4 mb-0 w-full relative">
               <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
                 <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
               </div>
             </div>
 
             {/* Traction Stats */}
-            <div className={cn("w-full mt-1 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <TractionStats />
             </div>
           </div>
         </div>
 
         {/* Live Market Pulse */}
-        <div className={cn("mt-1 mb-1 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+        <div className={cn("mt-4 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
           <LiveMarketPulse />
         </div>
       </div>
@@ -313,7 +313,7 @@ const Index = () => { // hero-phase-v2
 
           {/* ─── Below-the-fold: existing components ─── */}
           <section className="flex-1 flex flex-col">
-            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-4 pb-safe gap-4 md:gap-6">
+            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-6 pb-safe gap-6 md:gap-10">
               {/* Trust Strip */}
               <div className="w-full max-w-[1100px] mb-3">
                 <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
@@ -380,15 +380,15 @@ const Index = () => { // hero-phase-v2
                 </div>
               )}
 
-              <div className="w-full max-w-[1100px]"><StepTimeline /></div>
-              <div className="w-full max-w-[1100px]"><CompareEngineShowcase /></div>
-              <div className="w-full max-w-[1100px]"><AudienceSegmentCards /></div>
+              <div className="w-full max-w-[1100px] mt-2"><StepTimeline /></div>
+              <div className="w-full max-w-[1100px] mt-2"><CompareEngineShowcase /></div>
+              <div className="w-full max-w-[1100px] mt-2"><AudienceSegmentCards /></div>
 
               {!specialViewItem && !selectedDeveloper && (
                 <>
                   <FeaturedIdentitySpotlight />
-                  <div className="w-full max-w-[1100px]"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
-                  <div className="w-full max-w-[1100px] mt-4"><CommunityHighlights /></div>
+                  <div className="w-full max-w-[1100px] mt-2"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+                  <div className="w-full max-w-[1100px] mt-2"><CommunityHighlights /></div>
                 </>
               )}
 
@@ -500,8 +500,8 @@ const Index = () => { // hero-phase-v2
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
 
       {/* Trust Badges + Reviews + Footer — wrapped for scroll-snap reachability */}
-      <div className="snap-start">
-        <div className={cn("flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-6 md:py-8", userMode === "industry" && "business-mode")}>
+      <div className="snap-start mt-8">
+        <div className={cn("flex flex-wrap items-center justify-center gap-2 sm:gap-3 py-8 md:py-12", userMode === "industry" && "business-mode")}>
           <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
             <Shield className="w-3.5 h-3.5 text-verified" />
             {t("hero.benefit_zero_risk")}
