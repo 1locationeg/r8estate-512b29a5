@@ -61,25 +61,9 @@ const scenarioDefs: ReviewScenarioDef[] = [
     ],
     trustLabelKey: "showcase.highTrust",
   },
-  {
-    score: 97,
-    reviewer: "Omar J.",
-    initial: "O",
-    avatar: "https://i.pravatar.cc/80?img=53",
-    project: "Mountain View iCity",
-    location: "New Cairo",
-    developer: "Mountain View",
-    rating: 5,
-    commentKey: "showcase.comment4",
-    dimensions: [
-      { labelKey: "showcase.delivery", valueKey: "showcase.early", positive: true },
-      { labelKey: "showcase.quality", valueKey: "showcase.premium", positive: true },
-    ],
-    trustLabelKey: "showcase.exceptional",
-  },
 ];
 
-const presets = [25, 88, 97];
+const presets = [25, 88];
 
 function getClosestScenario(score: number): ReviewScenarioDef {
   let closest = scenarioDefs[0];
