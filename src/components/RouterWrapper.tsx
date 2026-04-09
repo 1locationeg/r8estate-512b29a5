@@ -13,7 +13,7 @@ function RouterContextChecker({ children }: RouterWrapperProps) {
     return <>{children}</>;
   } catch {
     // Not inside router context, so wrap with BrowserRouter
-    return <BrowserRouter>{children}</BrowserRouter>;
+    return <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>{children}</BrowserRouter>;
   }
 }
 
