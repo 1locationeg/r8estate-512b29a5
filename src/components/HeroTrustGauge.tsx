@@ -151,7 +151,7 @@ export const HeroTrustGauge = () => {
         <text x="182" y="113" fontSize="8" fill="hsl(var(--muted-foreground))" fontWeight="600" opacity="0.5">100</text>
 
         {/* TRUST SCORE label in SVG */}
-        <text x="100" y="119" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))" fontWeight="700" letterSpacing="0.25em" opacity="0.5">
+        <text x="100" y="114" textAnchor="middle" fontSize="7" fill="hsl(var(--muted-foreground))" fontWeight="700" letterSpacing="0.25em" opacity="0.5">
           TRUST SCORE
         </text>
       </svg>
