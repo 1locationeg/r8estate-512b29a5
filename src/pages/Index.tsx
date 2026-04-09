@@ -278,10 +278,6 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
 
-            {/* Traction Stats */}
-            <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <TractionStats />
-            </div>
           </div>
         </div>
 
@@ -416,7 +412,7 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
 
-            <div className="w-full max-w-[1100px] mt-0 mb-0"><TractionStats /></div>
+            
             <div className="mt-2 mb-2"><LiveMarketPulse /></div>
 
             {/* Business view */}
@@ -513,6 +509,9 @@ const Index = () => { // hero-phase-v2
         </div>
 
         <ReviewsCarousel />
+        <div className="w-full max-w-[1100px] mx-auto mt-6 mb-8 px-4">
+          <TractionStats />
+        </div>
         <Footer />
       </div>
     </div>
