@@ -1201,10 +1201,10 @@
     "mixed": "Mixed",
     "highTrust": "High Trust",
     "exceptional": "Exceptional",
-    "comment1": "\"They promised us a dream — and delivered a nightmare that cost us everything.\"",
-    "comment2": "\"A decent start that faded into broken promises and empty storefronts.\"",
-    "comment3": "\"The day we moved in, I finally believed home could feel like a fresh beginning.\"",
-    "comment4": "\"This place didn't just meet expectations — it gave my family a life we never imagined.\""
+    "comment1": "\"They promised a dream — delivered a nightmare.\"",
+    "comment2": "\"Started well, ended in broken promises.\"",
+    "comment3": "\"Moving in felt like a fresh beginning.\"",
+    "comment4": "\"Gave my family a life beyond imagination.\""
   },
   "referral": {
     "headline": "Your contribution makes a difference",
