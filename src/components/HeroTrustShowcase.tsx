@@ -34,7 +34,7 @@ const scenarioDefs: ReviewScenarioDef[] = [
     reviewer: "Aly R.",
     initial: "A",
     avatar: "https://i.pravatar.cc/80?img=12",
-    project: "Galleria 40",
+    project: "Galle2ria 40",
     location: "New Cairo",
     developer: "Ora Developers",
     rating: 1.5,
