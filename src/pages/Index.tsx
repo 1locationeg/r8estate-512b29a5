@@ -223,10 +223,10 @@ const Index = () => { // hero-phase-v2
 
   /* ─── Hero content block ─── */
   const heroBlock = (
-    <div className="w-full flex flex-col items-center pt-2 px-4 md:px-6 lg:px-8">
+    <div className="w-full flex flex-col items-center pt-1 px-2 md:px-4 lg:px-6">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
         {/* Hero Card */}
-        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-3 md:p-4 mt-1 md:mt-1">
+        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0">
           <div className="relative text-center">
             <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.2em] uppercase mb-2 border border-border/60 rounded-full px-3 py-1 bg-background/60 backdrop-blur-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse shrink-0" />
