@@ -272,14 +272,14 @@ const Index = () => { // hero-phase-v2
             </div>
 
             {/* Journey Station Arc */}
-            <div className="mt-4 mb-0 w-full relative">
+            <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
                 <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
               </div>
             </div>
 
             {/* Traction Stats */}
-            <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <TractionStats />
             </div>
           </div>
@@ -416,7 +416,12 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
 
-            <div className="w-full max-w-[1100px] mt-0 mb-0"><TractionStats /></div>
+            <div className="w-full max-w-[1100px] mt-0 mb-0">
+              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
+                <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
+              </div>
+            </div>
+            <div className="w-full max-w-[1100px] mt-3 mb-0"><TractionStats /></div>
             <div className="mt-2 mb-2"><LiveMarketPulse /></div>
 
             {/* Business view */}
