@@ -416,7 +416,7 @@ export const HeroTrustShowcase = () => {
         </svg>
 
         {/* Center score */}
-        <div className="absolute inset-0 flex flex-col items-center justify-end pb-9">
+        <div className="absolute inset-0 flex flex-col items-center justify-end pb-11">
           <span className="text-2xl md:text-3xl font-black tabular-nums leading-none transition-colors duration-300" style={{ color }}>
             {displayScore}
           </span>
