@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { HeroSearchBar, HeroCategoryLinks } from "@/components/HeroSearchBar";
 import { MiniJourneyArc } from "@/components/MiniJourneyArc";
+import { JourneyScrollSections } from "@/components/JourneyScrollSections";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -305,9 +306,10 @@ const Index = () => { // hero-phase-v2
 
       {userMode === "buyers" ? (
         <>
-          {heroBlock}
+          {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
+          <JourneyScrollSections />
 
-          {/* ─── Below-the-fold: existing components (normal scroll, no snap) ─── */}
+          {/* ─── Below-the-fold: existing components ─── */}
           <section className="flex-1 flex flex-col">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-4 pb-safe gap-4 md:gap-6">
               {/* Trust Strip */}
