@@ -51,8 +51,8 @@ export const Navbar = ({
   const navLinks = user ? userNavLinks : guestNavLinks;
 
   return (
-    <header className={`bg-background shadow-sm border-b leading-none ${userMode === "industry" ? "border-business-border/50" : "border-border"}`}>
-      <div className="container mx-auto px-2 flex items-center justify-between gap-1 py-0">
+    <header className={`bg-background shadow-sm border-b leading-none ${userMode === "industry" ? "border-business-border/50" : "border-border"}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+      <div className="container mx-auto flex items-center justify-between gap-1 py-0" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left, 0.5rem))', paddingRight: 'max(0.5rem, env(safe-area-inset-right, 0.5rem))' }}>
         {/* Logo */}
         <button
           onClick={() => navigate("/")}
