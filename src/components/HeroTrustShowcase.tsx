@@ -427,7 +427,7 @@ export const HeroTrustShowcase = () => {
       </div>
 
       {/* ── Review Card / Agent Teaser ── */}
-      <div className="relative -mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden min-h-[180px]">
+      <div className="relative -mt-1 mx-2 md:mx-0 rounded-xl border border-border bg-card shadow-lg overflow-hidden">
         {/* Reviews content */}
         <div
           className={`transition-opacity duration-500 ${
