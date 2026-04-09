@@ -273,16 +273,7 @@ const Index = () => { // hero-phase-v2
             {/* Journey Station Arc */}
             <div className="mt-1 mb-0 w-full relative">
               <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
-                <MiniJourneyArc
-                  onStartJourney={() => {
-                    const el = document.getElementById('journey-section-0');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  onStationClick={(idx) => {
-                    const el = document.getElementById(`journey-section-${idx}`);
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                />
+                <MiniJourneyArc />
               </div>
             </div>
 
