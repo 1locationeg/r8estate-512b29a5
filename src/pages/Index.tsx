@@ -306,6 +306,8 @@ const Index = () => { // hero-phase-v2
 
       {userMode === "buyers" ? (
         <>
+          {heroBlock}
+
           {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
           <JourneyScrollSections />
 
