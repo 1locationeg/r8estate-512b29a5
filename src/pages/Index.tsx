@@ -271,16 +271,16 @@ const Index = () => { // hero-phase-v2
               <HeroTrustShowcase />
             </div>
 
-            {/* Journey Station Arc */}
+            {/* Traction Stats */}
             <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <TractionStats />
+            </div>
+
+            {/* Journey Station Arc */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
                 <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
               </div>
-            </div>
-
-            {/* Traction Stats */}
-            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <TractionStats />
             </div>
           </div>
         </div>
