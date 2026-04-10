@@ -63,7 +63,7 @@ export const HeroNextSteps = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {/* Start Here CTA */}
           <button
-            onClick={() => setDrawerOpen("start")}
+            onClick={() => navigate("/reviews")}
             className={cn(
               "group relative flex items-center gap-3 p-4 rounded-xl border border-primary/30 bg-primary text-primary-foreground overflow-hidden text-start",
               "hover:shadow-lg hover:scale-[1.01] transition-all duration-300 cursor-pointer",
