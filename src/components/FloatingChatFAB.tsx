@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { X, Bot, Phone } from "lucide-react";
+import { useState } from "react";
 import { WhatsAppChatModal } from "./WhatsAppChatModal";
 import { AIChatWidget } from "./AIChatWidget";
 
