@@ -11,6 +11,7 @@ import { useAuth } from "@/contexts/AuthContext";
 const intents = [
   { key: "reviews", emoji: "🔍" },
   { key: "compare", emoji: "⚖️" },
+  { key: "launch", emoji: "🚀" },
   { key: "contract", emoji: "🛡️" },
 ] as const;
 
@@ -20,7 +21,7 @@ export const HeroNextSteps = () => {
   const { user } = useAuth();
   const [showCompare, setShowCompare] = useState(false);
   const [showContract, setShowContract] = useState(false);
-  const [visible, setVisible] = useState([false, false, false]);
+  const [visible, setVisible] = useState([false, false, false, false]);
   const ref = useRef<HTMLDivElement>(null);
   const isRtl = i18n.dir() === "rtl";
 
@@ -43,6 +44,7 @@ export const HeroNextSteps = () => {
   const handleAction = (key: string) => {
     if (key === "reviews") navigate("/reviews");
     if (key === "compare") setShowCompare(true);
+    if (key === "launch") navigate("/launch-watch");
     if (key === "contract") setShowContract(true);
   };
 
@@ -57,7 +59,7 @@ export const HeroNextSteps = () => {
         </p>
 
         {/* Intent Corridor */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           {intents.map((intent, i) => (
             <button
               key={intent.key}
