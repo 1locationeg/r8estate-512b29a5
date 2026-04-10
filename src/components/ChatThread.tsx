@@ -132,6 +132,9 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
     const text = input;
     setInput('');
     setShowPreview(false);
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+    }
     await sendMessage(text);
   };
 
