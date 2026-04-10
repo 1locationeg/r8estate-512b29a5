@@ -61,6 +61,10 @@ export const FloatingChatFAB = () => {
     setActiveChat(type);
   };
 
+  if (pathname.startsWith('/messages')) {
+    return null;
+  }
+
   return (
     <>
       <div className={`fixed bottom-20 md:bottom-6 end-4 z-50 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`} ref={menuRef}>
