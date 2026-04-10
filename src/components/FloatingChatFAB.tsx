@@ -67,7 +67,7 @@ export const FloatingChatFAB = () => {
 
   return (
     <>
-      <div className={`fixed bottom-[calc(4rem+env(safe-area-inset-bottom)+8px)] md:bottom-20 end-2 z-50 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`} ref={menuRef}>
+      <div className={`fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom)+4px)] md:bottom-6 end-3 z-40 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`} ref={menuRef}>
         {/* Option buttons */}
         <div
           className={`flex flex-col items-end gap-2 mb-2 transition-all duration-200 ${
