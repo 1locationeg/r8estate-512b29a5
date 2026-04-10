@@ -27,10 +27,9 @@ export const FloatingChatFAB = () => {
       <div className="fixed bottom-20 md:bottom-6 end-4 z-50">
         <button
           onClick={() => setActiveChat(activeChat ? null : "whatsapp")}
-          className="w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105"
-          style={{ backgroundColor: "#25D366" }}
+          className="flex items-center justify-center transition-all hover:scale-105 bg-transparent border-none p-0"
         >
-          <WhatsAppAIIcon size={30} />
+          <WhatsAppAIIcon size={52} />
         </button>
       </div>
 
