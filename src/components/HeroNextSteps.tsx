@@ -127,7 +127,7 @@ export const HeroNextSteps = () => {
         </p>
       </div>
 
-      <CompareModal open={showCompare} onOpenChange={setShowCompare} />
+      <CompareModal item={null} open={showCompare} onClose={() => setShowCompare(false)} />
       <ContractUploadModal open={showContract} onOpenChange={setShowContract} />
     </>
   );
