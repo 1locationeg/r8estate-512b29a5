@@ -416,7 +416,11 @@
     "myReviews": "تقييماتي",
     "allReviews": "كل التقييمات",
     "anonymousUser": "مستخدم مجهول",
-    "general": "عام"
+    "general": "عام",
+    "searchBusiness": "ابحث عن شركة...",
+    "allBusinesses": "كل الشركات",
+    "allCategories": "كل الفئات",
+    "filterByCategory": "فلتر حسب الفئة"
   },
   "actions": {
     "downloadReport": "تحميل التقرير",
