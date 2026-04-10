@@ -229,7 +229,7 @@ export const LiveMarketPulse = () => {
     if (ev?.link) navigate(ev.link);
   }, [events, idx, navigate]);
 
-  if (events.length === 0) return null;
+  if (!delayReady || events.length === 0) return null;
 
   const current = events[idx];
   const displayText = isAr ? (current.textAr || current.text) : current.text;
