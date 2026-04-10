@@ -293,6 +293,29 @@
   animation: fadeInUp 0.5s ease-out both;
 }
 
+/* Hero "Reviews are the KEYS" shimmer */
+@keyframes hero-keys-shimmer {
+  0% { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+
+.hero-keys-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--accent)) 0%,
+    hsl(var(--destructive)) 40%,
+    hsl(var(--accent)) 60%,
+    hsl(350 85% 70%) 80%,
+    hsl(var(--accent)) 100%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: hero-keys-shimmer 3s linear infinite;
+  filter: drop-shadow(0 0 8px hsl(var(--accent) / 0.3));
+}
+
 /* Live Activity Feed — animated conic-gradient border */
 @property --feed-angle {
   syntax: "<angle>";
