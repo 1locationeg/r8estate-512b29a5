@@ -36,7 +36,13 @@ const WhatsAppMiniIcon = ({ size = 18 }: { size?: number }) => (
 export const FloatingChatFAB = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [activeChat, setActiveChat] = useState<"ai" | "whatsapp" | null>(null);
+  const [visible, setVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 15000);
+    return () => clearTimeout(timer);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
