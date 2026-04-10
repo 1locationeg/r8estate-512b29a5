@@ -47,8 +47,7 @@ export const FloatingChatFAB = () => {
             else setMenuOpen(!menuOpen);
           }}
           className="w-13 h-13 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105"
-          style={{ backgroundColor: activeChat ? undefined : "#25D366" }}
-          className={`w-13 h-13 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 ${activeChat ? "bg-muted-foreground" : ""}`}
+          style={{ backgroundColor: activeChat ? "#666" : "#25D366" }}
         >
           {activeChat ? (
             <X className="w-6 h-6 text-white" />
