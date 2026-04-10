@@ -416,7 +416,11 @@
     "myReviews": "My Reviews",
     "allReviews": "All Reviews",
     "anonymousUser": "Anonymous user",
-    "general": "General"
+    "general": "General",
+    "searchBusiness": "Search business...",
+    "allBusinesses": "All Businesses",
+    "allCategories": "All Categories",
+    "filterByCategory": "Filter by Category"
   },
   "actions": {
     "downloadReport": "Download Report",
