@@ -5,7 +5,6 @@
 //   - Businesses directory page (filter sidebar)
 
 export const BUSINESS_CATEGORIES = [
-  { value: "developers", label: "Developers" },
   { value: "units", label: "Units" },
   { value: "apps", label: "Apps" },
   { value: "shares", label: "Shares" },
