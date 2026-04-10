@@ -39,6 +39,7 @@ export const FloatingChatFAB = () => {
   const [activeChat, setActiveChat] = useState<"ai" | "whatsapp" | null>(null);
   const [visible, setVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 15000);
