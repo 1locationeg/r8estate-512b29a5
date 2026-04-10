@@ -146,6 +146,18 @@ const Reviews = () => {
   const filteredReviews = useMemo(() => {
     let result = allReviews;
 
+    // Text search across comment, author, developer name
+    if (businessSearch.trim()) {
+      const q = businessSearch.toLowerCase();
+      result = result.filter((r) => {
+        const businessName = getBusinessName(r.developerId).toLowerCase();
+        const comment = (r.comment || "").toLowerCase();
+        const author = (r.author || "").toLowerCase();
+        const devName = (r.developerName || "").toLowerCase();
+        return businessName.includes(q) || comment.includes(q) || author.includes(q) || devName.includes(q);
+      });
+    }
+
     if (selectedBusiness) {
       result = result.filter((r) => getBusinessName(r.developerId) === selectedBusiness);
     }
@@ -162,7 +174,7 @@ const Reviews = () => {
     }
 
     return result;
-  }, [allReviews, selectedBusiness, selectedCategory, activeFilter, businessMap]);
+  }, [allReviews, selectedBusiness, selectedCategory, activeFilter, businessMap, businessSearch]);
 
   const stats = useMemo(() => {
     const total = allReviews.length;
