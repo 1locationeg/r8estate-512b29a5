@@ -1460,5 +1460,26 @@
     "tapToExplore": "Tap to explore",
     "close": "Close",
     "goToPage": "Go to full page"
+  },
+  "nextSteps": {
+    "header": "What to do next",
+    "reviews": {
+      "title": "Read all reviews",
+      "subtitle": "Real owners · verified purchases · project-specific",
+      "cta": "Browse reviews →→"
+    },
+    "compare": {
+      "title": "Compare with another",
+      "subtitle": "Stack side-by-side with trust scores + AI analysis",
+      "cta": "Add to compare →→"
+    },
+    "contract": {
+      "title": "Upload your contract",
+      "subtitle": "AI checks for hidden clauses and payment traps",
+      "cta": "Check contract →→"
+    },
+    "protectCta": "Protect your purchase now",
+    "alertCta": "Set a price alert",
+    "socialProof": "Verified buyers who checked this developer before signing saved an average of EGP 620K in hidden fees."
   }
 }
