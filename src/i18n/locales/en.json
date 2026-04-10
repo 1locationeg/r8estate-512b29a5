@@ -1462,25 +1462,22 @@
     "goToPage": "Go to full page"
   },
   "nextSteps": {
-    "header": "I want to…",
     "reviews": {
-      "title": "Research a company",
-      "subtitle": "\"Is this developer legit?\""
+      "cta": "Check Reviews",
+      "subtitle": "Is this developer legit?"
     },
     "compare": {
-      "title": "Compare options",
-      "subtitle": "\"Which one is the best deal?\""
+      "cta": "Compare Now",
+      "subtitle": "Which one is the best deal?"
     },
     "launch": {
-      "title": "Track a launch",
-      "subtitle": "\"What's launching near me?\""
+      "cta": "Track Launches",
+      "subtitle": "What's new near me?"
     },
     "contract": {
-      "title": "Protect my deal",
-      "subtitle": "\"Is my contract safe?\""
+      "cta": "Protect My Deal",
+      "subtitle": "Is my contract safe?"
     },
-    "protectCta": "Start your free protection",
-    "alertCta": "Set a price alert",
-    "socialProof": "2,847 buyers used this flow this week to make smarter decisions."
+    "socialProof": "2,847 buyers made smarter decisions this week."
   }
 }
