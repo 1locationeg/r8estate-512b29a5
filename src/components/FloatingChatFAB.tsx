@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { WhatsAppChatModal } from "./WhatsAppChatModal";
 import { AIChatWidget } from "./AIChatWidget";
+import { MessageSquare, Sparkles } from "lucide-react";
 
 const WhatsAppAIIcon = ({ size = 28 }: { size?: number }) => (
   <svg viewBox="0 0 48 48" width={size} height={size} fill="none">
@@ -18,14 +19,68 @@ const WhatsAppAIIcon = ({ size = 28 }: { size?: number }) => (
   </svg>
 );
 
+const WhatsAppMiniIcon = ({ size = 18 }: { size?: number }) => (
+  <svg viewBox="0 0 48 48" width={size} height={size} fill="none">
+    <circle cx="24" cy="24" r="22" fill="#25D366" />
+    <path
+      d="M24 10C16.268 10 10 16.268 10 24c0 2.476.652 4.8 1.787 6.81L10 38l7.368-1.726A13.94 13.94 0 0024 38c7.732 0 14-6.268 14-14S31.732 10 24 10z"
+      fill="white"
+    />
+    <path
+      d="M30.5 27c-.4-.2-2.4-1.2-2.8-1.3-.4-.1-.6-.2-.9.2-.3.4-1 1.3-1.3 1.6-.2.3-.5.3-.9.1-.4-.2-1.7-.6-3.2-2-1.2-1.1-2-2.4-2.2-2.8-.2-.4 0-.6.2-.8.2-.2.4-.5.6-.7.2-.2.3-.4.4-.7.1-.3.1-.5 0-.7-.1-.2-.9-2.2-1.2-3-.3-.8-.7-.7-.9-.7h-.8c-.3 0-.7.1-1.1.5-.4.4-1.4 1.4-1.4 3.4s1.5 3.9 1.7 4.2c.2.3 2.9 4.4 7 6.1 1 .4 1.7.7 2.3.9 1 .3 1.9.3 2.6.2.8-.1 2.4-1 2.7-1.9.3-1 .3-1.8.2-1.9-.1-.2-.4-.3-.8-.5z"
+      fill="#25D366"
+    />
+  </svg>
+);
+
 export const FloatingChatFAB = () => {
+  const [menuOpen, setMenuOpen] = useState(false);
   const [activeChat, setActiveChat] = useState<"ai" | "whatsapp" | null>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+        setMenuOpen(false);
+      }
+    };
+    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
+
+  const openChat = (type: "ai" | "whatsapp") => {
+    setMenuOpen(false);
+    setActiveChat(type);
+  };
 
   return (
     <>
-      <div className="fixed bottom-20 md:bottom-6 end-4 z-50">
+      <div className="fixed bottom-20 md:bottom-6 end-4 z-50" ref={menuRef}>
+        {/* Option buttons */}
+        <div
+          className={`flex flex-col items-end gap-2 mb-2 transition-all duration-200 ${
+            menuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 translate-y-3 pointer-events-none"
+          }`}
+        >
+          <button
+            onClick={() => openChat("whatsapp")}
+            className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full shadow-lg px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-100 hover:scale-105 transition-transform border border-gray-200 dark:border-gray-700"
+          >
+            <WhatsAppMiniIcon size={20} />
+            WhatsApp
+          </button>
+          <button
+            onClick={() => openChat("ai")}
+            className="flex items-center gap-2 bg-white dark:bg-gray-800 rounded-full shadow-lg px-4 py-2 text-sm font-medium text-gray-800 dark:text-gray-100 hover:scale-105 transition-transform border border-gray-200 dark:border-gray-700"
+          >
+            <Sparkles size={18} className="text-indigo-500" />
+            AI Chat
+          </button>
+        </div>
+
+        {/* Main FAB */}
         <button
-          onClick={() => setActiveChat(activeChat ? null : "whatsapp")}
+          onClick={() => setMenuOpen(!menuOpen)}
           className="flex items-center justify-center transition-all hover:scale-105 bg-transparent border-none p-0"
         >
           <WhatsAppAIIcon size={40} />
