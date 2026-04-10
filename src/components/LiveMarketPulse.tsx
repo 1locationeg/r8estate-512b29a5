@@ -43,9 +43,16 @@ export const LiveMarketPulse = () => {
   const [events, setEvents] = useState<PulseEvent[]>([]);
   const [idx, setIdx] = useState(0);
   const [mobileExpanded, setMobileExpanded] = useState(false);
+  const [delayReady, setDelayReady] = useState(false);
   const mobileTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const cycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const mobileCycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Delay showing the feed for 15 seconds
+  useEffect(() => {
+    const timer = setTimeout(() => setDelayReady(true), 15000);
+    return () => clearTimeout(timer);
+  }, []);
 
   // Fetch data
   useEffect(() => {
