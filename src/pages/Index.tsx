@@ -30,7 +30,7 @@ import { LiveMarketPulse } from "@/components/LiveMarketPulse";
 import { TractionStats } from "@/components/TractionStats";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
-import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint } from "lucide-react";
+import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint, Users } from "lucide-react";
 import HowWeWork from "@/components/HowWeWork";
 import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
@@ -243,6 +243,30 @@ const Index = () => { // hero-phase-v2
                   <p className="text-2xl sm:text-3xl md:text-4xl leading-tight font-black tracking-tight hero-keys-shimmer mt-1">
                     {t("hero.tagline_line2")}
                   </p>
+
+                  {/* Hero Power CTAs */}
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4 animate-[fadeInUp_0.6s_ease-out_0.3s_both]">
+                    <button
+                      onClick={() => navigate("/reviews")}
+                      className="group flex items-center gap-2.5 px-5 py-3 rounded-xl border border-border/60 bg-card text-foreground hover:border-primary/40 hover:shadow-[0_0_20px_-4px_hsl(var(--primary)/0.25)] transition-all duration-300 cursor-pointer"
+                    >
+                      <Users className="w-5 h-5 text-primary shrink-0" />
+                      <div className="text-start">
+                        <span className="block text-sm font-bold leading-tight">{t("hero.ctaSeeOwners")}</span>
+                        <span className="block text-[10px] text-muted-foreground leading-snug mt-0.5">{t("hero.ctaSeeOwnersSub")}</span>
+                      </div>
+                    </button>
+                    <button
+                      onClick={() => navigate("/reviews")}
+                      className="group flex items-center gap-2.5 px-5 py-3 rounded-xl bg-primary text-primary-foreground shadow-[0_0_20px_-4px_hsl(var(--glow-accent)/0.4)] hover:shadow-[0_0_28px_-2px_hsl(var(--glow-accent)/0.5)] transition-all duration-300 cursor-pointer"
+                    >
+                      <ShieldCheck className="w-5 h-5 shrink-0" />
+                      <div className="text-start">
+                        <span className="block text-sm font-bold leading-tight">{t("hero.ctaProtectMoney")}</span>
+                        <span className="block text-[10px] leading-snug mt-0.5 opacity-80">{t("hero.ctaProtectMoneySub")}</span>
+                      </div>
+                    </button>
+                  </div>
                 </>
               ) : (
                 <>
