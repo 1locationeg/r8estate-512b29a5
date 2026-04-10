@@ -5,6 +5,7 @@
 //   - Businesses directory page (filter sidebar)
 
 export const BUSINESS_CATEGORIES = [
+  { value: "developers", label: "Developers" },
   { value: "units", label: "Units" },
   { value: "apps", label: "Apps" },
   { value: "shares", label: "Shares" },
@@ -23,7 +24,6 @@ export const BUSINESS_CATEGORIES = [
   { value: "leasing", label: "Leasing" },
   { value: "blockchain", label: "Blockchain" },
   { value: "lands", label: "Lands" },
-  { value: "developers", label: "Developers" },
 ] as const;
 
 export type BusinessCategoryValue = (typeof BUSINESS_CATEGORIES)[number]["value"];
