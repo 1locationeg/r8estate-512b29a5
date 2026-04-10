@@ -103,21 +103,29 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
     });
   };
 
-  const insertLink = () => {
-    updateSelection((selectedText, start, end) => {
-      const label = selectedText || 'link text';
-      const template = `[${label}](https://)`;
-      const nextValue = `${input.slice(0, start)}${template}${input.slice(end)}`;
-      const urlStart = start + label.length + 3;
-      const urlEnd = urlStart + 'https://'.length;
-
-      return {
-        nextValue,
-        selectionStart: urlStart,
-        selectionEnd: urlEnd,
-      };
+  const handleInsertLink = () => {
+    const label = linkLabel.trim() || 'link';
+    const url = linkUrl.trim() || 'https://';
+    const markdown = `[${label}](${url})`;
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? input.length;
+    const end = textarea?.selectionEnd ?? input.length;
+    const nextValue = `${input.slice(0, start)}${markdown}${input.slice(end)}`;
+    setInput(nextValue);
+    setLinkLabel('');
+    setLinkUrl('https://');
+    setLinkPopoverOpen(false);
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus();
     });
   };
+
+  const autoResize = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;
