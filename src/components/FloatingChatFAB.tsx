@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { WhatsAppChatModal } from "./WhatsAppChatModal";
 import { AIChatWidget } from "./AIChatWidget";
 import { MessageSquare, Sparkles } from "lucide-react";
