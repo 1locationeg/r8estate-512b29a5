@@ -93,7 +93,7 @@ export const FloatingChatFAB = () => {
         {/* Main FAB */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex items-center justify-center transition-all hover:scale-105 bg-transparent border-none p-0"
+          className="flex items-center justify-center transition-all hover:scale-105 bg-transparent border-none p-0 mx-[53px] my-[25px]"
         >
           <WhatsAppAIIcon size={40} />
         </button>
