@@ -1462,6 +1462,18 @@
     "goToPage": "Go to full page"
   },
   "nextSteps": {
+    "startHere": {
+      "cta": "Start Here",
+      "subtitle": "Your first step to a safe property purchase",
+      "drawerTitle": "Where would you like to start?",
+      "drawerDesc": "Pick a tool to begin your property journey"
+    },
+    "smartTools": {
+      "cta": "Smart Tools",
+      "subtitle": "Compare, track & protect like a pro",
+      "drawerTitle": "Your Power Tools",
+      "drawerDesc": "Compare deals, track launches & protect your investment"
+    },
     "reviews": {
       "cta": "Check Reviews",
       "subtitle": "Is this developer legit?"
