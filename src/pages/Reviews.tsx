@@ -229,79 +229,34 @@ const Reviews = () => {
           </div>
         </div>
 
-        {/* Search business */}
-        <div className="relative">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            placeholder={t("reviews.searchBusiness", "Search business...")}
-            value={businessSearch}
-            onChange={(e) => setBusinessSearch(e.target.value)}
-            className="ps-9 h-9 rounded-full text-sm"
-          />
-        </div>
-
-        {/* Business cloud tags */}
+        {/* Category cloud tags */}
         <div className="flex flex-wrap gap-1.5">
           <button
-            onClick={() => setSelectedBusiness(null)}
+            onClick={() => setSelectedCategory(null)}
             className={cn(
               "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-              !selectedBusiness
+              !selectedCategory
                 ? "bg-primary text-primary-foreground"
                 : "bg-secondary text-foreground hover:bg-secondary/80"
             )}
           >
-            {t("reviews.allBusinesses", "All Businesses")}
+            {t("reviews.allCategories", "All Categories")}
           </button>
-          {visibleTags.map((tag) => (
+          {BUSINESS_CATEGORIES.map((cat) => (
             <button
-              key={tag.name}
-              onClick={() => setSelectedBusiness(selectedBusiness === tag.name ? null : tag.name)}
+              key={cat.value}
+              onClick={() => setSelectedCategory(selectedCategory === cat.value ? null : cat.value)}
               className={cn(
                 "px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-                selectedBusiness === tag.name
+                selectedCategory === cat.value
                   ? "bg-primary text-primary-foreground"
                   : "bg-secondary text-foreground hover:bg-secondary/80"
               )}
             >
-              {tag.name} <span className="opacity-60">({tag.count})</span>
+              {cat.label}
             </button>
           ))}
         </div>
-
-        {/* Category filter chips */}
-        {activeCategories.length > 0 && (
-          <div className="overflow-x-auto -mx-4 px-4">
-            <div className="flex gap-1.5 w-max">
-              <button
-                onClick={() => setSelectedCategory(null)}
-                className={cn(
-                  "px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap",
-                  !selectedCategory
-                    ? "bg-accent text-accent-foreground"
-                    : "bg-muted text-muted-foreground hover:bg-muted/80"
-                )}
-              >
-                {t("reviews.allCategories", "All Categories")}
-              </button>
-              {activeCategories.map((cat) => (
-                <button
-                  key={cat.value}
-                  onClick={() => setSelectedCategory(selectedCategory === cat.value ? null : cat.value)}
-                  className={cn(
-                    "px-3 py-1.5 rounded-full text-xs font-medium transition-all whitespace-nowrap",
-                    selectedCategory === cat.value
-                      ? "bg-accent text-accent-foreground"
-                      : "bg-muted text-muted-foreground hover:bg-muted/80"
-                  )}
-                >
-                  {cat.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
         {/* Star rating filter */}
         <div className="overflow-x-auto -mx-4 px-4">
           <ReviewFilters activeFilter={activeFilter} onFilterChange={setActiveFilter} />
