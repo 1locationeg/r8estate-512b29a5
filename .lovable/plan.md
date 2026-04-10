@@ -1,80 +1,56 @@
 
 
-## Redesign: "What to do next" → Intent-Based Action Corridor
+## Plan: Two-CTA Hero with Drawer Sub-Actions
 
-### Problem
-The current 3-card layout ("Read reviews", "Compare", "Upload contract") is generic and task-oriented. It doesn't speak to the user's **emotional state** or **intent** — a first-time visitor, a hesitant investor, and a deep researcher all see the same thing. The cards also use verbose descriptions that slow scanning.
+### Concept
 
-### Proposed Design: "I want to…" Intent Selector
+Replace the 4-button grid with **two clear CTAs**:
 
-Replace the 3 static task cards with a **single-row intent corridor** — a proven "choose your path" pattern (used by Stripe, Linear, Notion onboarding) that lets users self-select their intent, then immediately routes them to the right funnel stage.
+1. **"Start Here"** — for first-time buyers. Opens a bottom drawer with guided options: Check Reviews, Compare Developers, Track Launches, Protect Your Deal.
+2. **"Smart Tools"** — for experienced buyers. Opens a bottom drawer with the same tools but framed for power users (Compare Now, Track Launches, Contract Check).
+
+Both drawers reuse existing modals/routes (CompareModal, ContractUploadModal, /reviews, /launch-watch).
+
+### Layout (mobile 390px)
 
 ```text
-┌─────────────────────────────────────────────────────┐
-│           I WANT TO…                                │
-│                                                     │
-│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
-│  │  🔍 ➜    │  │  ⚖️ ➜    │  │  🛡️ ➜    │          │
-│  │ Research  │  │ Compare  │  │ Protect  │          │
-│  │ a company │  │ options  │  │ my deal  │          │
-│  │           │  │          │  │          │          │
-│  │ "Is this  │  │ "Which   │  │ "Is my   │          │
-│  │  dev      │  │  one is  │  │  contract│          │
-│  │  legit?"  │  │  best?"  │  │  safe?"  │          │
-│  └──────────┘  └──────────┘  └──────────┘          │
-│                     ↓                               │
-│  [🛡️ Start your free protection ──────────────]     │
-│  [🔔 Set a price alert            (outline)   ]     │
-│                                                     │
-│  🟢 2,847 buyers used this flow this week           │
-└─────────────────────────────────────────────────────┘
+┌──────────────────────────────┐
+│  🏠  "Start Here"           │  ← full-width, primary style
+│  Your first step to a safe  │
+│  property purchase           │
+├──────────────────────────────┤
+│  ⚡ "Smart Tools"            │  ← full-width, outline style
+│  Compare, track & protect   │
+│  like a pro                 │
+└──────────────────────────────┘
+   • 2,847 buyers this week
 ```
 
-### Key Design Changes
+On desktop (sm+): side-by-side two columns.
 
-1. **Header**: "WHAT TO DO NEXT" → **"I WANT TO…"** — shifts from instructional to user-driven (self-determination theory)
+### Drawer Content (both share same actions, different framing)
 
-2. **Cards become intent lanes** with:
-   - A large **emoji + directional arrow** (→) replacing the icon box — faster pattern recognition, no cognitive load
-   - **Bold verb phrase** as primary label ("Research a company" not "Read all reviews")
-   - **Inner-voice question** in italics as subtitle ("Is this developer legit?") — mirrors the user's actual thought, creating instant resonance
-   - Hover: subtle **left-to-right gradient sweep** + scale-up to signal "this is a doorway"
-   - Remove the small CTA text line — the whole card is the CTA
-
-3. **Social proof line**: Replace static savings stat with a **live-feeling counter** — "2,847 buyers used this flow this week" (dynamic number from a simple counter or estimated)
-
-4. **Animations**: Keep staggered fade-in. Add a subtle **shimmer** on the arrow icon to draw the eye.
-
-### Routes per Intent
-| Intent | Route | Rationale |
-|--------|-------|-----------|
-| Research a company | `/reviews` | Lands on social proof first |
-| Compare options | Opens CompareModal | Existing flow |
-| Protect my deal | Opens ContractUploadModal | Existing flow |
+Each drawer uses the Shadcn `Drawer` component and lists 4 action cards:
+- **Check Reviews** → `/reviews`
+- **Compare** → opens CompareModal
+- **Track Launches** → `/launch-watch`
+- **Protect My Deal** → opens ContractUploadModal
 
 ### Files to Change
 
-**`src/components/HeroNextSteps.tsx`**
-- Redesign the 3-card grid with new intent-based content, emoji+arrow icons, inner-voice subtitles
-- Update header text key
-- Add shimmer animation class to arrow
-- Add hover gradient effect
+1. **`src/components/HeroNextSteps.tsx`** — Rewrite to render two CTA buttons + two Drawer components with action lists inside.
 
-**`src/i18n/locales/en.json`**
-- Update `nextSteps.header` → "I want to…"
-- Update card titles/subtitles to intent-based copy
-- Update social proof line
+2. **`src/i18n/locales/en.json`** — Update `nextSteps` keys:
+   - `nextSteps.startHere.cta`, `nextSteps.startHere.subtitle`
+   - `nextSteps.smartTools.cta`, `nextSteps.smartTools.subtitle`
+   - Keep existing sub-action keys (`reviews`, `compare`, `launch`, `contract`)
 
-**`src/i18n/locales/ar.json`**
-- Mirror all Arabic translations for the new copy
+3. **`src/i18n/locales/ar.json`** — Arabic translations for the same new keys.
 
-**`src/index.css`** (optional)
-- Add a small `@keyframes shimmer` for the arrow glow effect
+### Technical Notes
 
-### Why This Works
-- **Self-selection** increases engagement 2-3x vs generic CTAs (Fogg Behavior Model)
-- **Inner-voice questions** create "that's exactly what I'm thinking" moments (mirroring effect)
-- **Emoji + arrow** are universally scannable — no reading required to understand direction
-- **Fewer words per card** = faster decision = higher click-through
-- Maintains all existing functionality (same routes, same modals)
+- Uses existing `Drawer` from `src/components/ui/drawer.tsx`
+- Keeps CompareModal and ContractUploadModal as-is
+- Staggered fade-in animation preserved for the two buttons
+- Social proof line kept below
 
