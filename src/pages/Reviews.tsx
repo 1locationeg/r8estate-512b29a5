@@ -189,6 +189,17 @@ const Reviews = () => {
       />
 
       <div className="max-w-2xl mx-auto px-4 py-4 space-y-5">
+        {/* Search input */}
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder={t("reviews.searchPlaceholder", "Search reviews, businesses...")}
+            value={businessSearch}
+            onChange={(e) => setBusinessSearch(e.target.value)}
+            className="pl-9 rounded-full h-10 bg-secondary border-0 text-sm"
+          />
+        </div>
+
         {/* Mine / All toggle */}
         {user && (
           <div className="flex gap-2">
@@ -257,6 +268,7 @@ const Reviews = () => {
             </button>
           ))}
         </div>
+
         {/* Star rating filter */}
         <div className="overflow-x-auto -mx-4 px-4">
           <ReviewFilters activeFilter={activeFilter} onFilterChange={setActiveFilter} />
