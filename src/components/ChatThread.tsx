@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import ReactMarkdown from 'react-markdown';
 import { useAuth } from '@/contexts/AuthContext';
@@ -6,7 +6,9 @@ import { useChatMessages } from '@/hooks/useMessages';
 import { useUserPresence } from '@/hooks/usePresence';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { ArrowLeft, Send, Circle, Bold, Italic, List, Link2, Quote, Eye, EyeOff } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDistanceToNow } from 'date-fns';
@@ -32,6 +34,9 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
   const { isOnline, lastSeen } = useUserPresence(otherUserId);
   const [input, setInput] = useState('');
   const [showPreview, setShowPreview] = useState(false);
+  const [linkLabel, setLinkLabel] = useState('');
+  const [linkUrl, setLinkUrl] = useState('https://');
+  const [linkPopoverOpen, setLinkPopoverOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -98,21 +103,29 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
     });
   };
 
-  const insertLink = () => {
-    updateSelection((selectedText, start, end) => {
-      const label = selectedText || 'link text';
-      const template = `[${label}](https://)`;
-      const nextValue = `${input.slice(0, start)}${template}${input.slice(end)}`;
-      const urlStart = start + label.length + 3;
-      const urlEnd = urlStart + 'https://'.length;
-
-      return {
-        nextValue,
-        selectionStart: urlStart,
-        selectionEnd: urlEnd,
-      };
+  const handleInsertLink = () => {
+    const label = linkLabel.trim() || 'link';
+    const url = linkUrl.trim() || 'https://';
+    const markdown = `[${label}](${url})`;
+    const textarea = textareaRef.current;
+    const start = textarea?.selectionStart ?? input.length;
+    const end = textarea?.selectionEnd ?? input.length;
+    const nextValue = `${input.slice(0, start)}${markdown}${input.slice(end)}`;
+    setInput(nextValue);
+    setLinkLabel('');
+    setLinkUrl('https://');
+    setLinkPopoverOpen(false);
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus();
     });
   };
+
+  const autoResize = useCallback(() => {
+    const el = textareaRef.current;
+    if (!el) return;
+    el.style.height = 'auto';
+    el.style.height = `${Math.min(el.scrollHeight, 200)}px`;
+  }, []);
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -224,9 +237,31 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
             <Button type="button" variant="ghost" size="sm" onClick={() => prefixLines('> ', 'Quoted text')}>
               <Quote className="w-4 h-4" />
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={insertLink}>
-              <Link2 className="w-4 h-4" />
-            </Button>
+            <Popover open={linkPopoverOpen} onOpenChange={setLinkPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="ghost" size="sm">
+                  <Link2 className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72 space-y-3" side="top" align="start">
+                <p className="text-sm font-medium text-foreground">{t('messages.insertLink', 'Insert Link')}</p>
+                <Input
+                  placeholder={t('messages.linkLabel', 'Label (e.g. Click here)')}
+                  value={linkLabel}
+                  onChange={(e) => setLinkLabel(e.target.value)}
+                  className="text-sm"
+                />
+                <Input
+                  placeholder="https://example.com"
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  className="text-sm"
+                />
+                <Button size="sm" className="w-full" onClick={handleInsertLink}>
+                  {t('messages.addLink', 'Add link')}
+                </Button>
+              </PopoverContent>
+            </Popover>
             <div className="ms-auto">
               <Button type="button" variant="ghost" size="sm" onClick={() => setShowPreview((prev) => !prev)}>
                 {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
@@ -252,11 +287,14 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
             <Textarea
               ref={textareaRef}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                autoResize();
+              }}
               onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
               placeholder={t('messages.typeRichMessage', 'Write a message...')}
-              className="flex-1 min-h-[44px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm"
+              className="flex-1 min-h-[44px] max-h-[200px] resize-none border-0 shadow-none focus-visible:ring-0 text-sm overflow-y-auto"
             />
             <Button
               size="icon"
