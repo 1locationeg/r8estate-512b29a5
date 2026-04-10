@@ -39,6 +39,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
+import { HeroNextSteps } from "@/components/HeroNextSteps";
 
 
 const Index = () => { // hero-phase-v2
@@ -270,6 +271,9 @@ const Index = () => { // hero-phase-v2
             <div id="trust-showcase" className="mt-4">
               <HeroTrustShowcase />
             </div>
+
+            {/* Next Steps CTAs */}
+            <HeroNextSteps />
 
             {/* Traction Stats */}
             <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
