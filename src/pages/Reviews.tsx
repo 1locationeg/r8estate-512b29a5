@@ -153,7 +153,7 @@ const Reviews = () => {
         const businessName = getBusinessName(r.developerId).toLowerCase();
         const comment = (r.comment || "").toLowerCase();
         const author = (r.author || "").toLowerCase();
-        const devName = (r.developerName || "").toLowerCase();
+        const devName = ((r as any).developerName || "").toLowerCase();
         return businessName.includes(q) || comment.includes(q) || author.includes(q) || devName.includes(q);
       });
     }
