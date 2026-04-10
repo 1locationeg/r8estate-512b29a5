@@ -1,19 +1,80 @@
 
 
-## Fix: FAB Overlapping Send Button on Messages Page
+## Redesign: "What to do next" → Intent-Based Action Corridor
 
 ### Problem
-The `FloatingChatFAB` is rendered globally on every page (including `/messages`) at `fixed bottom-20 md:bottom-6 end-4 z-50`. On the messages page, this overlaps the send button in the chat input area.
+The current 3-card layout ("Read reviews", "Compare", "Upload contract") is generic and task-oriented. It doesn't speak to the user's **emotional state** or **intent** — a first-time visitor, a hesitant investor, and a deep researcher all see the same thing. The cards also use verbose descriptions that slow scanning.
 
-### Solution
-Hide the FAB on the `/messages` route entirely — the messages page already has its own chat UI, so showing a chat FAB there is redundant and causes overlap.
+### Proposed Design: "I want to…" Intent Selector
 
-### Changes
+Replace the 3 static task cards with a **single-row intent corridor** — a proven "choose your path" pattern (used by Stripe, Linear, Notion onboarding) that lets users self-select their intent, then immediately routes them to the right funnel stage.
 
-**`src/components/FloatingChatFAB.tsx`**
-- Import `useLocation` from `react-router-dom`
-- Get the current pathname
-- Return `null` early when pathname starts with `/messages` (same pattern used by `BottomNav` which already hides on `/messages`)
+```text
+┌─────────────────────────────────────────────────────┐
+│           I WANT TO…                                │
+│                                                     │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐          │
+│  │  🔍 ➜    │  │  ⚖️ ➜    │  │  🛡️ ➜    │          │
+│  │ Research  │  │ Compare  │  │ Protect  │          │
+│  │ a company │  │ options  │  │ my deal  │          │
+│  │           │  │          │  │          │          │
+│  │ "Is this  │  │ "Which   │  │ "Is my   │          │
+│  │  dev      │  │  one is  │  │  contract│          │
+│  │  legit?"  │  │  best?"  │  │  safe?"  │          │
+│  └──────────┘  └──────────┘  └──────────┘          │
+│                     ↓                               │
+│  [🛡️ Start your free protection ──────────────]     │
+│  [🔔 Set a price alert            (outline)   ]     │
+│                                                     │
+│  🟢 2,847 buyers used this flow this week           │
+└─────────────────────────────────────────────────────┘
+```
 
-This is a 3-line change that cleanly prevents overlap on the messages page without affecting any other page.
+### Key Design Changes
+
+1. **Header**: "WHAT TO DO NEXT" → **"I WANT TO…"** — shifts from instructional to user-driven (self-determination theory)
+
+2. **Cards become intent lanes** with:
+   - A large **emoji + directional arrow** (→) replacing the icon box — faster pattern recognition, no cognitive load
+   - **Bold verb phrase** as primary label ("Research a company" not "Read all reviews")
+   - **Inner-voice question** in italics as subtitle ("Is this developer legit?") — mirrors the user's actual thought, creating instant resonance
+   - Hover: subtle **left-to-right gradient sweep** + scale-up to signal "this is a doorway"
+   - Remove the small CTA text line — the whole card is the CTA
+
+3. **Social proof line**: Replace static savings stat with a **live-feeling counter** — "2,847 buyers used this flow this week" (dynamic number from a simple counter or estimated)
+
+4. **Animations**: Keep staggered fade-in. Add a subtle **shimmer** on the arrow icon to draw the eye.
+
+### Routes per Intent
+| Intent | Route | Rationale |
+|--------|-------|-----------|
+| Research a company | `/reviews` | Lands on social proof first |
+| Compare options | Opens CompareModal | Existing flow |
+| Protect my deal | Opens ContractUploadModal | Existing flow |
+
+### Files to Change
+
+**`src/components/HeroNextSteps.tsx`**
+- Redesign the 3-card grid with new intent-based content, emoji+arrow icons, inner-voice subtitles
+- Update header text key
+- Add shimmer animation class to arrow
+- Add hover gradient effect
+
+**`src/i18n/locales/en.json`**
+- Update `nextSteps.header` → "I want to…"
+- Update card titles/subtitles to intent-based copy
+- Update social proof line
+
+**`src/i18n/locales/ar.json`**
+- Mirror all Arabic translations for the new copy
+
+**`src/index.css`** (optional)
+- Add a small `@keyframes shimmer` for the arrow glow effect
+
+### Why This Works
+- **Self-selection** increases engagement 2-3x vs generic CTAs (Fogg Behavior Model)
+- **Inner-voice questions** create "that's exactly what I'm thinking" moments (mirroring effect)
+- **Emoji + arrow** are universally scannable — no reading required to understand direction
+- **Fewer words per card** = faster decision = higher click-through
+- Maintains all existing functionality (same routes, same modals)
 
