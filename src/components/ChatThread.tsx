@@ -234,12 +234,31 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
             <Button type="button" variant="ghost" size="sm" onClick={() => prefixLines('- ', 'List item')}>
               <List className="w-4 h-4" />
             </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={() => prefixLines('> ', 'Quoted text')}>
-              <Quote className="w-4 h-4" />
-            </Button>
-            <Button type="button" variant="ghost" size="sm" onClick={insertLink}>
-              <Link2 className="w-4 h-4" />
-            </Button>
+            <Popover open={linkPopoverOpen} onOpenChange={setLinkPopoverOpen}>
+              <PopoverTrigger asChild>
+                <Button type="button" variant="ghost" size="sm">
+                  <Link2 className="w-4 h-4" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-72 space-y-3" side="top" align="start">
+                <p className="text-sm font-medium text-foreground">{t('messages.insertLink', 'Insert Link')}</p>
+                <Input
+                  placeholder={t('messages.linkLabel', 'Label (e.g. Click here)')}
+                  value={linkLabel}
+                  onChange={(e) => setLinkLabel(e.target.value)}
+                  className="text-sm"
+                />
+                <Input
+                  placeholder="https://example.com"
+                  value={linkUrl}
+                  onChange={(e) => setLinkUrl(e.target.value)}
+                  className="text-sm"
+                />
+                <Button size="sm" className="w-full" onClick={handleInsertLink}>
+                  {t('messages.addLink', 'Add link')}
+                </Button>
+              </PopoverContent>
+            </Popover>
             <div className="ms-auto">
               <Button type="button" variant="ghost" size="sm" onClick={() => setShowPreview((prev) => !prev)}>
                 {showPreview ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
