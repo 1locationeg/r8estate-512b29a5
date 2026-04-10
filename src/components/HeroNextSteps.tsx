@@ -1,48 +1,34 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle, GitCompare, FileSearch, Shield, Bell } from "lucide-react";
+import { Shield, Bell, ArrowRight, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { CompareModal } from "@/components/CompareModal";
 import ContractUploadModal from "@/components/ContractUploadModal";
 import { useAuth } from "@/contexts/AuthContext";
 
-const steps = [
-  {
-    key: "reviews",
-    icon: CheckCircle,
-    colorClass: "text-trust-excellent",
-    bgClass: "bg-trust-excellent/10",
-  },
-  {
-    key: "compare",
-    icon: GitCompare,
-    colorClass: "text-amber-500",
-    bgClass: "bg-amber-500/10",
-  },
-  {
-    key: "contract",
-    icon: FileSearch,
-    colorClass: "text-orange-500",
-    bgClass: "bg-orange-500/10",
-  },
+const intents = [
+  { key: "reviews", emoji: "🔍" },
+  { key: "compare", emoji: "⚖️" },
+  { key: "contract", emoji: "🛡️" },
 ] as const;
 
 export const HeroNextSteps = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [showCompare, setShowCompare] = useState(false);
   const [showContract, setShowContract] = useState(false);
   const [visible, setVisible] = useState([false, false, false]);
   const ref = useRef<HTMLDivElement>(null);
+  const isRtl = i18n.dir() === "rtl";
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          steps.forEach((_, i) => {
+          intents.forEach((_, i) => {
             setTimeout(() => setVisible((v) => { const n = [...v]; n[i] = true; return n; }), i * 120);
           });
           observer.disconnect();
@@ -60,43 +46,49 @@ export const HeroNextSteps = () => {
     if (key === "contract") setShowContract(true);
   };
 
+  const Arrow = isRtl ? ArrowLeft : ArrowRight;
+
   return (
     <>
       <div ref={ref} className="w-full mt-5 space-y-3">
         {/* Header */}
-        <p className="text-[10px] sm:text-xs font-semibold text-muted-foreground uppercase tracking-widest text-center">
-          {t("nextSteps.header", "What to do next")}
+        <p className="text-[10px] sm:text-xs font-bold text-primary uppercase tracking-[0.2em] text-center">
+          {t("nextSteps.header")}
         </p>
 
-        {/* 3 Cards */}
+        {/* Intent Corridor */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-          {steps.map((step, i) => {
-            const Icon = step.icon;
-            return (
-              <button
-                key={step.key}
-                onClick={() => handleAction(step.key)}
-                className={cn(
-                  "flex flex-col items-start gap-1.5 p-3 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group",
-                  visible[i] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3",
-                  "transition-all duration-500"
-                )}
-              >
-                <div className={cn("w-8 h-8 rounded-lg flex items-center justify-center", step.bgClass)}>
-                  <Icon className={cn("w-4 h-4", step.colorClass)} />
-                </div>
-                <span className="text-xs font-bold text-foreground leading-tight">
-                  {t(`nextSteps.${step.key}.title`)}
-                </span>
-                <span className="text-[10px] text-muted-foreground leading-snug">
-                  {t(`nextSteps.${step.key}.subtitle`)}
-                </span>
-                <span className={cn("text-[10px] font-semibold mt-auto group-hover:underline", step.colorClass)}>
-                  {t(`nextSteps.${step.key}.cta`)}
-                </span>
-              </button>
-            );
-          })}
+          {intents.map((intent, i) => (
+            <button
+              key={intent.key}
+              onClick={() => handleAction(intent.key)}
+              className={cn(
+                "group relative flex flex-col items-start gap-2 p-4 rounded-xl border border-border bg-card overflow-hidden text-start",
+                "hover:border-primary/40 hover:shadow-md hover:scale-[1.02]",
+                "transition-all duration-500",
+                visible[i] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
+              )}
+            >
+              {/* Hover gradient sweep */}
+              <div className="absolute inset-0 bg-gradient-to-r from-primary/5 via-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
+
+              {/* Emoji + Arrow */}
+              <div className="relative flex items-center gap-2">
+                <span className="text-2xl" role="img">{intent.emoji}</span>
+                <Arrow className="w-4 h-4 text-primary/60 group-hover:text-primary animate-[shimmer-slide_2s_ease-in-out_infinite] transition-colors" />
+              </div>
+
+              {/* Bold verb phrase */}
+              <span className="relative text-sm font-bold text-foreground leading-tight">
+                {t(`nextSteps.${intent.key}.title`)}
+              </span>
+
+              {/* Inner-voice question */}
+              <span className="relative text-[11px] italic text-muted-foreground leading-snug">
+                {t(`nextSteps.${intent.key}.subtitle`)}
+              </span>
+            </button>
+          ))}
         </div>
 
         {/* Primary + Secondary CTAs */}
@@ -107,7 +99,7 @@ export const HeroNextSteps = () => {
             size="lg"
           >
             <Shield className="w-4 h-4 ltr:mr-1 rtl:ml-1" />
-            {t("nextSteps.protectCta", "Protect your purchase now")}
+            {t("nextSteps.protectCta")}
           </Button>
           <Button
             variant="outline"
@@ -116,14 +108,14 @@ export const HeroNextSteps = () => {
             size="lg"
           >
             <Bell className="w-4 h-4 ltr:mr-1 rtl:ml-1" />
-            {t("nextSteps.alertCta", "Set a price alert")}
+            {t("nextSteps.alertCta")}
           </Button>
         </div>
 
-        {/* Social proof micro-copy */}
+        {/* Social proof */}
         <p className="text-[10px] text-muted-foreground text-center leading-relaxed">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-trust-excellent mr-1 align-middle" />
-          {t("nextSteps.socialProof", "Verified buyers who checked this developer before signing saved an average of EGP 620K in hidden fees.")}
+          {t("nextSteps.socialProof")}
         </p>
       </div>
 

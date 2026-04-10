@@ -1462,24 +1462,21 @@
     "goToPage": "Go to full page"
   },
   "nextSteps": {
-    "header": "What to do next",
+    "header": "I want to…",
     "reviews": {
-      "title": "Read all reviews",
-      "subtitle": "Real owners · verified purchases · project-specific",
-      "cta": "Browse reviews →→"
+      "title": "Research a company",
+      "subtitle": "\"Is this developer legit?\""
     },
     "compare": {
-      "title": "Compare with another",
-      "subtitle": "Stack side-by-side with trust scores + AI analysis",
-      "cta": "Add to compare →→"
+      "title": "Compare options",
+      "subtitle": "\"Which one is the best deal?\""
     },
     "contract": {
-      "title": "Upload your contract",
-      "subtitle": "AI checks for hidden clauses and payment traps",
-      "cta": "Check contract →→"
+      "title": "Protect my deal",
+      "subtitle": "\"Is my contract safe?\""
     },
-    "protectCta": "Protect your purchase now",
+    "protectCta": "Start your free protection",
     "alertCta": "Set a price alert",
-    "socialProof": "Verified buyers who checked this developer before signing saved an average of EGP 620K in hidden fees."
+    "socialProof": "2,847 buyers used this flow this week to make smarter decisions."
   }
 }
