@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { WhatsAppChatModal } from "./WhatsAppChatModal";
 import { AIChatWidget } from "./AIChatWidget";
 import { MessageSquare, Sparkles } from "lucide-react";
@@ -38,6 +39,7 @@ export const FloatingChatFAB = () => {
   const [activeChat, setActiveChat] = useState<"ai" | "whatsapp" | null>(null);
   const [visible, setVisible] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
+  const { pathname } = useLocation();
 
   useEffect(() => {
     const timer = setTimeout(() => setVisible(true), 15000);
@@ -58,6 +60,10 @@ export const FloatingChatFAB = () => {
     setMenuOpen(false);
     setActiveChat(type);
   };
+
+  if (pathname.startsWith('/messages')) {
+    return null;
+  }
 
   return (
     <>
