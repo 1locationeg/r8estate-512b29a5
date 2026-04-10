@@ -1471,6 +1471,10 @@
       "title": "Compare options",
       "subtitle": "\"Which one is the best deal?\""
     },
+    "launch": {
+      "title": "Track a launch",
+      "subtitle": "\"What's launching near me?\""
+    },
     "contract": {
       "title": "Protect my deal",
       "subtitle": "\"Is my contract safe?\""
