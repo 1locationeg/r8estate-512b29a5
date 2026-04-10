@@ -1463,33 +1463,33 @@
   },
   "nextSteps": {
     "startHere": {
-      "cta": "Start Here",
-      "subtitle": "Your first step to a safe property purchase",
+      "cta": "See Who You Can Trust",
+      "subtitle": "Read real buyer reviews before you pay a single pound",
       "drawerTitle": "Where would you like to start?",
       "drawerDesc": "Pick a tool to begin your property journey"
     },
     "smartTools": {
-      "cta": "Smart Tools",
-      "subtitle": "Compare, track & protect like a pro",
-      "drawerTitle": "Your Power Tools",
-      "drawerDesc": "Compare deals, track launches & protect your investment"
+      "cta": "Compare, Track & Protect",
+      "subtitle": "Save money and avoid risky deals in minutes",
+      "drawerTitle": "Your Deal Protection Kit",
+      "drawerDesc": "Every tool you need to buy smarter and safer"
     },
     "reviews": {
-      "cta": "Check Reviews",
-      "subtitle": "Is this developer legit?"
+      "cta": "Read Real Reviews",
+      "subtitle": "See what actual buyers say before you commit"
     },
     "compare": {
-      "cta": "Compare Now",
-      "subtitle": "Which one is the best deal?"
+      "cta": "Compare Developers",
+      "subtitle": "Find the best value — side by side"
     },
     "launch": {
-      "cta": "Track Launches",
-      "subtitle": "What's new near me?"
+      "cta": "Track New Projects",
+      "subtitle": "Get early access to launches near you"
     },
     "contract": {
-      "cta": "Protect My Deal",
-      "subtitle": "Is my contract safe?"
+      "cta": "Check My Contract",
+      "subtitle": "Spot red flags before you sign"
     },
-    "socialProof": "2,847 buyers made smarter decisions this week."
+    "socialProof": "Join 2,847 buyers who avoided bad deals this week"
   }
 }
