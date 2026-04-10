@@ -34,6 +34,9 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
   const { isOnline, lastSeen } = useUserPresence(otherUserId);
   const [input, setInput] = useState('');
   const [showPreview, setShowPreview] = useState(false);
+  const [linkLabel, setLinkLabel] = useState('');
+  const [linkUrl, setLinkUrl] = useState('https://');
+  const [linkPopoverOpen, setLinkPopoverOpen] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
