@@ -234,6 +234,9 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
             <Button type="button" variant="ghost" size="sm" onClick={() => prefixLines('- ', 'List item')}>
               <List className="w-4 h-4" />
             </Button>
+            <Button type="button" variant="ghost" size="sm" onClick={() => prefixLines('> ', 'Quoted text')}>
+              <Quote className="w-4 h-4" />
+            </Button>
             <Popover open={linkPopoverOpen} onOpenChange={setLinkPopoverOpen}>
               <PopoverTrigger asChild>
                 <Button type="button" variant="ghost" size="sm">
