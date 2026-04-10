@@ -65,7 +65,7 @@ export const HeroNextSteps = () => {
           <button
             onClick={() => setDrawerOpen("start")}
             className={cn(
-              "group relative flex items-center gap-3 p-4 rounded-xl border border-primary/30 bg-primary text-primary-foreground overflow-hidden text-start",
+              "group relative flex items-center gap-3 p-4 rounded-xl border border-primary/30 bg-primary/50 text-primary-foreground overflow-hidden text-start",
               "hover:shadow-lg hover:scale-[1.01] transition-all duration-300 cursor-pointer",
               visible[0] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             )}
@@ -84,7 +84,7 @@ export const HeroNextSteps = () => {
           <button
             onClick={() => setDrawerOpen("smart")}
             className={cn(
-              "group relative flex items-center gap-3 p-4 rounded-xl border border-border/60 bg-card text-foreground overflow-hidden text-start",
+              "group relative flex items-center gap-3 p-4 rounded-xl border border-border/60 bg-card/50 text-foreground overflow-hidden text-start",
               "hover:border-primary/30 hover:shadow-md hover:scale-[1.01] transition-all duration-300 cursor-pointer",
               visible[1] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
             )}
