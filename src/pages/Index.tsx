@@ -237,7 +237,7 @@ const Index = () => { // hero-phase-v2
             <div className="mb-0 max-w-[1100px] mx-auto py-3 md:py-4">
               {userMode === "buyers" ? (
                 <>
-                  <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent">
+                  <p className="text-xl sm:text-2xl md:text-3xl leading-tight font-black tracking-tight bg-gradient-to-r from-primary via-brand-red to-accent bg-clip-text text-transparent whitespace-pre-line">
                     {t("hero.tagline_line1")}
                   </p>
                   <p className="text-lg sm:text-xl md:text-2xl leading-tight font-bold tracking-tight text-primary/90">
