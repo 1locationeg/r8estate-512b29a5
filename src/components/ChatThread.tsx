@@ -300,10 +300,11 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
               className="flex-1 min-h-[44px] max-h-[200px] resize-none border-0 shadow-none focus-visible:ring-0 text-sm overflow-y-auto"
             />
             <Button
+              type="button"
               size="icon"
               onClick={handleSend}
               disabled={!input.trim()}
-              className="h-11 w-11 rounded-full shrink-0"
+              className="h-11 w-11 rounded-full shrink-0 relative z-10"
             >
               <Send className="w-4 h-4" />
             </Button>
