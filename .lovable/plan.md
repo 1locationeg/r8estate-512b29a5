@@ -1,58 +1,50 @@
 
 
-## Plan: Rewrite CTA Copy for Clarity, Benefits, and Motivation
+## Plan: Reviews Discovery with Business & Category Filters
 
-### Problem
-Current copy is generic ("Start Here", "Smart Tools") — doesn't communicate what's in it for the visitor, doesn't reduce confusion, and doesn't motivate action.
+### What We're Building
 
-### New Copy Strategy
-Shift from **labels** to **benefit-driven micro-stories** that answer "what do I get?" instantly.
+Transform the Reviews page from a flat list into a discoverable review directory where users can filter by **business name** (cloud tags) and **category** (chips), in addition to the existing star rating filter.
 
-### English Copy Changes (`en.json`)
+### UI Layout (top to bottom)
 
-| Key | Current | New |
-|-----|---------|-----|
-| `startHere.cta` | "Start Here" | "See Who You Can Trust" |
-| `startHere.subtitle` | "Your first step to a safe property purchase" | "Read real buyer reviews before you pay a single pound" |
-| `smartTools.cta` | "Smart Tools" | "Compare, Track & Protect" |
-| `smartTools.subtitle` | "Compare, track & protect like a pro" | "Save money and avoid risky deals in minutes" |
-| `smartTools.drawerTitle` | "Your Power Tools" | "Your Deal Protection Kit" |
-| `smartTools.drawerDesc` | "Compare deals, track launches & protect your investment" | "Every tool you need to buy smarter and safer" |
-| `reviews.cta` | "Check Reviews" | "Read Real Reviews" |
-| `reviews.subtitle` | "Is this developer legit?" | "See what actual buyers say before you commit" |
-| `compare.cta` | "Compare Now" | "Compare Developers" |
-| `compare.subtitle` | "Which one is the best deal?" | "Find the best value — side by side" |
-| `launch.cta` | "Track Launches" | "Track New Projects" |
-| `launch.subtitle` | "What's new near me?" | "Get early access to launches near you" |
-| `contract.cta` | "Protect My Deal" | "Check My Contract" |
-| `contract.subtitle` | "Is my contract safe?" | "Spot red flags before you sign" |
-| `socialProof` | "2,847 buyers made smarter decisions this week." | "Join 2,847 buyers who avoided bad deals this week" |
+1. **Stats bar** — unchanged
+2. **Search input** — new, small search bar to quickly find a business name
+3. **Business cloud tags** — a wrap of pill/cloud tags showing all businesses that have reviews (e.g. "Palm Hills", "CIB Home Loans", "1 LOCATION"), with review count badges. Clicking one filters to that business. Active tag is highlighted.
+4. **Category filter chips** — horizontal scroll of the 18 categories from `BUSINESS_CATEGORIES`. Only show categories that have at least one reviewed business. Clicking filters reviews to businesses in that category.
+5. **Star rating filter** — existing `ReviewFilters` component, unchanged
+6. **Reviews list** — filtered results
 
-### Arabic Copy Changes (`ar.json`)
+### Data Strategy
 
-Matching Arabic translations with the same benefit-driven tone, using Egyptian dialect where appropriate:
-
-| Key | New Arabic |
-|-----|-----------|
-| `startHere.cta` | "اعرف مين تقدر تثق فيه" |
-| `startHere.subtitle` | "اقرأ تقييمات مشترين حقيقيين قبل ما تدفع جنيه" |
-| `smartTools.cta` | "قارن، تابع واحمي" |
-| `smartTools.subtitle` | "وفّر فلوسك وابعد عن الصفقات الخطر في دقائق" |
-| `smartTools.drawerTitle` | "أدوات حماية صفقتك" |
-| `smartTools.drawerDesc` | "كل اللي محتاجه تشتري بذكاء وأمان" |
-| `reviews.cta` | "اقرأ تقييمات حقيقية" |
-| `reviews.subtitle` | "شوف رأي المشترين الحقيقيين قبل ما تلتزم" |
-| `compare.cta` | "قارن المطورين" |
-| `compare.subtitle` | "اعرف الأفضل — جنب بعض" |
-| `launch.cta` | "تابع المشاريع الجديدة" |
-| `launch.subtitle` | "اعرف أول واحد عن المشاريع القريبة منك" |
-| `contract.cta` | "راجع عقدي" |
-| `contract.subtitle` | "اكتشف المشاكل قبل ما توقّع" |
-| `socialProof` | "انضم لـ ٢٬٨٤٧ مشتري تجنبوا صفقات سيئة الأسبوع ده" |
+- Fetch reviews with `developer_id` and `developer_name` (already available)
+- Fetch `business_profiles` to get category mappings per `developer_id` (join client-side)
+- Extract unique businesses from reviews to build cloud tags
+- Map business → categories to build category filter
+- For mock reviews, use `developerId` to look up mock developer data
 
 ### Files to Edit
-1. `src/i18n/locales/en.json` — Update all `nextSteps.*` values
-2. `src/i18n/locales/ar.json` — Update all `nextSteps.*` values
 
-No component code changes needed — the component already reads from these keys.
+1. **`src/pages/Reviews.tsx`**
+   - Add state: `selectedBusiness` (string | null), `selectedCategory` (string | null), `businessSearch` (string)
+   - Fetch `business_profiles` (id, company_name, categories) on mount
+   - Build `businessMap`: developer_id → { name, categories }
+   - Extract unique businesses from combined reviews
+   - Add `filteredReviews` logic: chain business → category → star filters
+   - Render new UI sections: search, business clouds, category chips
+
+2. **`src/components/ReviewFilters.tsx`** — no changes needed (star filter stays as-is)
+
+3. **`src/i18n/locales/en.json`** — add keys: `reviews.searchBusiness`, `reviews.allBusinesses`, `reviews.allCategories`, `reviews.filterByBusiness`, `reviews.filterByCategory`
+
+4. **`src/i18n/locales/ar.json`** — Arabic translations for same keys
+
+### UX Details
+
+- Business cloud tags: wrapped flex, pill-shaped, showing `name (count)`, scrollable on mobile
+- Search filters the cloud tags in real-time
+- Category chips: only visible categories (those with reviews), horizontal scroll
+- Clicking a business tag or category is a toggle (click again to deselect)
+- All three filters (business, category, stars) work together as AND filters
+- Empty state updates to reflect active filters
 
