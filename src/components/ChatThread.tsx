@@ -284,11 +284,14 @@ export const ChatThread = ({ conversationId, otherUserId, otherUserName, otherUs
             <Textarea
               ref={textareaRef}
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={(e) => {
+                setInput(e.target.value);
+                autoResize();
+              }}
               onFocus={handleInputFocus}
               onKeyDown={handleKeyDown}
               placeholder={t('messages.typeRichMessage', 'Write a message...')}
-              className="flex-1 min-h-[44px] max-h-32 resize-none border-0 shadow-none focus-visible:ring-0 text-sm"
+              className="flex-1 min-h-[44px] max-h-[200px] resize-none border-0 shadow-none focus-visible:ring-0 text-sm overflow-y-auto"
             />
             <Button
               size="icon"
