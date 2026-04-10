@@ -23,6 +23,7 @@ export const BUSINESS_CATEGORIES = [
   { value: "leasing", label: "Leasing" },
   { value: "blockchain", label: "Blockchain" },
   { value: "lands", label: "Lands" },
+  { value: "developers", label: "Developers" },
 ] as const;
 
 export type BusinessCategoryValue = (typeof BUSINESS_CATEGORIES)[number]["value"];
