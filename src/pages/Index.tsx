@@ -274,6 +274,10 @@ const Index = () => { // hero-phase-v2
               )}
             </div>
 
+            <div id="trust-showcase" className="mt-3">
+              <HeroTrustShowcase />
+            </div>
+
             {userMode === "buyers" && (
               <>
                 {searchFocused && (
@@ -289,10 +293,6 @@ const Index = () => { // hero-phase-v2
                 </div>
               </>
             )}
-
-            <div id="trust-showcase" className="mt-4">
-              <HeroTrustShowcase />
-            </div>
 
             {/* Next Steps CTAs */}
             <HeroNextSteps />
