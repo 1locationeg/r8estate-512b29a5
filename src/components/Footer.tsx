@@ -97,7 +97,7 @@ export const Footer = () => {
           {/* Newsletter + Social */}
           <div className="lg:col-span-1 space-y-6">
             <div>
-              <h3 className="text-lg font-bold text-white mb-2">Subscribe to Our Newsletter</h3>
+              <h3 className="text-lg font-bold text-white mb-2">Subscribe</h3>
               <p className="text-sm text-slate-400 mb-4">
                 Get the latest real estate insights, reviews & exclusive deals delivered to your inbox.
               </p>
