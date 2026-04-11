@@ -26,7 +26,7 @@ import CompareEngineShowcase from "@/components/CompareEngineShowcase";
 import { AudienceSegmentCards } from "@/components/AudienceSegmentCards";
 import { CollectiveBuyerProtection } from "@/components/CollectiveBuyerProtection";
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
-import { LiveMarketPulse } from "@/components/LiveMarketPulse";
+
 import { TractionStats } from "@/components/TractionStats";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
@@ -388,10 +388,6 @@ const Index = () => { // hero-phase-v2
           </div>
         </div>
 
-        {/* Live Market Pulse */}
-        <div className={cn("mt-4 mb-2 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-          <LiveMarketPulse />
-        </div>
       </div>
     </div>
   );
@@ -525,7 +521,7 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
             <div className="w-full max-w-[1100px] mt-3 mb-0"><TractionStats /></div>
-            <div className="mt-2 mb-2"><LiveMarketPulse /></div>
+            
 
             {/* Business view */}
             {role !== 'business' && role !== 'admin' && (

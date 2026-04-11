@@ -152,6 +152,7 @@ const AppContent = () => {
 
   return (
     <>
+      <LiveMarketPulse />
       <ScrollToTop />
       <JourneyStripe />
       <SideJourneyRail />
