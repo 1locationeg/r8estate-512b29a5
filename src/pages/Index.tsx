@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -59,6 +59,42 @@ const Index = () => { // hero-phase-v2
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
   const [showAgentHint, setShowAgentHint] = useState(false);
+  const [showStars, setShowStars] = useState(false);
+  const [starCount, setStarCount] = useState(0);
+
+  // Cycle: show "Reviews" for 6s, then animate stars 1→5 (600ms each), hold 1s, repeat
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    let starInterval: ReturnType<typeof setInterval>;
+
+    const startStarPhase = () => {
+      setShowStars(true);
+      setStarCount(0);
+      let count = 0;
+      starInterval = setInterval(() => {
+        count++;
+        setStarCount(count);
+        if (count >= 5) {
+          clearInterval(starInterval);
+          // Hold 5 stars for 1s, then back to text
+          timeout = setTimeout(() => {
+            setShowStars(false);
+            setStarCount(0);
+            // Show text for 6s, then repeat
+            timeout = setTimeout(startStarPhase, 6000);
+          }, 1000);
+        }
+      }, 600);
+    };
+
+    // Initial: show text for 6s first
+    timeout = setTimeout(startStarPhase, 6000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(starInterval);
+    };
+  }, []);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
   const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -246,7 +282,25 @@ const Index = () => { // hero-phase-v2
                     {t("hero.tagline_line1")}
                   </p>
                   <p className="text-2xl sm:text-3xl md:text-4xl leading-tight font-black tracking-tight hero-keys-shimmer mt-1">
-                    {t("hero.tagline_line2")}
+                    {showStars ? (
+                      <>
+                        <span className="inline-flex items-center gap-1 align-middle">
+                          {[1,2,3,4,5].map(i => (
+                            <Star
+                              key={i}
+                              className={`w-7 h-7 md:w-9 md:h-9 transition-all duration-300 ${
+                                i <= starCount
+                                  ? 'fill-[#00b67a] text-[#00b67a] scale-100 opacity-100'
+                                  : 'text-transparent scale-75 opacity-0'
+                              }`}
+                            />
+                          ))}
+                        </span>
+                        {" "}{t("hero.tagline_line2_post")}
+                      </>
+                    ) : (
+                      t("hero.tagline_line2")
+                    )}
                   </p>
 
                   {/* Hero Power CTAs */}
