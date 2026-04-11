@@ -289,7 +289,7 @@ const Index = () => { // hero-phase-v2
               )}
             </div>
 
-            <div id="trust-showcase" className="mt-1">
+            <div id="trust-showcase" className="-mt-2">
               <HeroTrustShowcase />
             </div>
 
