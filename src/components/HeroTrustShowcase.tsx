@@ -2,7 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Slider } from "@/components/ui/slider";
-import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle, Hand, Sparkles, ArrowRight } from "lucide-react";
+import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle, Hand, Sparkles, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 // ── Score color logic ──
 const getScoreColor = (s: number) => {
