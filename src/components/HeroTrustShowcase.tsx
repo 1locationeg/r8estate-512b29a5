@@ -44,7 +44,7 @@ const scenarioDefs: ReviewScenarioDef[] = [
     avatar: "https://i.pravatar.cc/80?img=12",
     project: "Lake Vo",
     location: "New Cairo",
-    developer: "Ora Developers",
+    developer: "Orla Developers",
     rating: 1.5,
     commentKey: "showcase.comment1",
     dimensions: [
@@ -111,7 +111,7 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
 
 // ── Agent teaser data ──
 const agentTeaserPairs: { question: string; verdict: string; rating: number; reviewerCount: number; type: "warning" | "positive" | "insight"; proof: string }[] = [
-  { question: "Is Ora Developers safe?", verdict: "Not Recommended", rating: 2.1, reviewerCount: 253, type: "warning", proof: "253 reviews flagged concerns" },
+  { question: "Is Orla Developers safe?", verdict: "Not Recommended", rating: 2.1, reviewerCount: 253, type: "warning", proof: "253 reviews flagged concerns" },
   { question: "Best compounds in New Cairo?", verdict: "Top Pick — Mivida", rating: 4.8, reviewerCount: 312, type: "positive", proof: "Recommended by 312 verified buyers" },
   { question: "Mountain View vs Emaar?", verdict: "Wait for Launch", rating: 4.2, reviewerCount: 187, type: "insight", proof: "187 buyers suggest waiting" },
 ];
