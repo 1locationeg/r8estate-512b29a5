@@ -293,6 +293,11 @@ const Index = () => { // hero-phase-v2
               <HeroTrustShowcase />
             </div>
 
+            {/* Traction Stats */}
+            <div className={cn("w-full mt-2 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <TractionStats />
+            </div>
+
             {userMode === "buyers" && (
               <>
                 {searchFocused && (
@@ -311,11 +316,6 @@ const Index = () => { // hero-phase-v2
 
             {/* Next Steps CTAs */}
             <HeroNextSteps />
-
-            {/* Traction Stats */}
-            <div className={cn("w-full mt-4 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <TractionStats />
-            </div>
 
             {/* Journey Station Arc */}
             <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
