@@ -44,74 +44,9 @@ const scenarioDefs: ReviewScenarioDef[] = [
     avatar: "https://i.pravatar.cc/80?img=12",
     project: "Lake Vo",
     location: "New Cairo",
-    developer: "Ora Developers",
-    rating: 1.5,
-    commentKey: "showcase.comment1",
-    dimensions: [
-      { labelKey: "showcase.delivery", valueKey: "showcase.18moLate", positive: false },
-      { labelKey: "showcase.quality", valueKey: "showcase.poor", positive: false },
-    ],
-    trustLabelKey: "showcase.lowTrust",
-  },
-  {
-    score: 88,
-    reviewer: "Noor M.",
-    initial: "F",
-    avatar: "https://i.pravatar.cc/80?img=9",
-    project: "Mivida",
-    location: "New Cairo",
-    developer: "Emaar Misr",
-    rating: 4.5,
-    commentKey: "showcase.comment3",
-    dimensions: [
-      { labelKey: "showcase.delivery", valueKey: "showcase.onTime", positive: true },
-      { labelKey: "showcase.quality", valueKey: "showcase.excellent", positive: true },
-    ],
-    trustLabelKey: "showcase.highTrust",
-  },
-  {
-    score: 97,
-    reviewer: "Omar J.",
-    initial: "O",
-    avatar: "https://i.pravatar.cc/80?img=53",
-    project: "Mountain View iCity",
-    location: "New Cairo",
-    developer: "Mountain View",
-    rating: 5,
-    commentKey: "showcase.comment4",
-    dimensions: [
-      { labelKey: "showcase.delivery", valueKey: "showcase.early", positive: true },
-      { labelKey: "showcase.quality", valueKey: "showcase.premium", positive: true },
-    ],
-    trustLabelKey: "showcase.exceptional",
-  },
-];
-
-const presets = [25, 88, 97];
-
-function getClosestScenario(score: number): ReviewScenarioDef {
-  let closest = scenarioDefs[0];
-  let minDist = Math.abs(score - scenarioDefs[0].score);
-  for (const s of scenarioDefs) {
-    const d = Math.abs(score - s.score);
-    if (d < minDist) {
-      minDist = d;
-      closest = s;
-    }
-  }
-  return closest;
-}
-
-const dimensionIconKeys: Record<string, typeof Clock> = {
-  "showcase.delivery": Clock,
-  "showcase.quality": Hammer,
-  "showcase.brochureMatch": FileText,
-  "showcase.response": MessageCircle,
-};
-
-// ── Agent teaser data ──
-const agentTeaserPairs: { question: string; verdict: string; rating: number; reviewerCount: number; type: "warning" | "positive" | "insight"; proof: string }[] = [
-  { question: "Is Ora Developers safe?", verdict: "Not Recommended", rating: 2.1, reviewerCount: 253, type: "warning", proof: "253 reviews flagged concerns" },
+    developer: "Orla Developers",
+...
+  { question: "Is Orla Developers safe?", verdict: "Not Recommended", rating: 2.1, reviewerCount: 253, type: "warning", proof: "253 reviews flagged concerns" },
   { question: "Best compounds in New Cairo?", verdict: "Top Pick — Mivida", rating: 4.8, reviewerCount: 312, type: "positive", proof: "Recommended by 312 verified buyers" },
   { question: "Mountain View vs Emaar?", verdict: "Wait for Launch", rating: 4.2, reviewerCount: 187, type: "insight", proof: "187 buyers suggest waiting" },
 ];
