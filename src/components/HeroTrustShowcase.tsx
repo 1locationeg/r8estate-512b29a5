@@ -267,9 +267,11 @@ export const HeroTrustShowcase = () => {
     };
   }, [runEntrance]);
 
-  // ── Agent teaser typing effect ──
+  // ── Agent teaser typing effect (only for agent-full) ──
   useEffect(() => {
     if (cardPhase !== "agent") return;
+    const currentStep = SHOWCASE_SEQUENCE[seqIdxRef.current];
+    if (!currentStep || currentStep.type !== "agent-full") return;
     setTeaserTypedChars(0);
     setTeaserPhase("typing");
     setTeaserStep(0);
@@ -308,20 +310,14 @@ export const HeroTrustShowcase = () => {
     return () => clearInterval(stepInterval);
   }, [cardPhase, teaserPhase]);
 
-  // ── Agent teaser: cycle questions then return to reviews ──
+  // ── Agent result hold → advance sequence ──
   useEffect(() => {
     if (cardPhase !== "agent" || teaserPhase !== "result") return;
     const timer = setTimeout(() => {
-      if (teaserIdx < agentTeaserPairs.length - 1) {
-        setTeaserIdx(i => i + 1);
-      } else {
-        setCardPhase("reviews");
-        setTransitioning(false);
-        startCycling();
-      }
+      advanceSequence();
     }, 4000);
     return () => clearTimeout(timer);
-  }, [cardPhase, teaserPhase, teaserIdx, startCycling]);
+  }, [cardPhase, teaserPhase, teaserIdx, advanceSequence]);
 
 
   const animateToScore = useCallback((target: number) => {
@@ -362,9 +358,9 @@ export const HeroTrustShowcase = () => {
 
   const handleReplay = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
-    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+    if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
-    cycleIdxRef.current = 1;
+    seqIdxRef.current = 0;
     runEntrance();
   };
 
