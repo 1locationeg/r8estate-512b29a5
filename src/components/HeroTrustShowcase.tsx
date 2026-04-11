@@ -256,7 +256,9 @@ export const HeroTrustShowcase = () => {
   useEffect(() => {
     if (cardPhase !== "agent") return;
     setTeaserTypedChars(0);
-    setTeaserShowAnswer(false);
+    setTeaserPhase("typing");
+    setTeaserStep(0);
+    setTeaserProgress(0);
     const q = agentTeaserPairs[teaserIdx].question;
     let charIdx = 0;
     const typeInterval = setInterval(() => {
@@ -264,28 +266,47 @@ export const HeroTrustShowcase = () => {
       setTeaserTypedChars(charIdx);
       if (charIdx >= q.length) {
         clearInterval(typeInterval);
-        setTimeout(() => setTeaserShowAnswer(true), 400);
+        setTimeout(() => setTeaserPhase("processing"), 300);
       }
     }, 25);
     return () => clearInterval(typeInterval);
   }, [cardPhase, teaserIdx]);
 
+  // ── Agent teaser processing steps ──
+  useEffect(() => {
+    if (cardPhase !== "agent" || teaserPhase !== "processing") return;
+    setTeaserStep(0);
+    setTeaserProgress(0);
+    let step = 0;
+    const stepInterval = setInterval(() => {
+      step++;
+      setTeaserStep(step);
+      setTeaserProgress(step * 25);
+      if (step >= agentProcessingSteps.length) {
+        clearInterval(stepInterval);
+        setTimeout(() => {
+          setTeaserPhase("result");
+          setTeaserProgress(100);
+        }, 400);
+      }
+    }, 750);
+    return () => clearInterval(stepInterval);
+  }, [cardPhase, teaserPhase]);
+
   // ── Agent teaser: cycle questions then return to reviews ──
   useEffect(() => {
-    if (cardPhase !== "agent" || !teaserShowAnswer) return;
+    if (cardPhase !== "agent" || teaserPhase !== "result") return;
     const timer = setTimeout(() => {
       if (teaserIdx < agentTeaserPairs.length - 1) {
         setTeaserIdx(i => i + 1);
-        setTeaserShowAnswer(false);
       } else {
-        // Return to reviews permanently
         setCardPhase("reviews");
         setTransitioning(false);
         startCycling();
       }
     }, 2500);
     return () => clearTimeout(timer);
-  }, [cardPhase, teaserShowAnswer, teaserIdx, startCycling]);
+  }, [cardPhase, teaserPhase, teaserIdx, startCycling]);
 
 
   const animateToScore = useCallback((target: number) => {
