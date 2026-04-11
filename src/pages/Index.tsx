@@ -274,7 +274,7 @@ const Index = () => { // hero-phase-v2
               )}
             </div>
 
-            <div id="trust-showcase" className="mt-3">
+            <div id="trust-showcase" className="mt-1">
               <HeroTrustShowcase />
             </div>
 
