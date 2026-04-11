@@ -521,24 +521,59 @@ export const HeroTrustShowcase = () => {
         {/* Agent Teaser content */}
         {cardPhase === "agent" && (
           <div className="p-3 flex flex-col justify-center min-h-[180px] animate-fade-in">
-            <div className="flex items-center gap-1.5 mb-3">
+            <div className="flex items-center gap-1.5 mb-2">
               <Sparkles className="w-3.5 h-3.5 text-primary" />
               <span className="text-[10px] font-bold text-primary tracking-wide uppercase">R8 Agent</span>
               <span className="w-1.5 h-1.5 rounded-full bg-trust-excellent animate-pulse" />
             </div>
 
-            <p className="text-sm md:text-base font-semibold text-foreground mb-1.5">
+            {/* Question typing */}
+            <p className="text-sm md:text-base font-semibold text-foreground mb-2">
               "{agentTeaserPairs[teaserIdx].question.slice(0, teaserTypedChars)}"
-              {teaserTypedChars < agentTeaserPairs[teaserIdx].question.length && <span className="animate-pulse text-primary">|</span>}
+              {teaserPhase === "typing" && teaserTypedChars < agentTeaserPairs[teaserIdx].question.length && (
+                <span className="animate-pulse text-primary">|</span>
+              )}
             </p>
 
-            <div className={`transition-opacity duration-500 ${teaserShowAnswer ? "opacity-100" : "opacity-0"}`}>
-              <p className="text-xs md:text-sm text-muted-foreground leading-relaxed">{agentTeaserPairs[teaserIdx].answer}</p>
-            </div>
+            {/* Processing phase */}
+            {teaserPhase === "processing" && (
+              <div className="space-y-1.5 mb-2 animate-fade-in">
+                <p className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider mb-1">Processing your request…</p>
+                {agentProcessingSteps.map((step, i) => {
+                  const isDone = i < teaserStep;
+                  const isActive = i === teaserStep;
+                  return (
+                    <div key={i} className={`flex items-center gap-2 transition-opacity duration-300 ${isDone || isActive ? "opacity-100" : "opacity-30"}`}>
+                      {isDone ? (
+                        <CheckCircle2 className="w-3.5 h-3.5 text-trust-excellent shrink-0" />
+                      ) : isActive ? (
+                        <Loader2 className="w-3.5 h-3.5 text-primary animate-spin shrink-0" />
+                      ) : (
+                        <div className="w-3.5 h-3.5 rounded-full border border-muted-foreground/30 shrink-0" />
+                      )}
+                      <span className={`text-[11px] ${isDone ? "text-muted-foreground" : isActive ? "text-foreground font-medium" : "text-muted-foreground/50"}`}>
+                        {step}
+                      </span>
+                    </div>
+                  );
+                })}
+                <Progress value={teaserProgress} className="h-1 mt-2 bg-secondary" />
+              </div>
+            )}
+
+            {/* Result phase */}
+            {teaserPhase === "result" && (
+              <div className="animate-fade-in">
+                <div className="flex items-start gap-1.5 mb-2">
+                  <CheckCircle2 className="w-4 h-4 text-trust-excellent shrink-0 mt-0.5" />
+                  <p className="text-xs md:text-sm text-foreground leading-relaxed font-medium">{agentTeaserPairs[teaserIdx].answer}</p>
+                </div>
+              </div>
+            )}
 
             <button
               onClick={() => navigate("/copilot")}
-              className="mt-3 self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
+              className={`mt-auto self-start inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-all ${teaserPhase === "result" ? "opacity-100 animate-pulse" : "opacity-60"}`}
             >
               Try R8 Agent
               <ArrowRight className="w-3 h-3" />
