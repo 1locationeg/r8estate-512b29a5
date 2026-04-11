@@ -1,46 +1,55 @@
 
 
-## Plan: Embed Search Bar + Storytelling Agent Card in Research Station
+## Plan: Transform Agent Teaser into Interactive Task-Processing Experience
 
-### What we're building
+### What changes
 
-Replace the plain `HeroSearchBar` in the Research expanded section with a richer, storytelling-driven experience that matches the Research navy theme. The search bar stays but gets wrapped in a branded context card with:
+Replace the current static agent teaser (lines 489-514 in `HeroTrustShowcase.tsx`) with a multi-phase "agent working" simulation that makes users feel like the agent is actively doing work for them — task submission, processing steps with a progress bar, and a result reveal.
 
-1. **A storytelling header** — rotating micro-stories (real buyer outcomes) that cycle every 5s, styled in navy
-2. **The existing HeroSearchBar** — embedded as-is (already has AI agent, compare, voice search)
-3. **A value proposition strip** — 3 small stat/benefit pills ("Saved EGP 1.2M", "47 verified reviews", "3 risks flagged") that rotate with the stories
-4. **A social proof footer** — "2,847 buyers used R8 Agent this week" + a "Share your experience" micro-CTA
+### New Agent Teaser Flow (5 phases, ~8s total per question)
 
-### Visual Design
+```text
+Phase 1 (1.5s): Question types in with cursor
+Phase 2 (0.3s): "Processing your request..." label appears
+Phase 3 (3s):   4 tool steps animate sequentially with progress bar filling
+                 → "Scanning 1,247 reviews..." 
+                 → "Cross-checking developer records..."
+                 → "Analyzing delivery timelines..."
+                 → "Computing trust score..."
+Phase 4 (0.5s): Result fades in (the existing answer text)
+Phase 5 (2s):   Hold result, then advance to next question or return to reviews
+```
 
-- Outer wrapper: `bg-gradient-to-br from-journey-research/8 to-transparent border border-journey-research/15 rounded-2xl` with subtle navy glassmorphism
-- Story text: `text-[11px] italic text-foreground/80` with fade transition between stories
-- Value pills: small rounded badges in navy tones
-- Social proof: `text-[10px] text-muted-foreground` centered
+### Visual Details
+
+- **Progress bar**: Thin bar at the bottom of the card using `journey-research` navy color, animating from 0% to 100% across the 4 steps
+- **Tool steps**: Each step shows a small check icon when complete, a spinning loader when active, and is dimmed when pending — reuses the `ToolExecutionSteps` pattern from the copilot dashboard
+- **Result reveal**: Answer slides up with a subtle scale-in, prefixed with a green checkmark
+- **CTA**: "Try R8 Agent →" button pulses gently after result appears
 
 ### File Changes
 
-**`src/components/JourneyScrollSections.tsx`**
-- In the `research` expanded content block (lines 141-158), wrap the existing `HeroSearchBar` in a new storytelling container:
-  - Add `storyIndex` state with `useEffect` cycling every 5s through 3 stories
-  - Before the search bar: rotating story snippet with fade animation
-  - After the search bar + stats: value pills that correspond to the active story
-  - Below everything: social proof line + share CTA
-- All text uses i18n keys for EN/AR
+**`src/components/HeroTrustShowcase.tsx`**
+- Add new state: `teaserPhase` (`typing` | `processing` | `result`), `teaserStep` (0-3), `teaserProgress` (0-100)
+- Replace the agent teaser block (lines 489-514) with the new multi-phase UI:
+  - Phase "typing": existing typewriter effect (keep as-is)
+  - Phase "processing": when typing finishes, transition to processing instead of showing answer directly
+  - 4 processing steps with labels, each taking ~750ms, progress bar advancing 25% per step
+  - Phase "result": answer text with checkmark, CTA button with gentle pulse
+- Update the typing effect `useEffect` (lines 244-260) to set `teaserPhase = "processing"` instead of `setTeaserShowAnswer(true)`
+- Add a new `useEffect` for the processing steps that advances `teaserStep` every 750ms and sets `teaserPhase = "result"` when done
+- Update the cycle effect (lines 262-277) to trigger on `teaserPhase === "result"` instead of `teaserShowAnswer`
 
-**`src/i18n/locales/en.json`** — Add keys under `journeyScroll.research`:
-- `agentStory1`: "Ahmed searched 'SODIC reviews' — R8 Agent flagged hidden complaints → Saved EGP 1.5M"
-- `agentStory2`: "Sara asked 'Is Mountain View reliable?' — 47 verified reviews pulled in seconds"
-- `agentStory3`: "Omar compared 3 developers — Agent revealed one had 40% delayed projects"
-- `agentValue1`: "Saved EGP 1.5M"
-- `agentValue2`: "47 verified reviews"
-- `agentValue3`: "3 risks flagged"
-- `agentProof`: "2,847 buyers used R8 Agent this week"
-- `agentShare`: "Tell a friend about R8"
+- Add processing step labels array:
+  ```
+  ["Scanning 1,247 reviews...", "Cross-checking developer records...", "Analyzing delivery timelines...", "Computing trust score..."]
+  ```
 
-**`src/i18n/locales/ar.json`** — Arabic equivalents for all above keys
+- Import `Loader2, CheckCircle2` from lucide-react, `Progress` from ui/progress
+
+**No i18n changes needed** — the processing step labels are short technical-feeling strings that work in both languages contextually (they appear briefly during animation).
 
 ### Result
 
-The search bar feels native to the Research station — same navy palette, same trust language. Users see real outcomes before they even type, making the tools feel indispensable. The storytelling creates emotional connection and word-of-mouth motivation.
+The agent teaser transforms from a simple Q&A into a mini "agent at work" demo — users see it scanning, analyzing, and computing before delivering a result. This creates the feeling of a powerful tool doing real work, motivating clicks to "Try R8 Agent".
 
