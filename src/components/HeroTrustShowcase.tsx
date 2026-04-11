@@ -144,13 +144,20 @@ export const HeroTrustShowcase = () => {
   const [teaserStep, setTeaserStep] = useState(0);
   const [teaserProgress, setTeaserProgress] = useState(0);
   const animRef = useRef<number | null>(null);
-  const cycleIdxRef = useRef(1);
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runEntranceRef = useRef<(() => void) | null>(null);
-  const cycleCountRef = useRef(0);
-  const agentShownRef = useRef(false);
+  const seqIdxRef = useRef(0);
   const entranceTarget = 88;
+
+  // Sequence: agent-result → review → review → agent-full → review → loop
+  const SHOWCASE_SEQUENCE = [
+    { type: "agent-result" as const, agentIdx: 0 },
+    { type: "review" as const, reviewIdx: 0 },
+    { type: "review" as const, reviewIdx: 1 },
+    { type: "agent-full" as const, agentIdx: 1 },
+    { type: "review" as const, reviewIdx: 2 },
+  ];
 
   // ── Auto-cycle logic ──
   const startCycling = useCallback(() => {
