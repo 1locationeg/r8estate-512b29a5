@@ -1425,7 +1425,15 @@
       "bullet4": "Compare developers side-by-side",
       "cta": "Start Researching →",
       "hook": "Search developers & projects",
-      "searchPlaceholder": "Search developers, projects..."
+      "searchPlaceholder": "Search developers, projects...",
+      "agentStory1": "Ahmed searched 'SODIC reviews' — R8 Agent flagged hidden complaints → Saved EGP 1.5M",
+      "agentStory2": "Sara asked 'Is Mountain View reliable?' — 47 verified reviews pulled in seconds",
+      "agentStory3": "Omar compared 3 developers — Agent revealed one had 40% delayed projects",
+      "agentValue1": "Saved EGP 1.5M",
+      "agentValue2": "47 verified reviews",
+      "agentValue3": "3 risks flagged",
+      "agentProof": "2,847 buyers used R8 Agent this week",
+      "agentShare": "Tell a friend about R8"
     },
     "choose": {
       "title": "CHOOSE",

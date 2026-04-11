@@ -140,21 +140,13 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
 
   if (stationKey === "research") {
     return (
-      <div className="space-y-3">
-        <HeroSearchBar
-          onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
-          onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
-        />
-        <div className="flex items-center justify-center gap-4 py-2">
-          <div className="text-center"><span className="text-lg font-black text-foreground">18</span><p className="text-[10px] text-muted-foreground">{isRTL ? "فئة" : "Categories"}</p></div>
-          <div className="w-px h-8 bg-border" />
-          <div className="text-center"><span className="text-lg font-black text-foreground">70+</span><p className="text-[10px] text-muted-foreground">{isRTL ? "شركة مقيّمة" : "Businesses Rated"}</p></div>
-          <div className="w-px h-8 bg-border" />
-          <div className="text-center"><span className="text-lg font-black text-foreground">7</span><p className="text-[10px] text-muted-foreground">{isRTL ? "مطور" : "Developers"}</p></div>
-        </div>
-        {sectionTitle("Research Categories", "فئات البحث")}
-        <BrowseCategoriesGrid stationFilter="research" />
-      </div>
+      <ResearchStorySection
+        onCollapse={onCollapse}
+        navigate={navigate}
+        isRTL={isRTL}
+        t={t}
+        sectionTitle={sectionTitle}
+      />
     );
   }
 
