@@ -123,10 +123,98 @@ const StationTrustBlock = ({ stationKey }: { stationKey: string }) => {
   );
 };
 
+/* ─── Research Story Section ─── */
+const STORIES = [1, 2, 3] as const;
+
+const ResearchStorySection = ({
+  onCollapse,
+  navigate,
+  isRTL,
+  t,
+  sectionTitle,
+}: {
+  onCollapse: () => void;
+  navigate: ReturnType<typeof useNavigate>;
+  isRTL: boolean;
+  t: (key: string) => string;
+  sectionTitle: (en: string, ar: string) => React.ReactNode;
+}) => {
+  const [storyIndex, setStoryIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => setStoryIndex((s) => (s + 1) % 3), 5000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const activeStory = STORIES[storyIndex];
+
+  return (
+    <div className="space-y-3">
+      {/* Storytelling wrapper */}
+      <div className="relative rounded-2xl border border-journey-research/15 bg-gradient-to-br from-journey-research/8 to-transparent p-4 space-y-3 overflow-hidden">
+        {/* Rotating story */}
+        <div className="flex items-start gap-2">
+          <Sparkles className="w-3.5 h-3.5 text-journey-research shrink-0 mt-0.5 animate-pulse" />
+          <p
+            key={storyIndex}
+            className="text-[11px] italic text-foreground/80 leading-relaxed animate-fade-in"
+          >
+            {t(`journeyScroll.research.agentStory${activeStory}`)}
+          </p>
+        </div>
+
+        {/* Search bar */}
+        <HeroSearchBar
+          onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
+          onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
+        />
+
+        {/* Stats row */}
+        <div className="flex items-center justify-center gap-4 py-1">
+          <div className="text-center"><span className="text-lg font-black text-foreground">18</span><p className="text-[10px] text-muted-foreground">{isRTL ? "فئة" : "Categories"}</p></div>
+          <div className="w-px h-8 bg-border" />
+          <div className="text-center"><span className="text-lg font-black text-foreground">70+</span><p className="text-[10px] text-muted-foreground">{isRTL ? "شركة مقيّمة" : "Businesses Rated"}</p></div>
+          <div className="w-px h-8 bg-border" />
+          <div className="text-center"><span className="text-lg font-black text-foreground">7</span><p className="text-[10px] text-muted-foreground">{isRTL ? "مطور" : "Developers"}</p></div>
+        </div>
+
+        {/* Value pill */}
+        <div className="flex items-center justify-center">
+          <span
+            key={`val-${storyIndex}`}
+            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-journey-research/10 border border-journey-research/20 text-[10px] font-semibold text-journey-research animate-fade-in"
+          >
+            <BarChart3 className="w-3 h-3" />
+            {t(`journeyScroll.research.agentValue${activeStory}`)}
+          </span>
+        </div>
+
+        {/* Social proof + share */}
+        <div className="flex flex-col items-center gap-1 pt-1">
+          <p className="text-[10px] text-muted-foreground">{t("journeyScroll.research.agentProof")}</p>
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({ title: "R8ESTATE", text: t("journeyScroll.research.agentShare"), url: window.location.origin });
+              }
+            }}
+            className="text-[9px] font-medium text-journey-research hover:underline transition-all"
+          >
+            {t("journeyScroll.research.agentShare")} →
+          </button>
+        </div>
+      </div>
+
+      {sectionTitle("Research Categories", "فئات البحث")}
+      <BrowseCategoriesGrid stationFilter="research" />
+    </div>
+  );
+};
+
 /* ─── Expanded Content per Station ─── */
 const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string; onCollapse: () => void }) => {
   const navigate = useNavigate();
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   const fallback = (
     <div className="flex items-center justify-center py-12">
