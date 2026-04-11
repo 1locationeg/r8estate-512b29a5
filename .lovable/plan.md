@@ -1,35 +1,26 @@
 
 
-## Plan: Declutter Hero CTAs — Minimal, Clean, Powerful
+## Plan: Add subtle AI agent hint below CTAs
 
-### Problem
-At 390px viewport, the hero area feels crowded with the tagline, two dense CTA buttons (icon + title + subtitle), and the search bar stacked tightly together.
+Add a small, understated text link right after the two CTA buttons (line ~267) that says something like "or ask our AI agent →" which opens the TrustInsightsModal (already used in HeroSearchBar).
 
-### Solution
-Strip the CTAs down to their essence — remove the subtitle text, keep only the icon + bold label, reduce padding, and use pill-shaped compact buttons instead of card-like blocks. The powerful words ("See Real Owners", "Protect Your Money") stay intact.
+### Changes
 
-### Changes in `src/pages/Index.tsx` (lines 248-269)
+**`src/pages/Index.tsx`**
+- After the closing `</div>` of the Hero Power CTAs (line 267), add a subtle text button:
+  - Styled as `text-[10px] text-muted-foreground` with a sparkle icon (`Sparkles` from lucide-react, ~10px)
+  - Text: "or ask R8 Agent →" (with i18n keys for EN/AR)
+  - On click: opens the TrustInsightsModal (reuse the existing `showInsights` state already in HeroSearchBar, or add a local state + modal instance here)
+  - Entrance animation matching the CTAs but slightly delayed (`fadeInUp 0.6s ease-out 0.5s both`)
+- Import `Sparkles` from lucide-react and `TrustInsightsModal` (if not already imported at page level)
+- Add local state `const [showAgentHint, setShowAgentHint] = useState(false)` for the modal
 
-**Before**: Two card-like buttons with icon + title + subtitle, `py-3 px-3 rounded-xl`
-**After**: Two slim pill buttons with icon + label only, `py-2 px-4 rounded-full`, smaller gap
+**`src/i18n/locales/en.json`**
+- Add `"hero.askAgent": "or ask R8 Agent"`
 
-```text
-Before:
-  [👥 See Real Owners          ] [🛡 Protect Your Money        ]
-       Real stories from             Don't pay millions
-       real buyers                   before you check
+**`src/i18n/locales/ar.json`**
+- Add `"hero.askAgent": "أو اسأل وكيل R8"`
 
-After:
-  [👥 See Real Owners]  [🛡 Protect Your Money]
-```
-
-- Remove subtitle `<span>` elements (the sub-copy)
-- Change `rounded-xl` → `rounded-full` for pill shape
-- Reduce `py-3 px-3` → `py-2 px-4`
-- Remove nested `<div>` wrapper, keep just icon + single `<span>`
-- Reduce `mt-4` → `mt-3` on the container
-- Keep the same hover effects and navigation behavior
-
-### Files Modified
-- `src/pages/Index.tsx` — simplify CTA button markup and styling
+### Result
+A non-intrusive, secondary text link beneath the two main CTAs — no third button, no visual weight, just a gentle discovery path to the AI agent.
 
