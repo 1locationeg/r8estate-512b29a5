@@ -630,8 +630,8 @@ export const HeroTrustShowcase = () => {
                   <p className="text-[11px] text-muted-foreground mt-1.5">{pair.proof}</p>
                 </div>
               );
-            })()
-            )}
+            })()}
+
 
             <button
               onClick={() => navigate("/copilot")}
