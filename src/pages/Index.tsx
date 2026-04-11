@@ -285,16 +285,24 @@ const Index = () => { // hero-phase-v2
                     {showStars ? (
                       <>
                         <span className="inline-flex items-center gap-1 align-middle">
-                          {[1,2,3,4,5].map(i => (
-                            <Star
-                              key={i}
-                              className={`w-7 h-7 md:w-9 md:h-9 transition-all duration-300 ${
-                                i <= starCount
-                                  ? 'fill-[#00b67a] text-[#00b67a] scale-100 opacity-100'
-                                  : 'text-transparent scale-75 opacity-0'
-                              }`}
-                            />
-                          ))}
+                          {[1,2,3,4,5].map(i => {
+                            const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#00b67a'];
+                            const isFilled = i <= starCount;
+                            const fillColor = isFilled
+                              ? (starCount >= 5 ? '#00b67a' : colors[starCount - 1])
+                              : undefined;
+                            return (
+                              <Star
+                                key={i}
+                                className={`w-7 h-7 md:w-9 md:h-9 transition-all duration-500 ${
+                                  isFilled
+                                    ? 'scale-110'
+                                    : 'scale-90'
+                                }`}
+                                style={isFilled ? { fill: fillColor, color: fillColor } : { fill: 'none', color: 'hsl(var(--muted-foreground) / 0.35)' }}
+                              />
+                            );
+                          })}
                         </span>
                         {" "}{t("hero.tagline_line2_post")}
                       </>
