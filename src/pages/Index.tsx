@@ -230,11 +230,12 @@ const Index = () => { // hero-phase-v2
         <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0">
           <div className="relative text-center">
              <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-[#e8f5e9]/70 backdrop-blur-sm text-[#2e7d32]">
-              <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 shrink-0" aria-label="Verified">
-                <path d="M12 1C12 1 14.5 3.5 18 3.5C18 3.5 19 10 18 14C17 18 12 22 12 22C12 22 7 18 6 14C5 10 6 3.5 6 3.5C9.5 3.5 12 1 12 1Z" fill="#6ab04c" />
-                <path d="M8.5 12.5L10.5 14.5L15.5 9.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+              <span className="pb-0 font-bold">TRUST</span>
+              <svg viewBox="0 0 20 24" fill="none" className="w-4 h-5 shrink-0" aria-label="Verified">
+                <path d="M10 0C10 0 12.5 2.5 16 2.5C16 2.5 17.5 9 16.5 13C15.5 17 10 21.5 10 21.5C10 21.5 4.5 17 3.5 13C2.5 9 4 2.5 4 2.5C7.5 2.5 10 0 10 0Z" fill="#6ab04c" />
+                <path d="M6.5 11.5L8.8 13.8L13.5 8.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="pb-0 font-bold">{t('hero.platformDescriptor')}</span>
+              <span className="pb-0 font-bold">PLATFORM</span>
             </p>
 
             <div className="mb-0 max-w-[1100px] mx-auto py-3 md:py-4">
