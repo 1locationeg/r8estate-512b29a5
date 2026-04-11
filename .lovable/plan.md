@@ -1,55 +1,41 @@
 
 
-## Plan: Upgrade Agent Teaser — Station Progress Bar + Bold Recommendations
+## Plan: Improve Agent Teaser Readability & Progress Bar
 
-### What changes
+### Changes in `src/components/HeroTrustShowcase.tsx`
 
-Two upgrades to the agent teaser in `HeroTrustShowcase.tsx`:
+**1. Shorten text — less words, bigger impact**
 
-**1. Replace linear progress bar with a 3-station milestone tracker**
+Update `agentTeaserPairs` answers to be shorter (1 line max):
+- Pair 1: `"⚠️ Wait — 3 red flags. Delivery delayed 18 months."`
+- Pair 2: `"✅ Mivida wins — 98% on-time, 4.7★ from 312 buyers."`
+- Pair 3: `"📊 Emaar leads quality by 12%. New launch next month."`
 
-Instead of a plain `<Progress>` bar, render a horizontal track with 3 station dots connected by a line. As each processing step completes, the corresponding station dot fills with color (journey-research navy → trust-excellent green on completion). The 4 processing steps map to 3 stations: step 1 = station 1 lights, step 2-3 = station 2 lights, step 4 = station 3 lights (all done).
+Shorten processing steps:
+- `"Scanning reviews..."` / `"Analyzing records..."` / `"Computing score..."`
 
-```text
-  ●────────●────────●
-  Scan    Analyze  Score
-  (navy)  (navy)   (green=done)
-```
+**2. Increase font sizes for mobile readability**
 
-Each station: a 10px circle, connected by a 2px line. Inactive = `border-muted-foreground/30`, active = `bg-journey-research`, completed = `bg-trust-excellent` with a mini checkmark inside. A small label below each dot.
+- Question text: `text-sm` → `text-base`
+- Result answer: `text-sm md:text-base` → `text-base md:text-lg`
+- Processing step labels: `text-[11px]` → `text-xs`
+- Station labels: `text-[9px]` → `text-[11px]`
 
-**2. Replace short answers with bold, actionable recommendations**
+**3. Slow down timing — give users time to read**
 
-Update `agentTeaserPairs` with longer, clear recommendation text styled prominently:
+- Typing speed: `25ms` → `40ms` per character
+- Processing step interval: `750ms` → `1200ms`
+- Result hold time: `2500ms` → `4000ms`
+- Post-processing delay before result: `400ms` → `600ms`
 
-- Pair 1: `"⚠️ I recommend you wait — 3 red flags detected. Delivery delayed 18 months. Check Mountain View instead, 94% on-time."`
-- Pair 2: `"✅ I recommend Mivida — tops New Cairo with 98% on-time delivery and 4.7★ average from 312 verified buyers."`
-- Pair 3: `"📊 Emaar leads by 12% in finishing quality. But wait — a new launch is expected next month with better pricing."`
+**4. Bold, colorful milestone tracker**
 
-The result text renders at `text-sm md:text-base font-bold` with a colored left border (green for positive, amber for caution, red for warning) to make the recommendation visually dominant in the card.
-
-### File Changes
-
-**`src/components/HeroTrustShowcase.tsx`**
-
-1. Update `agentTeaserPairs` (lines 106-110) with new longer recommendation texts and add a `type` field (`"warning" | "positive" | "insight"`) for color coding.
-
-2. Replace the processing steps UI (lines 538-561) — remove `<Progress>` bar, replace with a 3-station milestone tracker:
-   - 3 inline dots with connecting lines
-   - Labels: "Scanning", "Analyzing", "Computing"
-   - Color transitions as `teaserStep` advances
-   - Keep the existing step list above with checkmarks (but reduce to 3 steps to match stations)
-
-3. Update `agentProcessingSteps` (lines 112-117) — reduce to 3 items matching the station labels:
-   - "Scanning 1,247 reviews..."
-   - "Analyzing developer records..."  
-   - "Computing trust score..."
-   - Update step interval logic: `step * 33` instead of `step * 25`, threshold check for 3 steps
-
-4. Update result phase UI (lines 564-571):
-   - Recommendation text: `text-sm md:text-base font-bold leading-snug`
-   - Add a colored left-border strip: `border-l-3` with color based on pair type
-   - Pad the recommendation block: `pl-3 py-1`
-
-5. Adjust processing `useEffect` (lines 276-293): change `step * 25` → `step * 33`, threshold from `agentProcessingSteps.length` (now 3).
+- Station dots: `w-[10px] h-[10px]` → `w-4 h-4`
+- Connecting line: `h-[2px]` → `h-[3px]`
+- Each station gets a distinct color when active:
+  - Station 1 (Scan): `bg-blue-500`
+  - Station 2 (Analyze): `bg-amber-500`
+  - Station 3 (Score): `bg-trust-excellent` (green)
+- Active fill line transitions through matching gradient colors
+- Done checkmarks inside dots: `w-2 h-2` → `w-3 h-3`
 
