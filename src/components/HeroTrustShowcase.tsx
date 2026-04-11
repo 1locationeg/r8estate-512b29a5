@@ -109,6 +109,13 @@ const agentTeaserPairs = [
   { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads in finishing quality by 12%" },
 ];
 
+const agentProcessingSteps = [
+  "Scanning 1,247 reviews...",
+  "Cross-checking developer records...",
+  "Analyzing delivery timelines...",
+  "Computing trust score...",
+];
+
 // ── Component ──
 export const HeroTrustShowcase = () => {
   const { t } = useTranslation();
