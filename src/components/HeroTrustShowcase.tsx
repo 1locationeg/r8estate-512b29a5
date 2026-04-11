@@ -262,7 +262,7 @@ export const HeroTrustShowcase = () => {
     runEntrance();
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
-      if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
+      if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
       if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     };
   }, [runEntrance]);
