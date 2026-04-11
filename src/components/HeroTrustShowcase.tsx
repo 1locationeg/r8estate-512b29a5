@@ -130,7 +130,7 @@ export const HeroTrustShowcase = () => {
   const [cardPhase, setCardPhase] = useState<"reviews" | "agent">("reviews");
   const [teaserIdx, setTeaserIdx] = useState(0);
   const [teaserTypedChars, setTeaserTypedChars] = useState(0);
-  const [teaserShowAnswer, setTeaserShowAnswer] = useState(false);
+  
   const [teaserPhase, setTeaserPhase] = useState<"typing" | "processing" | "result">("typing");
   const [teaserStep, setTeaserStep] = useState(0);
   const [teaserProgress, setTeaserProgress] = useState(0);
