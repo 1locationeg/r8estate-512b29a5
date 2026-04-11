@@ -103,18 +103,19 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
 };
 
 // ── Agent teaser data ──
-const agentTeaserPairs = [
-  { question: "Is Ora Developers safe?", answer: "⚠️ 3 red flags found — 18mo delivery delay" },
-  { question: "Best compounds in New Cairo?", answer: "✅ Mivida tops with 98% on-time delivery" },
-  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads in finishing quality by 12%" },
+const agentTeaserPairs: { question: string; answer: string; type: "warning" | "positive" | "insight" }[] = [
+  { question: "Is Ora Developers safe?", answer: "⚠️ I recommend you wait — 3 red flags detected. Delivery delayed 18 months. Check Mountain View instead, 94% on-time.", type: "warning" },
+  { question: "Best compounds in New Cairo?", answer: "✅ I recommend Mivida — tops New Cairo with 98% on-time delivery and 4.7★ average from 312 verified buyers.", type: "positive" },
+  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads by 12% in finishing quality. But wait — a new launch is expected next month with better pricing.", type: "insight" },
 ];
 
 const agentProcessingSteps = [
   "Scanning 1,247 reviews...",
-  "Cross-checking developer records...",
-  "Analyzing delivery timelines...",
+  "Analyzing developer records...",
   "Computing trust score...",
 ];
+
+const agentStationLabels = ["Scan", "Analyze", "Score"];
 
 // ── Component ──
 export const HeroTrustShowcase = () => {
@@ -281,7 +282,7 @@ export const HeroTrustShowcase = () => {
     const stepInterval = setInterval(() => {
       step++;
       setTeaserStep(step);
-      setTeaserProgress(step * 25);
+      setTeaserProgress(Math.round(step * 33.33));
       if (step >= agentProcessingSteps.length) {
         clearInterval(stepInterval);
         setTimeout(() => {
@@ -537,7 +538,7 @@ export const HeroTrustShowcase = () => {
 
             {/* Processing phase */}
             {teaserPhase === "processing" && (
-              <div className="space-y-1.5 mb-2 animate-fade-in">
+              <div className="space-y-2 mb-2 animate-fade-in">
                 <p className="text-[10px] font-semibold text-primary/80 uppercase tracking-wider mb-1">Processing your request…</p>
                 {agentProcessingSteps.map((step, i) => {
                   const isDone = i < teaserStep;
@@ -557,16 +558,52 @@ export const HeroTrustShowcase = () => {
                     </div>
                   );
                 })}
-                <Progress value={teaserProgress} className="h-1 mt-2 bg-secondary" />
+                {/* 3-Station Milestone Tracker */}
+                <div className="relative flex items-center justify-between mt-3 px-1">
+                  {/* Connecting line */}
+                  <div className="absolute top-[5px] left-[5px] right-[5px] h-[2px] bg-muted-foreground/20 z-0" />
+                  <div
+                    className="absolute top-[5px] left-[5px] h-[2px] bg-journey-research transition-all duration-500 z-[1]"
+                    style={{ width: `${Math.min(teaserStep / (agentProcessingSteps.length) * 100, 100)}%` }}
+                  />
+                  {agentStationLabels.map((label, idx) => {
+                    const stationDone = teaserStep > idx;
+                    const stationActive = teaserStep === idx;
+                    const allDone = teaserStep >= agentProcessingSteps.length;
+                    return (
+                      <div key={idx} className="flex flex-col items-center z-[2]">
+                        <div className={`w-[10px] h-[10px] rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
+                          allDone && idx === agentStationLabels.length - 1
+                            ? "bg-trust-excellent border-trust-excellent"
+                            : stationDone
+                              ? "bg-journey-research border-journey-research"
+                              : stationActive
+                                ? "bg-journey-research/50 border-journey-research"
+                                : "bg-background border-muted-foreground/30"
+                        }`}>
+                          {stationDone && <CheckCircle2 className="w-2 h-2 text-white" />}
+                        </div>
+                        <span className={`text-[9px] mt-1 font-medium ${stationDone || stationActive ? "text-foreground" : "text-muted-foreground/50"}`}>
+                          {label}
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
 
             {/* Result phase */}
             {teaserPhase === "result" && (
               <div className="animate-fade-in">
-                <div className="flex items-start gap-1.5 mb-2">
-                  <CheckCircle2 className="w-4 h-4 text-trust-excellent shrink-0 mt-0.5" />
-                  <p className="text-xs md:text-sm text-foreground leading-relaxed font-medium">{agentTeaserPairs[teaserIdx].answer}</p>
+                <div className={`border-l-[3px] pl-3 py-1 mb-2 ${
+                  agentTeaserPairs[teaserIdx].type === "warning"
+                    ? "border-destructive"
+                    : agentTeaserPairs[teaserIdx].type === "positive"
+                      ? "border-trust-excellent"
+                      : "border-amber-500"
+                }`}>
+                  <p className="text-sm md:text-base font-bold text-foreground leading-snug">{agentTeaserPairs[teaserIdx].answer}</p>
                 </div>
               </div>
             )}
