@@ -14,6 +14,7 @@ import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
 import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { JourneyStripe } from "./components/JourneyStripe";
+import { LiveMarketPulse } from "./components/LiveMarketPulse";
 import { SideJourneyRail } from "./components/SideJourneyRail";
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
