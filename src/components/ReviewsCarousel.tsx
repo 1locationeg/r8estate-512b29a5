@@ -318,7 +318,7 @@ export function ReviewsCarousel() {
             {renderStars(5)}
             <span className="text-sm font-bold text-foreground">5.0</span>
             <span className="text-xs text-muted-foreground">
-              ({TESTIMONIALS.length} {isRTL ? "تقييم" : "reviews"})
+              ( 98 {isRTL ? "تقييم" : "reviews"})
             </span>
           </div>
           <BrandLogo size="hero" tagline="" />
