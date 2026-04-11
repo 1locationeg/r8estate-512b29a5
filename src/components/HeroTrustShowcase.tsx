@@ -104,18 +104,19 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
 
 // ── Agent teaser data ──
 const agentTeaserPairs: { question: string; answer: string; type: "warning" | "positive" | "insight" }[] = [
-  { question: "Is Ora Developers safe?", answer: "⚠️ I recommend you wait — 3 red flags detected. Delivery delayed 18 months. Check Mountain View instead, 94% on-time.", type: "warning" },
-  { question: "Best compounds in New Cairo?", answer: "✅ I recommend Mivida — tops New Cairo with 98% on-time delivery and 4.7★ average from 312 verified buyers.", type: "positive" },
-  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads by 12% in finishing quality. But wait — a new launch is expected next month with better pricing.", type: "insight" },
+  { question: "Is Ora Developers safe?", answer: "⚠️ Wait — 3 red flags. Delivery delayed 18 months.", type: "warning" },
+  { question: "Best compounds in New Cairo?", answer: "✅ Mivida wins — 98% on-time, 4.7★ from 312 buyers.", type: "positive" },
+  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads quality by 12%. New launch next month.", type: "insight" },
 ];
 
 const agentProcessingSteps = [
-  "Scanning 1,247 reviews...",
-  "Analyzing developer records...",
-  "Computing trust score...",
+  "Scanning reviews...",
+  "Analyzing records...",
+  "Computing score...",
 ];
 
 const agentStationLabels = ["Scan", "Analyze", "Score"];
+const agentStationColors = ["bg-blue-500", "bg-amber-500", "bg-trust-excellent"];
 
 // ── Component ──
 export const HeroTrustShowcase = () => {
@@ -269,7 +270,7 @@ export const HeroTrustShowcase = () => {
         clearInterval(typeInterval);
         setTimeout(() => setTeaserPhase("processing"), 300);
       }
-    }, 25);
+    }, 40);
     return () => clearInterval(typeInterval);
   }, [cardPhase, teaserIdx]);
 
@@ -288,9 +289,9 @@ export const HeroTrustShowcase = () => {
         setTimeout(() => {
           setTeaserPhase("result");
           setTeaserProgress(100);
-        }, 400);
+        }, 600);
       }
-    }, 750);
+    }, 1200);
     return () => clearInterval(stepInterval);
   }, [cardPhase, teaserPhase]);
 
@@ -305,7 +306,7 @@ export const HeroTrustShowcase = () => {
         setTransitioning(false);
         startCycling();
       }
-    }, 2500);
+    }, 4000);
     return () => clearTimeout(timer);
   }, [cardPhase, teaserPhase, teaserIdx, startCycling]);
 
@@ -529,7 +530,7 @@ export const HeroTrustShowcase = () => {
             </div>
 
             {/* Question typing */}
-            <p className="text-sm md:text-base font-semibold text-foreground mb-2">
+            <p className="text-base font-semibold text-foreground mb-2">
               "{agentTeaserPairs[teaserIdx].question.slice(0, teaserTypedChars)}"
               {teaserPhase === "typing" && teaserTypedChars < agentTeaserPairs[teaserIdx].question.length && (
                 <span className="animate-pulse text-primary">|</span>
@@ -552,38 +553,43 @@ export const HeroTrustShowcase = () => {
                       ) : (
                         <div className="w-3.5 h-3.5 rounded-full border border-muted-foreground/30 shrink-0" />
                       )}
-                      <span className={`text-[11px] ${isDone ? "text-muted-foreground" : isActive ? "text-foreground font-medium" : "text-muted-foreground/50"}`}>
+                      <span className={`text-xs ${isDone ? "text-muted-foreground" : isActive ? "text-foreground font-medium" : "text-muted-foreground/50"}`}>
                         {step}
                       </span>
                     </div>
                   );
                 })}
                 {/* 3-Station Milestone Tracker */}
-                <div className="relative flex items-center justify-between mt-3 px-1">
-                  {/* Connecting line */}
-                  <div className="absolute top-[5px] left-[5px] right-[5px] h-[2px] bg-muted-foreground/20 z-0" />
+                <div className="relative flex items-center justify-between mt-3 px-2">
+                  {/* Background line */}
+                  <div className="absolute top-[8px] left-[8px] right-[8px] h-[3px] bg-muted-foreground/20 z-0 rounded-full" />
+                  {/* Active fill line */}
                   <div
-                    className="absolute top-[5px] left-[5px] h-[2px] bg-journey-research transition-all duration-500 z-[1]"
-                    style={{ width: `${Math.min(teaserStep / (agentProcessingSteps.length) * 100, 100)}%` }}
+                    className="absolute top-[8px] left-[8px] h-[3px] rounded-full transition-all duration-700 ease-out z-[1]"
+                    style={{
+                      width: `${Math.min(teaserStep / agentProcessingSteps.length * 100, 100)}%`,
+                      background: teaserStep >= 3
+                        ? "linear-gradient(90deg, #3b82f6, #f59e0b, #22c55e)"
+                        : teaserStep >= 2
+                          ? "linear-gradient(90deg, #3b82f6, #f59e0b)"
+                          : "#3b82f6",
+                    }}
                   />
                   {agentStationLabels.map((label, idx) => {
                     const stationDone = teaserStep > idx;
                     const stationActive = teaserStep === idx;
-                    const allDone = teaserStep >= agentProcessingSteps.length;
                     return (
                       <div key={idx} className="flex flex-col items-center z-[2]">
-                        <div className={`w-[10px] h-[10px] rounded-full border-2 flex items-center justify-center transition-all duration-300 ${
-                          allDone && idx === agentStationLabels.length - 1
-                            ? "bg-trust-excellent border-trust-excellent"
-                            : stationDone
-                              ? "bg-journey-research border-journey-research"
-                              : stationActive
-                                ? "bg-journey-research/50 border-journey-research"
-                                : "bg-background border-muted-foreground/30"
+                        <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-all duration-500 ${
+                          stationDone
+                            ? `${agentStationColors[idx]} border-transparent`
+                            : stationActive
+                              ? `${agentStationColors[idx]}/50 border-current`
+                              : "bg-background border-muted-foreground/30"
                         }`}>
-                          {stationDone && <CheckCircle2 className="w-2 h-2 text-white" />}
+                          {stationDone && <CheckCircle2 className="w-3 h-3 text-white" />}
                         </div>
-                        <span className={`text-[9px] mt-1 font-medium ${stationDone || stationActive ? "text-foreground" : "text-muted-foreground/50"}`}>
+                        <span className={`text-[11px] mt-1 font-semibold ${stationDone || stationActive ? "text-foreground" : "text-muted-foreground/50"}`}>
                           {label}
                         </span>
                       </div>
@@ -603,7 +609,7 @@ export const HeroTrustShowcase = () => {
                       ? "border-trust-excellent"
                       : "border-amber-500"
                 }`}>
-                  <p className="text-sm md:text-base font-bold text-foreground leading-snug">{agentTeaserPairs[teaserIdx].answer}</p>
+                  <p className="text-base md:text-lg font-bold text-foreground leading-snug">{agentTeaserPairs[teaserIdx].answer}</p>
                 </div>
               </div>
             )}
