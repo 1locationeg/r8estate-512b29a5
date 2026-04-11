@@ -103,10 +103,10 @@ const dimensionIconKeys: Record<string, typeof Clock> = {
 };
 
 // ── Agent teaser data ──
-const agentTeaserPairs: { question: string; answer: string; type: "warning" | "positive" | "insight" }[] = [
-  { question: "Is Ora Developers safe?", answer: "⚠️ Wait — 3 red flags. Delivery delayed 18 months.", type: "warning" },
-  { question: "Best compounds in New Cairo?", answer: "✅ Mivida wins — 98% on-time, 4.7★ from 312 buyers.", type: "positive" },
-  { question: "Mountain View vs Emaar?", answer: "📊 Emaar leads quality by 12%. New launch next month.", type: "insight" },
+const agentTeaserPairs: { question: string; verdict: string; rating: number; reviewerCount: number; type: "warning" | "positive" | "insight"; proof: string }[] = [
+  { question: "Is Ora Developers safe?", verdict: "Not Recommended", rating: 2.1, reviewerCount: 253, type: "warning", proof: "253 reviews flagged concerns" },
+  { question: "Best compounds in New Cairo?", verdict: "Top Pick — Mivida", rating: 4.8, reviewerCount: 312, type: "positive", proof: "Recommended by 312 verified buyers" },
+  { question: "Mountain View vs Emaar?", verdict: "Wait for Launch", rating: 4.2, reviewerCount: 187, type: "insight", proof: "187 buyers suggest waiting" },
 ];
 
 const agentProcessingSteps = [
@@ -599,19 +599,38 @@ export const HeroTrustShowcase = () => {
               </div>
             )}
 
-            {/* Result phase */}
-            {teaserPhase === "result" && (
-              <div className="animate-fade-in">
-                <div className={`border-l-[3px] pl-3 py-1 mb-2 ${
-                  agentTeaserPairs[teaserIdx].type === "warning"
-                    ? "border-destructive"
-                    : agentTeaserPairs[teaserIdx].type === "positive"
-                      ? "border-trust-excellent"
-                      : "border-amber-500"
-                }`}>
-                  <p className="text-base md:text-lg font-bold text-foreground leading-snug">{agentTeaserPairs[teaserIdx].answer}</p>
+            {/* Result phase — compact badge */}
+            {teaserPhase === "result" && (() => {
+              const pair = agentTeaserPairs[teaserIdx];
+              const bgMap = { warning: "bg-destructive/10", positive: "bg-emerald-500/10", insight: "bg-amber-500/10" };
+              const textMap = { warning: "text-destructive", positive: "text-emerald-600", insight: "text-amber-600" };
+              const avatarColors = ["#3b82f6", "#f59e0b", "#22c55e", "#a855f7", "#ef4444"];
+              const filledStars = Math.round(pair.rating);
+              return (
+                <div className={`animate-fade-in rounded-xl px-4 py-3 ${bgMap[pair.type]}`}>
+                  <p className={`text-base md:text-lg font-extrabold leading-tight ${textMap[pair.type]}`}>
+                    {pair.type === "warning" ? "⚠️" : pair.type === "positive" ? "✅" : "📊"} {pair.verdict}
+                  </p>
+                  <div className="flex items-center gap-3 mt-2">
+                    <div className="flex items-center gap-1">
+                      {[1,2,3,4,5].map(i => (
+                        <Star key={i} className="w-4 h-4" fill={i <= filledStars ? "#00b67a" : "transparent"} color={i <= filledStars ? "#00b67a" : "hsl(var(--muted-foreground))"} strokeWidth={1.5} />
+                      ))}
+                      <span className="text-sm font-bold text-foreground ml-1">{pair.rating}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <div className="flex -space-x-2">
+                        {avatarColors.slice(0, 4).map((c, i) => (
+                          <div key={i} className="w-6 h-6 rounded-full border-2 border-background" style={{ backgroundColor: c }} />
+                        ))}
+                      </div>
+                      <span className="text-xs font-semibold text-muted-foreground ml-1.5">+{pair.reviewerCount}</span>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-muted-foreground mt-1.5">{pair.proof}</p>
                 </div>
-              </div>
+              );
+            })()
             )}
 
             <button
