@@ -1,26 +1,46 @@
 
 
-## Plan: Add subtle AI agent hint below CTAs
+## Plan: Embed Search Bar + Storytelling Agent Card in Research Station
 
-Add a small, understated text link right after the two CTA buttons (line ~267) that says something like "or ask our AI agent →" which opens the TrustInsightsModal (already used in HeroSearchBar).
+### What we're building
 
-### Changes
+Replace the plain `HeroSearchBar` in the Research expanded section with a richer, storytelling-driven experience that matches the Research navy theme. The search bar stays but gets wrapped in a branded context card with:
 
-**`src/pages/Index.tsx`**
-- After the closing `</div>` of the Hero Power CTAs (line 267), add a subtle text button:
-  - Styled as `text-[10px] text-muted-foreground` with a sparkle icon (`Sparkles` from lucide-react, ~10px)
-  - Text: "or ask R8 Agent →" (with i18n keys for EN/AR)
-  - On click: opens the TrustInsightsModal (reuse the existing `showInsights` state already in HeroSearchBar, or add a local state + modal instance here)
-  - Entrance animation matching the CTAs but slightly delayed (`fadeInUp 0.6s ease-out 0.5s both`)
-- Import `Sparkles` from lucide-react and `TrustInsightsModal` (if not already imported at page level)
-- Add local state `const [showAgentHint, setShowAgentHint] = useState(false)` for the modal
+1. **A storytelling header** — rotating micro-stories (real buyer outcomes) that cycle every 5s, styled in navy
+2. **The existing HeroSearchBar** — embedded as-is (already has AI agent, compare, voice search)
+3. **A value proposition strip** — 3 small stat/benefit pills ("Saved EGP 1.2M", "47 verified reviews", "3 risks flagged") that rotate with the stories
+4. **A social proof footer** — "2,847 buyers used R8 Agent this week" + a "Share your experience" micro-CTA
 
-**`src/i18n/locales/en.json`**
-- Add `"hero.askAgent": "or ask R8 Agent"`
+### Visual Design
 
-**`src/i18n/locales/ar.json`**
-- Add `"hero.askAgent": "أو اسأل وكيل R8"`
+- Outer wrapper: `bg-gradient-to-br from-journey-research/8 to-transparent border border-journey-research/15 rounded-2xl` with subtle navy glassmorphism
+- Story text: `text-[11px] italic text-foreground/80` with fade transition between stories
+- Value pills: small rounded badges in navy tones
+- Social proof: `text-[10px] text-muted-foreground` centered
+
+### File Changes
+
+**`src/components/JourneyScrollSections.tsx`**
+- In the `research` expanded content block (lines 141-158), wrap the existing `HeroSearchBar` in a new storytelling container:
+  - Add `storyIndex` state with `useEffect` cycling every 5s through 3 stories
+  - Before the search bar: rotating story snippet with fade animation
+  - After the search bar + stats: value pills that correspond to the active story
+  - Below everything: social proof line + share CTA
+- All text uses i18n keys for EN/AR
+
+**`src/i18n/locales/en.json`** — Add keys under `journeyScroll.research`:
+- `agentStory1`: "Ahmed searched 'SODIC reviews' — R8 Agent flagged hidden complaints → Saved EGP 1.5M"
+- `agentStory2`: "Sara asked 'Is Mountain View reliable?' — 47 verified reviews pulled in seconds"
+- `agentStory3`: "Omar compared 3 developers — Agent revealed one had 40% delayed projects"
+- `agentValue1`: "Saved EGP 1.5M"
+- `agentValue2`: "47 verified reviews"
+- `agentValue3`: "3 risks flagged"
+- `agentProof`: "2,847 buyers used R8 Agent this week"
+- `agentShare`: "Tell a friend about R8"
+
+**`src/i18n/locales/ar.json`** — Arabic equivalents for all above keys
 
 ### Result
-A non-intrusive, secondary text link beneath the two main CTAs — no third button, no visual weight, just a gentle discovery path to the AI agent.
+
+The search bar feels native to the Research station — same navy palette, same trust language. Users see real outcomes before they even type, making the tools feel indispensable. The storytelling creates emotional connection and word-of-mouth motivation.
 
