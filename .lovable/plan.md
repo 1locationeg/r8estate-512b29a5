@@ -1,57 +1,36 @@
 
 
-## Plan: Cycle "Reviews" Word with Star Rating Animation
+## Plan: Progressive Star Fill with Color Gradient (Red → Yellow → Green)
 
-### Behavior
-The hero tagline line 2 normally shows **"Reviews are the KEYS"** (or Arabic equivalent). Periodically, the word "Reviews" swaps out for an animated star sequence (1★→2★→3★→4★→5★), then swaps back to "Reviews". The cycle repeats indefinitely.
+### Current Behavior
+Stars appear one by one in solid green (`#00b67a`), invisible stars are transparent.
 
-**Timing:**
-- Show "Reviews" text: **6 seconds**
-- Show stars phase: stars animate 1→5 over ~3 seconds (600ms per star), hold 5★ for 1s, then swap back
-- Total cycle: ~10s
+### New Behavior
+1. **Start**: Show all 5 stars with grey borders (empty, unfilled) — like the uploaded reference image but hollow
+2. **Fill progressively** (600ms each): Each star fills with a color based on the cumulative rating:
+   - Star 1 (rating 1): **Red** (`#e74c3c`)
+   - Star 2 (rating 2): **Orange** (`#e67e22`)
+   - Star 3 (rating 3): **Yellow/Amber** (`#f1c40f`)
+   - Star 4 (rating 4): **Light Green** (`#2ecc71`)
+   - Star 5 (rating 5): **Green** (`#00b67a`) — all 5 stars become green
+3. **On reaching 5 stars**: All filled stars transition to green (`#00b67a`) to match the uploaded reference
+4. **Hold** 1s at full green, then swap back to "Reviews" text for 6s
 
-### Changes
+### Changes — `src/pages/Index.tsx` only
 
-**1. `src/pages/Index.tsx` (lines 248-250)**
-
-Add local state and effect to manage the swap:
-
-```tsx
-const [showStars, setShowStars] = useState(false);
-const [starCount, setStarCount] = useState(0);
-
-useEffect(() => {
-  // Show "Reviews" for 6s, then switch to stars
-  // Stars: increment 1→5 every 600ms, hold 1s, then back to text
-  // Loop forever
-}, []);
-```
-
-Replace the static `{t("hero.tagline_line2")}` with:
+**Star color logic** (lines 287-297): Replace the single green color with a gradient function:
 
 ```tsx
-<p className="... hero-keys-shimmer mt-1">
-  {showStars ? (
-    <>
-      <span className="inline-flex items-center gap-1">
-        {[1,2,3,4,5].map(i => (
-          <Star key={i} className={`w-7 h-7 md:w-9 md:h-9 transition-all duration-300
-            ${i <= starCount ? 'fill-[#00b67a] text-[#00b67a] scale-100' : 'text-transparent scale-75'}`} />
-        ))}
-      </span>
-      {" "}{t("hero.tagline_line2_post")}
-    </>
-  ) : (
-    t("hero.tagline_line2")
-  )}
-</p>
+const getStarFillColor = (starIndex: number, totalFilled: number) => {
+  if (starIndex > totalFilled) return null; // unfilled
+  if (totalFilled >= 5) return '#00b67a'; // all green at 5
+  const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71', '#00b67a'];
+  return colors[totalFilled - 1]; // color based on current count
+};
 ```
 
-**2. `src/i18n/locales/en.json`** — Add: `"tagline_line2_post": "are the KEYS"`
+**Rendering**: Unfilled stars show with `text-muted-foreground/40` (grey border, no fill). Filled stars use the dynamic color for both `fill` and `text`. When `starCount` reaches 5, all stars smoothly transition to green.
 
-**3. `src/i18n/locales/ar.json`** — Add: `"tagline_line2_post": "هي المفاتيح"`
-
-### Single file scope
-- `src/pages/Index.tsx` — ~25 lines added
-- `en.json` / `ar.json` — 1 key each
+### Scope
+- `src/pages/Index.tsx` — ~10 lines changed in the star rendering block
 
