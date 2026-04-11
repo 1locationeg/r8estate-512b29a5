@@ -229,10 +229,10 @@ const Index = () => { // hero-phase-v2
         {/* Hero Card */}
         <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0">
           <div className="relative text-center">
-            <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm text-muted-foreground font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-muted/50 backdrop-blur-sm">
+             <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-[#e8f5e9]/70 backdrop-blur-sm text-[#2e7d32]">
               <svg viewBox="0 0 22 22" fill="none" className="w-4 h-4 shrink-0" aria-label="Verified">
-                <circle cx="11" cy="11" r="11" fill="hsl(var(--primary))" />
-                <path d="M6.5 11.5L9.5 14.5L15.5 8.5" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <circle cx="11" cy="11" r="11" fill="#2e7d32" />
+                <path d="M6.5 11.5L9.5 14.5L15.5 8.5" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
               <span className="pb-0 font-bold">{t('hero.platformDescriptor')}</span>
             </p>
