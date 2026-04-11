@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect, useRef } from "react";
+import { useState, useMemo, useEffect, useRef, useCallback } from "react";
+import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -246,7 +247,25 @@ const Index = () => { // hero-phase-v2
                     {t("hero.tagline_line1")}
                   </p>
                   <p className="text-2xl sm:text-3xl md:text-4xl leading-tight font-black tracking-tight hero-keys-shimmer mt-1">
-                    {t("hero.tagline_line2")}
+                    {showStars ? (
+                      <>
+                        <span className="inline-flex items-center gap-1 align-middle">
+                          {[1,2,3,4,5].map(i => (
+                            <Star
+                              key={i}
+                              className={`w-7 h-7 md:w-9 md:h-9 transition-all duration-300 ${
+                                i <= starCount
+                                  ? 'fill-[#00b67a] text-[#00b67a] scale-100 opacity-100'
+                                  : 'text-transparent scale-75 opacity-0'
+                              }`}
+                            />
+                          ))}
+                        </span>
+                        {" "}{t("hero.tagline_line2_post")}
+                      </>
+                    ) : (
+                      t("hero.tagline_line2")
+                    )}
                   </p>
 
                   {/* Hero Power CTAs */}
