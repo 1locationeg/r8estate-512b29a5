@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect, useRef, useCallback } from "react";
-import { Star } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -60,6 +59,42 @@ const Index = () => { // hero-phase-v2
   const [showCompareModal, setShowCompareModal] = useState(false);
   const [showContractModal, setShowContractModal] = useState(false);
   const [showAgentHint, setShowAgentHint] = useState(false);
+  const [showStars, setShowStars] = useState(false);
+  const [starCount, setStarCount] = useState(0);
+
+  // Cycle: show "Reviews" for 6s, then animate stars 1→5 (600ms each), hold 1s, repeat
+  useEffect(() => {
+    let timeout: ReturnType<typeof setTimeout>;
+    let starInterval: ReturnType<typeof setInterval>;
+
+    const startStarPhase = () => {
+      setShowStars(true);
+      setStarCount(0);
+      let count = 0;
+      starInterval = setInterval(() => {
+        count++;
+        setStarCount(count);
+        if (count >= 5) {
+          clearInterval(starInterval);
+          // Hold 5 stars for 1s, then back to text
+          timeout = setTimeout(() => {
+            setShowStars(false);
+            setStarCount(0);
+            // Show text for 6s, then repeat
+            timeout = setTimeout(startStarPhase, 6000);
+          }, 1000);
+        }
+      }, 600);
+    };
+
+    // Initial: show text for 6s first
+    timeout = setTimeout(startStarPhase, 6000);
+
+    return () => {
+      clearTimeout(timeout);
+      clearInterval(starInterval);
+    };
+  }, []);
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
   const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
