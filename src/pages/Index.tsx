@@ -265,6 +265,20 @@ const Index = () => { // hero-phase-v2
                         <span className="text-xs font-bold whitespace-nowrap">{t("hero.ctaProtectMoney")}</span>
                       </button>
                     </div>
+
+                    {/* Subtle AI Agent hint */}
+                    <div className="flex justify-center mt-2 animate-[fadeInUp_0.6s_ease-out_0.5s_both]">
+                      <button
+                        onClick={() => setShowAgentHint(true)}
+                        className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition-colors cursor-pointer"
+                      >
+                        <Sparkles className="w-2.5 h-2.5" />
+                        <span>{t("hero.askAgent")}</span>
+                        <span>→</span>
+                      </button>
+                    </div>
+
+                    <TrustInsightsModal open={showAgentHint} onOpenChange={setShowAgentHint} />
                 </>
               ) : (
                 <>
