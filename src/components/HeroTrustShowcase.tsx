@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom";
 import { Slider } from "@/components/ui/slider";
 import { Star, BadgeCheck, RotateCcw, Building2, MapPin, Clock, Hammer, FileText, MessageCircle, Hand, Sparkles, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import egyptianAvatar1 from "@/assets/avatars/egyptian-1.jpg";
+import egyptianAvatar2 from "@/assets/avatars/egyptian-2.jpg";
+import egyptianAvatar3 from "@/assets/avatars/egyptian-3.jpg";
+import egyptianAvatar4 from "@/assets/avatars/egyptian-4.jpg";
+import egyptianAvatar5 from "@/assets/avatars/egyptian-5.jpg";
+
+const REVIEWER_AVATARS = [egyptianAvatar1, egyptianAvatar2, egyptianAvatar3, egyptianAvatar4, egyptianAvatar5];
 
 // ── Score color logic ──
 const getScoreColor = (s: number) => {
@@ -604,7 +611,6 @@ export const HeroTrustShowcase = () => {
               const pair = agentTeaserPairs[teaserIdx];
               const bgMap = { warning: "bg-destructive/10", positive: "bg-emerald-500/10", insight: "bg-amber-500/10" };
               const textMap = { warning: "text-destructive", positive: "text-emerald-600", insight: "text-amber-600" };
-              const avatarColors = ["#3b82f6", "#f59e0b", "#22c55e", "#a855f7", "#ef4444"];
               const filledStars = Math.round(pair.rating);
               return (
                 <div className={`animate-fade-in rounded-xl px-4 py-3 ${bgMap[pair.type]}`}>
@@ -620,8 +626,8 @@ export const HeroTrustShowcase = () => {
                     </div>
                     <div className="flex items-center">
                       <div className="flex -space-x-2">
-                        {avatarColors.slice(0, 4).map((c, i) => (
-                          <div key={i} className="w-6 h-6 rounded-full border-2 border-background" style={{ backgroundColor: c }} />
+                        {REVIEWER_AVATARS.slice(0, 4).map((src, i) => (
+                          <img key={i} src={src} alt="reviewer" className="w-7 h-7 rounded-full border-2 border-background object-cover" loading="lazy" />
                         ))}
                       </div>
                       <span className="text-xs font-semibold text-muted-foreground ml-1.5">+{pair.reviewerCount}</span>
