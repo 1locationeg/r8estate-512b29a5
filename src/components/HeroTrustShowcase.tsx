@@ -160,58 +160,57 @@ export const HeroTrustShowcase = () => {
   ];
 
   // ── Auto-cycle logic ──
-  const startCycling = useCallback(() => {
-    if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
-    cycleCountRef.current = 0;
-    cycleIntervalRef.current = setInterval(() => {
-      cycleIdxRef.current = (cycleIdxRef.current + 1) % scenarioDefs.length;
-      cycleCountRef.current += 1;
+  const advanceSequence = useCallback(() => {
+    const nextIdx = (seqIdxRef.current + 1) % SHOWCASE_SEQUENCE.length;
+    seqIdxRef.current = nextIdx;
+    const step = SHOWCASE_SEQUENCE[nextIdx];
 
-      // After all 3 reviews shown once, switch to agent teaser
-      if (cycleCountRef.current >= scenarioDefs.length && !agentShownRef.current) {
-        agentShownRef.current = true;
-        if (cycleIntervalRef.current) clearInterval(cycleIntervalRef.current);
-        setCardPhase("agent");
-        return;
-      }
-
-      // When wrapping back to start, just crossfade like any other transition (no replay reset)
-      const nextScore = scenarioDefs[cycleIdxRef.current].score;
+    if (step.type === "review") {
+      const nextScore = scenarioDefs[step.reviewIdx].score;
+      setCardPhase("reviews");
       setTransitioning(true);
       setTimeout(() => {
         setScore(nextScore);
-        const startVal = displayScore;
-        const startTime = performance.now();
-        const duration = 800;
-        const step = (now: number) => {
-          const elapsed = now - startTime;
-          const t = Math.min(elapsed / duration, 1);
-          const eased = 1 - Math.pow(1 - t, 3);
-          const current = Math.round(startVal + (nextScore - startVal) * eased);
-          setDisplayScore(current);
-          if (t < 1) {
-            animRef.current = requestAnimationFrame(step);
-          } else {
-            setDisplayScore(nextScore);
-          }
-        };
-        if (animRef.current) cancelAnimationFrame(animRef.current);
-        animRef.current = requestAnimationFrame(step);
+        setDisplayScore(nextScore);
         setTimeout(() => setTransitioning(false), 50);
       }, 200);
-    }, 4000);
-  }, [displayScore]);
+      // Hold review for 4s then advance
+      if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
+      cycleIntervalRef.current = setTimeout(() => advanceSequence(), 4000) as any;
+    } else if (step.type === "agent-result") {
+      // Show result badge directly (no typing/processing)
+      setTeaserIdx(step.agentIdx);
+      setCardPhase("agent");
+      setTeaserPhase("result");
+      setTeaserTypedChars(agentTeaserPairs[step.agentIdx].question.length);
+      setTeaserStep(3);
+      setTeaserProgress(100);
+      // Hold for 4s then advance
+      if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
+      cycleIntervalRef.current = setTimeout(() => advanceSequence(), 4000) as any;
+    } else if (step.type === "agent-full") {
+      // Full animation — typing → processing → result; handled by effects
+      setTeaserIdx(step.agentIdx);
+      setCardPhase("agent");
+      // Effects will drive typing → processing → result, then we advance from result effect
+    }
+  }, []);
+
+  const startCycling = useCallback(() => {
+    // Kick off the sequence from current position
+    advanceSequence();
+  }, [advanceSequence]);
 
   const pauseCycling = useCallback(() => {
     if (cycleIntervalRef.current) {
-      clearInterval(cycleIntervalRef.current);
+      clearTimeout(cycleIntervalRef.current);
       cycleIntervalRef.current = null;
     }
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     resumeTimeoutRef.current = setTimeout(() => {
-      startCycling();
+      advanceSequence();
     }, 6000);
-  }, [startCycling]);
+  }, [advanceSequence]);
 
   // ── Entrance animation ──
   const runEntrance = useCallback(() => {
