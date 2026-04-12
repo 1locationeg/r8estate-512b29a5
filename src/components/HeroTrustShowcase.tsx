@@ -144,6 +144,8 @@ export const HeroTrustShowcase = () => {
   const [teaserStep, setTeaserStep] = useState(0);
   const [teaserProgress, setTeaserProgress] = useState(0);
   const animRef = useRef<number | null>(null);
+  const idleAnimRef = useRef<number | null>(null);
+  const restingScoreRef = useRef(0);
   const cycleIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const resumeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const runEntranceRef = useRef<(() => void) | null>(null);
@@ -171,7 +173,7 @@ export const HeroTrustShowcase = () => {
       setTransitioning(true);
       setTimeout(() => {
         setScore(nextScore);
-        setDisplayScore(nextScore);
+        springAnimateTo(nextScore);
         setTimeout(() => setTransitioning(false), 50);
       }, 200);
       // Hold review for 4s then advance
@@ -320,27 +322,52 @@ export const HeroTrustShowcase = () => {
   }, [cardPhase, teaserPhase, teaserIdx, advanceSequence]);
 
 
-  const animateToScore = useCallback((target: number) => {
+  // ── Spring-based damped oscillation animation ──
+  const springAnimateTo = useCallback((target: number) => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
-    const startVal = displayScore;
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
+    const startVal = restingScoreRef.current;
     const startTime = performance.now();
-    const duration = 800;
+    const duration = 1200;
 
     const step = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - t, 3);
-      const current = Math.round(startVal + (target - startVal) * eased);
-      setDisplayScore(current);
+      // Damped sine wave: overshoots ~15%, bounces, settles
+      const progress = 1 - Math.exp(-6 * t) * Math.cos(4 * Math.PI * t);
+      const current = Math.round(startVal + (target - startVal) * progress);
+      const clamped = Math.min(Math.max(current, 0), 100);
+      setDisplayScore(clamped);
       if (t < 1) {
         animRef.current = requestAnimationFrame(step);
       } else {
         setDisplayScore(target);
+        restingScoreRef.current = target;
+        startIdleOscillation(target);
       }
     };
     animRef.current = requestAnimationFrame(step);
+  }, []);
+
+  // ── Idle micro-oscillation (±1-2 pt wobble) ──
+  const startIdleOscillation = useCallback((baseScore: number) => {
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
+    const startTime = performance.now();
+
+    const wobble = (now: number) => {
+      const elapsed = (now - startTime) / 1000;
+      const offset = Math.sin(elapsed * 0.8) * 1.5 + Math.sin(elapsed * 1.3) * 0.5;
+      const wobbled = Math.round(Math.min(Math.max(baseScore + offset, 0), 100));
+      setDisplayScore(wobbled);
+      idleAnimRef.current = requestAnimationFrame(wobble);
+    };
+    idleAnimRef.current = requestAnimationFrame(wobble);
+  }, []);
+
+  const animateToScore = useCallback((target: number) => {
+    springAnimateTo(target);
     setScore(target);
-  }, [displayScore]);
+  }, [springAnimateTo]);
 
   const handleSliderChange = (values: number[]) => {
     const val = values[0];
