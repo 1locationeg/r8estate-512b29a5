@@ -120,7 +120,7 @@ const CompareEngineShowcase = () => {
         >
           <Lock className="w-3.5 h-3.5" />
           {t("compareEngine.exportReport")}
-          <span className="ml-1 px-1.5 py-0.5 text-[10px] font-bold rounded bg-accent/20 text-accent">
+          <span className="ms-1 px-1.5 py-0.5 text-[10px] font-bold rounded bg-accent/20 text-accent">
             {t("compareEngine.proBadge")}
           </span>
         </Button>

@@ -5,6 +5,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { BusinessLogoProvider } from "@/contexts/BusinessLogoContext";
 import { BusinessProfileProvider } from "@/contexts/BusinessProfileContext";
@@ -133,6 +134,7 @@ const ScrollToTop = () => {
 
 const AppContent = () => {
   const isEmbed = useIsEmbedRoute();
+  const { i18n } = useTranslation();
 
   const isReviewRoute = location.pathname === "/review" || location.pathname.startsWith("/review/");
   const isGoRoute = location.pathname.startsWith("/go/");
@@ -152,7 +154,7 @@ const AppContent = () => {
   }
 
   return (
-    <>
+    <div dir={i18n.dir()}>
       <LiveMarketPulse />
       <ScrollToTop />
       <JourneyStripe />
@@ -204,7 +206,7 @@ const AppContent = () => {
       <PWAInstallBanner />
       <FloatingChatFAB />
       <CookieConsentBanner />
-    </>
+    </div>
   );
 };
 
