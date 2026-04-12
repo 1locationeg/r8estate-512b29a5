@@ -20,7 +20,7 @@ export function PricingTeaser() {
         <span className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground">
           {t("pricingTeaser.label")}
         </span>
-        <Badge className="bg-emerald-500/15 text-emerald-600 border-emerald-500/30 text-[10px] px-1.5 py-0">
+        <Badge className="bg-accent/15 text-accent-foreground border-accent/30 text-[10px] px-1.5 py-0">
           {t("pricingTeaser.new")}
         </Badge>
       </div>
