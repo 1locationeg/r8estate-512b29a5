@@ -488,6 +488,11 @@ const Index = () => { // hero-phase-v2
 
               <div className="w-16 h-px bg-border mx-auto" />
 
+              {/* ReviewsCarousel */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12"><ReviewsCarousel /></div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
               {/* Category Links */}
               <div className="w-full max-w-[1100px] py-8 md:py-12">
                 <HeroCategoryLinks
@@ -660,7 +665,6 @@ const Index = () => { // hero-phase-v2
           </button>
         </div>
 
-        <ReviewsCarousel />
         <Footer />
       </div>
     </div>
