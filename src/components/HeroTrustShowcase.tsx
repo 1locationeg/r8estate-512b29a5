@@ -364,8 +364,10 @@ export const HeroTrustShowcase = () => {
   const handleSliderChange = (values: number[]) => {
     const val = values[0];
     if (animRef.current) cancelAnimationFrame(animRef.current);
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
     setScore(val);
     setDisplayScore(val);
+    restingScoreRef.current = val;
     setHasInteracted(true);
     pauseCycling();
   };
@@ -377,6 +379,7 @@ export const HeroTrustShowcase = () => {
 
   const handleReplay = () => {
     if (animRef.current) cancelAnimationFrame(animRef.current);
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
     if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
     if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     seqIdxRef.current = 0;
