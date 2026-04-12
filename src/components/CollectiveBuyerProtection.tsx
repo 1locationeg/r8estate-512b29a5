@@ -77,12 +77,14 @@ export const CollectiveBuyerProtection = () => {
 
         <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4">
           {/* Row 1: Header + Counter */}
-          <div className="flex items-center gap-2 flex-wrap">
-            <Shield className="h-4 w-4 text-destructive shrink-0" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-destructive">
-              {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
-            </span>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-[hsl(0,85%,60%)] ltr:ml-auto rtl:mr-auto">
+          <div className="flex flex-col gap-0.5">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-destructive shrink-0" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-destructive">
+                {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
+              </span>
+            </div>
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-[hsl(0,85%,60%)] ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
           </div>
