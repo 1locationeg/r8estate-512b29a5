@@ -14,6 +14,7 @@ import { HeroCategoryItems, categories as heroCategoryList } from "@/components/
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
 import { PricingTeaser } from "@/components/PricingTeaser";
 import { JourneyCompleteCTA } from "@/components/JourneyCompleteCTA";
+import { SiteExperienceFeedback } from "@/components/SiteExperienceFeedback";
 import { DeveloperDetailCard } from "@/components/DeveloperDetailCard";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { ViewToggle } from "@/components/ViewToggle";
@@ -514,6 +515,11 @@ const Index = () => { // hero-phase-v2
 
               {/* Journey Complete CTA */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* Site Experience Feedback */}
+              <div className="w-full max-w-[1100px] py-4 md:py-6"><SiteExperienceFeedback /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
