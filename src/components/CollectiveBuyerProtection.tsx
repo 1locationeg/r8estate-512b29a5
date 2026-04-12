@@ -127,11 +127,6 @@ export const CollectiveBuyerProtection = () => {
             <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+</span>
             
           </div>
-          <div className="ltr:ml-6 rtl:mr-6">
-            <span className="text-xs text-white/70">
-              {isAr ? "حموا فلوسهم هذا الشهر" : "already protected their money this month"}
-            </span>
-          </div>
 
           {/* Row 4: CTA */}
           <div className="flex items-center gap-3">
