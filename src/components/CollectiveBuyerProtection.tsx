@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Shield, AlertTriangle, X } from "lucide-react";
+import { Shield, AlertTriangle } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { ShareMenu } from "@/components/ShareMenu";
+import { Button } from "@/components/ui/button";
 import avatar1 from "@/assets/protection-avatar-1.jpg";
 import avatar2 from "@/assets/protection-avatar-2.jpg";
 import avatar3 from "@/assets/protection-avatar-3.jpg";
@@ -42,8 +45,11 @@ function useCountUp(target: number, duration = 2000) {
 export const CollectiveBuyerProtection = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === "ar";
+  const navigate = useNavigate();
   const protectedAmount = useCountUp(847, 2200);
   const buyerCount = useCountUp(1247, 1800);
+  const [riskIndex, setRiskIndex] = useState(0);
+  const [fadeIn, setFadeIn] = useState(true);
 
   const risks = isAr
     ? [
@@ -52,15 +58,30 @@ export const CollectiveBuyerProtection = () => {
         "لا حماية قانونية لما توقّع من غير ما تقرأ تقييمات موثقة",
       ]
     : [
-        "Average Egyptian buyer risks EGP 1.2M on an unverified developer",
+        "Average buyer risks EGP 1.2M on an unverified developer",
         "1 in 3 off-plan buyers faces delivery delays of 1+ years",
-        "No legal protection when you sign without reading verified reviews",
+        "No protection when you sign without verified reviews",
       ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFadeIn(false);
+      setTimeout(() => {
+        setRiskIndex((prev) => (prev + 1) % risks.length);
+        setFadeIn(true);
+      }, 300);
+    }, 4000);
+    return () => clearInterval(interval);
+  }, [risks.length]);
+
+  const shareText = isAr
+    ? "847 مليون جنيه محميين بتقييمات مشترين حقيقيين على R8ESTATE"
+    : "847M EGP protected by real buyers on R8ESTATE";
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
       <div
-        className="relative overflow-hidden rounded-2xl ai-grain"
+        className="relative overflow-hidden rounded-2xl"
         style={{
           background:
             "linear-gradient(135deg, hsl(203,81%,8%) 0%, hsl(203,65%,16%) 40%, hsl(203,55%,22%) 70%, hsl(203,45%,28%) 100%)",
@@ -83,31 +104,23 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
 
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 px-5 py-6 md:px-8 md:py-8">
-          {/* Left — Protection stats */}
-          <div className="flex flex-col justify-center">
-            {/* Badge */}
-            <div className="inline-flex items-center gap-1.5 rounded-full bg-[hsl(45,96%,54%)]/15 border border-[hsl(45,96%,54%)]/25 px-3 py-1 w-fit mb-4">
-              <Shield className="h-3.5 w-3.5 text-[hsl(45,96%,54%)]" />
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[hsl(45,96%,54%)]">
-                {isAr ? "حماية المشترين الجماعية" : "Collective Buyer Protection"}
-              </span>
-            </div>
+        <div ref={protectedAmount.ref} className="relative z-10 flex flex-col gap-3 px-5 py-4 md:px-8 md:py-5">
+          {/* Hook headline */}
+          <div className="flex items-center gap-3">
+            <Shield className="h-5 w-5 text-[hsl(45,96%,54%)] animate-pulse shrink-0" />
+            <h2 className="text-base md:text-lg font-extrabold text-white leading-tight">
+              {isAr ? (
+                <>ما تشتريش وانت أعمى. <span className="text-[hsl(45,96%,54%)] tabular-nums">{protectedAmount.value}M</span> جنيه محميين بالفعل.</>
+              ) : (
+                <>Don't buy blind. <span className="text-[hsl(45,96%,54%)] tabular-nums">{protectedAmount.value}M EGP</span> already protected.</>
+              )}
+            </h2>
+          </div>
 
-            {/* Big number */}
-            <div ref={protectedAmount.ref} className="flex items-baseline gap-2 mb-1">
-              <span className="text-4xl md:text-5xl font-extrabold text-[hsl(45,96%,54%)] tabular-nums tracking-tight">
-                {protectedAmount.value}M
-              </span>
-              <span className="text-lg md:text-xl font-bold text-white/70">EGP</span>
-            </div>
-
-            <p className="text-sm text-white/50 mb-5">
-              {isAr ? "محميين بتقييمات مشترين موثقين" : "Protected by verified buyer reviews"}
-            </p>
-
-            {/* Avatar row */}
-            <div ref={buyerCount.ref} className="flex items-center gap-2.5">
+          {/* Social proof + rotating risk */}
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
+            {/* Avatars */}
+            <div ref={buyerCount.ref} className="flex items-center gap-2 shrink-0">
               <div className="flex -space-x-2 rtl:space-x-reverse">
                 {avatars.map((src, i) => (
                   <img
@@ -115,36 +128,48 @@ export const CollectiveBuyerProtection = () => {
                     src={src}
                     alt=""
                     loading="lazy"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7 rounded-full border-2 border-white/20 object-cover"
+                    width={24}
+                    height={24}
+                    className="h-6 w-6 rounded-full border-2 border-white/20 object-cover"
                   />
                 ))}
               </div>
-              <span className="text-xs text-white/45 font-medium tabular-nums">
-                <span className="text-white/70 font-bold">{buyerCount.value.toLocaleString()}+</span>{" "}
-                {isAr ? "مشتري حموا فلوسهم" : "buyers protected their money"}
+              <span className="text-xs text-white/50 font-medium">
+                <span className="text-white/80 font-bold tabular-nums">{buyerCount.value.toLocaleString()}+</span>{" "}
+                {isAr ? "مشتري انضموا" : "buyers joined"}
               </span>
+            </div>
+
+            {/* Rotating risk */}
+            <div className="flex items-center gap-2 min-h-[20px]">
+              <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />
+              <p
+                className="text-xs text-white/60 leading-relaxed transition-opacity duration-300"
+                style={{ opacity: fadeIn ? 1 : 0 }}
+              >
+                {risks[riskIndex]}
+              </p>
             </div>
           </div>
 
-          {/* Right — Risk panel */}
-          <div className="rounded-xl bg-white/[0.06] backdrop-blur-sm border border-white/10 p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <AlertTriangle className="h-4 w-4 text-[hsl(45,96%,54%)]" />
-              <span className="text-xs font-bold uppercase tracking-wider text-white">
-                {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-3">
-              {risks.map((risk, i) => (
-                <div key={i} className="flex items-start gap-2.5">
-                  <X className="h-4 w-4 text-destructive shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/65 leading-relaxed">{risk}</p>
-                </div>
-              ))}
-            </div>
+          {/* Action row */}
+          <div className="flex items-center gap-3 pt-1">
+            <Button
+              size="sm"
+              variant="glow"
+              className="text-xs font-bold"
+              onClick={() => navigate("/reviews")}
+            >
+              {isAr ? "احمي شرايك" : "Protect My Purchase"}
+            </Button>
+            <ShareMenu
+              title="R8ESTATE"
+              description={shareText}
+              iconOnly
+              variant="ghost"
+              size="icon"
+              className="text-white/50 hover:text-white h-8 w-8"
+            />
           </div>
         </div>
       </div>
