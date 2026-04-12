@@ -283,7 +283,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
     <div className="w-full max-w-3xl mx-auto">
       {/* Title */}
       <h2 className="text-sm font-semibold text-foreground/80 mb-2 ltr:text-left rtl:text-right">
-        {isAr ? "اعثر على شركات يمكنك الوثوق بها" : "Find Companies You Can Trust"}
+        {i18n.language === "ar" ? "اعثر على شركات يمكنك الوثوق بها" : "Find Companies You Can Trust"}
       </h2>
       {/* Search + Suggestions anchor */}
       <div className="relative">
