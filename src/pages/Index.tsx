@@ -410,31 +410,46 @@ const Index = () => { // hero-phase-v2
           {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
           <JourneyScrollSections />
 
-          {/* ─── Below-the-fold: existing components ─── */}
+          {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
-            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-6 pb-safe gap-6 md:gap-10">
-              {/* Trust Strip */}
-              <div className="w-full max-w-[1100px] mb-3">
-                <div className="flex items-center justify-between gap-1.5 py-2 px-2 rounded-xl bg-primary">
-                  <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
-                    <Sparkles className="w-3.5 h-3.5 text-accent shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.verifiedReviews")}</span>
+            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
+
+              {/* Trust Strip — softened */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12">
+                <div className="flex items-center justify-between gap-1.5 py-2.5 px-3 rounded-xl bg-primary/10 border border-primary/20">
+                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
+                    <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.verifiedReviews")}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
-                    <Fingerprint className="w-3.5 h-3.5 text-verified shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.realBuyers")}</span>
+                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
+                    <Fingerprint className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.realBuyers")}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 bg-primary-foreground/[0.07] rounded-full py-1.5 px-3 border border-primary-foreground/[0.08] flex-1 justify-center">
-                    <ShieldCheck className="w-3.5 h-3.5 text-trust-excellent shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-primary-foreground/80 whitespace-nowrap">{t("widgets.realExperts")}</span>
+                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
+                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.realExperts")}</span>
                   </div>
                 </div>
               </div>
 
-              <HowWeWork />
-              <CollectiveBuyerProtection />
+              <div className="w-16 h-px bg-border mx-auto" />
 
-              <div>
+              {/* HowWeWork */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12">
+                <HowWeWork />
+              </div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* CollectiveBuyerProtection */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12">
+                <CollectiveBuyerProtection />
+              </div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* Category Links */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12">
                 <HeroCategoryLinks
                   activeView={activeView}
                   onViewSelect={(view) => { setActiveView((prev) => prev === view ? null : view); setSelectedDeveloperId(null); setSpecialViewItem(null); }}
@@ -443,15 +458,17 @@ const Index = () => { // hero-phase-v2
                 />
               </div>
 
+              <div className="w-16 h-px bg-border mx-auto" />
+
               {/* Quick Actions + Widgets */}
-              <div className="w-full max-w-[1100px] mb-4 py-[5px] pb-0">
+              <div className="w-full max-w-[1100px] py-8 md:py-12">
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
                   {quickActions.map((action) => {
                     const Icon = action.icon;
                     return (
-                      <button key={action.title} onClick={() => handleQuickAction(action.key)} className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border bg-card hover:border-primary/30 hover:shadow-sm transition-all text-start group">
-                        <div className="w-8 h-8 rounded-lg bg-secondary flex items-center justify-center group-hover:scale-105 transition-transform">
-                          <Icon className={`w-4 h-4 ${action.color}`} />
+                      <button key={action.title} onClick={() => handleQuickAction(action.key)} className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] transition-all duration-500 text-start group">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                          <Icon className={`w-4 h-4 text-primary`} />
                         </div>
                         <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
                         <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
@@ -479,15 +496,37 @@ const Index = () => { // hero-phase-v2
                 </div>
               )}
 
-              <div className="w-full max-w-[1100px] mt-2"><StepTimeline /></div>
-              <div className="w-full max-w-[1100px] mt-2"><CompareEngineShowcase /></div>
-              <div className="w-full max-w-[1100px] mt-2"><AudienceSegmentCards /></div>
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* StepTimeline */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12"><StepTimeline /></div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* CompareEngineShowcase */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12 bg-primary/[0.02] -mx-3 sm:-mx-4 md:-mx-8 lg:-mx-12 px-3 sm:px-4 md:px-8 lg:px-12"><CompareEngineShowcase /></div>
+
+              <div className="w-16 h-px bg-border mx-auto" />
+
+              {/* AudienceSegmentCards */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
 
               {!specialViewItem && !selectedDeveloper && (
                 <>
-                  <FeaturedIdentitySpotlight />
-                  <div className="w-full max-w-[1100px] mt-2"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
-                  <div className="w-full max-w-[1100px] mt-2"><CommunityHighlights /></div>
+                  <div className="w-16 h-px bg-border mx-auto" />
+
+                  {/* FeaturedIdentitySpotlight */}
+                  <div className="w-full max-w-[1100px] py-8 md:py-12"><FeaturedIdentitySpotlight /></div>
+
+                  <div className="w-16 h-px bg-border mx-auto" />
+
+                  {/* SmartRecommendations */}
+                  <div className="w-full max-w-[1100px] py-8 md:py-12"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+
+                  <div className="w-16 h-px bg-border mx-auto" />
+
+                  {/* CommunityHighlights */}
+                  <div className="w-full max-w-[1100px] py-8 md:py-12"><CommunityHighlights /></div>
                 </>
               )}
 

@@ -111,7 +111,7 @@ export const SmartRecommendations = ({ onSelectDeveloper }: SmartRecommendations
         {recommended.map((dev) => (
           <Card
             key={dev.id}
-            className="p-3 cursor-pointer hover:border-primary/50 transition-all group"
+            className="p-3 cursor-pointer border-border/60 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] transition-all duration-500 group"
             onClick={() => onSelectDeveloper(dev.id)}
           >
             <div className="flex items-start gap-2.5">

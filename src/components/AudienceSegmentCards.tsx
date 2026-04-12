@@ -2,42 +2,13 @@ import { useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Home, Building2, Briefcase, HardHat, Sparkles, ArrowRight } from "lucide-react";
 
 const segments = [
-  {
-    key: "buyers",
-    icon: Home,
-    gradient: "from-accent/20 to-accent/5",
-    borderHover: "hover:border-accent/50",
-    iconBg: "bg-accent/15 text-accent-foreground",
-    cta: "/auth",
-  },
-  {
-    key: "business",
-    icon: Building2,
-    gradient: "from-primary/15 to-primary/5",
-    borderHover: "hover:border-primary/50",
-    iconBg: "bg-primary/10 text-primary",
-    cta: "/auth",
-  },
-  {
-    key: "services",
-    icon: Briefcase,
-    gradient: "from-destructive/10 to-destructive/5",
-    borderHover: "hover:border-destructive/40",
-    iconBg: "bg-destructive/10 text-destructive",
-    cta: "/auth",
-  },
-  {
-    key: "professionals",
-    icon: HardHat,
-    gradient: "from-muted to-secondary",
-    borderHover: "hover:border-muted-foreground/30",
-    iconBg: "bg-muted text-muted-foreground",
-    cta: "/auth",
-  },
+  { key: "buyers", icon: Home, cta: "/auth" },
+  { key: "business", icon: Building2, cta: "/auth" },
+  { key: "services", icon: Briefcase, cta: "/auth" },
+  { key: "professionals", icon: HardHat, cta: "/auth" },
 ];
 
 export const AudienceSegmentCards = () => {
@@ -58,19 +29,19 @@ export const AudienceSegmentCards = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-10">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 mb-3">
-          <Sparkles className="w-3.5 h-3.5 text-accent" />
-          <span className="text-xs font-medium text-primary">
+    <section ref={sectionRef} className="w-full">
+      {/* Unified header */}
+      <div className="flex flex-col items-center gap-1.5 mb-6 md:mb-8">
+        <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3.5 py-1.5 border border-primary/15">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
             {t("audience.badge", "AI-Matched Experience")}
           </span>
         </div>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+        <h2 className="text-xl md:text-2xl font-bold text-foreground">
           {t("audience.headline", "Built for every player in real estate")}
         </h2>
-        <p className="text-sm text-muted-foreground max-w-md mx-auto">
+        <p className="text-sm text-muted-foreground max-w-md mx-auto text-center">
           {t("audience.subtitle", "Select your role — we'll tailor everything to your goals")}
         </p>
       </div>
@@ -84,21 +55,18 @@ export const AudienceSegmentCards = () => {
               key={seg.key}
               onClick={() => navigate(seg.cta)}
               className={`
-                group relative cursor-pointer overflow-hidden border ai-grain
-                bg-gradient-to-br ${seg.gradient} ${seg.borderHover}
+                group relative cursor-pointer overflow-hidden
+                border border-border/60 bg-card/80 backdrop-blur-sm
                 transition-all duration-500 ease-out
-                hover:shadow-[0_0_24px_-6px_hsl(var(--glow-primary)/0.2)] hover:-translate-y-1
-                ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"}
+                hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] hover:-translate-y-1
+                ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
               `}
               style={{ transitionDelay: visible ? `${idx * 120}ms` : "0ms" }}
             >
-              {/* AI shimmer line */}
-              <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-accent/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
               <div className="p-4 md:p-5 flex flex-col items-center text-center gap-3">
                 {/* Icon */}
-                <div className={`w-11 h-11 rounded-xl ${seg.iconBg} flex items-center justify-center transition-transform duration-300 group-hover:scale-110`}>
-                  <Icon className="w-5 h-5" />
+                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
 
                 {/* Title */}
@@ -113,7 +81,7 @@ export const AudienceSegmentCards = () => {
 
                 {/* CTA arrow */}
                 <div className="mt-auto pt-2">
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-300 translate-x-0 group-hover:translate-x-1">
+                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-0 group-hover:translate-x-1">
                     {t(`audience.${seg.key}.cta`, t("audience.getStarted", "Get started"))}
                     <ArrowRight className="w-3 h-3" />
                   </span>

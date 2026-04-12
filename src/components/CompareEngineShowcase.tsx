@@ -46,14 +46,16 @@ const CompareEngineShowcase = () => {
     max === 5 ? value.toFixed(1) : `${value}%`;
 
   return (
-    <section ref={sectionRef} className="w-full py-10 px-4">
-      {/* Header */}
-      <div className="text-center mb-8">
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary text-xs font-semibold mb-3 animate-[shimmer_2s_ease-in-out_infinite]">
-          <Sparkles className="w-3.5 h-3.5" />
-          {t("compareEngine.subtitle")}
-        </span>
-        <h2 className="text-2xl md:text-3xl font-bold text-foreground">
+    <section ref={sectionRef} className="w-full">
+      {/* Unified header */}
+      <div className="flex flex-col items-center gap-1.5 mb-6 md:mb-8">
+        <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3.5 py-1.5 border border-primary/15">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
+            {t("compareEngine.subtitle")}
+          </span>
+        </div>
+        <h2 className="text-xl md:text-2xl font-bold text-center text-foreground">
           {t("compareEngine.headline")}
         </h2>
       </div>
@@ -65,7 +67,7 @@ const CompareEngineShowcase = () => {
           return (
             <div
               key={dev.name}
-              className="relative rounded-2xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 transition-all duration-300 hover:shadow-[0_0_30px_-8px_hsl(var(--glow-primary)/0.25)] hover:border-primary/30 ai-grain"
+              className="relative rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm p-5 transition-all duration-500 hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)]"
             >
               {isWinner && (
                 <div className="absolute -top-3 right-4 flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-bold">
@@ -92,7 +94,7 @@ const CompareEngineShowcase = () => {
                       </div>
                       <div className="h-2 w-full rounded-full bg-muted/50 overflow-hidden">
                         <div
-                          className={`h-full rounded-full transition-all duration-1000 ease-out ${getBarColor(value, max)}`}
+                          className={`h-full rounded-full transition-all duration-500 ease-out ${getBarColor(value, max)}`}
                           style={{
                             width: animated ? `${widthPct}%` : "0%",
                             transitionDelay: `${devIdx * 200 + i * 150}ms`,
@@ -106,13 +108,6 @@ const CompareEngineShowcase = () => {
             </div>
           );
         })}
-      </div>
-
-      {/* VS badge (desktop) */}
-      <div className="hidden md:flex justify-center -mt-[calc(50%_-_2rem)] mb-[calc(50%_-_2rem)] relative z-10 pointer-events-none">
-        <span className="bg-primary text-primary-foreground text-xs font-bold px-2.5 py-1 rounded-full shadow-lg">
-          VS
-        </span>
       </div>
 
       {/* CTAs */}
