@@ -221,6 +221,8 @@ export const HeroTrustShowcase = () => {
     setRowsVisible(0);
     setScore(0);
     setDisplayScore(0);
+    restingScoreRef.current = 0;
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
 
     const start = performance.now();
     const duration = 1200;
@@ -228,11 +230,9 @@ export const HeroTrustShowcase = () => {
     const step = (now: number) => {
       const elapsed = now - start;
       const t = Math.min(elapsed / duration, 1);
-      // Elastic overshoot easing
-      const eased = t < 1
-        ? 1 - Math.pow(1 - t, 3) * Math.cos(t * Math.PI * 1.2)
-        : 1;
-      const current = Math.round(entranceTarget * Math.min(eased, 1.08));
+      // Damped sine wave for entrance too
+      const progress = 1 - Math.exp(-6 * t) * Math.cos(4 * Math.PI * t);
+      const current = Math.round(entranceTarget * Math.min(progress, 1.08));
       const clamped = Math.min(Math.max(current, 0), 100);
       setDisplayScore(clamped);
       if (t < 1) {
@@ -240,11 +240,11 @@ export const HeroTrustShowcase = () => {
       } else {
         setDisplayScore(entranceTarget);
         setScore(entranceTarget);
-        // Show first row before the card fades in so there's no blank white frame
+        restingScoreRef.current = entranceTarget;
+        startIdleOscillation(entranceTarget);
         setTimeout(() => {
           setRowsVisible(1);
           requestAnimationFrame(() => setCardVisible(true));
-          // Stagger remaining rows
           for (let i = 2; i <= 5; i++) {
             setTimeout(() => setRowsVisible(i), (i - 1) * 80);
           }
@@ -256,7 +256,7 @@ export const HeroTrustShowcase = () => {
       }
     };
     animRef.current = requestAnimationFrame(step);
-  }, []);
+  }, [startIdleOscillation]);
 
   runEntranceRef.current = runEntrance;
 
@@ -264,6 +264,7 @@ export const HeroTrustShowcase = () => {
     runEntrance();
     return () => {
       if (animRef.current) cancelAnimationFrame(animRef.current);
+      if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
       if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
       if (resumeTimeoutRef.current) clearTimeout(resumeTimeoutRef.current);
     };
