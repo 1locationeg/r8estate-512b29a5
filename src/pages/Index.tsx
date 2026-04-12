@@ -415,6 +415,11 @@ const Index = () => { // hero-phase-v2
           {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
           <JourneyScrollSections />
 
+          {/* FeaturedIdentitySpotlight — right after 4/4 Protect */}
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+            <FeaturedIdentitySpotlight />
+          </div>
+
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
@@ -512,10 +517,6 @@ const Index = () => { // hero-phase-v2
 
               {!specialViewItem && !selectedDeveloper && (
                 <>
-                  <div className="w-16 h-px bg-border mx-auto" />
-
-                  {/* FeaturedIdentitySpotlight */}
-                  <div className="w-full max-w-[1100px] py-8 md:py-12"><FeaturedIdentitySpotlight /></div>
 
                   <div className="w-16 h-px bg-border mx-auto" />
 
