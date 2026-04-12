@@ -1,32 +1,14 @@
 
 
-## Plan: Compact the Collective Buyer Protection Card
+## Plan: Move FeaturedIdentitySpotlight under JourneyScrollSections (4/4 Protect)
 
-### What Changes
+### What changes
+In `src/pages/Index.tsx`:
 
-Shrink the card dramatically by replacing verbose risk sentences with **single bold keyword pills** that communicate benefits/risks at a glance, and tighten all spacing.
+1. **Remove** the FeaturedIdentitySpotlight block from its current position (lines 514-520, inside the `!specialViewItem && !selectedDeveloper` conditional block).
 
-### New Layout (compact, single flow)
+2. **Insert** it immediately after `<JourneyScrollSections />` (line 416), before the "Below-the-fold" section, wrapped in the same styling container with a divider.
 
-1. **Header row** — Shield icon + "Without R8ESTATE" label + animated `183M EGP` counter — all on ONE line
-2. **Risk keywords row** — Three inline pills with ✗ icon + single bold word each:
-   - ✗ **Scams** · ✗ **Delays** · ✗ **No Protection**
-   - Arabic: ✗ **نصب** · ✗ **تأخير** · ✗ **بلا حماية**
-   - Keywords styled `text-sm font-bold text-white` (bigger than current `text-xs`)
-3. **Thin divider**
-4. **"WITH R8ESTATE" row** — CheckCircle + label + avatars + `323+` count — all on ONE line
-5. **CTA row** — Button + Share (unchanged)
-
-### Key Differences from Current
-- Remove 3 full-sentence risk bullets → replace with 3 single-word pills inline
-- Remove the subtitle text under "183M EGP" (the number speaks for itself)
-- Merge header + counter into one line
-- Reduce gaps from `gap-4` → `gap-2`, padding from `py-5` → `py-3`
-- Benefit keywords are `text-sm font-bold` (bigger than current `text-xs` sentences)
-- Overall card height drops ~50%
-
-### Files Modified
-- `src/components/CollectiveBuyerProtection.tsx` — Compact layout, keyword pills, tighter spacing
-
-### No database changes needed.
+### Result
+The Featured Identity Spotlight card will appear directly beneath the 4/4 Protect journey section, above the Trust Strip and other below-the-fold content. It will no longer be conditionally hidden when a developer or item detail is selected.
 
