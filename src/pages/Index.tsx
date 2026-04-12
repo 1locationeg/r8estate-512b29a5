@@ -479,12 +479,12 @@ const Index = () => { // hero-phase-v2
               </div>
 
               {/* AudienceSegmentCards */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
+              <div className="w-full max-w-[1100px] py-4 md:py-6"><AudienceSegmentCards /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
               {/* CommunityHighlights */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12"><CommunityHighlights /></div>
+              <div className="w-full max-w-[1100px] py-4 md:py-6"><CommunityHighlights /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
@@ -501,12 +501,12 @@ const Index = () => { // hero-phase-v2
               </div>
 
               {/* ReviewsCarousel */}
-              <div className="w-full max-w-[1100px] py-8 md:py-0"><ReviewsCarousel /></div>
+              <div className="w-full max-w-[1100px] py-2 md:py-0"><ReviewsCarousel /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
               {/* Category Links */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12">
+              <div className="w-full max-w-[1100px] py-4 md:py-6">
                 <HeroCategoryLinks
                   activeView={activeView}
                   onViewSelect={(view) => { setActiveView((prev) => prev === view ? null : view); setSelectedDeveloperId(null); setSpecialViewItem(null); }}
