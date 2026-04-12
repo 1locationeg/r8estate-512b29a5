@@ -1559,5 +1559,23 @@
     "compare": "Compare",
     "rateThisDeal": "Rate this deal",
     "viewBusiness": "View business"
+  },
+  "pricingTeaser": {
+    "label": "TRANSPARENT PRICING",
+    "new": "NEW",
+    "headline": "Start free. Upgrade when ready.",
+    "popular": "Most Popular",
+    "free": {
+      "title": "Free",
+      "desc": "Basic access"
+    },
+    "pro": {
+      "title": "Pro",
+      "desc": "Full reports"
+    },
+    "business": {
+      "title": "Business",
+      "desc": "For companies"
+    }
   }
 }
