@@ -1,40 +1,39 @@
 
 
-## Plan: Add Pricing Teaser Section After ReviewsCarousel
+## Plan: Add "Journey Complete" CTA Section After Pricing Teaser
 
 ### What
-A compact, conversion-focused pricing teaser block placed immediately after the ReviewsCarousel. Inspired by the uploaded reference image — shows three plan tiers (Free, Pro, Business) with a "Start free. Upgrade when ready." headline and a "TRANSPARENT PRICING" label with a "NEW" badge.
+A dark-themed, conversion-focused closing section placed immediately after the Pricing Teaser block. Inspired by the uploaded reference images — a navy-to-emerald gradient card congratulating the user for reaching the end of the homepage journey, offering point rewards for registration, and presenting clear action CTAs.
 
-### New Component: `src/components/PricingTeaser.tsx`
+### New Component: `src/components/JourneyCompleteCTA.tsx`
 
 A self-contained component with:
-- "TRANSPARENT PRICING" uppercase label with a green "NEW" badge
-- Headline: "Start free. Upgrade when ready." (en) / Arabic equivalent (ar)
-- Three clickable plan cards in a row:
-  - **Free** — "Basic access" — default outline style
-  - **Pro** — "Full reports" — highlighted with teal/primary border + badge
-  - **Business** — "For companies" — default outline style
-- Clicking any card navigates to `/auth` (signup gate)
+- Dark gradient background (navy → emerald, matching reference images)
+- A "Journey complete" pill badge at the top
+- Bold headline: "You've done the research. Now make your move." (en) / Arabic equivalent (ar)
+- Social proof line: "Join 39,000+ users making safer real estate decisions"
+- Coin reward callout: "+50 coins when you sign up today" with a gold coin icon
+- Three benefit chips: "Verified Reviews", "Trust Reports", "Deal Alerts"
+- Three CTA buttons: "Start for free" (primary/green), "Compare developers" (outline), "Write a review" (outline)
+- Auth-aware: if user is logged in, show different messaging ("Welcome back") and route to dashboard instead of /auth
 - Fully bilingual via i18n keys
-- Matches existing design system (Tailwind, shadcn Card/Badge)
 
 ### i18n Keys (2 edits)
 
-Add to `en.json` and `ar.json` under a new `"pricingTeaser"` namespace:
-- `label`, `new`, `headline`, `free.title`, `free.desc`, `pro.title`, `pro.desc`, `business.title`, `business.desc`
+Add `"journeyComplete"` namespace to `en.json` and `ar.json`:
+- `badge`, `headline1`, `headline2`, `socialProof`, `rewardText`, `benefit1`, `benefit2`, `benefit3`, `ctaStart`, `ctaCompare`, `ctaReview`, `welcomeBack`, `goToDashboard`
 
 ### Integration in `src/pages/Index.tsx` (1 edit)
 
-Insert after the ReviewsCarousel block (line 504), before the divider on line 506:
-
+Insert after the Pricing Teaser block (line 512), before the existing divider:
 ```
+<div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
 <div className="w-16 h-px bg-border mx-auto" />
-<div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
 ```
 
 ### Files touched
-1. **New** — `src/components/PricingTeaser.tsx`
-2. **Edit** — `src/i18n/locales/en.json` (add `pricingTeaser` keys)
-3. **Edit** — `src/i18n/locales/ar.json` (add `pricingTeaser` keys)
-4. **Edit** — `src/pages/Index.tsx` (import + insert after ReviewsCarousel)
+1. **New** — `src/components/JourneyCompleteCTA.tsx`
+2. **Edit** — `src/i18n/locales/en.json` (add `journeyComplete` keys)
+3. **Edit** — `src/i18n/locales/ar.json` (add `journeyComplete` keys)
+4. **Edit** — `src/pages/Index.tsx` (import + insert after PricingTeaser)
 
