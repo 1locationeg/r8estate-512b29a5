@@ -87,6 +87,9 @@ export const CollectiveBuyerProtection = () => {
             <span className="text-2xl md:text-3xl font-black tabular-nums text-[hsl(0,85%,60%)] ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
+            <span className="text-xs text-white/60 ltr:ml-6 rtl:mr-6">
+              {isAr ? "في خطر عبر مشتري العقارات في مصر" : "at risk across Egyptian off-plan buyers"}
+            </span>
           </div>
 
           {/* Row 2: Risk keyword pills */}
