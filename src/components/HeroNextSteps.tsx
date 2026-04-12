@@ -102,7 +102,7 @@ export const HeroNextSteps = () => {
 
         {/* Social proof */}
         <p className="text-[10px] text-muted-foreground text-center leading-relaxed">
-          <span className="inline-block w-1.5 h-1.5 rounded-full bg-trust-excellent mr-1 align-middle animate-pulse" />
+          <span className="inline-block w-1.5 h-1.5 rounded-full bg-trust-excellent me-1 align-middle animate-pulse" />
           {t("nextSteps.socialProof")}
         </p>
       </div>

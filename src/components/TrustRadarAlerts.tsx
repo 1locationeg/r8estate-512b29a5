@@ -108,8 +108,8 @@ export const TrustRadarAlerts = ({ riskFlags, onAskCopilot }: Props) => {
   };
 
   const severityBorder = (s?: string) => {
-    if (s === "high") return "border-l-2 border-l-destructive";
-    if (s === "medium") return "border-l-2 border-l-amber-500";
+    if (s === "high") return "border-s-2 border-s-destructive";
+    if (s === "medium") return "border-s-2 border-s-amber-500";
     return "";
   };
 
@@ -119,7 +119,7 @@ export const TrustRadarAlerts = ({ riskFlags, onAskCopilot }: Props) => {
         <Bell className="w-4 h-4 text-primary" />
         <h3 className="text-sm font-bold text-foreground">Trust Radar</h3>
         {riskFlags?.length ? (
-          <span className="ml-auto text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium">
+          <span className="ms-auto text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/10 text-emerald-600 font-medium">
             Live
           </span>
         ) : null}

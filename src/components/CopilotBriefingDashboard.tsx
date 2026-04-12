@@ -128,7 +128,7 @@ const AgentActivityLog = ({ entries }: { entries: ActivityEntry[] }) => {
       <div className="flex items-center gap-2 mb-2">
         <Radio className="w-3.5 h-3.5 text-primary" />
         <span className="text-xs font-semibold text-foreground uppercase tracking-wider">Agent Activity</span>
-        <span className="text-[10px] text-muted-foreground ml-auto">Live</span>
+        <span className="text-[10px] text-muted-foreground ms-auto">Live</span>
       </div>
       <div className="space-y-1.5 max-h-[120px] overflow-y-auto scrollbar-hide">
         {entries.slice(0, visibleCount).map((e, i) => (
@@ -156,12 +156,12 @@ interface AgentActionCardProps {
 }
 const AgentActionCard = ({ icon, title, description, linkText, onLink, variant = "info", badge, delay = 0 }: AgentActionCardProps) => (
   <div
-    className={`rounded-lg border-l-4 px-4 py-3 ai-scale-in ${
+    className={`rounded-lg border-s-4 px-4 py-3 ai-scale-in ${
       variant === "warning"
-        ? "border-l-amber-400 bg-amber-50 dark:bg-amber-950/20"
+      ? "border-s-amber-400 bg-amber-50 dark:bg-amber-950/20"
         : variant === "success"
-        ? "border-l-emerald-400 bg-emerald-50 dark:bg-emerald-950/20"
-        : "border-l-primary/60 bg-primary/5 dark:bg-primary/10"
+        ? "border-s-emerald-400 bg-emerald-50 dark:bg-emerald-950/20"
+        : "border-s-primary/60 bg-primary/5 dark:bg-primary/10"
     }`}
     style={{ animationDelay: `${delay}ms` }}
   >
@@ -193,7 +193,7 @@ const SectionHeading = ({ icon, title, subtitle }: { icon: React.ReactNode; titl
       <span className="text-muted-foreground">{icon}</span>
       <h2 className="text-xl font-bold text-foreground">{title}</h2>
     </div>
-    {subtitle && <p className="text-sm text-muted-foreground ml-7">{subtitle}</p>}
+    {subtitle && <p className="text-sm text-muted-foreground ms-7">{subtitle}</p>}
   </div>
 );
 

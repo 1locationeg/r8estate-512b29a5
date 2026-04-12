@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Star, Share2, Eye, Rocket, ChevronDown, ChevronUp, Bookmark, BookmarkCheck, GitCompare } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -41,14 +42,15 @@ function useCountdown(targetDate: string | null) {
   return timeLeft;
 }
 
-const statusConfig: Record<string, { bg: string; label: string }> = {
-  reservations_open: { bg: "bg-teal-600", label: "Reservations Open" },
-  upcoming: { bg: "bg-amber-500", label: "Launching Soon" },
-  active: { bg: "bg-primary", label: "Now Selling" },
-  sold_out: { bg: "bg-muted-foreground", label: "Sold Out" },
-};
-
 export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelected, onToggleCompare }: LaunchCardProps) => {
+  const { t } = useTranslation();
+
+  const statusConfig: Record<string, { bg: string; labelKey: string }> = {
+    reservations_open: { bg: "bg-teal-600", labelKey: "launchCard.reservationsOpen" },
+    upcoming: { bg: "bg-amber-500", labelKey: "launchCard.launchingSoon" },
+    active: { bg: "bg-primary", labelKey: "launchCard.nowSelling" },
+    sold_out: { bg: "bg-muted-foreground", labelKey: "launchCard.soldOut" },
+  };
   const { user } = useAuth();
   const navigate = useNavigate();
   const [showPhases, setShowPhases] = useState(false);
@@ -125,11 +127,11 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
   };
 
   const subScoreLabels = [
-    { key: "price", label: "Price fairness" },
-    { key: "transparency", label: "Developer reputation" },
-    { key: "payment", label: "Payment terms" },
-    { key: "location", label: "Location value" },
-    { key: "overall", label: "Transparency on launch day" },
+    { key: "price", label: t("launchCard.priceFairness") },
+    { key: "transparency", label: t("launchCard.developerReputation") },
+    { key: "payment", label: t("launchCard.paymentTerms") },
+    { key: "location", label: t("launchCard.locationValue") },
+    { key: "overall", label: t("launchCard.transparencyOnLaunch") },
   ];
 
   return (
@@ -138,8 +140,8 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
       <div className={`${status.bg} text-white px-4 py-2 text-sm font-semibold flex items-center justify-between`}>
         <span>
           {launch.status === "active"
-            ? `Now Selling — Phase ${launch.current_phase}`
-            : status.label}
+            ? `${t("launchCard.nowSelling")} — ${t("launchCard.phase")} ${launch.current_phase}`
+            : t(status.labelKey)}
         </span>
         {launch.status === "upcoming" && (
           <span className="text-xs font-mono bg-white/20 rounded px-2 py-0.5">
@@ -167,16 +169,16 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
           <div className="flex items-center gap-1 flex-wrap">
             {launch.is_verified && (
               <Badge className="bg-emerald-500/15 text-emerald-700 border-emerald-300 text-[10px]">
-                ✓ Verified Launch
+                ✓ {t("launchCard.verifiedLaunch")}
               </Badge>
             )}
             {!launch.is_verified && (
               <Badge variant="outline" className="text-[10px] border-muted-foreground/30 text-muted-foreground">
-                Unverified
+                {t("launchCard.unverified")}
               </Badge>
             )}
             <Badge className="bg-amber-500/15 text-amber-700 border-amber-300 text-[10px]">
-              Submitted by developer
+              {t("launchCard.submittedByDev")}
             </Badge>
           </div>
         </div>
@@ -185,7 +187,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
           {/* Price per m² */}
           <div className="bg-secondary/50 rounded-lg p-2.5">
-            <p className="text-[10px] text-muted-foreground font-medium">Launch Price</p>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("launchCard.launchPrice")}</p>
             <p className="text-sm font-bold text-foreground">
               EGP {launch.current_price_per_m2 ? Number(launch.current_price_per_m2).toLocaleString() : "—"} / m²
             </p>
@@ -193,7 +195,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
 
           {/* Payment */}
           <div className="bg-secondary/50 rounded-lg p-2.5">
-            <p className="text-[10px] text-muted-foreground font-medium">Payment Plan</p>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("launchCard.paymentPlan")}</p>
             <p className="text-sm font-bold text-foreground">
               {launch.down_payment_pct ? `${Number(launch.down_payment_pct)}% down` : "—"}
               {launch.installment_years ? ` · ${launch.installment_years}y` : ""}
@@ -202,7 +204,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
 
           {/* Delivery */}
           <div className="bg-secondary/50 rounded-lg p-2.5">
-            <p className="text-[10px] text-muted-foreground font-medium">Delivery</p>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("launchCard.delivery")}</p>
             <p className="text-sm font-bold text-foreground">
               {launch.delivery_date ? new Date(launch.delivery_date).toLocaleDateString("en-US", { year: "numeric", month: "short" }) : "—"}
             </p>
@@ -210,9 +212,9 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
 
           {/* Units */}
           <div className="bg-secondary/50 rounded-lg p-2.5">
-            <p className="text-[10px] text-muted-foreground font-medium">Units</p>
+            <p className="text-[10px] text-muted-foreground font-medium">{t("launchCard.units")}</p>
             <p className="text-sm font-bold text-foreground">
-              {launch.units_remaining ?? "—"} / {launch.total_units ?? "—"} remaining
+              {launch.units_remaining ?? "—"} / {launch.total_units ?? "—"} {t("launchCard.remaining")}
             </p>
             {launch.total_units > 0 && (
               <div className="mt-1 h-1.5 bg-muted rounded-full overflow-hidden">
@@ -228,7 +230,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
         {/* R8 Launch Score */}
         <div className="flex items-center gap-2">
           <Rocket className="w-4 h-4 text-primary" />
-          <span className="text-xs font-semibold text-muted-foreground">R8 Launch Score:</span>
+          <span className="text-xs font-semibold text-muted-foreground">{t("launchCard.r8LaunchScore")}:</span>
           {avgScores ? (
             <>
               <div className="flex items-center gap-0.5">
@@ -237,13 +239,13 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
                 ))}
               </div>
               <span className="text-sm font-bold text-foreground">{(r8Score * 5).toFixed(1)}</span>
-              <span className="text-xs text-muted-foreground">({avgScores.count} ratings)</span>
+              <span className="text-xs text-muted-foreground">({avgScores.count} {t("launchCard.ratings")})</span>
               <button onClick={() => setShowRatingBreakdown(!showRatingBreakdown)} className="text-xs text-primary font-medium ms-1">
-                {showRatingBreakdown ? "Hide" : "Details"}
+                {showRatingBreakdown ? t("launchCard.hide") : t("launchCard.details")}
               </button>
             </>
           ) : (
-            <span className="text-xs text-muted-foreground">No ratings yet</span>
+            <span className="text-xs text-muted-foreground">{t("launchCard.noRatings")}</span>
           )}
         </div>
 
@@ -269,10 +271,10 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
           <Collapsible open={showPhases} onOpenChange={setShowPhases}>
             <CollapsibleTrigger className="flex items-center gap-1 text-xs text-primary font-medium w-full">
               {showPhases ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-              Phase History
+              {t("launchCard.phaseHistory")}
               {priceIncreasePct && Number(priceIncreasePct) > 0 && (
                 <Badge variant="outline" className="text-[9px] ms-1 border-red-300 text-red-600">
-                  +{priceIncreasePct}% since reservation
+                  +{priceIncreasePct}% {t("launchCard.sinceReservation")}
                 </Badge>
               )}
             </CollapsibleTrigger>
@@ -283,7 +285,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
                     <div className={`flex flex-col items-center ${p.phase_number === launch.current_phase ? "" : ""}`}>
                       <div className={`w-3 h-3 rounded-full ${p.phase_number === launch.current_phase ? "bg-amber-500 ring-2 ring-amber-200" : "bg-muted-foreground/30"}`} />
                       <span className="text-[9px] font-bold mt-0.5">EGP {Number(p.price_per_m2).toLocaleString()}</span>
-                      <span className="text-[8px] text-muted-foreground">Phase {p.phase_number}</span>
+                      <span className="text-[8px] text-muted-foreground">{t("launchCard.phase")} {p.phase_number}</span>
                     </div>
                     {i < sortedPhases.length - 1 && <div className="h-px w-6 bg-border mt-[-8px]" />}
                   </div>
@@ -304,7 +306,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
             }}
           >
             <Rocket className="w-3 h-3 me-1" />
-            Rate this launch
+            {t("launchCard.rateThisLaunch")}
           </Button>
           <Button
             variant="ghost"
@@ -314,7 +316,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
             disabled={watchLoading}
           >
             {isWatched ? <BookmarkCheck className="w-3.5 h-3.5 text-primary" /> : <Bookmark className="w-3.5 h-3.5" />}
-            {isWatched ? "Watching" : "Watch this launch"}
+            {isWatched ? t("launchCard.watching") : t("launchCard.watchThisLaunch")}
           </Button>
           {onToggleCompare && (
             <Button
@@ -324,7 +326,7 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
               onClick={() => onToggleCompare(launch.id)}
             >
               <GitCompare className="w-3 h-3" />
-              {isSelected ? "Selected" : "Compare"}
+              {isSelected ? t("launchCard.selected") : t("launchCard.compare")}
             </Button>
           )}
           <ShareMenu
