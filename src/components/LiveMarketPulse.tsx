@@ -2,12 +2,12 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { Star, Zap, MessageSquare, Users, Eye, X } from "lucide-react";
+import { Star, Zap, MessageSquare, Users, Eye, X, Rocket } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface PulseEvent {
   id: string;
-  type: "review" | "deal" | "community" | "buyer_check";
+  type: "review" | "deal" | "community" | "buyer_check" | "launch";
   text: string;
   textAr?: string;
   keyword: string;
@@ -23,7 +23,9 @@ const FALLBACK_EVENTS: Omit<PulseEvent, "icon">[] = [
   { id: "f1", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "47 buyers checked Mountain View recently", textAr: "٤٧ مشتري تحققوا من ماونتن فيو مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 47, entityName: "Mountain View" },
   { id: "f2", type: "review", keyword: "REVIEW", keywordAr: "تقييم", text: "New reviews submitted today", textAr: "تقييمات جديدة اليوم", timestamp: new Date().toISOString(), link: "/reviews" },
   { id: "f3", type: "deal", keyword: "HOT DEAL", keywordAr: "عرض حصري", text: "Exclusive deals from verified businesses", textAr: "عروض حصرية من شركات موثقة", timestamp: new Date().toISOString(), link: "/deal-watch" },
-  { id: "f4", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "23 buyers checked Palm Hills recently", textAr: "٢٣ مشتري تحققوا من بالم هيلز مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 23, entityName: "Palm Hills" },
+  { id: "f4", type: "launch", keyword: "LAUNCH", keywordAr: "إطلاق", text: "New launch: Naia West — 120 units available", textAr: "إطلاق جديد: نايا ويست — ١٢٠ وحدة متاحة", timestamp: new Date().toISOString(), link: "/launch-watch", entityName: "Naia West" },
+  { id: "f5", type: "community", keyword: "TRENDING", keywordAr: "رائج", text: "Hot discussion in the community right now", textAr: "نقاش ساخن في المجتمع الآن", timestamp: new Date().toISOString(), link: "/community" },
+  { id: "f6", type: "buyer_check", keyword: "LIVE", keywordAr: "مباشر", text: "23 buyers checked Palm Hills recently", textAr: "٢٣ مشتري تحققوا من بالم هيلز مؤخراً", timestamp: new Date().toISOString(), link: "/reviews", count: 23, entityName: "Palm Hills" },
 ];
 
 const getIcon = (type: string) => {
@@ -32,8 +34,44 @@ const getIcon = (type: string) => {
     case "deal": return <Zap className="w-3 h-3" />;
     case "community": return <MessageSquare className="w-3 h-3" />;
     case "buyer_check": return <Eye className="w-3 h-3" />;
+    case "launch": return <Rocket className="w-3 h-3" />;
     default: return <Users className="w-3 h-3" />;
   }
+};
+
+const KEYWORD_COLORS: Record<string, string> = {
+  buyer_check: "bg-emerald-500/80 text-white",
+  review: "bg-amber-500/80 text-white",
+  deal: "bg-red-500/80 text-white",
+  launch: "bg-cyan-500/80 text-white",
+  community: "bg-purple-500/80 text-white",
+};
+
+const RichText = ({ text, entityName }: { text: string; entityName?: string }) => {
+  if (!text) return null;
+
+  // Build a regex that matches the entity name or number sequences
+  const parts: string[] = [];
+  if (entityName) parts.push(entityName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+  parts.push("\\d+\\.?\\d*/?\\d*");
+
+  const regex = new RegExp(`(${parts.join("|")})`, "g");
+  const segments = text.split(regex);
+
+  return (
+    <>
+      {segments.map((seg, i) => {
+        if (!seg) return null;
+        if (entityName && seg === entityName) {
+          return <span key={i} className="font-bold text-amber-300">{seg}</span>;
+        }
+        if (/^\d/.test(seg)) {
+          return <span key={i} className="font-bold text-white">{seg}</span>;
+        }
+        return <span key={i}>{seg}</span>;
+      })}
+    </>
+  );
 };
 
 export const LiveMarketPulse = () => {
@@ -55,6 +93,7 @@ export const LiveMarketPulse = () => {
     const fetchData = async () => {
       const items: PulseEvent[] = [];
 
+      // Reviews
       const { data: reviews } = await supabase
         .from("reviews")
         .select("id, author_name, developer_name, developer_id, rating, created_at")
@@ -88,10 +127,12 @@ export const LiveMarketPulse = () => {
             text: `${r.author_name} rated ${r.developer_name || "a business"} ${r.rating}/5`,
             textAr: `${r.author_name} قيّم ${r.developer_name || "شركة"} ${r.rating}/٥`,
             icon: getIcon("review"), timestamp: r.created_at, link: "/reviews",
+            entityName: r.developer_name || undefined,
           });
         });
       }
 
+      // Deals
       const { data: deals } = await supabase
         .from("deals").select("id, headline, created_at")
         .eq("status", "verified").order("created_at", { ascending: false }).limit(3);
@@ -106,6 +147,28 @@ export const LiveMarketPulse = () => {
         });
       }
 
+      // Launches
+      const { data: launches } = await supabase
+        .from("launches")
+        .select("id, project_name, units_remaining, total_units, location_district, created_at")
+        .in("status", ["reservations_open", "upcoming"])
+        .eq("is_verified", true)
+        .order("created_at", { ascending: false })
+        .limit(5);
+
+      if (launches) {
+        launches.forEach((l) => {
+          items.push({
+            id: `launch-${l.id}`, type: "launch", keyword: "LAUNCH", keywordAr: "إطلاق",
+            text: `New launch: ${l.project_name} — ${l.units_remaining} units available`,
+            textAr: `إطلاق جديد: ${l.project_name} — ${l.units_remaining} وحدة متاحة`,
+            icon: getIcon("launch"), timestamp: l.created_at, link: "/launch-watch",
+            entityName: l.project_name,
+          });
+        });
+      }
+
+      // Community
       const { data: posts } = await supabase
         .from("community_posts").select("id, title, created_at")
         .order("created_at", { ascending: false }).limit(3);
@@ -128,13 +191,12 @@ export const LiveMarketPulse = () => {
 
       setEvents(items.length === 0
         ? FALLBACK_EVENTS.map((e) => ({ ...e, icon: getIcon(e.type) }))
-        : items.slice(0, 12)
+        : items.slice(0, 15)
       );
     };
     fetchData();
   }, []);
 
-  // Cycle + micro-fluctuate counts
   useEffect(() => {
     if (events.length <= 1) return;
     cycleRef.current = setInterval(() => {
@@ -165,31 +227,32 @@ export const LiveMarketPulse = () => {
   const current = events[idx];
   const displayText = isAr ? (current.textAr || current.text) : current.text;
   const displayKeyword = isAr ? (current.keywordAr || current.keyword) : current.keyword;
+  const badgeColor = KEYWORD_COLORS[current.type] || "bg-white/15 text-white/90";
 
   return (
     <div className="w-full bg-[hsl(220,40%,13%)] text-white z-50 relative">
       <div className="flex items-center justify-center gap-3 px-10 py-2 min-h-[36px]">
-        {/* Live pulse dot */}
         <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
           <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 animate-ping" />
           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_6px_2px_rgba(52,211,153,0.5)]" />
         </span>
 
-        {/* Content */}
         <button
           onClick={handleClick}
           className="flex items-center gap-2 min-w-0 hover:opacity-80 transition-opacity"
         >
-          <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-white/15 text-white/90 flex-shrink-0">
+          <span className={cn(
+            "inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider flex-shrink-0",
+            badgeColor
+          )}>
             {current.icon}
             {displayKeyword}
           </span>
-          <span key={current.id} className="text-xs font-medium text-white/90 truncate animate-fade-in">
-            {displayText}
+          <span key={current.id} className="text-xs font-medium text-white/80 truncate animate-fade-in">
+            <RichText text={displayText} entityName={current.entityName} />
           </span>
         </button>
 
-        {/* Dismiss */}
         <button
           onClick={(e) => { e.stopPropagation(); setDismissed(true); }}
           className="absolute end-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-white/10 transition-colors"
