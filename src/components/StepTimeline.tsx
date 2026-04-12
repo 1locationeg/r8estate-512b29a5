@@ -38,13 +38,13 @@ const StepTimeline = () => {
     <section ref={sectionRef} className="w-full py-8 md:py-12" dir={isRtl ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-10">
-        <div className="inline-flex items-center gap-1.5 bg-primary/10 backdrop-blur-sm rounded-full px-4 py-1.5 border border-primary/20">
+        <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3.5 py-1.5 border border-primary/15">
           <Sparkles className="w-3.5 h-3.5 text-primary animate-pulse-glow" />
           <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
             {t("stepTimeline.subtitle")}
           </span>
         </div>
-        <h2 className="text-xl md:text-2xl font-bold text-center bg-gradient-to-r from-foreground via-primary to-foreground bg-[length:200%_auto] bg-clip-text text-transparent animate-shimmer">
+        <h2 className="text-xl md:text-2xl font-bold text-center text-foreground">
           {t("stepTimeline.headline")}
         </h2>
       </div>

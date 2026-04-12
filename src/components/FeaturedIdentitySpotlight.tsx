@@ -82,17 +82,21 @@ export const FeaturedIdentitySpotlight = () => {
   };
 
   return (
-    <section className="w-full max-w-[1100px] mx-auto px-0 mt-4 mb-3">
-      <div className="flex items-center justify-between mb-2 py-0">
-        <h2 className="text-base md:text-lg font-bold text-foreground">
+    <section className="w-full">
+      {/* Unified header */}
+      <div className="flex flex-col items-center gap-1.5 mb-6 md:mb-8">
+        <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3.5 py-1.5 border border-primary/15">
+          <Star className="w-3.5 h-3.5 text-primary" />
+          <span className="text-[10px] font-semibold uppercase tracking-widest text-primary">
+            {t("spotlight.featured")}
+          </span>
+        </div>
+        <h2 className="text-xl md:text-2xl font-bold text-center text-foreground">
           {t("spotlight.title")}
         </h2>
-        <span className="text-[9px] uppercase tracking-[0.2em] font-bold text-primary-foreground bg-primary/80 px-2.5 py-0.5 rounded-full">
-          {t("spotlight.featured")}
-        </span>
       </div>
 
-      <Card className="overflow-hidden border-primary/20 bg-card shadow-sm">
+      <Card className="overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm shadow-sm">
         {/* Navy gradient banner header */}
         <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 px-4 pt-4 pb-8 text-center">
           <div className="absolute inset-0 opacity-[0.06]" style={{
