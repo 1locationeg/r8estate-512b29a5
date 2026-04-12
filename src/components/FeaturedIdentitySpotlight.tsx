@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Star, Shield, MessageSquare, ChevronRight, Bookmark, UserPlus, UserCheck } from "lucide-react";
+import { Star, Shield, Building2, ChevronRight, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
@@ -9,7 +9,7 @@ import { getRatingColorClass } from "@/lib/ratingColors";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { localizeStoredReviewValue } from "@/lib/reviewCopy";
+
 
 const trustCategoryKeys = [
   { key: "projectTimeliness", labelKey: "trust.projectTimeliness" },
@@ -28,6 +28,7 @@ export const FeaturedIdentitySpotlight = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categoryPairIndex, setCategoryPairIndex] = useState(0);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   const totalPairs = Math.ceil(trustCategoryKeys.length / 2);
 
@@ -50,7 +51,23 @@ export const FeaturedIdentitySpotlight = () => {
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
-  const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
+
+  // Reset reviewIndex when developer changes
+  useEffect(() => {
+    setReviewIndex(0);
+    setShowAllReviews(false);
+  }, [currentIndex]);
+
+  // Auto-rotate reviews every 5s (pause when expanded)
+  useEffect(() => {
+    if (showAllReviews || devReviews.length <= 1) return;
+    const timer = setInterval(() => {
+      setReviewIndex((prev) => (prev + 1) % devReviews.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [devReviews.length, showAllReviews]);
+
+  const currentReview = devReviews[reviewIndex] || devReviews[0];
 
   const getCategoryScore = (key: string) => {
     const hash = key.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
@@ -214,60 +231,30 @@ export const FeaturedIdentitySpotlight = () => {
           </div>
 
           <div className="space-y-2.5">
-            {displayedReviews.map((review) =>
-              <div key={review.id} className="space-y-1">
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex items-center gap-1.5 min-w-0">
-                    <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">
-                      {review.author.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-1">
-                        <span className="text-xs font-semibold text-foreground truncate">
-                          {isAr ? (review.authorAr || review.author) : review.author}
-                        </span>
-                        {review.tier &&
-                          <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
-                            {review.tier}
-                          </span>
-                        }
-                      </div>
-                      <p className="text-[10px] text-muted-foreground truncate">
-                        {localizeStoredReviewValue(review.project, t)} • {review.developerId}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-0.5 flex-shrink-0">
-                    <div className="flex">{renderStars(review.rating)}</div>
-                  </div>
-                </div>
-
-                <p className="text-xs text-foreground/80 leading-snug line-clamp-2">
-                  {isAr ? (review.commentAr || review.comment) : review.comment}
-                </p>
-                <p className="text-[9px] text-muted-foreground">{review.date}</p>
-
-                {review.developerReply &&
-                  <div className="ms-5 p-2 bg-secondary/50 rounded-md border border-border">
-                    <div className="flex items-center gap-1 mb-0.5">
-                      <MessageSquare className="w-2.5 h-2.5 text-primary" />
-                      <span className="text-[10px] font-semibold text-primary">
-                        {isAr ? (review.developerReply.authorAr || review.developerReply.author) : review.developerReply.author}
-                      </span>
-                      <span className="text-[9px] text-muted-foreground">
-                        {review.developerReply.date}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-foreground/70 leading-snug line-clamp-2">
-                      {isAr ? (review.developerReply.commentAr || review.developerReply.comment) : review.developerReply.comment}
-                    </p>
-                  </div>
-                }
+            {showAllReviews ? (
+              devReviews.map((review) => (
+                <ReviewItem key={review.id} review={review} isAr={isAr} renderStars={renderStars} tierColors={tierColors} t={t} />
+              ))
+            ) : currentReview ? (
+              <div key={reviewIndex} className="animate-fade-in">
+                <ReviewItem review={currentReview} isAr={isAr} renderStars={renderStars} tierColors={tierColors} t={t} />
               </div>
-            )}
+            ) : null}
           </div>
 
-          {devReviews.length > 2 &&
+          {/* Dot indicators */}
+          {!showAllReviews && devReviews.length > 1 && (
+            <div className="flex items-center justify-center gap-1.5 mt-2">
+              {devReviews.map((_, i) => (
+                <span
+                  key={i}
+                  className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === reviewIndex ? "bg-primary scale-125" : "bg-muted-foreground/30"}`}
+                />
+              ))}
+            </div>
+          )}
+
+          {devReviews.length > 1 &&
             <button
               onClick={() => setShowAllReviews(!showAllReviews)}
               className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
@@ -280,3 +267,58 @@ export const FeaturedIdentitySpotlight = () => {
     </section>
   );
 };
+
+/* Extracted review item with distinct business reply */
+const ReviewItem = ({ review, isAr, renderStars, tierColors, t }: any) => (
+  <div className="space-y-1">
+    <div className="flex items-start justify-between gap-2">
+      <div className="flex items-center gap-1.5 min-w-0">
+        <div className="w-6 h-6 rounded-full bg-secondary flex items-center justify-center text-[10px] font-bold text-foreground flex-shrink-0">
+          {review.author.charAt(0)}
+        </div>
+        <div className="min-w-0">
+          <div className="flex items-center gap-1">
+            <span className="text-xs font-semibold text-foreground truncate">
+              {isAr ? (review.authorAr || review.author) : review.author}
+            </span>
+            {review.tier &&
+              <span className={`text-[8px] px-1 py-0 rounded-full font-bold uppercase ${tierColors[review.tier] || ""}`}>
+                {review.tier}
+              </span>
+            }
+          </div>
+          <p className="text-[10px] text-muted-foreground truncate">
+            {review.project} • {review.developerId}
+          </p>
+        </div>
+      </div>
+      <div className="flex items-center gap-0.5 flex-shrink-0">
+        <div className="flex">{renderStars(review.rating)}</div>
+      </div>
+    </div>
+
+    <p className="text-xs text-foreground/80 leading-snug line-clamp-2">
+      {isAr ? (review.commentAr || review.comment) : review.comment}
+    </p>
+    <p className="text-[9px] text-muted-foreground">{review.date}</p>
+
+    {review.developerReply &&
+      <div className="ms-5 p-2.5 bg-primary/5 rounded-md border-s-2 border-primary">
+        <div className="flex items-center gap-1.5 mb-1">
+          <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-full bg-primary/10">
+            <Building2 className="w-2.5 h-2.5 text-primary" />
+            <span className="text-[9px] font-bold text-primary uppercase tracking-wide">
+              {isAr ? "رد الشركة" : "Business Reply"}
+            </span>
+          </div>
+          <span className="text-[9px] text-muted-foreground">
+            {review.developerReply.date}
+          </span>
+        </div>
+        <p className="text-[11px] text-foreground/70 leading-snug line-clamp-2">
+          {isAr ? (review.developerReply.commentAr || review.developerReply.comment) : review.developerReply.comment}
+        </p>
+      </div>
+    }
+  </div>
+);
