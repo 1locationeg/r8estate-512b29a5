@@ -1,23 +1,30 @@
 
 
-## Plan: Oscillating Needle Motion for Trust Gauge
+## Plan: Enrich Live Feed Sources and Bold/Color Key Words
 
-### Problem
-The gauge needle currently jumps instantly to new scores during the auto-cycle (review transitions set `displayScore` directly). Even the `animateToScore` function uses a simple ease-out with no oscillation — it moves once and stops.
+### What Changes
 
-### Solution
-Two changes to make the needle feel alive:
+**1. Add launch events** to the feed data fetch
+- Query `launches` table for recent active launches (status `reservations_open` or `upcoming`)
+- Create feed items like "New launch: **Mountain View iCity** — **120** units available" with keyword `LAUNCH` and a Rocket icon
 
-**1. Spring-based score transitions** (`advanceSequence` + `animateToScore`)
-- Replace the direct `setDisplayScore(nextScore)` in review transitions with an animated spring that overshoots the target, bounces back, and settles (damped oscillation)
-- Easing: `1 - e^(-6t) * cos(4πt)` — a damped sine wave that overshoots ~15% then settles within ~1.2s
+**2. Add more diverse fallback events** covering all 4 source types (reviews, deals, launches, community) so the feed always feels multi-source even without DB data
 
-**2. Subtle idle micro-oscillation**
-- When the needle is "resting" at a score, add a continuous ±1–2 point wobble using a slow sine wave (`sin(t * 0.8)`) — like a real analog gauge with slight vibration
-- This runs via `requestAnimationFrame` and only affects `displayScore`, not the logical `score`
+**3. Color-code the keyword badge per event type**
+- `LIVE` (buyer_check) — emerald green background
+- `REVIEW` — gold/amber background  
+- `HOT DEAL` — red/brand-red background
+- `LAUNCH` — cyan/blue background
+- `TRENDING` (community) — purple background
+
+**4. Highlight numbers and entity names in the feed text**
+- Instead of rendering `displayText` as a plain string, parse it to wrap:
+  - **Numbers** (e.g. "47", "4.2/5") in `font-bold text-white` (stand out from the `text-white/90` body)
+  - **Entity names** (stored in `entityName`) in `font-bold text-amber-300` (gold highlight)
+- This makes the ticker scannable — eyes catch the numbers and names instantly
 
 ### Files Modified
-- `src/components/HeroTrustShowcase.tsx` — Replace `animateToScore` easing with spring physics, add idle oscillation effect, update `advanceSequence` to use animated transitions instead of instant jumps
+- `src/components/LiveMarketPulse.tsx` — Add launch fetch, keyword color map, rich text rendering with highlighted segments
 
-### No database changes.
+### No database changes needed.
 
