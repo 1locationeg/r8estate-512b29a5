@@ -501,7 +501,7 @@ const Index = () => { // hero-phase-v2
               </div>
 
               {/* ReviewsCarousel */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12"><ReviewsCarousel /></div>
+              <div className="w-full max-w-[1100px] py-8 md:py-0"><ReviewsCarousel /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
