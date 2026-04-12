@@ -119,9 +119,12 @@ export const CollectiveBuyerProtection = () => {
                 />
               ))}
             </div>
-            <span className="text-xs text-white/70 whitespace-pre-line">
-              <span className="text-white font-bold tabular-nums">{protectedCount.value}+</span>{" "}
-              {isAr ? "مشتري حموا فلوسهم هذا الشهر" : "buyers\n already protected their money this month"}
+            <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+</span>
+            <span className="text-xs text-white/70">{isAr ? "مشتري" : "buyers"}</span>
+          </div>
+          <div className="ltr:ml-6 rtl:mr-6">
+            <span className="text-xs text-white/70">
+              {isAr ? "حموا فلوسهم هذا الشهر" : "already protected their money this month"}
             </span>
           </div>
 
