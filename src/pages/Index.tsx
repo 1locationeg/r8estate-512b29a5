@@ -426,13 +426,7 @@ const Index = () => { // hero-phase-v2
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
 
-          {/* AudienceSegmentCards — right after compare */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
-            <AudienceSegmentCards />
-          </div>
-          <div className="w-16 h-px bg-border mx-auto" />
-
-          {/* Quick Actions + Widgets — right after audience */}
+          {/* Quick Actions + Widgets — right after compare */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {quickActions.map((action) => {
@@ -522,6 +516,8 @@ const Index = () => { // hero-phase-v2
               <div className="w-16 h-px bg-border mx-auto" />
 
 
+              {/* AudienceSegmentCards */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
 
               {!specialViewItem && !selectedDeveloper && (
                 <>
