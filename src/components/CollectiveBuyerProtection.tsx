@@ -49,17 +49,9 @@ export const CollectiveBuyerProtection = () => {
   const riskAmount = useCountUp(183, 2200);
   const protectedCount = useCountUp(323, 1800);
 
-  const risks = isAr
-    ? [
-        "المشتري المصري يخاطر بـ 1.2 مليون جنيه على مطور غير موثق",
-        "1 من كل 4 مشترين أوف بلان يواجه تأخير تسليم +1 سنة",
-        "لا حماية قانونية لما توقّع من غير ما تقرأ تقييمات موثقة",
-      ]
-    : [
-        "Average Egyptian buyer risks EGP 1.2M on an unverified developer",
-        "1 in 4 off-plan buyers faces delivery delays of 1+ years",
-        "No legal protection when signing without reading verified reviews",
-      ];
+  const riskKeywords = isAr
+    ? ["نصب", "تأخير", "بلا حماية"]
+    : ["Scams", "Delays", "No Protection"];
 
   const shareText = isAr
     ? "183 مليون جنيه في خطر — احمي فلوسك مع R8ESTATE"
@@ -82,80 +74,58 @@ export const CollectiveBuyerProtection = () => {
             backgroundSize: "18px 18px",
           }}
         />
-        {/* Radial glow */}
-        <div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(ellipse 50% 60% at 25% 50%, hsla(0,70%,50%,0.06) 0%, transparent 70%)",
-          }}
-        />
 
-        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-4 px-5 py-5 md:px-8 md:py-6">
-          {/* WITHOUT R8ESTATE */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <Shield className="h-4 w-4 text-destructive shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-wider text-destructive">
-                {isAr ? "بدون R8ESTATE — الخطر الحقيقي" : "Without R8ESTATE — the real risk"}
-              </span>
-            </div>
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4">
+          {/* Row 1: Header + Counter */}
+          <div className="flex items-center gap-2 flex-wrap">
+            <Shield className="h-4 w-4 text-destructive shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-destructive">
+              {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
+            </span>
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-[hsl(0,85%,60%)] ltr:ml-auto rtl:mr-auto">
+              {riskAmount.value}M EGP
+            </span>
+          </div>
 
-            {/* Big risk number */}
-            <div className="flex items-baseline gap-2">
-              <span className="text-3xl md:text-4xl font-black tabular-nums text-[hsl(0,85%,60%)]">
-                {riskAmount.value}M EGP
-              </span>
-              <span className="text-xs text-white/50">
-                {isAr ? "في خطر على المشترين المصريين الآن" : "at risk across Egyptian off-plan buyers right now"}
-              </span>
-            </div>
-
-            {/* Risk bullets */}
-            <div className="flex flex-col gap-1.5">
-              {risks.map((risk, i) => (
-                <div key={i} className="flex items-start gap-2">
-                  <X className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
-                  <p className="text-xs text-white/70 leading-relaxed">{risk}</p>
-                </div>
-              ))}
-            </div>
+          {/* Row 2: Risk keyword pills */}
+          <div className="flex items-center gap-3 flex-wrap">
+            {riskKeywords.map((word, i) => (
+              <div key={i} className="flex items-center gap-1">
+                <X className="h-3.5 w-3.5 text-destructive shrink-0" />
+                <span className="text-sm font-bold text-white">{word}</span>
+              </div>
+            ))}
           </div>
 
           {/* Divider */}
           <div className="border-t border-white/10" />
 
-          {/* WITH R8ESTATE */}
-          <div className="flex flex-col gap-3">
-            <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-[hsl(45,96%,54%)] shrink-0" />
-              <span className="text-xs font-bold uppercase tracking-wider text-[hsl(45,96%,54%)]">
-                {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
-              </span>
+          {/* Row 3: WITH R8ESTATE */}
+          <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
+            <CheckCircle className="h-4 w-4 text-[hsl(45,96%,54%)] shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-[hsl(45,96%,54%)]">
+              {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
+            </span>
+            <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
+              {avatars.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  width={22}
+                  height={22}
+                  className="h-[22px] w-[22px] rounded-full border-2 border-white/20 object-cover"
+                />
+              ))}
             </div>
-
-            <div ref={protectedCount.ref} className="flex items-center gap-3">
-              <div className="flex -space-x-2 rtl:space-x-reverse">
-                {avatars.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    loading="lazy"
-                    width={24}
-                    height={24}
-                    className="h-6 w-6 rounded-full border-2 border-white/20 object-cover"
-                  />
-                ))}
-              </div>
-              <span className="text-xs text-white/70">
-                <span className="text-white font-bold tabular-nums">{protectedCount.value}+</span>{" "}
-                {isAr ? "مشتري حموا فلوسهم الشهر ده" : "buyers already protected their money this month"}
-              </span>
-            </div>
+            <span className="text-xs text-white/70">
+              <span className="text-white font-bold tabular-nums">{protectedCount.value}+</span>{" "}
+              {isAr ? "محميين" : "protected"}
+            </span>
           </div>
 
-          {/* Action row */}
+          {/* Row 4: CTA */}
           <div className="flex items-center gap-3">
             <Button
               size="sm"
