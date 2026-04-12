@@ -416,18 +416,18 @@ const Index = () => { // hero-phase-v2
           <JourneyScrollSections />
 
           {/* FeaturedIdentitySpotlight — right after 4/4 Protect */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <FeaturedIdentitySpotlight />
           </div>
 
           {/* CompareEngineShowcase — right after spotlight */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <CompareEngineShowcase />
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
 
           {/* Quick Actions + Widgets — right after compare */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {quickActions.map((action) => {
                 const Icon = action.icon;
@@ -474,7 +474,7 @@ const Index = () => { // hero-phase-v2
               <div className="w-16 h-px bg-border mx-auto" />
 
               {/* HowWeWork */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12">
+              <div className="w-full max-w-[1100px] py-4 md:py-6">
                 <HowWeWork />
               </div>
 
@@ -535,7 +535,7 @@ const Index = () => { // hero-phase-v2
               <div className="w-16 h-px bg-border mx-auto" />
 
               {/* StepTimeline */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12"><StepTimeline /></div>
+              <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
 
@@ -547,7 +547,7 @@ const Index = () => { // hero-phase-v2
                   <div className="w-16 h-px bg-border mx-auto" />
 
                   {/* SmartRecommendations */}
-                  <div className="w-full max-w-[1100px] py-8 md:py-12"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+                  <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
 
                 </>
               )}
@@ -665,7 +665,7 @@ const Index = () => { // hero-phase-v2
       <ContractUploadModal open={showContractModal} onOpenChange={setShowContractModal} />
 
       {/* Footer */}
-      <div className="snap-start mt-4">
+      <div className="snap-start mt-0">
         <Footer />
       </div>
     </div>

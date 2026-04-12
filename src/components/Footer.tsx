@@ -92,7 +92,7 @@ export const Footer = () => {
     <footer className="bg-slate-900 text-slate-200 safe-bottom">
 
       {/* Main Footer Content */}
-      <div className="container mx-auto px-4 py-10 md:py-14">
+      <div className="container mx-auto px-4 py-6 md:py-8">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-10">
           {/* Newsletter + Social */}
           <div className="lg:col-span-1 space-y-6">
