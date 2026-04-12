@@ -46,7 +46,7 @@ export const CollectiveBuyerProtection = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === "ar";
   const navigate = useNavigate();
-  const riskAmount = useCountUp(183, 2200);
+  const riskAmount = useCountUp(847, 2200);
   const protectedCount = useCountUp(323, 1800);
 
   const riskKeywords = isAr
@@ -54,8 +54,8 @@ export const CollectiveBuyerProtection = () => {
     : ["Scams", "Delays", "No Protection"];
 
   const shareText = isAr
-    ? "183 مليون جنيه في خطر — احمي فلوسك مع R8ESTATE"
-    : "183M EGP at risk — protect your money with R8ESTATE";
+    ? "847 مليون جنيه في خطر — احمي فلوسك مع R8ESTATE"
+    : "847M EGP at risk — protect your money with R8ESTATE";
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
