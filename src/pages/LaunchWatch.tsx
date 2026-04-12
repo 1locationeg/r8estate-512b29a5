@@ -46,8 +46,6 @@ const LaunchWatch = () => {
     { value: "newest", label: t("launchWatch.newest") },
   ];
 
-
-const LaunchWatch = () => {
   const navigate = useNavigate();
   const [launches, setLaunches] = useState<any[]>([]);
   const [allRatings, setAllRatings] = useState<any[]>([]);
