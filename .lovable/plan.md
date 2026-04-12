@@ -1,16 +1,17 @@
 
 
-## Plan: Move CompareEngineShowcase under FeaturedIdentitySpotlight
+## Plan: Move AudienceSegmentCards under "From doubt to confidence"
 
-### What changes
+### Changes in `src/pages/Index.tsx`
 
-In `src/pages/Index.tsx`:
+1. **Remove** line 520: `<div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>`
 
-1. **Remove** the CompareEngineShowcase block from its current position (line 510-511, inside the below-the-fold section) along with its following divider (line 513).
+2. **Insert** after the HowWeWork block (after line 481), with a divider:
+```
+<div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
+<div className="w-16 h-px bg-border mx-auto" />
+```
 
-2. **Insert** it immediately after the `FeaturedIdentitySpotlight` wrapper (after line 421), with a divider and matching container styling.
-
-### Result
-
-The Compare Engine showcase will appear directly beneath the Featured Identity Spotlight, before the "Below-the-fold" section starts. The layout order will be: JourneyScrollSections → FeaturedIdentitySpotlight → CompareEngineShowcase → Trust Strip → rest of page.
+### Resulting order
+HowWeWork ("From doubt to confidence") → **AudienceSegmentCards** → Category Links → ...
 
