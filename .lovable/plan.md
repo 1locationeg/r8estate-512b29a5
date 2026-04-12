@@ -1,40 +1,32 @@
 
 
-## Plan: Redesign Copy to "Cost of NOT Joining" Framework
+## Plan: Compact the Collective Buyer Protection Card
 
 ### What Changes
 
-Restructure the component into a **two-part narrative** — "WITHOUT R8ESTATE" (fear/risk) → "WITH R8ESTATE" (safety/proof) — to make visitors feel the real cost of inaction.
+Shrink the card dramatically by replacing verbose risk sentences with **single bold keyword pills** that communicate benefits/risks at a glance, and tighten all spacing.
 
-### New Layout (top to bottom)
+### New Layout (compact, single flow)
 
-1. **Section header**: `"Without R8ESTATE — the real risk"` in bold white with a red accent
-2. **Big animated number**: `183M EGP` in large red/amber text with subtitle `"at risk across Egyptian off-plan buyers right now"`
-3. **Three static risk bullets** (always visible, not rotating — all 3 hit harder together):
-   - ✗ Average Egyptian buyer risks EGP 1.2M on an unverified developer
-   - ✗ 1 in 4 off-plan buyers faces delivery delays of 1+ years
-   - ✗ No legal protection when signing without reading verified reviews
-4. **Divider line** (subtle white/10 border)
-5. **"WITH R8ESTATE"** section in green/gold accent:
-   - Avatars + `"323+ buyers already protected their money this month"`
-6. **CTA row**: "Protect My Purchase" button + Share icon
+1. **Header row** — Shield icon + "Without R8ESTATE" label + animated `183M EGP` counter — all on ONE line
+2. **Risk keywords row** — Three inline pills with ✗ icon + single bold word each:
+   - ✗ **Scams** · ✗ **Delays** · ✗ **No Protection**
+   - Arabic: ✗ **نصب** · ✗ **تأخير** · ✗ **بلا حماية**
+   - Keywords styled `text-sm font-bold text-white` (bigger than current `text-xs`)
+3. **Thin divider**
+4. **"WITH R8ESTATE" row** — CheckCircle + label + avatars + `323+` count — all on ONE line
+5. **CTA row** — Button + Share (unchanged)
 
-### Key Copy Changes
-- Replace "Don't buy blind" hook with the fear-framing "Without R8ESTATE" header
-- Change animated counter from `847M` to `183M` (risk amount, not protected)
-- Change `1 in 3` → `1 in 4` per user's copy
-- Show all 3 risks simultaneously (remove rotating logic) — stacked vertically with red ✗ marks
-- Add the positive flip: "WITH R8ESTATE" + `323+` protected count
-- Arabic translations for all new copy
-
-### Visual Treatment
-- Risk section: red `X` icons, white text, urgent feel
-- "WITH R8ESTATE" text in gold/green to contrast the red danger above
-- Keep dark navy gradient background, dot texture, radial glow
-- Slightly more padding to accommodate the two-section layout
+### Key Differences from Current
+- Remove 3 full-sentence risk bullets → replace with 3 single-word pills inline
+- Remove the subtitle text under "183M EGP" (the number speaks for itself)
+- Merge header + counter into one line
+- Reduce gaps from `gap-4` → `gap-2`, padding from `py-5` → `py-3`
+- Benefit keywords are `text-sm font-bold` (bigger than current `text-xs` sentences)
+- Overall card height drops ~50%
 
 ### Files Modified
-- `src/components/CollectiveBuyerProtection.tsx` — Full copy rewrite, remove rotating risk logic, add two-section layout with static risk bullets + positive flip
+- `src/components/CollectiveBuyerProtection.tsx` — Compact layout, keyword pills, tighter spacing
 
 ### No database changes needed.
 
