@@ -442,7 +442,7 @@ const Index = () => { // hero-phase-v2
               <div className="w-16 h-px bg-border mx-auto" />
 
               {/* CollectiveBuyerProtection */}
-              <div className="w-full max-w-[1100px] py-8 md:py-0">
+              <div className="w-full max-w-[1100px] py-0">
                 <CollectiveBuyerProtection />
               </div>
 
