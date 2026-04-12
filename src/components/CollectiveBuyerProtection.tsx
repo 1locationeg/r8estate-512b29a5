@@ -120,7 +120,7 @@ export const CollectiveBuyerProtection = () => {
               ))}
             </div>
             <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+</span>
-            <span className="text-xs text-white/70">{isAr ? "مشتري" : "buyers"}</span>
+            
           </div>
           <div className="ltr:ml-6 rtl:mr-6">
             <span className="text-xs text-white/70">
