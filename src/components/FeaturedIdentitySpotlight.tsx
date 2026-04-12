@@ -28,6 +28,7 @@ export const FeaturedIdentitySpotlight = () => {
   const [showAllReviews, setShowAllReviews] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [categoryPairIndex, setCategoryPairIndex] = useState(0);
+  const [reviewIndex, setReviewIndex] = useState(0);
 
   const totalPairs = Math.ceil(trustCategoryKeys.length / 2);
 
