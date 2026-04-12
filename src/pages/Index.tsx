@@ -370,6 +370,11 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
 
+            {/* Collective Buyer Protection */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <CollectiveBuyerProtection />
+            </div>
+
             {userMode === "buyers" && (
               <>
                 {searchFocused && (
@@ -441,12 +446,6 @@ const Index = () => { // hero-phase-v2
 
               <div className="w-16 h-px bg-border mx-auto" />
 
-              {/* CollectiveBuyerProtection */}
-              <div className="w-full max-w-[1100px] py-0">
-                <CollectiveBuyerProtection />
-              </div>
-
-              <div className="w-16 h-px bg-border mx-auto" />
 
               {/* Category Links */}
               <div className="w-full max-w-[1100px] py-8 md:py-12">
