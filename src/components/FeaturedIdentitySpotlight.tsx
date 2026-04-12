@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Star, Shield, MessageSquare, ChevronRight, Bookmark, UserPlus, UserCheck } from "lucide-react";
+import { Star, Shield, Building2, ChevronRight, Bookmark, UserPlus, UserCheck } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { developers, reviews } from "@/data/mockData";
 import { ShareMenu } from "./ShareMenu";
