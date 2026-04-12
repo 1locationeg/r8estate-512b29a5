@@ -1592,5 +1592,15 @@
     "ctaReview": "Write a review",
     "welcomeBack": "Welcome back!",
     "goToDashboard": "Go to Dashboard"
+  },
+  "siteFeedback": {
+    "badge": "RATE YOUR EXPERIENCE",
+    "headline": "Did you find what you were looking for?",
+    "subtitle": "Tell us what's missing — your feedback shapes the platform.",
+    "foundIt": "Yes, found it",
+    "suggest": "Suggest something →",
+    "reportIssue": "Report an issue",
+    "footnote": "We practice what we preach. Every visit is an experience worth reviewing.",
+    "thankYou": "Thanks for your feedback!"
   }
 }
