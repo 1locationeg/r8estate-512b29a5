@@ -426,6 +426,29 @@ const Index = () => { // hero-phase-v2
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
 
+          {/* Quick Actions + Widgets — right after compare */}
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <button key={action.title} onClick={() => handleQuickAction(action.key)} className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] transition-all duration-500 text-start group">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
+                      <Icon className={`w-4 h-4 text-primary`} />
+                    </div>
+                    <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
+                    <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
+                  </button>
+                );
+              })}
+              <DealWatchWidget />
+              <LaunchWatchWidget />
+              <ContractCheckCard onClick={() => setShowContractModal(true)} />
+              <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
+            </div>
+          </div>
+          <div className="w-16 h-px bg-border mx-auto" />
+
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
