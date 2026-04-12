@@ -1,17 +1,15 @@
 
 
-## Plan: Move AudienceSegmentCards under "From doubt to confidence"
+## Plan: Move trust badges before ReviewsCarousel
 
 ### Changes in `src/pages/Index.tsx`
 
-1. **Remove** line 520: `<div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>`
+1. **Remove** the trust badges block (lines 657–666) from the bottom "Trust Badges + Reviews + Footer" wrapper — the two "Zero Risk" and "100% Confidence" buttons and their flex container.
 
-2. **Insert** after the HowWeWork block (after line 481), with a divider:
-```
-<div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
-<div className="w-16 h-px bg-border mx-auto" />
-```
+2. **Insert** that same flex container immediately before the `ReviewsCarousel` block (before line 492), inside the same below-the-fold section so they share one visual fold.
 
-### Resulting order
-HowWeWork ("From doubt to confidence") → **AudienceSegmentCards** → Category Links → ...
+3. The bottom wrapper (lines 655–669) simplifies to just `<Footer />`.
+
+### Resulting order around that area
+… CommunityHighlights → **Trust Badges (Zero Risk / 100% Confidence)** → ReviewsCarousel → Category Links → …
 
