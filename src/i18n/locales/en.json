@@ -1577,5 +1577,20 @@
       "title": "Business",
       "desc": "For companies"
     }
+  },
+  "journeyComplete": {
+    "badge": "Journey complete",
+    "headline1": "You've done the research.",
+    "headline2": "Now make your move.",
+    "socialProof": "Join 39,000+ users making safer real estate decisions",
+    "rewardText": "+50 coins when you sign up today",
+    "benefit1": "Verified Reviews",
+    "benefit2": "Trust Reports",
+    "benefit3": "Deal Alerts",
+    "ctaStart": "Start for free",
+    "ctaCompare": "Compare developers",
+    "ctaReview": "Write a review",
+    "welcomeBack": "Welcome back!",
+    "goToDashboard": "Go to Dashboard"
   }
 }
