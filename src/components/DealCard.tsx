@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Star, Share2, Flame, Clock, Scale } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -39,13 +40,16 @@ interface DealCardProps {
   onToggleCompare?: (id: string) => void;
 }
 
-const dealTypeLabels: Record<string, string> = {
-  payment_plan: "Payment Plan",
-  discount: "Discount",
-  early_access: "Early Access",
-  exclusive_units: "Exclusive Units",
-  other: "Other",
-};
+export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompare }: DealCardProps) => {
+  const { t } = useTranslation();
+
+  const dealTypeLabels: Record<string, string> = {
+    payment_plan: t("dealCard.paymentPlan"),
+    discount: t("dealCard.discount"),
+    early_access: t("dealCard.earlyAccess"),
+    exclusive_units: t("dealCard.exclusiveUnits"),
+    other: t("dealCard.other"),
+  };
 
 function isNew(created: string) {
   return (Date.now() - new Date(created).getTime()) < 7 * 24 * 60 * 60 * 1000;
@@ -55,7 +59,6 @@ function isHot(ratingCount: number) {
   return ratingCount >= 10;
 }
 
-export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompare }: DealCardProps) => {
   const [expanded, setExpanded] = useState(false);
   const [showRating, setShowRating] = useState(false);
   const { user } = useAuth();
@@ -81,14 +84,14 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
         {hot && (
           <div className="absolute -top-px -right-px">
             <div className="bg-gradient-to-bl from-orange-500 to-red-500 text-white text-[9px] font-bold px-3 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1 animate-pulse">
-              <Flame className="w-3 h-3" /> POPULAR
+              <Flame className="w-3 h-3" /> {t("dealCard.popular")}
             </div>
           </div>
         )}
         {!hot && fresh && (
           <div className="absolute -top-px -right-px">
             <div className="bg-gradient-to-bl from-accent to-yellow-500 text-primary text-[9px] font-bold px-3 py-0.5 rounded-bl-lg rounded-tr-xl flex items-center gap-1">
-              <Clock className="w-3 h-3" /> JUST IN
+              <Clock className="w-3 h-3" /> {t("dealCard.justIn")}
             </div>
           </div>
         )}
@@ -106,7 +109,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
               {biz?.company_name || "Business"}
             </span>
             <span className="text-[10px] text-muted-foreground leading-tight">
-              Submitted by business
+              {t("dealCard.submittedByBusiness")}
             </span>
           </div>
           {biz?.specialties?.[0] && (
@@ -154,7 +157,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
           {expanded ? deal.description : deal.description.slice(0, 120)}
           {deal.description.length > 120 && (
             <button onClick={() => setExpanded(!expanded)} className="text-primary text-xs ms-1 font-medium">
-              {expanded ? "Show less" : "Read more"}
+              {expanded ? t("dealCard.showLess") : t("dealCard.readMore")}
             </button>
           )}
         </p>
@@ -179,10 +182,10 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
             ))}
           </div>
           <span className="text-sm font-medium text-foreground">{avgRating.toFixed(1)}</span>
-          <span className="text-xs text-muted-foreground">({deal.rating_count} ratings)</span>
+          <span className="text-xs text-muted-foreground">({deal.rating_count} {t("dealCard.ratings")})</span>
           {hot && (
             <span className="text-[10px] text-orange-600 font-semibold ms-1 flex items-center gap-0.5">
-              <Flame className="w-3 h-3" /> Trending
+              <Flame className="w-3 h-3" /> {t("dealCard.trending")}
             </span>
           )}
         </div>
@@ -200,7 +203,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
               onClick={() => onToggleCompare(deal.id)}
             >
               <Scale className="w-3 h-3" />
-              {isSelected ? "Selected" : "Compare"}
+              {isSelected ? t("dealCard.selected") : t("dealCard.compare")}
             </Button>
           )}
           <Button
@@ -215,7 +218,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
                 : "bg-primary text-primary-foreground"
             }`}
           >
-            Rate this deal
+            {t("dealCard.rateThisDeal")}
           </Button>
           {biz?.id && (
             <Button
@@ -224,7 +227,7 @@ export const DealCard = ({ deal, onRated, compareMode, isSelected, onToggleCompa
               className="text-xs text-muted-foreground"
               onClick={() => navigate(`/directory`)}
             >
-              View business
+              {t("dealCard.viewBusiness")}
             </Button>
           )}
           <ShareMenu
