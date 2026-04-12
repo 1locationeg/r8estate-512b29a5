@@ -454,7 +454,7 @@ const Index = () => { // hero-phase-v2
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
 
               {/* Trust Strip — softened */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12">
+              <div className="w-full max-w-[1100px] py-4 md:py-6">
                 <div className="flex items-center justify-between gap-1.5 py-2.5 px-3 rounded-xl bg-primary/10 border border-primary/20">
                   <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
                     <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
