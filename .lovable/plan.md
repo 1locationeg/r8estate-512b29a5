@@ -1,14 +1,22 @@
 
 
-## Plan: Move FeaturedIdentitySpotlight under JourneyScrollSections (4/4 Protect)
+## Plan: Auto-rotating reviews with distinct business reply styling
 
-### What changes
-In `src/pages/Index.tsx`:
+### Changes to `src/components/FeaturedIdentitySpotlight.tsx`
 
-1. **Remove** the FeaturedIdentitySpotlight block from its current position (lines 514-520, inside the `!specialViewItem && !selectedDeveloper` conditional block).
+1. **Add `reviewIndex` state** and auto-rotate every 5 seconds through `devReviews`, resetting when the developer changes.
 
-2. **Insert** it immediately after `<JourneyScrollSections />` (line 416), before the "Below-the-fold" section, wrapped in the same styling container with a divider.
+2. **Show one review at a time** with a fade-in animation (reuse `animate-fade-in`). Remove arrows — rotation is fully automatic. Add small dot indicators below the review so users can see progress.
 
-### Result
-The Featured Identity Spotlight card will appear directly beneath the 4/4 Protect journey section, above the Trust Strip and other below-the-fold content. It will no longer be conditionally hidden when a developer or item detail is selected.
+3. **Keep "View all reviews" button** — still toggles `showAllReviews` to expand the full list. When expanded, auto-rotation pauses.
+
+4. **Restyle business reply block** to be clearly distinguishable:
+   - Add a colored left border (`border-l-2 border-primary`) and a "Business Reply" / "رد الشركة" label badge with a `Building2` icon instead of `MessageSquare`.
+   - Use a slightly different background (`bg-primary/5`) so it visually separates from user reviews.
+   - Make the label more prominent with a small pill badge.
+
+### Summary of behavior
+- Single review visible → auto-fades to next every 5s → dot indicators show position
+- "View all reviews" expands full list and stops rotation
+- Business replies get a distinct visual treatment (colored border, icon, label badge)
 
