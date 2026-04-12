@@ -420,6 +420,12 @@ const Index = () => { // hero-phase-v2
             <FeaturedIdentitySpotlight />
           </div>
 
+          {/* CompareEngineShowcase — right after spotlight */}
+          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-8 md:py-12">
+            <CompareEngineShowcase />
+          </div>
+          <div className="w-16 h-px bg-border mx-auto" />
+
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
             <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
@@ -507,10 +513,6 @@ const Index = () => { // hero-phase-v2
 
               <div className="w-16 h-px bg-border mx-auto" />
 
-              {/* CompareEngineShowcase */}
-              <div className="w-full max-w-[1100px] py-8 md:py-12 bg-primary/[0.02] -mx-3 sm:-mx-4 md:-mx-8 lg:-mx-12 px-3 sm:px-4 md:px-8 lg:px-12"><CompareEngineShowcase /></div>
-
-              <div className="w-16 h-px bg-border mx-auto" />
 
               {/* AudienceSegmentCards */}
               <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
