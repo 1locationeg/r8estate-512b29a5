@@ -1,16 +1,13 @@
 
 
-## Plan: Move CompareEngineShowcase under FeaturedIdentitySpotlight
+## Plan: Move AudienceSegmentCards under CompareEngineShowcase
 
-### What changes
+### Changes in `src/pages/Index.tsx`
 
-In `src/pages/Index.tsx`:
+1. **Remove** the AudienceSegmentCards block from its current position (line 520) inside the below-the-fold section.
 
-1. **Remove** the CompareEngineShowcase block from its current position (line 510-511, inside the below-the-fold section) along with its following divider (line 513).
+2. **Insert** it immediately after the CompareEngineShowcase block (after line 427), with the same container styling and a divider.
 
-2. **Insert** it immediately after the `FeaturedIdentitySpotlight` wrapper (after line 421), with a divider and matching container styling.
-
-### Result
-
-The Compare Engine showcase will appear directly beneath the Featured Identity Spotlight, before the "Below-the-fold" section starts. The layout order will be: JourneyScrollSections → FeaturedIdentitySpotlight → CompareEngineShowcase → Trust Strip → rest of page.
+### Resulting layout order
+JourneyScrollSections → FeaturedIdentitySpotlight → CompareEngineShowcase → **AudienceSegmentCards** → Quick Actions + Widgets → Below-the-fold sections
 
