@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Shield, AlertTriangle } from "lucide-react";
+import { Shield, X, CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ShareMenu } from "@/components/ShareMenu";
 import { Button } from "@/components/ui/button";
@@ -46,37 +46,24 @@ export const CollectiveBuyerProtection = () => {
   const { i18n } = useTranslation();
   const isAr = i18n.language === "ar";
   const navigate = useNavigate();
-  const protectedAmount = useCountUp(847, 2200);
-  const buyerCount = useCountUp(1247, 1800);
-  const [riskIndex, setRiskIndex] = useState(0);
-  const [fadeIn, setFadeIn] = useState(true);
+  const riskAmount = useCountUp(183, 2200);
+  const protectedCount = useCountUp(323, 1800);
 
   const risks = isAr
     ? [
         "المشتري المصري يخاطر بـ 1.2 مليون جنيه على مطور غير موثق",
-        "1 من كل 3 مشترين أوف بلان يواجه تأخير تسليم +1 سنة",
+        "1 من كل 4 مشترين أوف بلان يواجه تأخير تسليم +1 سنة",
         "لا حماية قانونية لما توقّع من غير ما تقرأ تقييمات موثقة",
       ]
     : [
-        "Average buyer risks EGP 1.2M on an unverified developer",
-        "1 in 3 off-plan buyers faces delivery delays of 1+ years",
-        "No protection when you sign without verified reviews",
+        "Average Egyptian buyer risks EGP 1.2M on an unverified developer",
+        "1 in 4 off-plan buyers faces delivery delays of 1+ years",
+        "No legal protection when signing without reading verified reviews",
       ];
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setFadeIn(false);
-      setTimeout(() => {
-        setRiskIndex((prev) => (prev + 1) % risks.length);
-        setFadeIn(true);
-      }, 300);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [risks.length]);
-
   const shareText = isAr
-    ? "847 مليون جنيه محميين بتقييمات مشترين حقيقيين على R8ESTATE"
-    : "847M EGP protected by real buyers on R8ESTATE";
+    ? "183 مليون جنيه في خطر — احمي فلوسك مع R8ESTATE"
+    : "183M EGP at risk — protect your money with R8ESTATE";
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
@@ -100,27 +87,54 @@ export const CollectiveBuyerProtection = () => {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(ellipse 50% 60% at 25% 50%, hsla(45,96%,54%,0.06) 0%, transparent 70%)",
+              "radial-gradient(ellipse 50% 60% at 25% 50%, hsla(0,70%,50%,0.06) 0%, transparent 70%)",
           }}
         />
 
-        <div ref={protectedAmount.ref} className="relative z-10 flex flex-col gap-3 px-5 py-4 md:px-8 md:py-5">
-          {/* Hook headline */}
-          <div className="flex items-center gap-3">
-            <Shield className="h-5 w-5 text-[hsl(45,96%,54%)] animate-pulse shrink-0" />
-            <h2 className="text-base md:text-lg font-extrabold text-white leading-tight">
-              {isAr ? (
-                <>ما تشتريش وانت أعمى. <span className="text-[hsl(45,96%,54%)] tabular-nums">{protectedAmount.value}M</span> جنيه محميين بالفعل.</>
-              ) : (
-                <>Don't buy blind. <span className="text-[hsl(45,96%,54%)] tabular-nums">{protectedAmount.value}M EGP</span> already protected.</>
-              )}
-            </h2>
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-4 px-5 py-5 md:px-8 md:py-6">
+          {/* WITHOUT R8ESTATE */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <Shield className="h-4 w-4 text-destructive shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider text-destructive">
+                {isAr ? "بدون R8ESTATE — الخطر الحقيقي" : "Without R8ESTATE — the real risk"}
+              </span>
+            </div>
+
+            {/* Big risk number */}
+            <div className="flex items-baseline gap-2">
+              <span className="text-3xl md:text-4xl font-black tabular-nums text-[hsl(0,85%,60%)]">
+                {riskAmount.value}M EGP
+              </span>
+              <span className="text-xs text-white/50">
+                {isAr ? "في خطر على المشترين المصريين الآن" : "at risk across Egyptian off-plan buyers right now"}
+              </span>
+            </div>
+
+            {/* Risk bullets */}
+            <div className="flex flex-col gap-1.5">
+              {risks.map((risk, i) => (
+                <div key={i} className="flex items-start gap-2">
+                  <X className="h-3.5 w-3.5 text-destructive shrink-0 mt-0.5" />
+                  <p className="text-xs text-white/70 leading-relaxed">{risk}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
-          {/* Social proof + rotating risk */}
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
-            {/* Avatars */}
-            <div ref={buyerCount.ref} className="flex items-center gap-2 shrink-0">
+          {/* Divider */}
+          <div className="border-t border-white/10" />
+
+          {/* WITH R8ESTATE */}
+          <div className="flex flex-col gap-3">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-[hsl(45,96%,54%)] shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider text-[hsl(45,96%,54%)]">
+                {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
+              </span>
+            </div>
+
+            <div ref={protectedCount.ref} className="flex items-center gap-3">
               <div className="flex -space-x-2 rtl:space-x-reverse">
                 {avatars.map((src, i) => (
                   <img
@@ -134,26 +148,15 @@ export const CollectiveBuyerProtection = () => {
                   />
                 ))}
               </div>
-              <span className="text-xs text-white/50 font-medium">
-                <span className="text-white/80 font-bold tabular-nums">{buyerCount.value.toLocaleString()}+</span>{" "}
-                {isAr ? "مشتري انضموا" : "buyers joined"}
+              <span className="text-xs text-white/70">
+                <span className="text-white font-bold tabular-nums">{protectedCount.value}+</span>{" "}
+                {isAr ? "مشتري حموا فلوسهم الشهر ده" : "buyers already protected their money this month"}
               </span>
-            </div>
-
-            {/* Rotating risk */}
-            <div className="flex items-center gap-2 min-h-[20px]">
-              <AlertTriangle className="h-3.5 w-3.5 text-destructive shrink-0" />
-              <p
-                className="text-xs text-white/60 leading-relaxed transition-opacity duration-300"
-                style={{ opacity: fadeIn ? 1 : 0 }}
-              >
-                {risks[riskIndex]}
-              </p>
             </div>
           </div>
 
           {/* Action row */}
-          <div className="flex items-center gap-3 pt-1">
+          <div className="flex items-center gap-3">
             <Button
               size="sm"
               variant="glow"
