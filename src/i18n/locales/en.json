@@ -1576,6 +1576,7 @@
     "business": {
       "title": "Business",
       "desc": "For companies"
+    }
   },
   "journeyComplete": {
     "badge": "Journey complete",
