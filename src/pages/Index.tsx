@@ -532,10 +532,6 @@ const Index = () => { // hero-phase-v2
                   {/* SmartRecommendations */}
                   <div className="w-full max-w-[1100px] py-8 md:py-12"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
 
-                  <div className="w-16 h-px bg-border mx-auto" />
-
-                  {/* CommunityHighlights */}
-                  <div className="w-full max-w-[1100px] py-8 md:py-12"><CommunityHighlights /></div>
                 </>
               )}
 
