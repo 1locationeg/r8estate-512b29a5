@@ -315,8 +315,8 @@ const LaunchWatch = () => {
       <div className="max-w-3xl mx-auto px-4 py-6 pb-20 space-y-5">
         <div className="space-y-2">
           <PageHeader
-            title="Launch Watch"
-            breadcrumbs={[{ label: "Launch Watch" }]}
+            title={t("launchWatch.title")}
+            breadcrumbs={[{ label: t("launchWatch.title") }]}
             rightSlot={
               <span className="flex items-center gap-1 bg-red-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
                 <span className="relative flex h-2 w-2">
@@ -327,21 +327,21 @@ const LaunchWatch = () => {
               </span>
             }
           />
-          <p className="text-sm text-muted-foreground">Active off-plan launches — tracked, rated, and compared</p>
+          <p className="text-sm text-muted-foreground">{t("launchWatch.description")}</p>
 
           {/* Stats bar */}
           <div className="flex items-center gap-4 text-xs">
             <span className="flex items-center gap-1">
               <span className="font-bold text-foreground">{stats.active}</span>
-              <span className="text-muted-foreground">Active launches</span>
+              <span className="text-muted-foreground">{t("launchWatch.activeLaunches")}</span>
             </span>
             <span className="flex items-center gap-1">
               <span className="font-bold text-foreground">{stats.thisMonth}</span>
-              <span className="text-muted-foreground">This month</span>
+              <span className="text-muted-foreground">{t("launchWatch.thisMonth")}</span>
             </span>
             <span className="flex items-center gap-1">
               <span className="font-bold text-foreground">{stats.totalRatings}</span>
-              <span className="text-muted-foreground">Buyer ratings</span>
+              <span className="text-muted-foreground">{t("launchWatch.buyerRatings")}</span>
             </span>
           </div>
         </div>
@@ -379,7 +379,7 @@ const LaunchWatch = () => {
               <SelectValue placeholder="Developer" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Developers</SelectItem>
+              <SelectItem value="all">{t("launchWatch.allDevelopers")}</SelectItem>
               {businesses.map((b: any) => (
                 <SelectItem key={b.id} value={b.id}>{b.company_name || "Unnamed"}</SelectItem>
               ))}
@@ -395,9 +395,9 @@ const LaunchWatch = () => {
             </SelectContent>
           </Select>
 
-          <div className="flex items-center gap-1.5 ms-auto">
+           <div className="flex items-center gap-1.5 ms-auto">
             <Switch id="verified" checked={verifiedOnly} onCheckedChange={setVerifiedOnly} />
-            <Label htmlFor="verified" className="text-[10px] text-muted-foreground cursor-pointer">Verified only</Label>
+            <Label htmlFor="verified" className="text-[10px] text-muted-foreground cursor-pointer">{t("launchWatch.verifiedOnly")}</Label>
           </div>
         </div>
 
@@ -407,7 +407,7 @@ const LaunchWatch = () => {
           <Input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search launches..."
+            placeholder={t("launchWatch.searchLaunches")}
             className="ps-8 h-9 text-xs"
           />
         </div>
@@ -420,8 +420,8 @@ const LaunchWatch = () => {
         ) : filtered.length === 0 ? (
           <div className="text-center py-16 space-y-2">
             <Rocket className="w-10 h-10 text-muted-foreground mx-auto" />
-            <h3 className="font-semibold text-foreground">No launches yet</h3>
-            <p className="text-sm text-muted-foreground">Check back soon — developers are submitting their latest launches.</p>
+            <h3 className="font-semibold text-foreground">{t("launchWatch.noLaunches")}</h3>
+            <p className="text-sm text-muted-foreground">{t("launchWatch.noLaunchesDesc")}</p>
           </div>
         ) : (
           <div className="space-y-4">
