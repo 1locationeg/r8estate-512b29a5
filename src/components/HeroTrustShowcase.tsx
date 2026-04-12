@@ -161,6 +161,47 @@ export const HeroTrustShowcase = () => {
     { type: "review" as const, reviewIdx: 2 },
   ];
 
+  // ── Idle micro-oscillation (±1-2 pt wobble) ──
+  const startIdleOscillation = useCallback((baseScore: number) => {
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
+    const startTime = performance.now();
+
+    const wobble = (now: number) => {
+      const elapsed = (now - startTime) / 1000;
+      const offset = Math.sin(elapsed * 0.8) * 1.5 + Math.sin(elapsed * 1.3) * 0.5;
+      const wobbled = Math.round(Math.min(Math.max(baseScore + offset, 0), 100));
+      setDisplayScore(wobbled);
+      idleAnimRef.current = requestAnimationFrame(wobble);
+    };
+    idleAnimRef.current = requestAnimationFrame(wobble);
+  }, []);
+
+  // ── Spring-based damped oscillation animation ──
+  const springAnimateTo = useCallback((target: number) => {
+    if (animRef.current) cancelAnimationFrame(animRef.current);
+    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
+    const startVal = restingScoreRef.current;
+    const startTime = performance.now();
+    const duration = 1200;
+
+    const step = (now: number) => {
+      const elapsed = now - startTime;
+      const t = Math.min(elapsed / duration, 1);
+      const progress = 1 - Math.exp(-6 * t) * Math.cos(4 * Math.PI * t);
+      const current = Math.round(startVal + (target - startVal) * progress);
+      const clamped = Math.min(Math.max(current, 0), 100);
+      setDisplayScore(clamped);
+      if (t < 1) {
+        animRef.current = requestAnimationFrame(step);
+      } else {
+        setDisplayScore(target);
+        restingScoreRef.current = target;
+        startIdleOscillation(target);
+      }
+    };
+    animRef.current = requestAnimationFrame(step);
+  }, [startIdleOscillation]);
+
   // ── Auto-cycle logic ──
   const advanceSequence = useCallback(() => {
     const nextIdx = (seqIdxRef.current + 1) % SHOWCASE_SEQUENCE.length;
@@ -176,30 +217,24 @@ export const HeroTrustShowcase = () => {
         springAnimateTo(nextScore);
         setTimeout(() => setTransitioning(false), 50);
       }, 200);
-      // Hold review for 4s then advance
       if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
       cycleIntervalRef.current = setTimeout(() => advanceSequence(), 4000) as any;
     } else if (step.type === "agent-result") {
-      // Show result badge directly (no typing/processing)
       setTeaserIdx(step.agentIdx);
       setCardPhase("agent");
       setTeaserPhase("result");
       setTeaserTypedChars(agentTeaserPairs[step.agentIdx].question.length);
       setTeaserStep(3);
       setTeaserProgress(100);
-      // Hold for 4s then advance
       if (cycleIntervalRef.current) clearTimeout(cycleIntervalRef.current);
       cycleIntervalRef.current = setTimeout(() => advanceSequence(), 4000) as any;
     } else if (step.type === "agent-full") {
-      // Full animation — typing → processing → result; handled by effects
       setTeaserIdx(step.agentIdx);
       setCardPhase("agent");
-      // Effects will drive typing → processing → result, then we advance from result effect
     }
-  }, []);
+  }, [springAnimateTo]);
 
   const startCycling = useCallback(() => {
-    // Kick off the sequence from current position
     advanceSequence();
   }, [advanceSequence]);
 
@@ -230,7 +265,6 @@ export const HeroTrustShowcase = () => {
     const step = (now: number) => {
       const elapsed = now - start;
       const t = Math.min(elapsed / duration, 1);
-      // Damped sine wave for entrance too
       const progress = 1 - Math.exp(-6 * t) * Math.cos(4 * Math.PI * t);
       const current = Math.round(entranceTarget * Math.min(progress, 1.08));
       const clamped = Math.min(Math.max(current, 0), 100);
@@ -256,7 +290,7 @@ export const HeroTrustShowcase = () => {
       }
     };
     animRef.current = requestAnimationFrame(step);
-  }, [startIdleOscillation]);
+  }, [startIdleOscillation, startCycling]);
 
   runEntranceRef.current = runEntrance;
 
@@ -321,49 +355,6 @@ export const HeroTrustShowcase = () => {
     }, 4000);
     return () => clearTimeout(timer);
   }, [cardPhase, teaserPhase, teaserIdx, advanceSequence]);
-
-
-  // ── Spring-based damped oscillation animation ──
-  const springAnimateTo = useCallback((target: number) => {
-    if (animRef.current) cancelAnimationFrame(animRef.current);
-    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
-    const startVal = restingScoreRef.current;
-    const startTime = performance.now();
-    const duration = 1200;
-
-    const step = (now: number) => {
-      const elapsed = now - startTime;
-      const t = Math.min(elapsed / duration, 1);
-      // Damped sine wave: overshoots ~15%, bounces, settles
-      const progress = 1 - Math.exp(-6 * t) * Math.cos(4 * Math.PI * t);
-      const current = Math.round(startVal + (target - startVal) * progress);
-      const clamped = Math.min(Math.max(current, 0), 100);
-      setDisplayScore(clamped);
-      if (t < 1) {
-        animRef.current = requestAnimationFrame(step);
-      } else {
-        setDisplayScore(target);
-        restingScoreRef.current = target;
-        startIdleOscillation(target);
-      }
-    };
-    animRef.current = requestAnimationFrame(step);
-  }, []);
-
-  // ── Idle micro-oscillation (±1-2 pt wobble) ──
-  const startIdleOscillation = useCallback((baseScore: number) => {
-    if (idleAnimRef.current) cancelAnimationFrame(idleAnimRef.current);
-    const startTime = performance.now();
-
-    const wobble = (now: number) => {
-      const elapsed = (now - startTime) / 1000;
-      const offset = Math.sin(elapsed * 0.8) * 1.5 + Math.sin(elapsed * 1.3) * 0.5;
-      const wobbled = Math.round(Math.min(Math.max(baseScore + offset, 0), 100));
-      setDisplayScore(wobbled);
-      idleAnimRef.current = requestAnimationFrame(wobble);
-    };
-    idleAnimRef.current = requestAnimationFrame(wobble);
-  }, []);
 
   const animateToScore = useCallback((target: number) => {
     springAnimateTo(target);
