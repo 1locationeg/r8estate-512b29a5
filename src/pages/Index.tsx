@@ -513,7 +513,10 @@ const Index = () => { // hero-phase-v2
               {/* StepTimeline */}
               <div className="w-full max-w-[1100px] py-8 md:py-12"><StepTimeline /></div>
 
-              {/* AudienceSegmentCards — directly under StepTimeline */}
+              <div className="w-16 h-px bg-border mx-auto" />
+
+
+              {/* AudienceSegmentCards */}
               <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
 
               {!specialViewItem && !selectedDeveloper && (
