@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Rocket, Search, Loader2, Filter, GitCompare } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -16,32 +17,35 @@ import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const statusFilters = [
-  { value: "all", label: "All" },
-  { value: "reservations_open", label: "Reservations Open" },
-  { value: "upcoming", label: "Launching Soon" },
-  { value: "active", label: "Active" },
-  { value: "sold_out", label: "Sold Out" },
-];
+const LaunchWatch = () => {
+  const { t } = useTranslation();
+  const statusFilters = [
+    { value: "all", label: t("launchWatch.all") },
+    { value: "reservations_open", label: t("launchWatch.reservationsOpen") },
+    { value: "upcoming", label: t("launchWatch.launchingSoon") },
+    { value: "active", label: t("launchWatch.active") },
+    { value: "sold_out", label: t("launchWatch.soldOut") },
+  ];
 
-const districtOptions = [
-  { value: "all", label: "All Locations" },
-  { value: "New Cairo", label: "New Cairo" },
-  { value: "Sheikh Zayed", label: "Sheikh Zayed" },
-  { value: "6th of October", label: "6th of October" },
-  { value: "North Coast", label: "North Coast" },
-  { value: "Mostakbal City", label: "Mostakbal City" },
-  { value: "New Capital", label: "New Capital" },
-  { value: "Other", label: "Other" },
-];
+  const districtOptions = [
+    { value: "all", label: t("launchWatch.allLocations") },
+    { value: "New Cairo", label: t("launchWatch.newCairo") },
+    { value: "Sheikh Zayed", label: t("launchWatch.sheikhZayed") },
+    { value: "6th of October", label: t("launchWatch.sixthOctober") },
+    { value: "North Coast", label: t("launchWatch.northCoast") },
+    { value: "Mostakbal City", label: t("launchWatch.mostakbalCity") },
+    { value: "New Capital", label: t("launchWatch.newCapital") },
+    { value: "Other", label: t("launchWatch.other") },
+  ];
 
-const sortOptions = [
-  { value: "score", label: "R8 Score" },
-  { value: "price_asc", label: "Price: Low to High" },
-  { value: "units", label: "Units Remaining" },
-  { value: "delivery", label: "Delivery Date" },
-  { value: "newest", label: "Newest" },
-];
+  const sortOptions = [
+    { value: "score", label: t("launchWatch.r8Score") },
+    { value: "price_asc", label: t("launchWatch.priceLowHigh") },
+    { value: "units", label: t("launchWatch.unitsRemaining") },
+    { value: "delivery", label: t("launchWatch.deliveryDate") },
+    { value: "newest", label: t("launchWatch.newest") },
+  ];
+
 
 const LaunchWatch = () => {
   const navigate = useNavigate();
