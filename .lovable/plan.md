@@ -1,35 +1,35 @@
 
 
-## Plan: Add "Rate Your Experience" Feedback Section After Journey Complete
+## Plan: Minimise & Sharpen the Journey Complete CTA
 
-### What
-A meta-feedback section that embodies the platform's core "reviewing" philosophy — asking users to rate their browsing experience on the site itself. Placed after the Journey Complete CTA block. Inspired by the uploaded reference images.
+### Problem
+The current block is verbose — badge, headline, social proof, coin reward, benefit chips, and 3 CTAs all stacked vertically. Too much to scan, dilutes the motivation. On mobile (390px), it's especially long.
 
-### New Component: `src/components/SiteExperienceFeedback.tsx`
+### Approach
+Strip it down to a single-row benefit line, one punchy headline, one coin reward, and one primary CTA (with a secondary). Remove the badge pill, remove the social proof line, and inline benefits as a compact sentence instead of chips.
 
-A compact, centered card with:
-- Italic headline: "Did you find what you were looking for?"
-- Subtitle: "Tell us what's missing — your feedback shapes the platform."
-- 5-star interactive rating (gold stars, matching brand style)
-- Three action buttons: "Yes, found it" (filled primary), "Suggest something →" (outline), "Report an issue" (outline)
-- A small footnote: "NEW — as requested. Turns dead exits into product insights."
-- Fully bilingual via i18n keys under `"siteFeedback"` namespace
-- Stars submit silently (toast confirmation), buttons navigate to contact/feedback routes
+### Changes
 
-### i18n Keys (2 edits)
-Add `"siteFeedback"` namespace to `en.json` and `ar.json`:
-- `headline`, `subtitle`, `foundIt`, `suggest`, `reportIssue`, `footnote`, `thankYou`
+**File: `src/components/JourneyCompleteCTA.tsx`** — Rewrite to a tighter layout:
+- Remove the "Journey complete" badge pill
+- Shorter headline: "Ready to invest smarter?" / highlighted "Claim your free 50 coins."
+- Replace benefit chips with a single line: "Verified reviews · Trust reports · Deal alerts — all free."
+- Single primary CTA: "Start free — earn 50 coins" (or "Go to Dashboard" if logged in)
+- One subtle secondary link: "Compare developers →"
+- Reduce padding from `p-6 md:p-10` to `p-5 md:p-8`
+- Reduce gap from `gap-4` to `gap-3`
 
-### Integration in `src/pages/Index.tsx` (1 edit)
-Insert after line 518 (the divider after JourneyCompleteCTA):
-```
-<div className="w-full max-w-[1100px] py-4 md:py-6"><SiteExperienceFeedback /></div>
-<div className="w-16 h-px bg-border mx-auto" />
-```
+**File: `src/i18n/locales/en.json`** — Update `journeyComplete` keys:
+- `headline1`: "Ready to invest smarter?"
+- `headline2`: "Claim your free 50 coins."
+- Remove `socialProof`, `badge` usage (keep keys for backwards compat)
+- `benefitLine`: "Verified reviews · Trust reports · Deal alerts — all free."
+- `ctaStart`: "Start free — earn 50 coins"
+- Keep `ctaCompare`, `goToDashboard`
+- Remove `ctaReview` button (reduce to 2 CTAs max)
 
-### Files touched
-1. **New** — `src/components/SiteExperienceFeedback.tsx`
-2. **Edit** — `src/i18n/locales/en.json` (add `siteFeedback` keys)
-3. **Edit** — `src/i18n/locales/ar.json` (add `siteFeedback` keys)
-4. **Edit** — `src/pages/Index.tsx` (import + insert after JourneyCompleteCTA)
+**File: `src/i18n/locales/ar.json`** — Mirror Arabic translations for updated keys.
+
+### Result
+A compact, high-contrast block that delivers benefits in one glance and drives a single clear action. ~40% shorter vertically.
 
