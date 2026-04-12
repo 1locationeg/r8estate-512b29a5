@@ -51,7 +51,23 @@ export const FeaturedIdentitySpotlight = () => {
   const { isSaved, toggle: toggleSave, loading: saveLoading } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow, loading: followLoading } = useFollowBusiness(developer.id);
   const devReviews = reviews.filter((r) => r.developerId === developer.id);
-  const displayedReviews = showAllReviews ? devReviews : devReviews.slice(0, 2);
+
+  // Reset reviewIndex when developer changes
+  useEffect(() => {
+    setReviewIndex(0);
+    setShowAllReviews(false);
+  }, [currentIndex]);
+
+  // Auto-rotate reviews every 5s (pause when expanded)
+  useEffect(() => {
+    if (showAllReviews || devReviews.length <= 1) return;
+    const timer = setInterval(() => {
+      setReviewIndex((prev) => (prev + 1) % devReviews.length);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, [devReviews.length, showAllReviews]);
+
+  const currentReview = devReviews[reviewIndex] || devReviews[0];
 
   const getCategoryScore = (key: string) => {
     const hash = key.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
