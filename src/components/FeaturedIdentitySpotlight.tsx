@@ -9,7 +9,7 @@ import { getRatingColorClass } from "@/lib/ratingColors";
 import { useSavedItem, useFollowBusiness } from "@/hooks/useSaveFollow";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { localizeStoredReviewValue } from "@/lib/reviewCopy";
+
 
 const trustCategoryKeys = [
   { key: "projectTimeliness", labelKey: "trust.projectTimeliness" },
