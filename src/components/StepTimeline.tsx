@@ -35,7 +35,7 @@ const StepTimeline = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="w-full py-8 md:py-12" dir={isRtl ? "rtl" : "ltr"}>
+    <section ref={sectionRef} className="w-full py-4 md:py-6" dir={isRtl ? "rtl" : "ltr"}>
       {/* Header */}
       <div className="flex flex-col items-center gap-1.5 mb-8 md:mb-10">
         <div className="inline-flex items-center gap-1.5 bg-primary/10 rounded-full px-3.5 py-1.5 border border-primary/15">

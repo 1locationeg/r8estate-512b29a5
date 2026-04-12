@@ -348,7 +348,7 @@ const JourneyStepSection = ({ station, isExpanded, onExpand, onCollapse }: {
   return (
     <section
       id={`journey-section-${station.step - 1}`}
-      className="w-full flex items-center justify-center relative overflow-hidden py-12 md:py-16"
+      className="w-full flex items-center justify-center relative overflow-hidden py-6 md:py-8"
       style={{
         background: `linear-gradient(135deg, hsl(${station.hslVar} / 0.06) 0%, hsl(${station.hslVar} / 0.02) 50%, transparent 100%)`,
       }}
