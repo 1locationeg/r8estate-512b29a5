@@ -1,47 +1,40 @@
 
 
-## Plan: Reduce vertical padding site-wide to eliminate excessive white space
+## Plan: Add Pricing Teaser Section After ReviewsCarousel
 
-### Problem
-Multiple sections across the homepage (and some components) use `py-8 md:py-12` or `py-12 md:py-16` padding, creating large white gaps between blocks. The goal is to tighten all vertical spacing to a compact, consistent rhythm.
+### What
+A compact, conversion-focused pricing teaser block placed immediately after the ReviewsCarousel. Inspired by the uploaded reference image — shows three plan tiers (Free, Pro, Business) with a "Start free. Upgrade when ready." headline and a "TRANSPARENT PRICING" label with a "NEW" badge.
 
-### New standard spacing
-- **Section wrappers in Index.tsx**: `py-4 md:py-6` (down from `py-8 md:py-12`)
-- **Journey sections**: `py-6 md:py-8` (down from `py-12 md:py-16`)
-- **Footer internal**: `py-6 md:py-8` (down from `py-10 md:py-14`)
-- **Footer snap wrapper**: `mt-0` (down from `mt-4`)
+### New Component: `src/components/PricingTeaser.tsx`
 
-### File: `src/pages/Index.tsx` (7 edits)
+A self-contained component with:
+- "TRANSPARENT PRICING" uppercase label with a green "NEW" badge
+- Headline: "Start free. Upgrade when ready." (en) / Arabic equivalent (ar)
+- Three clickable plan cards in a row:
+  - **Free** — "Basic access" — default outline style
+  - **Pro** — "Full reports" — highlighted with teal/primary border + badge
+  - **Business** — "For companies" — default outline style
+- Clicking any card navigates to `/auth` (signup gate)
+- Fully bilingual via i18n keys
+- Matches existing design system (Tailwind, shadcn Card/Badge)
 
-| Line | Current | New |
-|------|---------|-----|
-| 419 | `py-8 md:py-12` (FeaturedIdentitySpotlight) | `py-4 md:py-6` |
-| 424 | `py-8 md:py-12` (CompareEngineShowcase) | `py-4 md:py-6` |
-| 430 | `py-8 md:py-12` (Quick Actions) | `py-4 md:py-6` |
-| 457 | `py-8 md:py-12` (Trust Strip) | `py-4 md:py-6` |
-| 477 | `py-8 md:py-12` (HowWeWork) | `py-4 md:py-6` |
-| 538 | `py-8 md:py-12` (StepTimeline) | `py-4 md:py-6` |
-| 550 | `py-8 md:py-12` (SmartRecommendations) | `py-4 md:py-6` |
-| 668 | `mt-4` (Footer wrapper) | `mt-0` |
+### i18n Keys (2 edits)
 
-### File: `src/components/JourneyScrollSections.tsx` (1 edit)
+Add to `en.json` and `ar.json` under a new `"pricingTeaser"` namespace:
+- `label`, `new`, `headline`, `free.title`, `free.desc`, `pro.title`, `pro.desc`, `business.title`, `business.desc`
 
-| Line | Current | New |
-|------|---------|-----|
-| 351 | `py-12 md:py-16` | `py-6 md:py-8` |
+### Integration in `src/pages/Index.tsx` (1 edit)
 
-### File: `src/components/StepTimeline.tsx` (1 edit)
+Insert after the ReviewsCarousel block (line 504), before the divider on line 506:
 
-| Line | Current | New |
-|------|---------|-----|
-| 38 | `py-8 md:py-12` | `py-4 md:py-6` |
+```
+<div className="w-16 h-px bg-border mx-auto" />
+<div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
+```
 
-### File: `src/components/Footer.tsx` (1 edit)
-
-| Line | Current | New |
-|------|---------|-----|
-| 95 | `py-10 md:py-14` | `py-6 md:py-8` |
-
-### Summary
-10 targeted padding reductions across 4 files. No layout or logic changes — purely CSS class updates to close excessive white gaps between all homepage blocks.
+### Files touched
+1. **New** — `src/components/PricingTeaser.tsx`
+2. **Edit** — `src/i18n/locales/en.json` (add `pricingTeaser` keys)
+3. **Edit** — `src/i18n/locales/ar.json` (add `pricingTeaser` keys)
+4. **Edit** — `src/pages/Index.tsx` (import + insert after ReviewsCarousel)
 
