@@ -357,7 +357,17 @@ const Index = () => { // hero-phase-v2
 
             {/* Traction Stats */}
             <div className={cn("w-full mt-2 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <TractionStats />
+            <TractionStats />
+            </div>
+
+            {/* Next Steps CTAs */}
+            <HeroNextSteps />
+
+            {/* Journey Station Arc */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
+                <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
+              </div>
             </div>
 
             {userMode === "buyers" && (
@@ -375,16 +385,6 @@ const Index = () => { // hero-phase-v2
                 </div>
               </>
             )}
-
-            {/* Next Steps CTAs */}
-            <HeroNextSteps />
-
-            {/* Journey Station Arc */}
-            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
-                <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
-              </div>
-            </div>
           </div>
         </div>
 
