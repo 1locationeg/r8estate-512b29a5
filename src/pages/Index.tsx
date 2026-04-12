@@ -478,8 +478,10 @@ const Index = () => { // hero-phase-v2
                 <HowWeWork />
               </div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              {/* AudienceSegmentCards */}
+              <div className="w-full max-w-[1100px] py-8 md:py-12"><AudienceSegmentCards /></div>
 
+              <div className="w-16 h-px bg-border mx-auto" />
 
               {/* Category Links */}
               <div className="w-full max-w-[1100px] py-8 md:py-12">
