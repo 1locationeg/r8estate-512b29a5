@@ -1,57 +1,82 @@
 
 
-## Plan: Compact Journey Corridor + Station Wayfinding on Click
+## Plan: Mobile-First Dual Composition for Homepage
 
-### Problems
-1. The corridor is too tall — 3 layers with header, global bar, and station row take ~70px on mobile
-2. When clicking a station, user loses context — no indication of where they are, what's remaining, or how to continue
-3. Background is dark/opaque, making it heavy — should use lighter tints that match each station's color consistently across the site
+### The Problem
+The current homepage uses one layout that shrinks on mobile — a "squished desktop." Mobile users see tiny text, multi-column grids crammed into 390px, and no touch-optimized patterns. The desktop layout itself is fine and stays mostly unchanged.
+
+### Mental Model
+Same React components, two different compositions. CSS media queries + conditional rendering control which components appear, in what order, and how they're styled per breakpoint.
 
 ### Changes
 
-#### 1. Compact the Corridor (`src/components/JourneyCorridor.tsx` — rewrite)
+#### 1. `src/pages/Index.tsx` — Mobile-specific composition
 
-Merge all 3 layers into a **single compact row** (~36px tall on mobile):
-- **Left**: tiny percentage circle (ring with number inside, 20px) — updates in real time
-- **Center**: 4 station dots in a horizontal track, connected by a thin progress line
-  - Each dot: 20px circle with station number or ✓, colored with its station accent
-  - Active dot: slightly larger (24px) with glow ring
-  - Below each dot: 1-word label (ابحث / اختر / مول / احم) in [9px] text
-  - Completed dots: ✓ + filled accent color
-  - Future dots: outlined/dim
-- **Right**: nothing (keeps it minimal)
-- **Background**: light frosted glass (`bg-background/90 backdrop-blur-md`) instead of dark colors. The connecting line between dots uses each station's accent color for completed segments, muted for future.
-- The global progress bar and subtitle row are **removed** — progress is communicated through the connecting line fill and the percentage circle.
+Wrap the existing buyer-mode content in a `hidden md:block` desktop container, and add a parallel `md:hidden` mobile container that renders the **same components** in a mobile-optimized order and style:
 
-Height reduction: ~70px → ~36px (mobile), ~40px (desktop).
+**Mobile section order:**
+1. Hero card (full-width, padded, same content but tighter spacing)
+2. **Stats as horizontal scroll chips** — wrap `TractionStats` in a `md:hidden` override that renders 3 horizontal scrollable pill cards instead of the current 3-column grid
+3. **Search bar as full-width hero element** — `HeroSearchBar` with `showQuickIcons={false}`, full width, 48px min-height input
+4. **Journey steps as horizontal scroll pills** — new mobile-only rendering of `JourneyScrollSections` as swipeable colored pill cards (1-line per station)
+5. **Widgets 2x2 grid** — same `DealWatchWidget`, `LaunchWatchWidget`, `ContractCheckCard`, `MarketPulseWidget` but in a `grid-cols-2` mobile grid
+6. **Compare as swipeable card** — `CompareEngineShowcase` rendered as horizontally scrollable developer cards with dot indicators
+7. **Review carousel 1 card + dots** — `ReviewsCarousel` showing single card with swipe dots
 
-#### 2. Station Click → Scroll + Highlight Context (`src/components/JourneyCorridor.tsx`)
+#### 2. `src/components/TractionStats.tsx` — Add horizontal scroll chip mode
 
-When a station is clicked:
-- Smooth-scroll to that zone (existing behavior)
-- **Temporarily expand** the corridor for 4 seconds to show a mini context strip below the compact row:
-  - Shows: "Station 2 of 4 · اختر · 2 stations remaining"
-  - A small "Next: مول →" link that scrolls to the next incomplete station
-  - Auto-collapses after 4s or on scroll
+Add a `useIsMobile()` check. On mobile, render stats as a horizontally scrollable row of pill-shaped cards (`flex overflow-x-auto gap-2`) with `min-h-[44px]` touch targets instead of the current centered 3-column grid.
 
-This way the user always knows: where they are, what's left, and how to get to the next station.
+#### 3. `src/components/JourneyScrollSections.tsx` — Mobile pill mode
 
-#### 3. Lighter Background + Station Color Consistency
+On mobile (`md:hidden`), render the 4 journey stations as horizontal scroll pills:
+- Each pill: colored left border matching station color, station number + bold name + 1-line subtitle
+- Active station: filled background with station color
+- 44px min-height, `overflow-x-auto` horizontal scroll
+- Clicking a pill still navigates/scrolls to the zone
 
-- Corridor background: `bg-background/95 backdrop-blur-sm border-b border-border/40` — light, not dark
-- Each station dot uses the existing Tailwind journey token colors (`journey-research`, `journey-choose`, `journey-finance`, `journey-protect`) which are already defined in CSS variables and used across the site (StationPageWrapper, JourneyStripe, SideJourneyRail, BottomNav, PageHeader)
-- The accent colors in the corridor will reference the same `hsl(var(--journey-*))` tokens, ensuring consistency with all other station-colored components site-wide
-- Remove the HSL interpolation logic for background — it's no longer needed with a light glass background
+Desktop (`hidden md:block`) keeps the current expanded card layout unchanged.
 
-#### 4. i18n Updates (`en.json` + `ar.json`)
+#### 4. `src/components/CompareEngineShowcase.tsx` — Swipeable cards on mobile
 
-Add:
-- `corridor.stationOf`: "Station {{current}} of {{total}}"
-- `corridor.remaining`: "{{count}} remaining"
-- `corridor.next`: "Next: {{name}}"
+On mobile, replace the side-by-side comparison bars with horizontally swipeable full-width developer cards:
+- Each card: developer name, trust/delivery/value bars stacked vertically
+- Dot indicators below (● ○) for swipe progress
+- `overflow-x-auto snap-x snap-mandatory` with `scroll-snap-align: start` per card
+
+#### 5. `src/components/ReviewsCarousel.tsx` — Single card + dots on mobile
+
+On mobile, show only 1 review card at a time (full width) with dot indicators below for horizontal swipe. Desktop keeps the current multi-card horizontal scroll.
+
+#### 6. `src/components/JourneyCorridor.tsx` — Mobile-compact corridor
+
+Already compact, but ensure:
+- Station dots are 18px on mobile (currently 20px — confirmed working)
+- Labels use 7px Arabic text on mobile
+- Touch targets are at least 44px per station button (add `min-w-[44px] min-h-[44px]` to the button wrapper)
+
+#### 7. Touch target audit across all mobile-visible components
+
+Add `min-h-[44px]` to all interactive elements rendered on mobile:
+- Hero CTA buttons
+- Search input
+- Journey pills
+- Widget cards
+- Compare cards
+- Review carousel navigation dots
 
 ### Files touched
-1. **Rewrite** — `src/components/JourneyCorridor.tsx` (compact single-row + click context strip)
-2. **Edit** — `src/i18n/locales/en.json` (add context strip keys)
-3. **Edit** — `src/i18n/locales/ar.json` (add context strip keys)
+1. **Edit** — `src/pages/Index.tsx` (dual composition: `md:hidden` mobile + `hidden md:block` desktop)
+2. **Edit** — `src/components/TractionStats.tsx` (horizontal scroll chips on mobile)
+3. **Edit** — `src/components/JourneyScrollSections.tsx` (horizontal pill mode on mobile)
+4. **Edit** — `src/components/CompareEngineShowcase.tsx` (swipeable cards on mobile)
+5. **Edit** — `src/components/ReviewsCarousel.tsx` (single card + dots on mobile)
+6. **Edit** — `src/components/JourneyCorridor.tsx` (44px touch targets)
+
+### What stays the same
+- All desktop rendering (unchanged)
+- All component logic, data fetching, state management
+- Journey corridor engagement tracking
+- i18n keys
+- Navbar, Footer, BottomNav (already mobile-optimized)
 
