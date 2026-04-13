@@ -19,7 +19,7 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
     <div className="w-full">
       {/* Reviewer CTA */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-        <p className="text-xs text-muted-foreground">
+        <p className="text-xs text-muted-foreground font-extrabold">
           Your review could save someone millions
         </p>
         <Button
