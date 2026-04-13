@@ -113,7 +113,10 @@ export const FeaturedIdentitySpotlight = () => {
         </h2>
       </div>
 
-      <Card className="overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm shadow-sm">
+      <Card
+        className="overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+        onClick={() => navigate(`/entity/${developer.id}`)}
+      >
         {/* Navy gradient banner header */}
         <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 px-4 pt-4 pb-8 text-center">
           <div className="absolute inset-0 opacity-[0.06]" style={{
