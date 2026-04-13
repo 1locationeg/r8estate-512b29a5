@@ -1651,8 +1651,6 @@
     "title": "رحلتك نحو بيت آمن",
     "complete": "مكتمل",
     "entry": "البداية",
-    "current": "أنت الآن في {{name}}",
-    "backTo": "ارجع إلى {{name}}",
     "stationOf": "محطة {{current}} من {{total}}",
     "remaining": "{{count}} متبقية",
     "next": "التالي: {{name}}",

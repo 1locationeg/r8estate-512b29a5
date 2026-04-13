@@ -1608,8 +1608,6 @@
     "title": "Your path to a safe home",
     "complete": "complete",
     "entry": "Start",
-    "current": "Now in {{name}}",
-    "backTo": "Back to {{name}}",
     "stationOf": "Station {{current}} of {{total}}",
     "remaining": "{{count}} remaining",
     "next": "Next: {{name}}",
