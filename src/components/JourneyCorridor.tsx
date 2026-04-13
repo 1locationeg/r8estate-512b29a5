@@ -2,6 +2,7 @@ import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { JOURNEY_STATIONS } from "@/lib/journeyStations";
 import { useCorridorEngagement } from "@/hooks/useCorridorEngagement";
+import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
 import { Check, ChevronRight, X, Search, GitCompare, Banknote, Shield } from "lucide-react";
 
@@ -40,6 +41,7 @@ const getProgressGradient = (pct: number) => {
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
   const { zoneEngagement } = useCorridorEngagement();
+  const { user } = useAuth();
   const [activeZone, setActiveZone] = useState(0);
   const [zoneScrollProgress, setZoneScrollProgress] = useState<[number, number, number, number]>([0, 0, 0, 0]);
   const [showBreakdown, setShowBreakdown] = useState(false);
@@ -96,6 +98,16 @@ export const JourneyCorridor = () => {
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafRef.current); };
   }, [getZoneElements]);
 
+  // 5% bonus for visiting (cookie/localStorage), +5% if signed up
+  const baseBonus = useMemo(() => {
+    const VISIT_KEY = "r8_visited";
+    try { localStorage.setItem(VISIT_KEY, "1"); } catch {}
+    const visited = (() => { try { return !!localStorage.getItem(VISIT_KEY); } catch { return false; } })();
+    const visitBonus = visited ? 5 : 0;
+    const signupBonus = user ? 5 : 0;
+    return visitBonus + signupBonus;
+  }, [user]);
+
   const combinedZone = useMemo(() => {
     return zoneScrollProgress.map((sp, i) =>
       Math.min(1, sp * 0.5 + zoneEngagement[i] * 0.5)
@@ -104,8 +116,8 @@ export const JourneyCorridor = () => {
 
   const overallProgress = useMemo(() => {
     const total = combinedZone.reduce((a, b) => a + b, 0);
-    return Math.round((total / 4) * 100);
-  }, [combinedZone]);
+    return Math.min(100, Math.round((total / 4) * 100) + baseBonus);
+  }, [combinedZone, baseBonus]);
 
   const scrollToZone = (zone: number) => {
     const el = document.querySelector(`[data-zone="${zone}"]`);
