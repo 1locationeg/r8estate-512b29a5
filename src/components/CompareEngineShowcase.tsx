@@ -60,8 +60,8 @@ const CompareEngineShowcase = () => {
         </h2>
       </div>
 
-      {/* Comparison Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
+      {/* Desktop: side-by-side cards */}
+      <div className="hidden md:grid grid-cols-2 gap-6 max-w-2xl mx-auto">
         {DEVELOPERS.map((dev, devIdx) => {
           const isWinner = dev.metrics[0] > DEVELOPERS[1 - devIdx].metrics[0];
           return (
@@ -109,6 +109,9 @@ const CompareEngineShowcase = () => {
           );
         })}
       </div>
+
+      {/* Mobile: swipeable horizontal cards */}
+      <MobileCompareCards developers={DEVELOPERS} metricKeys={metricKeys} maxValues={maxValues} animated={animated} getBarColor={getBarColor} getTextColor={getTextColor} formatValue={formatValue} t={t} />
 
       {/* CTAs */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
