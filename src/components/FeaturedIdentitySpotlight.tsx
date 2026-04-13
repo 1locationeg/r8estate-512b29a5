@@ -263,7 +263,7 @@ export const FeaturedIdentitySpotlight = () => {
 
           {devReviews.length > 1 &&
             <button
-              onClick={() => setShowAllReviews(!showAllReviews)}
+              onClick={(e) => { e.stopPropagation(); setShowAllReviews(!showAllReviews); }}
               className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
               {showAllReviews ? t("spotlight.showLess") : t("spotlight.viewAllReviews", { count: devReviews.length })}
               <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showAllReviews ? "rotate-90" : ""}`} />
