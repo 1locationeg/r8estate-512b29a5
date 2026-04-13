@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Search, BrainCircuit, BadgeCheck, ChevronRight, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
