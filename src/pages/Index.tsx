@@ -285,7 +285,7 @@ const Index = () => { // hero-phase-v2
                   <p className="text-base sm:text-lg md:text-xl leading-tight font-medium tracking-tight text-muted-foreground">
                     {t("hero.tagline_line1")}
                   </p>
-                  <p className="text-2xl sm:text-3xl md:text-4xl leading-tight font-black tracking-tight hero-keys-shimmer mt-1">
+                  <p className="heading-hero hero-keys-shimmer mt-1">
                     {showStars ? (
                       <>
                         <span className="inline-flex items-center gap-1 align-middle">
