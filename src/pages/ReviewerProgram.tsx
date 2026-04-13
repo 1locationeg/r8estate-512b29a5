@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { ReviewerSpotlight } from '@/components/ReviewerSpotlight';
 import { Footer } from '@/components/Footer';
-import { Navbar } from '@/components/Navbar';
+import { BrandLogo } from '@/components/BrandLogo';
 import { useAuth } from '@/contexts/AuthContext';
 
 const TIERS = [
@@ -40,7 +40,10 @@ const ReviewerProgram = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
-      <Navbar />
+      <header className="border-b border-border/60 px-4 py-3 flex items-center justify-between">
+        <BrandLogo />
+        <Button variant="outline" size="sm" onClick={() => navigate('/')}>Home</Button>
+      </header>
 
       {/* Hero */}
       <section className="relative overflow-hidden bg-gradient-to-br from-primary/10 via-background to-coin/10 pt-16 pb-12 px-4">
