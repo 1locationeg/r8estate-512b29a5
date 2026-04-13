@@ -345,37 +345,6 @@ export const JourneyCorridor = () => {
           </div>
         </div>
 
-        {/* Persistent context strip */}
-        {activeZone > 0 && (
-          <div className="pb-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
-            <div
-              className="flex items-center justify-between gap-2 px-2.5 py-1 rounded-md text-[9px] md:text-[10px]"
-              style={{
-                backgroundColor: `color-mix(in srgb, ${STATION_COLORS[activeZone - 1]} 10%, transparent)`,
-                color: STATION_COLORS[activeZone - 1],
-              }}
-            >
-              <span className="font-semibold flex items-center gap-1.5 min-w-0">
-                <span className="flex-shrink-0">📍</span>
-                <span className="truncate">
-                  Step {activeZone}/4 · {t(JOURNEY_STATIONS[activeZone - 1].labelKey)}
-                  <span className="text-muted-foreground font-normal mx-1">—</span>
-                  <span className="font-normal opacity-80">{STATION_HINTS[activeZone]}</span>
-                </span>
-              </span>
-              {nextIncomplete && nextIncomplete !== activeZone && (
-                <button
-                  onClick={() => scrollToZone(nextIncomplete)}
-                  className="flex items-center gap-0.5 font-bold hover:underline flex-shrink-0"
-                  style={{ color: STATION_COLORS[nextIncomplete - 1] }}
-                >
-                  Next: {t(JOURNEY_STATIONS[nextIncomplete - 1].labelKey)}
-                  <ChevronRight className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
