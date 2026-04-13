@@ -137,9 +137,22 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
       </div>
 
       {review.comment ? (
-        <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
-          {sanitizeDisplayText(i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment)}
-        </p>
+        (() => {
+          const commentText = i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment;
+          if (isHtmlContent(commentText)) {
+            return (
+              <div
+                className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3 prose prose-sm max-w-none [&_a]:text-primary [&_a]:underline [&_img]:rounded-lg [&_img]:max-h-32"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(commentText, { ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'ul', 'ol', 'li', 'a', 'img'], ALLOWED_ATTR: ['href', 'target', 'rel', 'src', 'alt', 'class'] }) }}
+              />
+            );
+          }
+          return (
+            <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
+              {sanitizeDisplayText(commentText)}
+            </p>
+          );
+        })()
       ) : (
         <p className="text-xs md:text-sm text-muted-foreground italic mb-2 md:mb-3">
           {t("review.ratingOnly", "Rating only — no written review")}
