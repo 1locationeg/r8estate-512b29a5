@@ -121,11 +121,11 @@ export const FeaturedIdentitySpotlight = () => {
             backgroundSize: '16px 16px'
           }} />
           <div className="relative">
-            <div className="relative flex items-center justify-center">
-              <h3 className="text-lg md:text-xl font-bold text-primary-foreground text-center">
+            <div className="flex flex-col items-center gap-1.5 md:relative md:flex-row md:justify-center">
+              <h3 className="text-lg md:text-xl font-bold text-primary-foreground text-center w-full">
                 {developer.name}
               </h3>
-              <div className="absolute end-0 flex items-center gap-1">
+              <div className="flex items-center gap-1 md:absolute md:end-0">
                 <button
                   onClick={() => {
                     if (!user) { navigate("/auth"); return; }

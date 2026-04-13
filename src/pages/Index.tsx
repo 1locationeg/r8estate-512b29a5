@@ -463,18 +463,18 @@ const Index = () => { // hero-phase-v2
 
               {/* Trust Strip — softened */}
               <div className="w-full max-w-[1100px] py-4 md:py-6">
-                <div className="flex items-center justify-between gap-1.5 py-2.5 px-3 rounded-xl bg-primary/10 border border-primary/20">
-                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
-                    <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.verifiedReviews")}</span>
+                <div className="flex items-center justify-between gap-1.5 py-2.5 px-3 rounded-xl bg-primary/10 border border-primary/20 overflow-x-auto scrollbar-hide">
+                  <div className="flex items-center gap-1 md:gap-1.5 bg-primary/10 rounded-full py-1.5 px-2 md:px-3 border border-primary/15 flex-1 justify-center min-w-0">
+                    <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary shrink-0" />
+                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.verifiedReviews")}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
-                    <Fingerprint className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.realBuyers")}</span>
+                  <div className="flex items-center gap-1 md:gap-1.5 bg-primary/10 rounded-full py-1.5 px-2 md:px-3 border border-primary/15 flex-1 justify-center min-w-0">
+                    <Fingerprint className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary shrink-0" />
+                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.realBuyers")}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 bg-primary/10 rounded-full py-1.5 px-3 border border-primary/15 flex-1 justify-center">
-                    <ShieldCheck className="w-3.5 h-3.5 text-primary shrink-0" />
-                    <span className="text-[9px] md:text-[11px] font-medium text-foreground whitespace-nowrap">{t("widgets.realExperts")}</span>
+                  <div className="flex items-center gap-1 md:gap-1.5 bg-primary/10 rounded-full py-1.5 px-2 md:px-3 border border-primary/15 flex-1 justify-center min-w-0">
+                    <ShieldCheck className="w-3 h-3 md:w-3.5 md:h-3.5 text-primary shrink-0" />
+                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.realExperts")}</span>
                   </div>
                 </div>
               </div>
