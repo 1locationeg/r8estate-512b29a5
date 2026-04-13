@@ -154,7 +154,9 @@ export const FeaturedIdentitySpotlight = () => {
                     <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
                   }
                 </button>
-                <ShareMenu title={developer.name} iconOnly />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ShareMenu title={developer.name} iconOnly />
+                </div>
               </div>
             </div>
             {developer.verified &&
