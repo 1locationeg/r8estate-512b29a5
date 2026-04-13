@@ -930,8 +930,9 @@ export const WriteReviewModal = ({
       </div>
 
       {rating > 0 && !isSaving && !showThanksScreen && savedReviewId && (
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-2">
           <p className="text-lg font-semibold text-foreground">{getRatingWord(rating)}</p>
+          <p className="text-xs text-muted-foreground italic">{getRatingEncouragement(rating)}</p>
         </div>
       )}
 
