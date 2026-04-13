@@ -130,7 +130,8 @@ export const FeaturedIdentitySpotlight = () => {
               </h3>
               <div className="flex items-center gap-1 md:absolute md:end-0">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (!user) { navigate("/auth"); return; }
                     toggleSave(developer.name, developer.logo);
                   }}
@@ -140,7 +141,8 @@ export const FeaturedIdentitySpotlight = () => {
                   <Bookmark className={`h-3.5 w-3.5 ${isSaved ? "fill-primary-foreground text-primary-foreground" : "text-primary-foreground/70"}`} />
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (!user) { navigate("/auth"); return; }
                     toggleFollow(developer.name);
                   }}
