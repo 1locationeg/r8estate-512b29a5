@@ -21,16 +21,21 @@ const STATION_TIPS: Record<number, string[]> = {
   4: ["Visit the community", "Submit feedback", "Write a review"],
 };
 
+const STATION_HINTS: Record<number, string> = {
+  1: "Search & explore developers",
+  2: "Compare & shortlist options",
+  3: "Review deals & financing",
+  4: "Join community & protect",
+};
+
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
   const { zoneEngagement } = useCorridorEngagement();
   const [activeZone, setActiveZone] = useState(0);
   const [zoneScrollProgress, setZoneScrollProgress] = useState<[number, number, number, number]>([0, 0, 0, 0]);
-  const [contextZone, setContextZone] = useState<number | null>(null);
   const [showBreakdown, setShowBreakdown] = useState(false);
-  const contextTimer = useRef<ReturnType<typeof setTimeout>>();
-  const rafRef = useRef<number>(0);
   const breakdownRef = useRef<HTMLDivElement>(null);
+  const rafRef = useRef<number>(0);
 
   const getZoneElements = useCallback(() => {
     return [1, 2, 3, 4].map(z => document.querySelector(`[data-zone="${z}"]`) as HTMLElement | null);
@@ -75,16 +80,12 @@ export const JourneyCorridor = () => {
 
         setActiveZone(current);
         setZoneScrollProgress(progArr);
-        if (contextZone !== null) {
-          setContextZone(null);
-          if (contextTimer.current) clearTimeout(contextTimer.current);
-        }
       });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafRef.current); };
-  }, [getZoneElements, contextZone]);
+  }, [getZoneElements]);
 
   const combinedZone = useMemo(() => {
     return zoneScrollProgress.map((sp, i) =>
@@ -104,10 +105,7 @@ export const JourneyCorridor = () => {
 
   const handleStationClick = (zone: number) => {
     scrollToZone(zone);
-    setContextZone(zone);
     setShowBreakdown(false);
-    if (contextTimer.current) clearTimeout(contextTimer.current);
-    contextTimer.current = setTimeout(() => setContextZone(null), 4000);
   };
 
   const nextIncomplete = useMemo(() => {
@@ -122,7 +120,7 @@ export const JourneyCorridor = () => {
       <div className="max-w-[1100px] mx-auto px-3 md:px-4">
         {/* Single compact row */}
         <div className="flex items-center gap-2 py-1.5 md:py-2">
-          {/* Left: percentage ring — clickable */}
+          {/* Left: percentage ring */}
           <div className="relative flex-shrink-0">
             <button
               onClick={() => setShowBreakdown(!showBreakdown)}
@@ -219,7 +217,6 @@ export const JourneyCorridor = () => {
                           </div>
                         </button>
 
-                        {/* Tips for incomplete stations */}
                         {!isComplete && (
                           <div className="ml-7 mt-1 space-y-0.5">
                             {tips.map((tip, tIdx) => (
@@ -235,7 +232,6 @@ export const JourneyCorridor = () => {
                   })}
                 </div>
 
-                {/* Footer message */}
                 <div className="mt-4 pt-3 border-t border-border">
                   {overallProgress >= 100 ? (
                     <p className="text-xs text-center font-semibold text-primary">
@@ -257,19 +253,24 @@ export const JourneyCorridor = () => {
               const zone = idx + 1;
               const isPast = activeZone > zone;
               const isActive = activeZone === zone;
-              const isFuture = activeZone < zone;
               const color = STATION_COLORS[idx];
 
               return (
                 <div key={station.key} className="flex-1 flex flex-col items-center relative">
+                  {/* Connecting line with gradient */}
                   {idx > 0 && (
-                    <div className="absolute top-[10px] md:top-[12px] right-1/2 w-full h-[2px] -z-[1]">
-                      <div className="w-full h-full bg-border/30 rounded-full overflow-hidden">
+                    <div className="absolute top-[12px] md:top-[14px] right-1/2 w-full h-[3px] -z-[1]">
+                      <div
+                        className="w-full h-full rounded-full overflow-hidden"
+                        style={{
+                          background: `linear-gradient(to right, ${STATION_COLORS[idx - 1]}20, ${color}20)`,
+                        }}
+                      >
                         <div
-                          className="h-full rounded-full transition-all duration-300"
+                          className="h-full rounded-full transition-all duration-500"
                           style={{
                             width: `${combinedZone[idx - 1] * 100}%`,
-                            backgroundColor: STATION_COLORS[idx - 1],
+                            background: `linear-gradient(to right, ${STATION_COLORS[idx - 1]}, ${color})`,
                           }}
                         />
                       </div>
@@ -278,29 +279,51 @@ export const JourneyCorridor = () => {
 
                   <button
                     onClick={() => handleStationClick(zone)}
-                    className="flex flex-col items-center gap-0.5 cursor-pointer group min-w-[44px] min-h-[44px] justify-center"
+                    className="flex flex-col items-center gap-0.5 cursor-pointer group min-w-[44px] min-h-[44px] justify-center relative"
                   >
+                    {/* Station dot — bigger, colored */}
                     <div
                       className={cn(
-                        "w-[18px] h-[18px] md:w-6 md:h-6 rounded-full flex items-center justify-center text-[7px] md:text-[9px] font-black transition-all duration-300 border-2",
-                        isPast && "text-white border-transparent",
-                        isActive && "text-white border-transparent scale-110 shadow-md",
-                        isFuture && "bg-background text-muted-foreground border-border/50",
+                        "w-[24px] h-[24px] md:w-[28px] md:h-[28px] rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-black transition-all duration-300 border-2",
                       )}
                       style={{
-                        backgroundColor: isPast || isActive ? color : undefined,
-                        boxShadow: isActive ? `0 0 8px ${color}` : undefined,
+                        backgroundColor: isPast || isActive
+                          ? color
+                          : `color-mix(in srgb, ${color} 12%, hsl(var(--background)))`,
+                        borderColor: isPast || isActive
+                          ? color
+                          : `color-mix(in srgb, ${color} 30%, transparent)`,
+                        color: isPast || isActive ? "white" : color,
+                        boxShadow: isActive ? `0 0 12px ${color}, 0 0 4px ${color}` : "none",
+                        transform: isActive ? "scale(1.15)" : "scale(1)",
                       }}
                     >
-                      {isPast ? <Check className="w-2.5 h-2.5 md:w-3 md:h-3" /> : zone}
+                      {isPast ? <Check className="w-3 h-3 md:w-3.5 md:h-3.5" /> : zone}
                     </div>
 
+                    {/* Pulsing ring on active */}
+                    {isActive && (
+                      <div
+                        className="absolute top-0 left-1/2 -translate-x-1/2 w-[24px] h-[24px] md:w-[28px] md:h-[28px] rounded-full animate-ping opacity-20"
+                        style={{ backgroundColor: color }}
+                      />
+                    )}
+
+                    {/* Active underline accent */}
+                    {isActive && (
+                      <div
+                        className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-4 h-[2px] rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                    )}
+
+                    {/* Label — always colored per station */}
                     <span
                       className={cn(
-                        "text-[8px] md:text-[9px] font-bold leading-tight whitespace-nowrap transition-colors duration-300",
-                        isActive ? "text-foreground" : isPast ? "text-muted-foreground" : "text-muted-foreground/50"
+                        "text-[10px] md:text-[11px] font-bold leading-tight whitespace-nowrap transition-all duration-300",
+                        isPast ? "opacity-70" : isActive ? "opacity-100" : "opacity-50",
                       )}
-                      style={{ color: isActive ? color : undefined }}
+                      style={{ color }}
                     >
                       {t(station.labelKey)}
                     </span>
@@ -311,30 +334,31 @@ export const JourneyCorridor = () => {
           </div>
         </div>
 
-        {/* Context strip */}
-        {contextZone !== null && (
+        {/* Persistent context strip — visible when user is in any zone */}
+        {activeZone > 0 && (
           <div className="pb-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
             <div
               className="flex items-center justify-between gap-2 px-2.5 py-1 rounded-md text-[9px] md:text-[10px]"
               style={{
-                backgroundColor: `color-mix(in srgb, ${STATION_COLORS[contextZone - 1]} 10%, transparent)`,
-                color: STATION_COLORS[contextZone - 1],
+                backgroundColor: `color-mix(in srgb, ${STATION_COLORS[activeZone - 1]} 10%, transparent)`,
+                color: STATION_COLORS[activeZone - 1],
               }}
             >
-              <span className="font-semibold">
-                {t("corridor.stationOf", { current: contextZone, total: 4 })} · {t(JOURNEY_STATIONS[contextZone - 1].labelKey)}
-                {contextZone < 4 && (
-                  <span className="text-muted-foreground font-normal mx-1">
-                    · {t("corridor.remaining", { count: 4 - contextZone })}
-                  </span>
-                )}
+              <span className="font-semibold flex items-center gap-1.5 min-w-0">
+                <span className="flex-shrink-0">📍</span>
+                <span className="truncate">
+                  Step {activeZone}/4 · {t(JOURNEY_STATIONS[activeZone - 1].labelKey)}
+                  <span className="text-muted-foreground font-normal mx-1">—</span>
+                  <span className="font-normal opacity-80">{STATION_HINTS[activeZone]}</span>
+                </span>
               </span>
-              {nextIncomplete && nextIncomplete !== contextZone && (
+              {nextIncomplete && nextIncomplete !== activeZone && (
                 <button
-                  onClick={() => { scrollToZone(nextIncomplete); setContextZone(nextIncomplete); }}
-                  className="flex items-center gap-0.5 font-bold hover:underline"
+                  onClick={() => scrollToZone(nextIncomplete)}
+                  className="flex items-center gap-0.5 font-bold hover:underline flex-shrink-0"
+                  style={{ color: STATION_COLORS[nextIncomplete - 1] }}
                 >
-                  {t("corridor.next", { name: t(JOURNEY_STATIONS[nextIncomplete - 1].labelKey) })}
+                  Next: {t(JOURNEY_STATIONS[nextIncomplete - 1].labelKey)}
                   <ChevronRight className="w-3 h-3" />
                 </button>
               )}
