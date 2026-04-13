@@ -22,17 +22,19 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
         <p className="text-xs text-muted-foreground">
           Your review could save someone millions
         </p>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="text-[10px] font-medium text-primary">🪙 +25 coins & unlock badges</span>
-          <Button
+        <Button
             size="sm"
-            className="gap-1.5 h-8 text-xs"
+            className="gap-2 h-8 text-xs"
             onClick={onWriteReview || (() => navigate('/reviews'))}
           >
+            <span className="flex items-center gap-1 text-coin font-bold">
+              <Coins className="w-3.5 h-3.5" />
+              +25
+            </span>
+            <span className="w-px h-3 bg-primary-foreground/20" />
             <PenLine className="w-3.5 h-3.5" />
             Write a Review
           </Button>
-        </div>
       </div>
 
       {/* Spotlight strip */}
