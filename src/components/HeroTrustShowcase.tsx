@@ -513,18 +513,18 @@ export const HeroTrustShowcase = () => {
             <div className={`flex items-center gap-2 transition-all duration-300 ${rowsVisible >= 2 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
               <img src={scenario.avatar} alt={scenario.reviewer} className="w-7 h-7 rounded-full object-cover flex-shrink-0" />
               <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2">
-                  <span className="text-sm font-bold text-foreground">{scenario.reviewer}</span>
+                <div className="flex items-center gap-1.5 flex-wrap min-w-0">
+                  <span className="text-sm font-bold text-foreground truncate">{scenario.reviewer}</span>
                   <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
                     <path d="M12 2L14.09 4.26L17 3.29L17.47 6.29L20.39 7.1L19.42 10L21.68 12L19.42 14L20.39 16.9L17.47 17.71L17 20.71L14.09 19.74L12 22L9.91 19.74L7 20.71L6.53 17.71L3.61 16.9L4.58 14L2.32 12L4.58 10L3.61 7.1L6.53 6.29L7 3.29L9.91 4.26L12 2Z" fill="#1877F2"/>
                     <path d="M9.5 12.5L11 14L15 10" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
-                  <div className="flex items-center gap-0.5">
+                  <div className="flex items-center gap-0.5 shrink-0">
                     {Array.from({ length: 5 }).map((_, i) => (
                       <Star key={i} className={`w-3 h-3 ${i < Math.floor(scenario.rating) ? "text-accent fill-accent" : i < scenario.rating ? "text-accent fill-accent/50" : "text-muted-foreground/30"}`} />
                     ))}
                   </div>
-                  <span className="text-[10px] text-muted-foreground">{t("showcase.weeksAgo")}</span>
+                  <span className="text-[10px] text-muted-foreground shrink-0">{t("showcase.weeksAgo")}</span>
                 </div>
               </div>
             </div>
@@ -535,7 +535,7 @@ export const HeroTrustShowcase = () => {
             </div>
 
             {/* Row 4: Dimension pills */}
-            <div className={`flex flex-nowrap gap-2 justify-center overflow-hidden transition-all duration-300 ${rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
+            <div className={`flex flex-wrap gap-2 justify-center transition-all duration-300 ${rowsVisible >= 4 ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"}`}>
               {scenario.dimensions.map((dim) => {
                 const Icon = dimensionIconKeys[dim.labelKey] || Clock;
                 return (

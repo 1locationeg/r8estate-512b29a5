@@ -38,11 +38,11 @@ export const BottomNav = () => {
       <div className="h-12 md:hidden" />
 
       <nav className="fixed bottom-0 start-0 end-0 z-50 md:hidden bg-card/95 backdrop-blur-lg border-t border-border" style={{ paddingBottom: 'env(safe-area-inset-bottom, 0px)' }}>
-        <div className="flex items-center justify-around h-12 px-2 max-w-md mx-auto">
+        <div className="flex items-center justify-around h-12 px-1 max-w-md mx-auto">
           {/* Reviews */}
           <button
             onClick={() => navigate("/reviews")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[40px] py-1 transition-colors ${
               isReviews ? activeColor : "text-muted-foreground"
             }`}
           >
@@ -53,7 +53,7 @@ export const BottomNav = () => {
           {/* Categories / Directory */}
           <button
             onClick={() => navigate("/categories")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[40px] py-1 transition-colors ${
               location.pathname === "/categories" ? activeColor : "text-muted-foreground"
             }`}
           >
@@ -77,7 +77,7 @@ export const BottomNav = () => {
           {/* Portfolio */}
           <button
             onClick={() => navigate("/portfolio")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[40px] py-1 transition-colors ${
               location.pathname === "/portfolio" ? activeColor : "text-muted-foreground"
             }`}
           >
@@ -88,7 +88,7 @@ export const BottomNav = () => {
           {/* Community */}
           <button
             onClick={() => navigate("/community")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[40px] py-1 transition-colors ${
               location.pathname === "/community" ? activeColor : "text-muted-foreground"
             }`}
           >
@@ -99,7 +99,7 @@ export const BottomNav = () => {
           {/* Copilot / Agentic */}
           <button
             onClick={() => navigate("/copilot")}
-            className={`flex flex-col items-center justify-center gap-0.5 min-w-[48px] py-1 transition-colors ${
+            className={`flex flex-col items-center justify-center gap-0.5 min-w-[40px] py-1 transition-colors ${
               location.pathname === "/copilot" ? "text-primary" : "text-muted-foreground"
             }`}
           >
