@@ -61,6 +61,7 @@ const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
 const CopilotPage = lazy(() => import("./pages/CopilotPage"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const StaticPage = lazy(() => import("./pages/StaticPage"));
+const ReviewerProgram = lazy(() => import("./pages/ReviewerProgram"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const Businesses = lazy(() => import("./pages/Businesses"));
 
@@ -184,6 +185,7 @@ const AppContent = () => {
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/businesses" element={<Businesses />} />
+          <Route path="/reviewer-program" element={<ReviewerProgram />} />
           <Route path="/sitemap" element={<Sitemap />} />
           <Route path="/messages" element={<Messages />} />
           <Route path="/about" element={<StaticPage />} />

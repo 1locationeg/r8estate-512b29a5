@@ -36,4 +36,5 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { name: "Customer Service", path: "/customer-service" },
   { name: "FAQ", path: "/faq" },
   { name: "Report a Problem", path: "/report" },
+  { name: "Reviewer Program", path: "/reviewer-program" },
 ];
