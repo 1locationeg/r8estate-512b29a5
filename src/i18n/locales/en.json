@@ -1608,6 +1608,9 @@
     "title": "Your path to a safe home",
     "complete": "complete",
     "entry": "Start",
+    "stationOf": "Station {{current}} of {{total}}",
+    "remaining": "{{count}} remaining",
+    "next": "Next: {{name}}",
     "sub": {
       "research": "About developers",
       "choose": "The best project",
