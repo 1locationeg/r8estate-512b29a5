@@ -308,11 +308,28 @@ const Auth = () => {
               {/* ===== STEP 1: Social + Email ===== */}
               {step === 'social' && (
                 <div className="animate-in fade-in duration-200">
-                  <h2 className="text-xl font-bold text-foreground text-center mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                    {isBusinessMode
-                      ? t('auth.registerBusiness', 'Register your business')
-                      : t('auth.createOrSign', 'Create an account')}
-                  </h2>
+                   <h2 className="text-xl font-bold text-foreground text-center mb-1" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                     {isReviewIntent
+                       ? (isAr ? 'انضم كمراجع موثق ✍️' : 'Join as Trusted Reviewer ✍️')
+                       : isBusinessMode
+                       ? t('auth.registerBusiness', 'Register your business')
+                       : t('auth.createOrSign', 'Create an account')}
+                   </h2>
+
+                   {isReviewIntent && !isBusinessMode && (
+                     <div className="flex flex-col gap-1.5 my-3 px-2">
+                       {[
+                         { icon: '🏅', text: isAr ? 'اكسب عملات وشارات' : 'Earn coins & badges' },
+                         { icon: '✅', text: isAr ? 'احصل على حالة مراجع موثق' : 'Get verified reviewer status' },
+                         { icon: '🛡️', text: isAr ? 'ساعد الآلاف في اتخاذ قرارات أفضل' : 'Help 1000s make better decisions' },
+                       ].map((b) => (
+                         <div key={b.text} className="flex items-center gap-2 text-xs text-muted-foreground">
+                           <span>{b.icon}</span>
+                           <span>{b.text}</span>
+                         </div>
+                       ))}
+                     </div>
+                   )}
 
                   <p className="text-sm text-muted-foreground text-center mb-6">
                     {t('auth.hasAccount', 'Already have an account?')}{' '}
