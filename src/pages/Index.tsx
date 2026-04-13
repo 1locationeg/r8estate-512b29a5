@@ -319,14 +319,14 @@ const Index = () => { // hero-phase-v2
                    <div className="flex flex-row items-center justify-center gap-3 mt-3 animate-[fadeInUp_0.6s_ease-out_0.3s_both]">
                       <button
                         onClick={() => navigate("/reviews")}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full border border-border/60 bg-card text-foreground hover:border-primary/40 hover:shadow-[0_0_20px_-4px_hsl(var(--primary)/0.25)] transition-all duration-300 cursor-pointer"
+                         className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full border border-border/60 bg-card text-foreground hover:border-primary/40 hover:shadow-[0_0_20px_-4px_hsl(var(--primary)/0.25)] transition-all duration-300 cursor-pointer"
                       >
                         <Users className="w-4 h-4 text-primary shrink-0" />
                         <span className="text-xs font-bold whitespace-nowrap">{t("hero.ctaSeeOwners")}</span>
                       </button>
                       <button
                         onClick={() => navigate("/reviews")}
-                        className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-primary-foreground shadow-[0_0_20px_-4px_hsl(var(--glow-accent)/0.4)] hover:shadow-[0_0_28px_-2px_hsl(var(--glow-accent)/0.5)] transition-all duration-300 cursor-pointer"
+                         className="flex items-center gap-2 px-4 py-2 min-h-[44px] rounded-full bg-primary text-primary-foreground shadow-[0_0_20px_-4px_hsl(var(--glow-accent)/0.4)] hover:shadow-[0_0_28px_-2px_hsl(var(--glow-accent)/0.5)] transition-all duration-300 cursor-pointer"
                       >
                         <ShieldCheck className="w-4 h-4 shrink-0" />
                         <span className="text-xs font-bold whitespace-nowrap">{t("hero.ctaProtectMoney")}</span>
