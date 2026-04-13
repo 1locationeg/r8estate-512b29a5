@@ -1,64 +1,57 @@
 
 
-## Plan: 3-Layer Journey Corridor with Engagement-Boosted Progress
+## Plan: Compact Journey Corridor + Station Wayfinding on Click
 
-### What
-Replace the current simple corridor with a rich 3-layer sticky bar. The completion percentage is a **blend of scroll position (50%) + user engagement actions (50%)**, so actively using features (searching, comparing, clicking entities) accelerates progress beyond just scrolling.
+### Problems
+1. The corridor is too tall — 3 layers with header, global bar, and station row take ~70px on mobile
+2. When clicking a station, user loses context — no indication of where they are, what's remaining, or how to continue
+3. Background is dark/opaque, making it heavy — should use lighter tints that match each station's color consistently across the site
 
-### Engagement Tracking
+### Changes
 
-**New hook: `src/hooks/useCorridorEngagement.ts`**
-- Stores per-zone engagement scores in React state (sessionStorage-backed so it persists on refresh)
-- Zone 1 (Research): +points for using search, clicking search suggestions
-- Zone 2 (Choose): +points for viewing entity details, opening compare modal
-- Zone 3 (Finance): +points for interacting with deal/launch cards, pricing section
-- Zone 4 (Protect): +points for clicking community, feedback, or CTA buttons
-- Exposes: `zoneEngagement: [0-1, 0-1, 0-1, 0-1]` (normalized per zone) and a `trackEngagement(zone, action)` function
-- Listens for custom DOM events (`corridor:engage`) so any component can fire engagement without importing the hook
-- Max per zone = 1.0 (capped), each action adds ~0.15-0.25
+#### 1. Compact the Corridor (`src/components/JourneyCorridor.tsx` — rewrite)
 
-### Component Rewrite: `src/components/JourneyCorridor.tsx`
+Merge all 3 layers into a **single compact row** (~36px tall on mobile):
+- **Left**: tiny percentage circle (ring with number inside, 20px) — updates in real time
+- **Center**: 4 station dots in a horizontal track, connected by a thin progress line
+  - Each dot: 20px circle with station number or ✓, colored with its station accent
+  - Active dot: slightly larger (24px) with glow ring
+  - Below each dot: 1-word label (ابحث / اختر / مول / احم) in [9px] text
+  - Completed dots: ✓ + filled accent color
+  - Future dots: outlined/dim
+- **Right**: nothing (keeps it minimal)
+- **Background**: light frosted glass (`bg-background/90 backdrop-blur-md`) instead of dark colors. The connecting line between dots uses each station's accent color for completed segments, muted for future.
+- The global progress bar and subtitle row are **removed** — progress is communicated through the connecting line fill and the percentage circle.
 
-**Layer 1 — Header row**:
-- Left: "رحلتك نحو بيت آمن" / "Your path to a safe home"
-- Right: live `XX% مكتمل` / `XX% complete`
-- Percentage = `((scrollProgress + engagementProgress) / 2) * 100` across all 4 zones
+Height reduction: ~70px → ~36px (mobile), ~40px (desktop).
 
-**Layer 2 — Global progress bar**:
-- Full-width thin gradient bar (h-[3px]) filling 0→100%
-- Gradient: navy → teal → amber → emerald
+#### 2. Station Click → Scroll + Highlight Context (`src/components/JourneyCorridor.tsx`)
 
-**Layer 3 — Stations row** (5 items, always visible):
-- Entry state "البداية" with home icon (always dim after zone 1 activates)
-- 4 stations: numbered circle (or ✓), bold name, subtitle, per-station progress bar
-- Per-station progress = `(scrollProgress * 0.5 + engagementProgress * 0.5)` for that zone
-- Subtitles: "عن المطورين" / "المشروع الأفضل" / "بأمان مالي" / "حقوقك وفلوسك"
+When a station is clicked:
+- Smooth-scroll to that zone (existing behavior)
+- **Temporarily expand** the corridor for 4 seconds to show a mini context strip below the compact row:
+  - Shows: "Station 2 of 4 · اختر · 2 stations remaining"
+  - A small "Next: مول →" link that scrolls to the next incomplete station
+  - Auto-collapses after 4s or on scroll
 
-**Background color transition**: Smooth HSL interpolation based on active zone:
-- Entry: `hsl(203,81%,12%)` navy
-- Zone 1→2→3→4: teal → amber → blue → green
+This way the user always knows: where they are, what's left, and how to get to the next station.
 
-**Engagement dispatch from existing components**:
-- Add `dispatchEvent(new CustomEvent('corridor:engage', { detail: { zone, action } }))` to:
-  - `HeroSearchBar` (zone 1, on search submit)
-  - `CompareModal` (zone 2, on compare open)
-  - `SearchSuggestions` (zone 1, on suggestion click)
-  - `DealCard` / `LaunchCard` (zone 3, on interaction)
-  - `JourneyCompleteCTA` (zone 4, on CTA click)
-  - `SiteExperienceFeedback` (zone 4, on feedback)
+#### 3. Lighter Background + Station Color Consistency
 
-### i18n Keys
+- Corridor background: `bg-background/95 backdrop-blur-sm border-b border-border/40` — light, not dark
+- Each station dot uses the existing Tailwind journey token colors (`journey-research`, `journey-choose`, `journey-finance`, `journey-protect`) which are already defined in CSS variables and used across the site (StationPageWrapper, JourneyStripe, SideJourneyRail, BottomNav, PageHeader)
+- The accent colors in the corridor will reference the same `hsl(var(--journey-*))` tokens, ensuring consistency with all other station-colored components site-wide
+- Remove the HSL interpolation logic for background — it's no longer needed with a light glass background
 
-Add `"corridor"` namespace to both locale files:
-- `title`, `complete`, `entry`, `sub.research`, `sub.choose`, `sub.finance`, `sub.protect`
+#### 4. i18n Updates (`en.json` + `ar.json`)
+
+Add:
+- `corridor.stationOf`: "Station {{current}} of {{total}}"
+- `corridor.remaining`: "{{count}} remaining"
+- `corridor.next`: "Next: {{name}}"
 
 ### Files touched
-1. **New** — `src/hooks/useCorridorEngagement.ts`
-2. **Rewrite** — `src/components/JourneyCorridor.tsx`
-3. **Edit** — `src/i18n/locales/en.json` (add `corridor` keys)
-4. **Edit** — `src/i18n/locales/ar.json` (add `corridor` keys)
-5. **Edit** — `src/components/HeroSearchBar.tsx` (dispatch engage event on search)
-6. **Edit** — `src/components/CompareModal.tsx` (dispatch engage event on compare)
-7. **Edit** — `src/components/SiteExperienceFeedback.tsx` (dispatch engage event)
-8. **Edit** — `src/components/JourneyCompleteCTA.tsx` (dispatch engage event)
+1. **Rewrite** — `src/components/JourneyCorridor.tsx` (compact single-row + click context strip)
+2. **Edit** — `src/i18n/locales/en.json` (add context strip keys)
+3. **Edit** — `src/i18n/locales/ar.json` (add context strip keys)
 
