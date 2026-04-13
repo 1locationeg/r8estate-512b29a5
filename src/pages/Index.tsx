@@ -366,7 +366,7 @@ const Index = () => { // hero-phase-v2
             </div>
 
             {/* Reviewer Spotlight — social proof strip */}
-            <div className={cn("w-full transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <div className={cn("w-full mt-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <ReviewerSpotlight onWriteReview={() => navigate('/reviews')} />
             </div>
 
