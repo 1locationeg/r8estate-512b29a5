@@ -412,12 +412,16 @@ const Index = () => { // hero-phase-v2
         getDashboardRoute={getDashboardRoute}
       />
 
+      {userMode === "buyers" && <JourneyCorridor />}
+
       {userMode === "buyers" ? (
         <>
-          {heroBlock}
+          <div data-zone="1">
+            {heroBlock}
 
-          {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
-          <JourneyScrollSections />
+            {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
+            <JourneyScrollSections />
+          </div>
 
           {/* FeaturedIdentitySpotlight — right after 4/4 Protect */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
