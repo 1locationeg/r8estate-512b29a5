@@ -59,6 +59,11 @@ export const LaunchCard = ({ launch, phases = [], ratings = [], onRate, isSelect
   const [watchLoading, setWatchLoading] = useState(false);
   const countdown = useCountdown(launch.status === "upcoming" ? launch.launch_date : null);
 
+  // Track launch view for corridor progress
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 3, action: "launch_click" } }));
+  }, [launch.id]);
+
   const biz = launch.business_profiles;
   const status = statusConfig[launch.status] || statusConfig.upcoming;
   const unitsSold = (launch.total_units || 0) - (launch.units_remaining || 0);
