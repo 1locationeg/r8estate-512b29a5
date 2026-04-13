@@ -14,7 +14,7 @@ const HowWeWork = () => {
   const isRtl = i18n.language === "ar";
 
   // Track how-we-work view for corridor progress
-  React.useEffect(() => {
+  useEffect(() => {
     window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 3, action: "how_we_work" } }));
   }, []);
 
