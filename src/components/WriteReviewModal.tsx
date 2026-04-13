@@ -198,6 +198,13 @@ export const WriteReviewModal = ({
   const [successRating, setSuccessRating] = useState(5);
   const [successTotalReviews, setSuccessTotalReviews] = useState(1);
 
+  // Track review click for corridor progress
+  useEffect(() => {
+    if (open) {
+      window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "review_click" } }));
+    }
+  }, [open]);
+
   // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
   const [showThanksScreen, setShowThanksScreen] = useState(false);

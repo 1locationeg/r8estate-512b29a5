@@ -40,8 +40,10 @@ export const DeveloperDetailModal = ({ developer, open, onClose }: DeveloperDeta
 
   // Track developer view
   useEffect(() => {
-    if (open && developer && user) {
-      trackBuyerEngagement(user.id, 'developers_viewed');
+    if (open && developer) {
+      if (user) trackBuyerEngagement(user.id, 'developers_viewed');
+      // Fire corridor engagement for entity view (zone 2)
+      window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 2, action: "entity_view" } }));
     }
   }, [open, developer?.id, user]);
 

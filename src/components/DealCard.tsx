@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Star, Share2, Flame, Clock, Scale } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -68,6 +68,11 @@ function isHot(ratingCount: number) {
   const isExpired = deal.valid_until && new Date(deal.valid_until) < new Date();
   const hot = isHot(deal.rating_count);
   const fresh = isNew(deal.created_at);
+
+  // Track deal view for corridor progress
+  useEffect(() => {
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 3, action: "deal_click" } }));
+  }, [deal.id]);
 
   return (
     <>
