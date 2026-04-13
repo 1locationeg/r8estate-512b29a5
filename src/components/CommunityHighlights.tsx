@@ -45,7 +45,7 @@ export const CommunityHighlights = () => {
           return (
             <button
               key={post.id}
-              onClick={() => navigate(`/community?post=${post.id}`)}
+              onClick={() => { window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "community_click" } })); navigate(`/community?post=${post.id}`); }}
               className="min-w-[240px] max-w-[280px] bg-card/80 backdrop-blur-sm border border-border/60 rounded-xl p-3 text-start hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] transition-all duration-500 flex-shrink-0"
             >
               <Badge variant="outline" className={`text-[9px] px-1.5 py-0 mb-1.5 ${cat.className}`}>
