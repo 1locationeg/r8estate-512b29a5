@@ -16,6 +16,7 @@ export function SiteExperienceFeedback() {
   const handleRate = (value: number) => {
     setRating(value);
     setSubmitted(true);
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "feedback_submit" } }));
     toast({ title: t("siteFeedback.thankYou") });
   };
 

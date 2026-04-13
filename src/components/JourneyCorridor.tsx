@@ -1,20 +1,38 @@
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { JOURNEY_STATIONS } from "@/lib/journeyStations";
+import { useCorridorEngagement } from "@/hooks/useCorridorEngagement";
 import { cn } from "@/lib/utils";
-import { Check } from "lucide-react";
+import { Check, Home } from "lucide-react";
 
-const COLORS: Record<string, { bg: string; text: string; bar: string; dim: string }> = {
-  research: { bg: "bg-journey-research", text: "text-white", bar: "bg-journey-research", dim: "bg-journey-research/12" },
-  choose:   { bg: "bg-journey-choose",   text: "text-white", bar: "bg-journey-choose",   dim: "bg-journey-choose/12" },
-  finance:  { bg: "bg-journey-finance",  text: "text-white", bar: "bg-journey-finance",  dim: "bg-journey-finance/12" },
-  protect:  { bg: "bg-journey-protect",  text: "text-white", bar: "bg-journey-protect",  dim: "bg-journey-protect/12" },
-};
+// HSL values for background interpolation
+const ZONE_COLORS = [
+  { h: 203, s: 81, l: 12 }, // entry / pre-zone — dark navy
+  { h: 195, s: 70, l: 15 }, // zone 1 research — deep teal
+  { h: 35, s: 60, l: 15 },  // zone 2 choose — deep amber
+  { h: 215, s: 70, l: 15 }, // zone 3 finance — deep blue
+  { h: 152, s: 60, l: 15 }, // zone 4 protect — deep green
+];
+
+function lerpHsl(a: typeof ZONE_COLORS[0], b: typeof ZONE_COLORS[0], t: number) {
+  const h = a.h + (b.h - a.h) * t;
+  const s = a.s + (b.s - a.s) * t;
+  const l = a.l + (b.l - a.l) * t;
+  return `hsl(${Math.round(h)}, ${Math.round(s)}%, ${Math.round(l)}%)`;
+}
+
+const STATION_ACCENT_COLORS = [
+  "hsl(195, 70%, 50%)", // research teal
+  "hsl(35, 80%, 55%)",  // choose amber
+  "hsl(215, 70%, 55%)", // finance blue
+  "hsl(152, 60%, 50%)", // protect green
+];
 
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
-  const [activeZone, setActiveZone] = useState(0); // 1-4, 0 = none
-  const [zoneProgress, setZoneProgress] = useState(0); // 0-1
+  const { zoneEngagement } = useCorridorEngagement();
+  const [activeZone, setActiveZone] = useState(0);
+  const [zoneScrollProgress, setZoneScrollProgress] = useState<[number, number, number, number]>([0, 0, 0, 0]);
   const rafRef = useRef<number>(0);
 
   const getZoneElements = useCallback(() => {
@@ -27,38 +45,55 @@ export const JourneyCorridor = () => {
       rafRef.current = requestAnimationFrame(() => {
         const zones = getZoneElements();
         const viewMid = window.scrollY + window.innerHeight * 0.4;
-
         let current = 0;
-        let progress = 0;
+        const progArr: [number, number, number, number] = [0, 0, 0, 0];
 
         for (let i = 0; i < zones.length; i++) {
           const el = zones[i];
           if (!el) continue;
           const top = el.offsetTop;
           const bottom = top + el.offsetHeight;
-          if (viewMid >= top && viewMid <= bottom) {
-            current = i + 1;
-            progress = Math.min(1, Math.max(0, (viewMid - top) / (bottom - top)));
-            break;
-          }
-          if (viewMid > bottom) {
-            current = i + 1;
-            progress = 1;
+          if (viewMid >= top) {
+            if (viewMid <= bottom) {
+              current = i + 1;
+              progArr[i] = Math.min(1, Math.max(0, (viewMid - top) / (bottom - top)));
+            } else {
+              progArr[i] = 1;
+              current = i + 1;
+            }
           }
         }
 
         setActiveZone(current);
-        setZoneProgress(progress);
+        setZoneScrollProgress(progArr);
       });
     };
-
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(rafRef.current);
-    };
+    return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafRef.current); };
   }, [getZoneElements]);
+
+  // Combined progress per zone (scroll 50% + engagement 50%)
+  const combinedZone = useMemo(() => {
+    return zoneScrollProgress.map((sp, i) =>
+      Math.min(1, sp * 0.5 + zoneEngagement[i] * 0.5)
+    ) as [number, number, number, number];
+  }, [zoneScrollProgress, zoneEngagement]);
+
+  // Overall progress 0-100
+  const overallProgress = useMemo(() => {
+    const total = combinedZone.reduce((a, b) => a + b, 0);
+    return Math.round((total / 4) * 100);
+  }, [combinedZone]);
+
+  // Background color
+  const bgColor = useMemo(() => {
+    if (activeZone === 0) return lerpHsl(ZONE_COLORS[0], ZONE_COLORS[0], 0);
+    const from = ZONE_COLORS[activeZone - 1] || ZONE_COLORS[0];
+    const to = ZONE_COLORS[activeZone];
+    const progress = zoneScrollProgress[activeZone - 1] || 0;
+    return lerpHsl(from, to, progress);
+  }, [activeZone, zoneScrollProgress]);
 
   const scrollToZone = (zone: number) => {
     const el = document.querySelector(`[data-zone="${zone}"]`);
@@ -66,60 +101,110 @@ export const JourneyCorridor = () => {
   };
 
   return (
-    <div className="sticky top-[56px] z-20 w-full bg-background/95 backdrop-blur-md border-b border-border/40 shadow-sm">
-      <div className="max-w-[1100px] mx-auto flex items-stretch">
-        {JOURNEY_STATIONS.map((station, idx) => {
-          const zone = idx + 1;
-          const isPast = activeZone > zone;
-          const isActive = activeZone === zone;
-          const isFuture = activeZone < zone;
-          const c = COLORS[station.key];
-          const Icon = station.icon;
+    <div
+      className="sticky top-[56px] z-20 w-full border-b border-white/[0.06] shadow-lg"
+      style={{ backgroundColor: bgColor, transition: "background-color 0.5s ease" }}
+    >
+      <div className="max-w-[1100px] mx-auto px-3 md:px-4">
+        {/* Layer 1 — Header */}
+        <div className="flex items-center justify-between py-1.5">
+          <span className="text-[10px] md:text-xs text-white/60 font-medium tracking-wide">
+            {t("corridor.title")}
+          </span>
+          <span className="text-[10px] md:text-xs text-white/80 font-bold tabular-nums">
+            {overallProgress}% {t("corridor.complete")}
+          </span>
+        </div>
 
-          return (
-            <button
-              key={station.key}
-              onClick={() => scrollToZone(zone)}
-              className={cn(
-                "flex-1 flex flex-col items-center py-2 px-1 relative transition-all duration-300 cursor-pointer",
-                isActive && "scale-[1.02]"
-              )}
-            >
-              {/* Number / Check */}
-              <div className={cn(
-                "w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black transition-all duration-300 mb-0.5",
-                isPast ? cn(c.bg, c.text) :
-                isActive ? cn(c.bg, c.text, "ring-2 ring-offset-1 ring-offset-background", `ring-${station.colorClass}/30`) :
-                cn(c.dim, `text-${station.colorClass}`)
-              )}>
-                {isPast ? <Check className="w-3 h-3" /> : zone}
-              </div>
+        {/* Layer 2 — Global progress bar */}
+        <div className="w-full h-[3px] rounded-full bg-white/10 overflow-hidden mb-2">
+          <div
+            className="h-full rounded-full transition-[width] duration-300"
+            style={{
+              width: `${overallProgress}%`,
+              background: "linear-gradient(90deg, hsl(195,70%,50%), hsl(35,80%,55%), hsl(215,70%,55%), hsl(152,60%,50%))",
+            }}
+          />
+        </div>
 
-              {/* Label */}
-              <span className={cn(
-                "text-[9px] md:text-[10px] font-semibold leading-tight transition-colors duration-300 whitespace-nowrap",
-                isActive ? `text-${station.colorClass}` :
-                isPast ? "text-foreground" :
-                "text-muted-foreground/60"
-              )}>
-                {t(station.labelKey)}
-              </span>
+        {/* Layer 3 — Stations row */}
+        <div className="flex items-start gap-0.5 pb-2">
+          {/* Entry state */}
+          <button
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            className="flex flex-col items-center gap-0.5 px-1.5 py-0.5 min-w-[42px] md:min-w-[56px] transition-all"
+          >
+            <div className={cn(
+              "w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center transition-all",
+              activeZone >= 1 ? "bg-white/20 text-white/40" : "bg-white/10 text-white/70 ring-1 ring-white/20"
+            )}>
+              <Home className="w-3 h-3" />
+            </div>
+            <span className="text-[8px] md:text-[9px] text-white/40 font-medium leading-tight whitespace-nowrap">
+              {t("corridor.entry")}
+            </span>
+          </button>
 
-              {/* Progress bar */}
-              <div className={cn(
-                "absolute bottom-0 left-0 right-0 h-[3px] rounded-full overflow-hidden transition-colors duration-300",
-                isPast ? c.bg : isActive ? "bg-muted/30" : "bg-transparent"
-              )}>
-                {isActive && (
+          {/* 4 Stations */}
+          {JOURNEY_STATIONS.map((station, idx) => {
+            const zone = idx + 1;
+            const isPast = activeZone > zone;
+            const isActive = activeZone === zone;
+            const isFuture = activeZone < zone;
+            const stationProgress = combinedZone[idx];
+            const accentColor = STATION_ACCENT_COLORS[idx];
+
+            return (
+              <button
+                key={station.key}
+                onClick={() => scrollToZone(zone)}
+                className="flex-1 flex flex-col items-center gap-0.5 py-0.5 relative transition-all cursor-pointer group"
+              >
+                {/* Number / Check circle */}
+                <div
+                  className={cn(
+                    "w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-black transition-all duration-300",
+                    isPast && "text-white",
+                    isActive && "text-white ring-2 ring-white/30 ring-offset-1 scale-110",
+                    isFuture && "bg-white/8 text-white/30",
+                  )}
+                  style={{
+                    backgroundColor: isPast || isActive ? accentColor : undefined,
+                  }}
+                >
+                  {isPast ? <Check className="w-3 h-3" /> : zone}
+                </div>
+
+                {/* Name */}
+                <span className={cn(
+                  "text-[9px] md:text-[10px] font-bold leading-tight whitespace-nowrap transition-colors duration-300",
+                  isActive ? "text-white" : isPast ? "text-white/70" : "text-white/30"
+                )}>
+                  {t(station.labelKey)}
+                </span>
+
+                {/* Subtitle */}
+                <span className={cn(
+                  "text-[7px] md:text-[8px] leading-tight whitespace-nowrap transition-colors duration-300 hidden sm:block",
+                  isActive ? "text-white/60" : isPast ? "text-white/40" : "text-white/20"
+                )}>
+                  {t(`corridor.sub.${station.key}`)}
+                </span>
+
+                {/* Per-station progress bar */}
+                <div className="w-full h-[2px] rounded-full bg-white/10 mt-0.5 overflow-hidden">
                   <div
-                    className={cn("h-full rounded-full transition-[width] duration-200", c.bar)}
-                    style={{ width: `${zoneProgress * 100}%` }}
+                    className="h-full rounded-full transition-[width] duration-200"
+                    style={{
+                      width: `${stationProgress * 100}%`,
+                      backgroundColor: accentColor,
+                    }}
                   />
-                )}
-              </div>
-            </button>
-          );
-        })}
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
   );

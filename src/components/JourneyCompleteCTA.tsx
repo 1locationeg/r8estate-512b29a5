@@ -33,11 +33,11 @@ export function JourneyCompleteCTA() {
         {/* CTAs */}
         <div className="flex items-center gap-3 mt-1">
           {user ? (
-            <Button onClick={() => navigate("/buyer")} className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white">
+            <Button onClick={() => { window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "cta_click" } })); navigate("/buyer"); }} className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white">
               {t("journeyComplete.goToDashboard")}
             </Button>
           ) : (
-            <Button onClick={() => navigate("/auth")} className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white">
+            <Button onClick={() => { window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "cta_click" } })); navigate("/auth"); }} className="bg-[hsl(var(--primary))] hover:bg-[hsl(var(--primary))]/90 text-white">
               {t("journeyComplete.ctaStart")}
             </Button>
           )}

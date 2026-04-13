@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Dialog,
@@ -24,6 +24,11 @@ import { getRatingColorClass } from "@/lib/ratingColors";
 import { performSearch, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { reviews as allReviews } from "@/data/mockData";
 import { downloadComparisonReport } from "@/lib/generateComparisonReport";
+
+// Dispatch corridor engagement on compare open
+function dispatchCompareEngage() {
+  window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 2, action: "compare_open" } }));
+}
 
 interface CompareModalProps {
   item: SearchItem | null;
@@ -77,6 +82,7 @@ const generateScores = (item: SearchItem) => {
 type Scores = ReturnType<typeof generateScores>;
 
 export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
+  useEffect(() => { if (open) dispatchCompareEngage(); }, [open]);
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [compareItems, setCompareItems] = useState<SearchItem[]>([]);
