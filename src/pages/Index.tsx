@@ -517,7 +517,9 @@ const Index = () => { // hero-phase-v2
               <div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
+              </div>{/* end zone 3 inner */}
 
+              <div data-zone="4" className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
               {/* Journey Complete CTA */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
 
@@ -537,6 +539,7 @@ const Index = () => { // hero-phase-v2
                   onCategorySelect={(catKey) => { setExternalCategory(catKey); setActiveView(null); setSelectedDeveloperId(null); setSpecialViewItem(null); setTimeout(() => setExternalCategory(null), 100); }}
                 />
               </div>
+              </div>{/* end zone 4 */}
 
 
 
