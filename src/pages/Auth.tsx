@@ -28,6 +28,7 @@ const Auth = () => {
   const { toast } = useToast();
 
   const isBusinessMode = searchParams.get('type') === 'business';
+  const isReviewIntent = searchParams.get('intent') === 'review';
   const [accountType, setAccountType] = useState<AccountType>(isBusinessMode ? 'business' : 'buyer');
   const [step, setStep] = useState<Step>('social');
   const [disclaimerAgreed, setDisclaimerAgreed] = useState(false);
