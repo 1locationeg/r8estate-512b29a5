@@ -113,7 +113,10 @@ export const FeaturedIdentitySpotlight = () => {
         </h2>
       </div>
 
-      <Card className="overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm shadow-sm">
+      <Card
+        className="overflow-hidden border-border/60 bg-card/80 backdrop-blur-sm shadow-sm cursor-pointer hover:shadow-md transition-shadow"
+        onClick={() => navigate(`/entity/${developer.id}`)}
+      >
         {/* Navy gradient banner header */}
         <div className="relative bg-gradient-to-r from-primary via-primary/90 to-primary/80 px-4 pt-4 pb-8 text-center">
           <div className="absolute inset-0 opacity-[0.06]" style={{
@@ -127,7 +130,8 @@ export const FeaturedIdentitySpotlight = () => {
               </h3>
               <div className="flex items-center gap-1 md:absolute md:end-0">
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (!user) { navigate("/auth"); return; }
                     toggleSave(developer.name, developer.logo);
                   }}
@@ -137,7 +141,8 @@ export const FeaturedIdentitySpotlight = () => {
                   <Bookmark className={`h-3.5 w-3.5 ${isSaved ? "fill-primary-foreground text-primary-foreground" : "text-primary-foreground/70"}`} />
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation();
                     if (!user) { navigate("/auth"); return; }
                     toggleFollow(developer.name);
                   }}
@@ -149,7 +154,9 @@ export const FeaturedIdentitySpotlight = () => {
                     <UserPlus className="h-3.5 w-3.5 text-primary-foreground/70" />
                   }
                 </button>
-                <ShareMenu title={developer.name} iconOnly />
+                <div onClick={(e) => e.stopPropagation()}>
+                  <ShareMenu title={developer.name} iconOnly />
+                </div>
               </div>
             </div>
             {developer.verified &&
@@ -256,7 +263,7 @@ export const FeaturedIdentitySpotlight = () => {
 
           {devReviews.length > 1 &&
             <button
-              onClick={() => setShowAllReviews(!showAllReviews)}
+              onClick={(e) => { e.stopPropagation(); setShowAllReviews(!showAllReviews); }}
               className="mt-2 w-full flex items-center justify-center gap-1 text-xs font-semibold text-primary hover:text-primary/80 transition-colors">
               {showAllReviews ? t("spotlight.showLess") : t("spotlight.viewAllReviews", { count: devReviews.length })}
               <ChevronRight className={`w-3.5 h-3.5 transition-transform ${showAllReviews ? "rotate-90" : ""}`} />
