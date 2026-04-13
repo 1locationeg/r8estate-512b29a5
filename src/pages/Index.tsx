@@ -541,44 +541,27 @@ const Index = () => { // hero-phase-v2
               </div>
               </div>{/* end zone 4 */}
 
-
-
-
-              {/* Special View Item Detail */}
-              {specialViewItem && (
-                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
-                </div>
-              )}
-
-              {/* Developer Detail Card */}
-              {selectedDeveloper && !specialViewItem && (
-                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
-                </div>
-              )}
-
-              <div className="w-16 h-px bg-border mx-auto" />
-
-              {/* StepTimeline */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
-
-              <div className="w-16 h-px bg-border mx-auto" />
-
-
-
-              {!specialViewItem && !selectedDeveloper && (
-                <>
-
-                  <div className="w-16 h-px bg-border mx-auto" />
-
-                  {/* SmartRecommendations */}
-                  <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
-
-                </>
-              )}
-
-            </div>
+              <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
+                {specialViewItem && (
+                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                    <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
+                  </div>
+                )}
+                {selectedDeveloper && !specialViewItem && (
+                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                    <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
+                  </div>
+                )}
+                <div className="w-16 h-px bg-border mx-auto" />
+                <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
+                <div className="w-16 h-px bg-border mx-auto" />
+                {!specialViewItem && !selectedDeveloper && (
+                  <>
+                    <div className="w-16 h-px bg-border mx-auto" />
+                    <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+                  </>
+                )}
+              </div>
           </section>
         </>
       ) : (
