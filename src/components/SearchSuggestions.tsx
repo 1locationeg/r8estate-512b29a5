@@ -70,6 +70,7 @@ export const SearchSuggestions = ({
 
   const handleSelect = (item: SearchItem) => {
     trackSearch(item.id, item.name);
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 1, action: "suggestion_click" } }));
     onSelect(item);
   };
 
