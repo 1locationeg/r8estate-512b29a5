@@ -43,6 +43,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroNextSteps } from "@/components/HeroNextSteps";
+import { JourneyCorridor } from "@/components/JourneyCorridor";
 
 
 const Index = () => { // hero-phase-v2
@@ -411,25 +412,28 @@ const Index = () => { // hero-phase-v2
         getDashboardRoute={getDashboardRoute}
       />
 
+      {userMode === "buyers" && <JourneyCorridor />}
+
       {userMode === "buyers" ? (
         <>
-          {heroBlock}
+          <div data-zone="1">
+            {heroBlock}
 
-          {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
-          <JourneyScrollSections />
+            {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
+            <JourneyScrollSections />
+          </div>
 
-          {/* FeaturedIdentitySpotlight — right after 4/4 Protect */}
+          <div data-zone="2">
+          {/* FeaturedIdentitySpotlight */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <FeaturedIdentitySpotlight />
           </div>
-
-          {/* CompareEngineShowcase — right after spotlight */}
+          {/* CompareEngineShowcase */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <CompareEngineShowcase />
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
-
-          {/* Quick Actions + Widgets — right after compare */}
+          {/* Quick Actions + Widgets */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {quickActions.map((action) => {
@@ -451,10 +455,11 @@ const Index = () => { // hero-phase-v2
             </div>
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
+          </div>
 
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
-            <div className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
+            <div data-zone="3" className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
 
               {/* Trust Strip — softened */}
               <div className="w-full max-w-[1100px] py-4 md:py-6">
@@ -512,7 +517,9 @@ const Index = () => { // hero-phase-v2
               <div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
 
               <div className="w-16 h-px bg-border mx-auto" />
+              </div>{/* end zone 3 inner */}
 
+              <div data-zone="4" className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
               {/* Journey Complete CTA */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
 
@@ -532,45 +539,29 @@ const Index = () => { // hero-phase-v2
                   onCategorySelect={(catKey) => { setExternalCategory(catKey); setActiveView(null); setSelectedDeveloperId(null); setSpecialViewItem(null); setTimeout(() => setExternalCategory(null), 100); }}
                 />
               </div>
+              </div>{/* end zone 4 */}
 
-
-
-
-              {/* Special View Item Detail */}
-              {specialViewItem && (
-                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
-                </div>
-              )}
-
-              {/* Developer Detail Card */}
-              {selectedDeveloper && !specialViewItem && (
-                <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                  <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
-                </div>
-              )}
-
-              <div className="w-16 h-px bg-border mx-auto" />
-
-              {/* StepTimeline */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
-
-              <div className="w-16 h-px bg-border mx-auto" />
-
-
-
-              {!specialViewItem && !selectedDeveloper && (
-                <>
-
-                  <div className="w-16 h-px bg-border mx-auto" />
-
-                  {/* SmartRecommendations */}
-                  <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
-
-                </>
-              )}
-
-            </div>
+              <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
+                {specialViewItem && (
+                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                    <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
+                  </div>
+                )}
+                {selectedDeveloper && !specialViewItem && (
+                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
+                    <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
+                  </div>
+                )}
+                <div className="w-16 h-px bg-border mx-auto" />
+                <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
+                <div className="w-16 h-px bg-border mx-auto" />
+                {!specialViewItem && !selectedDeveloper && (
+                  <>
+                    <div className="w-16 h-px bg-border mx-auto" />
+                    <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
+                  </>
+                )}
+              </div>
           </section>
         </>
       ) : (
