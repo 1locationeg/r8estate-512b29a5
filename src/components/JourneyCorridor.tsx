@@ -28,6 +28,15 @@ const STATION_HINTS: Record<number, string> = {
   4: "Join community & protect",
 };
 
+/** Returns a red→yellow→green gradient string based on how far along progress is */
+const getProgressGradient = (pct: number) => {
+  if (pct <= 0) return "transparent";
+  if (pct <= 25) return "linear-gradient(to right, hsl(0,72%,51%), hsl(15,80%,50%))";
+  if (pct <= 50) return "linear-gradient(to right, hsl(0,72%,51%), hsl(30,90%,50%), hsl(45,93%,47%))";
+  if (pct <= 75) return "linear-gradient(to right, hsl(0,72%,51%), hsl(35,90%,48%), hsl(45,93%,47%), hsl(80,60%,45%))";
+  return "linear-gradient(to right, hsl(0,72%,51%), hsl(35,90%,48%), hsl(45,93%,47%), hsl(100,60%,42%), hsl(142,71%,45%))";
+};
+
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
   const { zoneEngagement } = useCorridorEngagement();
@@ -171,8 +180,8 @@ export const JourneyCorridor = () => {
                   </div>
                   <div className="h-2 w-full rounded-full bg-secondary overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-primary transition-all duration-500"
-                      style={{ width: `${overallProgress}%` }}
+                      className="h-full rounded-full transition-all duration-500"
+                      style={{ width: `${overallProgress}%`, background: getProgressGradient(overallProgress) }}
                     />
                   </div>
                 </div>
@@ -254,58 +263,53 @@ export const JourneyCorridor = () => {
             )}
           </div>
 
-          {/* Center: station track */}
-          <div className="flex-1 flex items-center">
+          {/* Center: station track with unified progress bar */}
+          <div className="flex-1 flex items-center relative">
+            {/* Unified grey progress track behind station dots */}
+            <div
+              className="absolute top-[12px] md:top-[14px] h-[4px] rounded-full bg-muted overflow-hidden"
+              style={{ left: "12.5%", right: "12.5%", zIndex: 0 }}
+            >
+              <div
+                className="h-full rounded-full transition-all duration-700 ease-out"
+                style={{
+                  width: `${overallProgress}%`,
+                  background: getProgressGradient(overallProgress),
+                }}
+              />
+            </div>
+
             {JOURNEY_STATIONS.map((station, idx) => {
               const zone = idx + 1;
               const isPast = activeZone > zone;
               const isActive = activeZone === zone;
               const color = STATION_COLORS[idx];
+              const stationComplete = combinedZone[idx] >= 1;
 
               return (
-                <div key={station.key} className="flex-1 flex flex-col items-center relative">
-                  {/* Connecting line with gradient */}
-                  {idx > 0 && (
-                    <div className="absolute top-[12px] md:top-[14px] right-1/2 w-full h-[3px] -z-[1]">
-                      <div
-                        className="w-full h-full rounded-full overflow-hidden"
-                        style={{
-                          background: `linear-gradient(to right, ${STATION_COLORS[idx - 1]}20, ${color}20)`,
-                        }}
-                      >
-                        <div
-                          className="h-full rounded-full transition-all duration-500"
-                          style={{
-                            width: `${combinedZone[idx - 1] * 100}%`,
-                            background: `linear-gradient(to right, ${STATION_COLORS[idx - 1]}, ${color})`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                  )}
-
+                <div key={station.key} className="flex-1 flex flex-col items-center relative" style={{ zIndex: 1 }}>
                   <button
                     onClick={() => handleStationClick(zone)}
                     className="flex flex-col items-center gap-0.5 cursor-pointer group min-w-[44px] min-h-[44px] justify-center relative"
                   >
-                    {/* Station dot — bigger, colored */}
+                    {/* Station dot */}
                     <div
                       className={cn(
                         "w-[24px] h-[24px] md:w-[28px] md:h-[28px] rounded-full flex items-center justify-center text-[9px] md:text-[10px] font-black transition-all duration-300 border-2",
                       )}
                       style={{
-                        backgroundColor: isPast || isActive
+                        backgroundColor: isPast || isActive || stationComplete
                           ? color
                           : `color-mix(in srgb, ${color} 12%, hsl(var(--background)))`,
-                        borderColor: isPast || isActive
+                        borderColor: isPast || isActive || stationComplete
                           ? color
                           : `color-mix(in srgb, ${color} 30%, transparent)`,
-                        color: isPast || isActive ? "white" : color,
+                        color: isPast || isActive || stationComplete ? "white" : color,
                         boxShadow: isActive ? `0 0 12px ${color}, 0 0 4px ${color}` : "none",
                         transform: isActive ? "scale(1.15)" : "scale(1)",
                       }}
                     >
-                      {isPast ? <Check className="w-3 h-3 md:w-3.5 md:h-3.5" /> : zone}
+                      {isPast || stationComplete ? <Check className="w-3 h-3 md:w-3.5 md:h-3.5" /> : zone}
                     </div>
 
                     {/* Pulsing ring on active */}
@@ -324,11 +328,11 @@ export const JourneyCorridor = () => {
                       />
                     )}
 
-                    {/* Label — always colored per station */}
+                    {/* Label */}
                     <span
                       className={cn(
                         "text-[10px] md:text-[11px] font-bold leading-tight whitespace-nowrap transition-all duration-300",
-                        isPast ? "opacity-70" : isActive ? "opacity-100" : "opacity-50",
+                        isPast || stationComplete ? "opacity-70" : isActive ? "opacity-100" : "opacity-50",
                       )}
                       style={{ color }}
                     >
@@ -341,7 +345,7 @@ export const JourneyCorridor = () => {
           </div>
         </div>
 
-        {/* Persistent context strip — visible when user is in any zone */}
+        {/* Persistent context strip */}
         {activeZone > 0 && (
           <div className="pb-1.5 animate-in slide-in-from-top-1 fade-in duration-200">
             <div
