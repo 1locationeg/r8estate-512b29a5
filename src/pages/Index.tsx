@@ -43,6 +43,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroNextSteps } from "@/components/HeroNextSteps";
+import { JourneyCorridor } from "@/components/JourneyCorridor";
 
 
 const Index = () => { // hero-phase-v2
