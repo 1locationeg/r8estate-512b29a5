@@ -21,9 +21,9 @@ export const TrustCategoryBar = ({ label, percentage }: TrustCategoryBarProps) =
 
   return (
     <div className="space-y-1.5">
-      <div className="flex items-center justify-between text-sm">
-        <span className="text-muted-foreground">{label}</span>
-        <span className={cn("font-semibold", getTextColorClass(percentage))}>
+      <div className="flex items-center justify-between text-sm gap-2 min-w-0">
+        <span className="text-muted-foreground truncate min-w-0">{label}</span>
+        <span className={cn("font-semibold shrink-0", getTextColorClass(percentage))}>
           {percentage}%
         </span>
       </div>
