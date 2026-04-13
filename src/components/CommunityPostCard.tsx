@@ -192,6 +192,17 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             )}
           </button>
         )}
+
+        {/* Community-to-review nudge */}
+        {post.developer_id && post.category === 'experience' && (
+          <div className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/10">
+            <Star className="w-3.5 h-3.5 text-primary shrink-0" />
+            <p className="text-[11px] text-primary font-medium">
+              Turn this into a verified review for 3x visibility
+            </p>
+          </div>
+        )}
+
         {/* Attached images */}
         {(post as any).image_urls?.length > 0 && (
           <div className={`mt-2 grid gap-1 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>

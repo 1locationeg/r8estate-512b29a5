@@ -93,7 +93,7 @@ export const ReviewRichEditor = ({
           class: "rounded-lg max-w-full h-auto my-2",
         },
       }),
-      Placeholder.configure({ placeholder }),
+      Placeholder.configure({ placeholder: placeholder || "I worked with this company on... / The best part was... / I wish I had known..." }),
     ],
     content: content || "",
     onUpdate: ({ editor: e }) => {
