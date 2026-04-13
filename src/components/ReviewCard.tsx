@@ -125,7 +125,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
           </div>
           <ShareMenu
             title={t("share.shareReview", { item: developer?.name || projectLabel })}
-            description={review.comment.slice(0, 100)}
+            description={(review.comment || "").slice(0, 100)}
             size="icon"
             className="w-7 h-7 md:w-8 md:h-8"
           />
@@ -133,9 +133,15 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
         </div>
       </div>
 
-      <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
-        {sanitizeDisplayText(i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment)}
-      </p>
+      {review.comment ? (
+        <p className="text-xs md:text-sm text-foreground leading-relaxed mb-2 md:mb-3 line-clamp-3">
+          {sanitizeDisplayText(i18n.language === 'ar' ? (review.commentAr || review.comment) : review.comment)}
+        </p>
+      ) : (
+        <p className="text-xs md:text-sm text-muted-foreground italic mb-2 md:mb-3">
+          {t("review.ratingOnly", "Rating only — no written review")}
+        </p>
+      )}
       <div className="flex items-center justify-between mb-2 md:mb-3">
         <span className="text-[10px] md:text-xs text-muted-foreground">
           {formatDate(review.date, i18n.language)}
