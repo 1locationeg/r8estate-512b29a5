@@ -28,6 +28,7 @@ import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 import { BusinessUpgradeModal } from '@/components/BusinessUpgradeModal';
 import BuyerVerification from '@/components/BuyerVerification';
 import { DeveloperInsightsUpsell } from '@/components/DeveloperInsightsUpsell';
+import { ReviewerBadge, getReviewerTier, getNextReviewerTier } from '@/components/ReviewerBadge';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
