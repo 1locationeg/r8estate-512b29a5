@@ -215,100 +215,137 @@ export function ReviewsCarousel() {
     );
   };
 
+  // Mobile: single card with dots
+  const [mobileIdx, setMobileIdx] = useState(0);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = mobileScrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const cardWidth = el.offsetWidth;
+      if (cardWidth > 0) setMobileIdx(Math.round(el.scrollLeft / cardWidth));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const renderCard = (item: CuratedTestimonial, className?: string) => (
+    <div
+      key={item.id}
+      className={cn(
+        "snap-center shrink-0 rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40",
+        className
+      )}
+      style={{
+        background: `linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 50%, hsl(var(--card)) 100%)`,
+      }}
+    >
+      <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
+        backgroundImage: `radial-gradient(circle at 20% 50%, hsl(var(--primary)) 1px, transparent 1px), radial-gradient(circle at 80% 20%, hsl(var(--accent)) 1px, transparent 1px)`,
+        backgroundSize: '40px 40px',
+      }} />
+      <div className="flex flex-col gap-1 flex-1 min-w-0 relative z-10">
+        <div className="flex items-center gap-2 flex-wrap">
+          {stageBadge(item.stage, item.isBusiness)}
+          {renderStars(item.rating)}
+        </div>
+        <p className="text-[13px] font-medium leading-[1.45] mt-1 text-foreground line-clamp-3">
+          &ldquo;{isRTL ? item.commentAr : item.comment}&rdquo;
+        </p>
+        <div className="flex flex-col mt-auto">
+          <span className="text-[11px] font-bold text-foreground truncate">
+            {isRTL ? item.authorAr : item.author}
+          </span>
+          <span className="text-[9px] text-muted-foreground">
+            {isRTL ? item.roleAr : item.role}
+          </span>
+        </div>
+      </div>
+      <div className="flex-shrink-0 flex items-center relative z-10">
+        <div className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center relative shadow-md ${item.isBusiness ? "border-[3px] border-accent/40 bg-white p-1" : "border-[3px] border-primary/30 bg-muted"}`}>
+          <img
+            src={item.isBusiness ? (getLogoOverride(item.id, item.author) || item.avatar) : item.avatar}
+            alt={isRTL ? item.authorAr : item.author}
+            className={`object-cover ${item.isBusiness ? "w-[85%] h-[85%] object-contain rounded-full" : "w-full h-full"}`}
+            loading="lazy"
+            width={64}
+            height={64}
+          />
+          {!item.isBusiness && (
+            <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
+              <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
+                <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
+              </svg>
+            </div>
+          )}
+          {item.isBusiness && (
+            <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
+              <Building2 className="w-2.5 h-2.5 text-accent-foreground" />
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  const ctaCard = (className?: string) => (
+    <div
+      className={cn(
+        "snap-center shrink-0 rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]",
+        className
+      )}
+      onClick={() => navigate("/reviews")}
+    >
+      <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+        <MessageSquarePlus className="w-6 h-6 text-primary" />
+      </div>
+      <p className="text-sm font-bold text-foreground text-center">
+        {isRTL ? "شاركنا تجربتك" : "Share your story."}
+      </p>
+      <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-[180px]">
+        {isRTL ? "ساعد مشترين آخرين باتخاذ قرارات أفضل" : "Help other buyers make smarter decisions"}
+      </p>
+      <span className="text-[11px] font-semibold text-primary hover:underline">
+        {isRTL ? "اكتب تقييم →" : "Write a review →"}
+      </span>
+    </div>
+  );
+
   return (
     <section className="w-full py-0 overflow-hidden" style={{ paddingLeft: 'env(safe-area-inset-left, 0px)', paddingRight: 'env(safe-area-inset-right, 0px)' }}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6">
-        <div className="relative group">
+        {/* Desktop: multi-card scroll */}
+        <div className="relative group hidden md:block">
           <div
             ref={scrollRef}
             className="flex gap-3 overflow-x-auto scrollbar-hide snap-x snap-mandatory pb-2 px-1"
             style={{ WebkitOverflowScrolling: "touch" }}
             onMouseEnter={() => setIsPaused(true)}
             onMouseLeave={() => setIsPaused(false)}
+          >
+            {TESTIMONIALS.map((item) => renderCard(item, "w-[300px] md:w-[340px]"))}
+            {ctaCard("w-[300px] md:w-[340px]")}
+          </div>
+        </div>
+
+        {/* Mobile: single card + dots */}
+        <div className="md:hidden">
+          <div
+            ref={mobileScrollRef}
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide"
+            style={{ WebkitOverflowScrolling: "touch" }}
             onTouchStart={() => setIsPaused(true)}
             onTouchEnd={() => setTimeout(() => setIsPaused(false), 3000)}
           >
-            {TESTIMONIALS.map((item) => (
-              <div
-                key={item.id}
-                className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-row gap-3 relative overflow-hidden group/card transition-all duration-300 hover:scale-[1.01] border border-border/40"
-                style={{
-                  background: `linear-gradient(135deg, hsl(var(--card)) 0%, hsl(var(--muted)) 50%, hsl(var(--card)) 100%)`,
-                }}
-              >
-                {/* Pattern overlay */}
-                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{
-                  backgroundImage: `radial-gradient(circle at 20% 50%, hsl(var(--primary)) 1px, transparent 1px), radial-gradient(circle at 80% 20%, hsl(var(--accent)) 1px, transparent 1px)`,
-                  backgroundSize: '40px 40px',
-                }} />
-
-                {/* Content */}
-                <div className="flex flex-col gap-1 flex-1 min-w-0 relative z-10">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    {stageBadge(item.stage, item.isBusiness)}
-                    {renderStars(item.rating)}
-                  </div>
-
-                  <p className="text-[13px] font-medium leading-[1.45] mt-1 text-foreground line-clamp-3">
-                    &ldquo;{isRTL ? item.commentAr : item.comment}&rdquo;
-                  </p>
-
-                  <div className="flex flex-col mt-auto">
-                    <span className="text-[11px] font-bold text-foreground truncate">
-                      {isRTL ? item.authorAr : item.author}
-                    </span>
-                    <span className="text-[9px] text-muted-foreground">
-                      {isRTL ? item.roleAr : item.role}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Avatar */}
-                <div className="flex-shrink-0 flex items-center relative z-10">
-                  <div className={`w-16 h-16 rounded-full overflow-hidden flex items-center justify-center relative shadow-md ${item.isBusiness ? "border-[3px] border-accent/40 bg-white p-1" : "border-[3px] border-primary/30 bg-muted"}`}>
-                    <img
-                      src={item.isBusiness ? (getLogoOverride(item.id, item.author) || item.avatar) : item.avatar}
-                      alt={isRTL ? item.authorAr : item.author}
-                      className={`object-cover ${item.isBusiness ? "w-[85%] h-[85%] object-contain rounded-full" : "w-full h-full"}`}
-                      loading="lazy"
-                      width={64}
-                      height={64}
-                    />
-                    {!item.isBusiness && (
-                      <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-[#1877F2] flex items-center justify-center">
-                        <svg viewBox="0 0 16 16" className="w-2.5 h-2.5 text-white fill-current">
-                          <path d="M6.5 12.5l-4-4 1.5-1.5 2.5 2.5 5.5-5.5 1.5 1.5z" />
-                        </svg>
-                      </div>
-                    )}
-                    {item.isBusiness && (
-                      <div className="absolute -bottom-0.5 -end-0.5 w-4 h-4 rounded-full bg-accent flex items-center justify-center">
-                        <Building2 className="w-2.5 h-2.5 text-accent-foreground" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </div>
+            {TESTIMONIALS.map((item) => renderCard(item, "w-full min-w-full"))}
+            {ctaCard("w-full min-w-full")}
+          </div>
+          {/* Dot indicators */}
+          <div className="flex items-center justify-center gap-1 mt-2 pb-1">
+            {[...TESTIMONIALS, null].map((_, i) => (
+              <div key={i} className={cn("w-1.5 h-1.5 rounded-full transition-all", i === mobileIdx ? "bg-primary w-3" : "bg-muted-foreground/30")} />
             ))}
-
-            {/* CTA card */}
-            <div
-              className="snap-center shrink-0 w-[78vw] sm:w-[300px] md:w-[340px] rounded-2xl p-4 flex flex-col items-center justify-center gap-3 border-2 border-dashed border-primary/30 bg-gradient-to-br from-card to-muted/50 hover:border-primary/50 transition-all duration-300 cursor-pointer hover:scale-[1.01]"
-              onClick={() => navigate("/reviews")}
-            >
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <MessageSquarePlus className="w-6 h-6 text-primary" />
-              </div>
-              <p className="text-sm font-bold text-foreground text-center">
-                {isRTL ? "شاركنا تجربتك" : "Share your story."}
-              </p>
-              <p className="text-[11px] text-muted-foreground text-center leading-relaxed max-w-[180px]">
-                {isRTL ? "ساعد مشترين آخرين باتخاذ قرارات أفضل" : "Help other buyers make smarter decisions"}
-              </p>
-              <span className="text-[11px] font-semibold text-primary hover:underline">
-                {isRTL ? "اكتب تقييم →" : "Write a review →"}
-              </span>
-            </div>
           </div>
         </div>
 
