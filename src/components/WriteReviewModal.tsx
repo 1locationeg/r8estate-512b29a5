@@ -1043,7 +1043,7 @@ export const WriteReviewModal = ({
               </button>
               <button
                 type="button"
-                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--glow-accent))] to-[hsl(var(--accent))] text-primary-foreground shadow-[0_0_14px_-3px_hsl(var(--glow-accent)/0.5)] hover:shadow-[0_0_22px_-2px_hsl(var(--glow-accent)/0.65)] hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-40 disabled:shadow-none disabled:hover:scale-100 font-serif text-orange-700 bg-slate-900"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40"
                 onClick={() => enhanceWithAi(false)}
                 disabled={isEnhancing || !content.trim()}
               >
