@@ -423,18 +423,17 @@ const Index = () => { // hero-phase-v2
             <JourneyScrollSections />
           </div>
 
-          {/* FeaturedIdentitySpotlight — right after 4/4 Protect */}
+          <div data-zone="2">
+          {/* FeaturedIdentitySpotlight */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <FeaturedIdentitySpotlight />
           </div>
-
-          {/* CompareEngineShowcase — right after spotlight */}
+          {/* CompareEngineShowcase */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <CompareEngineShowcase />
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
-
-          {/* Quick Actions + Widgets — right after compare */}
+          {/* Quick Actions + Widgets */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
               {quickActions.map((action) => {
@@ -456,6 +455,7 @@ const Index = () => { // hero-phase-v2
             </div>
           </div>
           <div className="w-16 h-px bg-border mx-auto" />
+          </div>
 
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
