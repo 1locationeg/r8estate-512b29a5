@@ -28,6 +28,7 @@ import { POINTS_PER_ACTION } from '@/lib/buyerGamification';
 import { BusinessUpgradeModal } from '@/components/BusinessUpgradeModal';
 import BuyerVerification from '@/components/BuyerVerification';
 import { DeveloperInsightsUpsell } from '@/components/DeveloperInsightsUpsell';
+import { ReviewerBadge, getReviewerTier, getNextReviewerTier } from '@/components/ReviewerBadge';
 
 const BuyerOverview = () => {
   const navigate = useNavigate();
@@ -66,6 +67,44 @@ const BuyerOverview = () => {
 
   return (
     <div className="space-y-6">
+      {/* Your Impact Card */}
+      <div className="bg-card border border-border rounded-xl p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-sm font-bold text-foreground flex items-center gap-1.5">
+            <Eye className="w-4 h-4 text-primary" />
+            Your Reviewer Impact
+          </h3>
+          <ReviewerBadge reviewCount={parseInt(stats[1].value) || 0} />
+        </div>
+        <div className="grid grid-cols-3 gap-3">
+          <div className="text-center">
+            <p className="text-lg font-bold text-foreground">{stats[1].value}</p>
+            <p className="text-[10px] text-muted-foreground">Reviews Written</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-foreground">142</p>
+            <p className="text-[10px] text-muted-foreground">Views on Reviews</p>
+          </div>
+          <div className="text-center">
+            <p className="text-lg font-bold text-foreground">18</p>
+            <p className="text-[10px] text-muted-foreground">Helpful Votes</p>
+          </div>
+        </div>
+        {(() => {
+          const next = getNextReviewerTier(parseInt(stats[1].value) || 0);
+          if (!next) return null;
+          return (
+            <div className="mt-3 pt-3 border-t border-border/50">
+              <div className="flex items-center justify-between text-xs mb-1">
+                <span className="text-muted-foreground">Next: {next.tier.emoji} {next.tier.name}</span>
+                <span className="text-primary font-bold">{next.remaining} more</span>
+              </div>
+              <Progress value={(parseInt(stats[1].value) / next.tier.minReviews) * 100} className="h-1.5" />
+            </div>
+          );
+        })()}
+      </div>
+
       {/* Points Breakdown Header */}
       <PointsBreakdownHeader
         totalPoints={gamification.totalPoints}

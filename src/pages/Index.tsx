@@ -44,6 +44,7 @@ import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroNextSteps } from "@/components/HeroNextSteps";
 import { JourneyCorridor } from "@/components/JourneyCorridor";
+import { ReviewerSpotlight } from "@/components/ReviewerSpotlight";
 
 
 const Index = () => { // hero-phase-v2
@@ -362,6 +363,11 @@ const Index = () => { // hero-phase-v2
             {/* Traction Stats */}
             <div className={cn("w-full mt-2 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
             <TractionStats />
+            </div>
+
+            {/* Reviewer Spotlight — social proof strip */}
+            <div className={cn("w-full mt-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <ReviewerSpotlight onWriteReview={() => navigate('/reviews')} />
             </div>
 
             {/* Next Steps CTAs */}

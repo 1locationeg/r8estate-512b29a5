@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon, ShieldAlert } from "lucide-react";
+import { ArrowBigUp, MessageCircle, Pin, ThumbsUp, Flag, Bookmark, BookmarkCheck, Globe, MoreHorizontal, Link2, BellPlus, BellOff, EyeOff, UserX, AlertTriangle, Copy, Pencil, Image as ImageIcon, ShieldAlert, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { UserTierBadge } from "@/components/UserTierBadge";
@@ -192,6 +192,17 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
             )}
           </button>
         )}
+
+        {/* Community-to-review nudge */}
+        {post.developer_id && post.category === 'experience' && (
+          <div className="mt-2 flex items-center gap-2 px-3 py-2 rounded-lg bg-primary/5 border border-primary/10">
+            <Star className="w-3.5 h-3.5 text-primary shrink-0" />
+            <p className="text-[11px] text-primary font-medium">
+              Turn this into a verified review for 3x visibility
+            </p>
+          </div>
+        )}
+
         {/* Attached images */}
         {(post as any).image_urls?.length > 0 && (
           <div className={`mt-2 grid gap-1 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>

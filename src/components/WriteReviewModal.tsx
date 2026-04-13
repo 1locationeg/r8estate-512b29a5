@@ -196,6 +196,7 @@ export const WriteReviewModal = ({
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [successIsFirst, setSuccessIsFirst] = useState(false);
   const [successRating, setSuccessRating] = useState(5);
+  const [successTotalReviews, setSuccessTotalReviews] = useState(1);
 
   // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
@@ -430,6 +431,7 @@ export const WriteReviewModal = ({
       const isFirstReview = totalReviews === 1;
       setSuccessRating(submittedRating);
       setSuccessIsFirst(isFirstReview);
+      setSuccessTotalReviews(totalReviews || 1);
       setShowSuccessOverlay(true);
     } else if (isGuest) {
       setShowAccountPrompt(true);
@@ -667,6 +669,15 @@ export const WriteReviewModal = ({
     return "";
   };
 
+  const getRatingEncouragement = (r: number) => {
+    if (r >= 5) return "Tell others what made it special ✨";
+    if (r >= 4) return "Share what impressed you — it helps others choose wisely 💡";
+    if (r >= 3) return "Your balanced view helps the community decide fairly ⚖️";
+    if (r >= 2) return "Your honesty warns others — share what went wrong 🛡️";
+    if (r >= 1) return "We hear you. Share your story so others are protected 🛡️";
+    return "";
+  };
+
   if (!open && !showSuccessOverlay) return null;
 
   if (showSuccessOverlay) {
@@ -677,6 +688,7 @@ export const WriteReviewModal = ({
         isFirstReview={successIsFirst}
         developerName={developerName}
         rating={successRating}
+        totalReviews={successTotalReviews}
       />
     );
   }
@@ -846,6 +858,9 @@ export const WriteReviewModal = ({
       <p className="text-xs text-primary font-medium text-center">
         {t("form.thanksMotivation", "Adding details earns you +15 community points 🎯")}
       </p>
+      <p className="text-[10px] text-muted-foreground text-center">
+        Reviews like yours have helped 2,847 buyers this month
+      </p>
 
       <div className="w-full space-y-3 max-w-xs">
         <Button
@@ -921,8 +936,9 @@ export const WriteReviewModal = ({
       </div>
 
       {rating > 0 && !isSaving && !showThanksScreen && savedReviewId && (
-        <div className="text-center space-y-3">
+        <div className="text-center space-y-2">
           <p className="text-lg font-semibold text-foreground">{getRatingWord(rating)}</p>
+          <p className="text-xs text-muted-foreground italic">{getRatingEncouragement(rating)}</p>
         </div>
       )}
 
