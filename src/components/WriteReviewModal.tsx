@@ -8,19 +8,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Slider } from "@/components/ui/slider";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -46,9 +39,11 @@ import {
   AlertTriangle,
   ChevronRight,
   ChevronLeft,
+  ChevronDown,
   Wand2,
   Check,
   PenLine,
+  SmilePlus,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -57,6 +52,7 @@ import { Trophy } from "lucide-react";
 import { TrustSignals } from "@/components/TrustSignals";
 import { ReviewSuccessOverlay } from "@/components/ReviewSuccessOverlay";
 import { BrandLogo } from "@/components/BrandLogo";
+import { useIsMobile } from "@/hooks/use-mobile";
 import type { SearchCategory } from "@/data/searchIndex";
 
 interface WriteReviewModalProps {
@@ -68,13 +64,59 @@ interface WriteReviewModalProps {
   entityCategory?: string;
 }
 
-const EXPERIENCE_TYPES_KEYS = [
-  "form.exp_buyer",
-  "form.exp_agent",
-  "form.exp_investor",
-  "form.exp_construction",
-  "form.exp_family",
-];
+// ===================== CONTEXT-AWARE CONFIG =====================
+
+interface ContextFieldConfig {
+  label: string;
+  placeholder: string;
+  chips?: string[];
+}
+
+const getContextFieldConfig = (entityCategory: string, t: any): ContextFieldConfig => {
+  switch (entityCategory) {
+    case "developers":
+      return { label: t("form.unit_type", "Unit Type"), placeholder: t("form.unit_type_placeholder", "e.g. Apartment, Villa") };
+    case "projects":
+      return { label: t("form.unit_type", "Unit Type"), placeholder: "e.g. Studio, Duplex" };
+    case "brokers":
+      return { label: t("form.serviceUsed", "Service Used"), placeholder: "e.g. Buy, Rent", chips: ["Buying", "Selling", "Renting", "Consulting"] };
+    case "apps":
+      return { label: t("form.featureUsed", "Feature Used"), placeholder: "e.g. Search, Listings", chips: ["Search", "Listings", "Maps", "Alerts"] };
+    case "locations":
+      return { label: t("form.propertyType", "Property Type"), placeholder: "e.g. Residential", chips: ["Residential", "Commercial", "Mixed-Use", "Land"] };
+    default:
+      return { label: t("form.serviceType", "Service Type"), placeholder: "e.g. Contract Review, Consultation" };
+  }
+};
+
+const getExperienceChips = (entityCategory: string, t: any): { key: string; label: string; icon: string }[] => {
+  switch (entityCategory) {
+    case "developers":
+    case "projects":
+    case "units":
+    case "locations":
+      return [
+        { key: "form.exp_buyer", label: t("form.exp_buyer", "Buyer"), icon: "🏠" },
+        { key: "form.exp_agent", label: t("form.exp_agent", "Agent"), icon: "🏢" },
+        { key: "form.exp_investor", label: t("form.exp_investor", "Investor"), icon: "💰" },
+        { key: "form.exp_construction", label: t("form.exp_construction", "Construction"), icon: "🔨" },
+        { key: "form.exp_family", label: t("form.exp_family", "Family"), icon: "👨‍👩‍👧" },
+      ];
+    case "brokers":
+      return [
+        { key: "form.exp_buying", label: t("form.exp_buying", "Buying"), icon: "🏠" },
+        { key: "form.exp_selling", label: t("form.exp_selling", "Selling"), icon: "💵" },
+        { key: "form.exp_renting", label: t("form.exp_renting", "Renting"), icon: "🔑" },
+        { key: "form.exp_consulting", label: t("form.exp_consulting", "Consulting"), icon: "📋" },
+      ];
+    default:
+      return [
+        { key: "form.exp_client", label: t("form.exp_client", "Client"), icon: "👤" },
+        { key: "form.exp_partner", label: t("form.exp_partner", "Partner"), icon: "🤝" },
+        { key: "form.exp_vendor", label: t("form.exp_vendor", "Vendor"), icon: "📦" },
+      ];
+  }
+};
 
 const EMOJI_QUICK = ["👍", "👎", "⭐", "🏠", "💰", "🔑", "📋", "✅", "❌", "🏗️", "😊", "😤"];
 
@@ -92,6 +134,49 @@ const getCategoryMetricKeys = (category: string): string[] => {
 
 const PHASE_LABELS = ["Rating", "Your Review", "Category Ratings"];
 
+// ===================== STAR ROW COMPONENT (for Phase 3) =====================
+
+const MiniStarRow = ({ value, onChange, label }: { value: number; onChange: (v: number) => void; label: string }) => (
+  <div className="flex items-center justify-between gap-3">
+    <span className="text-sm font-medium text-foreground flex-1 min-w-0 truncate">{label}</span>
+    <div className="flex items-center gap-0.5 shrink-0">
+      {[1, 2, 3, 4, 5].map((s) => (
+        <button
+          key={s}
+          type="button"
+          className="p-0.5 active:scale-90 transition-transform"
+          onClick={() => onChange(s === value ? 0 : s)}
+        >
+          <Star className={cn("w-5 h-5 md:w-6 md:h-6", s <= value ? "fill-accent text-accent" : "text-muted-foreground/25")} />
+        </button>
+      ))}
+    </div>
+  </div>
+);
+
+// ===================== TAPPABLE CHIP COMPONENT =====================
+
+const ChipSelect = ({ options, value, onChange }: { options: { key: string; label: string; icon?: string }[]; value: string; onChange: (v: string) => void }) => (
+  <div className="flex flex-wrap gap-1.5">
+    {options.map((opt) => (
+      <button
+        key={opt.key}
+        type="button"
+        className={cn(
+          "px-3 py-1.5 rounded-full text-xs font-medium border transition-colors",
+          value === opt.key
+            ? "bg-primary text-primary-foreground border-primary"
+            : "bg-secondary/50 text-foreground border-border hover:bg-secondary"
+        )}
+        onClick={() => onChange(value === opt.key ? "" : opt.key)}
+      >
+        {opt.icon && <span className="me-1">{opt.icon}</span>}
+        {opt.label}
+      </button>
+    ))}
+  </div>
+);
+
 export const WriteReviewModal = ({
   open,
   onOpenChange,
@@ -104,6 +189,7 @@ export const WriteReviewModal = ({
   const { toast } = useToast();
   const { user, signUp } = useAuth();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [firstReviewCelebration, setFirstReviewCelebration] = useState(false);
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
@@ -174,11 +260,19 @@ export const WriteReviewModal = ({
   const [aiModeration, setAiModeration] = useState<AIModerationResult | null>(null);
   const [isCheckingContent, setIsCheckingContent] = useState(false);
 
+  // Emoji bar toggle (mobile)
+  const [showEmojiBar, setShowEmojiBar] = useState(false);
+
+  // More options toggle (Phase 3 mobile)
+  const [moreOptionsOpen, setMoreOptionsOpen] = useState(!isMobile);
+
   const metricsCategory = ['developers', 'projects', 'locations', 'apps', 'units', 'brokers'].includes(entityCategory) 
     ? entityCategory 
     : 'developers';
 
   const categoryMetricKeys = getCategoryMetricKeys(metricsCategory);
+  const contextField = getContextFieldConfig(entityCategory, t);
+  const experienceChips = getExperienceChips(entityCategory, t);
 
   const resetForm = () => {
     setRating(0);
@@ -205,11 +299,11 @@ export const WriteReviewModal = ({
     setShowThanksScreen(false);
     setSavedReviewId(null);
     setIsSaving(false);
+    setShowEmojiBar(false);
   };
 
   // ===================== PROGRESSIVE SAVE LOGIC =====================
 
-  // Phase 1: Save rating immediately on star tap
   const saveRatingOnly = async (starRating: number) => {
     setIsSaving(true);
     try {
@@ -259,7 +353,6 @@ export const WriteReviewModal = ({
     }
   };
 
-  // Phase 2: Update with comment/title
   const savePhase2 = async () => {
     if (!savedReviewId || !content.trim()) return;
     try {
@@ -284,7 +377,6 @@ export const WriteReviewModal = ({
     }
   };
 
-  // Phase 3: Update with category ratings + attachments
   const savePhase3 = async () => {
     if (!savedReviewId) return;
     try {
@@ -295,7 +387,6 @@ export const WriteReviewModal = ({
         completion_level: "full",
       };
 
-      // Upload attachments for authenticated users
       if (!isGuest && user) {
         const uploadedUrls: string[] = [];
         for (const att of [...attachments, ...verificationFiles.map((f) => ({ file: f, type: "verification" }))]) {
@@ -317,9 +408,7 @@ export const WriteReviewModal = ({
     }
   };
 
-  // Handle "Done" at any point — close modal, data already saved
   const handleDone = async () => {
-    // If we're past phase 2, save current phase data first
     if (phase === 2 && content.trim()) {
       await savePhase2();
     } else if (phase === 3) {
@@ -350,7 +439,6 @@ export const WriteReviewModal = ({
 
   // ===================== EXISTING HELPERS =====================
 
-  // AI Title Suggestions for Phase 2
   const getAiTitleSuggestions = useCallback(async () => {
     setIsAiLoading(true);
     try {
@@ -380,7 +468,6 @@ export const WriteReviewModal = ({
     }
   }, [content, developerName, rating, experienceType, unitType, entityCategory, toast, t]);
 
-  // AI Enhance
   const enhanceWithAi = useCallback(async (isVoice = false) => {
     if (!content.trim()) return;
     setIsEnhancing(true);
@@ -404,7 +491,6 @@ export const WriteReviewModal = ({
     }
   }, [content, developerName, toast, t]);
 
-  // Voice Recording
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -463,7 +549,6 @@ export const WriteReviewModal = ({
     setIsRecording(false);
   };
 
-  // File Attachments
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const newAttachments = files.map((file) => ({
@@ -564,7 +649,6 @@ export const WriteReviewModal = ({
     setContent((prev) => (prev ? `${prev} ${text}` : text));
   };
 
-  // Rating label helper
   const getRatingWord = (r: number) => {
     if (r >= 5) return t("form.ratingExcellent", "Excellent! 🌟");
     if (r >= 4) return t("form.ratingGreat", "Great! 😊");
@@ -576,7 +660,6 @@ export const WriteReviewModal = ({
 
   if (!open && !showSuccessOverlay) return null;
 
-  // Success celebration overlay
   if (showSuccessOverlay) {
     return (
       <ReviewSuccessOverlay
@@ -725,7 +808,6 @@ export const WriteReviewModal = ({
 
   const renderThanksScreen = () => (
     <div className="flex flex-col items-center py-8 px-6 space-y-6">
-      {/* Success checkmark */}
       <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
         <Check className="w-8 h-8 text-primary" />
       </div>
@@ -739,7 +821,6 @@ export const WriteReviewModal = ({
         </p>
       </div>
 
-      {/* Show the stars the user selected */}
       <div className="flex items-center gap-1">
         {[1, 2, 3, 4, 5].map((s) => (
           <Star
@@ -752,8 +833,12 @@ export const WriteReviewModal = ({
         ))}
       </div>
 
+      {/* Motivational micro-copy */}
+      <p className="text-xs text-primary font-medium text-center">
+        {t("form.thanksMotivation", "Adding details earns you +15 community points 🎯")}
+      </p>
+
       <div className="w-full space-y-3 max-w-xs">
-        {/* Primary: Write a detailed review */}
         <Button
           className="w-full gap-2 min-h-[48px]"
           onClick={() => {
@@ -765,7 +850,6 @@ export const WriteReviewModal = ({
           {t("form.writeReview", "Write a Review")}
         </Button>
 
-        {/* Secondary: Done */}
         <Button
           variant="ghost"
           className="w-full text-muted-foreground min-h-[44px]"
@@ -774,10 +858,6 @@ export const WriteReviewModal = ({
           {t("form.doneForNow", "Done")}
         </Button>
       </div>
-
-      <p className="text-xs text-muted-foreground text-center max-w-[280px]">
-        {t("form.writeReviewEncourage", "A detailed review helps others make better decisions and earns you community points!")}
-      </p>
     </div>
   );
 
@@ -785,7 +865,6 @@ export const WriteReviewModal = ({
 
   const renderPhase1 = () => (
     <div className="flex flex-col items-center py-6 px-4 space-y-6">
-      {/* Guest name for guests */}
       {isGuest && (
         <div className="w-full max-w-xs">
           <label className="text-sm font-medium text-foreground mb-1.5 block">{t("guestReview.yourName", "Your Name")}</label>
@@ -804,7 +883,6 @@ export const WriteReviewModal = ({
         <p className="text-sm text-muted-foreground font-medium">{developerName}</p>
       </div>
 
-      {/* Large stars */}
       <div className="flex items-center gap-2">
         {[1, 2, 3, 4, 5].map((star) => (
           <button
@@ -815,7 +893,6 @@ export const WriteReviewModal = ({
             onMouseLeave={() => setHoverRating(0)}
             onClick={() => {
               setRating(star);
-              // Auto-save immediately on star tap
               if (!savedReviewId) {
                 saveRatingOnly(star);
               }
@@ -850,52 +927,57 @@ export const WriteReviewModal = ({
   );
 
   const renderPhase2 = () => (
-    <div className="p-4 md:p-6 pt-2 space-y-4">
-      {/* Unit Type + Experience Type */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.unit_type")}</label>
+    <div className="p-4 md:p-6 pt-2 space-y-3 md:space-y-4">
+      {/* Context Field — chips or text input */}
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
+        {contextField.chips ? (
+          <ChipSelect
+            options={contextField.chips.map((c) => ({ key: c.toLowerCase(), label: c }))}
+            value={unitType}
+            onChange={setUnitType}
+          />
+        ) : (
           <Input
             value={unitType}
             onChange={(e) => setUnitType(e.target.value)}
-            placeholder={t("form.unit_type_placeholder")}
+            placeholder={contextField.placeholder}
+            className="h-9 text-sm"
           />
-        </div>
-        {!isGuest && (
-          <div>
-            <label className="text-sm font-medium text-foreground mb-1.5 block">{t("form.experience_type")}</label>
-            <Select value={experienceType} onValueChange={setExperienceType}>
-              <SelectTrigger><SelectValue placeholder={t("form.select_type")} /></SelectTrigger>
-              <SelectContent>
-                {EXPERIENCE_TYPES_KEYS.map((key) => (
-                  <SelectItem key={key} value={key}>{t(key)}</SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
         )}
       </div>
 
+      {/* Experience Type — tappable chips instead of Select dropdown */}
+      {!isGuest && (
+        <div>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("form.experience_type", "Experience Type")}</label>
+          <ChipSelect
+            options={experienceChips}
+            value={experienceType}
+            onChange={setExperienceType}
+          />
+        </div>
+      )}
+
       {/* Review Title with AI suggestions */}
       <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <label className="text-sm font-medium text-foreground">{t("form.review_title")}</label>
+        <div className="flex items-center justify-between mb-1">
+          <label className="text-xs font-medium text-muted-foreground">{t("form.review_title", "Title")} <span className="text-muted-foreground/50">({t("form.optional", "optional")})</span></label>
           {!isGuest && (
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               size="sm"
-              className="h-7 gap-1 text-xs"
+              className="h-6 gap-1 text-xs px-2 text-primary"
               onClick={getAiTitleSuggestions}
               disabled={isAiLoading}
             >
               {isAiLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : <Wand2 className="w-3 h-3" />}
-              AI Suggest
+              AI
             </Button>
           )}
         </div>
 
-        {/* AI title chips */}
         {aiTitleSuggestions.length > 0 && (
           <div className="flex flex-wrap gap-1.5 mb-2">
             {aiTitleSuggestions.map((s, i) => (
@@ -917,32 +999,17 @@ export const WriteReviewModal = ({
         <Input
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder={t("form.review_title_placeholder")}
+          placeholder={t("form.review_title_placeholder", "Sum up your experience")}
           maxLength={100}
+          className="h-9 text-sm"
         />
       </div>
 
-      {/* Disclaimer — moved here before comment is saved */}
+      {/* Disclaimer — slim */}
       <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
 
-      {/* Review Content */}
-      <div>
-        <div className="flex items-center justify-between mb-1.5">
-          <label className="text-sm font-medium text-foreground">{t("form.your_review")}</label>
-          {!isGuest && (
-            <div className="flex items-center gap-1">
-              <Button type="button" variant={isRecording ? "destructive" : "outline"} size="sm" className="h-7 gap-1 text-xs" onClick={isRecording ? stopRecording : startRecording}>
-                {isRecording ? <MicOff className="w-3 h-3" /> : <Mic className="w-3 h-3" />}
-                {isRecording ? t("form.stop") : t("form.voice")}
-              </Button>
-              <Button type="button" variant="outline" size="sm" className="h-7 gap-1 text-xs" onClick={() => enhanceWithAi(false)} disabled={isEnhancing || !content.trim()}>
-                {isEnhancing ? <Loader2 className="w-3 h-3 animate-spin" /> : <Sparkles className="w-3 h-3 text-accent" />}
-                {t("form.enhance")}
-              </Button>
-            </div>
-          )}
-        </div>
-
+      {/* Review Content — hero section with floating toolbar */}
+      <div className="relative">
         <Textarea
           value={content}
           onChange={(e) => {
@@ -952,32 +1019,73 @@ export const WriteReviewModal = ({
             setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
             if (aiModeration) setAiModeration(null);
           }}
-          placeholder={t("form.review_placeholder")}
-          rows={4}
-          className="resize-none"
+          placeholder={t("form.review_placeholder", "Share your experience...")}
+          rows={isMobile ? 4 : 5}
+          className="resize-none pb-10 text-sm"
         />
 
-        {/* Quick Emoji Bar */}
-        <div className="flex flex-wrap items-center gap-1 mt-2">
+        {/* Floating toolbar inside textarea */}
+        <div className="absolute bottom-2 end-2 flex items-center gap-1">
+          {!isGuest && (
+            <>
+              <button
+                type="button"
+                className={cn(
+                  "p-1.5 rounded-full transition-colors",
+                  isRecording ? "bg-destructive text-destructive-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                )}
+                onClick={isRecording ? stopRecording : startRecording}
+                title={isRecording ? t("form.stop") : t("form.voice")}
+              >
+                {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+              </button>
+              <button
+                type="button"
+                className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-40"
+                onClick={() => enhanceWithAi(false)}
+                disabled={isEnhancing || !content.trim()}
+                title={t("form.enhance")}
+              >
+                {isEnhancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-accent" />}
+              </button>
+            </>
+          )}
+          <button
+            type="button"
+            className={cn(
+              "p-1.5 rounded-full transition-colors",
+              showEmojiBar ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+            )}
+            onClick={() => setShowEmojiBar(!showEmojiBar)}
+            title="Emoji"
+          >
+            <SmilePlus className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
+
+      {/* Emoji bar — collapsible */}
+      {showEmojiBar && (
+        <div className="flex flex-wrap items-center gap-1 px-1">
           {(aiEmojis.length > 0 ? aiEmojis : EMOJI_QUICK).map((emoji, i) => (
             <button key={i} type="button" className="text-lg hover:scale-125 transition-transform p-0.5" onClick={() => insertText(emoji)}>
               {emoji}
             </button>
           ))}
         </div>
-      </div>
+      )}
 
       {/* Content warnings */}
       {localWarning && (
-        <div className="flex items-start gap-2 rounded-lg p-3 bg-destructive/10 border border-destructive/20">
+        <div className="flex items-start gap-2 rounded-lg p-2.5 bg-destructive/10 border border-destructive/20">
           <AlertTriangle className="w-4 h-4 text-destructive mt-0.5 shrink-0" />
           <p className="text-xs text-destructive font-medium">{localWarning}</p>
         </div>
       )}
 
-      {/* Navigation */}
-      <div className="flex items-center justify-between pt-2">
-        <Button variant="ghost" size="sm" onClick={() => setPhase(1)} className="gap-1">
+      {/* Navigation — sticky bottom */}
+      <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(1)} className="gap-1 h-9">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
         <div className="flex items-center gap-2">
@@ -988,13 +1096,13 @@ export const WriteReviewModal = ({
               if (content.trim()) savePhase2();
               handleDone();
             }}
-            className="text-muted-foreground"
+            className="text-muted-foreground h-9"
           >
             {t("form.doneForNow", "Done")}
           </Button>
           <Button
+            size="sm"
             onClick={async () => {
-              // Content moderation before saving
               if (content.trim()) {
                 const localCheck = checkContentLocally(content);
                 if (localCheck.blocked) {
@@ -1013,12 +1121,12 @@ export const WriteReviewModal = ({
               setPhase(3);
             }}
             disabled={!disclaimerAgreed || isCheckingContent}
-            className="gap-2"
+            className="gap-1 h-9"
           >
             {isCheckingContent ? (
               <><Loader2 className="w-4 h-4 animate-spin" /> {t("contentGuard.checking")}</>
             ) : (
-              <>{t("form.nextAddDetails", "Next: Add Details")} <ChevronRight className="w-4 h-4" /></>
+              <>{t("form.next", "Next")} <ChevronRight className="w-4 h-4" /></>
             )}
           </Button>
         </div>
@@ -1027,121 +1135,117 @@ export const WriteReviewModal = ({
   );
 
   const renderPhase3 = () => (
-    <div className="p-4 md:p-6 pt-2 space-y-5">
-      {/* Category Sliders */}
+    <div className="p-4 md:p-6 pt-2 space-y-4">
+      {/* Motivational micro-copy */}
+      <p className="text-xs text-primary font-medium text-center">
+        {t("form.almostThere", "Almost there! Category ratings help buyers compare 📊")}
+      </p>
+
+      {/* Category Star Rows (instead of sliders) */}
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-1">
           {t("form.categoryRatings", "Rate specific categories")}
         </h3>
-        <p className="text-xs text-muted-foreground mb-4">
+        <p className="text-xs text-muted-foreground mb-3">
           {t("form.categoryRatingsDesc", "Optional — helps others understand your experience better")}
         </p>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {categoryMetricKeys.map((key) => (
-            <div key={key} className="space-y-1.5">
-              <div className="flex items-center justify-between">
-                <label className="text-sm font-medium text-foreground">
-                  {t(`categoryMetrics.${metricsCategory}.${key}`, key)}
-                </label>
-                <span className="text-sm font-semibold text-primary min-w-[2ch] text-end">
-                  {categoryRatings[key] || 0}
-                </span>
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-muted-foreground w-4">1</span>
-                <Slider
-                  value={[categoryRatings[key] || 0]}
-                  onValueChange={([val]) => setCategoryRatings((prev) => ({ ...prev, [key]: val }))}
-                  min={0}
-                  max={5}
-                  step={1}
-                  className="flex-1"
-                />
-                <span className="text-xs text-muted-foreground w-4">5</span>
-              </div>
-            </div>
+            <MiniStarRow
+              key={key}
+              label={t(`categoryMetrics.${metricsCategory}.${key}`, key)}
+              value={categoryRatings[key] || 0}
+              onChange={(val) => setCategoryRatings((prev) => ({ ...prev, [key]: val }))}
+            />
           ))}
         </div>
       </div>
 
-      {/* Attachments — authenticated only */}
+      {/* Collapsible More Options (mobile) / expanded (desktop) */}
       {!isGuest && (
-        <div>
-          <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
-            <Paperclip className="w-4 h-4" /> {t("form.attachments")}
-          </label>
-          <div className="flex flex-wrap gap-2 mb-2">
-            <Button type="button" variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => fileInputRef.current?.click()}>
-              <ImageIcon className="w-3.5 h-3.5" /> {t("form.photos")}
-            </Button>
-            <Button type="button" variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => {
-              if (fileInputRef.current) { fileInputRef.current.accept = ".pdf,.doc,.docx"; fileInputRef.current.click(); fileInputRef.current.accept = "image/*,.pdf,.doc,.docx"; }
-            }}>
-              <FileText className="w-3.5 h-3.5" /> {t("form.documents")}
-            </Button>
-            <Button type="button" variant="outline" size="sm" className="h-9 gap-1.5 text-xs" disabled={isReceiptUploading} onClick={() => receiptCameraRef.current?.click()}>
-              {isReceiptUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
-              {isReceiptUploading ? t("form.uploading") : t("form.scan_receipt")}
-            </Button>
-          </div>
-          <input ref={fileInputRef} type="file" className="hidden" accept="image/*,.pdf,.doc,.docx" multiple onChange={handleFileSelect} />
-          <input ref={receiptCameraRef} type="file" className="hidden" accept="image/*" capture="environment" onChange={handleReceiptCapture} />
-          {attachments.length > 0 && (
-            <div className="flex flex-wrap gap-2 mt-2">
-              {attachments.map((att, i) => (
-                <div key={i} className="relative group">
-                  {att.preview ? (
-                    <img src={att.preview} alt="" className="w-16 h-16 rounded-lg object-cover border border-border" />
-                  ) : (
-                    <div className="w-16 h-16 rounded-lg border border-border flex items-center justify-center bg-secondary">
-                      <FileText className="w-6 h-6 text-muted-foreground" />
+        <Collapsible open={moreOptionsOpen} onOpenChange={setMoreOptionsOpen}>
+          <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium text-foreground w-full py-2 md:hidden">
+            <ChevronDown className={cn("w-4 h-4 transition-transform", moreOptionsOpen && "rotate-180")} />
+            {t("form.moreOptions", "More Options")}
+            <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional", "Optional")}</Badge>
+          </CollapsibleTrigger>
+
+          <CollapsibleContent className="space-y-4 md:!block">
+            {/* Attachments */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-1.5 block flex items-center gap-1.5">
+                <Paperclip className="w-4 h-4" /> {t("form.attachments", "Attachments")}
+              </label>
+              <div className="flex flex-wrap gap-2 mb-2">
+                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => fileInputRef.current?.click()}>
+                  <ImageIcon className="w-3.5 h-3.5" /> {t("form.photos", "Photos")}
+                </Button>
+                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => {
+                  if (fileInputRef.current) { fileInputRef.current.accept = ".pdf,.doc,.docx"; fileInputRef.current.click(); fileInputRef.current.accept = "image/*,.pdf,.doc,.docx"; }
+                }}>
+                  <FileText className="w-3.5 h-3.5" /> {t("form.documents", "Documents")}
+                </Button>
+                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" disabled={isReceiptUploading} onClick={() => receiptCameraRef.current?.click()}>
+                  {isReceiptUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
+                  {isReceiptUploading ? t("form.uploading", "Uploading") : t("form.scan_receipt", "Receipt")}
+                </Button>
+              </div>
+              <input ref={fileInputRef} type="file" className="hidden" accept="image/*,.pdf,.doc,.docx" multiple onChange={handleFileSelect} />
+              <input ref={receiptCameraRef} type="file" className="hidden" accept="image/*" capture="environment" onChange={handleReceiptCapture} />
+              {attachments.length > 0 && (
+                <div className="flex flex-wrap gap-2 mt-2">
+                  {attachments.map((att, i) => (
+                    <div key={i} className="relative group">
+                      {att.preview ? (
+                        <img src={att.preview} alt="" className="w-14 h-14 rounded-lg object-cover border border-border" />
+                      ) : (
+                        <div className="w-14 h-14 rounded-lg border border-border flex items-center justify-center bg-secondary">
+                          <FileText className="w-5 h-5 text-muted-foreground" />
+                        </div>
+                      )}
+                      <button type="button" className="absolute -top-1.5 -end-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeAttachment(i)}>
+                        <X className="w-3 h-3" />
+                      </button>
                     </div>
-                  )}
-                  <button type="button" className="absolute -top-1.5 -end-1.5 bg-destructive text-destructive-foreground rounded-full p-0.5 opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => removeAttachment(i)}>
-                    <X className="w-3 h-3" />
-                  </button>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Verification — authenticated only */}
-      {!isGuest && (
-        <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
-          <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
-            <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification")}
-            <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional")}</Badge>
-          </label>
-          <p className="text-xs text-muted-foreground mb-2">{t("form.verification_desc")}</p>
-          <Button type="button" variant="outline" size="sm" className="h-9 gap-1.5 text-xs" onClick={() => verificationInputRef.current?.click()}>
-            <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification")}
-          </Button>
-          <input ref={verificationInputRef} type="file" className="hidden" accept="image/*,.pdf" multiple onChange={handleVerificationSelect} />
-          {verificationFiles.length > 0 && (
-            <div className="mt-2 space-y-1">
-              {verificationFiles.map((file, i) => (
-                <div key={i} className="flex items-center gap-2 text-xs text-foreground bg-background rounded-md px-2 py-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-trust-excellent" />
-                  <span className="truncate flex-1">{file.name}</span>
-                  <button type="button" onClick={() => removeVerification(i)} className="text-muted-foreground hover:text-destructive">
-                    <X className="w-3 h-3" />
-                  </button>
+            {/* Verification */}
+            <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
+              <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
+                <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification", "Verification")}
+                <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional", "Optional")}</Badge>
+              </label>
+              <p className="text-xs text-muted-foreground mb-2">{t("form.verification_desc", "Upload proof of purchase for a verified badge")}</p>
+              <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => verificationInputRef.current?.click()}>
+                <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification", "Upload")}
+              </Button>
+              <input ref={verificationInputRef} type="file" className="hidden" accept="image/*,.pdf" multiple onChange={handleVerificationSelect} />
+              {verificationFiles.length > 0 && (
+                <div className="mt-2 space-y-1">
+                  {verificationFiles.map((file, i) => (
+                    <div key={i} className="flex items-center gap-2 text-xs text-foreground bg-background rounded-md px-2 py-1.5">
+                      <CheckCircle2 className="w-3.5 h-3.5 text-trust-excellent" />
+                      <span className="truncate flex-1">{file.name}</span>
+                      <button type="button" onClick={() => removeVerification(i)} className="text-muted-foreground hover:text-destructive">
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
                 </div>
-              ))}
+              )}
             </div>
-          )}
-        </div>
-      )}
 
-      {/* Anonymous Toggle */}
-      {!isGuest && (
-        <label className="flex items-center gap-2 cursor-pointer">
-          <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="rounded border-border" />
-          <span className="text-sm text-foreground">{t("form.post_anonymously")}</span>
-        </label>
+            {/* Anonymous Toggle */}
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={isAnonymous} onChange={(e) => setIsAnonymous(e.target.checked)} className="rounded border-border" />
+              <span className="text-sm text-foreground">{t("form.post_anonymously", "Post anonymously")}</span>
+            </label>
+          </CollapsibleContent>
+        </Collapsible>
       )}
 
       {/* Trust signals for guests */}
@@ -1164,11 +1268,12 @@ export const WriteReviewModal = ({
       )}
 
       {/* Navigation + Done */}
-      <div className="flex items-center justify-between pt-2">
-        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1">
+      <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1 h-9">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
         <Button
+          size="sm"
           onClick={async () => {
             setIsUploading(true);
             await savePhase3();
@@ -1185,6 +1290,11 @@ export const WriteReviewModal = ({
           )}
         </Button>
       </div>
+
+      {/* Completion micro-copy */}
+      <p className="text-xs text-center text-primary/70 font-medium pb-1">
+        {t("form.topContributor", "You're a top contributor! 🏆")}
+      </p>
     </div>
   );
 
@@ -1206,7 +1316,7 @@ export const WriteReviewModal = ({
               )}
             </DialogHeader>
 
-            {/* Progress Bar — hide on thanks screen */}
+            {/* Progress Bar */}
             {!showThanksScreen && (
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -1219,7 +1329,7 @@ export const WriteReviewModal = ({
               </div>
             )}
 
-            {/* Star summary when past phase 1 and not on thanks screen */}
+            {/* Star summary when past phase 1 */}
             {phase > 1 && !showThanksScreen && (
               <div className="flex items-center gap-2 pb-1">
                 <div className="flex items-center gap-0.5">
