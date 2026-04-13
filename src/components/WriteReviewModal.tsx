@@ -196,6 +196,7 @@ export const WriteReviewModal = ({
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false);
   const [successIsFirst, setSuccessIsFirst] = useState(false);
   const [successRating, setSuccessRating] = useState(5);
+  const [successTotalReviews, setSuccessTotalReviews] = useState(1);
 
   // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
@@ -430,6 +431,7 @@ export const WriteReviewModal = ({
       const isFirstReview = totalReviews === 1;
       setSuccessRating(submittedRating);
       setSuccessIsFirst(isFirstReview);
+      setSuccessTotalReviews(totalReviews || 1);
       setShowSuccessOverlay(true);
     } else if (isGuest) {
       setShowAccountPrompt(true);
