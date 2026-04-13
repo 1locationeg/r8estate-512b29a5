@@ -75,7 +75,7 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
 
-        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4">
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-4 md:px-8 md:py-5 max-w-[1100px] mx-auto">
           {/* Row 1: Header + Counter */}
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-2">
