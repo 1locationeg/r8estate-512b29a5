@@ -1,72 +1,73 @@
 
 
-## Plan: Progressive-Save Review Flow (Facebook Pattern)
+## Plan: Mobile-Friendly, Context-Aware Review Experience
 
-### The Problem
-Currently, if a user taps 5 stars but quits before finishing all 3 phases and hitting submit, the platform captures **nothing**. No rating, no insight, no signal. The review only saves at the very end.
+### The Goal
+Keep all the rich data collection but make the experience feel effortless — especially on mobile. The Facebook image you shared shows the key principle: minimal visual weight, clear progression, optional depth.
 
-### The Solution — Save on Every Step
-Inspired by the Facebook App Store pattern you shared: tap a star → data is saved immediately → "Thanks! Want to write more?" → user can stop or continue. Every step enriches the same record.
+### Changes
 
+#### 1. Context-Aware Fields — `WriteReviewModal.tsx`
+The "Unit Type" field makes no sense when reviewing a law firm, brokerage, or app. Replace the static field with a dynamic one based on `entityCategory`:
+
+| entityCategory | Field Label | Placeholder | Options |
+|---|---|---|---|
+| developers | Unit Type | "e.g. Apartment, Villa" | Free text |
+| projects | Unit Type | "e.g. Studio, Duplex" | Free text |
+| brokers | Service Used | "e.g. Buy, Rent, Sell" | Chips |
+| apps | Feature Used | "e.g. Search, Listings" | Chips |
+| locations | Property Type | "e.g. Residential, Commercial" | Chips |
+| *anything else* (law firms, services) | Service Type | "e.g. Contract Review, Consultation" | Free text |
+
+Similarly, `EXPERIENCE_TYPES_KEYS` should adapt — a law firm reviewer isn't a "buyer" or "investor."
+
+#### 2. Mobile-Optimized Phase 2 Layout
+Phase 2 currently shows: Unit Type + Experience Type + Title (with AI) + Disclaimer + Review textarea + Emoji bar + Navigation. That's overwhelming on a 390px screen.
+
+Restructure Phase 2 into a cleaner flow:
+- **Top**: Context field (unit/service type) as tappable chips instead of a text input — one tap vs typing on mobile keyboard
+- **Title**: Keep AI suggest button, but make title visually optional (lighter placeholder, smaller label)
+- **Review textarea**: Make it the hero — larger, with the voice/AI buttons as floating icons inside the textarea (bottom-right), not a separate row above
+- **Emoji bar**: Collapse into a single 😀 toggle button that expands the emoji row — saves vertical space
+- **Disclaimer**: Move to a slim inline checkbox below textarea (already there, just tighten spacing)
+- **Navigation**: Sticky bottom bar with "Done" and "Next" — always visible without scrolling
+
+#### 3. Tappable Chips for Experience Type
+Replace the `Select` dropdown (hard to use on mobile) with horizontal scrollable chips:
 ```text
-Current flow:
-  Stars → Comment → Categories → [Submit] → saved
-  ↑ quit anywhere before submit = nothing captured
-
-New flow:
-  Stars → [auto-save partial] → "Thanks!" screen
-    ├── "Done" → close (rating captured!)
-    └── "Write a Review" → Comment → [auto-save] → Categories → [auto-save] → "Done"
-         Every field change updates the same DB row
+[ 🏠 Buyer ] [ 🏢 Agent ] [ 💰 Investor ] [ 🔨 Construction ] [ 👨‍👩‍👧 Family ]
 ```
+One tap instead of: tap dropdown → scroll → tap option → close dropdown.
 
-### Database Changes
+For non-real-estate categories, show relevant chips:
+- Brokers: `[ Buying ] [ Selling ] [ Renting ] [ Consulting ]`
+- Services/Law: `[ Client ] [ Partner ] [ Vendor ]`
 
-**Migration: Make `comment` nullable + add `completion_level`**
+#### 4. Phase 3 — Star Taps Instead of Sliders
+Sliders are notoriously hard on mobile (small drag target, imprecise). Replace each category slider with a row of 5 tappable stars — same data, much easier to use:
+```text
+Delivery Quality    ★★★★☆  (tap the 4th star)
+Build Quality       ★★★☆☆  (tap the 3rd star)
+```
+This matches the Phase 1 interaction pattern so it feels familiar.
 
-On both `reviews` and `guest_reviews` tables:
-- `ALTER COLUMN comment DROP NOT NULL` — allow rating-only records
-- `ADD COLUMN completion_level text NOT NULL DEFAULT 'rating_only'` — tracks how far the user got: `'rating_only'`, `'with_comment'`, `'full'`
+#### 5. Encouraging Micro-Copy
+Add small motivational text at each phase transition:
+- Phase 1→2: "Your rating is saved! Adding details earns you +15 community points 🎯"
+- Phase 2→3: "Almost there! Category ratings help buyers compare 📊"
+- Phase 3 done: "You're a top contributor! 🏆"
 
-This lets the platform distinguish between "quick star tap" vs "detailed review" for display and insights.
-
-### UI Flow Changes — `WriteReviewModal.tsx`
-
-**Phase 1 (Stars):** When user taps a star:
-- Immediately insert a new row (rating + developer_id only, comment = null, completion_level = 'rating_only')
-- Store the returned `id` in state
-- Show a Facebook-style "Thanks for your feedback" card with the filled stars, two buttons:
-  - **"Write a Review"** (primary) → advance to phase 2
-  - **"Done"** (secondary/ghost) → close modal, partial review already saved
-
-**Phase 2 (Comment/Title):** When user types and moves to phase 3 (or pauses for 2s via debounce):
-- Update the existing row with comment + title + experience_type
-- Set completion_level = 'with_comment'
-- Remove the "Submit" gate — data is already persisting
-
-**Phase 3 (Categories + Details):** When user adjusts sliders or adds attachments:
-- Update the existing row with category_ratings, attachments, etc.
-- Set completion_level = 'full'
-- Final "Done" button runs content moderation check, then closes with success overlay
-
-**Key behavior changes:**
-- No more "Submit" button that gates everything — replaced by "Done" at each stage
-- Disclaimer checkbox moves to phase 2 (before comment is saved)
-- Content moderation runs when leaving phase 2 (before persisting comment text)
-- Guest flow works the same — partial guest_reviews saved on star tap
-
-### What the Platform Gains
-
-Even from users who only tap a star and leave:
-- Rating distribution data per developer (valuable for trust scores)
-- Engagement signal for interest tracking
-- Volume metric for popularity
-- Partial reviews can be shown as "X users rated this" alongside full reviews
+#### 6. Collapsible Optional Sections in Phase 3
+On mobile, attachments/verification/anonymous toggle should be in a collapsible "More Options" accordion — visible but not intimidating. Desktop keeps them expanded.
 
 ### Files Touched
-1. **Migration** — Make `comment` nullable, add `completion_level` to `reviews` and `guest_reviews`
-2. **Edit** — `src/components/WriteReviewModal.tsx` (progressive save logic, "Thanks" interstitial, auto-save on each phase)
-3. **Edit** — `src/hooks/useReviews.ts` (handle null comments in display)
-4. **Edit** — `src/pages/Reviews.tsx` (show rating-only reviews differently, e.g., "★★★★★ — no comment")
-5. **Edit** — `src/components/ReviewCard.tsx` (handle missing comment gracefully)
+1. **Edit** — `src/components/WriteReviewModal.tsx` (context-aware fields, chips, star-tap Phase 3, mobile layout, collapsible sections, micro-copy)
+
+### What stays the same
+- Progressive save logic (unchanged)
+- AI title suggestions + enhance + voice (unchanged, just repositioned)
+- All data collected (same DB columns)
+- Desktop layout (mostly unchanged, benefits from chips too)
+- Content moderation flow
+- Guest vs authenticated paths
 
