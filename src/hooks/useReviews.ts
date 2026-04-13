@@ -38,7 +38,7 @@ export function useReviews(developerId: string | undefined) {
         rating: r.rating,
         date: new Date(r.created_at).toISOString().split('T')[0],
         project: localizeStoredReviewValue(r.experience_type, t),
-        comment: r.comment,
+        comment: r.comment || '',
         verified: r.is_verified,
         categoryRatings: r.category_ratings || {},
       }));

@@ -849,7 +849,8 @@ export type Database = {
         Row: {
           category_ratings: Json | null
           claimed_by: string | null
-          comment: string
+          comment: string | null
+          completion_level: string
           created_at: string
           developer_id: string
           developer_name: string | null
@@ -865,7 +866,8 @@ export type Database = {
         Insert: {
           category_ratings?: Json | null
           claimed_by?: string | null
-          comment: string
+          comment?: string | null
+          completion_level?: string
           created_at?: string
           developer_id: string
           developer_name?: string | null
@@ -881,7 +883,8 @@ export type Database = {
         Update: {
           category_ratings?: Json | null
           claimed_by?: string | null
-          comment?: string
+          comment?: string | null
+          completion_level?: string
           created_at?: string
           developer_id?: string
           developer_name?: string | null
@@ -1650,7 +1653,8 @@ export type Database = {
           attachment_urls: string[] | null
           author_name: string
           category_ratings: Json | null
-          comment: string
+          comment: string | null
+          completion_level: string
           created_at: string
           developer_id: string
           developer_name: string | null
@@ -1671,7 +1675,8 @@ export type Database = {
           attachment_urls?: string[] | null
           author_name: string
           category_ratings?: Json | null
-          comment: string
+          comment?: string | null
+          completion_level?: string
           created_at?: string
           developer_id: string
           developer_name?: string | null
@@ -1692,7 +1697,8 @@ export type Database = {
           attachment_urls?: string[] | null
           author_name?: string
           category_ratings?: Json | null
-          comment?: string
+          comment?: string | null
+          completion_level?: string
           created_at?: string
           developer_id?: string
           developer_name?: string | null
