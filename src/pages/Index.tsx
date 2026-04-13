@@ -341,7 +341,7 @@ const Index = () => { // hero-phase-v2
                         className="flex items-center gap-1 text-[10px] text-muted-foreground hover:text-primary transition-colors cursor-pointer"
                       >
                         <Sparkles className="w-2.5 h-2.5" />
-                        <span>{t("hero.askAgent")}</span>
+                        <span className="font-extrabold">{t("hero.askAgent")}</span>
                         <span>→</span>
                       </button>
                     </div>
