@@ -688,6 +688,7 @@ export const WriteReviewModal = ({
         isFirstReview={successIsFirst}
         developerName={developerName}
         rating={successRating}
+        totalReviews={successTotalReviews}
       />
     );
   }
