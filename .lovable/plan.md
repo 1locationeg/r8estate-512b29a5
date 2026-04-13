@@ -1,17 +1,18 @@
 
 
-## Update ReviewerSpotlight: Keep Subtitle + Add Rewards
+## Integrate Golden Coin Icon with Count Inside the Button
 
-### Changes in `src/components/ReviewerSpotlight.tsx`
+### Change in `src/components/ReviewerSpotlight.tsx`
 
-1. **Remove** only the title line: "Had an experience? Your voice matters."
-2. **Keep** the subtitle: "Your review could save someone millions"
-3. **Add** rewards motivation text near the CTA button (e.g., "Earn 🪙 +25 coins & unlock badges")
-4. **Keep** the "Write a Review" button and the spotlight card unchanged
+Remove the separate `<span>` reward text. Instead, embed a golden coin icon (`Coins` from lucide-react) with "+25" directly inside the "Write a Review" button, styled with the existing `--coin` gold color (`text-coin`).
 
-### Result
-The section shows: subtitle → rewards motivation + Write a Review button → reviewer spotlight card. Clean, action-focused, motivating.
+**Result:**
+```
+[ 🪙 +25  ✏️ Write a Review ]
+```
+
+The button will show a golden `Coins` icon + bold "+25" on the left, then the pen icon + "Write a Review" text — all in one button. The coin/number portion uses `text-coin` (gold #F5A623) to pop visually.
 
 ### File
-- `src/components/ReviewerSpotlight.tsx`
+- `src/components/ReviewerSpotlight.tsx` — replace line 26 span + update button to include coin count inside it
 
