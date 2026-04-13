@@ -251,6 +251,23 @@
   .touch-target {
     @apply min-h-[44px] min-w-[44px];
   }
+
+  /* Typography Hierarchy — enforce clear visual scale */
+  .heading-hero {
+    @apply text-3xl md:text-5xl font-black tracking-tight leading-tight;
+  }
+  .heading-section {
+    @apply text-xl md:text-2xl font-bold tracking-tight leading-snug;
+  }
+  .heading-sub {
+    @apply text-base md:text-lg font-semibold leading-snug;
+  }
+
+  /* Section gradient divider — softer rhythm between blocks */
+  .section-divider {
+    @apply w-full max-w-[200px] h-px mx-auto my-2;
+    background: linear-gradient(90deg, transparent 0%, hsl(var(--border)) 50%, transparent 100%);
+  }
 }
 
 /* Smooth momentum scrolling for mobile */
