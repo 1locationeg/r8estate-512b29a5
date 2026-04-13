@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { ReviewRichEditor, getPlainTextFromHtml } from "@/components/ReviewRichEditor";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -266,6 +267,10 @@ export const WriteReviewModal = ({
   // More options toggle (Phase 3 mobile)
   const [moreOptionsOpen, setMoreOptionsOpen] = useState(!isMobile);
 
+  // Helper to check if rich text content has actual text
+  const contentPlainText = getPlainTextFromHtml(content).trim();
+  const hasContent = contentPlainText.length > 0;
+
   const metricsCategory = ['developers', 'projects', 'locations', 'apps', 'units', 'brokers'].includes(entityCategory) 
     ? entityCategory 
     : 'developers';
@@ -354,7 +359,7 @@ export const WriteReviewModal = ({
   };
 
   const savePhase2 = async () => {
-    if (!savedReviewId || !content.trim()) return;
+    if (!savedReviewId || !hasContent) return;
     try {
       const table = isGuest ? "guest_reviews" : "reviews";
       const updateData: any = {
@@ -409,7 +414,7 @@ export const WriteReviewModal = ({
   };
 
   const handleDone = async () => {
-    if (phase === 2 && content.trim()) {
+    if (phase === 2 && hasContent) {
       await savePhase2();
     } else if (phase === 3) {
       await savePhase3();
@@ -445,7 +450,7 @@ export const WriteReviewModal = ({
       const { data, error } = await supabase.functions.invoke("review-ai-assist", {
         body: {
           action: "suggest",
-          text: content || "",
+          text: getPlainTextFromHtml(content) || "",
           developerName,
           rating,
           experienceType: unitType || experienceType || entityCategory,
@@ -469,13 +474,14 @@ export const WriteReviewModal = ({
   }, [content, developerName, rating, experienceType, unitType, entityCategory, toast, t]);
 
   const enhanceWithAi = useCallback(async (isVoice = false) => {
-    if (!content.trim()) return;
+    const plain = getPlainTextFromHtml(content).trim();
+    if (!plain) return;
     setIsEnhancing(true);
     try {
       const { data, error } = await supabase.functions.invoke("review-ai-assist", {
         body: {
           action: isVoice ? "enhance_voice" : "enhance",
-          text: content,
+          text: plain,
           developerName,
         },
       });
@@ -507,7 +513,7 @@ export const WriteReviewModal = ({
         try {
           const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
           if (SpeechRecognitionAPI) {
-            if (content.trim()) await enhanceWithAi(true);
+            if (getPlainTextFromHtml(content).trim()) await enhanceWithAi(true);
           }
         } catch {
           toast({ title: t("form.voice_processing"), description: t("form.voice_done"), variant: "default" });
@@ -646,7 +652,10 @@ export const WriteReviewModal = ({
   };
 
   const insertText = (text: string) => {
-    setContent((prev) => (prev ? `${prev} ${text}` : text));
+    setContent((prev) => {
+      const plain = getPlainTextFromHtml(prev);
+      return plain ? `${prev} ${text}` : text;
+    });
   };
 
   const getRatingWord = (r: number) => {
@@ -987,7 +996,7 @@ export const WriteReviewModal = ({
                 className="text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
                 onClick={() => {
                   setTitle(s.title);
-                  if (!content.trim()) setContent(s.starter);
+                  if (!hasContent) setContent(s.starter);
                 }}
               >
                 ✨ {s.title}
@@ -1010,18 +1019,17 @@ export const WriteReviewModal = ({
 
       {/* Review Content — hero section */}
       <div className="space-y-2">
-        <Textarea
-          value={content}
-          onChange={(e) => {
-            const val = e.target.value;
-            setContent(val);
-            const localCheck = checkContentLocally(val);
+        <ReviewRichEditor
+          content={content}
+          onChange={(html) => {
+            setContent(html);
+            const plainText = getPlainTextFromHtml(html);
+            const localCheck = checkContentLocally(plainText);
             setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
             if (aiModeration) setAiModeration(null);
           }}
           placeholder={t("form.review_placeholder", "Share your experience — what went well? What could improve?")}
           rows={isMobile ? 4 : 5}
-          className="resize-none text-sm border-primary/30 focus:border-primary"
         />
 
         {/* Action toolbar below textarea — clear & inviting */}
@@ -1045,7 +1053,7 @@ export const WriteReviewModal = ({
                 type="button"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40"
                 onClick={() => enhanceWithAi(false)}
-                disabled={isEnhancing || !content.trim()}
+                disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                 {t("form.enhance_label", "AI Enhance")}
@@ -1095,7 +1103,7 @@ export const WriteReviewModal = ({
             variant="ghost"
             size="sm"
             onClick={() => {
-              if (content.trim()) savePhase2();
+              if (hasContent) savePhase2();
               handleDone();
             }}
             className="text-muted-foreground h-9"
@@ -1105,14 +1113,14 @@ export const WriteReviewModal = ({
           <Button
             size="sm"
             onClick={async () => {
-              if (content.trim()) {
-                const localCheck = checkContentLocally(content);
+              if (hasContent) {
+                const localCheck = checkContentLocally(contentPlainText);
                 if (localCheck.blocked) {
                   setLocalWarning(t("contentGuard.profanity"));
                   return;
                 }
                 setIsCheckingContent(true);
-                const result = await checkContentWithAI(content, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
+                const result = await checkContentWithAI(contentPlainText, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
                 setIsCheckingContent(false);
                 if (result) {
                   setAiModeration(result);
