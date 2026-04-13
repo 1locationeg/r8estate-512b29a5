@@ -231,7 +231,7 @@ export const LiveMarketPulse = () => {
 
   return (
     <div className="w-full bg-[hsl(220,40%,13%)] text-white z-50 relative">
-      <div className="flex items-center justify-center gap-3 px-10 py-2 min-h-[36px]">
+      <div className="flex items-center justify-center gap-2 md:gap-3 px-8 md:px-10 py-2 min-h-[36px]">
         <span className="relative flex h-2.5 w-2.5 flex-shrink-0">
           <span className="absolute inline-flex h-full w-full rounded-full bg-emerald-400/60 animate-ping" />
           <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-400 shadow-[0_0_6px_2px_rgba(52,211,153,0.5)]" />
