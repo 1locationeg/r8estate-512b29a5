@@ -31,7 +31,7 @@ export function PricingTeaser() {
         {plans.map(({ key, icon: Icon, highlight }) => (
           <Card
             key={key}
-            onClick={() => navigate("/auth")}
+            onClick={() => { window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 3, action: "pricing_view" } })); navigate("/auth"); }}
             className={`cursor-pointer p-3 sm:p-4 text-center transition-all hover:shadow-md ${
               highlight
                 ? "border-primary/60 bg-primary/5 ring-1 ring-primary/20"

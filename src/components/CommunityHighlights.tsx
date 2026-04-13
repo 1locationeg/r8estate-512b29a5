@@ -32,7 +32,7 @@ export const CommunityHighlights = () => {
         <Button
           variant="ghost"
           size="sm"
-          onClick={() => navigate("/community")}
+          onClick={() => { window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 4, action: "community_click" } })); navigate("/community"); }}
           className="text-xs text-primary h-7 px-2 gap-1"
         >
           {t("widgets.joinConversation")} <ArrowRight className="w-3 h-3" />

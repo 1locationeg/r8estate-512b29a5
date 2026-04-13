@@ -37,6 +37,8 @@ const EntityPage = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
+    // Track entity/detail view for corridor progress (zone 2)
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 2, action: "detail_click" } }));
   }, [id]);
 
   const logoOverride = id ? getLogoOverride(id) : null;
