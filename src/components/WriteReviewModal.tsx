@@ -855,6 +855,9 @@ export const WriteReviewModal = ({
       <p className="text-xs text-primary font-medium text-center">
         {t("form.thanksMotivation", "Adding details earns you +15 community points 🎯")}
       </p>
+      <p className="text-[10px] text-muted-foreground text-center">
+        Reviews like yours have helped 2,847 buyers this month
+      </p>
 
       <div className="w-full space-y-3 max-w-xs">
         <Button
