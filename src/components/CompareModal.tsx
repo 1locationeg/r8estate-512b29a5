@@ -82,6 +82,8 @@ const generateScores = (item: SearchItem) => {
 type Scores = ReturnType<typeof generateScores>;
 
 export const CompareModal = ({ item, open, onClose }: CompareModalProps) => {
+  // Track engagement when modal opens
+  if (open) dispatchCompareEngage();
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const [compareItems, setCompareItems] = useState<SearchItem[]>([]);
