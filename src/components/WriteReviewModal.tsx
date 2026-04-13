@@ -414,7 +414,7 @@ export const WriteReviewModal = ({
   };
 
   const handleDone = async () => {
-    if (phase === 2 && content.trim()) {
+    if (phase === 2 && hasContent) {
       await savePhase2();
     } else if (phase === 3) {
       await savePhase3();
@@ -513,7 +513,7 @@ export const WriteReviewModal = ({
         try {
           const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
           if (SpeechRecognitionAPI) {
-            if (content.trim()) await enhanceWithAi(true);
+            if (getPlainTextFromHtml(content).trim()) await enhanceWithAi(true);
           }
         } catch {
           toast({ title: t("form.voice_processing"), description: t("form.voice_done"), variant: "default" });
@@ -996,7 +996,7 @@ export const WriteReviewModal = ({
                 className="text-xs px-3 py-1.5 rounded-full border border-primary/30 bg-primary/5 text-primary hover:bg-primary/10 transition-colors"
                 onClick={() => {
                   setTitle(s.title);
-                  if (!content.trim()) setContent(s.starter);
+                  if (!hasContent) setContent(s.starter);
                 }}
               >
                 ✨ {s.title}
@@ -1120,7 +1120,7 @@ export const WriteReviewModal = ({
                   return;
                 }
                 setIsCheckingContent(true);
-                const result = await checkContentWithAI(content, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
+                const result = await checkContentWithAI(contentPlainText, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
                 setIsCheckingContent(false);
                 if (result) {
                   setAiModeration(result);
