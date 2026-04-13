@@ -29,7 +29,8 @@ const POINTS: Record<string, number> = {
 
 function loadFromStorage(): [number, number, number, number] {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEY);
+    // Try localStorage first (persistent), fall back to sessionStorage
+    const raw = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
   return [0, 0, 0, 0];
@@ -37,6 +38,8 @@ function loadFromStorage(): [number, number, number, number] {
 
 function saveToStorage(data: [number, number, number, number]) {
   try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    // Keep sessionStorage in sync for backward compat
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {}
 }
