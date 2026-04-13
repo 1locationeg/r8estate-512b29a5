@@ -667,6 +667,15 @@ export const WriteReviewModal = ({
     return "";
   };
 
+  const getRatingEncouragement = (r: number) => {
+    if (r >= 5) return "Tell others what made it special ✨";
+    if (r >= 4) return "Share what impressed you — it helps others choose wisely 💡";
+    if (r >= 3) return "Your balanced view helps the community decide fairly ⚖️";
+    if (r >= 2) return "Your honesty warns others — share what went wrong 🛡️";
+    if (r >= 1) return "We hear you. Share your story so others are protected 🛡️";
+    return "";
+  };
+
   if (!open && !showSuccessOverlay) return null;
 
   if (showSuccessOverlay) {
