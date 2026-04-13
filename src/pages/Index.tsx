@@ -44,6 +44,7 @@ import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroNextSteps } from "@/components/HeroNextSteps";
 import { JourneyCorridor } from "@/components/JourneyCorridor";
+import { ReviewerSpotlight } from "@/components/ReviewerSpotlight";
 
 
 const Index = () => { // hero-phase-v2
