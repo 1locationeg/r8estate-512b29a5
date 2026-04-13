@@ -1651,6 +1651,9 @@
     "title": "رحلتك نحو بيت آمن",
     "complete": "مكتمل",
     "entry": "البداية",
+    "stationOf": "محطة {{current}} من {{total}}",
+    "remaining": "{{count}} متبقية",
+    "next": "التالي: {{name}}",
     "sub": {
       "research": "عن المطورين",
       "choose": "المشروع الأفضل",
