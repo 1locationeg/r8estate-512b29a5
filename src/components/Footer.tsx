@@ -99,7 +99,7 @@ export const Footer = () => {
             <div>
               <h3 className="text-lg font-bold text-white mb-2">Subscribe</h3>
               <p className="text-sm text-slate-400 mb-4">
-                Get the latest real estate insights, reviews & exclusive deals delivered to your inbox.
+                Get trust reports,  exclusive deals. Join 39K+ users. 
               </p>
               <form onSubmit={handleSubscribe} className="flex gap-2">
                 <Input
