@@ -1,26 +1,72 @@
 
 
-## Plan: Fix Mobile Overflow & Spacing Issues
+## Plan: Progressive-Save Review Flow (Facebook Pattern)
 
-### Issues Found
-1. **Testimonial badges clipping right edge** — In `JourneyScrollSections.tsx`, the badge text ("Saved EGP 1.2M") uses `whitespace-nowrap` and overflows on 390px screens
-2. **Trust strip 3-pill row** — In `Index.tsx`, three trust pills use `whitespace-nowrap` and push past viewport width on mobile
-3. **FeaturedIdentitySpotlight banner** — Developer name and action buttons (save/follow/share) compete for space, causing the name to be cut off on the navy banner
+### The Problem
+Currently, if a user taps 5 stars but quits before finishing all 3 phases and hitting submit, the platform captures **nothing**. No rating, no insight, no signal. The review only saves at the very end.
 
-### Changes
+### The Solution — Save on Every Step
+Inspired by the Facebook App Store pattern you shared: tap a star → data is saved immediately → "Thanks! Want to write more?" → user can stop or continue. Every step enriches the same record.
 
-#### 1. `src/components/JourneyScrollSections.tsx` — Fix badge overflow
-- Line 91: Change badge from `whitespace-nowrap` to `truncate max-w-[100px]` so long badge text ("Saved EGP 1.2M") shrinks gracefully on narrow screens
-- Keep `shrink-0` but add a max-width constraint
+```text
+Current flow:
+  Stars → Comment → Categories → [Submit] → saved
+  ↑ quit anywhere before submit = nothing captured
 
-#### 2. `src/pages/Index.tsx` — Trust strip mobile layout
-- Lines 466-479: On mobile, stack the 3 trust pills into a scrollable horizontal row (`flex overflow-x-auto md:flex-row`) or reduce text size to `text-[8px]` on mobile. Simplest fix: remove `whitespace-nowrap` on mobile and let text wrap, or use `overflow-x-auto scrollbar-hide` on the container
+New flow:
+  Stars → [auto-save partial] → "Thanks!" screen
+    ├── "Done" → close (rating captured!)
+    └── "Write a Review" → Comment → [auto-save] → Categories → [auto-save] → "Done"
+         Every field change updates the same DB row
+```
 
-#### 3. `src/components/FeaturedIdentitySpotlight.tsx` — Banner layout fix
-- Lines 124-154: On mobile, move the action buttons (save/follow/share) below the developer name instead of absolute-positioned `end-0`, so the name gets full width. Use `flex-col` on mobile, `flex-row` on `md:`
+### Database Changes
 
-### Files touched
-1. **Edit** — `src/components/JourneyScrollSections.tsx` (badge overflow)
-2. **Edit** — `src/pages/Index.tsx` (trust strip)
-3. **Edit** — `src/components/FeaturedIdentitySpotlight.tsx` (banner layout)
+**Migration: Make `comment` nullable + add `completion_level`**
+
+On both `reviews` and `guest_reviews` tables:
+- `ALTER COLUMN comment DROP NOT NULL` — allow rating-only records
+- `ADD COLUMN completion_level text NOT NULL DEFAULT 'rating_only'` — tracks how far the user got: `'rating_only'`, `'with_comment'`, `'full'`
+
+This lets the platform distinguish between "quick star tap" vs "detailed review" for display and insights.
+
+### UI Flow Changes — `WriteReviewModal.tsx`
+
+**Phase 1 (Stars):** When user taps a star:
+- Immediately insert a new row (rating + developer_id only, comment = null, completion_level = 'rating_only')
+- Store the returned `id` in state
+- Show a Facebook-style "Thanks for your feedback" card with the filled stars, two buttons:
+  - **"Write a Review"** (primary) → advance to phase 2
+  - **"Done"** (secondary/ghost) → close modal, partial review already saved
+
+**Phase 2 (Comment/Title):** When user types and moves to phase 3 (or pauses for 2s via debounce):
+- Update the existing row with comment + title + experience_type
+- Set completion_level = 'with_comment'
+- Remove the "Submit" gate — data is already persisting
+
+**Phase 3 (Categories + Details):** When user adjusts sliders or adds attachments:
+- Update the existing row with category_ratings, attachments, etc.
+- Set completion_level = 'full'
+- Final "Done" button runs content moderation check, then closes with success overlay
+
+**Key behavior changes:**
+- No more "Submit" button that gates everything — replaced by "Done" at each stage
+- Disclaimer checkbox moves to phase 2 (before comment is saved)
+- Content moderation runs when leaving phase 2 (before persisting comment text)
+- Guest flow works the same — partial guest_reviews saved on star tap
+
+### What the Platform Gains
+
+Even from users who only tap a star and leave:
+- Rating distribution data per developer (valuable for trust scores)
+- Engagement signal for interest tracking
+- Volume metric for popularity
+- Partial reviews can be shown as "X users rated this" alongside full reviews
+
+### Files Touched
+1. **Migration** — Make `comment` nullable, add `completion_level` to `reviews` and `guest_reviews`
+2. **Edit** — `src/components/WriteReviewModal.tsx` (progressive save logic, "Thanks" interstitial, auto-save on each phase)
+3. **Edit** — `src/hooks/useReviews.ts` (handle null comments in display)
+4. **Edit** — `src/pages/Reviews.tsx` (show rating-only reviews differently, e.g., "★★★★★ — no comment")
+5. **Edit** — `src/components/ReviewCard.tsx` (handle missing comment gracefully)
 
