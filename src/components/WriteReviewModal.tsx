@@ -474,13 +474,14 @@ export const WriteReviewModal = ({
   }, [content, developerName, rating, experienceType, unitType, entityCategory, toast, t]);
 
   const enhanceWithAi = useCallback(async (isVoice = false) => {
-    if (!content.trim()) return;
+    const plain = getPlainTextFromHtml(content).trim();
+    if (!plain) return;
     setIsEnhancing(true);
     try {
       const { data, error } = await supabase.functions.invoke("review-ai-assist", {
         body: {
           action: isVoice ? "enhance_voice" : "enhance",
-          text: content,
+          text: plain,
           developerName,
         },
       });
