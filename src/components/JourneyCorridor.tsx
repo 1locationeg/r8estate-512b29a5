@@ -128,14 +128,21 @@ export const JourneyCorridor = () => {
               aria-label="View journey progress breakdown"
             >
               <svg viewBox="0 0 36 36" className="w-full h-full -rotate-90">
-                <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--border))" strokeWidth="2.5" />
+                <defs>
+                  <linearGradient id="progress-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="hsl(0, 72%, 51%)" />
+                    <stop offset="50%" stopColor="hsl(45, 93%, 47%)" />
+                    <stop offset="100%" stopColor="hsl(142, 71%, 45%)" />
+                  </linearGradient>
+                </defs>
+                <circle cx="18" cy="18" r="15" fill="none" stroke="hsl(var(--muted))" strokeWidth="2.5" />
                 <circle
                   cx="18" cy="18" r="15" fill="none"
-                  stroke="hsl(var(--primary))"
+                  stroke="url(#progress-gradient)"
                   strokeWidth="2.5"
                   strokeLinecap="round"
                   strokeDasharray={`${overallProgress * 0.9425} 94.25`}
-                  className="transition-all duration-300"
+                  className="transition-all duration-500"
                 />
               </svg>
               <span className="absolute inset-0 flex items-center justify-center text-[8px] md:text-[9px] font-bold text-foreground tabular-nums">
