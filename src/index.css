@@ -679,3 +679,20 @@
     animation: none;
   }
 }
+
+/* TipTap Editor Styles */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: hsl(var(--muted-foreground) / 0.5);
+  pointer-events: none;
+  height: 0;
+  font-size: 0.875rem;
+}
+.tiptap:focus {
+  outline: none;
+}
+.tiptap ul { list-style: disc; padding-left: 1.25rem; }
+.tiptap ol { list-style: decimal; padding-left: 1.25rem; }
+.tiptap a { color: hsl(var(--primary)); text-decoration: underline; text-underline-offset: 2px; }
+.tiptap img { border-radius: 0.5rem; max-width: 100%; max-height: 12rem; }
