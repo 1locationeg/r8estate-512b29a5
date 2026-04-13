@@ -374,6 +374,10 @@ const Index = () => { // hero-phase-v2
               </div>
             </div>
 
+            {/* Collective Buyer Protection */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <CollectiveBuyerProtection />
+            </div>
 
             {userMode === "buyers" && (
               <>
@@ -414,9 +418,6 @@ const Index = () => { // hero-phase-v2
         <>
           <div data-zone="1">
             {heroBlock}
-
-            {/* Full-bleed Collective Buyer Protection strip */}
-            <CollectiveBuyerProtection />
 
             {/* Journey Scroll Sections: 1/4, 2/4, 3/4, 4/4 */}
             <JourneyScrollSections />

@@ -60,7 +60,7 @@ export const CollectiveBuyerProtection = () => {
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
       <div
-        className="relative overflow-hidden"
+        className="relative overflow-hidden rounded-2xl"
         style={{
           background:
             "linear-gradient(135deg, hsl(203,81%,8%) 0%, hsl(203,65%,16%) 40%, hsl(203,55%,22%) 70%, hsl(203,45%,28%) 100%)",
@@ -75,7 +75,7 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
 
-        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-4 md:px-8 md:py-5 max-w-[1100px] mx-auto">
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4">
           {/* Row 1: Header + Counter */}
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-2">
