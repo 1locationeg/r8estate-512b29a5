@@ -450,7 +450,7 @@ export const WriteReviewModal = ({
       const { data, error } = await supabase.functions.invoke("review-ai-assist", {
         body: {
           action: "suggest",
-          text: content || "",
+          text: getPlainTextFromHtml(content) || "",
           developerName,
           rating,
           experienceType: unitType || experienceType || entityCategory,
