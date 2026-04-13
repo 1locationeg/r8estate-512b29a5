@@ -147,12 +147,12 @@ export const JourneyCorridor = () => {
 
                   <button
                     onClick={() => handleStationClick(zone)}
-                    className="flex flex-col items-center gap-0.5 cursor-pointer group"
+                    className="flex flex-col items-center gap-0.5 cursor-pointer group min-w-[44px] min-h-[44px] justify-center"
                   >
                     {/* Dot */}
                     <div
                       className={cn(
-                        "w-5 h-5 md:w-6 md:h-6 rounded-full flex items-center justify-center text-[8px] md:text-[9px] font-black transition-all duration-300 border-2",
+                        "w-[18px] h-[18px] md:w-6 md:h-6 rounded-full flex items-center justify-center text-[7px] md:text-[9px] font-black transition-all duration-300 border-2",
                         isPast && "text-white border-transparent",
                         isActive && "text-white border-transparent scale-110 shadow-md",
                         isFuture && "bg-background text-muted-foreground border-border/50",

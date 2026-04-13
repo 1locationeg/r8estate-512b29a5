@@ -403,12 +403,58 @@ const JourneyStepSection = ({ station, isExpanded, onExpand, onCollapse }: {
   );
 };
 
+/* ─── Mobile Journey Pills ─── */
+const STATION_PILL_COLORS = [
+  "var(--journey-research)",
+  "var(--journey-choose)",
+  "var(--journey-finance)",
+  "var(--journey-protect)",
+];
+
+const MobileJourneyPills = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  return (
+    <div className="md:hidden flex gap-2 overflow-x-auto scrollbar-hide px-3 py-2" style={{ WebkitOverflowScrolling: "touch" }}>
+      {STATIONS.map((station, idx) => {
+        const Icon = station.icon;
+        return (
+          <button
+            key={station.key}
+            onClick={() => {
+              const el = document.getElementById(`journey-section-${idx}`);
+              if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}
+            className="flex items-center gap-2 shrink-0 min-h-[44px] rounded-full px-4 py-2 border bg-card/80 backdrop-blur-sm transition-all hover:scale-105"
+            style={{
+              borderColor: `hsl(${STATION_PILL_COLORS[idx]})`,
+              borderLeftWidth: "3px",
+            }}
+          >
+            <Icon className="w-4 h-4 shrink-0" style={{ color: `hsl(${STATION_PILL_COLORS[idx]})` }} />
+            <div className="flex flex-col items-start">
+              <span className="text-[10px] font-bold text-foreground whitespace-nowrap">
+                {station.step}. {t(`journeyScroll.${station.key}.title`)}
+              </span>
+            </div>
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
 /* ─── Exported Component ─── */
 export const JourneyScrollSections = () => {
   const [expandedSection, setExpandedSection] = useState<number | null>(null);
 
   return (
     <div className="w-full">
+      {/* Mobile: horizontal pill navigation */}
+      <MobileJourneyPills />
+      
+      {/* Full station sections (both mobile & desktop) */}
       {STATIONS.map((station, idx) => (
         <JourneyStepSection
           key={station.key}

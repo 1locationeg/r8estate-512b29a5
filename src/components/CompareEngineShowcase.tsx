@@ -4,6 +4,79 @@ import { useNavigate } from "react-router-dom";
 import { Sparkles, Lock, GitCompare, Crown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+/* ─── Mobile swipeable compare cards ─── */
+const MobileCompareCards = ({ developers, metricKeys, maxValues, animated, getBarColor, getTextColor, formatValue, t }: {
+  developers: typeof DEVELOPERS;
+  metricKeys: readonly string[];
+  maxValues: number[];
+  animated: boolean;
+  getBarColor: (v: number, m: number) => string;
+  getTextColor: (v: number, m: number) => string;
+  formatValue: (v: number, m: number) => string;
+  t: (k: string) => string;
+}) => {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const scrollLeft = el.scrollLeft;
+      const cardWidth = el.offsetWidth;
+      setActiveIdx(Math.round(scrollLeft / cardWidth));
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <div className="md:hidden">
+      <div ref={scrollRef} className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-0" style={{ WebkitOverflowScrolling: "touch" }}>
+        {developers.map((dev, devIdx) => {
+          const isWinner = dev.metrics[0] > developers[1 - devIdx].metrics[0];
+          return (
+            <div key={dev.name} className="snap-start shrink-0 w-full px-2">
+              <div className="relative rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm p-4">
+                {isWinner && (
+                  <div className="absolute -top-3 right-4 flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/20 text-accent text-[10px] font-bold">
+                    <Crown className="w-3 h-3" /> Leader
+                  </div>
+                )}
+                <h3 className="font-semibold text-foreground mb-3 text-sm">{dev.name}</h3>
+                <div className="space-y-3">
+                  {metricKeys.map((key, i) => {
+                    const value = dev.metrics[i];
+                    const max = maxValues[i];
+                    const widthPct = max === 5 ? (value / 5) * 100 : value;
+                    return (
+                      <div key={key}>
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="text-xs text-muted-foreground">{t(`compareEngine.${key}`)}</span>
+                          <span className={`text-xs font-bold ${getTextColor(value, max)}`}>{formatValue(value, max)}</span>
+                        </div>
+                        <div className="h-2 w-full rounded-full bg-muted/50 overflow-hidden">
+                          <div className={`h-full rounded-full transition-all duration-500 ease-out ${getBarColor(value, max)}`} style={{ width: animated ? `${widthPct}%` : "0%", transitionDelay: `${devIdx * 200 + i * 150}ms` }} />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      {/* Dot indicators */}
+      <div className="flex items-center justify-center gap-1.5 mt-2">
+        {developers.map((_, i) => (
+          <div key={i} className={`w-2 h-2 rounded-full transition-all ${i === activeIdx ? "bg-primary w-4" : "bg-muted-foreground/30"}`} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const DEVELOPERS = [
   { name: "Palim Hills", metrics: [4.2, 78, 85] },
   { name: "Oria Developers", metrics: [3.1, 52, 61] },
@@ -60,8 +133,8 @@ const CompareEngineShowcase = () => {
         </h2>
       </div>
 
-      {/* Comparison Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-2xl mx-auto">
+      {/* Desktop: side-by-side cards */}
+      <div className="hidden md:grid grid-cols-2 gap-6 max-w-2xl mx-auto">
         {DEVELOPERS.map((dev, devIdx) => {
           const isWinner = dev.metrics[0] > DEVELOPERS[1 - devIdx].metrics[0];
           return (
@@ -109,6 +182,9 @@ const CompareEngineShowcase = () => {
           );
         })}
       </div>
+
+      {/* Mobile: swipeable horizontal cards */}
+      <MobileCompareCards developers={DEVELOPERS} metricKeys={metricKeys} maxValues={maxValues} animated={animated} getBarColor={getBarColor} getTextColor={getTextColor} formatValue={formatValue} t={t} />
 
       {/* CTAs */}
       <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">

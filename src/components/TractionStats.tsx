@@ -56,22 +56,30 @@ export function TractionStats() {
 
   return (
     <div ref={ref} className="w-full max-w-[1100px] mx-auto">
-      <div className="grid grid-cols-3 gap-3 sm:gap-6">
+      {/* Desktop: centered grid */}
+      <div className="hidden md:grid grid-cols-3 gap-6">
         {stats.map((s, i) => {
           const Icon = s.icon;
           const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
           return (
-            <div
-              key={s.labelKey}
-              className="flex flex-col items-center gap-1 py-0 px-2"
-            >
+            <div key={s.labelKey} className="flex flex-col items-center gap-1 py-0 px-2">
               <Icon className="w-3.5 h-3.5 text-primary drop-shadow-[0_0_6px_hsl(var(--primary)/0.4)]" />
-              <span className="text-xs md:text-base font-bold text-foreground tabular-nums leading-none">
-                {displayVal}
-              </span>
-              <span className="text-[9px] md:text-[11px] font-medium text-muted-foreground leading-none text-center whitespace-nowrap">
-                {t(s.labelKey)}
-              </span>
+              <span className="text-base font-bold text-foreground tabular-nums leading-none">{displayVal}</span>
+              <span className="text-[11px] font-medium text-muted-foreground leading-none text-center whitespace-nowrap">{t(s.labelKey)}</span>
+            </div>
+          );
+        })}
+      </div>
+      {/* Mobile: horizontal scroll pill chips */}
+      <div className="flex md:hidden gap-2 overflow-x-auto scrollbar-hide px-1 pb-1" style={{ WebkitOverflowScrolling: "touch" }}>
+        {stats.map((s, i) => {
+          const Icon = s.icon;
+          const displayVal = s.suffix === "K+" ? `${formatNumber(values[i], i18n.language)}K+` : s.suffix === "%" ? `${formatNumber(values[i], i18n.language)}%` : `${formatNumber(values[i], i18n.language)}+`;
+          return (
+            <div key={s.labelKey} className="flex items-center gap-2 min-h-[44px] shrink-0 rounded-full border border-border/60 bg-card/80 backdrop-blur-sm px-3.5 py-2">
+              <Icon className="w-3.5 h-3.5 text-primary shrink-0" />
+              <span className="text-xs font-bold text-foreground tabular-nums whitespace-nowrap">{displayVal}</span>
+              <span className="text-[9px] font-medium text-muted-foreground whitespace-nowrap">{t(s.labelKey)}</span>
             </div>
           );
         })}
