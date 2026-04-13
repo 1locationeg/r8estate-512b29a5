@@ -359,7 +359,7 @@ export const WriteReviewModal = ({
   };
 
   const savePhase2 = async () => {
-    if (!savedReviewId || !content.trim()) return;
+    if (!savedReviewId || !hasContent) return;
     try {
       const table = isGuest ? "guest_reviews" : "reviews";
       const updateData: any = {
@@ -1052,7 +1052,7 @@ export const WriteReviewModal = ({
                 type="button"
                 className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40"
                 onClick={() => enhanceWithAi(false)}
-                disabled={isEnhancing || !content.trim()}
+                disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
                 {t("form.enhance_label", "AI Enhance")}
@@ -1102,7 +1102,7 @@ export const WriteReviewModal = ({
             variant="ghost"
             size="sm"
             onClick={() => {
-              if (content.trim()) savePhase2();
+              if (hasContent) savePhase2();
               handleDone();
             }}
             className="text-muted-foreground h-9"
@@ -1112,8 +1112,8 @@ export const WriteReviewModal = ({
           <Button
             size="sm"
             onClick={async () => {
-              if (content.trim()) {
-                const localCheck = checkContentLocally(content);
+              if (hasContent) {
+                const localCheck = checkContentLocally(contentPlainText);
                 if (localCheck.blocked) {
                   setLocalWarning(t("contentGuard.profanity"));
                   return;
