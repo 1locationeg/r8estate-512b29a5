@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
-import { CheckCircle2, Trophy, Star, PartyPopper, Eye, Coins } from 'lucide-react';
+import { CheckCircle2, Trophy, Star, PartyPopper, Eye, Coins, Share2, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Progress } from '@/components/ui/progress';
 import { ConfettiCelebration } from '@/components/ConfettiCelebration';
+import { getReviewerTier, getNextReviewerTier } from '@/components/ReviewerBadge';
 import { useNavigate } from 'react-router-dom';
 
 interface ReviewSuccessOverlayProps {
@@ -10,6 +12,7 @@ interface ReviewSuccessOverlayProps {
   isFirstReview?: boolean;
   developerName?: string;
   rating?: number;
+  totalReviews?: number;
 }
 
 export function ReviewSuccessOverlay({
@@ -18,14 +21,17 @@ export function ReviewSuccessOverlay({
   isFirstReview = false,
   developerName = '',
   rating = 5,
+  totalReviews = 1,
 }: ReviewSuccessOverlayProps) {
   const [showContent, setShowContent] = useState(false);
   const [confettiTrigger, setConfettiTrigger] = useState(false);
   const navigate = useNavigate();
 
+  const currentTier = getReviewerTier(totalReviews);
+  const nextTier = getNextReviewerTier(totalReviews);
+
   useEffect(() => {
     if (open) {
-      // Stagger the content reveal
       const t1 = setTimeout(() => setShowContent(true), 200);
       const t2 = setTimeout(() => setConfettiTrigger(true), 400);
       return () => { clearTimeout(t1); clearTimeout(t2); };
@@ -36,6 +42,16 @@ export function ReviewSuccessOverlay({
   }, [open]);
 
   if (!open) return null;
+
+  const shareOnWhatsApp = () => {
+    const text = `I just reviewed ${developerName} on R8ESTATE! Help others make better real estate decisions 🏠⭐`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
+
+  const shareOnTwitter = () => {
+    const text = `Just shared my experience with ${developerName} on @R8ESTATE. Transparency matters in Egyptian real estate! 🏠`;
+    window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-background/80 backdrop-blur-sm animate-fade-in">
@@ -63,11 +79,17 @@ export function ReviewSuccessOverlay({
           {isFirstReview ? '🏆 First Review Badge Earned!' : 'Review Submitted!'}
         </h2>
 
-        {/* Subtitle */}
+        {/* Reviewer Rank */}
+        {currentTier && (
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary/10 text-primary text-xs font-semibold">
+            <span>{currentTier.emoji}</span>
+            You're a {currentTier.name}!
+          </div>
+        )}
+
+        {/* Impact preview */}
         <p className="text-sm text-muted-foreground text-center leading-relaxed">
-          {isFirstReview
-            ? `Amazing! You've earned the First Reviewer badge. Your review of ${developerName} helps the community make better decisions.`
-            : `Thank you for reviewing ${developerName}. Your feedback helps others make informed decisions.`}
+          Your review will appear on <span className="font-semibold text-foreground">{developerName}</span>'s profile and help thousands make better decisions.
         </p>
 
         {/* Stars */}
@@ -91,15 +113,36 @@ export function ReviewSuccessOverlay({
           </span>
         </div>
 
-        {isFirstReview && (
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-semibold">
-            <Star className="w-3.5 h-3.5 fill-accent" />
-            🏆 First Reviewer Badge Unlocked!
+        {/* Next milestone */}
+        {nextTier && (
+          <div className="w-full space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground">
+                Next: <span className="font-semibold text-foreground">{nextTier.tier.emoji} {nextTier.tier.name}</span>
+              </span>
+              <span className="text-primary font-bold">{nextTier.remaining} more review{nextTier.remaining !== 1 ? 's' : ''}</span>
+            </div>
+            <Progress
+              value={((totalReviews / nextTier.tier.minReviews) * 100)}
+              className="h-1.5"
+            />
           </div>
         )}
 
+        {/* Share buttons */}
+        <div className="flex gap-2 w-full">
+          <Button variant="outline" size="sm" className="flex-1 gap-1.5 text-xs" onClick={shareOnWhatsApp}>
+            <Share2 className="w-3.5 h-3.5" />
+            WhatsApp
+          </Button>
+          <Button variant="outline" size="sm" className="flex-1 gap-1.5 text-xs" onClick={shareOnTwitter}>
+            <Share2 className="w-3.5 h-3.5" />
+            Twitter
+          </Button>
+        </div>
+
         {/* CTAs */}
-        <div className="flex gap-2 w-full mt-2">
+        <div className="flex gap-2 w-full mt-1">
           <Button
             variant="outline"
             className="flex-1 gap-1.5"
