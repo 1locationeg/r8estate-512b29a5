@@ -47,6 +47,8 @@ import {
   ChevronRight,
   ChevronLeft,
   Wand2,
+  Check,
+  PenLine,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -108,8 +110,13 @@ export const WriteReviewModal = ({
   const [successIsFirst, setSuccessIsFirst] = useState(false);
   const [successRating, setSuccessRating] = useState(5);
 
-  // 3-phase state
+  // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
+  const [showThanksScreen, setShowThanksScreen] = useState(false);
+
+  // Progressive save: track the saved review ID
+  const [savedReviewId, setSavedReviewId] = useState<string | null>(null);
+  const [isSaving, setIsSaving] = useState(false);
 
   // Guest vs authenticated mode
   const isGuest = !user;
@@ -195,7 +202,153 @@ export const WriteReviewModal = ({
     setPhase(1);
     setCategoryRatings({});
     setDisclaimerAgreed(false);
+    setShowThanksScreen(false);
+    setSavedReviewId(null);
+    setIsSaving(false);
   };
+
+  // ===================== PROGRESSIVE SAVE LOGIC =====================
+
+  // Phase 1: Save rating immediately on star tap
+  const saveRatingOnly = async (starRating: number) => {
+    setIsSaving(true);
+    try {
+      if (isGuest) {
+        const { data, error } = await supabase
+          .from("guest_reviews" as any)
+          .insert({
+            guest_name: guestName.trim() || "Guest",
+            developer_id: developerId,
+            developer_name: developerName,
+            rating: starRating,
+            comment: null,
+            completion_level: "rating_only",
+          })
+          .select("id")
+          .single();
+        if (error) throw error;
+        setSavedReviewId((data as any).id);
+        setGuestReviewId((data as any).id);
+      } else {
+        let displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || "Anonymous";
+        const { data: profile } = await supabase.from("profiles").select("full_name").eq("user_id", user.id).single();
+        if (profile?.full_name) displayName = profile.full_name;
+
+        const { data, error } = await supabase
+          .from("reviews")
+          .insert({
+            user_id: user.id,
+            developer_id: developerId,
+            developer_name: developerName,
+            author_name: displayName,
+            rating: starRating,
+            comment: null,
+            completion_level: "rating_only",
+          })
+          .select("id")
+          .single();
+        if (error) throw error;
+        setSavedReviewId(data.id);
+      }
+      setShowThanksScreen(true);
+    } catch (e) {
+      console.error("Error saving rating:", e);
+      toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  // Phase 2: Update with comment/title
+  const savePhase2 = async () => {
+    if (!savedReviewId || !content.trim()) return;
+    try {
+      const table = isGuest ? "guest_reviews" : "reviews";
+      const updateData: any = {
+        comment: content,
+        title: title || null,
+        completion_level: "with_comment",
+      };
+      if (!isGuest) {
+        updateData.experience_type = experienceType || null;
+        updateData.unit_type = unitType || null;
+        updateData.is_anonymous = isAnonymous;
+        if (isAnonymous) updateData.author_name = "Anonymous";
+      } else {
+        updateData.experience_type = experienceType || null;
+        updateData.guest_name = guestName.trim() || "Guest";
+      }
+      await supabase.from(table as any).update(updateData).eq("id", savedReviewId);
+    } catch (e) {
+      console.error("Error updating review (phase 2):", e);
+    }
+  };
+
+  // Phase 3: Update with category ratings + attachments
+  const savePhase3 = async () => {
+    if (!savedReviewId) return;
+    try {
+      const table = isGuest ? "guest_reviews" : "reviews";
+      const catRatingsPayload = Object.keys(categoryRatings).length > 0 ? categoryRatings : {};
+      const updateData: any = {
+        category_ratings: catRatingsPayload,
+        completion_level: "full",
+      };
+
+      // Upload attachments for authenticated users
+      if (!isGuest && user) {
+        const uploadedUrls: string[] = [];
+        for (const att of [...attachments, ...verificationFiles.map((f) => ({ file: f, type: "verification" }))]) {
+          const filePath = `${user.id}/${Date.now()}-${att.file.name}`;
+          const { error } = await supabase.storage.from("review-attachments").upload(filePath, att.file);
+          if (!error) {
+            const { data: urlData } = supabase.storage.from("review-attachments").getPublicUrl(filePath);
+            uploadedUrls.push(urlData.publicUrl);
+          }
+        }
+        if (uploadedUrls.length > 0) {
+          updateData.attachment_urls = uploadedUrls;
+        }
+      }
+
+      await supabase.from(table as any).update(updateData).eq("id", savedReviewId);
+    } catch (e) {
+      console.error("Error updating review (phase 3):", e);
+    }
+  };
+
+  // Handle "Done" at any point — close modal, data already saved
+  const handleDone = async () => {
+    // If we're past phase 2, save current phase data first
+    if (phase === 2 && content.trim()) {
+      await savePhase2();
+    } else if (phase === 3) {
+      await savePhase3();
+    }
+
+    const submittedRating = rating;
+
+    if (!isGuest && user) {
+      const { count: totalReviews } = await supabase
+        .from("reviews")
+        .select("id", { count: "exact", head: true })
+        .eq("user_id", user.id);
+      const isFirstReview = totalReviews === 1;
+      setSuccessRating(submittedRating);
+      setSuccessIsFirst(isFirstReview);
+      setShowSuccessOverlay(true);
+    } else if (isGuest) {
+      setShowAccountPrompt(true);
+    }
+
+    onReviewSubmitted?.();
+    if (!isGuest) {
+      resetForm();
+      onOpenChange(false);
+    }
+  };
+
+  // ===================== EXISTING HELPERS =====================
 
   // AI Title Suggestions for Phase 2
   const getAiTitleSuggestions = useCallback(async () => {
@@ -211,8 +364,6 @@ export const WriteReviewModal = ({
         },
       });
       if (error) throw error;
-      
-      // Map AI suggestions to title+starter format
       if (data.suggestions) {
         const titles = data.suggestions.slice(0, 3).map((s: string) => ({
           title: s.length > 60 ? s.substring(0, 57) + "..." : s,
@@ -259,11 +410,9 @@ export const WriteReviewModal = ({
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
       audioChunksRef.current = [];
-
       recorder.ondataavailable = (e) => {
         if (e.data.size > 0) audioChunksRef.current.push(e.data);
       };
-
       recorder.onstop = async () => {
         stream.getTracks().forEach((track) => track.stop());
         if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
@@ -278,7 +427,6 @@ export const WriteReviewModal = ({
           toast({ title: t("form.voice_processing"), description: t("form.voice_done"), variant: "default" });
         }
       };
-
       const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
       if (SpeechRecognitionAPI) {
         const recognition = new SpeechRecognitionAPI();
@@ -299,7 +447,6 @@ export const WriteReviewModal = ({
         recognition.start();
         recorder.addEventListener("stop", () => recognition.stop(), { once: true });
       }
-
       recorder.start();
       setMediaRecorder(recorder);
       setIsRecording(true);
@@ -379,101 +526,6 @@ export const WriteReviewModal = ({
     }
   };
 
-  // Submit — guest or authenticated
-  const handleSubmit = async () => {
-    if (rating === 0) {
-      toast({ title: t("form.rating_required"), description: t("form.rating_required_desc"), variant: "destructive" });
-      return;
-    }
-    if (!content.trim()) {
-      toast({ title: t("form.review_required"), description: t("form.review_required_desc"), variant: "destructive" });
-      return;
-    }
-
-    setIsUploading(true);
-    try {
-      // Build category_ratings JSON
-      const catRatingsPayload = Object.keys(categoryRatings).length > 0 ? categoryRatings : {};
-
-      if (isGuest) {
-        const { data, error } = await supabase
-          .from("guest_reviews" as any)
-          .insert({
-            guest_name: guestName.trim() || "Guest",
-            developer_id: developerId,
-            developer_name: developerName,
-            rating,
-            title: title || null,
-            comment: content,
-            experience_type: experienceType || null,
-            category_ratings: catRatingsPayload,
-          })
-          .select("id")
-          .single();
-
-        if (error) throw error;
-        setGuestReviewId((data as any).id);
-        setShowAccountPrompt(true);
-        toast({ title: t("form.review_submitted"), description: t("form.review_submitted_guest", { name: developerName }) });
-      } else {
-        const uploadedUrls: string[] = [];
-        for (const att of [...attachments, ...verificationFiles.map((f) => ({ file: f, type: "verification" }))]) {
-          const filePath = `${user.id}/${Date.now()}-${att.file.name}`;
-          const { error } = await supabase.storage.from("review-attachments").upload(filePath, att.file);
-          if (!error) {
-            const { data: urlData } = supabase.storage.from("review-attachments").getPublicUrl(filePath);
-            uploadedUrls.push(urlData.publicUrl);
-          }
-        }
-
-        let displayName = user.user_metadata?.full_name || user.user_metadata?.name || user.email || "Anonymous";
-        if (!isAnonymous) {
-          const { data: profile } = await supabase.from("profiles").select("full_name").eq("user_id", user.id).single();
-          if (profile?.full_name) displayName = profile.full_name;
-        }
-        const authorName = isAnonymous ? "Anonymous" : displayName;
-        const { error: insertError } = await supabase.from("reviews").insert({
-          user_id: user.id,
-          developer_id: developerId,
-          developer_name: developerName,
-          author_name: authorName,
-          rating,
-          title,
-          comment: content,
-          experience_type: experienceType || null,
-          unit_type: unitType || null,
-          is_anonymous: isAnonymous,
-          attachment_urls: uploadedUrls,
-          category_ratings: catRatingsPayload,
-        });
-
-        if (insertError) throw insertError;
-
-        const { count: totalReviews } = await supabase
-          .from("reviews")
-          .select("id", { count: "exact", head: true })
-          .eq("user_id", user.id);
-
-        const isFirstReview = totalReviews === 1;
-        const submittedRating = rating;
-
-        resetForm();
-        onOpenChange(false);
-
-        setSuccessRating(submittedRating);
-        setSuccessIsFirst(isFirstReview);
-        setShowSuccessOverlay(true);
-
-        onReviewSubmitted?.();
-      }
-    } catch (e) {
-      console.error("Review submission error:", e);
-      toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handleGuestSignup = async () => {
     if (!signupEmail || !signupPassword) {
       toast({ title: t("form.fields_required"), description: t("form.fields_required_desc"), variant: "destructive" });
@@ -514,11 +566,11 @@ export const WriteReviewModal = ({
 
   // Rating label helper
   const getRatingWord = (r: number) => {
-    if (r >= 5) return "Excellent! 🌟";
-    if (r >= 4) return "Great! 😊";
-    if (r >= 3) return "Good 👍";
-    if (r >= 2) return "Fair 😐";
-    if (r >= 1) return "Poor 😞";
+    if (r >= 5) return t("form.ratingExcellent", "Excellent! 🌟");
+    if (r >= 4) return t("form.ratingGreat", "Great! 😊");
+    if (r >= 3) return t("form.ratingGood", "Good 👍");
+    if (r >= 2) return t("form.ratingFair", "Fair 😐");
+    if (r >= 1) return t("form.ratingPoor", "Poor 😞");
     return "";
   };
 
@@ -669,6 +721,66 @@ export const WriteReviewModal = ({
     );
   }
 
+  // ===================== THANKS INTERSTITIAL (Facebook-style) =====================
+
+  const renderThanksScreen = () => (
+    <div className="flex flex-col items-center py-8 px-6 space-y-6">
+      {/* Success checkmark */}
+      <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+        <Check className="w-8 h-8 text-primary" />
+      </div>
+
+      <div className="text-center space-y-2">
+        <h3 className="text-xl font-bold text-foreground">
+          {t("form.thanksFeedback", "Thanks for your feedback!")}
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          {t("form.ratingRecorded", "Your rating for {{name}} has been recorded.", { name: developerName })}
+        </p>
+      </div>
+
+      {/* Show the stars the user selected */}
+      <div className="flex items-center gap-1">
+        {[1, 2, 3, 4, 5].map((s) => (
+          <Star
+            key={s}
+            className={cn(
+              "w-8 h-8",
+              s <= rating ? "fill-accent text-accent" : "text-muted-foreground/30"
+            )}
+          />
+        ))}
+      </div>
+
+      <div className="w-full space-y-3 max-w-xs">
+        {/* Primary: Write a detailed review */}
+        <Button
+          className="w-full gap-2 min-h-[48px]"
+          onClick={() => {
+            setShowThanksScreen(false);
+            setPhase(2);
+          }}
+        >
+          <PenLine className="w-4 h-4" />
+          {t("form.writeReview", "Write a Review")}
+        </Button>
+
+        {/* Secondary: Done */}
+        <Button
+          variant="ghost"
+          className="w-full text-muted-foreground min-h-[44px]"
+          onClick={() => handleDone()}
+        >
+          {t("form.doneForNow", "Done")}
+        </Button>
+      </div>
+
+      <p className="text-xs text-muted-foreground text-center max-w-[280px]">
+        {t("form.writeReviewEncourage", "A detailed review helps others make better decisions and earns you community points!")}
+      </p>
+    </div>
+  );
+
   // ===================== PHASE RENDERERS =====================
 
   const renderPhase1 = () => (
@@ -701,7 +813,14 @@ export const WriteReviewModal = ({
             className="p-1 transition-transform hover:scale-110 active:scale-95"
             onMouseEnter={() => setHoverRating(star)}
             onMouseLeave={() => setHoverRating(0)}
-            onClick={() => setRating(star)}
+            onClick={() => {
+              setRating(star);
+              // Auto-save immediately on star tap
+              if (!savedReviewId) {
+                saveRatingOnly(star);
+              }
+            }}
+            disabled={isSaving}
           >
             <Star
               className={cn(
@@ -715,13 +834,16 @@ export const WriteReviewModal = ({
         ))}
       </div>
 
-      {rating > 0 && (
+      {rating > 0 && !isSaving && !showThanksScreen && savedReviewId && (
         <div className="text-center space-y-3">
           <p className="text-lg font-semibold text-foreground">{getRatingWord(rating)}</p>
-          <Button onClick={() => setPhase(2)} className="gap-2 min-w-[160px]">
-            {t("form.continue", "Continue")}
-            <ChevronRight className="w-4 h-4" />
-          </Button>
+        </div>
+      )}
+
+      {isSaving && (
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Loader2 className="w-4 h-4 animate-spin" />
+          {t("form.savingRating", "Saving your rating...")}
         </div>
       )}
     </div>
@@ -800,10 +922,13 @@ export const WriteReviewModal = ({
         />
       </div>
 
+      {/* Disclaimer — moved here before comment is saved */}
+      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
       {/* Review Content */}
       <div>
         <div className="flex items-center justify-between mb-1.5">
-          <label className="text-sm font-medium text-foreground">{t("form.your_review")} *</label>
+          <label className="text-sm font-medium text-foreground">{t("form.your_review")}</label>
           {!isGuest && (
             <div className="flex items-center gap-1">
               <Button type="button" variant={isRecording ? "destructive" : "outline"} size="sm" className="h-7 gap-1 text-xs" onClick={isRecording ? stopRecording : startRecording}>
@@ -855,14 +980,48 @@ export const WriteReviewModal = ({
         <Button variant="ghost" size="sm" onClick={() => setPhase(1)} className="gap-1">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
-        <Button
-          onClick={() => setPhase(3)}
-          disabled={!content.trim()}
-          className="gap-2"
-        >
-          {t("form.nextAddDetails", "Next: Add Details")}
-          <ChevronRight className="w-4 h-4" />
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => {
+              if (content.trim()) savePhase2();
+              handleDone();
+            }}
+            className="text-muted-foreground"
+          >
+            {t("form.doneForNow", "Done")}
+          </Button>
+          <Button
+            onClick={async () => {
+              // Content moderation before saving
+              if (content.trim()) {
+                const localCheck = checkContentLocally(content);
+                if (localCheck.blocked) {
+                  setLocalWarning(t("contentGuard.profanity"));
+                  return;
+                }
+                setIsCheckingContent(true);
+                const result = await checkContentWithAI(content, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
+                setIsCheckingContent(false);
+                if (result) {
+                  setAiModeration(result);
+                  if (result.suspicion_score > 80) return;
+                }
+                await savePhase2();
+              }
+              setPhase(3);
+            }}
+            disabled={!disclaimerAgreed || isCheckingContent}
+            className="gap-2"
+          >
+            {isCheckingContent ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> {t("contentGuard.checking")}</>
+            ) : (
+              <>{t("form.nextAddDetails", "Next: Add Details")} <ChevronRight className="w-4 h-4" /></>
+            )}
+          </Button>
+        </div>
       </div>
     </div>
   );
@@ -988,9 +1147,6 @@ export const WriteReviewModal = ({
       {/* Trust signals for guests */}
       {isGuest && <TrustSignals compact />}
 
-      {/* Disclaimer */}
-      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
-
       {/* AI Moderation warnings */}
       {aiModeration && aiModeration.suspicion_score > 50 && (
         <div className={cn(
@@ -1007,37 +1163,25 @@ export const WriteReviewModal = ({
         </div>
       )}
 
-      {/* Navigation + Submit */}
+      {/* Navigation + Done */}
       <div className="flex items-center justify-between pt-2">
         <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
         <Button
           onClick={async () => {
-            const localCheck = checkContentLocally(content);
-            if (localCheck.blocked) {
-              setLocalWarning(t("contentGuard.profanity"));
-              setPhase(2);
-              return;
-            }
-            setIsCheckingContent(true);
-            const result = await checkContentWithAI(content, "review", rating, (name, opts) => supabase.functions.invoke(name, opts));
-            setIsCheckingContent(false);
-            if (result) {
-              setAiModeration(result);
-              if (result.suspicion_score > 80) return;
-            }
-            handleSubmit();
+            setIsUploading(true);
+            await savePhase3();
+            setIsUploading(false);
+            handleDone();
           }}
-          disabled={isUploading || isCheckingContent || rating === 0 || !content.trim() || !disclaimerAgreed || (aiModeration?.suspicion_score ?? 0) > 80}
+          disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
           className="gap-1.5 min-h-[44px]"
         >
-          {isCheckingContent ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> {t("contentGuard.checking")}</>
-          ) : isUploading ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.submitting")}</>
+          {isUploading ? (
+            <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.saving", "Saving...")}</>
           ) : (
-            t("form.submit_review")
+            <><Check className="w-4 h-4" /> {t("form.submitReview", "Submit Review")}</>
           )}
         </Button>
       </div>
@@ -1055,26 +1199,28 @@ export const WriteReviewModal = ({
               <DialogTitle className="text-lg md:text-xl font-bold text-foreground">
                 {t("nav_write_review")} {developerName && t("form.for_developer", { name: developerName })}
               </DialogTitle>
-              {isGuest && phase === 1 && (
+              {isGuest && phase === 1 && !showThanksScreen && (
                 <p className="text-xs text-muted-foreground mt-1">
                   {t("guestReview.noAccountNeeded", "No account needed — share your experience freely")}
                 </p>
               )}
             </DialogHeader>
 
-            {/* Progress Bar */}
-            <div className="space-y-1.5">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>
-                  {t("form.step", "Step")} {phase} {t("form.of", "of")} 3
-                </span>
-                <span className="font-medium text-foreground">{PHASE_LABELS[phase - 1]}</span>
+            {/* Progress Bar — hide on thanks screen */}
+            {!showThanksScreen && (
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between text-xs text-muted-foreground">
+                  <span>
+                    {t("form.step", "Step")} {phase} {t("form.of", "of")} 3
+                  </span>
+                  <span className="font-medium text-foreground">{PHASE_LABELS[phase - 1]}</span>
+                </div>
+                <Progress value={(phase / 3) * 100} className="h-2" />
               </div>
-              <Progress value={(phase / 3) * 100} className="h-2" />
-            </div>
+            )}
 
-            {/* Star summary when past phase 1 */}
-            {phase > 1 && (
+            {/* Star summary when past phase 1 and not on thanks screen */}
+            {phase > 1 && !showThanksScreen && (
               <div className="flex items-center gap-2 pb-1">
                 <div className="flex items-center gap-0.5">
                   {[1, 2, 3, 4, 5].map((s) => (
@@ -1089,16 +1235,20 @@ export const WriteReviewModal = ({
             )}
           </div>
 
-          {/* Phase Content with CSS transitions */}
+          {/* Phase Content */}
           <div className="overflow-hidden">
-            <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${(phase - 1) * 100}%)` }}
-            >
-              <div className="w-full flex-shrink-0">{renderPhase1()}</div>
-              <div className="w-full flex-shrink-0">{renderPhase2()}</div>
-              <div className="w-full flex-shrink-0">{renderPhase3()}</div>
-            </div>
+            {showThanksScreen ? (
+              renderThanksScreen()
+            ) : (
+              <div
+                className="flex transition-transform duration-300 ease-in-out"
+                style={{ transform: `translateX(-${(phase - 1) * 100}%)` }}
+              >
+                <div className="w-full flex-shrink-0">{renderPhase1()}</div>
+                <div className="w-full flex-shrink-0">{renderPhase2()}</div>
+                <div className="w-full flex-shrink-0">{renderPhase3()}</div>
+              </div>
+            )}
           </div>
         </DialogContent>
       </Dialog>
