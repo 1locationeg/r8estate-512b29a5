@@ -16,6 +16,9 @@ import r8Stars from "@/assets/r8-stars.png";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 import { sanitizeDisplayText } from "@/lib/contentSanitizer";
 import { generateAvatar } from "@/lib/avatarUtils";
+import DOMPurify from "dompurify";
+
+const isHtmlContent = (text: string) => /<[a-z][\s\S]*>/i.test(text);
 
 interface ReviewCardProps {
   review: Review;
