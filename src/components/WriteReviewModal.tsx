@@ -1008,8 +1008,8 @@ export const WriteReviewModal = ({
       {/* Disclaimer — slim */}
       <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
 
-      {/* Review Content — hero section with floating toolbar */}
-      <div className="relative">
+      {/* Review Content — hero section */}
+      <div className="space-y-2">
         <Textarea
           value={content}
           onChange={(e) => {
@@ -1019,47 +1019,49 @@ export const WriteReviewModal = ({
             setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
             if (aiModeration) setAiModeration(null);
           }}
-          placeholder={t("form.review_placeholder", "Share your experience...")}
+          placeholder={t("form.review_placeholder", "Share your experience — what went well? What could improve?")}
           rows={isMobile ? 4 : 5}
-          className="resize-none pb-10 text-sm"
+          className="resize-none text-sm border-primary/30 focus:border-primary"
         />
 
-        {/* Floating toolbar inside textarea */}
-        <div className="absolute bottom-2 end-2 flex items-center gap-1">
+        {/* Action toolbar below textarea — clear & inviting */}
+        <div className="flex items-center gap-2 flex-wrap">
           {!isGuest && (
             <>
               <button
                 type="button"
                 className={cn(
-                  "p-1.5 rounded-full transition-colors",
-                  isRecording ? "bg-destructive text-destructive-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                  isRecording
+                    ? "bg-destructive text-destructive-foreground animate-pulse"
+                    : "bg-secondary/80 text-foreground hover:bg-secondary hover:shadow-sm"
                 )}
                 onClick={isRecording ? stopRecording : startRecording}
-                title={isRecording ? t("form.stop") : t("form.voice")}
               >
-                {isRecording ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
+                {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                {isRecording ? t("form.stop", "Stop") : t("form.voice_label", "Voice")}
               </button>
               <button
                 type="button"
-                className="p-1.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent/10 text-accent hover:bg-accent/20 hover:shadow-sm transition-all disabled:opacity-40"
                 onClick={() => enhanceWithAi(false)}
                 disabled={isEnhancing || !content.trim()}
-                title={t("form.enhance")}
               >
-                {isEnhancing ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4 text-accent" />}
+                {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                {t("form.enhance_label", "AI Polish")}
               </button>
             </>
           )}
           <button
             type="button"
             className={cn(
-              "p-1.5 rounded-full transition-colors",
-              showEmojiBar ? "bg-secondary text-foreground" : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+              showEmojiBar ? "bg-primary/10 text-primary" : "bg-secondary/80 text-foreground hover:bg-secondary hover:shadow-sm"
             )}
             onClick={() => setShowEmojiBar(!showEmojiBar)}
-            title="Emoji"
           >
-            <SmilePlus className="w-4 h-4" />
+            <SmilePlus className="w-3.5 h-3.5" />
+            Emoji
           </button>
         </div>
       </div>
