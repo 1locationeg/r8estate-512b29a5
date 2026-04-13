@@ -19,22 +19,20 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
     <div className="w-full">
       {/* Reviewer CTA */}
       <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-        <div>
-          <p className="text-sm font-bold text-foreground">
-            Had an experience? <span className="text-primary">Your voice matters.</span>
-          </p>
-          <p className="text-xs text-muted-foreground">
-            Your review could save someone millions
-          </p>
+        <p className="text-xs text-muted-foreground">
+          Your review could save someone millions
+        </p>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="text-[10px] font-medium text-primary">🪙 +25 coins & unlock badges</span>
+          <Button
+            size="sm"
+            className="gap-1.5 h-8 text-xs"
+            onClick={onWriteReview || (() => navigate('/reviews'))}
+          >
+            <PenLine className="w-3.5 h-3.5" />
+            Write a Review
+          </Button>
         </div>
-        <Button
-          size="sm"
-          className="gap-1.5 h-8 text-xs shrink-0"
-          onClick={onWriteReview || (() => navigate('/reviews'))}
-        >
-          <PenLine className="w-3.5 h-3.5" />
-          Write a Review
-        </Button>
       </div>
 
       {/* Spotlight strip */}
