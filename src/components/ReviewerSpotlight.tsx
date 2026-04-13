@@ -6,8 +6,6 @@ import { useNavigate } from 'react-router-dom';
 
 const SPOTLIGHT_REVIEWERS = [
   { name: 'Ahmed K.', initials: 'AK', rating: 5, snippet: 'Saved me from a bad developer deal in 6th October', reviewCount: 8 },
-  { name: 'Sara M.', initials: 'SM', rating: 4, snippet: 'Finally a platform where I can share my real experience', reviewCount: 3 },
-  { name: 'Omar H.', initials: 'OH', rating: 5, snippet: 'The trust score helped me choose the right broker', reviewCount: 12 },
 ];
 
 interface ReviewerSpotlightProps {
