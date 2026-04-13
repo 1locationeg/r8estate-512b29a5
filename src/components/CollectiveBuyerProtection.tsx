@@ -60,7 +60,7 @@ export const CollectiveBuyerProtection = () => {
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
       <div
-        className="relative overflow-hidden rounded-2xl"
+        className="relative overflow-hidden"
         style={{
           background:
             "linear-gradient(135deg, hsl(203,81%,8%) 0%, hsl(203,65%,16%) 40%, hsl(203,55%,22%) 70%, hsl(203,45%,28%) 100%)",
