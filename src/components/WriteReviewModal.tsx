@@ -1043,12 +1043,12 @@ export const WriteReviewModal = ({
               </button>
               <button
                 type="button"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-accent/10 text-accent hover:bg-accent/20 hover:shadow-sm transition-all disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold bg-gradient-to-r from-[hsl(var(--primary))] via-[hsl(var(--glow-accent))] to-[hsl(var(--accent))] text-primary-foreground shadow-[0_0_14px_-3px_hsl(var(--glow-accent)/0.5)] hover:shadow-[0_0_22px_-2px_hsl(var(--glow-accent)/0.65)] hover:scale-105 active:scale-95 transition-all duration-200 disabled:opacity-40 disabled:shadow-none disabled:hover:scale-100"
                 onClick={() => enhanceWithAi(false)}
                 disabled={isEnhancing || !content.trim()}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {t("form.enhance_label", "AI Polish")}
+                {t("form.enhance_label", "AI Enhance")}
               </button>
             </>
           )}
