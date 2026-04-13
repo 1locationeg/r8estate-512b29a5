@@ -1,4 +1,4 @@
-import { Star, PenLine } from 'lucide-react';
+import { Star, PenLine, Coins } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { ReviewerBadge } from '@/components/ReviewerBadge';
 import { Button } from '@/components/ui/button';
