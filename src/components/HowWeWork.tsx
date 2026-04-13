@@ -12,6 +12,11 @@ const HowWeWork = () => {
   const { t, i18n } = useTranslation();
   const isRtl = i18n.language === "ar";
 
+  // Track how-we-work view for corridor progress
+  React.useEffect(() => {
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 3, action: "how_we_work" } }));
+  }, []);
+
   return (
     <section className="w-full" dir={isRtl ? "rtl" : "ltr"}>
       {/* Unified header */}
