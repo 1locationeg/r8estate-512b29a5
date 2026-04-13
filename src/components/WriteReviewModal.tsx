@@ -647,7 +647,10 @@ export const WriteReviewModal = ({
   };
 
   const insertText = (text: string) => {
-    setContent((prev) => (prev ? `${prev} ${text}` : text));
+    setContent((prev) => {
+      const plain = getPlainTextFromHtml(prev);
+      return plain ? `${prev} ${text}` : text;
+    });
   };
 
   const getRatingWord = (r: number) => {
