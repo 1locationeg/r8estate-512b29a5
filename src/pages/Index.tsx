@@ -432,7 +432,7 @@ const Index = () => { // hero-phase-v2
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <CompareEngineShowcase />
           </div>
-          <div className="w-16 h-px bg-border mx-auto" />
+          <div className="section-divider" />
           {/* Quick Actions + Widgets */}
           <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
@@ -454,7 +454,7 @@ const Index = () => { // hero-phase-v2
               <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
             </div>
           </div>
-          <div className="w-16 h-px bg-border mx-auto" />
+          <div className="section-divider" />
           </div>
 
           {/* ─── Below-the-fold: unified sections ─── */}
@@ -479,7 +479,7 @@ const Index = () => { // hero-phase-v2
                 </div>
               </div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* HowWeWork */}
               <div className="w-full max-w-[1100px] py-4 md:py-6">
@@ -489,12 +489,12 @@ const Index = () => { // hero-phase-v2
               {/* AudienceSegmentCards */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><AudienceSegmentCards /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* CommunityHighlights */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><CommunityHighlights /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* Trust Badges */}
               <div className="flex flex-wrap items-center justify-center gap-2 py-4 my-0 px-0 md:py-[20px] sm:gap-0">
@@ -511,24 +511,24 @@ const Index = () => { // hero-phase-v2
               {/* ReviewsCarousel */}
               <div className="w-full max-w-[1100px] py-2 md:py-0"><ReviewsCarousel /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* Pricing Teaser */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
               </div>{/* end zone 3 inner */}
 
               <div data-zone="4" className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
               {/* Journey Complete CTA */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* Site Experience Feedback */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><SiteExperienceFeedback /></div>
 
-              <div className="w-16 h-px bg-border mx-auto" />
+              <div className="section-divider" />
 
               {/* Category Links */}
               <div className="w-full max-w-[1100px] py-4 md:py-6">
@@ -552,12 +552,12 @@ const Index = () => { // hero-phase-v2
                     <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
                   </div>
                 )}
-                <div className="w-16 h-px bg-border mx-auto" />
+                <div className="section-divider" />
                 <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
-                <div className="w-16 h-px bg-border mx-auto" />
+                <div className="section-divider" />
                 {!specialViewItem && !selectedDeveloper && (
                   <>
-                    <div className="w-16 h-px bg-border mx-auto" />
+                    <div className="section-divider" />
                     <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
                   </>
                 )}
