@@ -66,6 +66,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
     addToSearchHistory(item.name);
     setQuery("");
     setIsFocused(false);
+    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 1, action: "search" } }));
 
     if (item.meta?.dynamicBusinessProfile) {
       searchNavigate(`/entity/${item.id}`);

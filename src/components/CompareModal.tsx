@@ -25,6 +25,11 @@ import { performSearch, type SearchItem, type SearchCategory } from "@/data/sear
 import { reviews as allReviews } from "@/data/mockData";
 import { downloadComparisonReport } from "@/lib/generateComparisonReport";
 
+// Dispatch corridor engagement on compare open
+function dispatchCompareEngage() {
+  window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 2, action: "compare_open" } }));
+}
+
 interface CompareModalProps {
   item: SearchItem | null;
   open: boolean;

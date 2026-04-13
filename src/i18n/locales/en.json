@@ -1603,5 +1603,16 @@
     "reportIssue": "Report an issue",
     "footnote": "We practice what we preach. Every visit is an experience worth reviewing.",
     "thankYou": "Thanks for your feedback!"
+  },
+  "corridor": {
+    "title": "Your path to a safe home",
+    "complete": "complete",
+    "entry": "Start",
+    "sub": {
+      "research": "About developers",
+      "choose": "The best project",
+      "finance": "Financial safety",
+      "protect": "Your rights & money"
+    }
   }
 }
