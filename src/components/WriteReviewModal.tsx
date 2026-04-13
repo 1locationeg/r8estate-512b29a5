@@ -267,6 +267,10 @@ export const WriteReviewModal = ({
   // More options toggle (Phase 3 mobile)
   const [moreOptionsOpen, setMoreOptionsOpen] = useState(!isMobile);
 
+  // Helper to check if rich text content has actual text
+  const contentPlainText = getPlainTextFromHtml(content).trim();
+  const hasContent = contentPlainText.length > 0;
+
   const metricsCategory = ['developers', 'projects', 'locations', 'apps', 'units', 'brokers'].includes(entityCategory) 
     ? entityCategory 
     : 'developers';
