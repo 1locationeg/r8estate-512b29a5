@@ -152,17 +152,6 @@ const ResearchStorySection = ({
     <div className="space-y-3">
       {/* Storytelling wrapper */}
       <div className="relative rounded-2xl border border-journey-research/15 bg-gradient-to-br from-journey-research/8 to-transparent p-4 space-y-3 overflow-hidden">
-        {/* Rotating story */}
-        <div className="flex items-start gap-2">
-          <Sparkles className="w-3.5 h-3.5 text-journey-research shrink-0 mt-0.5 animate-pulse" />
-          <p
-            key={storyIndex}
-            className="text-[11px] italic text-foreground/80 leading-relaxed animate-fade-in"
-          >
-            {t(`journeyScroll.research.agentStory${activeStory}`)}
-          </p>
-        </div>
-
         {/* Search bar */}
         <HeroSearchBar
           onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
@@ -191,7 +180,7 @@ const ResearchStorySection = ({
         </div>
 
         {/* Social proof + share */}
-        <div className="flex flex-col items-center gap-1 pt-1">
+        <div className="flex flex-col items-center gap-1">
           <p className="text-[10px] text-muted-foreground">{t("journeyScroll.research.agentProof")}</p>
           <button
             onClick={() => {
