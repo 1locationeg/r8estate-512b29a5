@@ -111,24 +111,13 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
         <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 space-y-2">
-          <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-2">
             <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
             <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
               {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
             </span>
-            <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
-              {avatars.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  width={22}
-                  height={22}
-                  className="h-[22px] w-[22px] rounded-full border-2 border-journey-protect/30 object-cover"
-                />
-              ))}
-            </div>
+          </div>
+          <div ref={protectedCount.ref}>
             <span className="text-2xl md:text-3xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center gap-2">
               {protectedCount.value}+
               <span className="flex -space-x-2 rtl:space-x-reverse">
