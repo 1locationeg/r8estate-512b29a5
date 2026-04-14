@@ -374,10 +374,6 @@ const Index = () => { // hero-phase-v2
             <HeroNextSteps />
 
 
-            {/* Collective Buyer Protection */}
-            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <CollectiveBuyerProtection />
-            </div>
 
             {userMode === "buyers" && (
               <>
@@ -561,6 +557,8 @@ const Index = () => { // hero-phase-v2
                     <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
                   </>
                 )}
+                <div className="section-divider" />
+                <div className="w-full max-w-[1100px] py-4 md:py-6"><CollectiveBuyerProtection /></div>
               </div>
           </section>
         </>
