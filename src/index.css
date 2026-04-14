@@ -62,10 +62,27 @@
     /* Brand red #ed1b40 for accents */
     --brand-red: 350 85% 52%;
 
-    /* Business green #EAF3DE / #3B6D11 / #27500A */
+    /* Business / Developers — Forest Green #3B6D11 */
     --business: 93 40% 90%;
     --business-foreground: 93 66% 17%;
     --business-border: 93 72% 25%;
+
+    /* Buyers / Investors — alias to primary navy */
+    --buyers: 203 81% 21%;
+    --buyers-foreground: 0 0% 100%;
+    --buyers-border: 203 81% 31%;
+
+    /* Service Companies — Teal #0891B2 */
+    --services: 192 91% 37%;
+    --services-foreground: 0 0% 100%;
+    --services-border: 192 80% 30%;
+    --services-light: 192 60% 92%;
+
+    /* RE Professionals — Amber/Bronze #B45309 */
+    --professionals: 30 92% 37%;
+    --professionals-foreground: 0 0% 100%;
+    --professionals-border: 30 80% 30%;
+    --professionals-light: 30 60% 92%;
 
     /* Coin gold #F5A623 */
     --coin: 38 91% 55%;
@@ -114,6 +131,38 @@
     ) !important;
   }
 
+  /* ─── Services Mode: remap all primary tokens to Teal ─── */
+  .services-mode {
+    --primary: 192 91% 37%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 192 70% 45%;
+    --accent-foreground: 192 80% 15%;
+    --secondary: 192 40% 92%;
+    --secondary-foreground: 192 80% 20%;
+    --ring: 192 91% 37%;
+    --verified: 192 91% 37%;
+    --verified-foreground: 0 0% 100%;
+    --border: 192 30% 80%;
+    --muted: 192 25% 93%;
+    --muted-foreground: 192 30% 35%;
+  }
+
+  /* ─── Professionals Mode: remap all primary tokens to Amber ─── */
+  .professionals-mode {
+    --primary: 30 92% 37%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 30 70% 45%;
+    --accent-foreground: 30 80% 15%;
+    --secondary: 30 40% 92%;
+    --secondary-foreground: 30 80% 20%;
+    --ring: 30 92% 37%;
+    --verified: 30 92% 37%;
+    --verified-foreground: 0 0% 100%;
+    --border: 30 30% 80%;
+    --muted: 30 25% 93%;
+    --muted-foreground: 30 30% 35%;
+  }
+
   .dark {
     --background: 203 50% 8%;
     --foreground: 203 10% 95%;
@@ -160,6 +209,20 @@
     --business: 93 40% 90%;
     --business-foreground: 93 66% 17%;
     --business-border: 93 72% 25%;
+
+    --buyers: 203 81% 40%;
+    --buyers-foreground: 0 0% 100%;
+    --buyers-border: 203 81% 50%;
+
+    --services: 192 80% 45%;
+    --services-foreground: 0 0% 100%;
+    --services-border: 192 70% 38%;
+    --services-light: 192 40% 20%;
+
+    --professionals: 30 80% 45%;
+    --professionals-foreground: 0 0% 100%;
+    --professionals-border: 30 70% 38%;
+    --professionals-light: 30 40% 20%;
 
     --coin: 38 91% 60%;
     --coin-foreground: 30 80% 15%;
