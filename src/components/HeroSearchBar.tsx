@@ -250,6 +250,13 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
               selectedIndex={selectedIndex}
               className="relative top-auto mt-0 rounded-none border-0 shadow-none max-h-none"
             />
+            {showResearchHub && !query && (
+              <ResearchToolkitPanel
+                onClose={dismissFocus}
+                onOpenCompare={() => { setCompareItem({} as any); }}
+                onOpenAIAgent={() => { setIsAIModalOpen(true); }}
+              />
+            )}
           </div>
 
           {/* Sticky footer - Validate Decision */}
@@ -374,6 +381,15 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
             onCompare={handleCompare}
             selectedIndex={selectedIndex}
           />
+          {showResearchHub && isFocused && !query && (
+            <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-background shadow-xl">
+              <ResearchToolkitPanel
+                onClose={dismissFocus}
+                onOpenCompare={() => { setCompareItem({} as any); }}
+                onOpenAIAgent={() => { setIsAIModalOpen(true); }}
+              />
+            </div>
+          )}
         </div>
 
         {showQuickIcons && (
