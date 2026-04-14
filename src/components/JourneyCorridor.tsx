@@ -329,7 +329,7 @@ export const JourneyCorridor = () => {
                             return (
                               <button
                                 key={tIdx}
-                                onClick={() => handleTipClick(tip)}
+                                onClick={(e) => handleTipClick(e, tip)}
                                 className={cn(
                                   "flex items-center gap-1.5 text-[10px] w-full text-start rounded-sm px-1 py-0.5 -mx-1 transition-colors",
                                   isDone
