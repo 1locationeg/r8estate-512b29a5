@@ -167,6 +167,7 @@ const ResearchStorySection = ({
         <HeroSearchBar
           onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
           onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
+          showResearchHub={true}
         />
 
         {/* Stats row */}

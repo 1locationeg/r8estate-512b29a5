@@ -1621,5 +1621,32 @@
       "finance": "Financial safety",
       "protect": "Your rights & money"
     }
+  },
+  "researchHub": {
+    "title": "Research Toolkit",
+    "discover": "Discover",
+    "evaluate": "Evaluate",
+    "track": "Track",
+    "browseCategories": "Browse Categories",
+    "browseCategoriesSub": "Explore all 18 real estate categories",
+    "developerDirectory": "Developer Directory",
+    "developerDirectorySub": "Browse and compare all developers",
+    "leaderboard": "Leaderboard",
+    "leaderboardSub": "Top-rated developers and reviewers",
+    "products": "Products",
+    "productsSub": "Discover R8ESTATE tools and services",
+    "compareDevelopers": "Compare Developers",
+    "compareDevelopersSub": "Side-by-side trust score comparison",
+    "readReviews": "Read Reviews",
+    "readReviewsSub": "Real buyer experiences and ratings",
+    "aiTrustAgent": "AI Trust Agent",
+    "aiTrustAgentSub": "Ask anything about any developer",
+    "marketInsights": "Market Insights",
+    "marketInsightsSub": "Trends, data, and market analysis",
+    "savedSearches": "Saved Searches",
+    "savedSearchesSub": "Save and track your research queries",
+    "smartRecs": "Smart Recommendations",
+    "smartRecsSub": "AI-powered personalized suggestions",
+    "readyToChoose": "Ready to choose? →"
   }
 }

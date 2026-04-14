@@ -1664,5 +1664,32 @@
       "finance": "بأمان مالي",
       "protect": "حقوقك وفلوسك"
     }
+  },
+  "researchHub": {
+    "title": "أدوات البحث",
+    "discover": "اكتشف",
+    "evaluate": "قيّم",
+    "track": "تابع",
+    "browseCategories": "تصفح الفئات",
+    "browseCategoriesSub": "استكشف جميع فئات العقارات الـ 18",
+    "developerDirectory": "دليل المطورين",
+    "developerDirectorySub": "تصفح وقارن بين جميع المطورين",
+    "leaderboard": "المتصدرين",
+    "leaderboardSub": "أعلى المطورين والمراجعين تقييمًا",
+    "products": "المنتجات",
+    "productsSub": "اكتشف أدوات وخدمات R8ESTATE",
+    "compareDevelopers": "قارن المطورين",
+    "compareDevelopersSub": "مقارنة جنبًا إلى جنب لدرجات الثقة",
+    "readReviews": "اقرأ التقييمات",
+    "readReviewsSub": "تجارب وتقييمات المشترين الحقيقية",
+    "aiTrustAgent": "وكيل الثقة الذكي",
+    "aiTrustAgentSub": "اسأل عن أي مطور",
+    "marketInsights": "رؤى السوق",
+    "marketInsightsSub": "اتجاهات وبيانات وتحليلات السوق",
+    "savedSearches": "عمليات البحث المحفوظة",
+    "savedSearchesSub": "احفظ وتتبع استفساراتك البحثية",
+    "smartRecs": "توصيات ذكية",
+    "smartRecsSub": "اقتراحات مخصصة بالذكاء الاصطناعي",
+    "readyToChoose": "← جاهز للاختيار؟"
   }
 }
