@@ -244,7 +244,7 @@ const CommentItem = ({
               <UserTierBadge userId={reply.user_id} />
               <VerifiedBuyerBadge userId={reply.user_id} compact />
             </div>
-            <p className="text-sm text-foreground leading-relaxed break-words">{sanitizeDisplayText(reply.body)}</p>
+            <p className="text-sm text-foreground leading-relaxed break-words">{linkifyText(sanitizeDisplayText(reply.body))}</p>
           </div>
 
           <div className="flex items-center gap-3 px-2 mt-0.5">
@@ -732,7 +732,7 @@ export const CommunityPostDetail = ({ post, replies, onBack, onVotePost, onVoteR
           ) : (
             <>
               <h1 className="text-base font-bold text-foreground mb-1.5">{post.title}</h1>
-              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{sanitizeDisplayText(post.body)}</p>
+              <p className="text-sm text-foreground leading-relaxed whitespace-pre-wrap">{linkifyText(sanitizeDisplayText(post.body))}</p>
               {(post as any).image_urls?.length > 0 && (
                 <div className={`mt-3 grid gap-1.5 ${(post as any).image_urls.length === 1 ? 'grid-cols-1' : 'grid-cols-2'}`}>
                   {((post as any).image_urls as string[]).map((url: string, idx: number) => (

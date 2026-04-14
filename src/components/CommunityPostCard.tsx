@@ -185,7 +185,7 @@ export const CommunityPostCard = ({ post, onClick, onVote, onTogglePin, onEdit }
         ) : (
           <button onClick={onClick} className="w-full text-start">
             <p className="text-sm text-muted-foreground line-clamp-3 leading-relaxed">
-              {sanitizeDisplayText(post.body)}
+              {linkifyText(sanitizeDisplayText(post.body))}
             </p>
             {post.reply_count === 0 && post.category === 'question' && (
               <p className="text-xs text-primary font-medium mt-2">{t("community.beFirstAnswer", "Be the first to answer!")}</p>
