@@ -97,6 +97,7 @@ export const JourneyCorridor = () => {
   }, [showBreakdown]);
 
   useEffect(() => {
+    if (!isHomePage) return; // Only track scroll on homepage
     const onScroll = () => {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
@@ -128,7 +129,7 @@ export const JourneyCorridor = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafRef.current); };
-  }, [getZoneElements]);
+  }, [getZoneElements, isHomePage]);
 
   // 5% bonus for visiting (cookie/localStorage), +5% if signed up
   const baseBonus = useMemo(() => {
@@ -159,9 +160,19 @@ export const JourneyCorridor = () => {
   };
 
   const handleStationClick = (zone: number) => {
-    scrollToZone(zone);
+    if (isHomePage) {
+      scrollToZone(zone);
+    } else {
+      const station = JOURNEY_STATIONS[zone - 1];
+      if (station) navigate(station.homeRoute);
+    }
     setShowBreakdown(false);
   };
+
+  // Determine effective active zone: scroll-based on homepage, route-based on inner pages
+  const effectiveActiveZone = isHomePage ? activeZone : (routeStationIdx >= 0 ? routeStationIdx + 1 : 0);
+
+  if (isExcluded) return null;
 
   const handleTipClick = (e: React.MouseEvent, tip: TipItem) => {
     e.stopPropagation();
