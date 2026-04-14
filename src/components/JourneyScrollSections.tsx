@@ -308,10 +308,9 @@ const StationCompactHook = ({ station, onExpand }: { station: StationData; onExp
 
   if (station.key === "research") {
     return (
-      <button onClick={onExpand} className="w-full max-w-sm mx-auto flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card/80 backdrop-blur-sm hover:border-primary/40 transition-all group" style={{ borderColor: `hsl(${station.hslVar} / 0.25)` }}>
-        <Search className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" style={{ color: `hsl(${station.hslVar} / 0.6)` }} />
-        <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">{t("journeyScroll.research.searchPlaceholder", "Search developers, projects...")}</span>
-      </button>
+      <div className="w-full max-w-sm mx-auto">
+        <HeroSearchBar onSelectDeveloper={() => {}} showResearchHub={true} />
+      </div>
     );
   }
 
@@ -367,7 +366,9 @@ const JourneyStepSection = ({ station, isExpanded, onExpand, onCollapse }: {
         {!isExpanded && (
           <div className="animate-fade-in mb-4">
             <StationCompactHook station={station} onExpand={onExpand} />
-            <p className="text-[11px] text-muted-foreground mt-2 animate-pulse">{t("journeyScroll.tapToExplore", "Tap to explore")}</p>
+            {station.key !== "research" && (
+              <p className="text-[11px] text-muted-foreground mt-2 animate-pulse">{t("journeyScroll.tapToExplore", "Tap to explore")}</p>
+            )}
             <StationTrustBlock stationKey={station.key} />
           </div>
         )}
