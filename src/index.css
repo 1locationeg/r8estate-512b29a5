@@ -131,6 +131,38 @@
     ) !important;
   }
 
+  /* ─── Services Mode: remap all primary tokens to Teal ─── */
+  .services-mode {
+    --primary: 192 91% 37%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 192 70% 45%;
+    --accent-foreground: 192 80% 15%;
+    --secondary: 192 40% 92%;
+    --secondary-foreground: 192 80% 20%;
+    --ring: 192 91% 37%;
+    --verified: 192 91% 37%;
+    --verified-foreground: 0 0% 100%;
+    --border: 192 30% 80%;
+    --muted: 192 25% 93%;
+    --muted-foreground: 192 30% 35%;
+  }
+
+  /* ─── Professionals Mode: remap all primary tokens to Amber ─── */
+  .professionals-mode {
+    --primary: 30 92% 37%;
+    --primary-foreground: 0 0% 100%;
+    --accent: 30 70% 45%;
+    --accent-foreground: 30 80% 15%;
+    --secondary: 30 40% 92%;
+    --secondary-foreground: 30 80% 20%;
+    --ring: 30 92% 37%;
+    --verified: 30 92% 37%;
+    --verified-foreground: 0 0% 100%;
+    --border: 30 30% 80%;
+    --muted: 30 25% 93%;
+    --muted-foreground: 30 30% 35%;
+  }
+
   .dark {
     --background: 203 50% 8%;
     --foreground: 203 10% 95%;
