@@ -99,7 +99,7 @@ export const CollectiveBuyerProtection = () => {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-border/60" />
+          <div className="border-t border-red-200/40 dark:border-red-800/30" />
 
           {/* Row 3 & 4: WITH R8ESTATE — green safe zone */}
           <div className="bg-journey-protect/[0.04] rounded-lg p-2.5 space-y-2 border border-journey-protect/10">
