@@ -97,7 +97,7 @@ export const AddBusinessModal = ({ open, onOpenChange, parentBusinessId, mode = 
           <DialogTitle className="flex items-center gap-2">
             {mode === 'sub' ? (
               <>
-                <Building2 className="w-5 h-5 text-primary" />
+                <Building2 className="w-5 h-5 text-business-border" />
                 Add Sub-Business / Branch
               </>
             ) : (

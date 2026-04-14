@@ -44,9 +44,9 @@ export const BusinessProfileHeader = ({
         <div className="flex flex-col md:flex-row md:items-start gap-5">
           {/* Logo / Avatar */}
           <div className="flex-shrink-0">
-            <Avatar className="h-20 w-20 rounded-xl border-2 border-border">
+            <Avatar className="h-20 w-20 rounded-xl border-2 border-business-border/30">
               {<AvatarImage src={company.logo || generateAvatar(company.name, "developer")} alt={company.name} className="rounded-xl" />}
-              <AvatarFallback className="rounded-xl bg-primary/10 text-primary text-2xl font-bold">
+              <AvatarFallback className="rounded-xl bg-business/50 text-business-border text-2xl font-bold">
                 {company.name.charAt(0)}
               </AvatarFallback>
             </Avatar>
@@ -143,25 +143,25 @@ export const BusinessProfileHeader = ({
 
       {/* Profile Completion – clickable */}
       <button
-        className="w-full text-start bg-card border border-border rounded-xl p-4 hover:border-accent/50 transition-colors group cursor-pointer"
+        className="w-full text-start bg-card border border-border rounded-xl p-4 hover:border-business-border/50 transition-colors group cursor-pointer"
         onClick={() => navigate(profileCompletion < 100 ? '/business/profile' : '/business/gamification')}
       >
         <div className="flex items-center justify-between mb-2">
           <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-muted-foreground" />
+            <Building2 className="w-4 h-4 text-business-border" />
             <span className="text-sm font-medium text-foreground">Profile Completion</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="text-sm font-bold text-foreground">{profileCompletion}%</span>
-            <span className="text-xs text-accent font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+            <span className="text-xs text-business-border font-medium opacity-0 group-hover:opacity-100 transition-opacity">
               {profileCompletion < 100 ? 'Complete now →' : 'View rewards →'}
             </span>
           </div>
         </div>
-        <Progress value={profileCompletion} className="h-2" />
+        <Progress value={profileCompletion} className="h-2 [&>div]:bg-business-border" />
         {profileCompletion < 100 && (
           <p className="text-[11px] text-muted-foreground mt-2">
-            Complete your profile to earn the <strong className="text-accent">Profile Pioneer</strong> badge and unlock more perks!
+            Complete your profile to earn the <strong className="text-business-border">Profile Pioneer</strong> badge and unlock more perks!
           </p>
         )}
       </button>

@@ -180,7 +180,7 @@ const AdminBusinessClaims = () => {
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap mb-2">
-                        <Building2 className="w-4 h-4 text-primary" />
+                        <Building2 className="w-4 h-4 text-business-border" />
                         <span className="font-semibold text-foreground">{claim.business_name}</span>
                         <Badge
                           variant={claim.status === 'approved' ? 'default' : claim.status === 'rejected' ? 'destructive' : 'secondary'}
@@ -286,7 +286,7 @@ const AdminBusinessClaims = () => {
               <Button
                 onClick={() => handleModerate(reviewModal.id, 'approved')}
                 disabled={!!processing}
-                className="bg-green-600 hover:bg-green-700 text-white"
+                className="bg-business-border hover:bg-business-border/90 text-white"
               >
                 {processing === reviewModal.id ? <Loader2 className="w-4 h-4 animate-spin me-1" /> : <CheckCircle className="w-4 h-4 me-1" />}
                 Approve

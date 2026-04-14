@@ -84,12 +84,12 @@ function BusinessCard({ biz }: { biz: BusinessWithStats }) {
               className="w-12 h-12 rounded-lg object-cover border border-border shrink-0"
             />
           ) : (
-            <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-              <Building2 className="w-6 h-6 text-primary" />
+            <div className="w-12 h-12 rounded-lg bg-business/50 flex items-center justify-center shrink-0">
+              <Building2 className="w-6 h-6 text-business-border" />
             </div>
           )}
           <div className="min-w-0 flex-1">
-            <h3 className="font-semibold text-foreground truncate group-hover:text-primary transition-colors">
+            <h3 className="font-semibold text-foreground truncate group-hover:text-business-border transition-colors">
               {biz.company_name || "Unnamed Business"}
             </h3>
             {domain && (
@@ -163,7 +163,7 @@ function FilterSidebar({
               key={opt.stars}
               onClick={() => setMinRating(minRating === opt.min ? null : opt.min)}
               className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-sm transition-colors ${
-                minRating === opt.min ? "bg-primary/10 text-primary" : "hover:bg-accent text-foreground"
+                minRating === opt.min ? "bg-business/50 text-business-border" : "hover:bg-accent text-foreground"
               }`}
             >
               <StarDisplay rating={opt.stars} size={12} />
@@ -372,13 +372,13 @@ const Businesses = () => {
                 <div className="hidden md:flex border border-border rounded-md overflow-hidden">
                   <button
                     onClick={() => setViewMode("grid")}
-                    className={`p-2 ${viewMode === "grid" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
+                    className={`p-2 ${viewMode === "grid" ? "bg-business-border text-white" : "bg-card text-muted-foreground hover:bg-accent"}`}
                   >
                     <LayoutGrid className="w-4 h-4" />
                   </button>
                   <button
                     onClick={() => setViewMode("list")}
-                    className={`p-2 ${viewMode === "list" ? "bg-primary text-primary-foreground" : "bg-card text-muted-foreground hover:bg-accent"}`}
+                    className={`p-2 ${viewMode === "list" ? "bg-business-border text-white" : "bg-card text-muted-foreground hover:bg-accent"}`}
                   >
                     <List className="w-4 h-4" />
                   </button>
@@ -395,7 +395,7 @@ const Businesses = () => {
               </div>
             ) : paginated.length === 0 ? (
               <div className="text-center py-16 space-y-3">
-                <Building2 className="w-12 h-12 mx-auto text-muted-foreground/40" />
+                <Building2 className="w-12 h-12 mx-auto text-business-border/40" />
                 <p className="text-muted-foreground">No businesses match your filters.</p>
                 <Button variant="outline" size="sm" onClick={() => { setSearch(""); setMinRating(null); setSelectedCategories([]); }}>
                   Clear filters
@@ -462,7 +462,7 @@ const Businesses = () => {
                   <h3 className="font-semibold text-foreground">Can't find a business?</h3>
                   <p className="text-sm text-muted-foreground">Add it to R8Estate and be the first to review it.</p>
                 </div>
-                <Button onClick={() => navigate("/auth")} className="shrink-0">
+                <Button onClick={() => navigate("/auth")} className="shrink-0 bg-business-border hover:bg-business-border/90 text-white">
                   <Plus className="w-4 h-4 mr-1" /> Add Business
                 </Button>
               </CardContent>
