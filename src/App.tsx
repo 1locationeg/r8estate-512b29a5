@@ -64,6 +64,7 @@ const StaticPage = lazy(() => import("./pages/StaticPage"));
 const ReviewerProgram = lazy(() => import("./pages/ReviewerProgram"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const Businesses = lazy(() => import("./pages/Businesses"));
+const Products = lazy(() => import("./pages/Products"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
