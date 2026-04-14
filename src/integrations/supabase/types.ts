@@ -899,6 +899,27 @@ export type Database = {
         }
         Relationships: []
       }
+      journey_progress: {
+        Row: {
+          id: string
+          updated_at: string
+          user_id: string
+          zone_engagement: Json
+        }
+        Insert: {
+          id?: string
+          updated_at?: string
+          user_id: string
+          zone_engagement?: Json
+        }
+        Update: {
+          id?: string
+          updated_at?: string
+          user_id?: string
+          zone_engagement?: Json
+        }
+        Relationships: []
+      }
       launch_phases: {
         Row: {
           id: string
