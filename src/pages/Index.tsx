@@ -438,7 +438,7 @@ const Index = () => { // hero-phase-v2
         getDashboardRoute={getDashboardRoute}
       />
 
-      {userMode === "buyers" && <JourneyCorridor />}
+      {/* JourneyCorridor is now rendered globally in App.tsx */}
 
       {userMode === "buyers" ? (
         <>

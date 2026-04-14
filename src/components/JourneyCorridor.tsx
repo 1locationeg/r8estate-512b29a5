@@ -1,7 +1,7 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
-import { JOURNEY_STATIONS } from "@/lib/journeyStations";
+import { useNavigate, useLocation } from "react-router-dom";
+import { JOURNEY_STATIONS, getStationForRoute } from "@/lib/journeyStations";
 import { useCorridorEngagement } from "@/hooks/useCorridorEngagement";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
@@ -57,9 +57,12 @@ const getProgressGradient = (pct: number) => {
   return "linear-gradient(to right, hsl(0,72%,51%), hsl(35,90%,48%), hsl(45,93%,47%), hsl(100,60%,42%), hsl(142,71%,45%))";
 };
 
+const EXCLUDED_ROUTES = ["/auth", "/embed/", "/review", "/forgot-password", "/reset-password"];
+
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const { pathname } = useLocation();
   const { zoneEngagement, completedActions } = useCorridorEngagement();
   const { user } = useAuth();
   const [activeZone, setActiveZone] = useState(0);
@@ -67,6 +70,15 @@ export const JourneyCorridor = () => {
   const [showBreakdown, setShowBreakdown] = useState(false);
   const breakdownRef = useRef<HTMLDivElement>(null);
   const rafRef = useRef<number>(0);
+
+  const isHomePage = pathname === "/";
+
+  // Hide on excluded routes
+  const isExcluded = EXCLUDED_ROUTES.some(r => pathname === r || pathname.startsWith(r + "/") || (r.endsWith("/") && pathname.startsWith(r)));
+  
+  // On inner pages, determine active station from route
+  const routeStation = useMemo(() => getStationForRoute(pathname), [pathname]);
+  const routeStationIdx = routeStation ? JOURNEY_STATIONS.findIndex(s => s.key === routeStation.key) : -1;
 
   const getZoneElements = useCallback(() => {
     return [1, 2, 3, 4].map(z => document.querySelector(`[data-zone="${z}"]`) as HTMLElement | null);
@@ -85,6 +97,7 @@ export const JourneyCorridor = () => {
   }, [showBreakdown]);
 
   useEffect(() => {
+    if (!isHomePage) return; // Only track scroll on homepage
     const onScroll = () => {
       cancelAnimationFrame(rafRef.current);
       rafRef.current = requestAnimationFrame(() => {
@@ -116,7 +129,7 @@ export const JourneyCorridor = () => {
     window.addEventListener("scroll", onScroll, { passive: true });
     onScroll();
     return () => { window.removeEventListener("scroll", onScroll); cancelAnimationFrame(rafRef.current); };
-  }, [getZoneElements]);
+  }, [getZoneElements, isHomePage]);
 
   // 5% bonus for visiting (cookie/localStorage), +5% if signed up
   const baseBonus = useMemo(() => {
@@ -147,9 +160,19 @@ export const JourneyCorridor = () => {
   };
 
   const handleStationClick = (zone: number) => {
-    scrollToZone(zone);
+    if (isHomePage) {
+      scrollToZone(zone);
+    } else {
+      const station = JOURNEY_STATIONS[zone - 1];
+      if (station) navigate(station.homeRoute);
+    }
     setShowBreakdown(false);
   };
+
+  // Determine effective active zone: scroll-based on homepage, route-based on inner pages
+  const effectiveActiveZone = isHomePage ? activeZone : (routeStationIdx >= 0 ? routeStationIdx + 1 : 0);
+
+  
 
   const handleTipClick = (e: React.MouseEvent, tip: TipItem) => {
     e.stopPropagation();
@@ -213,6 +236,8 @@ export const JourneyCorridor = () => {
     }
     return null;
   }, [combinedZone]);
+
+  if (isExcluded) return null;
 
   return (
     <div className="sticky top-[56px] z-20 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
@@ -392,8 +417,8 @@ export const JourneyCorridor = () => {
 
             {JOURNEY_STATIONS.map((station, idx) => {
               const zone = idx + 1;
-              const isPast = activeZone > zone;
-              const isActive = activeZone === zone;
+              const isPast = effectiveActiveZone > zone;
+              const isActive = effectiveActiveZone === zone;
               const color = STATION_COLORS[idx];
               const stationComplete = combinedZone[idx] >= 1;
 
