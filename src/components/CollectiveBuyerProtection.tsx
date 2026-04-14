@@ -129,7 +129,23 @@ export const CollectiveBuyerProtection = () => {
                 />
               ))}
             </div>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)]">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center gap-2">
+              {protectedCount.value}+
+              <span className="flex -space-x-2 rtl:space-x-reverse">
+                {avatars.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    width={28}
+                    height={28}
+                    className="h-7 w-7 rounded-full border-2 border-journey-protect/30 object-cover"
+                  />
+                ))}
+              </span>
+              {isAr ? "محمي" : "Protected"}
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
