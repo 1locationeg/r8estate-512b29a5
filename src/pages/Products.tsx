@@ -106,8 +106,8 @@ const Products = () => {
                       }}
                       className={`flex items-center gap-3 px-3 py-3 rounded-lg border bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors ${link ? "cursor-pointer" : ""} ${isFeatured ? "border-primary/40 ring-1 ring-primary/20 bg-primary/5" : "border-border/60"}`}
                     >
-                      <div className={`w-9 h-9 rounded-lg ${stage.bgLight} flex items-center justify-center shrink-0`}>
-                        <ProductIcon className={`w-4.5 h-4.5 ${stage.color}`} />
+                      <div className={`w-9 h-9 rounded-lg ${isFeatured ? "bg-primary/20" : stage.bgLight} flex items-center justify-center shrink-0 ${isFeatured ? "ring-1 ring-primary/30 shadow-[0_0_8px_hsl(var(--primary)/0.3)]" : ""}`}>
+                        <ProductIcon className={`w-4.5 h-4.5 ${isFeatured ? "text-primary" : stage.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
@@ -115,8 +115,9 @@ const Products = () => {
                             {product.name}
                           </span>
                           {isFeatured ? (
-                            <Badge className="text-[9px] px-1.5 py-0 bg-primary/20 text-primary border-primary/30 font-medium flex items-center gap-0.5">
-                              LIVE <ArrowRight className="w-2.5 h-2.5" />
+                            <Badge className="text-[9px] px-1.5 py-0.5 bg-green-500/20 text-green-400 border-green-500/40 font-bold flex items-center gap-1 animate-pulse">
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
+                              LIVE
                             </Badge>
                           ) : link ? (
                             <Badge className="text-[9px] px-1.5 py-0 bg-accent/20 text-accent border-accent/30 font-medium flex items-center gap-0.5">
