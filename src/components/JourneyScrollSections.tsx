@@ -451,8 +451,6 @@ export const JourneyScrollSections = () => {
 
   return (
     <div className="w-full">
-      {/* Mobile: horizontal pill navigation */}
-      <MobileJourneyPills />
       
       {/* Full station sections (both mobile & desktop) */}
       {STATIONS.map((station, idx) => (
