@@ -97,51 +97,57 @@ export const CollectiveBuyerProtection = () => {
               </div>
             ))}
           </div>
+        </div>
+      </div>
 
-          {/* Divider */}
-          <div className="border-t border-red-200/40 dark:border-red-800/30" />
-
-          {/* Row 3 & 4: WITH R8ESTATE — green safe zone */}
-          <div className="bg-journey-protect/[0.04] rounded-lg p-2.5 space-y-2 border border-journey-protect/10">
-            <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
-              <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
-              <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
-                {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
-              </span>
-              <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
-                {avatars.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    loading="lazy"
-                    width={22}
-                    height={22}
-                    className="h-[22px] w-[22px] rounded-full border-2 border-journey-protect/30 object-cover"
-                  />
-                ))}
-              </div>
-              <span className="text-journey-protect font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
+      {/* Standalone green safe zone */}
+      <div className="mt-1.5 relative overflow-hidden rounded-2xl border border-green-200/40 dark:border-green-900/30 bg-green-50/80 dark:bg-green-950/20 backdrop-blur-sm">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-green-500/[0.04] via-transparent to-green-500/[0.03]" />
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
+          style={{
+            backgroundImage: "radial-gradient(circle, #22c55e 1px, transparent 1px)",
+            backgroundSize: "24px 24px",
+          }}
+        />
+        <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 space-y-2">
+          <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
+            <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
+              {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
+            </span>
+            <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
+              {avatars.map((src, i) => (
+                <img
+                  key={i}
+                  src={src}
+                  alt=""
+                  loading="lazy"
+                  width={22}
+                  height={22}
+                  className="h-[22px] w-[22px] rounded-full border-2 border-journey-protect/30 object-cover"
+                />
+              ))}
             </div>
+            <span className="text-journey-protect font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
+          </div>
 
-            {/* CTA */}
-            <div className="flex items-center gap-3">
-              <Button
-                size="sm"
-                className="text-xs font-bold bg-journey-protect hover:bg-journey-protect/90 text-white"
-                onClick={() => navigate("/reviews")}
-              >
-                {isAr ? "احمي شرايك" : "Protect My Purchase"}
-              </Button>
-              <ShareMenu
-                title="R8ESTATE"
-                description={shareText}
-                iconOnly
-                variant="ghost"
-                size="icon"
-                className="text-muted-foreground hover:text-foreground h-8 w-8"
-              />
-            </div>
+          <div className="flex items-center gap-3">
+            <Button
+              size="sm"
+              className="text-xs font-bold bg-journey-protect hover:bg-journey-protect/90 text-white"
+              onClick={() => navigate("/reviews")}
+            >
+              {isAr ? "احمي شرايك" : "Protect My Purchase"}
+            </Button>
+            <ShareMenu
+              title="R8ESTATE"
+              description={shareText}
+              iconOnly
+              variant="ghost"
+              size="icon"
+              className="text-muted-foreground hover:text-foreground h-8 w-8"
+            />
           </div>
         </div>
       </div>
