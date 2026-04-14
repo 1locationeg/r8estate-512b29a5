@@ -14,47 +14,31 @@ interface ReviewerSpotlightProps {
 
 export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => {
   const navigate = useNavigate();
+  const r = SPOTLIGHT_REVIEWERS[0];
 
   return (
     <div className="w-full">
-      {/* Reviewer CTA */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 mb-4">
-        <p className="text-xs text-muted-foreground font-extrabold">
+      {/* Desktop: single compact row with CTA + reviewer inline */}
+      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
+        {/* Left: tagline */}
+        <p className="text-xs font-extrabold text-muted-foreground shrink-0">
           Your review could save someone millions
         </p>
-        <Button
-            size="sm"
-            className="gap-2 h-8 text-xs"
-            onClick={onWriteReview || (() => navigate('/reviews'))}
-          >
-            <span className="flex items-center gap-1 text-coin font-bold">
-              <Coins className="w-3.5 h-3.5" />
-              +25
-            </span>
-            <span className="w-px h-3 bg-primary-foreground/20" />
-            <PenLine className="w-3.5 h-3.5" />
-            Write a Review
-          </Button>
-      </div>
 
-      {/* Spotlight strip */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
-        {SPOTLIGHT_REVIEWERS.map((r) => (
-          <div
-            key={r.name}
-            className="flex items-start gap-2.5 p-2.5 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm"
-          >
-            <Avatar className="h-8 w-8 shrink-0 ring-1 ring-border">
-              <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
-                {r.initials}
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0 flex-1">
-              <div className="flex items-center gap-1 mb-0.5">
-                <span className="text-xs font-semibold text-foreground truncate">{r.name}</span>
-                <ReviewerBadge reviewCount={r.reviewCount} compact />
-              </div>
-              <div className="flex gap-0.5 mb-0.5">
+        {/* Center: reviewer card (desktop only shows inline) */}
+        <div className="flex items-center gap-2.5 p-2 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm flex-1 max-w-sm min-w-0">
+          <Avatar className="h-8 w-8 shrink-0 ring-1 ring-border">
+            <AvatarFallback className="text-[10px] bg-primary/10 text-primary font-bold">
+              {r.initials}
+            </AvatarFallback>
+          </Avatar>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1 mb-0.5">
+              <span className="text-xs font-semibold text-foreground truncate">{r.name}</span>
+              <ReviewerBadge reviewCount={r.reviewCount} compact />
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="flex gap-0.5">
                 {[1, 2, 3, 4, 5].map((s) => (
                   <Star
                     key={s}
@@ -62,12 +46,27 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
                   />
                 ))}
               </div>
-              <p className="text-[10px] text-muted-foreground line-clamp-2 leading-snug">
+              <p className="text-[10px] text-muted-foreground truncate leading-snug">
                 "{r.snippet}"
               </p>
             </div>
           </div>
-        ))}
+        </div>
+
+        {/* Right: CTA button */}
+        <Button
+          size="sm"
+          className="gap-2 h-8 text-xs shrink-0"
+          onClick={onWriteReview || (() => navigate('/reviews'))}
+        >
+          <span className="flex items-center gap-1 text-coin font-bold">
+            <Coins className="w-3.5 h-3.5" />
+            +25
+          </span>
+          <span className="w-px h-3 bg-primary-foreground/20" />
+          <PenLine className="w-3.5 h-3.5" />
+          Write a Review
+        </Button>
       </div>
     </div>
   );
