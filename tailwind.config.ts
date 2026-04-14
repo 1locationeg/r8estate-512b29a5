@@ -70,6 +70,23 @@ export default {
           foreground: "hsl(var(--business-foreground))",
           border: "hsl(var(--business-border))",
         },
+        buyers: {
+          DEFAULT: "hsl(var(--buyers))",
+          foreground: "hsl(var(--buyers-foreground))",
+          border: "hsl(var(--buyers-border))",
+        },
+        services: {
+          DEFAULT: "hsl(var(--services))",
+          foreground: "hsl(var(--services-foreground))",
+          border: "hsl(var(--services-border))",
+          light: "hsl(var(--services-light))",
+        },
+        professionals: {
+          DEFAULT: "hsl(var(--professionals))",
+          foreground: "hsl(var(--professionals-foreground))",
+          border: "hsl(var(--professionals-border))",
+          light: "hsl(var(--professionals-light))",
+        },
         coin: {
           DEFAULT: "hsl(var(--coin))",
           foreground: "hsl(var(--coin-foreground))",

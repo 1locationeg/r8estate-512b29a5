@@ -5,10 +5,54 @@ import { Card } from "@/components/ui/card";
 import { Home, Building2, Briefcase, HardHat, Sparkles, ArrowRight } from "lucide-react";
 
 const segments = [
-  { key: "buyers", icon: Home, cta: "/auth" },
-  { key: "developers", icon: Building2, cta: "/auth" },
-  { key: "services", icon: Briefcase, cta: "/auth" },
-  { key: "professionals", icon: HardHat, cta: "/auth" },
+  {
+    key: "buyers",
+    icon: Home,
+    cta: "/auth",
+    color: {
+      iconBg: "bg-buyers/10",
+      iconText: "text-buyers",
+      hoverBorder: "hover:border-buyers/30",
+      hoverShadow: "hover:shadow-[0_0_20px_-6px_hsl(var(--buyers)/0.2)]",
+      ctaText: "text-buyers",
+    },
+  },
+  {
+    key: "developers",
+    icon: Building2,
+    cta: "/auth",
+    color: {
+      iconBg: "bg-business-border/10",
+      iconText: "text-business-border",
+      hoverBorder: "hover:border-business-border/30",
+      hoverShadow: "hover:shadow-[0_0_20px_-6px_hsl(var(--business-border)/0.2)]",
+      ctaText: "text-business-border",
+    },
+  },
+  {
+    key: "services",
+    icon: Briefcase,
+    cta: "/auth",
+    color: {
+      iconBg: "bg-services/10",
+      iconText: "text-services",
+      hoverBorder: "hover:border-services/30",
+      hoverShadow: "hover:shadow-[0_0_20px_-6px_hsl(var(--services)/0.2)]",
+      ctaText: "text-services",
+    },
+  },
+  {
+    key: "professionals",
+    icon: HardHat,
+    cta: "/auth",
+    color: {
+      iconBg: "bg-professionals/10",
+      iconText: "text-professionals",
+      hoverBorder: "hover:border-professionals/30",
+      hoverShadow: "hover:shadow-[0_0_20px_-6px_hsl(var(--professionals)/0.2)]",
+      ctaText: "text-professionals",
+    },
+  },
 ];
 
 export const AudienceSegmentCards = () => {
@@ -50,6 +94,7 @@ export const AudienceSegmentCards = () => {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
         {segments.map((seg, idx) => {
           const Icon = seg.icon;
+          const c = seg.color;
           return (
             <Card
               key={seg.key}
@@ -58,15 +103,15 @@ export const AudienceSegmentCards = () => {
                 group relative cursor-pointer overflow-hidden
                 border border-border/60 bg-card/80 backdrop-blur-sm
                 transition-all duration-500 ease-out
-                hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] hover:-translate-y-1
+                ${c.hoverBorder} ${c.hoverShadow} hover:-translate-y-1
                 ${visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"}
               `}
               style={{ transitionDelay: visible ? `${idx * 120}ms` : "0ms" }}
             >
               <div className="p-4 md:p-5 flex flex-col items-center text-center gap-3">
                 {/* Icon */}
-                <div className="w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center transition-transform duration-500 group-hover:scale-110">
-                  <Icon className="w-5 h-5 text-primary" />
+                <div className={`w-11 h-11 rounded-xl ${c.iconBg} flex items-center justify-center transition-transform duration-500 group-hover:scale-110`}>
+                  <Icon className={`w-5 h-5 ${c.iconText}`} />
                 </div>
 
                 {/* Title */}
@@ -81,7 +126,7 @@ export const AudienceSegmentCards = () => {
 
                 {/* CTA arrow */}
                 <div className="mt-auto pt-2">
-                  <span className="inline-flex items-center gap-1 text-xs font-medium text-primary opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-0 group-hover:translate-x-1">
+                  <span className={`inline-flex items-center gap-1 text-xs font-medium ${c.ctaText} opacity-0 group-hover:opacity-100 transition-all duration-500 translate-x-0 group-hover:translate-x-1`}>
                     {t(`audience.${seg.key}.cta`, t("audience.getStarted", "Get started"))}
                     <ArrowRight className="w-3 h-3" />
                   </span>
