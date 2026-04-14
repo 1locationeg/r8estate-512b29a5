@@ -13,6 +13,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { useAuth } from "@/contexts/AuthContext";
 import { ReportButton } from "@/components/ReportButton";
 import { sanitizeDisplayText } from "@/lib/contentSanitizer";
+import { linkifyText } from "@/lib/linkifyText";
 import type { CommunityPost } from "@/hooks/useCommunity";
 
 function timeAgo(dateStr: string, t: (key: string, fallback: string) => string) {

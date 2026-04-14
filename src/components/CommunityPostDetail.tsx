@@ -22,6 +22,7 @@ import { DeveloperBridgeCard } from "@/components/DeveloperBridgeCard";
 import { supabase } from "@/integrations/supabase/client";
 import { ReportButton } from "@/components/ReportButton";
 import { sanitizeDisplayText } from "@/lib/contentSanitizer";
+import { linkifyText } from "@/lib/linkifyText";
 
 const EMOJI_GRID = [
   "😀", "😂", "😍", "🤔", "👍", "👎", "🔥", "💯",
