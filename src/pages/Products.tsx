@@ -143,11 +143,56 @@ const Products = () => {
       </section>
 
       {/* Flywheel line */}
-      <div className="max-w-3xl mx-auto px-4 pb-8 text-center">
+      <div className="max-w-3xl mx-auto px-4 pb-4 text-center">
         <p className="text-[11px] text-muted-foreground/70 italic">
           Every product feeds every other — trust compounds over time.
         </p>
       </div>
+
+      {/* Data Flywheel */}
+      <section className="max-w-3xl mx-auto px-4 pb-12">
+        <div className="rounded-2xl border border-border/40 bg-card/40 backdrop-blur-sm p-6 sm:p-8">
+          <h2 className="text-center text-lg sm:text-xl font-black tracking-tight mb-1">
+            <span className="text-foreground">THE DATA </span>
+            <span className="text-accent">FLYWHEEL</span>
+          </h2>
+          <p className="text-center text-[11px] text-muted-foreground max-w-sm mx-auto mb-8 leading-relaxed">
+            Every product generates data that feeds every other — making R8 more accurate over time and structurally impossible to replicate.
+          </p>
+
+          {/* Flywheel nodes */}
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4">
+            {[
+              { label: "BUYERS", sub: "Use products", icon: Users },
+              { label: "DATA", sub: "Flows in", icon: BarChart3 },
+              { label: "SCORES", sub: "Get sharper", icon: Brain, featured: true },
+              { label: "TRUST", sub: "Compounds", icon: Award },
+              { label: "MOAT", sub: "Deepens", icon: Shield },
+            ].map((node, i) => (
+              <div key={node.label} className="flex items-center gap-3 sm:gap-4">
+                <div className="flex flex-col items-center gap-1.5">
+                  <div
+                    className={`w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center transition-all ${
+                      node.featured
+                        ? "bg-accent/15 border-2 border-accent/50 shadow-[0_0_16px_hsl(var(--accent)/0.25)]"
+                        : "bg-muted/30 border border-border/50"
+                    }`}
+                  >
+                    <node.icon className={`w-5 h-5 ${node.featured ? "text-accent" : "text-muted-foreground"}`} />
+                  </div>
+                  <span className={`text-[9px] font-black tracking-wider ${node.featured ? "text-accent" : "text-foreground/80"}`}>
+                    {node.label}
+                  </span>
+                  <span className="text-[9px] text-muted-foreground -mt-1">{node.sub}</span>
+                </div>
+                {i < 4 && (
+                  <ArrowRight className="w-3 h-3 text-border/60 shrink-0 hidden sm:block" />
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="border-t border-border/40 py-6 text-center">
