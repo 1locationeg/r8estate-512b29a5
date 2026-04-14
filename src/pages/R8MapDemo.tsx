@@ -1,10 +1,8 @@
 import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { MapContainer, TileLayer, Marker, Circle, useMap } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { ArrowLeft, Search, X } from "lucide-react";
-import { Input } from "@/components/ui/input";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -61,7 +59,6 @@ function scoreGrade(s: number) {
 function statusClass(st: string) {
   if (st === "On Track" || st === "Delivered") return "bg-[#2ECC71]/15 text-[#2ECC71]";
   if (st === "Delayed" || st === "Frozen") return "bg-[#E74C3C]/15 text-[#E74C3C]";
-  if (st === "At Risk") return "bg-[#F1C40F]/15 text-[#F1C40F]";
   return "bg-[#F1C40F]/15 text-[#F1C40F]";
 }
 
@@ -73,15 +70,6 @@ function makeIcon(score: number) {
     iconSize: [36, 36],
     iconAnchor: [18, 18],
   });
-}
-
-// Pan map to selected project
-function MapPanner({ project }: { project: Project | null }) {
-  const map = useMap();
-  useEffect(() => {
-    if (project) map.panTo([project.lat, project.lng], { animate: true, duration: 0.5 });
-  }, [project, map]);
-  return null;
 }
 
 const AREAS = ["New Cairo", "New Capital", "Sheikh Zayed", "6th October", "North Coast"];
@@ -97,7 +85,10 @@ const R8MapDemo = () => {
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const listRef = useRef<HTMLDivElement>(null);
+
+  const mapRef = useRef<L.Map | null>(null);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const markersRef = useRef<Record<number, L.Marker>>({});
 
   const filtered = useMemo(() => {
     let list = projects;
@@ -127,7 +118,46 @@ const R8MapDemo = () => {
   const selectProject = (p: Project) => {
     setSelected(p);
     setSidebarOpen(false);
+    if (mapRef.current) mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
   };
+
+  // Initialize Leaflet map
+  useEffect(() => {
+    if (!mapContainerRef.current || mapRef.current) return;
+
+    const map = L.map(mapContainerRef.current, { zoomControl: false, attributionControl: false }).setView([30.06, 31.25], 9);
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+    L.control.zoom({ position: "bottomleft" }).addTo(map);
+
+    // Heat zones
+    heatZones.forEach(z => {
+      L.circle([z.lat, z.lng], { radius: z.r, color: "transparent", fillColor: z.color, fillOpacity: z.opacity }).addTo(map);
+    });
+
+    mapRef.current = map;
+
+    return () => {
+      map.remove();
+      mapRef.current = null;
+    };
+  }, []);
+
+  // Update markers when filtered changes
+  useEffect(() => {
+    const map = mapRef.current;
+    if (!map) return;
+
+    // Remove old markers
+    Object.values(markersRef.current).forEach(m => m.remove());
+    markersRef.current = {};
+
+    // Add new markers
+    filtered.forEach(p => {
+      const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.score) }).addTo(map);
+      marker.on("click", () => selectProject(p));
+      markersRef.current[p.id] = marker;
+    });
+  }, [filtered]);
 
   const trusted = projects.filter(p => p.score >= 80).length;
   const caution = projects.filter(p => p.score >= 60 && p.score < 80).length;
@@ -135,287 +165,247 @@ const R8MapDemo = () => {
 
   return (
     <>
-      <style>{`.leaflet-tile-pane{filter:brightness(0.45) saturate(0.3) hue-rotate(180deg)}.leaflet-control-attribution{display:none!important}`}</style>
-    <div className="h-screen flex flex-col bg-[#08090C] text-[#EDE9E1] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
-      {/* TOP BAR */}
-      <div className="flex items-center justify-between px-4 md:px-5 h-[54px] shrink-0 bg-[#08090C]/97 border-b border-white/[0.07] z-[1000] relative">
-        <div className="flex items-center gap-3">
-          <Link to="/products" className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors mr-2">
-            <ArrowLeft className="w-4 h-4" />
-          </Link>
-          <span className="font-['Bebas_Neue'] text-[22px] tracking-[3px] text-[#C9A84C]">R8 MAP</span>
-          <span className="hidden sm:block font-mono text-[10px] tracking-[2px] text-[#EDE9E1]/45 uppercase border-l border-white/[0.07] pl-2.5">
-            Live Trust Intelligence Layer
-          </span>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="flex items-center gap-1.5 font-mono text-[10px] tracking-[2px] text-[#2ECC71] uppercase">
-            <span className="w-[7px] h-[7px] rounded-full bg-[#2ECC71] animate-pulse" />
-            LIVE
+      <style>{`.leaflet-tile-pane{filter:brightness(0.45) saturate(0.3) hue-rotate(180deg)}.leaflet-control-attribution{display:none!important}.leaflet-control-zoom{border:1px solid rgba(255,255,255,0.07)!important;border-radius:2px!important;background:#13171F!important}.leaflet-control-zoom a{background:#13171F!important;color:rgba(237,233,225,0.45)!important;border-color:rgba(255,255,255,0.07)!important}.leaflet-control-zoom a:hover{color:#C9A84C!important}`}</style>
+      <div className="h-screen flex flex-col bg-[#08090C] text-[#EDE9E1] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
+        {/* TOP BAR */}
+        <div className="flex items-center justify-between px-4 md:px-5 h-[54px] shrink-0 bg-[#08090C]/97 border-b border-white/[0.07] z-[1000] relative">
+          <div className="flex items-center gap-3">
+            <Link to="/products" className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors mr-2">
+              <ArrowLeft className="w-4 h-4" />
+            </Link>
+            <span className="font-['Bebas_Neue'] text-[22px] tracking-[3px] text-[#C9A84C]">R8 MAP</span>
+            <span className="hidden sm:block font-mono text-[10px] tracking-[2px] text-[#EDE9E1]/45 uppercase border-l border-white/[0.07] pl-2.5">
+              Live Trust Intelligence Layer
+            </span>
           </div>
-          <span className="hidden sm:block font-mono text-[10px] tracking-[1px] text-[#EDE9E1]/45 border border-white/[0.07] px-2.5 py-1 rounded-sm">
-            {projects.length} PROJECTS
-          </span>
-          {/* Mobile sidebar toggle */}
-          <button
-            className="md:hidden font-mono text-[10px] tracking-[1px] text-[#C9A84C] border border-[#C9A84C]/30 px-2.5 py-1 rounded-sm"
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-          >
-            {sidebarOpen ? "MAP" : "LIST"}
-          </button>
-        </div>
-      </div>
-
-      {/* MAIN */}
-      <div className="flex flex-1 overflow-hidden relative">
-        {/* SIDEBAR */}
-        <div className={`${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 absolute md:relative z-[200] w-[300px] shrink-0 bg-[#0F1117] border-r border-white/[0.07] flex flex-col overflow-hidden transition-transform duration-300 h-full`}>
-          <div className="p-4 border-b border-white/[0.07]">
-            <div className="font-mono text-[10px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-3">Intelligence Filter</div>
-            <div className="relative mb-3">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#EDE9E1]/30" />
-              <input
-                className="w-full bg-white/[0.04] border border-white/[0.07] rounded-sm py-2 pl-8 pr-3 text-xs text-[#EDE9E1] placeholder:text-[#EDE9E1]/30 font-mono focus:outline-none focus:border-[#C9A84C]/40"
-                placeholder="Search project, developer, area..."
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-              />
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 font-mono text-[10px] tracking-[2px] text-[#2ECC71] uppercase">
+              <span className="w-[7px] h-[7px] rounded-full bg-[#2ECC71] animate-pulse" />
+              LIVE
             </div>
-
-            {/* Zone filters */}
-            <div className="mb-2">
-              <div className="font-mono text-[9px] tracking-[1px] uppercase text-[#EDE9E1]/40 mb-1.5">Trust Zone</div>
-              <div className="flex flex-wrap gap-1.5">
-                {ZONES.map(z => (
-                  <button
-                    key={z.label}
-                    onClick={() => toggleZone(z.label)}
-                    className={`font-mono text-[10px] px-2.5 py-1 rounded-sm border transition-all ${
-                      activeZones.includes(z.label)
-                        ? `border-[${z.color}] text-[${z.color}]`
-                        : "border-white/[0.07] text-[#EDE9E1]/40"
-                    }`}
-                    style={activeZones.includes(z.label) ? { borderColor: z.color, color: z.color, background: `${z.color}12` } : {}}
-                  >
-                    {z.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-
-            {/* Area filters */}
-            <div>
-              <div className="font-mono text-[9px] tracking-[1px] uppercase text-[#EDE9E1]/40 mb-1.5">Area</div>
-              <div className="flex flex-wrap gap-1.5">
-                {AREAS.map(a => (
-                  <button
-                    key={a}
-                    onClick={() => toggleArea(a)}
-                    className={`font-mono text-[10px] px-2.5 py-1 rounded-sm border transition-all ${
-                      activeAreas.includes(a)
-                        ? "border-[#C9A84C] text-[#C9A84C] bg-[#C9A84C]/[0.08]"
-                        : "border-white/[0.07] text-[#EDE9E1]/40"
-                    }`}
-                  >
-                    {a}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <span className="hidden sm:block font-mono text-[10px] tracking-[1px] text-[#EDE9E1]/45 border border-white/[0.07] px-2.5 py-1 rounded-sm">
+              {projects.length} PROJECTS
+            </span>
+            <button
+              className="md:hidden font-mono text-[10px] tracking-[1px] text-[#C9A84C] border border-[#C9A84C]/30 px-2.5 py-1 rounded-sm"
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+              {sidebarOpen ? "MAP" : "LIST"}
+            </button>
           </div>
+        </div>
 
-          {/* Project list */}
-          <div ref={listRef} className="flex-1 overflow-y-auto scrollbar-thin">
-            {filtered.map(p => (
-              <div
-                key={p.id}
-                onClick={() => selectProject(p)}
-                className={`flex items-center gap-3 px-4 py-3 border-b border-white/[0.07] cursor-pointer transition-colors hover:bg-white/[0.03] ${
-                  selected?.id === p.id ? "bg-[#C9A84C]/[0.06] border-l-2 border-l-[#C9A84C]" : ""
-                }`}
-              >
-                <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: scoreColor(p.score), boxShadow: `0 0 6px ${scoreColor(p.score)}` }} />
-                <div className="flex-1 min-w-0">
-                  <div className="text-[13px] font-medium text-[#EDE9E1] truncate">{p.name}</div>
-                  <div className="text-[11px] text-[#EDE9E1]/45">{p.area} · {p.dev}</div>
+        {/* MAIN */}
+        <div className="flex flex-1 overflow-hidden relative">
+          {/* SIDEBAR */}
+          <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[300px] shrink-0 bg-[#0F1117] border-r border-white/[0.07] flex flex-col overflow-hidden transition-transform duration-300 h-full`}>
+            <div className="p-4 border-b border-white/[0.07]">
+              <div className="font-mono text-[10px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-3">Intelligence Filter</div>
+              <div className="relative mb-3">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-[#EDE9E1]/30" />
+                <input
+                  className="w-full bg-white/[0.04] border border-white/[0.07] rounded-sm py-2 pl-8 pr-3 text-xs text-[#EDE9E1] placeholder:text-[#EDE9E1]/30 font-mono focus:outline-none focus:border-[#C9A84C]/40"
+                  placeholder="Search project, developer, area..."
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                />
+              </div>
+
+              {/* Zone filters */}
+              <div className="mb-2">
+                <div className="font-mono text-[9px] tracking-[1px] uppercase text-[#EDE9E1]/40 mb-1.5">Trust Zone</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {ZONES.map(z => (
+                    <button
+                      key={z.label}
+                      onClick={() => toggleZone(z.label)}
+                      className="font-mono text-[10px] px-2.5 py-1 rounded-sm border transition-all"
+                      style={activeZones.includes(z.label) ? { borderColor: z.color, color: z.color, background: `${z.color}12` } : { borderColor: "rgba(255,255,255,0.07)", color: "rgba(237,233,225,0.4)" }}
+                    >
+                      {z.label}
+                    </button>
+                  ))}
                 </div>
-                <span className="font-['Bebas_Neue'] text-[20px] tracking-[1px] shrink-0" style={{ color: scoreColor(p.score) }}>{p.score}</span>
               </div>
-            ))}
-            {filtered.length === 0 && (
-              <div className="p-6 text-center text-[12px] text-[#EDE9E1]/30 font-mono">No projects match</div>
-            )}
-          </div>
 
-          {/* Legend */}
-          <div className="p-4 border-t border-white/[0.07] bg-[#13171F]">
-            <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2.5">Score Legend</div>
-            <div className="space-y-1.5">
-              {[
-                { color: "#2ECC71", label: "80–100 Trusted" },
-                { color: "#F1C40F", label: "60–79 Caution" },
-                { color: "#E67E22", label: "40–59 Elevated Risk" },
-                { color: "#E74C3C", label: "0–39 High Risk" },
-              ].map(l => (
-                <div key={l.label} className="flex items-center gap-2 text-[11px] text-[#EDE9E1]/45">
-                  <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
-                  {l.label}
+              {/* Area filters */}
+              <div>
+                <div className="font-mono text-[9px] tracking-[1px] uppercase text-[#EDE9E1]/40 mb-1.5">Area</div>
+                <div className="flex flex-wrap gap-1.5">
+                  {AREAS.map(a => (
+                    <button
+                      key={a}
+                      onClick={() => toggleArea(a)}
+                      className={`font-mono text-[10px] px-2.5 py-1 rounded-sm border transition-all ${
+                        activeAreas.includes(a) ? "border-[#C9A84C] text-[#C9A84C] bg-[#C9A84C]/[0.08]" : "border-white/[0.07] text-[#EDE9E1]/40"
+                      }`}
+                    >
+                      {a}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Project list */}
+            <div className="flex-1 overflow-y-auto">
+              {filtered.map(p => (
+                <div
+                  key={p.id}
+                  onClick={() => selectProject(p)}
+                  className={`flex items-center gap-3 px-4 py-3 border-b border-white/[0.07] cursor-pointer transition-colors hover:bg-white/[0.03] ${
+                    selected?.id === p.id ? "bg-[#C9A84C]/[0.06] border-l-2 border-l-[#C9A84C]" : ""
+                  }`}
+                >
+                  <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: scoreColor(p.score), boxShadow: `0 0 6px ${scoreColor(p.score)}` }} />
+                  <div className="flex-1 min-w-0">
+                    <div className="text-[13px] font-medium text-[#EDE9E1] truncate">{p.name}</div>
+                    <div className="text-[11px] text-[#EDE9E1]/45">{p.area} · {p.dev}</div>
+                  </div>
+                  <span className="font-['Bebas_Neue'] text-[20px] tracking-[1px] shrink-0" style={{ color: scoreColor(p.score) }}>{p.score}</span>
                 </div>
               ))}
+              {filtered.length === 0 && (
+                <div className="p-6 text-center text-[12px] text-[#EDE9E1]/30 font-mono">No projects match</div>
+              )}
             </div>
-          </div>
-        </div>
 
-        {/* MAP */}
-        <div className="flex-1 relative">
-          <MapContainer
-            center={[30.06, 31.25]}
-            zoom={9}
-            zoomControl={false}
-            attributionControl={false}
-            className="w-full h-full"
-            style={{ background: "#0d0f14" }}
-          >
-            <TileLayer
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              maxZoom={18}
-            />
-            <MapPanner project={selected} />
-
-            {/* Heat zones */}
-            {heatZones.map((z, i) => (
-              <Circle
-                key={i}
-                center={[z.lat, z.lng]}
-                radius={z.r}
-                pathOptions={{ color: "transparent", fillColor: z.color, fillOpacity: z.opacity }}
-              />
-            ))}
-
-            {/* Project markers */}
-            {filtered.map(p => (
-              <Marker
-                key={p.id}
-                position={[p.lat, p.lng]}
-                icon={makeIcon(p.score)}
-                eventHandlers={{ click: () => selectProject(p) }}
-              />
-            ))}
-          </MapContainer>
-
-          {/* HUD */}
-          <div className="absolute bottom-4 right-4 z-[500] flex flex-col gap-2 items-end">
-            <div className="bg-[#08090C]/92 border border-white/[0.07] rounded-sm p-3 backdrop-blur-xl min-w-[160px]">
-              <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-1.5">Market Avg Trust</div>
-              <div className="font-['Bebas_Neue'] text-[28px] tracking-[2px] leading-none text-[#C9A84C]">67<span className="text-[16px] text-[#EDE9E1]/40">/100</span></div>
-            </div>
-            <div className="bg-[#08090C]/92 border border-white/[0.07] rounded-sm p-3 backdrop-blur-xl">
-              <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-2">Zone Breakdown</div>
-              <div className="flex items-center gap-4">
+            {/* Legend */}
+            <div className="p-4 border-t border-white/[0.07] bg-[#13171F]">
+              <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2.5">Score Legend</div>
+              <div className="space-y-1.5">
                 {[
-                  { n: trusted, label: "Trusted", color: "#2ECC71" },
-                  { n: caution, label: "Caution", color: "#F1C40F" },
-                  { n: atRisk, label: "At Risk", color: "#E74C3C" },
-                ].map(z => (
-                  <div key={z.label} className="text-center">
-                    <span className="font-['Bebas_Neue'] text-[20px] tracking-[1px] block" style={{ color: z.color }}>{z.n}</span>
-                    <span className="font-mono text-[8px] tracking-[1px] text-[#EDE9E1]/40">{z.label}</span>
+                  { color: "#2ECC71", label: "80–100 Trusted" },
+                  { color: "#F1C40F", label: "60–79 Caution" },
+                  { color: "#E67E22", label: "40–59 Elevated Risk" },
+                  { color: "#E74C3C", label: "0–39 High Risk" },
+                ].map(l => (
+                  <div key={l.label} className="flex items-center gap-2 text-[11px] text-[#EDE9E1]/45">
+                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color }} />
+                    {l.label}
                   </div>
                 ))}
               </div>
             </div>
           </div>
 
-          {/* DETAIL PANEL */}
-          <div className={`absolute top-4 right-4 z-[500] w-[280px] bg-[#08090C]/96 border border-white/[0.07] rounded backdrop-blur-xl overflow-hidden transition-transform duration-300 ${selected ? "translate-x-0" : "translate-x-[320px]"}`}>
-            {selected && (
-              <>
-                <div className="p-4 border-b border-white/[0.07] flex justify-between items-start">
-                  <div>
-                    <div className="font-['Bebas_Neue'] text-[24px] tracking-[2px] text-[#EDE9E1] leading-none mb-1">{selected.name}</div>
-                    <div className="text-[11px] font-mono text-[#EDE9E1]/45">{selected.area} · {selected.dev}</div>
-                  </div>
-                  <button onClick={() => setSelected(null)} className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors">
-                    <X className="w-4 h-4" />
-                  </button>
-                </div>
+          {/* MAP */}
+          <div className="flex-1 relative">
+            <div ref={mapContainerRef} className="w-full h-full" style={{ background: "#0d0f14" }} />
 
-                <div className="p-4">
-                  {/* Score circle */}
-                  <div className="flex items-center gap-3 mb-4">
-                    <div
-                      className="w-16 h-16 rounded-full border-2 flex items-center justify-center font-['Bebas_Neue'] text-[28px]"
-                      style={{ borderColor: scoreColor(selected.score), color: scoreColor(selected.score), boxShadow: `0 0 16px ${scoreColor(selected.score)}44` }}
-                    >
-                      {selected.score}
+            {/* HUD */}
+            <div className="absolute bottom-4 right-4 z-[500] flex flex-col gap-2 items-end">
+              <div className="bg-[#08090C]/92 border border-white/[0.07] rounded-sm p-3 backdrop-blur-xl min-w-[160px]">
+                <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-1.5">Market Avg Trust</div>
+                <div className="font-['Bebas_Neue'] text-[28px] tracking-[2px] leading-none text-[#C9A84C]">67<span className="text-[16px] text-[#EDE9E1]/40">/100</span></div>
+              </div>
+              <div className="bg-[#08090C]/92 border border-white/[0.07] rounded-sm p-3 backdrop-blur-xl">
+                <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/45 mb-2">Zone Breakdown</div>
+                <div className="flex items-center gap-4">
+                  {[
+                    { n: trusted, label: "Trusted", color: "#2ECC71" },
+                    { n: caution, label: "Caution", color: "#F1C40F" },
+                    { n: atRisk, label: "At Risk", color: "#E74C3C" },
+                  ].map(z => (
+                    <div key={z.label} className="text-center">
+                      <span className="font-['Bebas_Neue'] text-[20px] tracking-[1px] block" style={{ color: z.color }}>{z.n}</span>
+                      <span className="font-mono text-[8px] tracking-[1px] text-[#EDE9E1]/40">{z.label}</span>
                     </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* DETAIL PANEL */}
+            <div className={`absolute top-4 right-4 z-[500] w-[280px] bg-[#08090C]/96 border border-white/[0.07] rounded backdrop-blur-xl overflow-hidden transition-transform duration-300 ${selected ? "translate-x-0" : "translate-x-[320px]"}`}>
+              {selected && (
+                <>
+                  <div className="p-4 border-b border-white/[0.07] flex justify-between items-start">
                     <div>
-                      <div className="font-mono text-[11px] tracking-[2px] uppercase" style={{ color: scoreColor(selected.score) }}>{scoreGrade(selected.score)}</div>
-                      <div className="text-[10px] text-[#EDE9E1]/40 font-mono mt-0.5">Trust Score</div>
+                      <div className="font-['Bebas_Neue'] text-[24px] tracking-[2px] text-[#EDE9E1] leading-none mb-1">{selected.name}</div>
+                      <div className="text-[11px] font-mono text-[#EDE9E1]/45">{selected.area} · {selected.dev}</div>
                     </div>
+                    <button onClick={() => setSelected(null)} className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors">
+                      <X className="w-4 h-4" />
+                    </button>
                   </div>
 
-                  {/* Metrics */}
-                  <div className="space-y-2.5">
-                    {[
-                      { label: "DELIVERY STATUS", value: selected.status, isStatus: true },
-                      { label: "EXPECTED DELIVERY", value: selected.delivery },
-                      { label: "CURRENT DELAY", value: selected.delay > 0 ? `+${selected.delay} months` : "None", isDelay: true },
-                      { label: "VERIFIED REVIEWS", value: selected.reviews.toLocaleString() },
-                    ].map(m => (
-                      <div key={m.label} className="flex items-center justify-between py-1.5 border-b border-white/[0.05]">
-                        <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">{m.label}</span>
-                        {m.isStatus ? (
-                          <span className={`font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-sm ${statusClass(selected.status)}`}>
-                            {m.value}
-                          </span>
-                        ) : (
-                          <span className={`text-[12px] font-medium ${m.isDelay && selected.delay > 0 ? "text-[#E74C3C]" : m.isDelay ? "text-[#2ECC71]" : "text-[#EDE9E1]"}`}>
-                            {m.value}
-                          </span>
-                        )}
+                  <div className="p-4">
+                    {/* Score circle */}
+                    <div className="flex items-center gap-3 mb-4">
+                      <div
+                        className="w-16 h-16 rounded-full border-2 flex items-center justify-center font-['Bebas_Neue'] text-[28px]"
+                        style={{ borderColor: scoreColor(selected.score), color: scoreColor(selected.score), boxShadow: `0 0 16px ${scoreColor(selected.score)}44` }}
+                      >
+                        {selected.score}
                       </div>
-                    ))}
+                      <div>
+                        <div className="font-mono text-[11px] tracking-[2px] uppercase" style={{ color: scoreColor(selected.score) }}>{scoreGrade(selected.score)}</div>
+                        <div className="text-[10px] text-[#EDE9E1]/40 font-mono mt-0.5">Trust Score</div>
+                      </div>
+                    </div>
 
-                    {/* Trust bar */}
-                    <div className="pt-1">
-                      <div className="flex justify-between mb-1">
-                        <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">TRUST SCORE</span>
-                        <span className="text-[12px] font-medium" style={{ color: scoreColor(selected.score) }}>{selected.score}/100</span>
+                    {/* Metrics */}
+                    <div className="space-y-2.5">
+                      {[
+                        { label: "DELIVERY STATUS", value: selected.status, isStatus: true },
+                        { label: "EXPECTED DELIVERY", value: selected.delivery },
+                        { label: "CURRENT DELAY", value: selected.delay > 0 ? `+${selected.delay} months` : "None", isDelay: true },
+                        { label: "VERIFIED REVIEWS", value: selected.reviews.toLocaleString() },
+                      ].map(m => (
+                        <div key={m.label} className="flex items-center justify-between py-1.5 border-b border-white/[0.05]">
+                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">{m.label}</span>
+                          {m.isStatus ? (
+                            <span className={`font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-sm ${statusClass(selected.status)}`}>
+                              {m.value}
+                            </span>
+                          ) : (
+                            <span className={`text-[12px] font-medium ${m.isDelay && selected.delay > 0 ? "text-[#E74C3C]" : m.isDelay ? "text-[#2ECC71]" : "text-[#EDE9E1]"}`}>
+                              {m.value}
+                            </span>
+                          )}
+                        </div>
+                      ))}
+
+                      {/* Trust bar */}
+                      <div className="pt-1">
+                        <div className="flex justify-between mb-1">
+                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">TRUST SCORE</span>
+                          <span className="text-[12px] font-medium" style={{ color: scoreColor(selected.score) }}>{selected.score}/100</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: scoreColor(selected.score) }} />
+                        </div>
                       </div>
-                      <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
-                        <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: scoreColor(selected.score) }} />
+                    </div>
+
+                    {/* Sentiment */}
+                    <div className="mt-4">
+                      <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2">Buyer Sentiment</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {selected.sentiment.map((s, i) => {
+                          const colors = [
+                            { bg: "rgba(46,204,113,.15)", border: "#2ECC71" },
+                            { bg: "rgba(241,196,15,.12)", border: "#F1C40F" },
+                            { bg: "rgba(231,76,60,.12)", border: "#E74C3C" },
+                            { bg: "rgba(201,168,76,.12)", border: "#C9A84C" },
+                          ];
+                          const c = colors[i % 4];
+                          return (
+                            <span key={s} className="font-mono text-[9px] tracking-[0.5px] px-2 py-1 rounded-sm border" style={{ background: c.bg, borderColor: c.border, color: c.border }}>
+                              {s}
+                            </span>
+                          );
+                        })}
                       </div>
                     </div>
                   </div>
-
-                  {/* Sentiment */}
-                  <div className="mt-4">
-                    <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2">Buyer Sentiment</div>
-                    <div className="flex flex-wrap gap-1.5">
-                      {selected.sentiment.map((s, i) => {
-                        const colors = [
-                          { bg: "rgba(46,204,113,.15)", border: "#2ECC71" },
-                          { bg: "rgba(241,196,15,.12)", border: "#F1C40F" },
-                          { bg: "rgba(231,76,60,.12)", border: "#E74C3C" },
-                          { bg: "rgba(201,168,76,.12)", border: "#C9A84C" },
-                        ];
-                        const c = colors[i % 4];
-                        return (
-                          <span key={s} className="font-mono text-[9px] tracking-[0.5px] px-2 py-1 rounded-sm border" style={{ background: c.bg, borderColor: c.border, color: c.border }}>
-                            {s}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
     </>
   );
 };
