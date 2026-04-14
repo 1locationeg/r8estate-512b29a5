@@ -66,9 +66,11 @@ export function PricingTeaser() {
               </div>
             )}
 
-            <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
-              {t(`pricingTeaser.${key}.desc`)}
-            </p>
+            {!highlight && (
+              <p className="text-[11px] text-muted-foreground mt-0.5 leading-relaxed">
+                {t(`pricingTeaser.${key}.desc`)}
+              </p>
+            )}
 
             {highlight && (
               <Badge variant="secondary" className="mt-2 text-[10px]">
