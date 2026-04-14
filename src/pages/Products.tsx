@@ -1,5 +1,5 @@
-import { Link } from "react-router-dom";
-import { ArrowLeft, Search, FileSignature, ShieldCheck, Map, Gauge, Radio, Brain, Shield, SearchCheck, Award, MapPin, Megaphone, KeyRound } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeft, Search, FileSignature, ShieldCheck, Map, Gauge, Radio, Brain, Shield, SearchCheck, Award, MapPin, Megaphone, KeyRound, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const STAGES = [
@@ -43,6 +43,8 @@ const STAGES = [
 ];
 
 const Products = () => {
+  const navigate = useNavigate();
+  const interactiveProducts: Record<string, string> = { "R8 MAP": "/products/r8-map" };
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Back link */}
@@ -95,7 +97,8 @@ const Products = () => {
                   return (
                     <div
                       key={product.name}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors`}
+                      onClick={() => interactiveProducts[product.name] && navigate(interactiveProducts[product.name])}
+                      className={`flex items-center gap-3 px-3 py-3 rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors ${interactiveProducts[product.name] ? "cursor-pointer" : ""}`}
                     >
                       <div className={`w-9 h-9 rounded-lg ${stage.bgLight} flex items-center justify-center shrink-0`}>
                         <ProductIcon className={`w-4.5 h-4.5 ${stage.color}`} />
@@ -105,9 +108,15 @@ const Products = () => {
                           <span className="text-xs font-black tracking-wide text-foreground">
                             {product.name}
                           </span>
-                          <Badge variant="outline" className="text-[9px] px-1.5 py-0 text-muted-foreground border-border/50 font-medium">
-                            COMING SOON
-                          </Badge>
+                          {interactiveProducts[product.name] ? (
+                            <Badge className="text-[9px] px-1.5 py-0 bg-accent/20 text-accent border-accent/30 font-medium flex items-center gap-0.5">
+                              PREVIEW <ArrowRight className="w-2.5 h-2.5" />
+                            </Badge>
+                          ) : (
+                            <Badge variant="outline" className="text-[9px] px-1.5 py-0 text-muted-foreground border-border/50 font-medium">
+                              COMING SOON
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-[11px] text-muted-foreground mt-0.5">
                           {product.benefit}
