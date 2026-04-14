@@ -103,6 +103,7 @@ const Index = () => { // hero-phase-v2
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
   const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedDeveloper = useMemo(() => {
     if (!selectedDeveloperId) return null;
