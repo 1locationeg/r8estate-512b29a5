@@ -16,13 +16,13 @@ const STATION_COLORS = [
 
 const STATION_ICONS = [Search, GitCompare, Banknote, Shield];
 
-type TipItem = { label: string; action: string; route: string; scrollTo?: string };
+type TipItem = { label: string; action: string; route: string; scrollTo?: string; domAction?: string };
 
 const STATION_TIP_ITEMS: Record<number, TipItem[]> = {
   1: [
-    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']" },
-    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']" },
-    { label: "Try AI assistant", action: "ai_ask", route: "/", scrollTo: "[data-zone='1']" },
+    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
+    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
+    { label: "Try AI assistant", action: "ai_ask", route: "/", domAction: "open-ai-chat" },
   ],
   2: [
     { label: "View a company profile", action: "entity_view", route: "/reviews" },
@@ -149,24 +149,59 @@ export const JourneyCorridor = () => {
     setShowBreakdown(false);
   };
 
-  const handleTipClick = (tip: TipItem) => {
+  const handleTipClick = (e: React.MouseEvent, tip: TipItem) => {
+    e.stopPropagation();
+    e.preventDefault();
     setShowBreakdown(false);
-    const currentPath = window.location.pathname;
 
-    if (tip.route === currentPath && tip.scrollTo) {
-      // Same page — scroll to relevant section
-      const el = document.querySelector(tip.scrollTo);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+    const currentPath = window.location.pathname;
+    const isCurrentPage = tip.route === "/" && (currentPath === "/" || currentPath === "");
+
+    // Handle DOM actions first
+    if (tip.domAction === "focus-search") {
+      if (!isCurrentPage) {
+        navigate(tip.route);
+        return;
       }
-    } else if (tip.route !== currentPath) {
-      // Different page — navigate
+      // Scroll to search and focus it
+      const searchInput = document.querySelector('input[type="search"], input[placeholder*="Search"], input[placeholder*="ابحث"]') as HTMLInputElement;
+      if (searchInput) {
+        searchInput.scrollIntoView({ behavior: "smooth", block: "center" });
+        setTimeout(() => searchInput.focus(), 400);
+        return;
+      }
+      // Fallback: scroll to zone
+      if (tip.scrollTo) {
+        document.querySelector(tip.scrollTo)?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+      return;
+    }
+
+    if (tip.domAction === "open-ai-chat") {
+      if (!isCurrentPage) {
+        navigate(tip.route);
+        return;
+      }
+      // Try to open the AI chat FAB
+      const chatFab = document.querySelector('[aria-label*="chat"], [aria-label*="Chat"], [data-ai-chat]') as HTMLButtonElement;
+      if (chatFab) {
+        chatFab.click();
+        return;
+      }
+      // Fallback: scroll to zone 1
+      document.querySelector("[data-zone='1']")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      return;
+    }
+
+    // Navigate to a different page
+    if (!isCurrentPage) {
       navigate(tip.route);
-    } else if (tip.scrollTo) {
-      const el = document.querySelector(tip.scrollTo);
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      return;
+    }
+
+    // Same page — scroll to section
+    if (tip.scrollTo) {
+      document.querySelector(tip.scrollTo)?.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -294,7 +329,7 @@ export const JourneyCorridor = () => {
                             return (
                               <button
                                 key={tIdx}
-                                onClick={() => handleTipClick(tip)}
+                                onClick={(e) => handleTipClick(e, tip)}
                                 className={cn(
                                   "flex items-center gap-1.5 text-[10px] w-full text-start rounded-sm px-1 py-0.5 -mx-1 transition-colors",
                                   isDone
