@@ -16,21 +16,23 @@ const STATION_COLORS = [
 
 const STATION_ICONS = [Search, GitCompare, Banknote, Shield];
 
-const STATION_TIP_ITEMS: Record<number, { label: string; action: string; route: string }[]> = {
+type TipItem = { label: string; action: string; route: string; scrollTo?: string };
+
+const STATION_TIP_ITEMS: Record<number, TipItem[]> = {
   1: [
-    { label: "Search for a developer or project", action: "search", route: "/" },
-    { label: "Click a suggestion", action: "suggestion_click", route: "/" },
-    { label: "Try AI assistant", action: "ai_ask", route: "/" },
+    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']" },
+    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']" },
+    { label: "Try AI assistant", action: "ai_ask", route: "/", scrollTo: "[data-zone='1']" },
   ],
   2: [
     { label: "View a company profile", action: "entity_view", route: "/reviews" },
     { label: "Open the comparison tool", action: "compare_open", route: "/reviews" },
-    { label: "Check a spotlight card", action: "spotlight_click", route: "/" },
+    { label: "Check a spotlight card", action: "spotlight_click", route: "/", scrollTo: "[data-zone='2']" },
   ],
   3: [
     { label: "Explore a deal or launch", action: "deal_click", route: "/deals" },
-    { label: "View pricing plans", action: "pricing_view", route: "/" },
-    { label: "Read 'How We Work'", action: "how_we_work", route: "/" },
+    { label: "View pricing plans", action: "pricing_view", route: "/", scrollTo: "[data-zone='3']" },
+    { label: "Read 'How We Work'", action: "how_we_work", route: "/", scrollTo: "[data-zone='3']" },
   ],
   4: [
     { label: "Visit the community", action: "community_click", route: "/community" },
