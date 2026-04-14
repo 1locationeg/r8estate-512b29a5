@@ -6,7 +6,7 @@ import { Home, Building2, Briefcase, HardHat, Sparkles, ArrowRight } from "lucid
 
 const segments = [
   { key: "buyers", icon: Home, cta: "/auth" },
-  { key: "business", icon: Building2, cta: "/auth" },
+  { key: "developers", icon: Building2, cta: "/auth" },
   { key: "services", icon: Briefcase, cta: "/auth" },
   { key: "professionals", icon: HardHat, cta: "/auth" },
 ];
