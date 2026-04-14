@@ -239,6 +239,7 @@ export const JourneyCorridor = () => {
 
   if (isExcluded) return null;
 
+  return (
     <div className="sticky top-[56px] z-20 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
       <div className="max-w-[1100px] mx-auto px-3 md:px-4">
         {/* Single compact row */}
