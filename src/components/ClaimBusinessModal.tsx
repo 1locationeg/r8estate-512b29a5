@@ -93,7 +93,7 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
       <DialogContent className="max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Shield className="w-5 h-5 text-primary" />
+            <Shield className="w-5 h-5 text-business-border" />
             {submitted ? 'Claim Submitted' : 'Claim This Business'}
           </DialogTitle>
           <DialogDescription>
@@ -106,8 +106,8 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
 
         {submitted ? (
           <div className="text-center py-6 space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-full bg-green-500/10 flex items-center justify-center">
-              <CheckCircle className="w-8 h-8 text-green-500" />
+            <div className="w-16 h-16 mx-auto rounded-full bg-business/50 flex items-center justify-center">
+              <CheckCircle className="w-8 h-8 text-business-border" />
             </div>
             <div>
               <h3 className="font-semibold text-foreground">Claim Under Review</h3>
@@ -133,8 +133,8 @@ export const ClaimBusinessModal = ({ open, onClose, businessName, businessId, bu
               <div className="text-center">
                 {documentUrl ? (
                   <div className="space-y-2">
-                    <CheckCircle className="w-8 h-8 text-green-500 mx-auto" />
-                    <p className="text-sm text-green-600 font-medium">Document uploaded</p>
+                    <CheckCircle className="w-8 h-8 text-business-border mx-auto" />
+                    <p className="text-sm text-business-border font-medium">Document uploaded</p>
                     <Button variant="outline" size="sm" onClick={() => setDocumentUrl('')}>
                       Replace
                     </Button>

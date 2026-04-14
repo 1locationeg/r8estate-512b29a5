@@ -122,8 +122,8 @@ export const BusinessCategoryPicker = ({
               className={cn(
                 'px-3 py-1.5 text-xs font-medium rounded-full border transition-colors',
                 isSelected
-                  ? 'bg-primary text-primary-foreground border-primary'
-                  : 'bg-secondary text-muted-foreground border-border hover:border-primary/50 hover:text-foreground'
+                  ? 'bg-business-border text-white border-business-border'
+                  : 'bg-secondary text-muted-foreground border-border hover:border-business-border/50 hover:text-foreground'
               )}
             >
               {cat.label}

@@ -92,7 +92,7 @@ export const BusinessImageUpload = ({
         title={`Change ${type === 'logo' ? 'profile' : 'cover'} image`}
       >
         {isUploading ? (
-          <Loader2 className="w-4 h-4 animate-spin text-primary" />
+          <Loader2 className="w-4 h-4 animate-spin text-business-border" />
         ) : (
           <>
             <Camera className="w-4 h-4 text-foreground" />

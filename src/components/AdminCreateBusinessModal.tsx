@@ -163,7 +163,7 @@ export function AdminCreateBusinessModal({ open, onOpenChange, onCreated }: Admi
       <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-primary" />
+            <Building2 className="w-5 h-5 text-business-border" />
             Create Business Account
           </DialogTitle>
           <DialogDescription>
@@ -176,7 +176,7 @@ export function AdminCreateBusinessModal({ open, onOpenChange, onCreated }: Admi
           <div>
             <Label className="text-sm font-medium">Assign to User *</Label>
             {selectedUser ? (
-              <div className="mt-1.5 flex items-center justify-between bg-primary/5 border border-primary/20 rounded-lg p-3">
+              <div className="mt-1.5 flex items-center justify-between bg-business/50 border border-business-border/20 rounded-lg p-3">
                 <div>
                   <p className="text-sm font-medium text-foreground">{selectedUser.full_name || "No name"}</p>
                   <p className="text-xs text-muted-foreground">{selectedUser.email}</p>
@@ -213,7 +213,7 @@ export function AdminCreateBusinessModal({ open, onOpenChange, onCreated }: Admi
                           setUserResults([]);
                         }}
                       >
-                        <UserPlus className="w-4 h-4 text-primary shrink-0" />
+                        <UserPlus className="w-4 h-4 text-business-border shrink-0" />
                         <div className="min-w-0">
                           <p className="text-sm font-medium text-foreground truncate">{u.full_name || "No name"}</p>
                           <p className="text-[10px] text-muted-foreground truncate">{u.email}</p>
@@ -252,7 +252,7 @@ export function AdminCreateBusinessModal({ open, onOpenChange, onCreated }: Admi
                     variant={isActive ? "default" : "outline"}
                     className={cn(
                       "text-[10px] cursor-pointer transition-colors select-none",
-                      isActive ? "bg-primary text-primary-foreground hover:bg-primary/80" : "hover:bg-secondary"
+                    isActive ? "bg-business-border text-white hover:bg-business-border/80" : "hover:bg-secondary"
                     )}
                     onClick={() => toggleCategory(cat.value)}
                   >

@@ -119,7 +119,7 @@ export const BusinessUpgradeModal = ({ open, onOpenChange }: BusinessUpgradeModa
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Building2 className="w-5 h-5 text-primary" />
+            <Building2 className="w-5 h-5 text-business-border" />
             {justSubmitted ? "Request Submitted" : "Upgrade to Business Account"}
           </DialogTitle>
           <DialogDescription>
