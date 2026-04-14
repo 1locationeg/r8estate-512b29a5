@@ -1298,10 +1298,10 @@
       "pitch": "Verified reviews, developer comparisons & risk insights — so you invest with confidence, not anxiety.",
       "cta": "Start exploring"
     },
-    "business": {
-      "title": "Business Owners",
-      "pitch": "Build a trusted brand, manage project reputation & generate qualified leads with real buyer feedback.",
-      "cta": "Grow your brand"
+    "developers": {
+      "title": "Developers",
+      "pitch": "Showcase your track record, manage project reputation & attract verified buyers with powerful analytics.",
+      "cta": "Build your score"
     },
     "services": {
       "title": "Service Companies",
