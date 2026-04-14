@@ -1,34 +1,23 @@
 
 
-## Plan: Secret Easter Egg to "Coming Soon Products" Page
+## Plan: Use Journey-Protect Green for the "WITH R8ESTATE" Section
 
-### What it does
-Clicking the "TRUSTPLATFORM" badge on the homepage while holding Ctrl (desktop) or long-pressing it (mobile) navigates to a new `/products` page that showcases the R8ESTATE product ecosystem from the uploaded HTML file.
+### Recommendation
 
-### Changes
+The component currently uses `text-primary` (navy) for the "WITH R8ESTATE" row. Since this section represents the **Protect** stage of the user journey, it should use the **journey-protect** color (emerald green) — the same green used throughout the platform for the 4/4 Protect station. This creates a strong visual contrast: **red = danger (without)** vs **green = safety (with)**.
 
-**1. New page: `src/pages/Products.tsx`**
-- Convert the uploaded HTML into a React component styled with Tailwind (dark theme, gold accents matching the uploaded design).
-- Display all 10 products (R8 Map, Meter, Pulse, Intel, Shield, Check, Certified, Track, Voice, Keys) in a grid with journey stages, flywheel diagram, and footer.
-- Add a subtle "back to home" link.
+### Approach — Green accent on the bottom half only
 
-**2. Add route in `src/App.tsx`**
-- Add a lazy-loaded route: `/products` → `Products` page.
+Rather than converting the entire card background to green (which would lose the red urgency of the top half), apply green only to the "WITH R8ESTATE" row and CTA area. This creates a clear **red-to-green split** narrative.
 
-**3. Add secret trigger in `src/pages/Index.tsx` (line ~274)**
-- On the "TRUSTPLATFORM" `<p>` element:
-  - **Desktop**: `onClick` handler checks `e.ctrlKey || e.metaKey` → if true, navigate to `/products`.
-  - **Mobile**: `onTouchStart`/`onTouchEnd` handlers implement a long-press (hold ~800ms) → navigate to `/products`. Visual feedback: slight scale pulse after 500ms to hint something is happening.
-- No visible UI change — the badge looks and behaves normally for regular clicks.
+### Changes — `src/components/CollectiveBuyerProtection.tsx`
 
-### Technical details
+1. **CheckCircle icon** (line 106): Change `text-primary` → `text-journey-protect`
+2. **"WITH R8ESTATE" label** (line 107): Change `text-primary` → `text-journey-protect`
+3. **Avatar borders** (line 119): Change `border-border` → `border-journey-protect/30` for a subtle green tint
+4. **"323+ Protected" text** (line 123): Change `text-foreground` → `text-journey-protect`
+5. **CTA button** (line 129-134): Add green styling — override with `bg-journey-protect hover:bg-journey-protect/90 text-white` classes instead of the `glow` variant
+6. **Add a subtle green tinted background** behind the bottom rows: wrap rows 3-4 in a `bg-journey-protect/[0.04] rounded-lg p-2` container to visually separate the "safe zone"
 
-```text
-User clicks "TRUSTPLATFORM"
-  ├── Ctrl/Cmd held? → navigate("/products")
-  ├── Long-press (800ms)? → navigate("/products")
-  └── Normal click → nothing (existing behavior)
-```
-
-The Products page will use the app's existing dark mode tokens where possible, with custom overrides for the gold/grain aesthetic from the uploaded file.
+This mirrors the existing journey color system used across all station-aware components.
 
