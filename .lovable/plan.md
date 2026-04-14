@@ -1,21 +1,26 @@
 
 
-## Plan: Make Corridor Clicks Scroll to Journey Sections
+## Plan: Lighten Collective Buyer Protection Background
 
 ### Problem
-The corridor station clicks and tip clicks try to scroll to `[data-zone="N"]` elements, which are large wrapper divs in Index.tsx. The actual visible journey sections (showing "1/4 RESEARCH", "2/4 CHOOSE", etc.) have `id="journey-section-0"` through `journey-section-3"` — but nothing targets them.
+The dark navy background feels heavy and visually disconnected from the rest of the site's lighter aesthetic.
 
-### Changes
+### Approach
+Replace the dark gradient with a light, subtle design that still conveys urgency/risk through color accents (red tones) rather than a heavy dark background. Use a soft pattern overlay and the site's card recipe (border, backdrop-blur) to blend with the homepage.
 
-**File: `src/components/JourneyCorridor.tsx`**
+### Changes — `src/components/CollectiveBuyerProtection.tsx`
 
-1. Update `scrollToZone(zone)` to first try `#journey-section-{zone-1}`, falling back to `[data-zone="{zone}"]`.
+1. **Background**: Replace dark navy gradient with a light frosted card style — `bg-card/80 backdrop-blur-sm border border-destructive/15` with a very subtle red-tinted gradient overlay (`from-destructive/[0.03] via-transparent to-destructive/[0.02]`).
 
-2. Update all `scrollTo` values in `STATION_TIP_ITEMS` to use `#journey-section-0`, `#journey-section-1`, `#journey-section-2`, `#journey-section-3` respectively.
+2. **Dot texture**: Change dots from white to `destructive` color at low opacity (`opacity-[0.04]`) — gives a subtle "warning grid" feel without heaviness.
 
-3. Update `handleTipClick` fallback selectors similarly.
+3. **Text colors**: Swap all `text-white` and `text-white/60` to use foreground tokens (`text-foreground`, `text-muted-foreground`) so they work on the light background.
 
-4. For tips that navigate away from `/` (e.g. `/reviews`, `/community`), keep the route navigation as-is. Only same-page tips get the scroll-to-section behavior.
+4. **Risk counter**: Keep the red color for "847M EGP" (`text-destructive`) — it pops on light backgrounds too.
 
-This ensures clicking any station dot or tip on the homepage smoothly scrolls to the matching "X/4 · TITLE" journey section.
+5. **"WITH R8ESTATE" section**: Change gold color to `text-primary` or keep gold but ensure contrast on light bg.
+
+6. **Divider**: Change `border-white/10` to `border-border/60` to match site style.
+
+This keeps the fear/urgency expression through red accents and destructive color tokens while making the component feel integrated with the rest of the homepage.
 
