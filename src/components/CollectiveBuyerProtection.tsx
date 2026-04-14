@@ -124,7 +124,7 @@ export const CollectiveBuyerProtection = () => {
                 />
               ))}
             </div>
-            <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+</span>
+            <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
             
           </div>
 
