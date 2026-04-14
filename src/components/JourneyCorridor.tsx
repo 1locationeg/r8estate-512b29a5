@@ -172,7 +172,7 @@ export const JourneyCorridor = () => {
   // Determine effective active zone: scroll-based on homepage, route-based on inner pages
   const effectiveActiveZone = isHomePage ? activeZone : (routeStationIdx >= 0 ? routeStationIdx + 1 : 0);
 
-  if (isExcluded) return null;
+  
 
   const handleTipClick = (e: React.MouseEvent, tip: TipItem) => {
     e.stopPropagation();
@@ -237,7 +237,8 @@ export const JourneyCorridor = () => {
     return null;
   }, [combinedZone]);
 
-  return (
+  if (isExcluded) return null;
+
     <div className="sticky top-[56px] z-20 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
       <div className="max-w-[1100px] mx-auto px-3 md:px-4">
         {/* Single compact row */}
