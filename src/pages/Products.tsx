@@ -44,7 +44,7 @@ const STAGES = [
 
 const Products = () => {
   const navigate = useNavigate();
-  const interactiveProducts: Record<string, string> = { "R8 MAP": "/products/r8-map" };
+  const interactiveProducts: Record<string, string> = { "R8 MAP": "/products/r8-map", "R8 METER": "https://meter.r8estate.com" };
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Back link */}
@@ -94,11 +94,17 @@ const Products = () => {
               <div className="space-y-2">
                 {stage.products.map((product) => {
                   const ProductIcon = product.icon;
+                  const link = interactiveProducts[product.name];
+                  const isExternal = link?.startsWith("http");
+                  const isFeatured = product.name === "R8 METER";
                   return (
                     <div
                       key={product.name}
-                      onClick={() => interactiveProducts[product.name] && navigate(interactiveProducts[product.name])}
-                      className={`flex items-center gap-3 px-3 py-3 rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors ${interactiveProducts[product.name] ? "cursor-pointer" : ""}`}
+                      onClick={() => {
+                        if (isExternal) window.open(link, "_blank", "noopener");
+                        else if (link) navigate(link);
+                      }}
+                      className={`flex items-center gap-3 px-3 py-3 rounded-lg border bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors ${link ? "cursor-pointer" : ""} ${isFeatured ? "border-primary/40 ring-1 ring-primary/20 bg-primary/5" : "border-border/60"}`}
                     >
                       <div className={`w-9 h-9 rounded-lg ${stage.bgLight} flex items-center justify-center shrink-0`}>
                         <ProductIcon className={`w-4.5 h-4.5 ${stage.color}`} />
@@ -108,7 +114,11 @@ const Products = () => {
                           <span className="text-xs font-black tracking-wide text-foreground">
                             {product.name}
                           </span>
-                          {interactiveProducts[product.name] ? (
+                          {isFeatured ? (
+                            <Badge className="text-[9px] px-1.5 py-0 bg-primary/20 text-primary border-primary/30 font-medium flex items-center gap-0.5">
+                              LIVE <ArrowRight className="w-2.5 h-2.5" />
+                            </Badge>
+                          ) : link ? (
                             <Badge className="text-[9px] px-1.5 py-0 bg-accent/20 text-accent border-accent/30 font-medium flex items-center gap-0.5">
                               PREVIEW <ArrowRight className="w-2.5 h-2.5" />
                             </Badge>
