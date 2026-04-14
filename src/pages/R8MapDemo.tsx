@@ -134,6 +134,8 @@ const R8MapDemo = () => {
   const atRisk = projects.filter(p => p.score < 60).length;
 
   return (
+    <>
+      <style>{`.leaflet-tile-pane{filter:brightness(0.45) saturate(0.3) hue-rotate(180deg)}.leaflet-control-attribution{display:none!important}`}</style>
     <div className="h-screen flex flex-col bg-[#08090C] text-[#EDE9E1] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
       {/* TOP BAR */}
       <div className="flex items-center justify-between px-4 md:px-5 h-[54px] shrink-0 bg-[#08090C]/97 border-b border-white/[0.07] z-[1000] relative">
