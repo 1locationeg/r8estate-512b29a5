@@ -133,14 +133,15 @@ export const CollectiveBuyerProtection = () => {
               >
                 {isAr ? "احمي شرايك" : "Protect My Purchase"}
               </Button>
-            <ShareMenu
-              title="R8ESTATE"
-              description={shareText}
-              iconOnly
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground h-8 w-8"
-            />
+              <ShareMenu
+                title="R8ESTATE"
+                description={shareText}
+                iconOnly
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-8 w-8"
+              />
+            </div>
           </div>
         </div>
       </div>
