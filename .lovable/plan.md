@@ -1,33 +1,21 @@
 
 
-## Plan: Interactive & Status-Aware Journey Tips
+## Plan: Make Corridor Clicks Scroll to Journey Sections
 
-### What changes
+### Problem
+The corridor station clicks and tip clicks try to scroll to `[data-zone="N"]` elements, which are large wrapper divs in Index.tsx. The actual visible journey sections (showing "1/4 RESEARCH", "2/4 CHOOSE", etc.) have `id="journey-section-0"` through `journey-section-3"` — but nothing targets them.
 
-1. **Track completed actions per zone** — Extend `useCorridorEngagement` to also store which specific actions the user has performed (e.g. `{ 1: ["search", "suggestion_click"], 2: ["entity_view"] }`). This will be persisted in localStorage alongside the existing engagement data.
-
-2. **Map each tip to an action and a route** — Convert `STATION_TIPS` from simple strings to objects with `{ label, action, route }`:
-   - Zone 1: "Search for a developer or project" → `/` (focus search), "Click a suggestion" → `/`, "Try AI assistant" → `/` (open AI chat)
-   - Zone 2: "View a company profile" → `/reviews`, "Open the comparison tool" → `/reviews` (compare), "Check a spotlight card" → `/`
-   - Zone 3: "Explore a deal or launch" → `/deals`, "View pricing plans" → `/`, "Read 'How We Work'" → `/`
-   - Zone 4: "Visit the community" → `/community`, "Submit feedback" → `/community`, "Write a review" → `/reviews`
-
-3. **Green bullet for completed tips** — Change each tip bullet from a static grey dot to a green checkmark when the mapped action has been performed, or keep the grey dot when pending.
-
-4. **Make tips clickable** — Wrap each tip in a `<button>` that navigates to the relevant route (using `react-router-dom`'s `useNavigate`) and closes the breakdown popover.
-
-### Technical details
-
-**File: `src/hooks/useCorridorEngagement.ts`**
-- Add a `completedActions` state: `Record<number, string[]>` tracking which actions have fired per zone.
-- On `trackEngagement`, append the action to the zone's list (deduplicated).
-- Persist to localStorage alongside zone scores; merge on DB load.
-- Return `completedActions` from the hook.
+### Changes
 
 **File: `src/components/JourneyCorridor.tsx`**
-- Import `useNavigate`.
-- Replace `STATION_TIPS` with `STATION_TIP_ITEMS: Record<number, { label: string; action: string; route: string }[]>`.
-- In the tip rendering section (lines 248-256), for each tip:
-  - Check if `completedActions[zone]?.includes(tip.action)` → green dot + strikethrough or green check.
-  - Wrap in a clickable `<button>` that calls `navigate(tip.route)` and `setShowBreakdown(false)`.
+
+1. Update `scrollToZone(zone)` to first try `#journey-section-{zone-1}`, falling back to `[data-zone="{zone}"]`.
+
+2. Update all `scrollTo` values in `STATION_TIP_ITEMS` to use `#journey-section-0`, `#journey-section-1`, `#journey-section-2`, `#journey-section-3` respectively.
+
+3. Update `handleTipClick` fallback selectors similarly.
+
+4. For tips that navigate away from `/` (e.g. `/reviews`, `/community`), keep the route navigation as-is. Only same-page tips get the scroll-to-section behavior.
+
+This ensures clicking any station dot or tip on the homepage smoothly scrolls to the matching "X/4 · TITLE" journey section.
 
