@@ -64,7 +64,7 @@ export const CollectiveBuyerProtection = () => {
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.06] via-transparent to-destructive/[0.04]" />
         {/* Dot texture */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: "radial-gradient(circle, hsl(var(--destructive)) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
