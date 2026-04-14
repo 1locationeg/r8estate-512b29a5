@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { SearchSuggestions } from "@/components/SearchSuggestions";
+import { ResearchToolkitPanel } from "@/components/ResearchToolkitPanel";
 import { ItemDetailSection } from "@/components/ItemDetailSection";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
 import { CompareModal } from "@/components/CompareModal";
@@ -23,9 +24,10 @@ interface HeroSearchBarProps {
   onSelectItem?: (item: SearchItem) => void;
   onFocusChange?: (focused: boolean) => void;
   showQuickIcons?: boolean;
+  showResearchHub?: boolean;
 }
 
-export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, showQuickIcons = true }: HeroSearchBarProps) => {
+export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, showQuickIcons = true, showResearchHub = false }: HeroSearchBarProps) => {
   const { t, i18n } = useTranslation();
   const [query, setQuery] = useState("");
   const [isFocused, setIsFocused] = useState(false);
