@@ -279,7 +279,6 @@ const R8MapDemo = () => {
             <TileLayer
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               maxZoom={18}
-              className="[filter:brightness(0.45)_saturate(0.3)_hue-rotate(180deg)]"
             />
             <MapPanner project={selected} />
 
