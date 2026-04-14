@@ -201,6 +201,7 @@ const AppContent = () => {
           <Route path="/customer-service" element={<StaticPage />} />
           <Route path="/faq" element={<StaticPage />} />
           <Route path="/report" element={<StaticPage />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
