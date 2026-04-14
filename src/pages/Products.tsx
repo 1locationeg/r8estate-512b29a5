@@ -6,6 +6,9 @@ const STAGES = [
   {
     name: "Before You Buy",
     icon: Search,
+    color: "text-primary",
+    bgLight: "bg-primary/10",
+    borderAccent: "hover:border-primary/30",
     products: [
       { name: "R8 MAP", benefit: "See trust scores on a live map", icon: Map },
       { name: "R8 METER", benefit: "Instant trust score for any entity", icon: Gauge },
@@ -16,6 +19,9 @@ const STAGES = [
   {
     name: "At Signing",
     icon: FileSignature,
+    color: "text-accent",
+    bgLight: "bg-accent/10",
+    borderAccent: "hover:border-accent/30",
     products: [
       { name: "R8 SHIELD", benefit: "AI-powered contract risk detection", icon: Shield },
       { name: "R8 CHECK", benefit: "One-click broker background check", icon: SearchCheck },
@@ -25,6 +31,9 @@ const STAGES = [
   {
     name: "After You Buy",
     icon: ShieldCheck,
+    color: "text-journey-protect",
+    bgLight: "bg-journey-protect/10",
+    borderAccent: "hover:border-journey-protect/30",
     products: [
       { name: "R8 TRACK", benefit: "Track your unit's delivery progress", icon: MapPin },
       { name: "R8 VOICE", benefit: "Verified buyer review engine", icon: Megaphone },
@@ -70,11 +79,11 @@ const Products = () => {
           return (
             <div key={stage.name}>
               {/* Stage header */}
-              <div className="flex items-center gap-2.5 mb-4 pb-2 border-b border-border/60">
-                <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <StageIcon className="w-4 h-4 text-primary" />
+              <div className={`flex items-center gap-2.5 mb-4 pb-2 border-b border-border/60`}>
+                <div className={`w-8 h-8 rounded-lg ${stage.bgLight} flex items-center justify-center`}>
+                  <StageIcon className={`w-4 h-4 ${stage.color}`} />
                 </div>
-                <h2 className="text-sm font-bold text-primary uppercase tracking-wider">
+                <h2 className={`text-sm font-bold ${stage.color} uppercase tracking-wider`}>
                   {stage.name}
                 </h2>
               </div>
@@ -86,10 +95,10 @@ const Products = () => {
                   return (
                     <div
                       key={product.name}
-                      className="flex items-center gap-3 px-3 py-3 rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm hover:border-accent/30 transition-colors"
+                      className={`flex items-center gap-3 px-3 py-3 rounded-lg border border-border/60 bg-card/80 backdrop-blur-sm ${stage.borderAccent} transition-colors`}
                     >
-                      <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center shrink-0">
-                        <ProductIcon className="w-4.5 h-4.5 text-accent" />
+                      <div className={`w-9 h-9 rounded-lg ${stage.bgLight} flex items-center justify-center shrink-0`}>
+                        <ProductIcon className={`w-4.5 h-4.5 ${stage.color}`} />
                       </div>
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
