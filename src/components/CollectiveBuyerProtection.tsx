@@ -59,9 +59,9 @@ export const CollectiveBuyerProtection = () => {
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
-      <div className="relative overflow-hidden rounded-2xl border border-destructive/15 bg-card/80 backdrop-blur-sm">
-        {/* Subtle red gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.03] via-transparent to-destructive/[0.02]" />
+      <div className="relative overflow-hidden rounded-2xl border border-red-200/40 dark:border-red-900/30 bg-red-50/80 dark:bg-red-950/20 backdrop-blur-sm">
+        {/* Red gradient overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.06] via-transparent to-destructive/[0.04]" />
         {/* Dot texture */}
         <div
           className="pointer-events-none absolute inset-0 opacity-[0.04]"
