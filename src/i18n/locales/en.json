@@ -1571,7 +1571,11 @@
     },
     "pro": {
       "title": "Pro",
-      "desc": "Full reports"
+      "price": "5,000",
+      "period": "/mo",
+      "currency": "EGP",
+      "desc": "Unlimited trust reports, AI insights & priority alerts",
+      "value": "Less than a coffee a day for total market clarity"
     },
     "business": {
       "title": "Business",
