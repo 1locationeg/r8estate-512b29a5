@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft, Search, FileSignature, ShieldCheck, Map, Gauge, Radio, Brain, Shield, SearchCheck, Award, MapPin, Megaphone, KeyRound, ArrowRight } from "lucide-react";
+import { ArrowLeft, Search, FileSignature, ShieldCheck, Map, Gauge, Radio, Brain, Shield, SearchCheck, Award, MapPin, Megaphone, KeyRound, ArrowRight, Users, BarChart3 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 const STAGES = [
