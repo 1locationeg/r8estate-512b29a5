@@ -1,53 +1,76 @@
 
 
-## Audience Color Identity System
+## Research Hub — Search-Triggered Full Experience
 
 ### Concept
-Assign each of the four audience segments a distinct color theme that persists across the entire platform — cards, pages, profiles, badges, replies, etc. When a user sees a color, they instantly know which audience it belongs to.
+When the user clicks/focuses the search bar in the Research station scroll section, instead of just the standard search suggestions dropdown, the mobile overlay (and desktop expanded view) will include a **Research Hub toolkit** below the search results. This gives the first-time buyer a complete index of every research tool available on the platform — all triggered from the familiar search interaction.
 
-### Color Assignments
+### How It Works
+
+The `HeroSearchBar` already has two modes:
+1. **Desktop**: Search input with `SearchSuggestions` dropdown below
+2. **Mobile**: Full-screen overlay with search + suggestions
+
+The plan: Add a new prop `showResearchHub?: boolean` to `HeroSearchBar`. When true AND the search bar is focused (with no query or few results), render a **ResearchToolkitPanel** below the suggestions. The Research station in `JourneyScrollSections` will pass `showResearchHub={true}`.
+
+### ResearchToolkitPanel Layout
 
 ```text
-Segment            Type   Color Name      Hex        HSL
-─────────────────────────────────────────────────────────
-Buyers/Investors   B2C    Brand Navy      #0a3d62    203 81% 21%  (existing --primary)
-Developers         B2B    Forest Green    #3B6D11    93 72% 25%   (existing --business-border)
-Service Companies  B2B    Teal/Cyan       #0891B2    192 91% 37%  (new)
-RE Professionals   B2B    Amber/Bronze    #B45309    30 92% 37%   (new)
+┌─────────────────────────────────────┐
+│  [Search Input] ← user typed here  │
+│  [SearchSuggestions - if query]     │
+│                                     │
+│  ── DISCOVER ─────────────────────  │
+│  🏢 Browse Categories    → /categories
+│  🏗️ Developer Directory  → /directory
+│  🏆 Leaderboard          → /leaderboard
+│  📦 Products             → /products
+│                                     │
+│  ── EVALUATE ─────────────────────  │
+│  ⚖️ Compare Developers   → modal
+│  ⭐ Read Reviews         → /reviews
+│  🤖 AI Trust Agent       → modal
+│  📊 Market Insights      → /insights
+│                                     │
+│  ── TRACK ────────────────────────  │
+│  🔔 Saved Searches       → /auth
+│  💡 Smart Recs           → AI
+│                                     │
+│  ── Quick Stats ──────────────────  │
+│  18 Categories · 70+ Businesses     │
+│                                     │
+│  [Ready to choose? → Station 2]    │
+└─────────────────────────────────────┘
 ```
-
-Buyers keep the existing navy primary. Developers keep the established forest green. Service Companies get a teal blue, and RE Professionals get a warm amber/bronze — all distinct and accessible.
 
 ### Implementation Steps
 
-**1. Add CSS custom properties** (`src/index.css`)
-- Add new token groups for `--services` and `--professionals` (similar to existing `--business` group)
-- Add `--buyers` alias tokens pointing to existing primary values for consistency
+**1. Create `src/components/ResearchToolkitPanel.tsx`**
+- A new component with grouped tool cards (Discover, Evaluate, Track)
+- Each card: icon + title + subtitle + arrow → navigates to route or opens modal
+- Accepts `onClose` callback to dismiss the search overlay
+- Accepts `onOpenCompare` and `onOpenAIAgent` for modal triggers
+- Uses journey-research color theming
+- Full RTL support
+- "Ready to choose?" CTA at bottom scrolls to `#journey-section-1`
 
-**2. Add Tailwind color mappings** (`tailwind.config.ts`)
-- Add `services`, `professionals`, and `buyers` color groups to the `extend.colors` config
+**2. Update `src/components/HeroSearchBar.tsx`**
+- Add `showResearchHub?: boolean` prop (default false)
+- In the mobile full-screen overlay: render `ResearchToolkitPanel` below `SearchSuggestions` when `showResearchHub` is true and query is empty
+- In the desktop view: render `ResearchToolkitPanel` as part of the dropdown area when focused, query is empty, and `showResearchHub` is true
 
-**3. Update AudienceSegmentCards** (`src/components/AudienceSegmentCards.tsx`)
-- Add color metadata to each segment definition
-- Apply segment-specific colors to icon backgrounds, hover borders, and CTA text per card
+**3. Update `src/components/JourneyScrollSections.tsx`**
+- Pass `showResearchHub={true}` to the `HeroSearchBar` inside `ResearchStorySection`
 
-**4. Update segment-specific pages and components**
-- **Developers**: Already uses forest green — no changes needed
-- **Service Companies**: Apply teal theme to service-related components (service profiles, service cards, service badges)
-- **RE Professionals**: Apply amber theme to professional-related components (professional profiles, credentials, badges)
-- **Buyers/Investors**: Confirm navy is used consistently (already the default primary)
+**4. Add translations** (`en.json`, `ar.json`)
+- Keys under `researchHub.*` for section headers (Discover, Evaluate, Track) and tool card labels/subtitles
 
-**5. Update translation files** (`en.json`, `ar.json`)
-- No text changes needed — this is purely visual
+### Files to create/modify
+1. **New**: `src/components/ResearchToolkitPanel.tsx`
+2. **Edit**: `src/components/HeroSearchBar.tsx` — add prop, render panel
+3. **Edit**: `src/components/JourneyScrollSections.tsx` — pass prop
+4. **Edit**: `src/i18n/locales/en.json` — add translation keys
+5. **Edit**: `src/i18n/locales/ar.json` — add Arabic translations
 
-### Files to modify
-- `src/index.css` — add CSS variables for services and professionals
-- `tailwind.config.ts` — add new color tokens
-- `src/components/AudienceSegmentCards.tsx` — color-code each card
-- Business/developer components — already green, verify consistency
-- Service-related components — apply teal theme
-- Professional-related components — apply amber theme
-
-### Visual Result
-Each audience card will have its own accent color on icon, border hover, and CTA. This color will carry through to their respective dashboards, profiles, badges, and interactions across the platform.
+### No database or backend changes needed.
 
