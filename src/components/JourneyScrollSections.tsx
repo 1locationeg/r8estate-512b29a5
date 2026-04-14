@@ -309,7 +309,7 @@ const StationCompactHook = ({ station, onExpand }: { station: StationData; onExp
   if (station.key === "research") {
     return (
       <div className="w-full max-w-sm mx-auto">
-        <HeroSearchBar showResearchHub={true} />
+        <HeroSearchBar onSelectDeveloper={() => {}} showResearchHub={true} />
       </div>
     );
   }
