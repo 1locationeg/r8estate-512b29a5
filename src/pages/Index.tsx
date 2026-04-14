@@ -356,46 +356,41 @@ const Index = () => { // hero-phase-v2
               )}
             </div>
 
-            {/* Desktop: 2-column layout for hero lower section */}
-            <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4 mt-1">
-              {/* Left column: Trust Showcase + Traction Stats */}
-              <div className="flex flex-col gap-2">
-                <div id="trust-showcase">
-                  <HeroTrustShowcase />
-                </div>
-                <div className={cn("w-full transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-                  <TractionStats />
-                </div>
-              </div>
-
-              {/* Right column: Next Steps + Journey Arc + Search */}
-              <div className="flex flex-col gap-2">
-                <HeroNextSteps />
-
-                <div className={cn("w-full transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-                  <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
-                    <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
-                  </div>
-                </div>
-
-                <div className={cn("w-full transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-                  <CollectiveBuyerProtection />
-                </div>
-              </div>
+            <div id="trust-showcase" className="-mt-2">
+              <HeroTrustShowcase />
             </div>
 
-            {/* Reviewer Spotlight — full width below columns */}
+            {/* Traction Stats */}
+            <div className={cn("w-full mt-2 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+            <TractionStats />
+            </div>
+
+            {/* Reviewer Spotlight — social proof strip */}
             <div className={cn("w-full mt-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <ReviewerSpotlight onWriteReview={() => navigate('/reviews')} />
             </div>
 
-            {/* Search bar — full width */}
+            {/* Next Steps CTAs */}
+            <HeroNextSteps />
+
+            {/* Journey Station Arc */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <div className="relative rounded-2xl border border-primary/15 bg-gradient-to-br from-background/95 via-background/90 to-primary/5 backdrop-blur-sm px-3 md:px-4 py-1.5 md:py-2">
+                <MiniJourneyArc onStartJourney={() => navigate('/categories')} />
+              </div>
+            </div>
+
+            {/* Collective Buyer Protection */}
+            <div className={cn("w-full mt-3 mb-0 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <CollectiveBuyerProtection />
+            </div>
+
             {userMode === "buyers" && (
               <>
                 {searchFocused && (
                   <div className="fixed inset-0 z-40 bg-black/30 backdrop-blur-md transition-all duration-300 ease-in-out hidden md:block" onClick={() => setSearchFocused(false)} />
                 )}
-                <div className={cn("w-full max-w-[700px] mx-auto mt-2 transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
+                <div className={cn("w-full max-w-[700px] mx-auto transition-all duration-300 ease-in-out", searchFocused && "relative z-50")}>
                   <HeroSearchBar
                     onSelectDeveloper={(id) => { setSpecialViewItem(null); setActiveView(null); setSelectedDeveloperId(id); }}
                     onSelectItem={(item) => { setSelectedDeveloperId(null); setActiveView(null); setSpecialViewItem(item); }}
