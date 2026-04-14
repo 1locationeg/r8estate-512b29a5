@@ -20,19 +20,19 @@ type TipItem = { label: string; action: string; route: string; scrollTo?: string
 
 const STATION_TIP_ITEMS: Record<number, TipItem[]> = {
   1: [
-    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
-    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
-    { label: "Try AI assistant", action: "ai_ask", route: "/", domAction: "open-ai-chat" },
+    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "#journey-section-0", domAction: "focus-search" },
+    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "#journey-section-0", domAction: "focus-search" },
+    { label: "Try AI assistant", action: "ai_ask", route: "/", scrollTo: "#journey-section-0", domAction: "open-ai-chat" },
   ],
   2: [
     { label: "View a company profile", action: "entity_view", route: "/reviews" },
     { label: "Open the comparison tool", action: "compare_open", route: "/reviews" },
-    { label: "Check a spotlight card", action: "spotlight_click", route: "/", scrollTo: "[data-zone='2']" },
+    { label: "Check a spotlight card", action: "spotlight_click", route: "/", scrollTo: "#journey-section-1" },
   ],
   3: [
     { label: "Explore a deal or launch", action: "deal_click", route: "/deals" },
-    { label: "View pricing plans", action: "pricing_view", route: "/", scrollTo: "[data-zone='3']" },
-    { label: "Read 'How We Work'", action: "how_we_work", route: "/", scrollTo: "[data-zone='3']" },
+    { label: "View pricing plans", action: "pricing_view", route: "/", scrollTo: "#journey-section-2" },
+    { label: "Read 'How We Work'", action: "how_we_work", route: "/", scrollTo: "#journey-section-2" },
   ],
   4: [
     { label: "Visit the community", action: "community_click", route: "/community" },
@@ -140,7 +140,9 @@ export const JourneyCorridor = () => {
   }, [combinedZone, baseBonus]);
 
   const scrollToZone = (zone: number) => {
-    const el = document.querySelector(`[data-zone="${zone}"]`);
+    const sectionEl = document.getElementById(`journey-section-${zone - 1}`);
+    const fallbackEl = document.querySelector(`[data-zone="${zone}"]`);
+    const el = sectionEl || fallbackEl;
     if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
@@ -170,10 +172,9 @@ export const JourneyCorridor = () => {
         setTimeout(() => searchInput.focus(), 400);
         return;
       }
-      // Fallback: scroll to zone
-      if (tip.scrollTo) {
-        document.querySelector(tip.scrollTo)?.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+      // Fallback: scroll to journey section
+      const fallback = document.getElementById("journey-section-0") || document.querySelector("[data-zone='1']");
+      if (fallback) fallback.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
 
@@ -188,8 +189,9 @@ export const JourneyCorridor = () => {
         chatFab.click();
         return;
       }
-      // Fallback: scroll to zone 1
-      document.querySelector("[data-zone='1']")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      // Fallback: scroll to journey section 0
+      const fallback = document.getElementById("journey-section-0") || document.querySelector("[data-zone='1']");
+      if (fallback) fallback.scrollIntoView({ behavior: "smooth", block: "start" });
       return;
     }
 
