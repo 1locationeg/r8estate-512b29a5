@@ -1,10 +1,11 @@
 import { useEffect, useState, useRef, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { JOURNEY_STATIONS } from "@/lib/journeyStations";
 import { useCorridorEngagement } from "@/hooks/useCorridorEngagement";
 import { useAuth } from "@/contexts/AuthContext";
 import { cn } from "@/lib/utils";
-import { Check, ChevronRight, X, Search, GitCompare, Banknote, Shield } from "lucide-react";
+import { Check, ChevronRight, X, Search, GitCompare, Banknote, Shield, Circle, CheckCircle2 } from "lucide-react";
 
 const STATION_COLORS = [
   "hsl(var(--journey-research))",
@@ -15,11 +16,27 @@ const STATION_COLORS = [
 
 const STATION_ICONS = [Search, GitCompare, Banknote, Shield];
 
-const STATION_TIPS: Record<number, string[]> = {
-  1: ["Search for a developer or project", "Click a suggestion", "Try AI assistant"],
-  2: ["View a company profile", "Open the comparison tool", "Check a spotlight card"],
-  3: ["Explore a deal or launch", "View pricing plans", "Read 'How We Work'"],
-  4: ["Visit the community", "Submit feedback", "Write a review"],
+const STATION_TIP_ITEMS: Record<number, { label: string; action: string; route: string }[]> = {
+  1: [
+    { label: "Search for a developer or project", action: "search", route: "/" },
+    { label: "Click a suggestion", action: "suggestion_click", route: "/" },
+    { label: "Try AI assistant", action: "ai_ask", route: "/" },
+  ],
+  2: [
+    { label: "View a company profile", action: "entity_view", route: "/reviews" },
+    { label: "Open the comparison tool", action: "compare_open", route: "/reviews" },
+    { label: "Check a spotlight card", action: "spotlight_click", route: "/" },
+  ],
+  3: [
+    { label: "Explore a deal or launch", action: "deal_click", route: "/deals" },
+    { label: "View pricing plans", action: "pricing_view", route: "/" },
+    { label: "Read 'How We Work'", action: "how_we_work", route: "/" },
+  ],
+  4: [
+    { label: "Visit the community", action: "community_click", route: "/community" },
+    { label: "Submit feedback", action: "feedback_submit", route: "/community" },
+    { label: "Write a review", action: "review_click", route: "/reviews" },
+  ],
 };
 
 const STATION_HINTS: Record<number, string> = {
@@ -40,7 +57,8 @@ const getProgressGradient = (pct: number) => {
 
 export const JourneyCorridor = () => {
   const { t } = useTranslation();
-  const { zoneEngagement } = useCorridorEngagement();
+  const navigate = useNavigate();
+  const { zoneEngagement, completedActions } = useCorridorEngagement();
   const { user } = useAuth();
   const [activeZone, setActiveZone] = useState(0);
   const [zoneScrollProgress, setZoneScrollProgress] = useState<[number, number, number, number]>([0, 0, 0, 0]);
@@ -129,6 +147,11 @@ export const JourneyCorridor = () => {
     setShowBreakdown(false);
   };
 
+  const handleTipClick = (route: string) => {
+    setShowBreakdown(false);
+    navigate(route);
+  };
+
   const nextIncomplete = useMemo(() => {
     for (let i = 0; i < 4; i++) {
       if (combinedZone[i] < 1) return i + 1;
@@ -204,7 +227,8 @@ export const JourneyCorridor = () => {
                     const pct = Math.round(combinedZone[idx] * 100);
                     const Icon = STATION_ICONS[idx];
                     const isComplete = pct >= 100;
-                    const tips = STATION_TIPS[idx + 1];
+                    const tips = STATION_TIP_ITEMS[idx + 1];
+                    const zoneCompleted = completedActions[idx + 1] || [];
 
                     return (
                       <div key={station.key}>
@@ -245,16 +269,36 @@ export const JourneyCorridor = () => {
                           </div>
                         </button>
 
-                        {!isComplete && (
-                          <div className="ml-7 mt-1 space-y-0.5">
-                            {tips.map((tip, tIdx) => (
-                              <div key={tIdx} className="flex items-center gap-1.5 text-[10px] text-muted-foreground">
-                                <span className="w-1 h-1 rounded-full bg-muted-foreground/40 flex-shrink-0" />
-                                {tip}
-                              </div>
-                            ))}
-                          </div>
-                        )}
+                        {/* Tips - always show, with green/grey status */}
+                        <div className="ml-7 mt-1.5 space-y-0.5">
+                          {tips.map((tip, tIdx) => {
+                            const isDone = zoneCompleted.includes(tip.action);
+                            return (
+                              <button
+                                key={tIdx}
+                                onClick={() => handleTipClick(tip.route)}
+                                className={cn(
+                                  "flex items-center gap-1.5 text-[10px] w-full text-start rounded-sm px-1 py-0.5 -mx-1 transition-colors",
+                                  isDone
+                                    ? "text-emerald-600 dark:text-emerald-400"
+                                    : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                                )}
+                              >
+                                {isDone ? (
+                                  <CheckCircle2 className="w-3 h-3 flex-shrink-0 text-emerald-500" />
+                                ) : (
+                                  <Circle className="w-2.5 h-2.5 flex-shrink-0 opacity-40" />
+                                )}
+                                <span className={isDone ? "line-through opacity-70" : ""}>
+                                  {tip.label}
+                                </span>
+                                {!isDone && (
+                                  <ChevronRight className="w-3 h-3 ml-auto opacity-0 group-hover:opacity-100 flex-shrink-0" />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
                       </div>
                     );
                   })}
@@ -267,7 +311,7 @@ export const JourneyCorridor = () => {
                     </p>
                   ) : (
                     <p className="text-[10px] text-center text-muted-foreground">
-                      Explore each section to unlock your full journey. Progress is saved automatically.
+                      Tap any tip to jump there. Progress is saved automatically.
                     </p>
                   )}
                 </div>

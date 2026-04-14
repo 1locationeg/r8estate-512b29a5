@@ -3,6 +3,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "corridor_engagement";
+const ACTIONS_KEY = "corridor_completed_actions";
+
 const ACTIONS_PER_ZONE: Record<number, string[]> = {
   1: ["search", "suggestion_click", "voice_search", "ai_ask"],
   2: ["entity_view", "compare_open", "detail_click", "spotlight_click"],
@@ -30,6 +32,7 @@ const POINTS: Record<string, number> = {
 };
 
 type ZoneTuple = [number, number, number, number];
+type CompletedActions = Record<number, string[]>;
 
 function loadFromStorage(): ZoneTuple {
   try {
@@ -39,10 +42,25 @@ function loadFromStorage(): ZoneTuple {
   return [0, 0, 0, 0];
 }
 
+function loadActionsFromStorage(): CompletedActions {
+  try {
+    const raw = localStorage.getItem(ACTIONS_KEY) || sessionStorage.getItem(ACTIONS_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch {}
+  return {};
+}
+
 function saveToStorage(data: ZoneTuple) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  } catch {}
+}
+
+function saveActionsToStorage(data: CompletedActions) {
+  try {
+    localStorage.setItem(ACTIONS_KEY, JSON.stringify(data));
+    sessionStorage.setItem(ACTIONS_KEY, JSON.stringify(data));
   } catch {}
 }
 
@@ -56,9 +74,21 @@ function mergeEngagement(a: ZoneTuple, b: ZoneTuple): ZoneTuple {
   ];
 }
 
+/** Merge two completed-actions records (union of arrays per zone) */
+function mergeActions(a: CompletedActions, b: CompletedActions): CompletedActions {
+  const result: CompletedActions = {};
+  const allZones = new Set([...Object.keys(a), ...Object.keys(b)].map(Number));
+  for (const z of allZones) {
+    const merged = new Set([...(a[z] || []), ...(b[z] || [])]);
+    result[z] = Array.from(merged);
+  }
+  return result;
+}
+
 export function useCorridorEngagement() {
   const { user } = useAuth();
   const [zoneEngagement, setZoneEngagement] = useState<ZoneTuple>(loadFromStorage);
+  const [completedActions, setCompletedActions] = useState<CompletedActions>(loadActionsFromStorage);
   const dbLoaded = useRef(false);
   const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -110,7 +140,6 @@ export function useCorridorEngagement() {
             .maybeSingle();
 
           if (existing) {
-            // Merge with DB value to avoid overwriting progress from another session
             const dbData = existing.zone_engagement as unknown as ZoneTuple;
             const merged = mergeEngagement(data, dbData);
             await supabase
@@ -134,11 +163,22 @@ export function useCorridorEngagement() {
     (zone: number, action: string) => {
       if (zone < 1 || zone > 4) return;
       const pts = POINTS[action] ?? 0.15;
+
+      // Update zone engagement scores
       setZoneEngagement((prev) => {
         const next = [...prev] as ZoneTuple;
         next[zone - 1] = Math.min(1, next[zone - 1] + pts);
         saveToStorage(next);
         persistToDb(next);
+        return next;
+      });
+
+      // Track completed action (deduplicated)
+      setCompletedActions((prev) => {
+        const zoneActions = prev[zone] || [];
+        if (zoneActions.includes(action)) return prev;
+        const next = { ...prev, [zone]: [...zoneActions, action] };
+        saveActionsToStorage(next);
         return next;
       });
     },
@@ -157,5 +197,5 @@ export function useCorridorEngagement() {
     return () => window.removeEventListener("corridor:engage", handler);
   }, [trackEngagement]);
 
-  return { zoneEngagement, trackEngagement };
+  return { zoneEngagement, completedActions, trackEngagement };
 }
