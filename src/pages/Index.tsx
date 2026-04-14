@@ -103,6 +103,7 @@ const Index = () => { // hero-phase-v2
   const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
   const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedDeveloper = useMemo(() => {
     if (!selectedDeveloperId) return null;
@@ -271,7 +272,32 @@ const Index = () => { // hero-phase-v2
         {/* Hero Card */}
         <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0">
           <div className="relative text-center">
-             <p className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-[#e8f5e9]/70 backdrop-blur-sm text-[#2e7d32]">
+             <p
+              className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-[#e8f5e9]/70 backdrop-blur-sm text-[#2e7d32] select-none cursor-default"
+              onClick={(e) => {
+                if (e.ctrlKey || e.metaKey) {
+                  e.preventDefault();
+                  navigate("/products");
+                }
+              }}
+              onTouchStart={() => {
+                longPressRef.current = window.setTimeout(() => {
+                  navigate("/products");
+                }, 800);
+              }}
+              onTouchEnd={() => {
+                if (longPressRef.current) {
+                  clearTimeout(longPressRef.current);
+                  longPressRef.current = null;
+                }
+              }}
+              onTouchMove={() => {
+                if (longPressRef.current) {
+                  clearTimeout(longPressRef.current);
+                  longPressRef.current = null;
+                }
+              }}
+            >
               <span className="pb-0 font-bold">TRUST</span>
               <svg viewBox="0 0 20 24" fill="none" className="w-4 h-5 shrink-0" aria-label="Verified">
                 <path d="M10 0C10 0 12.5 2.5 16 2.5C16 2.5 17.5 9 16.5 13C15.5 17 10 21.5 10 21.5C10 21.5 4.5 17 3.5 13C2.5 9 4 2.5 4 2.5C7.5 2.5 10 0 10 0Z" fill="#6ab04c" />

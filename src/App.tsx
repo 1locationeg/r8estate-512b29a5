@@ -64,6 +64,7 @@ const StaticPage = lazy(() => import("./pages/StaticPage"));
 const ReviewerProgram = lazy(() => import("./pages/ReviewerProgram"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const Businesses = lazy(() => import("./pages/Businesses"));
+const Products = lazy(() => import("./pages/Products"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -200,6 +201,7 @@ const AppContent = () => {
           <Route path="/customer-service" element={<StaticPage />} />
           <Route path="/faq" element={<StaticPage />} />
           <Route path="/report" element={<StaticPage />} />
+          <Route path="/products" element={<Products />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
