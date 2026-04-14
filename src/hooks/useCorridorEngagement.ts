@@ -1,4 +1,6 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 const STORAGE_KEY = "corridor_engagement";
 const ACTIONS_PER_ZONE: Record<number, string[]> = {
@@ -27,36 +29,121 @@ const POINTS: Record<string, number> = {
   review_click: 0.2,
 };
 
-function loadFromStorage(): [number, number, number, number] {
+type ZoneTuple = [number, number, number, number];
+
+function loadFromStorage(): ZoneTuple {
   try {
-    // Try localStorage first (persistent), fall back to sessionStorage
     const raw = localStorage.getItem(STORAGE_KEY) || sessionStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
   } catch {}
   return [0, 0, 0, 0];
 }
 
-function saveToStorage(data: [number, number, number, number]) {
+function saveToStorage(data: ZoneTuple) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    // Keep sessionStorage in sync for backward compat
     sessionStorage.setItem(STORAGE_KEY, JSON.stringify(data));
   } catch {}
 }
 
-export function useCorridorEngagement() {
-  const [zoneEngagement, setZoneEngagement] = useState<[number, number, number, number]>(loadFromStorage);
+/** Merge two engagement tuples, taking the max of each zone */
+function mergeEngagement(a: ZoneTuple, b: ZoneTuple): ZoneTuple {
+  return [
+    Math.min(1, Math.max(a[0], b[0])),
+    Math.min(1, Math.max(a[1], b[1])),
+    Math.min(1, Math.max(a[2], b[2])),
+    Math.min(1, Math.max(a[3], b[3])),
+  ];
+}
 
-  const trackEngagement = useCallback((zone: number, action: string) => {
-    if (zone < 1 || zone > 4) return;
-    const pts = POINTS[action] ?? 0.15;
-    setZoneEngagement((prev) => {
-      const next = [...prev] as [number, number, number, number];
-      next[zone - 1] = Math.min(1, next[zone - 1] + pts);
-      saveToStorage(next);
-      return next;
-    });
-  }, []);
+export function useCorridorEngagement() {
+  const { user } = useAuth();
+  const [zoneEngagement, setZoneEngagement] = useState<ZoneTuple>(loadFromStorage);
+  const dbLoaded = useRef(false);
+  const saveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Load from DB on auth, merge with localStorage (take max)
+  useEffect(() => {
+    if (!user) {
+      dbLoaded.current = false;
+      return;
+    }
+
+    const loadFromDb = async () => {
+      try {
+        const { data } = await supabase
+          .from("journey_progress")
+          .select("zone_engagement")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        const dbData: ZoneTuple = data?.zone_engagement
+          ? (data.zone_engagement as unknown as ZoneTuple)
+          : [0, 0, 0, 0];
+
+        setZoneEngagement((local) => {
+          const merged = mergeEngagement(local, dbData);
+          saveToStorage(merged);
+          return merged;
+        });
+        dbLoaded.current = true;
+      } catch (err) {
+        console.error("Failed to load journey progress:", err);
+        dbLoaded.current = true;
+      }
+    };
+
+    loadFromDb();
+  }, [user]);
+
+  // Debounced save to DB
+  const persistToDb = useCallback(
+    (data: ZoneTuple) => {
+      if (!user) return;
+      if (saveTimer.current) clearTimeout(saveTimer.current);
+      saveTimer.current = setTimeout(async () => {
+        try {
+          const { data: existing } = await supabase
+            .from("journey_progress")
+            .select("id, zone_engagement")
+            .eq("user_id", user.id)
+            .maybeSingle();
+
+          if (existing) {
+            // Merge with DB value to avoid overwriting progress from another session
+            const dbData = existing.zone_engagement as unknown as ZoneTuple;
+            const merged = mergeEngagement(data, dbData);
+            await supabase
+              .from("journey_progress")
+              .update({ zone_engagement: merged as unknown as any, updated_at: new Date().toISOString() })
+              .eq("id", existing.id);
+          } else {
+            await supabase
+              .from("journey_progress")
+              .insert({ user_id: user.id, zone_engagement: data as unknown as any });
+          }
+        } catch (err) {
+          console.error("Failed to save journey progress:", err);
+        }
+      }, 1500);
+    },
+    [user]
+  );
+
+  const trackEngagement = useCallback(
+    (zone: number, action: string) => {
+      if (zone < 1 || zone > 4) return;
+      const pts = POINTS[action] ?? 0.15;
+      setZoneEngagement((prev) => {
+        const next = [...prev] as ZoneTuple;
+        next[zone - 1] = Math.min(1, next[zone - 1] + pts);
+        saveToStorage(next);
+        persistToDb(next);
+        return next;
+      });
+    },
+    [persistToDb]
+  );
 
   // Listen for custom DOM events from any component
   useEffect(() => {
