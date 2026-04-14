@@ -1,54 +1,62 @@
 
 
-## Plan: Redesign Products Page — Minimal, Branded, Benefit-Focused
+## Plan: Create R8 MAP Interactive Demo Page
 
-### Problem
-The current Products page uses a dark standalone theme (black bg, amber accents) that's disconnected from the main R8ESTATE brand (navy/gold/white). It's also crowded — 10 large cards with feature lists, a stage overview section, AND a flywheel section all compete for attention.
+### What it does
+When clicking the "R8 MAP" product card on the Products page, it navigates to a new `/products/r8-map` route that shows an interactive Leaflet-based map demo with 24 real Egyptian projects, color-coded trust markers, a sidebar with search/filters, and a detail panel for each project.
 
-### Approach
-Rebuild the page using the site's existing design tokens (navy primary, gold accent, white background) with a clean, minimal layout. Replace verbose feature lists with a single benefit line per product. Group products under their stage with a stage icon. Remove the flywheel section (or reduce to a single line). Use the site's `bg-background`, `text-foreground`, `text-primary`, `text-accent` tokens.
+### Changes
 
-### Changes — `src/pages/Products.tsx`
+**1. New page: `src/pages/R8MapDemo.tsx`**
+Convert the uploaded HTML into a React component:
+- Leaflet map centered on Egypt with dark tile styling
+- 24 projects with color-coded markers (green 80+, yellow 60-79, orange 40-59, red <40)
+- Heatmap glow circles for risk concentration zones
+- Clickable markers opening a slide-in detail panel (trust score, delivery status, delay, reviews, sentiment tags)
+- Left sidebar with search input, filter chips (Trust Zone, Stage, Area), scrollable project list
+- Top bar with "R8 MAP" branding, live badge, and stat chips
+- HUD overlay showing market avg trust score and zone breakdown
+- Use `react-leaflet` library (needs install) or load Leaflet via CDN script tag
+- Dark theme using CSS variables matching the uploaded file's aesthetic
+- Back link to `/products`
 
-**1. Background & Theme**
-- Replace `bg-[#0a0a0a] text-white` with `bg-background text-foreground` (site's light theme).
-- Remove the grain texture overlay entirely.
-- Use `font-['Montserrat']` consistent with the site.
+**2. Update `src/pages/Products.tsx`**
+- Make the "R8 MAP" product row clickable with `onClick={() => navigate('/products/r8-map')}`
+- Add a small "PREVIEW" or arrow indicator to show it's interactive
+- Import `useNavigate` from react-router-dom
 
-**2. Hero — Simplify**
-- Keep "BUILT ON TRUST / POWERED BY DATA" but style with `text-primary` (navy) and `text-accent` (gold) instead of white/amber.
-- Remove the stats row (10/3/∞) and "The Complete Ecosystem" subtitle — they add noise.
-- Add a short buyer-focused benefit line: "Know before you buy. Verify before you sign. Track after you pay."
+**3. Update `src/App.tsx`**
+- Add lazy import for `R8MapDemo`
+- Add route: `<Route path="/products/r8-map" element={<R8MapDemo />} />`
 
-**3. Stage Icons**
-- Assign Lucide icons to each stage: `Search` (Before You Buy), `FileSignature` (At Signing), `ShieldCheck` (After You Buy).
-- Remove the separate stage overview cards — merge stage headers directly into the product listing.
+**4. Install dependency**
+- `react-leaflet` + `leaflet` + `@types/leaflet` for the map
 
-**4. Products — Compact List by Stage**
-- Group products under stage headers (with stage icon + stage name).
-- Each product becomes a single compact row: icon | name | one-line benefit (replacing the long description + feature list).
-- Replace verbose descriptions with short buyer benefits:
-  - R8 MAP → "See trust scores on a live map"
-  - R8 METER → "Instant trust score for any entity"
-  - R8 PULSE → "Real-time market sentiment signals"
-  - R8 INTEL → "Deep developer intelligence reports"
-  - R8 SHIELD → "AI-powered contract risk detection"
-  - R8 CHECK → "One-click broker background check"
-  - R8 CERTIFIED → "Developer trust certification badge"
-  - R8 TRACK → "Track your unit's delivery progress"
-  - R8 VOICE → "Verified buyer review engine"
-  - R8 KEYS → "Trusted resale & handover platform"
-- "COMING SOON" badge on each row in muted text.
+### Technical details
 
-**5. Flywheel — Reduce to a subtle footer line**
-- Replace the full flywheel section with a single centered line: "Every product feeds every other — trust compounds over time."
+```text
+/products page
+  └── Click "R8 MAP" row → navigate("/products/r8-map")
 
-**6. Footer — Match site**
-- Use `text-primary` and `text-muted-foreground` instead of white.
+/products/r8-map page
+  ├── TopBar: "R8 MAP · Live Trust Intelligence Layer" + LIVE badge
+  ├── Sidebar (300px, left)
+  │   ├── Search input (filters project list)
+  │   ├── Filter chips: Trust Zone / Stage / Area
+  │   ├── Scrollable project list (click → highlight + open detail)
+  │   └── Legend (score color ranges)
+  ├── Map (Leaflet, dark tiles)
+  │   ├── 24 numbered markers (color = trust score)
+  │   ├── 5 heatmap glow circles
+  │   └── Search bar overlay
+  ├── Detail Panel (slide-in right, 280px)
+  │   ├── Trust score circle + grade
+  │   ├── Delivery status, delay, reviews
+  │   └── Buyer sentiment tags
+  └── HUD (bottom-right)
+      ├── Market Avg Trust Score: 67/100
+      └── Zone Breakdown: 18 Trusted / 21 Caution / 8 At Risk
+```
 
-**7. Back link**
-- Style with `text-muted-foreground` and site tokens.
-
-### Result
-A clean, scrollable page that feels like part of the R8ESTATE site — light background, navy/gold palette, minimal layout with clear benefits per product grouped by journey stage.
+The page is a full standalone dark-themed demo — self-contained with all 24 projects hardcoded, no database queries needed. Mobile: sidebar collapses, detail panel becomes a bottom sheet.
 
