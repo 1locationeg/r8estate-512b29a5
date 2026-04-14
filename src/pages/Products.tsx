@@ -44,7 +44,7 @@ const STAGES = [
 
 const Products = () => {
   const navigate = useNavigate();
-  const interactiveProducts: Record<string, string> = { "R8 MAP": "/products/r8-map" };
+  const interactiveProducts: Record<string, string> = { "R8 MAP": "/products/r8-map", "R8 METER": "https://meter.r8estate.com" };
   return (
     <div className="min-h-screen bg-background text-foreground">
       {/* Back link */}
