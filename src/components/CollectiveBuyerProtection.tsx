@@ -59,12 +59,12 @@ export const CollectiveBuyerProtection = () => {
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
-      <div className="relative overflow-hidden rounded-2xl border border-destructive/15 bg-card/80 backdrop-blur-sm">
-        {/* Subtle red gradient overlay */}
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.03] via-transparent to-destructive/[0.02]" />
+      <div className="relative overflow-hidden rounded-2xl border border-red-200/40 dark:border-red-900/30 bg-red-50/80 dark:bg-red-950/20 backdrop-blur-sm">
+        {/* Red gradient overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.06] via-transparent to-destructive/[0.04]" />
         {/* Dot texture */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          className="pointer-events-none absolute inset-0 opacity-[0.06]"
           style={{
             backgroundImage: "radial-gradient(circle, hsl(var(--destructive)) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
@@ -80,7 +80,7 @@ export const CollectiveBuyerProtection = () => {
                 {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
               </span>
             </div>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive ltr:ml-6 rtl:mr-6">
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
             <span className="text-xs text-muted-foreground ltr:ml-6 rtl:mr-6">
@@ -91,7 +91,7 @@ export const CollectiveBuyerProtection = () => {
           {/* Row 2: Risk keyword pills */}
           <div className="flex items-center gap-3 flex-wrap">
             {riskKeywords.map((word, i) => (
-              <div key={i} className="flex items-center gap-1">
+              <div key={i} className="flex items-center gap-1 bg-red-100/60 dark:bg-red-900/20 rounded-full px-2.5 py-0.5">
                 <X className="h-3.5 w-3.5 text-destructive shrink-0" />
                 <span className="text-sm font-bold text-foreground">{word}</span>
               </div>
@@ -99,7 +99,7 @@ export const CollectiveBuyerProtection = () => {
           </div>
 
           {/* Divider */}
-          <div className="border-t border-border/60" />
+          <div className="border-t border-red-200/40 dark:border-red-800/30" />
 
           {/* Row 3 & 4: WITH R8ESTATE — green safe zone */}
           <div className="bg-journey-protect/[0.04] rounded-lg p-2.5 space-y-2 border border-journey-protect/10">
