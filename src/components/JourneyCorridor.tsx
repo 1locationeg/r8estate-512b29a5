@@ -16,13 +16,13 @@ const STATION_COLORS = [
 
 const STATION_ICONS = [Search, GitCompare, Banknote, Shield];
 
-type TipItem = { label: string; action: string; route: string; scrollTo?: string };
+type TipItem = { label: string; action: string; route: string; scrollTo?: string; domAction?: string };
 
 const STATION_TIP_ITEMS: Record<number, TipItem[]> = {
   1: [
-    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']" },
-    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']" },
-    { label: "Try AI assistant", action: "ai_ask", route: "/", scrollTo: "[data-zone='1']" },
+    { label: "Search for a developer or project", action: "search", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
+    { label: "Click a suggestion", action: "suggestion_click", route: "/", scrollTo: "[data-zone='1']", domAction: "focus-search" },
+    { label: "Try AI assistant", action: "ai_ask", route: "/", domAction: "open-ai-chat" },
   ],
   2: [
     { label: "View a company profile", action: "entity_view", route: "/reviews" },
