@@ -39,7 +39,9 @@ export function PricingTeaser() {
             className={`cursor-pointer p-3 sm:p-4 text-center transition-all hover:shadow-md relative overflow-hidden ${
               highlight
                 ? "border-primary/60 bg-primary/5 ring-1 ring-primary/20 row-span-2"
-                : "border-border hover:border-primary/30"
+                : key === "business"
+                  ? "border-business-border/40 bg-business/5 hover:border-business-border/60"
+                  : "border-border hover:border-primary/30"
             }`}
           >
             {/* Highlight glow for Pro */}
@@ -47,8 +49,8 @@ export function PricingTeaser() {
               <div className="absolute -top-8 -right-8 w-24 h-24 bg-primary/10 rounded-full blur-2xl pointer-events-none" />
             )}
 
-            <Icon className={`w-5 h-5 mx-auto mb-1.5 ${highlight ? "text-primary" : "text-muted-foreground"}`} />
-            <p className={`text-sm font-semibold ${highlight ? "text-primary" : "text-foreground"}`}>
+            <Icon className={`w-5 h-5 mx-auto mb-1.5 ${highlight ? "text-primary" : key === "business" ? "text-business-border" : "text-muted-foreground"}`} />
+            <p className={`text-sm font-semibold ${highlight ? "text-primary" : key === "business" ? "text-business-border" : "text-foreground"}`}>
               {t(`pricingTeaser.${key}.title`)}
             </p>
 
