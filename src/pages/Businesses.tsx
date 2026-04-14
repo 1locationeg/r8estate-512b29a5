@@ -462,7 +462,7 @@ const Businesses = () => {
                   <h3 className="font-semibold text-foreground">Can't find a business?</h3>
                   <p className="text-sm text-muted-foreground">Add it to R8Estate and be the first to review it.</p>
                 </div>
-                <Button onClick={() => navigate("/auth")} className="shrink-0">
+                <Button onClick={() => navigate("/auth")} className="shrink-0 bg-business-border hover:bg-business-border/90 text-white">
                   <Plus className="w-4 h-4 mr-1" /> Add Business
                 </Button>
               </CardContent>
