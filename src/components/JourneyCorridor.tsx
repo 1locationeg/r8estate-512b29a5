@@ -149,9 +149,25 @@ export const JourneyCorridor = () => {
     setShowBreakdown(false);
   };
 
-  const handleTipClick = (route: string) => {
+  const handleTipClick = (tip: TipItem) => {
     setShowBreakdown(false);
-    navigate(route);
+    const currentPath = window.location.pathname;
+
+    if (tip.route === currentPath && tip.scrollTo) {
+      // Same page — scroll to relevant section
+      const el = document.querySelector(tip.scrollTo);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    } else if (tip.route !== currentPath) {
+      // Different page — navigate
+      navigate(tip.route);
+    } else if (tip.scrollTo) {
+      const el = document.querySelector(tip.scrollTo);
+      if (el) {
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
   };
 
   const nextIncomplete = useMemo(() => {
