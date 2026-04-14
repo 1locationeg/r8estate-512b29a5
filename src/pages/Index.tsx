@@ -579,8 +579,6 @@ const Index = () => { // hero-phase-v2
                   </div>
                 )}
                 <div className="section-divider" />
-                <div className="w-full max-w-[1100px] py-4 md:py-6"><StepTimeline /></div>
-                <div className="section-divider" />
                 {!specialViewItem && !selectedDeveloper && (
                   <>
                     <div className="section-divider" />
