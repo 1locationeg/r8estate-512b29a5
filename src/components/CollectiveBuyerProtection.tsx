@@ -129,7 +129,7 @@ export const CollectiveBuyerProtection = () => {
                 />
               ))}
             </div>
-            <span className="text-journey-protect font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)]">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
           </div>
 
           <div className="flex items-center gap-3">
