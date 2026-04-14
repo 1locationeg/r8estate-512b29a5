@@ -1,76 +1,26 @@
 
 
-## Research Hub — Search-Triggered Full Experience
+## Make Research Search Button Open Inline Focus (Like Hero)
 
-### Concept
-When the user clicks/focuses the search bar in the Research station scroll section, instead of just the standard search suggestions dropdown, the mobile overlay (and desktop expanded view) will include a **Research Hub toolkit** below the search results. This gives the first-time buyer a complete index of every research tool available on the platform — all triggered from the familiar search interaction.
+### Problem
+Currently, clicking the search button in the collapsed Research station calls `onExpand`, which opens the full station expanded content. The user wants it to behave like the hero search bar — clicking focuses an actual search input inline, which then shows the `ResearchToolkitPanel` in the focus overlay/dropdown.
 
-### How It Works
+### Solution
+Replace the fake search button in `StationCompactHook` (for the research station) with the actual `HeroSearchBar` component (with `showResearchHub={true}`). This way, clicking it focuses the real search input and opens the research toolkit panel inline — no station expansion needed.
 
-The `HeroSearchBar` already has two modes:
-1. **Desktop**: Search input with `SearchSuggestions` dropdown below
-2. **Mobile**: Full-screen overlay with search + suggestions
+### Changes
 
-The plan: Add a new prop `showResearchHub?: boolean` to `HeroSearchBar`. When true AND the search bar is focused (with no query or few results), render a **ResearchToolkitPanel** below the suggestions. The Research station in `JourneyScrollSections` will pass `showResearchHub={true}`.
+**File: `src/components/JourneyScrollSections.tsx`**
 
-### ResearchToolkitPanel Layout
+1. In `StationCompactHook` (line 309-315), replace the fake button with the actual `HeroSearchBar` component:
+   - Render `<HeroSearchBar showResearchHub={true} />` directly in the compact hook
+   - Remove the `onExpand` call for the research station — the search bar handles its own focus state
+   - Keep the other stations' compact hooks unchanged
 
-```text
-┌─────────────────────────────────────┐
-│  [Search Input] ← user typed here  │
-│  [SearchSuggestions - if query]     │
-│                                     │
-│  ── DISCOVER ─────────────────────  │
-│  🏢 Browse Categories    → /categories
-│  🏗️ Developer Directory  → /directory
-│  🏆 Leaderboard          → /leaderboard
-│  📦 Products             → /products
-│                                     │
-│  ── EVALUATE ─────────────────────  │
-│  ⚖️ Compare Developers   → modal
-│  ⭐ Read Reviews         → /reviews
-│  🤖 AI Trust Agent       → modal
-│  📊 Market Insights      → /insights
-│                                     │
-│  ── TRACK ────────────────────────  │
-│  🔔 Saved Searches       → /auth
-│  💡 Smart Recs           → AI
-│                                     │
-│  ── Quick Stats ──────────────────  │
-│  18 Categories · 70+ Businesses     │
-│                                     │
-│  [Ready to choose? → Station 2]    │
-└─────────────────────────────────────┘
-```
+2. In `JourneyStepSection`, for the research station when collapsed, skip the "Tap to explore" text since the search bar is self-explanatory
 
-### Implementation Steps
+3. Keep the expanded content as-is (still accessible via a small "expand" link or the search bar's navigation actions)
 
-**1. Create `src/components/ResearchToolkitPanel.tsx`**
-- A new component with grouped tool cards (Discover, Evaluate, Track)
-- Each card: icon + title + subtitle + arrow → navigates to route or opens modal
-- Accepts `onClose` callback to dismiss the search overlay
-- Accepts `onOpenCompare` and `onOpenAIAgent` for modal triggers
-- Uses journey-research color theming
-- Full RTL support
-- "Ready to choose?" CTA at bottom scrolls to `#journey-section-1`
-
-**2. Update `src/components/HeroSearchBar.tsx`**
-- Add `showResearchHub?: boolean` prop (default false)
-- In the mobile full-screen overlay: render `ResearchToolkitPanel` below `SearchSuggestions` when `showResearchHub` is true and query is empty
-- In the desktop view: render `ResearchToolkitPanel` as part of the dropdown area when focused, query is empty, and `showResearchHub` is true
-
-**3. Update `src/components/JourneyScrollSections.tsx`**
-- Pass `showResearchHub={true}` to the `HeroSearchBar` inside `ResearchStorySection`
-
-**4. Add translations** (`en.json`, `ar.json`)
-- Keys under `researchHub.*` for section headers (Discover, Evaluate, Track) and tool card labels/subtitles
-
-### Files to create/modify
-1. **New**: `src/components/ResearchToolkitPanel.tsx`
-2. **Edit**: `src/components/HeroSearchBar.tsx` — add prop, render panel
-3. **Edit**: `src/components/JourneyScrollSections.tsx` — pass prop
-4. **Edit**: `src/i18n/locales/en.json` — add translation keys
-5. **Edit**: `src/i18n/locales/ar.json` — add Arabic translations
-
-### No database or backend changes needed.
+### Files to modify
+- `src/components/JourneyScrollSections.tsx` — replace fake search button with real `HeroSearchBar` in compact hook
 
