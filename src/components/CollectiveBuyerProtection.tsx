@@ -101,47 +101,47 @@ export const CollectiveBuyerProtection = () => {
           {/* Divider */}
           <div className="border-t border-border/60" />
 
-          {/* Row 3: WITH R8ESTATE */}
-          <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
-            <CheckCircle className="h-4 w-4 text-primary shrink-0" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
-              {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
-            </span>
-            <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
-              {avatars.map((src, i) => (
-                <img
-                  key={i}
-                  src={src}
-                  alt=""
-                  loading="lazy"
-                  width={22}
-                  height={22}
-                  className="h-[22px] w-[22px] rounded-full border-2 border-border object-cover"
-                />
-              ))}
+          {/* Row 3 & 4: WITH R8ESTATE — green safe zone */}
+          <div className="bg-journey-protect/[0.04] rounded-lg p-2.5 space-y-2 border border-journey-protect/10">
+            <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
+              <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
+                {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
+              </span>
+              <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
+                {avatars.map((src, i) => (
+                  <img
+                    key={i}
+                    src={src}
+                    alt=""
+                    loading="lazy"
+                    width={22}
+                    height={22}
+                    className="h-[22px] w-[22px] rounded-full border-2 border-journey-protect/30 object-cover"
+                  />
+                ))}
+              </div>
+              <span className="text-journey-protect font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
             </div>
-            <span className="text-foreground font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
-            
-          </div>
 
-          {/* Row 4: CTA */}
-          <div className="flex items-center gap-3">
-            <Button
-              size="sm"
-              variant="glow"
-              className="text-xs font-bold"
-              onClick={() => navigate("/reviews")}
-            >
-              {isAr ? "احمي شرايك" : "Protect My Purchase"}
-            </Button>
-            <ShareMenu
-              title="R8ESTATE"
-              description={shareText}
-              iconOnly
-              variant="ghost"
-              size="icon"
-              className="text-muted-foreground hover:text-foreground h-8 w-8"
-            />
+            {/* CTA */}
+            <div className="flex items-center gap-3">
+              <Button
+                size="sm"
+                className="text-xs font-bold bg-journey-protect hover:bg-journey-protect/90 text-white"
+                onClick={() => navigate("/reviews")}
+              >
+                {isAr ? "احمي شرايك" : "Protect My Purchase"}
+              </Button>
+              <ShareMenu
+                title="R8ESTATE"
+                description={shareText}
+                iconOnly
+                variant="ghost"
+                size="icon"
+                className="text-muted-foreground hover:text-foreground h-8 w-8"
+              />
+            </div>
           </div>
         </div>
       </div>
