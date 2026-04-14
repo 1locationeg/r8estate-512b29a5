@@ -59,18 +59,14 @@ export const CollectiveBuyerProtection = () => {
 
   return (
     <section className="w-full" dir={isAr ? "rtl" : "ltr"}>
-      <div
-        className="relative overflow-hidden rounded-2xl"
-        style={{
-          background:
-            "linear-gradient(135deg, hsl(203,81%,8%) 0%, hsl(203,65%,16%) 40%, hsl(203,55%,22%) 70%, hsl(203,45%,28%) 100%)",
-        }}
-      >
+      <div className="relative overflow-hidden rounded-2xl border border-destructive/15 bg-card/80 backdrop-blur-sm">
+        {/* Subtle red gradient overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-destructive/[0.03] via-transparent to-destructive/[0.02]" />
         {/* Dot texture */}
         <div
-          className="pointer-events-none absolute inset-0 opacity-[0.03]"
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
           style={{
-            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+            backgroundImage: "radial-gradient(circle, hsl(var(--destructive)) 1px, transparent 1px)",
             backgroundSize: "18px 18px",
           }}
         />
@@ -84,10 +80,10 @@ export const CollectiveBuyerProtection = () => {
                 {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
               </span>
             </div>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-[hsl(0,85%,60%)] ltr:ml-6 rtl:mr-6">
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
-            <span className="text-xs text-white/60 ltr:ml-6 rtl:mr-6">
+            <span className="text-xs text-muted-foreground ltr:ml-6 rtl:mr-6">
               {isAr ? "في خطر عبر مشتري العقارات في مصر" : "at risk across Egyptian off-plan buyers"}
             </span>
           </div>
@@ -97,18 +93,18 @@ export const CollectiveBuyerProtection = () => {
             {riskKeywords.map((word, i) => (
               <div key={i} className="flex items-center gap-1">
                 <X className="h-3.5 w-3.5 text-destructive shrink-0" />
-                <span className="text-sm font-bold text-white">{word}</span>
+                <span className="text-sm font-bold text-foreground">{word}</span>
               </div>
             ))}
           </div>
 
           {/* Divider */}
-          <div className="border-t border-white/10" />
+          <div className="border-t border-border/60" />
 
           {/* Row 3: WITH R8ESTATE */}
           <div ref={protectedCount.ref} className="flex items-center gap-2 flex-wrap">
-            <CheckCircle className="h-4 w-4 text-[hsl(45,96%,54%)] shrink-0" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-[hsl(45,96%,54%)]">
+            <CheckCircle className="h-4 w-4 text-primary shrink-0" />
+            <span className="text-[11px] font-bold uppercase tracking-wider text-primary">
               {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
             </span>
             <div className="flex -space-x-2 rtl:space-x-reverse ltr:ml-2 rtl:mr-2">
@@ -120,11 +116,11 @@ export const CollectiveBuyerProtection = () => {
                   loading="lazy"
                   width={22}
                   height={22}
-                  className="h-[22px] w-[22px] rounded-full border-2 border-white/20 object-cover"
+                  className="h-[22px] w-[22px] rounded-full border-2 border-border object-cover"
                 />
               ))}
             </div>
-            <span className="text-white font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
+            <span className="text-foreground font-bold tabular-nums text-xs">{protectedCount.value}+ {isAr ? "محمي" : "Protected"}</span>
             
           </div>
 
@@ -144,7 +140,7 @@ export const CollectiveBuyerProtection = () => {
               iconOnly
               variant="ghost"
               size="icon"
-              className="text-white/50 hover:text-white h-8 w-8"
+              className="text-muted-foreground hover:text-foreground h-8 w-8"
             />
           </div>
         </div>
