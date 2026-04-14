@@ -36,7 +36,7 @@ export const JOURNEY_STATIONS: JourneyStation[] = [
     bgClass: "bg-journey-choose",
     textClass: "text-journey-choose",
     bgTintClass: "bg-journey-choose/10",
-    homeRoute: "/portfolio",
+    homeRoute: "/launch-watch",
     routePatterns: ["/entity/", "/portfolio", "/launch-watch", "/business"],
   },
   {
@@ -60,7 +60,7 @@ export const JOURNEY_STATIONS: JourneyStation[] = [
     bgClass: "bg-journey-protect",
     textClass: "text-journey-protect",
     bgTintClass: "bg-journey-protect/10",
-    homeRoute: "/buyer",
+    homeRoute: "/community",
     routePatterns: ["/buyer", "/community", "/reviews", "/messages", "/review"],
   },
 ];
