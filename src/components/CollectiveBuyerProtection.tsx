@@ -80,7 +80,7 @@ export const CollectiveBuyerProtection = () => {
                 {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
               </span>
             </div>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive ltr:ml-6 rtl:mr-6">
+            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
             <span className="text-xs text-muted-foreground ltr:ml-6 rtl:mr-6">
