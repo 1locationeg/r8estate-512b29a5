@@ -240,7 +240,7 @@ export const JourneyCorridor = () => {
   if (isExcluded) return null;
 
   return (
-    <div className="sticky top-[56px] z-20 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
+    <div className="sticky top-0 z-20 w-full border-b border-border/40 bg-background/95 backdrop-blur-sm">
       <div className="max-w-[1100px] mx-auto px-3 md:px-4">
         {/* Single compact row */}
         <div className="flex items-center gap-2 py-1.5 md:py-2">
