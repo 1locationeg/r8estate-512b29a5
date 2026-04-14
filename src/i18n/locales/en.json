@@ -1572,7 +1572,7 @@
     "pro": {
       "title": "Pro",
       "price": "5,000",
-      "period": "/mo",
+      "period": "",
       "currency": "EGP",
       "desc": "Unlimited trust reports, AI insights & priority alerts",
       "value": "Less than a coffee a day for total market clarity"
