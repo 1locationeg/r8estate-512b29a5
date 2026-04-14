@@ -417,8 +417,8 @@ export const JourneyCorridor = () => {
 
             {JOURNEY_STATIONS.map((station, idx) => {
               const zone = idx + 1;
-              const isPast = activeZone > zone;
-              const isActive = activeZone === zone;
+              const isPast = effectiveActiveZone > zone;
+              const isActive = effectiveActiveZone === zone;
               const color = STATION_COLORS[idx];
               const stationComplete = combinedZone[idx] >= 1;
 
