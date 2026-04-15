@@ -17,7 +17,7 @@ import { FloatingChatFAB } from "./components/FloatingChatFAB";
 import { JourneyStripe } from "./components/JourneyStripe";
 import { JourneyCorridor } from "./components/JourneyCorridor";
 import { LiveMarketPulse } from "./components/LiveMarketPulse";
-import { SideJourneyRail } from "./components/SideJourneyRail";
+
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
 import { TrackingManager } from "@/components/TrackingManager";
@@ -164,7 +164,7 @@ const AppContent = () => {
       <ScrollToTop />
       <JourneyStripe />
       <JourneyCorridor />
-      <SideJourneyRail />
+      
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>
