@@ -279,24 +279,24 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
                 <button
                   key={category.labelKey}
                   onClick={() => handleCategoryClick(originalIndex)}
-                  className="flex flex-col items-center gap-1 w-14 md:w-16 group cursor-pointer"
+                  className="flex flex-col items-center gap-1.5 w-16 md:w-18 group cursor-pointer"
                 >
                   <div className="relative">
                     <div className={cn(
-                      "w-10 h-10 md:w-11 md:h-11 rounded-full flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-md",
+                      "w-14 h-14 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-md [&>svg]:w-6 [&>svg]:h-6",
                       colors.bg, colors.text
                     )}>
                       {category.icon}
                     </div>
                     {/* Business count badge */}
                     <span className={cn(
-                      "absolute -top-1 -right-1 min-w-[16px] h-4 flex items-center justify-center rounded-full text-[9px] font-bold px-1 border border-background",
+                      "absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold px-1 border border-background",
                       colors.bg, colors.text
                     )}>
                       {totalCount}
                     </span>
                   </div>
-                  <span className="text-[9px] md:text-[10px] font-medium text-foreground text-center leading-tight line-clamp-2">
+                  <span className="text-[10px] md:text-[11px] font-medium text-foreground text-center leading-tight line-clamp-2">
                     {categoryName}
                   </span>
                 </button>
