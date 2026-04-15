@@ -31,6 +31,7 @@ import { CollectiveBuyerProtection } from "@/components/CollectiveBuyerProtectio
 import { LaunchWatchWidget } from "@/components/LaunchWatchWidget";
 
 import { TractionStats } from "@/components/TractionStats";
+import { SDGAlignmentStrip } from "@/components/SDGAlignmentStrip";
 import { developers } from "@/data/mockData";
 import { getSearchIndex } from "@/data/searchIndex";
 import { BarChart3, Shield, TrendingUp, Star, ArrowRight, ShieldCheck, Database, Ban, GitCompare, Award, LineChart, CheckCircle, Building2, User, MessageSquarePlus, ScanSearch, Sparkles, Fingerprint, Users } from "lucide-react";
@@ -541,6 +542,9 @@ const Index = () => { // hero-phase-v2
 
               {/* Pricing Teaser */}
               <div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
+
+              {/* SDG Alignment Strip */}
+              <div className="w-full max-w-[1100px] py-2 md:py-3"><SDGAlignmentStrip /></div>
 
               <div className="section-divider" />
               </div>{/* end zone 3 inner */}
