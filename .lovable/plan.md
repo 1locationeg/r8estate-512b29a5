@@ -1,26 +1,15 @@
 
 
-## Make Research Search Button Open Inline Focus (Like Hero)
+## Plan: Increase Category Icon Sizes on Mobile
 
-### Problem
-Currently, clicking the search button in the collapsed Research station calls `onExpand`, which opens the full station expanded content. The user wants it to behave like the hero search bar — clicking focuses an actual search input inline, which then shows the `ResearchToolkitPanel` in the focus overlay/dropdown.
-
-### Solution
-Replace the fake search button in `StationCompactHook` (for the research station) with the actual `HeroSearchBar` component (with `showResearchHub={true}`). This way, clicking it focuses the real search input and opens the research toolkit panel inline — no station expansion needed.
+The category grid icons are currently `w-10 h-10` on mobile and `w-11 h-11` on md+. With the available space on mobile (428px viewport), we can make them larger for better visibility.
 
 ### Changes
 
-**File: `src/components/JourneyScrollSections.tsx`**
+**File: `src/components/BrowseCategoriesGrid.tsx`**
 
-1. In `StationCompactHook` (line 309-315), replace the fake button with the actual `HeroSearchBar` component:
-   - Render `<HeroSearchBar showResearchHub={true} />` directly in the compact hook
-   - Remove the `onExpand` call for the research station — the search bar handles its own focus state
-   - Keep the other stations' compact hooks unchanged
-
-2. In `JourneyStepSection`, for the research station when collapsed, skip the "Tap to explore" text since the search bar is self-explanatory
-
-3. Keep the expanded content as-is (still accessible via a small "expand" link or the search bar's navigation actions)
-
-### Files to modify
-- `src/components/JourneyScrollSections.tsx` — replace fake search button with real `HeroSearchBar` in compact hook
+1. Increase the icon circle from `w-10 h-10` to `w-14 h-14` on mobile (keeping `md:w-11 md:h-11` or bumping to `md:w-14`)
+2. Increase the button column width from `w-14` to `w-16 md:w-18` to accommodate larger icons
+3. Slightly increase the label text from `text-[9px]` to `text-[10px]` on mobile for better readability alongside the bigger icons
+4. Adjust the count badge size proportionally
 
