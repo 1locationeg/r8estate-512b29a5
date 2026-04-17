@@ -1,18 +1,8 @@
 
 
-## Plan: Remove the SideJourneyRail
+User wants a step-by-step expert-led migration runbook to complete the move from Lovable Cloud → their own Supabase, 100%. The migration package was already generated (`r8estate-migration.zip` in `/mnt/documents/migration/`). Now they need a hand-holding execution guide.
 
-The `SideJourneyRail` is redundant — journey progress is already conveyed by the JourneyCorridor (top bar), PageHeader (station badge), BottomNav, and MiniJourneyArc. Removing it declutters the viewport, especially on mobile where edge space is precious.
+This is a research/guidance request — not a code change. But it's complex enough to warrant a structured plan so they can approve before I produce the full runbook document.
 
-### Changes
-
-**1. Delete `src/components/SideJourneyRail.tsx`**
-
-**2. Remove its usage from `src/App.tsx`**
-- Remove the import and the `<SideJourneyRail />` render call.
-
-**3. Clean up memory**
-- Update `mem://navigation/side-journey-rail` to note it was removed.
-
-That's it — two file touches and one deletion. No other component depends on `SideJourneyRail`.
+Plan: present the exact ordered sequence of steps with timing, decision points, what they do vs what I do, verification checkpoints, and rollback triggers. Keep concise.
 
