@@ -1163,6 +1163,7 @@ const DeveloperDashboard = () => {
         <Route path="my-deals" element={<MyDeals />} />
         <Route path="submit-launch" element={<LaunchSubmitForm />} />
         <Route path="my-launches" element={<MyLaunches />} />
+        <Route path="widgets" element={<BusinessWidgets />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
