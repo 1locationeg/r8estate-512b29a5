@@ -209,6 +209,7 @@ const AppContent = () => {
           <Route path="/products/r8-map" element={<R8MapDemo />} />
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
+          <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </Suspense>

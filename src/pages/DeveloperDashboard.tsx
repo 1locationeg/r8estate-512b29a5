@@ -45,6 +45,8 @@ import { AddBusinessModal } from '@/components/AddBusinessModal';
 import { BusinessImageUpload } from '@/components/BusinessImageUpload';
 import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { BusinessCategoryPicker } from '@/components/BusinessCategoryPicker';
+import BusinessWidgets from '@/components/BusinessWidgets';
+import { Code } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
@@ -1119,6 +1121,7 @@ const DeveloperDashboard = () => {
     { icon: <Trophy className="w-4 h-4" />, label: 'Leaderboard', path: '/leaderboard' },
     { icon: <Tag className="w-4 h-4" />, label: 'My Deals', path: '/business/my-deals' },
     { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
+    { icon: <Code className="w-4 h-4" />, label: 'Trust Widgets', path: '/business/widgets' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
@@ -1160,6 +1163,7 @@ const DeveloperDashboard = () => {
         <Route path="my-deals" element={<MyDeals />} />
         <Route path="submit-launch" element={<LaunchSubmitForm />} />
         <Route path="my-launches" element={<MyLaunches />} />
+        <Route path="widgets" element={<BusinessWidgets />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
