@@ -45,6 +45,8 @@ import { AddBusinessModal } from '@/components/AddBusinessModal';
 import { BusinessImageUpload } from '@/components/BusinessImageUpload';
 import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { BusinessCategoryPicker } from '@/components/BusinessCategoryPicker';
+import BusinessWidgets from '@/components/BusinessWidgets';
+import { Code } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
 const myDev = developers[0];
