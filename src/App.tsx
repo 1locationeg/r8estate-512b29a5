@@ -68,6 +68,7 @@ const Businesses = lazy(() => import("./pages/Businesses"));
 const Products = lazy(() => import("./pages/Products"));
 const R8MapDemo = lazy(() => import("./pages/R8MapDemo"));
 const ImpactPage = lazy(() => import("./pages/ImpactPage"));
+const R8Match = lazy(() => import("./pages/R8Match"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -208,6 +209,7 @@ const AppContent = () => {
           <Route path="/products" element={<Products />} />
           <Route path="/products/r8-map" element={<R8MapDemo />} />
           <Route path="/impact" element={<ImpactPage />} />
+          <Route path="/match" element={<R8Match />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />

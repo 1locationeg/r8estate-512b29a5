@@ -38,4 +38,5 @@ export const PUBLIC_ROUTES: PublicRoute[] = [
   { name: "Report a Problem", path: "/report" },
   { name: "Reviewer Program", path: "/reviewer-program" },
   { name: "SDG Impact", path: "/impact" },
+  { name: "R8 Match", path: "/match" },
 ];
