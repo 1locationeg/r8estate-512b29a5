@@ -17,6 +17,9 @@ const DealWatchWidget = lazy(() =>
 const CommunityHighlights = lazy(() =>
   import("@/components/CommunityHighlights").then(m => ({ default: m.CommunityHighlights }))
 );
+const R8MatchQuickCard = lazy(() =>
+  import("@/components/R8MatchQuickCard").then(m => ({ default: m.R8MatchQuickCard }))
+);
 
 interface StationData {
   key: string;
@@ -231,6 +234,11 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
   if (stationKey === "choose") {
     return (
       <div className="space-y-3">
+        {/* R8 Match — trust-ranked shortlist (anti-broker) */}
+        <Suspense fallback={fallback}>
+          <R8MatchQuickCard onNavigate={onCollapse} />
+        </Suspense>
+
         <button onClick={() => { onCollapse(); navigate("/directory"); }} className="w-full flex items-center gap-3 px-4 py-3 rounded-xl border border-border bg-card hover:border-primary/30 transition-all group">
           <div className="w-10 h-10 rounded-full bg-journey-choose/10 flex items-center justify-center shrink-0"><Building2 className="w-5 h-5 text-journey-choose" /></div>
           <div className="text-start flex-1">
