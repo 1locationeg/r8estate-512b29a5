@@ -273,6 +273,20 @@ export default function AdminNFCManagement() {
                           <Button size="sm" variant={tag.is_blocked ? 'outline' : 'destructive'} onClick={() => blockToggle(tag)}>
                             {tag.is_blocked ? <><CheckCircle2 className="w-3 h-3 me-1" /> Unblock</> : <><Ban className="w-3 h-3 me-1" /> Block</>}
                           </Button>
+                          {!tag.business_id ? (
+                            <Button size="sm" variant="default" onClick={() => openAssign(tag.id)}>
+                              <UserPlus className="w-3 h-3 me-1" /> Assign
+                            </Button>
+                          ) : (
+                            <>
+                              <Button size="sm" variant="outline" onClick={() => openAssign(tag.id)}>
+                                <RefreshCw className="w-3 h-3 me-1" /> Reassign
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => unassign(tag)}>
+                                <Link2Off className="w-3 h-3 me-1" /> Unassign
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </CardContent>
