@@ -323,6 +323,14 @@ export default function AdminNFCManagement() {
           </CardContent>
         </Card>
       )}
+
+      <AdminAssignNFCModal
+        open={assignOpen}
+        onOpenChange={setAssignOpen}
+        mode={assignMode}
+        tagId={assignTagId}
+        onDone={fetchData}
+      />
     </div>
   );
 }
