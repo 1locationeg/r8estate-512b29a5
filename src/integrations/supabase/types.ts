@@ -1282,6 +1282,7 @@ export type Database = {
           id: string
           is_active: boolean
           is_blocked: boolean
+          issued_by_admin: string | null
           label: string
           tag_code: string
           tap_count: number
@@ -1298,6 +1299,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_blocked?: boolean
+          issued_by_admin?: string | null
           label?: string
           tag_code: string
           tap_count?: number
@@ -1314,6 +1316,7 @@ export type Database = {
           id?: string
           is_active?: boolean
           is_blocked?: boolean
+          issued_by_admin?: string | null
           label?: string
           tag_code?: string
           tap_count?: number
