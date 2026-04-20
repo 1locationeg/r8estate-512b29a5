@@ -13,8 +13,10 @@ import {
 } from '@/components/ui/tabs';
 import { toast } from 'sonner';
 import {
-  Loader2, Smartphone, Search, Ban, CheckCircle2, ShieldCheck, ShieldX, Activity, Plus
+  Loader2, Smartphone, Search, Ban, CheckCircle2, ShieldCheck, ShieldX, Activity, Plus,
+  UserPlus, Gift, Link2Off, RefreshCw
 } from 'lucide-react';
+import AdminAssignNFCModal from './AdminAssignNFCModal';
 
 const DEST_LABELS: Record<string, string> = {
   profile: 'Profile',
@@ -32,6 +34,9 @@ export default function AdminNFCManagement() {
   const [bulkOpen, setBulkOpen] = useState(false);
   const [bulkCount, setBulkCount] = useState(10);
   const [bulkLabel, setBulkLabel] = useState('Bulk batch');
+  const [assignOpen, setAssignOpen] = useState(false);
+  const [assignMode, setAssignMode] = useState<'generate' | 'assign'>('generate');
+  const [assignTagId, setAssignTagId] = useState<string | null>(null);
 
   const fetchData = async () => {
     setLoading(true);
@@ -96,13 +101,39 @@ export default function AdminNFCManagement() {
     else { toast.success(`${count} tags pre-generated`); setBulkOpen(false); fetchData(); }
   };
 
+  const openAssign = (tagId: string) => {
+    setAssignMode('assign'); setAssignTagId(tagId); setAssignOpen(true);
+  };
+  const openGenerateForBusiness = () => {
+    setAssignMode('generate'); setAssignTagId(null); setAssignOpen(true);
+  };
+  const unassign = async (tag: any) => {
+    if (!confirm(`Unassign tag "${tag.tag_code}" from its business?`)) return;
+    const { error } = await supabase.from('nfc_tags')
+      .update({ business_id: null, user_id: null, issued_by_admin: null })
+      .eq('id', tag.id);
+    if (error) toast.error('Failed: ' + error.message);
+    else { toast.success('Unassigned — back in pool'); fetchData(); }
+  };
+
   const stats = useMemo(() => ({
     total: tags.length,
     active: tags.filter(t => t.is_active && !t.is_blocked && t.approval_status === 'approved').length,
     pending: tags.filter(t => t.approval_status === 'pending_approval').length,
     blocked: tags.filter(t => t.is_blocked).length,
     totalTaps: tags.reduce((s, t) => s + (t.tap_count || 0), 0),
+    unassigned: tags.filter(t => !t.business_id).length,
+    issued: tags.filter(t => t.issued_by_admin).length,
   }), [tags]);
+
+  const topBusinesses = useMemo(() => {
+    const counts: Record<string, number> = {};
+    tags.forEach(t => { if (t.business_id) counts[t.business_id] = (counts[t.business_id] || 0) + 1; });
+    return Object.entries(counts)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 5)
+      .map(([id, n]) => ({ id, count: n, name: businesses[id]?.company_name || 'Unknown' }));
+  }, [tags, businesses]);
 
   return (
     <div className="space-y-6">
@@ -115,7 +146,14 @@ export default function AdminNFCManagement() {
             Manage all NFC tags platform-wide. Block abusive tags and approve custom URLs.
           </p>
         </div>
-        <Button onClick={() => setBulkOpen(true)}><Plus className="w-4 h-4 me-2" /> Bulk Pre-generate</Button>
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={() => setBulkOpen(true)}>
+            <Plus className="w-4 h-4 me-2" /> Bulk Pre-generate
+          </Button>
+          <Button onClick={openGenerateForBusiness}>
+            <Gift className="w-4 h-4 me-2" /> Generate for Business
+          </Button>
+        </div>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
@@ -140,6 +178,34 @@ export default function AdminNFCManagement() {
           <div className="text-xl font-bold mt-1 flex items-center gap-1">
             <Activity className="w-4 h-4 text-primary" />{stats.totalTaps}
           </div>
+        </CardContent></Card>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground">Unassigned pool</div>
+          <div className="text-xl font-bold mt-1">{stats.unassigned}</div>
+        </CardContent></Card>
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground">Issued by R8ESTATE</div>
+          <div className="text-xl font-bold mt-1 flex items-center gap-1">
+            <Gift className="w-4 h-4 text-primary" />{stats.issued}
+          </div>
+        </CardContent></Card>
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground mb-2">Top businesses by tags</div>
+          {topBusinesses.length === 0 ? (
+            <div className="text-xs text-muted-foreground">No assignments yet.</div>
+          ) : (
+            <ul className="space-y-1 text-sm">
+              {topBusinesses.map(b => (
+                <li key={b.id} className="flex items-center justify-between gap-2">
+                  <span className="truncate">{b.name}</span>
+                  <Badge variant="outline">{b.count}</Badge>
+                </li>
+              ))}
+            </ul>
+          )}
         </CardContent></Card>
       </div>
 
@@ -207,6 +273,20 @@ export default function AdminNFCManagement() {
                           <Button size="sm" variant={tag.is_blocked ? 'outline' : 'destructive'} onClick={() => blockToggle(tag)}>
                             {tag.is_blocked ? <><CheckCircle2 className="w-3 h-3 me-1" /> Unblock</> : <><Ban className="w-3 h-3 me-1" /> Block</>}
                           </Button>
+                          {!tag.business_id ? (
+                            <Button size="sm" variant="default" onClick={() => openAssign(tag.id)}>
+                              <UserPlus className="w-3 h-3 me-1" /> Assign
+                            </Button>
+                          ) : (
+                            <>
+                              <Button size="sm" variant="outline" onClick={() => openAssign(tag.id)}>
+                                <RefreshCw className="w-3 h-3 me-1" /> Reassign
+                              </Button>
+                              <Button size="sm" variant="outline" onClick={() => unassign(tag)}>
+                                <Link2Off className="w-3 h-3 me-1" /> Unassign
+                              </Button>
+                            </>
+                          )}
                         </div>
                       </div>
                     </CardContent>
@@ -243,6 +323,14 @@ export default function AdminNFCManagement() {
           </CardContent>
         </Card>
       )}
+
+      <AdminAssignNFCModal
+        open={assignOpen}
+        onOpenChange={setAssignOpen}
+        mode={assignMode}
+        tagId={assignTagId}
+        onDone={fetchData}
+      />
     </div>
   );
 }
