@@ -19,7 +19,7 @@ import { toast } from 'sonner';
 import { QRCodeSVG } from 'qrcode.react';
 import {
   Loader2, Plus, Copy, Trash2, Edit, Smartphone, QrCode,
-  Activity, ExternalLink, ShieldAlert, Info
+  Activity, ExternalLink, ShieldAlert, Info, Gift
 } from 'lucide-react';
 
 const DEST_LABELS: Record<string, string> = {
@@ -236,6 +236,11 @@ export default function BusinessNFC() {
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
                         <h3 className="font-semibold truncate">{tag.label}</h3>
+                        {tag.issued_by_admin && (
+                          <Badge className="bg-primary/10 text-primary border-primary/30 gap-1">
+                            <Gift className="w-3 h-3" /> Issued by R8ESTATE
+                          </Badge>
+                        )}
                         {tag.is_blocked && <Badge variant="destructive">Blocked</Badge>}
                         {!tag.is_active && !tag.is_blocked && <Badge variant="outline">Paused</Badge>}
                         {tag.approval_status === 'pending_approval' && (
