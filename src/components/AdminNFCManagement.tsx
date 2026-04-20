@@ -181,6 +181,34 @@ export default function AdminNFCManagement() {
         </CardContent></Card>
       </div>
 
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground">Unassigned pool</div>
+          <div className="text-xl font-bold mt-1">{stats.unassigned}</div>
+        </CardContent></Card>
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground">Issued by R8ESTATE</div>
+          <div className="text-xl font-bold mt-1 flex items-center gap-1">
+            <Gift className="w-4 h-4 text-primary" />{stats.issued}
+          </div>
+        </CardContent></Card>
+        <Card><CardContent className="p-4">
+          <div className="text-xs text-muted-foreground mb-2">Top businesses by tags</div>
+          {topBusinesses.length === 0 ? (
+            <div className="text-xs text-muted-foreground">No assignments yet.</div>
+          ) : (
+            <ul className="space-y-1 text-sm">
+              {topBusinesses.map(b => (
+                <li key={b.id} className="flex items-center justify-between gap-2">
+                  <span className="truncate">{b.name}</span>
+                  <Badge variant="outline">{b.count}</Badge>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent></Card>
+      </div>
+
       <Tabs value={statusFilter} onValueChange={setStatusFilter}>
         <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="all">All</TabsTrigger>
