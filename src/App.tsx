@@ -69,6 +69,7 @@ const Products = lazy(() => import("./pages/Products"));
 const R8MapDemo = lazy(() => import("./pages/R8MapDemo"));
 const ImpactPage = lazy(() => import("./pages/ImpactPage"));
 const R8Match = lazy(() => import("./pages/R8Match"));
+const NFCRedirect = lazy(() => import("./pages/NFCRedirect"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -144,8 +145,9 @@ const AppContent = () => {
 
   const isReviewRoute = location.pathname === "/review" || location.pathname.startsWith("/review/");
   const isGoRoute = location.pathname.startsWith("/go/");
+  const isNfcRoute = location.pathname.startsWith("/n/");
 
-  if (isEmbed || isReviewRoute || isGoRoute) {
+  if (isEmbed || isReviewRoute || isGoRoute || isNfcRoute) {
     return (
       <Suspense fallback={<div className="flex items-center justify-center min-h-[80px] p-4" />}>
         <Routes>
@@ -154,6 +156,7 @@ const AppContent = () => {
           <Route path="/review" element={<FrictionlessReview />} />
           <Route path="/go/:slug" element={<SmartLinkRedirect />} />
           <Route path="/go" element={<Navigate to="/" replace />} />
+          <Route path="/n/:tagCode" element={<NFCRedirect />} />
         </Routes>
       </Suspense>
     );
