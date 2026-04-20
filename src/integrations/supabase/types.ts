@@ -1230,6 +1230,113 @@ export type Database = {
         }
         Relationships: []
       }
+      nfc_tag_taps: {
+        Row: {
+          browser: string | null
+          clicked_at: string
+          device_type: string | null
+          id: string
+          ip_country: string | null
+          referrer_url: string | null
+          tag_id: string
+          user_agent: string | null
+        }
+        Insert: {
+          browser?: string | null
+          clicked_at?: string
+          device_type?: string | null
+          id?: string
+          ip_country?: string | null
+          referrer_url?: string | null
+          tag_id: string
+          user_agent?: string | null
+        }
+        Update: {
+          browser?: string | null
+          clicked_at?: string
+          device_type?: string | null
+          id?: string
+          ip_country?: string | null
+          referrer_url?: string | null
+          tag_id?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_tag_taps_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "nfc_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      nfc_tags: {
+        Row: {
+          admin_notes: string | null
+          approval_status: Database["public"]["Enums"]["nfc_approval_status"]
+          business_id: string | null
+          created_at: string
+          custom_url: string | null
+          destination_type: Database["public"]["Enums"]["nfc_destination_type"]
+          id: string
+          is_active: boolean
+          is_blocked: boolean
+          label: string
+          tag_code: string
+          tap_count: number
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          approval_status?: Database["public"]["Enums"]["nfc_approval_status"]
+          business_id?: string | null
+          created_at?: string
+          custom_url?: string | null
+          destination_type?: Database["public"]["Enums"]["nfc_destination_type"]
+          id?: string
+          is_active?: boolean
+          is_blocked?: boolean
+          label?: string
+          tag_code: string
+          tap_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          approval_status?: Database["public"]["Enums"]["nfc_approval_status"]
+          business_id?: string | null
+          created_at?: string
+          custom_url?: string | null
+          destination_type?: Database["public"]["Enums"]["nfc_destination_type"]
+          id?: string
+          is_active?: boolean
+          is_blocked?: boolean
+          label?: string
+          tag_code?: string
+          tap_count?: number
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_tags_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "business_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "nfc_tags_business_id_fkey"
+            columns: ["business_id"]
+            isOneToOne: false
+            referencedRelation: "public_business_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       notification_preferences: {
         Row: {
           announcement_notifications: boolean
@@ -2260,6 +2367,7 @@ export type Database = {
         Returns: string
       }
       generate_embed_token: { Args: never; Returns: string }
+      generate_nfc_tag_code: { Args: never; Returns: string }
       get_leaderboard: {
         Args: { _limit?: number }
         Returns: {
@@ -2342,6 +2450,8 @@ export type Database = {
       launch_buyer_type: "reserver" | "purchaser" | "attendee" | "observer"
       launch_status: "upcoming" | "reservations_open" | "active" | "sold_out"
       launch_type: "new_project" | "new_phase" | "relaunch"
+      nfc_approval_status: "approved" | "pending_approval" | "rejected"
+      nfc_destination_type: "profile" | "review" | "projects" | "custom"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -2489,6 +2599,8 @@ export const Constants = {
       launch_buyer_type: ["reserver", "purchaser", "attendee", "observer"],
       launch_status: ["upcoming", "reservations_open", "active", "sold_out"],
       launch_type: ["new_project", "new_phase", "relaunch"],
+      nfc_approval_status: ["approved", "pending_approval", "rejected"],
+      nfc_destination_type: ["profile", "review", "projects", "custom"],
     },
   },
 } as const
