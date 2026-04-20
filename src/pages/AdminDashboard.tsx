@@ -12,6 +12,7 @@ import {
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
   Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon
+  , Smartphone
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { developers, reviews } from '@/data/mockData';
