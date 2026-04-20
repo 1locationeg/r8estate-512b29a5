@@ -39,6 +39,7 @@ import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
+import AdminNFCManagement from '@/components/AdminNFCManagement';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
 import AdminContactSettings from '@/components/AdminContactSettings';

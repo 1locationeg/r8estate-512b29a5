@@ -1123,6 +1123,7 @@ const DeveloperDashboard = () => {
     { icon: <Tag className="w-4 h-4" />, label: 'My Deals', path: '/business/my-deals' },
     { icon: <Rocket className="w-4 h-4" />, label: 'My Launches', path: '/business/my-launches' },
     { icon: <Code className="w-4 h-4" />, label: 'Trust Widgets', path: '/business/widgets' },
+    { icon: <Smartphone className="w-4 h-4" />, label: 'NFC Tags', path: '/business/nfc' },
     { icon: <MessageSquare className="w-4 h-4" />, label: 'Messages', path: '/messages' },
     { icon: <Users className="w-4 h-4" />, label: 'Community', path: '/community' },
     { icon: <Bell className="w-4 h-4" />, label: 'Notifications', path: '/business/notifications' },
@@ -1165,6 +1166,7 @@ const DeveloperDashboard = () => {
         <Route path="submit-launch" element={<LaunchSubmitForm />} />
         <Route path="my-launches" element={<MyLaunches />} />
         <Route path="widgets" element={<BusinessWidgets />} />
+        <Route path="nfc" element={<BusinessNFC />} />
         <Route path="gallery" element={<DevGallery />} />
         <Route path="employees" element={<DevEmployees />} />
         <Route path="categories" element={<DevCategories />} />
