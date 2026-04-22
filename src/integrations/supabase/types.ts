@@ -62,6 +62,36 @@ export type Database = {
         }
         Relationships: []
       }
+      alpha_report_leads: {
+        Row: {
+          created_at: string
+          email: string
+          entity_id: string | null
+          entity_name: string | null
+          id: string
+          phone: string | null
+          source: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          entity_id?: string | null
+          entity_name?: string | null
+          id?: string
+          phone?: string | null
+          source?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          entity_id?: string | null
+          entity_name?: string | null
+          id?: string
+          phone?: string | null
+          source?: string | null
+        }
+        Relationships: []
+      }
       business_claims: {
         Row: {
           admin_notes: string | null
