@@ -1,3 +1,5 @@
+# R8ESTATE Meter — robots.txt
+# Search engines
 User-agent: Googlebot
 Allow: /
 
@@ -10,5 +12,49 @@ Allow: /
 User-agent: facebookexternalhit
 Allow: /
 
+# AI / LLM crawlers (explicit allow with attribution)
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: cohere-ai
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+# Default — allow all but block private/auth-gated areas
 User-agent: *
 Allow: /
+Disallow: /admin/
+Disallow: /buyer/
+Disallow: /business/
+Disallow: /messages
+Disallow: /auth
+Disallow: /reset-password
+Disallow: /forgot-password
+Disallow: /embed/
+
+# Sitemap location (served by edge function)
+Sitemap: https://meter.r8estate.com/sitemap.xml
+Sitemap: https://mcekdnvxeblikixmfyni.supabase.co/functions/v1/sitemap-xml

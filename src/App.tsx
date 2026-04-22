@@ -70,6 +70,7 @@ const R8MapDemo = lazy(() => import("./pages/R8MapDemo"));
 const ImpactPage = lazy(() => import("./pages/ImpactPage"));
 const R8Match = lazy(() => import("./pages/R8Match"));
 const NFCRedirect = lazy(() => import("./pages/NFCRedirect"));
+const AboutTrustMeter = lazy(() => import("./pages/AboutTrustMeter"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -213,6 +214,7 @@ const AppContent = () => {
           <Route path="/products/r8-map" element={<R8MapDemo />} />
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/match" element={<R8Match />} />
+          <Route path="/about-trust-meter" element={<AboutTrustMeter />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />

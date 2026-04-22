@@ -11,6 +11,9 @@ import { ArrowLeft, Loader2 } from "lucide-react";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 import { supabase } from "@/integrations/supabase/client";
 import { mapPublicBusinessProfileToSearchItem } from "@/lib/businessProfileSearch";
+import { EntityMeta } from "@/components/EntityMeta";
+import { EntityJsonLd } from "@/components/EntityJsonLd";
+import { AlphaReportModal } from "@/components/AlphaReportModal";
 
 const categoryToSearchCategory = (labelKey: string): SearchCategory => {
   const map: Record<string, SearchCategory> = {
@@ -34,6 +37,8 @@ const EntityPage = () => {
   const { getLogoOverride } = useBusinessLogo();
   const [remoteEntity, setRemoteEntity] = useState<SearchItem | null>(null);
   const [isRemoteLoading, setIsRemoteLoading] = useState(false);
+  const [lastUpdated, setLastUpdated] = useState<string | undefined>();
+  const [topReviews, setTopReviews] = useState<Array<{ author_name: string; rating: number; comment: string | null; created_at: string }>>([]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'instant' });
@@ -120,6 +125,35 @@ const EntityPage = () => {
 
   const entity = staticEntity || remoteEntity;
 
+  // Fetch top reviews + last_updated for SEO/JSON-LD
+  useEffect(() => {
+    if (!id) return;
+    let active = true;
+    (async () => {
+      const [{ data: reviewData }, { data: bizData }] = await Promise.all([
+        supabase
+          .from("reviews")
+          .select("author_name, rating, comment, created_at")
+          .eq("developer_id", id)
+          .eq("status", "approved")
+          .order("created_at", { ascending: false })
+          .limit(5),
+        supabase
+          .from("public_business_profiles")
+          .select("updated_at")
+          .eq("id", id)
+          .maybeSingle(),
+      ]);
+      if (!active) return;
+      if (reviewData) setTopReviews(reviewData);
+      if (bizData?.updated_at) setLastUpdated(bizData.updated_at);
+      else setLastUpdated(new Date().toISOString());
+    })();
+    return () => {
+      active = false;
+    };
+  }, [id]);
+
   if (!entity && isRemoteLoading) {
     return (
       <div className="min-h-screen bg-background flex flex-col items-center justify-center gap-4 p-4">
@@ -150,6 +184,8 @@ const EntityPage = () => {
 
   return (
     <StationPageWrapper className="min-h-screen bg-background pb-20">
+      {entity && <EntityMeta entity={entity} lastUpdated={lastUpdated} />}
+      {entity && <EntityJsonLd entity={entity} reviews={topReviews} />}
       <PageHeader
         title={entity.name}
         breadcrumbs={[
@@ -159,10 +195,43 @@ const EntityPage = () => {
       />
 
       {/* Entity Detail */}
-      <ItemDetailSection
-        item={entity}
-        onClose={() => navigate(-1)}
-      />
+      <article itemScope itemType="https://schema.org/Organization">
+        <meta itemProp="name" content={entity.name} />
+        {entity.image && <meta itemProp="logo" content={entity.image} />}
+        <ItemDetailSection
+          item={entity}
+          onClose={() => navigate(-1)}
+        />
+
+        {/* Alpha Report lead-gen + freshness signal */}
+        <section aria-label="alpha-report" className="max-w-4xl mx-auto px-4 py-6 space-y-4">
+          <div className="bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/20 rounded-xl p-5 sm:p-6 flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
+            <div className="flex-1">
+              <h2 className="text-lg sm:text-xl font-bold text-foreground mb-1">
+                {isRTL ? `تقرير ألفا الكامل لـ ${entity.name}` : `Full Alpha Report for ${entity.name}`}
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                {isRTL
+                  ? "تحليل شامل من 12 صفحة: السجل القانوني، تاريخ التسليم، القوة المالية، ومقارنة بالمنافسين."
+                  : "A 12-page deep-dive: legal record, delivery history, financial strength, and competitor benchmark."}
+              </p>
+              {lastUpdated && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  <time dateTime={lastUpdated}>
+                    {isRTL ? "آخر تحديث: " : "Last updated: "}
+                    {new Date(lastUpdated).toLocaleDateString(isRTL ? "ar-EG" : "en-US", {
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </time>
+                </p>
+              )}
+            </div>
+            <AlphaReportModal entityId={entity.id} entityName={entity.name} />
+          </div>
+        </section>
+      </article>
     </StationPageWrapper>
   );
 };
