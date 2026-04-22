@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { formatDate } from "@/utils/formatArabic";
 import { useNavigate } from "react-router-dom";
-import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users } from "lucide-react";
+import { CheckCircle2, MessageSquare, ShieldCheck, Award, Medal, Trophy, Users, FileCheck2 } from "lucide-react";
 import { ReportButton } from "@/components/ReportButton";
 import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
@@ -16,6 +16,7 @@ import r8Stars from "@/assets/r8-stars.png";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 import { sanitizeDisplayText } from "@/lib/contentSanitizer";
 import { generateAvatar } from "@/lib/avatarUtils";
+import { useVerifiedBuyer } from "@/hooks/useVerifiedBuyer";
 import DOMPurify from "dompurify";
 
 const isHtmlContent = (text: string) => /<[a-z][\s\S]*>/i.test(text);
@@ -55,6 +56,7 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
   const tierConfig = getTierConfig(review.tier, t);
   const TierIcon = tierConfig.icon;
   const projectLabel = localizeStoredReviewValue(review.project, t);
+  const { hasContractVerified } = useVerifiedBuyer((review as any).userId);
 
   const getInitials = (name: string) => {
     return name
@@ -109,6 +111,16 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                 kycVerified={(review as any).kycVerified}
                 compact
               />
+              {hasContractVerified && (
+                <Badge
+                  variant="outline"
+                  className="text-[10px] md:text-xs px-1.5 py-0 h-5 flex items-center gap-1 border-accent/60 bg-accent/10 text-accent-foreground"
+                  title={t("verification.contract.contractVerifiedChip", "Contract Verified")}
+                >
+                  <FileCheck2 className="w-3 h-3 text-accent" />
+                  {t("verification.contract.contractVerifiedChip", "Contract Verified")}
+                </Badge>
+              )}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">
               {projectLabel} • {developer?.name}

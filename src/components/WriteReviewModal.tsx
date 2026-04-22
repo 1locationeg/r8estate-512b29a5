@@ -55,6 +55,7 @@ import { ReviewSuccessOverlay } from "@/components/ReviewSuccessOverlay";
 import { BrandLogo } from "@/components/BrandLogo";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { SearchCategory } from "@/data/searchIndex";
+import { SecureContractUpload } from "@/components/SecureContractUpload";
 
 interface WriteReviewModalProps {
   open: boolean;
@@ -1219,13 +1220,17 @@ export const WriteReviewModal = ({
                 }}>
                   <FileText className="w-3.5 h-3.5" /> {t("form.documents", "Documents")}
                 </Button>
-                <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" disabled={isReceiptUploading} onClick={() => receiptCameraRef.current?.click()}>
-                  {isReceiptUploading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
-                  {isReceiptUploading ? t("form.uploading", "Uploading") : t("form.scan_receipt", "Receipt")}
-                </Button>
               </div>
               <input ref={fileInputRef} type="file" className="hidden" accept="image/*,.pdf,.doc,.docx" multiple onChange={handleFileSelect} />
-              <input ref={receiptCameraRef} type="file" className="hidden" accept="image/*" capture="environment" onChange={handleReceiptCapture} />
+              {/* Secure contract upload (replaces raw receipt camera) */}
+              {!isGuest && (
+                <div className="mt-3">
+                  <SecureContractUpload
+                    developerId={developerId}
+                    developerName={developerName}
+                  />
+                </div>
+              )}
               {attachments.length > 0 && (
                 <div className="flex flex-wrap gap-2 mt-2">
                   {attachments.map((att, i) => (

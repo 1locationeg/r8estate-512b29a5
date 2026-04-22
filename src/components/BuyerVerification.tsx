@@ -11,6 +11,7 @@ import {
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { developers } from '@/data/mockData';
+import { SecureContractUpload } from '@/components/SecureContractUpload';
 
 type VerificationStatus = 'none' | 'pending' | 'approved' | 'rejected';
 
@@ -297,22 +298,27 @@ const BuyerVerification = () => {
                 <option key={d.id} value={d.id}>{d.name}</option>
               ))}
             </select>
-            <input
-              ref={receiptRef}
-              type="file"
-              className="hidden"
-              accept="image/*,.pdf"
-              onChange={e => e.target.files?.[0] && handleUploadReceipt(e.target.files[0])}
-            />
-            <Button
-              variant="outline"
-              onClick={() => receiptRef.current?.click()}
-              disabled={!selectedDeveloper || uploadingReceipt}
-              className="w-full"
-            >
-              {uploadingReceipt ? <Loader2 className="w-4 h-4 animate-spin me-2" /> : <Receipt className="w-4 h-4 me-2" />}
-              {uploadingReceipt ? 'Uploading...' : 'Upload Receipt / Contract'}
-            </Button>
+            {selectedDeveloper ? (
+              <SecureContractUpload
+                developerId={selectedDeveloper}
+                developerName={developers.find(d => d.id === selectedDeveloper)?.name}
+                onSubmitted={async () => {
+                  // Refresh submissions list after a successful submit
+                  if (!user) return;
+                  const { data } = await supabase
+                    .from('receipt_submissions')
+                    .select('*')
+                    .eq('user_id', user.id)
+                    .order('created_at', { ascending: false });
+                  setReceiptSubmissions((data as any[]) || []);
+                  setSelectedDeveloper('');
+                }}
+              />
+            ) : (
+              <p className="text-xs text-muted-foreground italic">
+                Select a developer above to start the secure upload.
+              </p>
+            )}
           </div>
         </CardContent>
       </Card>

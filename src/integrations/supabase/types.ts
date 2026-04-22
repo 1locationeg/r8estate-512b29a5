@@ -1657,33 +1657,54 @@ export type Database = {
       receipt_submissions: {
         Row: {
           admin_notes: string | null
+          authenticity_flags: Json | null
+          authenticity_label: string | null
+          authenticity_score: number | null
           created_at: string
           developer_id: string | null
           developer_name: string | null
+          document_type: string | null
+          extracted_developer_name: string | null
           id: string
           image_url: string
+          redacted_fields: Json | null
+          redacted_image_url: string | null
           reviewed_at: string | null
           status: string
           user_id: string
         }
         Insert: {
           admin_notes?: string | null
+          authenticity_flags?: Json | null
+          authenticity_label?: string | null
+          authenticity_score?: number | null
           created_at?: string
           developer_id?: string | null
           developer_name?: string | null
+          document_type?: string | null
+          extracted_developer_name?: string | null
           id?: string
           image_url: string
+          redacted_fields?: Json | null
+          redacted_image_url?: string | null
           reviewed_at?: string | null
           status?: string
           user_id: string
         }
         Update: {
           admin_notes?: string | null
+          authenticity_flags?: Json | null
+          authenticity_label?: string | null
+          authenticity_score?: number | null
           created_at?: string
           developer_id?: string | null
           developer_name?: string | null
+          document_type?: string | null
+          extracted_developer_name?: string | null
           id?: string
           image_url?: string
+          redacted_fields?: Json | null
+          redacted_image_url?: string | null
           reviewed_at?: string | null
           status?: string
           user_id?: string
