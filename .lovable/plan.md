@@ -1,106 +1,70 @@
 
 
-# SEO + AIO Optimization for R8ESTATE Meter
+# High-Stakes Review CTA — Loss-Framed Banner on Developer Profile
 
-A pragmatic plan that respects what already exists (Vite/React stack — **not Next.js**), focuses on high-impact SEO/AIO gaps, and skips work that's already done. Out of ~15 requested items, ~6 are already built. We'll focus on the **9 that genuinely move the needle** for ranking + LLM discoverability.
+A psychologically-charged banner that appears on developer profile pages after a user has viewed the same profile 3+ times without leaving a review. Uses Prospect Theory loss framing to convert lurkers into reviewers.
 
-## Reality check vs your prompt
+## Trigger logic
 
-| Your request | Status | Notes |
-|---|---|---|
-| Trust Meter radial gauge | ✅ Already built | `HeroTrustGauge`, `TrustScore`, `TrustGaugeMini` |
-| 5-pillar Factor Breakdown | ✅ Already built | `TrustCategoryBar` on `EntityPage` |
-| VS comparison engine | ✅ Already built | `CompareModal` (5-way compare) |
-| Embed widget for backlinks | ✅ Already built | `/embed/widget/:token` + `BusinessWidgets` |
-| Sitemap.xml | ⚠️ Partial | UI generates downloadable XML — not served as static `/sitemap.xml` |
-| robots.txt | ⚠️ Exists but bare | No sitemap reference, no AI crawler rules |
-| Next.js | ❌ Won't change | Stack is Vite + React Router; no SSR. Will use prerender-friendly meta + JSON-LD instead |
-| JSON-LD per entity | ❌ Missing | **Build it** |
-| Programmatic SEO titles | ❌ Missing | **Build it** |
-| Data manifest for LLMs | ❌ Missing | **Build it** |
-| Natural-language vector search | ❌ Missing | Big scope — defer (would need pgvector + embedding pipeline) |
+A user sees the banner on `/entity/:id` when **all** of these are true:
+1. User is **authenticated** (anonymous viewers won't see it — no review action available)
+2. View count for **this specific developer** ≥ 3
+3. User has **not** left a review for this developer
+4. User hasn't dismissed the banner for this developer in the last 7 days
+5. Profile is `is_reviewable = true` (skip parent profiles that block reviews)
 
-## What we'll build (9 items)
+View counts already track via `useTrackInterest()` (`type: "click"`) which writes to `user_interests` table. We'll add a per-developer view counter to that same table or read existing `strength` value (which already increments on each view, capped at 10).
 
-### 1. Per-entity dynamic `<head>` (Programmatic SEO)
-New `EntityMeta.tsx` component injected into `EntityPage.tsx`. Sets:
-- `<title>` — `"{Developer Name} Trust Score {score} & Reviews 2026 | R8ESTATE Meter"`
-- `<meta name="description">` — auto-generated from category + rating + review count + location
-- Canonical URL — `https://meter.r8estate.com/entity/{id}`
-- OpenGraph + Twitter cards (per-entity image, title, description)
-- `hreflang` for `en` and `ar`
+## What we'll build
 
-### 2. JSON-LD structured data per entity
-Inject 3 schema types into entity pages:
-- **`Organization`** (developer name, logo, location, sameAs links)
-- **`AggregateRating`** (score, count, bestRating: 5)
-- **`Review`** array (top 5 verified reviews with author, rating, body, datePublished)
-- **`SoftwareApplication`** schema on the homepage (R8ESTATE Meter as a tool)
+### 1. View tracking enhancement
+The existing `useTrackInterest` hook already increments `strength` on each click. We'll add a **dedicated view counter** by querying `user_interests` for `(user_id, entity_id, type='click')` and reading the row count or strength value. No new table — reuse existing infra.
 
-### 3. Static `/sitemap.xml` served from server
-Edge function `sitemap-xml` returning live XML with `Content-Type: text/xml`, regenerated on request from DB + static index. URL: `https://meter.r8estate.com/sitemap.xml`. Includes `<lastmod>` per entity.
+### 2. New component: `HighStakesReviewBanner.tsx`
+- Renders inside `EntityPage` between the trust score section and the reviews section
+- **Visual style**: Deep orange-to-gold gradient (`from-[#ed1b40]/10 via-[#fac417]/10 to-[#ed1b40]/10`), thick orange-left border (`border-l-4 border-[#ed1b40]`), subtle pulsing glow shadow
+- **Icon**: `AlertTriangle` (Lucide) in deep orange, with subtle pulse animation
+- **Headline** (bold, navy): *"Your insight is the only thing standing between an investor and a bad decision."*
+- **Body** (muted, slightly smaller): *"Every hour you delay, someone else risks their capital. Stop the risk — post your review."*
+- **CTA Button**: Gold-on-navy, prominent: **"Prevent a Bad Investment Now"** → opens existing `WriteReviewModal`
+- **Dismiss (X)** in top-right: stores `dismissed_at` in localStorage scoped to `(user_id, developer_id)` with 7-day TTL
+- **Trust micro-copy** below button: *"⏱ 60 seconds · 🛡 Verified anonymously · ✨ +25 coins"*
+- Mobile-safe (390px), 44px touch targets, RTL-aware (`ms-`/`pe-`), bilingual (EN/AR)
 
-### 4. Beefed-up `robots.txt`
-- Reference sitemap location
-- Explicit allow for `GPTBot`, `PerplexityBot`, `ClaudeBot`, `Google-Extended`, `OAI-SearchBot`
-- Block crawl traps (`/admin/*`, `/buyer/*`, `/business/*`, `/messages`)
+### 3. New hook: `useReviewUrgencyTrigger.ts`
+- Encapsulates all 5 trigger conditions
+- Returns `{ shouldShow: boolean, viewCount: number, dismiss: () => void }`
+- Reads view count from `user_interests`
+- Checks `reviews` table for existing user review on this developer
+- Reads `useReviewability()` for `is_reviewable` flag
+- Reads localStorage for dismissal state
 
-### 5. AIO data manifest at `/data-manifest.json`
-Edge function returning a structured JSON document LLMs can ingest:
-```json
-{
-  "@type": "DataManifest",
-  "platform": "R8ESTATE Meter",
-  "methodology": { "trustScore": "...", "pillars": [...] },
-  "entities": { "developers_count": N, "reviews_count": N },
-  "endpoints": { "sitemap": "...", "feed": "..." }
-}
-```
-Plus a human-readable `/about-trust-meter` page documenting the Alpha Report methodology — gives LLMs a citable URL.
+### 4. Arabic translations
+Add to `i18n/locales/en.json` and `ar.json` under `review.urgency.*`:
+- `headline`, `body`, `cta`, `microcopy`, `dismissed` toast text
+- Arabic uses Ammiya tone per memory (warm-friend approach to buyers)
 
-### 6. Semantic HTML5 upgrade on `EntityPage`
-Wrap sections in `<article>`, `<section aria-label="trust-score">`, `<aside>` for related entities. Add `itemscope itemtype="..."` microdata as a fallback for crawlers that miss JSON-LD.
+### 5. Engagement tracking
+Fire two corridor events (per `corridorEvents.ts` pattern):
+- `corridor:engage` with `{ zone: 2, action: "urgency_banner_shown" }` on first render
+- `corridor:engage` with `{ zone: 2, action: "urgency_banner_clicked" }` on CTA click
 
-### 7. "Alpha Report" lead-gen CTA
-New `AlphaReportModal` component on every entity page below the trust gauge:
-- "Download Full Alpha Report" button
-- Opens modal collecting email + phone (gated lead)
-- Stores in new `alpha_report_leads` table
-- Triggers existing PDF generator (`generateTrustReport.ts`) and emails it
-
-### 8. "Last updated" urgency signal
-Show `Last updated: {today}` near every trust score, pulling `updated_at` from `business_profiles`. Builds AI/SEO freshness signal.
-
-### 9. Core Web Vitals quick wins
-- Add `loading="lazy"` to all entity card images
-- `<link rel="preload">` for hero font + LCP image in `index.html`
-- Defer `TrackingManager` scripts until after first interaction
-- Add `font-display: swap` to Google Fonts URL
-
-## Database changes
-- New `alpha_report_leads` table: `id`, `email`, `phone`, `entity_id`, `created_at`, RLS (insert open, select admin-only)
-- Add `last_seo_indexed_at` timestamp on `business_profiles` (optional, for sitemap `lastmod`)
+Used for analytics — measures conversion lift of the loss-framed CTA.
 
 ## Files
 
 **Create**
-- `src/components/EntityMeta.tsx` — per-entity head injector
-- `src/components/EntityJsonLd.tsx` — JSON-LD script injector
-- `src/components/AlphaReportModal.tsx` — lead-gen modal
-- `src/pages/AboutTrustMeter.tsx` — methodology page (route `/about-trust-meter`)
-- `supabase/functions/sitemap-xml/index.ts` — serves live sitemap
-- `supabase/functions/data-manifest/index.ts` — serves AIO manifest
-- Migration: `alpha_report_leads` table
+- `src/components/HighStakesReviewBanner.tsx`
+- `src/hooks/useReviewUrgencyTrigger.ts`
 
 **Edit**
-- `src/pages/EntityPage.tsx` — wrap in semantic HTML, mount EntityMeta + JsonLd + AlphaReportModal
-- `public/robots.txt` — sitemap ref + AI crawler rules
-- `index.html` — preload hints, font-display
-- `src/App.tsx` — register `/about-trust-meter` route
-- `src/data/routeRegistry.ts` — add new route
+- `src/pages/EntityPage.tsx` — mount `<HighStakesReviewBanner developerId={id} developerName={name} />` between trust score block and reviews list, wired to existing `WriteReviewModal` open state
+- `src/i18n/locales/en.json` — add `review.urgency.*` keys
+- `src/i18n/locales/ar.json` — add `review.urgency.*` keys (Ammiya)
 
-## Out of scope (intentionally deferred)
-- **Vector/semantic search** — needs pgvector setup + embedding pipeline + UI changes. Worth a separate dedicated pass.
-- **Migrating to Next.js** — would require rewriting the entire app. The injection-based approach above gives ~80% of the SEO benefit (Google + Bingbot + most LLM crawlers now execute JS).
-- **Per-project pages** — your routes already use `/entity/:id` for both developers and projects; same SEO treatment applies.
+## Out of scope
+- Cross-device view counts (using `user_interests` already syncs across devices for logged-in users — guests excluded by design)
+- A/B testing copy variants (can layer on later via simple variant flag)
+- Email/push reminders for the same urgency (this is on-page only)
+- Adjusting threshold from 3 views (will be a constant `VIEW_THRESHOLD = 3` — easy to tune later)
 
