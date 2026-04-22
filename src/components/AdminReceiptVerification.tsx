@@ -11,6 +11,7 @@ import {
 } from '@/components/ui/dialog';
 import {
   Loader2, CheckCircle, XCircle, Clock, Search, Receipt, ExternalLink, User,
+  ShieldCheck, AlertTriangle, FileText, RotateCw,
 } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -24,6 +25,13 @@ interface ReceiptSubmission {
   admin_notes: string | null;
   reviewed_at: string | null;
   created_at: string;
+  document_type?: string | null;
+  authenticity_score?: number | null;
+  authenticity_label?: string | null;
+  authenticity_flags?: string[] | null;
+  redacted_fields?: string[] | null;
+  extracted_developer_name?: string | null;
+  redacted_image_url?: string | null;
   // joined from profiles
   user_name?: string;
   user_email?: string;
@@ -38,6 +46,9 @@ const AdminReceiptVerification = () => {
   const [processing, setProcessing] = useState<string | null>(null);
   const [reviewModal, setReviewModal] = useState<ReceiptSubmission | null>(null);
   const [adminNotes, setAdminNotes] = useState('');
+  const [sortByScore, setSortByScore] = useState(false);
+  const [scoreFilter, setScoreFilter] = useState<'all' | 'authentic' | 'needs_review' | 'suspicious'>('all');
+  const [rerunning, setRerunning] = useState<string | null>(null);
 
   const fetchReceipts = useCallback(async () => {
     setLoading(true);
@@ -112,8 +123,61 @@ const AdminReceiptVerification = () => {
     const matchesSearch = !searchQuery ||
       (r.developer_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
       (r.user_name || '').toLowerCase().includes(searchQuery.toLowerCase());
-    return matchesTab && matchesSearch;
+    const matchesScore =
+      scoreFilter === 'all' ||
+      (scoreFilter === 'authentic' && (r.authenticity_label === 'authentic')) ||
+      (scoreFilter === 'needs_review' && (r.authenticity_label === 'needs_review')) ||
+      (scoreFilter === 'suspicious' && (r.authenticity_label === 'suspicious'));
+    return matchesTab && matchesSearch && matchesScore;
+  }).sort((a, b) => {
+    if (!sortByScore) return 0;
+    return (b.authenticity_score ?? -1) - (a.authenticity_score ?? -1);
   });
+
+  const rerunCheck = async (receipt: ReceiptSubmission) => {
+    setRerunning(receipt.id);
+    try {
+      // Fetch image and convert to data URL on the client
+      const resp = await fetch(receipt.image_url);
+      const blob = await resp.blob();
+      const dataUrl: string = await new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+      const { data, error } = await supabase.functions.invoke('verify-contract', {
+        body: { image_data_url: dataUrl },
+      });
+      if (error) throw error;
+      const r = data as any;
+      const { error: updErr } = await supabase
+        .from('receipt_submissions')
+        .update({
+          document_type: r.document_type,
+          authenticity_score: r.authenticity_score,
+          authenticity_label: r.authenticity_label,
+          authenticity_flags: r.authenticity_flags,
+          extracted_developer_name: r.extracted_developer_name || null,
+        } as any)
+        .eq('id', receipt.id);
+      if (updErr) throw updErr;
+      toast.success('Re-checked');
+      fetchReceipts();
+    } catch (e) {
+      console.error(e);
+      toast.error('Re-check failed');
+    } finally {
+      setRerunning(null);
+    }
+  };
+
+  const scoreBadgeClass = (label?: string | null) => {
+    if (label === 'authentic') return 'border-trust-excellent/40 bg-trust-excellent/10 text-trust-excellent';
+    if (label === 'needs_review') return 'border-amber-500/40 bg-amber-500/10 text-amber-700';
+    if (label === 'suspicious') return 'border-destructive/40 bg-destructive/10 text-destructive';
+    return 'border-border bg-muted text-muted-foreground';
+  };
 
   const stats = {
     pending: receipts.filter(r => r.status === 'pending').length,
@@ -169,6 +233,23 @@ const AdminReceiptVerification = () => {
         />
       </div>
 
+      {/* Authenticity filters */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <select
+          value={scoreFilter}
+          onChange={e => setScoreFilter(e.target.value as any)}
+          className="px-2 py-1.5 rounded-md border border-border bg-background text-foreground text-xs"
+        >
+          <option value="all">All scores</option>
+          <option value="authentic">Authentic only</option>
+          <option value="needs_review">Needs review</option>
+          <option value="suspicious">Suspicious</option>
+        </select>
+        <Button size="sm" variant={sortByScore ? 'default' : 'outline'} onClick={() => setSortByScore(s => !s)} className="h-8 text-xs">
+          Sort by score
+        </Button>
+      </div>
+
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="w-full">
@@ -218,6 +299,38 @@ const AdminReceiptVerification = () => {
                           Submitted {new Date(receipt.created_at).toLocaleDateString()}
                         </p>
 
+                        {/* Authenticity & document type badges */}
+                        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                          {receipt.authenticity_score !== null && receipt.authenticity_score !== undefined && (
+                            <Badge variant="outline" className={`text-[10px] gap-1 ${scoreBadgeClass(receipt.authenticity_label)}`}>
+                              <ShieldCheck className="w-2.5 h-2.5" />
+                              {receipt.authenticity_score}/100 · {receipt.authenticity_label || 'unknown'}
+                            </Badge>
+                          )}
+                          {receipt.document_type && receipt.document_type !== 'unknown' && (
+                            <Badge variant="outline" className="text-[10px] gap-1">
+                              <FileText className="w-2.5 h-2.5" />
+                              {receipt.document_type.replace(/_/g, ' ')}
+                            </Badge>
+                          )}
+                          {receipt.redacted_fields && receipt.redacted_fields.length > 0 && (
+                            <Badge variant="secondary" className="text-[10px]">
+                              {receipt.redacted_fields.length} field{receipt.redacted_fields.length === 1 ? '' : 's'} redacted
+                            </Badge>
+                          )}
+                          {receipt.extracted_developer_name && (
+                            <span className="text-[10px] text-muted-foreground italic">
+                              AI saw: {receipt.extracted_developer_name}
+                            </span>
+                          )}
+                          {receipt.authenticity_flags && receipt.authenticity_flags.length > 0 && (
+                            <span title={receipt.authenticity_flags.join(', ')} className="text-[10px] text-muted-foreground inline-flex items-center gap-0.5">
+                              <AlertTriangle className="w-2.5 h-2.5" />
+                              {receipt.authenticity_flags.length} flag{receipt.authenticity_flags.length === 1 ? '' : 's'}
+                            </span>
+                          )}
+                        </div>
+
                         {receipt.admin_notes && (
                           <p className="text-xs text-muted-foreground mt-1 italic">Note: {receipt.admin_notes}</p>
                         )}
@@ -235,6 +348,16 @@ const AdminReceiptVerification = () => {
                           Review
                         </Button>
                       )}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        disabled={rerunning === receipt.id}
+                        onClick={() => rerunCheck(receipt)}
+                        className="h-7 text-[10px]"
+                      >
+                        {rerunning === receipt.id ? <Loader2 className="w-3 h-3 animate-spin me-1" /> : <RotateCw className="w-3 h-3 me-1" />}
+                        Re-run
+                      </Button>
 
                       {receipt.status !== 'pending' && receipt.reviewed_at && (
                         <div className="text-xs text-muted-foreground text-end">
