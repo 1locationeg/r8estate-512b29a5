@@ -768,7 +768,15 @@
     "tier_gold": "Gold Reviewer",
     "tier_silver": "Silver Reviewer",
     "your_rating": "Your rating",
-    "your_review": "Your review"
+    "your_review": "Your review",
+    "urgency": {
+      "headline": "Your insight is the only thing standing between an investor and a bad decision.",
+      "body": "Every hour you delay, someone else risks their capital. Stop the risk — post your review.",
+      "cta": "Prevent a Bad Investment Now",
+      "microcopy": "⏱ 60 seconds · 🛡 Verified anonymously · ✨ +25 coins",
+      "dismiss_aria": "Dismiss this reminder",
+      "dismissed_toast": "We'll remind you again later."
+    }
   },
   "notif": {
     "all": "All",

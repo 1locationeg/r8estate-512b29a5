@@ -14,6 +14,7 @@ import { mapPublicBusinessProfileToSearchItem } from "@/lib/businessProfileSearc
 import { EntityMeta } from "@/components/EntityMeta";
 import { EntityJsonLd } from "@/components/EntityJsonLd";
 import { AlphaReportModal } from "@/components/AlphaReportModal";
+import { HighStakesReviewBanner } from "@/components/HighStakesReviewBanner";
 
 const categoryToSearchCategory = (labelKey: string): SearchCategory => {
   const map: Record<string, SearchCategory> = {
@@ -201,6 +202,13 @@ const EntityPage = () => {
         <ItemDetailSection
           item={entity}
           onClose={() => navigate(-1)}
+        />
+
+        {/* High-Stakes loss-framed review CTA (shows after 3 views without a review) */}
+        <HighStakesReviewBanner
+          developerId={entity.id}
+          developerName={entity.name}
+          entityCategory={entity.category}
         />
 
         {/* Alpha Report lead-gen + freshness signal */}
