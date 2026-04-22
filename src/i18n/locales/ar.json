@@ -491,6 +491,67 @@
     "shareReview": "تقييم على R8ESTATE: {{item}}",
     "shareDeveloper": "{{name}} على R8ESTATE — نقاط الثقة: {{score}}"
   },
+  "verification": {
+    "contract": {
+      "title": "تحقق آمن من العقد",
+      "subtitle": "بنبلّر اسمك ورقمك القومي وتليفونك وقيمة العقد قبل ما أي حاجة تتبعت. بياناتك مش هتطلع من جهازك من غير حماية.",
+      "privacyBadge": "مُخفّى تلقائياً",
+      "takePhoto": "صوّر",
+      "uploadFile": "رفع ملف",
+      "privacyNote": "JPG أو PNG لحد 8 ميجا. الـ PDF قريباً. البيانات الحساسة بتتظبّط وتتبلّر على جهازك قبل الرفع.",
+      "scanning": "بنكشف البيانات الحساسة وعلامات الأصالة…",
+      "submit": "ابعت للتحقق",
+      "submitting": "بنرفع النسخة المحمية…",
+      "startOver": "ابدأ من جديد",
+      "uploadAnother": "ارفع تاني",
+      "doneTitle": "اتبعت بأمان",
+      "doneSubtitle": "ورقتك في المراجعة. هتوصلك إشعار لما الأدمن يوافق على شارة المشتري الموثّق.",
+      "submitted": "العقد اتبعت — محمي وفي طريقه للأدمن.",
+      "submitError": "فشل الإرسال. حاول تاني.",
+      "aiError": "مقدرناش نحلّل الملف.",
+      "tooLarge": "الملف كبير. الحد الأقصى 8 ميجا.",
+      "unsupported": "بنقبل صور أو PDF بس.",
+      "pdfHint": "دعم الـ PDF قريباً. ارفع صورة أو سكرين شوت من الورقة.",
+      "signInRequired": "سجّل الدخول الأول علشان ترفع عقد.",
+      "protectedTitle": "اللي اتحمى قبل الرفع",
+      "noFieldsDetected": "مفيش بيانات حساسة اتلقطت. تقدر ترفع برده.",
+      "flagsTitle": "علامات الأصالة",
+      "contractVerifiedChip": "عقد موثّق",
+      "labels": {
+        "authentic": "أصلي",
+        "needs_review": "محتاج مراجعة",
+        "suspicious": "مشبوه"
+      },
+      "docTypes": {
+        "reservation_form": "استمارة حجز",
+        "payment_receipt": "إيصال دفع",
+        "sale_contract": "عقد بيع",
+        "unknown": "ورقة غير معروفة"
+      },
+      "fields": {
+        "name": "الاسم",
+        "national_id": "الرقم القومي",
+        "phone": "التليفون",
+        "address": "العنوان",
+        "contract_value": "قيمة العقد",
+        "signature": "التوقيع",
+        "account_number": "رقم الحساب",
+        "email": "الإيميل"
+      },
+      "admin": {
+        "score": "الأصالة",
+        "documentType": "نوع الورقة",
+        "redactedFields": "اتحمى",
+        "rerun": "إعادة الفحص",
+        "rerunning": "بنعيد…",
+        "sortByScore": "ترتيب حسب النقاط",
+        "filterAll": "كل النقاط",
+        "filterAuthentic": "أصلي بس",
+        "filterReview": "محتاج مراجعة",
+        "filterSuspicious": "مشبوه"
+      }
+    }
+  },
   "whatsapp": {
     "chatTitle": "محادثة واتساب",
     "replyTime": "نرد عادةً خلال دقائق",

@@ -491,6 +491,67 @@
     "shareReview": "Review on R8ESTATE: {{item}}",
     "shareDeveloper": "{{name}} on R8ESTATE — Trust Score: {{score}}"
   },
+  "verification": {
+    "contract": {
+      "title": "Secure contract verification",
+      "subtitle": "We blur your name, ID, phone and contract value before anything is sent. Your private data never leaves your device unprotected.",
+      "privacyBadge": "Auto-redacted",
+      "takePhoto": "Take photo",
+      "uploadFile": "Upload file",
+      "privacyNote": "JPG or PNG up to 8MB. PDFs coming soon. Sensitive fields are detected and blurred on-device before upload.",
+      "scanning": "Detecting sensitive fields and authenticity signals…",
+      "submit": "Submit for verification",
+      "submitting": "Uploading the protected version…",
+      "startOver": "Start over",
+      "uploadAnother": "Upload another",
+      "doneTitle": "Submitted securely",
+      "doneSubtitle": "Your document is in review. You'll get a notification when admins approve your Verified Buyer badge.",
+      "submitted": "Contract submitted — protected and on its way to admins.",
+      "submitError": "Failed to submit. Please try again.",
+      "aiError": "Could not analyze document.",
+      "tooLarge": "File too large. Max 8MB.",
+      "unsupported": "Only images or PDF are supported.",
+      "pdfHint": "PDF support is coming soon. Please upload a photo or screenshot of the document.",
+      "signInRequired": "Please sign in to upload a contract.",
+      "protectedTitle": "Protected before upload",
+      "noFieldsDetected": "No sensitive fields were detected. You can still submit.",
+      "flagsTitle": "Authenticity signals",
+      "contractVerifiedChip": "Contract Verified",
+      "labels": {
+        "authentic": "Authentic",
+        "needs_review": "Needs review",
+        "suspicious": "Suspicious"
+      },
+      "docTypes": {
+        "reservation_form": "Reservation Form",
+        "payment_receipt": "Payment Receipt",
+        "sale_contract": "Sale Contract",
+        "unknown": "Unknown Document"
+      },
+      "fields": {
+        "name": "Name",
+        "national_id": "National ID",
+        "phone": "Phone",
+        "address": "Address",
+        "contract_value": "Contract value",
+        "signature": "Signature",
+        "account_number": "Account number",
+        "email": "Email"
+      },
+      "admin": {
+        "score": "Authenticity",
+        "documentType": "Document type",
+        "redactedFields": "Redacted",
+        "rerun": "Re-run check",
+        "rerunning": "Re-running…",
+        "sortByScore": "Sort by score",
+        "filterAll": "All scores",
+        "filterAuthentic": "Authentic only",
+        "filterReview": "Needs review",
+        "filterSuspicious": "Suspicious"
+      }
+    }
+  },
   "whatsapp": {
     "chatTitle": "WhatsApp Chat",
     "replyTime": "We typically reply within minutes",
