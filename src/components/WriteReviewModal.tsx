@@ -1059,40 +1059,10 @@ export const WriteReviewModal = ({
         </div>
 
         {rating > 0 && savedReviewId && !isSaving && (
-          <p className="text-xs text-primary/80 italic text-center">
+          <p className="text-sm text-primary/90 italic text-center">
             {getRatingEncouragement(rating)}
           </p>
         )}
-
-        {/* Stacked Title + Review card (Facebook pattern) */}
-        <div className="rounded-xl bg-muted/40 border border-border divide-y divide-border overflow-hidden">
-          <div className="flex items-stretch">
-            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0 flex items-center">
-              {t("form.review_title", "Title")}
-            </label>
-            <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              placeholder={t("form.optional", "Optional")}
-              maxLength={100}
-              className="border-0 bg-transparent focus-visible:ring-0 h-11 flex-1 px-2"
-              disabled={!rating}
-            />
-          </div>
-          <div className="flex items-stretch">
-            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0">
-              {t("form.your_review", "Review")}
-            </label>
-            <Textarea
-              value={contentPlainText}
-              onChange={(e) => setContent(e.target.value)}
-              placeholder={t("form.optional", "Optional")}
-              rows={3}
-              className="border-0 bg-transparent focus-visible:ring-0 resize-none flex-1 px-2 py-3"
-              disabled={!rating}
-            />
-          </div>
-        </div>
 
         {/* Reviewing as */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -1116,7 +1086,6 @@ export const WriteReviewModal = ({
             size="sm"
             className="text-primary gap-1 h-9 px-2"
             onClick={async () => {
-              if (hasContent || title) await savePhase2();
               setPhase(2);
             }}
             disabled={!rating}
@@ -1128,9 +1097,6 @@ export const WriteReviewModal = ({
             className="gap-1.5 min-h-[40px] px-5"
             disabled={!rating || isSaving}
             onClick={async () => {
-              if (hasContent || title) {
-                await savePhase2();
-              }
               await handleDone();
             }}
           >
@@ -1155,6 +1121,24 @@ export const WriteReviewModal = ({
 
   const renderPhase2 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-3 md:space-y-4">
+      {/* Motivating hero banner — encourages deeper reviews */}
+      <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-3 md:p-4">
+        <div className="flex items-start gap-3">
+          <div className="text-2xl shrink-0">✍️</div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-foreground">
+              {t("form.deepReview.title", "Your story helps thousands of buyers")}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {t(
+                "form.deepReview.subtitle",
+                "Share what worked, what didn't, and what you'd tell a friend. Detailed reviews earn +50 pts and a verified badge."
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Context Field — chips or text input */}
       <div>
         <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
