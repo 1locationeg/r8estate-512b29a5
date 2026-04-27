@@ -1,4 +1,4 @@
-import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck, MessageSquare } from "lucide-react";
+import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck, MessageSquare, Info } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
@@ -12,6 +12,13 @@ import { CompareModal } from "./CompareModal";
 import { ReviewMotivatorFloat } from "./ReviewMotivatorFloat";
 import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { DeveloperInsightsUpsell } from "./DeveloperInsightsUpsell";
+import { TrustScoreBreakdownModal } from "./TrustScoreBreakdown";
+import { VerificationLegend } from "./VerificationLegend";
+import {
+  calculateTrustScore,
+  trustColorClass,
+  trustStrokeClass,
+} from "@/lib/trustScoreCalculator";
 import { useState, useMemo, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { trackBuyerEngagement } from "@/lib/trackBuyerEngagement";
@@ -52,6 +59,7 @@ export const DeveloperDetailCard = ({
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
+  const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
   const { isSaved, toggle: toggleSave } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow } = useFollowBusiness(developer.id);
   const { isReviewable, parentName, childProjects } = useReviewability(developer.id);
@@ -70,6 +78,18 @@ export const DeveloperDetailCard = ({
     }
   }, [developer.id, user]);
 
+  const { reviews, dbReviews, refetch: refetchReviews } = useReviews(developer.id);
+
+  const breakdown = useMemo(
+    () =>
+      calculateTrustScore(reviews, {
+        rating: developer.rating,
+        reviewCount: developer.reviewCount,
+        trustScore: developer.trustScore,
+      }),
+    [reviews, developer.rating, developer.reviewCount, developer.trustScore]
+  );
+
   const developerAsSearchItem: SearchItem = useMemo(() => ({
     id: developer.id,
     name: developer.name,
@@ -78,22 +98,8 @@ export const DeveloperDetailCard = ({
     image: logoSrc,
     rating: developer.rating,
     reviewCount: developer.reviewCount,
-    meta: { trustScore: developer.trustScore, verified: developer.verified }
-  }), [developer, logoSrc]);
-
-  const getTrustScoreColor = (score: number) => {
-    if (score >= 66) return "text-trust-excellent";
-    if (score >= 50) return "text-trust-good";
-    return "text-trust-fair";
-  };
-
-  const getTrustScoreStroke = (score: number) => {
-    if (score >= 66) return "stroke-trust-excellent";
-    if (score >= 50) return "stroke-trust-good";
-    return "stroke-trust-fair";
-  };
-
-  const { reviews, refetch: refetchReviews } = useReviews(developer.id);
+    meta: { trustScore: breakdown.total, verified: developer.verified }
+  }), [developer, logoSrc, breakdown.total]);
 
   const developerReviews = useMemo(() => {
     let filtered = [...reviews];
@@ -129,15 +135,6 @@ export const DeveloperDetailCard = ({
     return stars;
   };
 
-  const trustCategories = [
-    { label: t("trust.projectTimeliness"), value: developer.trustScore - 3 },
-    { label: t("trust.constructionQuality"), value: developer.trustScore - 2 },
-    { label: t("trust.developerCommunication"), value: developer.trustScore - 5 },
-    { label: t("trust.valueForMoney"), value: developer.trustScore - 1 },
-    { label: t("trust.documentationLegality"), value: developer.trustScore + 3 },
-    { label: t("trust.customerService"), value: developer.trustScore - 6 },
-  ];
-
   return (
     <>
     <div className="bg-card border border-border rounded-2xl overflow-hidden">
@@ -169,12 +166,37 @@ export const DeveloperDetailCard = ({
         <div className="relative w-32 h-32 md:w-40 md:h-40 mx-auto mb-4">
           <svg className="w-full h-full transform -rotate-90">
             <circle cx="50%" cy="50%" r="45%" stroke="currentColor" strokeWidth="8" fill="none" className="text-secondary" />
-            <circle cx="50%" cy="50%" r="45%" strokeWidth="8" fill="none" strokeLinecap="round" strokeDasharray={`${(developer.trustScore / 100) * 283} 283`} className={getTrustScoreStroke(developer.trustScore)} />
+            <circle cx="50%" cy="50%" r="45%" strokeWidth="8" fill="none" strokeLinecap="round" strokeDasharray={`${(breakdown.total / 100) * 283} 283`} className={trustStrokeClass(breakdown.total)} />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className={cn("text-3xl md:text-4xl font-bold", getTrustScoreColor(developer.trustScore))}>{developer.trustScore}</span>
+            <span className={cn("text-3xl md:text-4xl font-bold", trustColorClass(breakdown.total))}>{breakdown.total}</span>
             <span className="text-[10px] md:text-xs text-muted-foreground uppercase tracking-wider">{t("developers.trustScore")}</span>
           </div>
+        </div>
+
+        {/* Confidence chip + How calculated */}
+        <div className="flex items-center justify-center gap-2 flex-wrap mb-3">
+          <span
+            className={cn(
+              "text-[10px] uppercase tracking-wide px-2 py-0.5 rounded-full font-semibold",
+              breakdown.confidence === "high" && "bg-trust-excellent/10 text-trust-excellent",
+              breakdown.confidence === "medium" && "bg-trust-good/10 text-trust-good",
+              breakdown.confidence === "low" && "bg-muted text-muted-foreground"
+            )}
+          >
+            {t(`trustMethod.confidence.${breakdown.confidence}`, breakdown.confidence)}
+            <span className="ms-1 opacity-70 normal-case">
+              · {t("trustMethod.basedOnReviews", { count: breakdown.pillars.rating.reviewCount, defaultValue: "{{count}} reviews" })}
+            </span>
+          </span>
+          <button
+            type="button"
+            onClick={() => setIsBreakdownOpen(true)}
+            className="inline-flex items-center gap-1 text-[11px] underline text-muted-foreground hover:text-primary transition-colors"
+          >
+            <Info className="w-3 h-3" />
+            {t("trustMethod.howCalculated", "How is this calculated?")}
+          </button>
         </div>
 
         <div className="flex items-center justify-center gap-2 mb-4">
@@ -211,9 +233,22 @@ export const DeveloperDetailCard = ({
       <div className="p-4 md:p-6 border-t border-border">
         <h3 className="text-base md:text-lg font-bold text-foreground mb-4">{t("trust.categories")}</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {trustCategories.map((cat) => (
-            <TrustCategoryBar key={cat.label} label={cat.label} percentage={Math.min(100, Math.max(0, cat.value))} />
+          {breakdown.categoryScores.map((cat) => (
+            <TrustCategoryBar
+              key={cat.key}
+              label={t(cat.labelKey)}
+              percentage={cat.score}
+              source={cat.source}
+              sampleSize={cat.sampleSize}
+            />
           ))}
+        </div>
+
+        <div className="mt-4">
+          <VerificationLegend
+            developerVerified={developer.verified}
+            reviews={dbReviews}
+          />
         </div>
       </div>
 
@@ -248,6 +283,12 @@ export const DeveloperDetailCard = ({
       <DeveloperInsightsUpsell />
     </div>
     <CompareModal item={developerAsSearchItem} open={isCompareOpen} onClose={() => setIsCompareOpen(false)} />
+    <TrustScoreBreakdownModal
+      open={isBreakdownOpen}
+      onOpenChange={setIsBreakdownOpen}
+      breakdown={breakdown}
+      developerName={developer.name}
+    />
     </>
   );
 };
