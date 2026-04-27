@@ -1144,6 +1144,70 @@ export const WriteReviewModal = ({
           </p>
         )}
 
+        {/* Social Impact Banner — logged-in users only, after rating-only save */}
+        {!isGuest && rating > 0 && savedReviewId && !isSaving && (
+          <div
+            className="flex items-start gap-2 rounded-xl p-3 animate-fade-in"
+            style={{
+              background: "#fdf3d0",
+              border: "0.5px solid #f0d068",
+              animationDelay: "600ms",
+              animationFillMode: "both",
+            }}
+          >
+            <Eye className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#7a5500" }} />
+            <p className="text-xs leading-relaxed" style={{ color: "#7a5500" }}>
+              {getImpactBannerText(rating)}
+            </p>
+          </div>
+        )}
+
+        {/* Word-Cloud Chips — pick what fits, helps draft the review */}
+        {rating > 0 && savedReviewId && !isSaving && (
+          <div className="space-y-2">
+            <p
+              className="text-[12px] font-semibold uppercase text-muted-foreground"
+              style={{ letterSpacing: "0.06em" }}
+            >
+              {t("form.chips.header", "Pick what fits your experience")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(CHIPS_BY_RATING[rating] || []).map((chip) => {
+                const isAr = (typeof document !== "undefined" && document.documentElement.lang === "ar");
+                const label = isAr ? chip.ar : chip.en;
+                const isSelected = selectedChips.includes(label);
+                const s = CHIP_STYLES[chip.sentiment];
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() =>
+                      setSelectedChips((prev) =>
+                        prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
+                      )
+                    }
+                    className={cn(
+                      "rounded-full px-3 py-1.5 text-xs font-medium border transition-all min-h-[32px]",
+                      isSelected && "ring-2 ring-[#ed1b40] scale-105"
+                    )}
+                    style={{ background: s.bg, color: s.text, borderColor: s.border }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <p
+              className="text-xs"
+              style={{ color: selectedChips.length > 0 ? "#1a6635" : undefined }}
+            >
+              {selectedChips.length > 0
+                ? t("form.chips.hintReady", "Great — continue to write your review")
+                : t("form.chips.hintEmpty", "Pick a few words and we'll help you draft the review ✨")}
+            </p>
+          </div>
+        )}
+
         {/* Guest name input only — no "reviewing as" line for logged-in users */}
         {isGuest && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -1175,7 +1239,7 @@ export const WriteReviewModal = ({
         {rating > 0 && (
           <button
             type="button"
-            onClick={() => setPhase(2)}
+            onClick={goToPhase2}
             className="w-full text-start rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-4 hover:border-primary/50 hover:shadow-md transition-all active:scale-[0.99] group"
           >
             <div className="flex items-start gap-3">
