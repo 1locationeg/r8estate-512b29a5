@@ -1370,7 +1370,7 @@ export const WriteReviewModal = ({
                 disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {t("form.enhance_label", "AI Enhance")}
+                {t("form.enhance_label", "Polish my writing ✨")}
               </button>
             </>
           )}
@@ -1490,7 +1490,7 @@ export const WriteReviewModal = ({
                 disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {t("form.enhance_label", "AI Enhance")}
+                {t("form.enhance_label", "Polish my writing ✨")}
               </button>
             </>
           )}
