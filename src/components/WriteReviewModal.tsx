@@ -124,6 +124,60 @@ const getExperienceChips = (entityCategory: string, t: any): { key: string; labe
 
 const EMOJI_QUICK = ["👍", "👎", "⭐", "🏠", "💰", "🔑", "📋", "✅", "❌", "🏗️", "😊", "😤"];
 
+// ===================== WORD-CLOUD CHIPS (per rating) =====================
+// White-Arabic + warm-EN labels. Sentiment drives chip color.
+type ChipSentiment = "pos" | "neg" | "neu";
+interface ChipDef { ar: string; en: string; sentiment: ChipSentiment }
+
+const CHIPS_BY_RATING: Record<number, ChipDef[]> = {
+  5: [
+    { ar: "تسليم في الموعد", en: "Delivered on time", sentiment: "pos" },
+    { ar: "جودة عالية", en: "High quality", sentiment: "pos" },
+    { ar: "موقع ممتاز", en: "Great location", sentiment: "pos" },
+    { ar: "خدمة ممتازة", en: "Excellent service", sentiment: "pos" },
+    { ar: "أمان وهدوء", en: "Safe & quiet", sentiment: "pos" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+    { ar: "استثمار ناجح", en: "Solid investment", sentiment: "neu" },
+  ],
+  4: [
+    { ar: "جودة جيدة", en: "Good quality", sentiment: "pos" },
+    { ar: "موقع ممتاز", en: "Great location", sentiment: "pos" },
+    { ar: "تأخير بسيط", en: "Minor delay", sentiment: "neg" },
+    { ar: "خدمة عملاء جيدة", en: "Helpful support", sentiment: "neu" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+    { ar: "ملاحظات على التشطيب", en: "Finishing issues", sentiment: "neg" },
+  ],
+  3: [
+    { ar: "تجربة متوسطة", en: "Average experience", sentiment: "neu" },
+    { ar: "تأخير في التسليم", en: "Delivery delay", sentiment: "neg" },
+    { ar: "ملاحظات على التشطيب", en: "Finishing issues", sentiment: "neg" },
+    { ar: "ضعف في خدمة العملاء", en: "Weak customer service", sentiment: "neg" },
+    { ar: "موقع جيد", en: "Good location", sentiment: "pos" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+  ],
+  2: [
+    { ar: "تأخير في التسليم", en: "Late delivery", sentiment: "neg" },
+    { ar: "جودة منخفضة", en: "Low quality", sentiment: "neg" },
+    { ar: "مشاكل متعددة", en: "Multiple issues", sentiment: "neg" },
+    { ar: "خدمة سيئة", en: "Poor service", sentiment: "neg" },
+    { ar: "وعود لم تتحقق", en: "Unmet promises", sentiment: "neg" },
+    { ar: "سعر مرتفع", en: "Overpriced", sentiment: "neg" },
+  ],
+  1: [
+    { ar: "تجربة سيئة جداً", en: "Very poor experience", sentiment: "neg" },
+    { ar: "تأخير كبير", en: "Major delay", sentiment: "neg" },
+    { ar: "جودة سيئة", en: "Bad quality", sentiment: "neg" },
+    { ar: "لا أوصي به", en: "Wouldn't recommend", sentiment: "neg" },
+    { ar: "وعود مضللة", en: "Misleading promises", sentiment: "neg" },
+  ],
+};
+
+const CHIP_STYLES: Record<ChipSentiment, { bg: string; text: string; border: string }> = {
+  pos: { bg: "#e4f5ec", text: "#1a6635", border: "#b8e2c8" },
+  neg: { bg: "#fde8ec", text: "#a0102a", border: "#f5c5cd" },
+  neu: { bg: "#e0eaf5", text: "#0a3d62", border: "#b8d0e8" },
+};
+
 const getCategoryMetricKeys = (category: string): string[] => {
   switch (category) {
     case 'developers': return ['delivery', 'quality', 'financial', 'support'];
