@@ -2351,6 +2351,7 @@ const AdminDashboard = () => {
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />
           <Route path="welcome-message" element={<AdminWelcomeMessage />} />
           <Route path="contact" element={<AdminContactSettings />} />
+          <Route path="truth-check" element={<AdminTruthCheck />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>
