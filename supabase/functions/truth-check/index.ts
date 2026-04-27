@@ -1,4 +1,4 @@
-// Truth-Check edge function — grounds AI verdict on a developer's marketing claim
+// Truth-Check edge function: grounds AI verdict on a developer's marketing claim
 // against verified buyer reviews + approved contract receipts.
 //
 // Returns a single non-streaming JSON response with:
@@ -245,7 +245,7 @@ Deno.serve(async (req) => {
     if (usable.length === 0) {
       return new Response(
         JSON.stringify({
-          verdict: "insufficient_evidence" satisfies Verdict,
+          verdict: "insufficient_evidence" as Verdict,
           headline:
             lang === "ar"
               ? "لسه مفيش تقييمات موثّقة كفاية على المطوّر ده."
