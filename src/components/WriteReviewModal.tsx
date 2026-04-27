@@ -1064,37 +1064,23 @@ export const WriteReviewModal = ({
           </p>
         )}
 
-        {/* Reviewing as */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{t("form.reviewingAs", "Reviewing as:")}</span>
-          {isGuest ? (
+        {/* Guest name input only — no "reviewing as" line for logged-in users */}
+        {isGuest && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Input
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               placeholder={t("guestReview.namePlaceholder", "Your name (optional)")}
-              className="h-7 text-xs flex-1 max-w-[180px]"
+              className="h-8 text-xs flex-1"
             />
-          ) : (
-            <span className="font-medium text-foreground truncate">{userDisplayName}</span>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Action row: Submit + Add details motivator */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-primary gap-1 h-9 px-2"
-            onClick={async () => {
-              setPhase(2);
-            }}
-            disabled={!rating}
-          >
-            {t("form.addMoreDetails", "Add more details")} <ChevronRight className="w-4 h-4" />
-          </Button>
+        {/* Submit — primary action (rating-only) */}
+        <div className="pt-1">
           <Button
             size="sm"
-            className="gap-1.5 min-h-[40px] px-5"
+            className="gap-1.5 min-h-[44px] w-full"
             disabled={!rating || isSaving}
             onClick={async () => {
               await handleDone();
@@ -1105,15 +1091,29 @@ export const WriteReviewModal = ({
           </Button>
         </div>
 
-        {/* Motivator nudge */}
+        {/* Motivating card — single CTA into Step 2 */}
         {rating > 0 && (
-          <MotivatorChip
-            icon="✨"
-            text={t(
-              "form.motivator.step1",
-              "Add a few details — earn +25 pts and help buyers more"
-            )}
-          />
+          <button
+            type="button"
+            onClick={() => setPhase(2)}
+            className="w-full text-start rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-4 hover:border-primary/50 hover:shadow-md transition-all active:scale-[0.99] group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="text-2xl shrink-0">✨</div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {t("form.motivator.goDeeperCard.title", "Tell your full story →")}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t(
+                    "form.motivator.goDeeperCard.subtitle",
+                    "Add a title & a few lines. Earn +25 pts and help thousands of buyers decide with confidence."
+                  )}
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-primary mt-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </button>
         )}
       </div>
     );
@@ -1138,37 +1138,6 @@ export const WriteReviewModal = ({
           </div>
         </div>
       </div>
-
-      {/* Context Field — chips or text input */}
-      <div>
-        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
-        {contextField.chips ? (
-          <ChipSelect
-            options={contextField.chips.map((c) => ({ key: c.toLowerCase(), label: c }))}
-            value={unitType}
-            onChange={setUnitType}
-          />
-        ) : (
-          <Input
-            value={unitType}
-            onChange={(e) => setUnitType(e.target.value)}
-            placeholder={contextField.placeholder}
-            className="h-9 text-sm"
-          />
-        )}
-      </div>
-
-      {/* Experience Type — tappable chips instead of Select dropdown */}
-      {!isGuest && (
-        <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("form.experience_type", "Experience Type")}</label>
-          <ChipSelect
-            options={experienceChips}
-            value={experienceType}
-            onChange={setExperienceType}
-          />
-        </div>
-      )}
 
       {/* Review Title with AI suggestions */}
       <div>
@@ -1216,9 +1185,6 @@ export const WriteReviewModal = ({
         />
       </div>
 
-      {/* Disclaimer — slim */}
-      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
-
       {/* Review Content — hero section */}
       <div className="space-y-2">
         <ReviewRichEditor
@@ -1234,7 +1200,7 @@ export const WriteReviewModal = ({
           rows={isMobile ? 4 : 5}
         />
 
-        {/* Action toolbar below textarea — clear & inviting */}
+        {/* Action toolbar — Voice + AI Enhance only */}
         <div className="flex items-center gap-2 flex-wrap">
           {!isGuest && (
             <>
@@ -1262,30 +1228,8 @@ export const WriteReviewModal = ({
               </button>
             </>
           )}
-          <button
-            type="button"
-            className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-              showEmojiBar ? "bg-primary/10 text-primary" : "bg-secondary/80 text-foreground hover:bg-secondary hover:shadow-sm"
-            )}
-            onClick={() => setShowEmojiBar(!showEmojiBar)}
-          >
-            <SmilePlus className="w-3.5 h-3.5" />
-            Emoji
-          </button>
         </div>
       </div>
-
-      {/* Emoji bar — collapsible */}
-      {showEmojiBar && (
-        <div className="flex flex-wrap items-center gap-1 px-1">
-          {(aiEmojis.length > 0 ? aiEmojis : EMOJI_QUICK).map((emoji, i) => (
-            <button key={i} type="button" className="text-lg hover:scale-125 transition-transform p-0.5" onClick={() => insertText(emoji)}>
-              {emoji}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Content warnings */}
       {localWarning && (
@@ -1331,7 +1275,7 @@ export const WriteReviewModal = ({
               }
               setPhase(3);
             }}
-            disabled={!disclaimerAgreed || isCheckingContent}
+            disabled={isCheckingContent}
             className="gap-1 h-9"
           >
             {isCheckingContent ? (
@@ -1342,18 +1286,42 @@ export const WriteReviewModal = ({
           </Button>
         </div>
       </div>
-
-      {/* Motivator chip */}
-      <MotivatorChip
-        icon="📊"
-        text={t("form.motivator.step2", "Halfway there — sub-ratings next help buyers compare")}
-      />
     </div>
   );
 
   // STEP 3 — Category ratings only
   const renderPhase3 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-4">
+      {/* Context — moved from Step 2 to keep Step 2 focused on writing */}
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
+        {contextField.chips ? (
+          <ChipSelect
+            options={contextField.chips.map((c) => ({ key: c.toLowerCase(), label: c }))}
+            value={unitType}
+            onChange={setUnitType}
+          />
+        ) : (
+          <Input
+            value={unitType}
+            onChange={(e) => setUnitType(e.target.value)}
+            placeholder={contextField.placeholder}
+            className="h-9 text-sm"
+          />
+        )}
+      </div>
+
+      {!isGuest && (
+        <div>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("form.experience_type", "Experience Type")}</label>
+          <ChipSelect
+            options={experienceChips}
+            value={experienceType}
+            onChange={setExperienceType}
+          />
+        </div>
+      )}
+
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-1">
           {t("form.categoryRatings", "Rate specific categories")}
@@ -1519,6 +1487,9 @@ export const WriteReviewModal = ({
         </div>
       )}
 
+      {/* Disclaimer — gates final submission */}
+      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
       {/* Navigation + Done */}
       <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
         <Button variant="ghost" size="sm" onClick={() => setPhase(3)} className="gap-1 h-9">
@@ -1541,7 +1512,7 @@ export const WriteReviewModal = ({
               setIsUploading(false);
               handleDone();
             }}
-            disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
+            disabled={isUploading || !disclaimerAgreed || (aiModeration?.suspicion_score ?? 0) > 80}
             className="gap-1.5 min-h-[44px]"
           >
             {isUploading ? (

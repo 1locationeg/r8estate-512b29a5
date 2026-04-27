@@ -925,7 +925,11 @@
       "step1": "Add a few details — earn +25 pts and help buyers more",
       "step2": "Halfway there — sub-ratings next help buyers compare",
       "step3": "Almost done — add proof next for a verified badge",
-      "step4": "You're a top contributor — verified reviewers get 3× visibility"
+      "step4": "You're a top contributor — verified reviewers get 3× visibility",
+      "goDeeperCard": {
+        "title": "Tell your full story →",
+        "subtitle": "Add a title & a few lines. Earn +25 pts and help thousands of buyers decide with confidence."
+      }
     }
   },
   "review": {
