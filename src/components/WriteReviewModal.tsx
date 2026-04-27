@@ -1647,7 +1647,12 @@ export const WriteReviewModal = ({
                 <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification", "Verification")}
                 <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional", "Optional")}</Badge>
               </label>
-              <p className="text-xs text-muted-foreground mb-2">{t("form.verification_desc", "Upload proof of purchase for a verified badge")}</p>
+              <p className="text-xs text-foreground/80 mb-2 leading-relaxed">
+                {t(
+                  "form.verification_desc",
+                  "Upload your booking receipt to earn the Verified Buyer badge and 2× points."
+                )}
+              </p>
               <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => verificationInputRef.current?.click()}>
                 <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification", "Upload")}
               </Button>
