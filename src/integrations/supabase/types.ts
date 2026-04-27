@@ -2002,6 +2002,7 @@ export type Database = {
           computed_score: number | null
           created_at: string | null
           id: string
+          per_category_counts: Json | null
           review_count: number | null
           snapshot_date: string
           verified_pct: number | null
@@ -2012,6 +2013,7 @@ export type Database = {
           computed_score?: number | null
           created_at?: string | null
           id?: string
+          per_category_counts?: Json | null
           review_count?: number | null
           snapshot_date?: string
           verified_pct?: number | null
@@ -2022,6 +2024,7 @@ export type Database = {
           computed_score?: number | null
           created_at?: string | null
           id?: string
+          per_category_counts?: Json | null
           review_count?: number | null
           snapshot_date?: string
           verified_pct?: number | null
@@ -2475,6 +2478,10 @@ export type Database = {
       }
       increment_engagement: { Args: { _field: string }; Returns: undefined }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      recalculate_trust_score: {
+        Args: { p_developer_id: string }
+        Returns: undefined
+      }
       set_my_account_type: {
         Args: { _account_type: string }
         Returns: Database["public"]["Enums"]["app_role"]
