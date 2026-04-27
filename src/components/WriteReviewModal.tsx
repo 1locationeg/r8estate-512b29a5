@@ -1245,12 +1245,11 @@ export const WriteReviewModal = ({
             variant="ghost"
             size="sm"
             onClick={() => {
-              if (hasContent) savePhase2();
-              handleDone();
+              safeClose();
             }}
             className="text-muted-foreground h-9"
           >
-            {t("form.doneForNow", "Done")}
+            {t("form.saveAndClose", "Save & Close")}
           </Button>
           <Button
             size="sm"
@@ -1283,6 +1282,12 @@ export const WriteReviewModal = ({
           </Button>
         </div>
       </div>
+
+      {/* Motivator chip */}
+      <MotivatorChip
+        icon="📊"
+        text={t("form.motivator.step2", "Halfway there — sub-ratings next help buyers compare")}
+      />
     </div>
   );
 
