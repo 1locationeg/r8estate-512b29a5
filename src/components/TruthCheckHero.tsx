@@ -81,6 +81,8 @@ export const TruthCheckHero = ({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { settings } = useTruthCheckSettings();
+  const { user } = useAuth();
 
   const [claim, setClaim] = useState(initialClaim ?? "");
   const [loading, setLoading] = useState(false);
@@ -92,22 +94,11 @@ export const TruthCheckHero = ({
   const lang: "ar" | "en" = i18n.language?.startsWith("ar") ? "ar" : "en";
 
   const examples = useMemo(
-    () => [
-      t(
-        "truthCheck.example1",
-        lang === "ar"
-          ? "تسليم في 2026، 100% على الخريطة، عائد استثماري 12%"
-          : "Delivery in 2026, 100% on schedule, 12% guaranteed ROI",
-      ),
-      t(
-        "truthCheck.example2",
-        lang === "ar"
-          ? "أكبر مطوّر في القاهرة الجديدة بدون أي تأخير في التسليم"
-          : "The biggest developer in New Cairo, never a single delivery delay",
-      ),
-    ],
-    [t, lang],
+    () => settings.exampleClaims,
+    [settings.exampleClaims],
   );
+
+  const minChars = Math.max(1, settings.minClaimChars || 8);
 
   const submit = async (claimText: string) => {
     const trimmed = claimText.trim();
