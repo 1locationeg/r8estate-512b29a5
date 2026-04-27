@@ -1187,17 +1187,19 @@ export const WriteReviewModal = ({
 
       {/* Review Content — hero section */}
       <div className="space-y-2">
-        <ReviewRichEditor
-          content={content}
-          onChange={(html) => {
-            setContent(html);
-            const plainText = getPlainTextFromHtml(html);
-            const localCheck = checkContentLocally(plainText);
+        <Textarea
+          value={contentPlainText}
+          onChange={(e) => {
+            const text = e.target.value;
+            // Store as plain text wrapped in a paragraph so DB/HTML pipeline stays consistent
+            setContent(text ? `<p>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>")}</p>` : "");
+            const localCheck = checkContentLocally(text);
             setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
             if (aiModeration) setAiModeration(null);
           }}
           placeholder={t("form.review_placeholder", "Share your experience — what went well? What could improve?")}
-          rows={isMobile ? 4 : 5}
+          rows={isMobile ? 5 : 6}
+          className="text-sm resize-none"
         />
 
         {/* Action toolbar — Voice + AI Enhance only */}
@@ -1248,12 +1250,22 @@ export const WriteReviewModal = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {
-              safeClose();
+            onClick={async () => {
+              if (hasContent) {
+                const localCheck = checkContentLocally(contentPlainText);
+                if (localCheck.blocked) {
+                  setLocalWarning(t("contentGuard.profanity"));
+                  return;
+                }
+                await savePhase2();
+              }
+              await handleDone();
             }}
-            className="text-muted-foreground h-9"
+            disabled={isSaving}
+            className="text-primary h-9 gap-1.5"
           >
-            {t("form.saveAndClose", "Save & Close")}
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            {t("form.submit", "Submit")}
           </Button>
           <Button
             size="sm"
@@ -1292,6 +1304,55 @@ export const WriteReviewModal = ({
   // STEP 3 — Category ratings only
   const renderPhase3 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-4">
+      {/* Rich-formatted review (optional upgrade from Step 2's plain text) */}
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block flex items-center gap-1.5">
+          <Sparkles className="w-3.5 h-3.5 text-primary" />
+          {t("form.richReviewLabel", "Polish your review with formatting")}
+          <span className="text-muted-foreground/50">({t("form.optional", "optional")})</span>
+        </label>
+        <ReviewRichEditor
+          content={content}
+          onChange={(html) => {
+            setContent(html);
+            const plainText = getPlainTextFromHtml(html);
+            const localCheck = checkContentLocally(plainText);
+            setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
+            if (aiModeration) setAiModeration(null);
+          }}
+          placeholder={t("form.review_placeholder", "Share your experience — what went well? What could improve?")}
+          rows={isMobile ? 4 : 5}
+        />
+        <div className="flex items-center gap-2 flex-wrap mt-2">
+          {!isGuest && (
+            <>
+              <button
+                type="button"
+                className={cn(
+                  "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
+                  isRecording
+                    ? "bg-destructive text-destructive-foreground animate-pulse"
+                    : "bg-secondary/80 text-foreground hover:bg-secondary hover:shadow-sm"
+                )}
+                onClick={isRecording ? stopRecording : startRecording}
+              >
+                {isRecording ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                {isRecording ? t("form.stop", "Stop") : t("form.voice_label", "Voice")}
+              </button>
+              <button
+                type="button"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all disabled:opacity-40"
+                onClick={() => enhanceWithAi(false)}
+                disabled={isEnhancing || !hasContent}
+              >
+                {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
+                {t("form.enhance_label", "AI Enhance")}
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+
       {/* Context — moved from Step 2 to keep Step 2 focused on writing */}
       <div>
         <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
