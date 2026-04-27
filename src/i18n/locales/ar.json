@@ -632,6 +632,8 @@
     "contract": {
       "title": "تحقق آمن من العقد",
       "subtitle": "بنبلّر اسمك ورقمك القومي وتليفونك وقيمة العقد قبل ما أي حاجة تتبعت. بياناتك مش هتطلع من جهازك من غير حماية.",
+      "weightTooltip": "تقييم موثّق بعقد — يُحتسب وزنه بـ ١٠ أضعاف وزن التعليق المجهول في درجة الثقة الخاصة بالمطوّر.",
+      "contractVerifiedChip": "موثّق بعقد",
       "privacyBadge": "مُخفّى تلقائياً",
       "takePhoto": "صوّر",
       "uploadFile": "رفع ملف",
@@ -954,11 +956,16 @@
     "enhance_label": "حسّن صياغتي ✨",
     "voice_label": "صوت",
     "review_placeholder": "شاركنا تجربتك: ما الذي سار جيداً؟ وما الذي يحتاج إلى تحسين؟",
-    "verification_desc": "ارفع إيصال الحجز للحصول على شارة *مشتري موثّق* ومضاعفة النقاط (×2).",
+    "verification_desc": "ارفع إيصال الحجز ليُحتسب تقييمك بوزن ×١٠، وتنال شارة *مشتري موثّق* ومضاعفة النقاط ×٢.",
     "purchase_verification": "كن مشتريًا موثّقًا",
     "verification_benefit_badge": "شارة مشتري موثّق",
     "verification_benefit_points": "نقاط مضاعفة ×٢",
+    "verification_benefit_weight": "وزن ثقة ×١٠",
     "verification_benefit_priority": "ظهور أعلى لتقييمك",
+    "verifiedBuyer": {
+      "weightHeadline": "تقييمك سيُحتسب بوزن أكبر ١٠ مرات",
+      "weightSubline": "التقييم الموثّق بعقد يُحتسب بوزن ١٠ أضعاف وزن أي تعليق مجهول داخل درجة الثقة الخاصة بالمطوّر."
+    },
     "verification_accepts_title": "الإثباتات المقبولة",
     "verification_accepts_receipt": "إيصال الحجز أو إيصال المقدم",
     "verification_accepts_contract": "نموذج الحجز أو أول صفحة من العقد",
