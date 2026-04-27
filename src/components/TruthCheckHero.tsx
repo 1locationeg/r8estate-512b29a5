@@ -208,7 +208,7 @@ export const TruthCheckHero = ({
                 className="text-[10px] px-1.5 py-0 h-5 border-accent/50 bg-accent/10 text-accent-foreground"
               >
                 <Sparkles className="w-2.5 h-2.5 me-1" />
-                {t("truthCheck.aiBadge", "AI · Verified buyers")}
+                {settings.cardEyebrow || t("truthCheck.aiBadge", "AI · Verified buyers")}
               </Badge>
             </div>
             <p className="text-xs md:text-sm text-muted-foreground mt-0.5 leading-snug">
