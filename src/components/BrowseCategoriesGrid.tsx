@@ -279,36 +279,54 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
           )}
 
           <div className="flex flex-wrap justify-center gap-x-4 gap-y-3">
-            {filteredCategories.map(({ category, originalIndex }) => {
+            {filteredCategories.map(({ category, originalIndex }, displayIdx) => {
               const journeyKey = journeyMap[category.labelKey] || "research";
               const colors = stationCircle[journeyKey];
               const categoryName = t(category.labelKey);
               const catValue = labelKeyToCategoryValue[category.labelKey] || "";
               const dbCount = categoryCounts[catValue] || 0;
               const totalCount = dbCount + category.items.length;
+              const isDevelopers = category.labelKey === "categories.shares" && displayIdx === 0 && !q;
 
               return (
                 <button
                   key={category.labelKey}
                   onClick={() => handleCategoryClick(originalIndex)}
-                  className="flex flex-col items-center gap-1.5 w-16 md:w-18 group cursor-pointer"
+                  className={cn(
+                    "flex flex-col items-center gap-1.5 group cursor-pointer",
+                    isDevelopers ? "w-20 md:w-24" : "w-16 md:w-18"
+                  )}
+                  aria-label={isDevelopers ? `${categoryName} — tap to open` : categoryName}
                 >
                   <div className="relative">
                     <div className={cn(
-                      "w-14 h-14 md:w-14 md:h-14 rounded-full flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-md [&>svg]:w-6 [&>svg]:h-6",
-                      colors.bg, colors.text
+                      "rounded-full flex items-center justify-center transition-all group-hover:scale-110 group-hover:shadow-md",
+                      colors.bg, colors.text,
+                      isDevelopers
+                        ? "w-20 h-20 md:w-24 md:h-24 ring-4 ring-primary/40 shadow-lg shadow-primary/20 animate-pulse-slow [&>svg]:w-10 [&>svg]:h-10"
+                        : "w-14 h-14 md:w-14 md:h-14 [&>svg]:w-6 [&>svg]:h-6"
                     )}>
                       {category.icon}
                     </div>
+                    {isDevelopers && (
+                      <span className="absolute -bottom-1 left-1/2 -translate-x-1/2 px-2 py-0.5 rounded-full bg-primary text-primary-foreground text-[9px] font-bold whitespace-nowrap shadow-md">
+                        {isRTL ? "ابدأ هنا" : "Start here"}
+                      </span>
+                    )}
                     {/* Business count badge */}
                     <span className={cn(
                       "absolute -top-1 -right-1 min-w-[18px] h-[18px] flex items-center justify-center rounded-full text-[10px] font-bold px-1 border border-background",
-                      colors.bg, colors.text
+                      isDevelopers ? "bg-primary text-primary-foreground" : `${colors.bg} ${colors.text}`
                     )}>
                       {totalCount}
                     </span>
                   </div>
-                  <span className="text-[10px] md:text-[11px] font-medium text-foreground text-center leading-tight line-clamp-2">
+                  <span className={cn(
+                    "text-center leading-tight line-clamp-2",
+                    isDevelopers
+                      ? "text-xs md:text-sm font-bold text-primary mt-1"
+                      : "text-[10px] md:text-[11px] font-medium text-foreground"
+                  )}>
                     {categoryName}
                   </span>
                 </button>
