@@ -488,8 +488,12 @@
         "detail": "Crossed {{count}} reviews — sample size now {{label}}."
       },
       "tier": {
-        "good": { "title": "Reached Good trust tier" },
-        "excellent": { "title": "Reached Excellent trust tier" },
+        "good": {
+          "title": "Reached Good trust tier"
+        },
+        "excellent": {
+          "title": "Reached Excellent trust tier"
+        },
         "detail": "Cumulative score crossed {{score}} after {{count}} reviews."
       }
     }
@@ -767,56 +771,8 @@
     "skipForNow": "Skip for now"
   },
   "community": {
-    "all": "All",
-    "questions": "Questions",
-    "discussions": "Discussions",
-    "tips": "Tips",
-    "experiences": "Experiences",
-    "polls": "Polls",
-    "question": "Question",
-    "discussion": "Discussion",
-    "tip": "Tip",
-    "experience": "Experience",
-    "poll": "Poll",
-    "trending": "Trending",
-    "newest": "Newest",
-    "mostDiscussed": "Most Discussed",
-    "whatsOnYourMind": "What's on your mind, {{name}}?",
-    "guest": "Guest",
-    "showingAbout": "Showing discussions about",
-    "thisDeveloper": "this developer",
-    "searchPlaceholder": "Search community...",
-    "postsCount": "{{count}} posts",
-    "noPosts": "No posts yet. Start the conversation!",
-    "createFirst": "Create the first post",
-    "justNow": "Just now",
-    "beFirstAnswer": "Be the first to answer!",
-    "commentCount": "{{count}} comment",
-    "upvoteCount": "{{count}} upvote",
-    "like": "Like",
-    "liked": "Liked",
-    "comment": "Comment",
-    "reply": "Reply",
-    "backToCommunity": "Back to Community",
-    "anonymous": "Anonymous",
-    "commentingAs": "Commenting as",
-    "writeComment": "Write a comment...",
-    "noComments": "No comments yet. Be the first to comment!",
-    "startDiscussion": "Start a Discussion",
-    "taggedDeveloper": "Discussion will be tagged with this developer",
-    "category": "Category",
-    "titlePlaceholder": "What do you want to know about a developer?",
-    "bodyPlaceholder": "Share the details...",
-    "cancel": "Cancel",
-    "post": "Post",
-    "askCommunity": "Ask the community",
-    "bridgeTitle": "Developer Intelligence",
-    "bridgeTrustScore": "Trust Score",
-    "bridgeSentimentRising": "Rising",
-    "bridgeSentimentStable": "Stable",
-    "bridgeSentimentDeclining": "Declining",
-    "bridgeDownloadReport": "Download Buyer Report for {{name}}",
-    "bridgeVerifiedOnly": "Verified buyers only"
+    "referralNudge": "Your contribution makes a difference 🎁",
+    "referralNudgeDesc": "Share your experience and help friends make the right decision"
   },
   "dashboard": {
     "memberSince": "Member since",
@@ -1406,10 +1362,6 @@
     "rewardNote": "Both you and your friend earn Insight Credits when they verify",
     "perReferral": "+50 credits each"
   },
-  "community": {
-    "referralNudge": "Your contribution makes a difference 🎁",
-    "referralNudgeDesc": "Share your experience and help friends make the right decision"
-  },
   "upsell": {
     "headline": "Want to see the full picture?",
     "subtext": "Don't settle for surface-level reviews. Get an expert report analyzing the developer's performance over the last 24 months.",
@@ -1583,10 +1535,18 @@
     "title": "YOUR PATH TO A SAFE HOME",
     "startJourney": "Start Journey",
     "tapExplore": "Tap to explore →",
-    "research": { "subtitle": " who to trust" },
-    "choose": { "subtitle": "verified projects" },
-    "finance": { "subtitle": "Fund safely" },
-    "protect": { "subtitle": "Land secure" }
+    "research": {
+      "subtitle": " who to trust"
+    },
+    "choose": {
+      "subtitle": "verified projects"
+    },
+    "finance": {
+      "subtitle": "Fund safely"
+    },
+    "protect": {
+      "subtitle": "Land secure"
+    }
   },
   "journeyScroll": {
     "research": {
@@ -1823,5 +1783,20 @@
     "smartRecs": "Smart Recommendations",
     "smartRecsSub": "AI-powered personalized suggestions",
     "readyToChoose": "Ready to choose? →"
+  },
+  "trustReport": {
+    "saveShort": "Save report",
+    "savedShort": "Saved",
+    "saved": "Report saved",
+    "savedDesc": "Find it anytime in your Saved items.",
+    "removed": "Report removed",
+    "removedDesc": "Removed from your saved reports.",
+    "downloaded": "Report downloaded",
+    "downloadedDesc": "Saved to your device as PDF.",
+    "preparing": "Preparing…",
+    "downloadFailed": "Could not generate the report. Please try again.",
+    "saveFailed": "Could not save the report. Please try again.",
+    "saveAria": "Save this trust report to revisit later",
+    "savedAria": "Trust report saved — click to remove"
   }
 }

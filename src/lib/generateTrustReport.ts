@@ -1,5 +1,6 @@
 import jsPDF from "jspdf";
 import type { SearchItem, SearchCategory } from "@/data/searchIndex";
+import type { TrustScoreBreakdown } from "@/lib/trustScoreCalculator";
 
 // Deterministic trust score (same logic as SearchSuggestions)
 const generateTrustScore = (item: SearchItem): number => {
@@ -50,6 +51,14 @@ const getCategoryLabel = (cat: SearchCategory): string => {
   return labels[cat] || cat;
 };
 
+// Map canonical breakdown keys to friendly English labels for the PDF.
+const PILLAR_LABELS: Record<string, string> = {
+  delivery: "Project Timeliness",
+  quality: "Construction Quality",
+  financial: "Value for Money",
+  support: "Customer Service",
+};
+
 // Load image as base64 data URL
 const loadImageAsBase64 = (url: string): Promise<string> => {
   return new Promise((resolve, reject) => {
@@ -69,7 +78,10 @@ const loadImageAsBase64 = (url: string): Promise<string> => {
   });
 };
 
-export const downloadTrustReport = async (item: SearchItem) => {
+export const downloadTrustReport = async (
+  item: SearchItem,
+  breakdown?: TrustScoreBreakdown
+) => {
   const doc = new jsPDF({ orientation: "portrait", unit: "mm", format: "a4" });
   const pageW = doc.internal.pageSize.getWidth(); // 210
   const pageH = doc.internal.pageSize.getHeight(); // 297
@@ -87,8 +99,11 @@ export const downloadTrustReport = async (item: SearchItem) => {
   const contentW = pageW - margin * 2;
   let y = 62; // Start below the R8ESTATE logo + tagline area
 
-  const trustScore = generateTrustScore(item);
-  const rating = item.rating || 3 + Math.abs(trustScore % 3);
+  // Prefer LIVE breakdown when available so the PDF reflects real math.
+  const trustScore = breakdown ? breakdown.total : generateTrustScore(item);
+  const rating = breakdown
+    ? breakdown.pillars.rating.avgRating || item.rating || 0
+    : item.rating || 3 + Math.abs(trustScore % 3);
   const scoreColor = getScoreColor(trustScore);
   const metrics = getCategoryMetrics(item.category);
   const categoryLabel = getCategoryLabel(item.category);
@@ -182,6 +197,93 @@ export const downloadTrustReport = async (item: SearchItem) => {
 
   y = circleY + circleR + 14;
 
+  // --- 4-Pillar Methodology (only when live breakdown is available) ---
+  if (breakdown) {
+    doc.setDrawColor(200, 200, 200);
+    doc.setLineWidth(0.3);
+    doc.line(margin, y, pageW - margin, y);
+    y += 7;
+
+    doc.setTextColor(15, 46, 83);
+    doc.setFontSize(12);
+    doc.setFont("helvetica", "bold");
+    doc.text("How This Score Is Built", margin, y);
+    y += 6;
+
+    const pillars: Array<{ label: string; pts: number; max: number; note: string }> = [
+      {
+        label: "Rating",
+        pts: breakdown.pillars.rating.points,
+        max: breakdown.pillars.rating.max,
+        note: `${breakdown.pillars.rating.avgRating.toFixed(1)} avg / 5`,
+      },
+      {
+        label: "Volume",
+        pts: breakdown.pillars.volume.points,
+        max: breakdown.pillars.volume.max,
+        note: `${breakdown.pillars.volume.reviewCount} reviews`,
+      },
+      {
+        label: "Verification",
+        pts: breakdown.pillars.verification.points,
+        max: breakdown.pillars.verification.max,
+        note: `${breakdown.pillars.verification.verifiedCount} verified`,
+      },
+      {
+        label: "Recency",
+        pts: breakdown.pillars.recency.points,
+        max: breakdown.pillars.recency.max,
+        note: `${breakdown.pillars.recency.recentCount} in last 90d`,
+      },
+    ];
+
+    pillars.forEach((p) => {
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(60, 60, 60);
+      doc.text(p.label, margin, y + 3);
+
+      doc.setFontSize(8);
+      doc.setTextColor(120, 120, 120);
+      doc.text(p.note, margin + 30, y + 3);
+
+      doc.setFontSize(9);
+      doc.setFont("helvetica", "bold");
+      doc.setTextColor(15, 46, 83);
+      doc.text(`${p.pts.toFixed(1)} / ${p.max} pts`, pageW - margin, y + 3, {
+        align: "right",
+      });
+
+      const barX = margin + 70;
+      const barW = contentW - 88;
+      const barH = 3.5;
+      doc.setFillColor(230, 230, 230);
+      doc.roundedRect(barX, y, barW, barH, 1.5, 1.5, "F");
+      doc.setFillColor(15, 46, 83);
+      doc.roundedRect(barX, y, barW * (p.pts / p.max), barH, 1.5, 1.5, "F");
+
+      y += 9;
+    });
+    y += 2;
+
+    // Confidence pill
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "italic");
+    doc.setTextColor(120, 120, 120);
+    const confLabel =
+      breakdown.confidence === "high"
+        ? "High confidence"
+        : breakdown.confidence === "medium"
+          ? "Medium confidence"
+          : "Low confidence";
+    doc.text(
+      `${confLabel} · based on ${breakdown.pillars.rating.reviewCount} reviews${breakdown.isEstimated ? " (estimated — limited data)" : ""}`,
+      margin,
+      y
+    );
+    y += 8;
+  }
+
   // --- Category Metrics Breakdown ---
   doc.setDrawColor(200, 200, 200);
   doc.setLineWidth(0.3);
@@ -194,30 +296,55 @@ export const downloadTrustReport = async (item: SearchItem) => {
   doc.text("Trust Category Breakdown", margin, y);
   y += 7;
 
-  metrics.forEach((metric) => {
-    let metricHash = 0;
-    const seed = item.id + metric;
-    for (let j = 0; j < seed.length; j++) {
-      metricHash = ((metricHash << 5) - metricHash) + seed.charCodeAt(j);
-      metricHash = metricHash & metricHash;
-    }
-    const metricScore = 45 + Math.abs(metricHash % 50);
+  // Prefer LIVE category scores (4 canonical keys) when available, otherwise fall back
+  // to the deterministic 6-metric estimation.
+  const liveCategories = breakdown?.categoryScores ?? [];
+  const useLive = liveCategories.length > 0;
+
+  const renderRows: Array<{ label: string; score: number; note?: string }> = useLive
+    ? liveCategories.map((c) => ({
+        label: PILLAR_LABELS[c.key] || c.key,
+        score: c.score,
+        note:
+          c.source === "estimated"
+            ? "estimated"
+            : `${c.sampleSize} review${c.sampleSize === 1 ? "" : "s"}`,
+      }))
+    : metrics.map((metric) => {
+        let metricHash = 0;
+        const seed = item.id + metric;
+        for (let j = 0; j < seed.length; j++) {
+          metricHash = ((metricHash << 5) - metricHash) + seed.charCodeAt(j);
+          metricHash = metricHash & metricHash;
+        }
+        return { label: metric, score: 45 + Math.abs(metricHash % 50) };
+      });
+
+  renderRows.forEach((row) => {
+    const metricScore = row.score;
     const mColor = getScoreColor(metricScore);
 
     // Label
     doc.setFontSize(9);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(60, 60, 60);
-    doc.text(metric, margin, y + 3);
+    doc.text(row.label, margin, y + 3);
+
+    if (row.note) {
+      doc.setFontSize(7);
+      doc.setTextColor(150, 150, 150);
+      doc.text(row.note, margin + 48, y + 3);
+    }
 
     // Score value
     doc.setTextColor(...mColor);
+    doc.setFontSize(9);
     doc.setFont("helvetica", "bold");
     doc.text(`${metricScore}%`, pageW - margin, y + 3, { align: "right" });
 
     // Bar background
-    const barX = margin + 48;
-    const barW = contentW - 66;
+    const barX = margin + 70;
+    const barW = contentW - 88;
     const barH = 3.5;
     doc.setFillColor(230, 230, 230);
     doc.roundedRect(barX, y, barW, barH, 1.5, 1.5, "F");
