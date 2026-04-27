@@ -6,6 +6,7 @@ import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Star, BarChart3, BadgeCheck, Clock, ShieldCheck, Truck, HardHat, Wallet, Headphones } from "lucide-react";
 import { TrustScoreCalculator } from "@/components/TrustScoreCalculator";
+import { TrustScoreWalkthrough } from "@/components/TrustScoreWalkthrough";
 
 const PILLARS = [
   {
@@ -124,6 +125,10 @@ const AboutTrustMeter = () => {
 
         <section aria-label="interactive-calculator">
           <TrustScoreCalculator />
+        </section>
+
+        <section aria-label="worked-example">
+          <TrustScoreWalkthrough />
         </section>
 
         <section aria-label="trust-pillars" className="space-y-3">
