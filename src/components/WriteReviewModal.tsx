@@ -1139,37 +1139,6 @@ export const WriteReviewModal = ({
         </div>
       </div>
 
-      {/* Context Field — chips or text input */}
-      <div>
-        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
-        {contextField.chips ? (
-          <ChipSelect
-            options={contextField.chips.map((c) => ({ key: c.toLowerCase(), label: c }))}
-            value={unitType}
-            onChange={setUnitType}
-          />
-        ) : (
-          <Input
-            value={unitType}
-            onChange={(e) => setUnitType(e.target.value)}
-            placeholder={contextField.placeholder}
-            className="h-9 text-sm"
-          />
-        )}
-      </div>
-
-      {/* Experience Type — tappable chips instead of Select dropdown */}
-      {!isGuest && (
-        <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("form.experience_type", "Experience Type")}</label>
-          <ChipSelect
-            options={experienceChips}
-            value={experienceType}
-            onChange={setExperienceType}
-          />
-        </div>
-      )}
-
       {/* Review Title with AI suggestions */}
       <div>
         <div className="flex items-center justify-between mb-1">
@@ -1216,9 +1185,6 @@ export const WriteReviewModal = ({
         />
       </div>
 
-      {/* Disclaimer — slim */}
-      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
-
       {/* Review Content — hero section */}
       <div className="space-y-2">
         <ReviewRichEditor
@@ -1234,7 +1200,7 @@ export const WriteReviewModal = ({
           rows={isMobile ? 4 : 5}
         />
 
-        {/* Action toolbar below textarea — clear & inviting */}
+        {/* Action toolbar — Voice + AI Enhance only */}
         <div className="flex items-center gap-2 flex-wrap">
           {!isGuest && (
             <>
@@ -1262,30 +1228,8 @@ export const WriteReviewModal = ({
               </button>
             </>
           )}
-          <button
-            type="button"
-            className={cn(
-              "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium transition-all",
-              showEmojiBar ? "bg-primary/10 text-primary" : "bg-secondary/80 text-foreground hover:bg-secondary hover:shadow-sm"
-            )}
-            onClick={() => setShowEmojiBar(!showEmojiBar)}
-          >
-            <SmilePlus className="w-3.5 h-3.5" />
-            Emoji
-          </button>
         </div>
       </div>
-
-      {/* Emoji bar — collapsible */}
-      {showEmojiBar && (
-        <div className="flex flex-wrap items-center gap-1 px-1">
-          {(aiEmojis.length > 0 ? aiEmojis : EMOJI_QUICK).map((emoji, i) => (
-            <button key={i} type="button" className="text-lg hover:scale-125 transition-transform p-0.5" onClick={() => insertText(emoji)}>
-              {emoji}
-            </button>
-          ))}
-        </div>
-      )}
 
       {/* Content warnings */}
       {localWarning && (
@@ -1331,7 +1275,7 @@ export const WriteReviewModal = ({
               }
               setPhase(3);
             }}
-            disabled={!disclaimerAgreed || isCheckingContent}
+            disabled={isCheckingContent}
             className="gap-1 h-9"
           >
             {isCheckingContent ? (
@@ -1342,12 +1286,6 @@ export const WriteReviewModal = ({
           </Button>
         </div>
       </div>
-
-      {/* Motivator chip */}
-      <MotivatorChip
-        icon="📊"
-        text={t("form.motivator.step2", "Halfway there — sub-ratings next help buyers compare")}
-      />
     </div>
   );
 
