@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { fireCorridorEngage } from "@/lib/corridorEvents";
+import { useTruthCheckSettings } from "@/hooks/useTruthCheckSettings";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type TruthCheckVerdict =
   | "backed_by_buyers"
@@ -79,6 +81,8 @@ export const TruthCheckHero = ({
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { settings } = useTruthCheckSettings();
+  const { user } = useAuth();
 
   const [claim, setClaim] = useState(initialClaim ?? "");
   const [loading, setLoading] = useState(false);
@@ -90,32 +94,18 @@ export const TruthCheckHero = ({
   const lang: "ar" | "en" = i18n.language?.startsWith("ar") ? "ar" : "en";
 
   const examples = useMemo(
-    () => [
-      t(
-        "truthCheck.example1",
-        lang === "ar"
-          ? "تسليم في 2026، 100% على الخريطة، عائد استثماري 12%"
-          : "Delivery in 2026, 100% on schedule, 12% guaranteed ROI",
-      ),
-      t(
-        "truthCheck.example2",
-        lang === "ar"
-          ? "أكبر مطوّر في القاهرة الجديدة بدون أي تأخير في التسليم"
-          : "The biggest developer in New Cairo, never a single delivery delay",
-      ),
-    ],
-    [t, lang],
+    () => settings.exampleClaims,
+    [settings.exampleClaims],
   );
+
+  const minChars = Math.max(1, settings.minClaimChars || 8);
 
   const submit = async (claimText: string) => {
     const trimmed = claimText.trim();
-    if (trimmed.length < 8) {
+    if (trimmed.length < minChars) {
       toast({
         title: t("truthCheck.tooShort", "Paste a longer claim"),
-        description: t(
-          "truthCheck.tooShortDesc",
-          "Add at least 8 characters from the developer's marketing copy.",
-        ),
+        description: `Add at least ${minChars} characters from the developer's marketing copy.`,
       });
       return;
     }
@@ -218,7 +208,7 @@ export const TruthCheckHero = ({
                 className="text-[10px] px-1.5 py-0 h-5 border-accent/50 bg-accent/10 text-accent-foreground"
               >
                 <Sparkles className="w-2.5 h-2.5 me-1" />
-                {t("truthCheck.aiBadge", "AI · Verified buyers")}
+                {settings.cardEyebrow || t("truthCheck.aiBadge", "AI · Verified buyers")}
               </Badge>
             </div>
             <p className="text-xs md:text-sm text-muted-foreground mt-0.5 leading-snug">
@@ -235,6 +225,25 @@ export const TruthCheckHero = ({
           </div>
         </div>
 
+        {settings.requireAuth && !user ? (
+          <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4 text-center">
+            <p className="text-sm text-foreground/90 mb-2 font-medium">
+              {t(
+                "truthCheck.signInRequired",
+                "Sign in to fact-check developer claims against verified buyer reviews.",
+              )}
+            </p>
+            <Button
+              size="sm"
+              onClick={() => navigate("/auth?next=/truth-check")}
+              className="gap-2"
+            >
+              <ScanSearch className="w-3.5 h-3.5" />
+              {t("truthCheck.signInCta", "Sign in to use Truth-Check")}
+            </Button>
+          </div>
+        ) : (
+          <>
         <Textarea
           value={claim}
           onChange={(e) => setClaim(e.target.value.slice(0, 500))}
@@ -271,7 +280,7 @@ export const TruthCheckHero = ({
           <Button
             size="sm"
             onClick={() => submit(claim)}
-            disabled={loading || claim.trim().length < 8}
+            disabled={loading || claim.trim().length < minChars}
             className="gap-2 min-h-[36px]"
           >
             {loading ? (
@@ -287,6 +296,8 @@ export const TruthCheckHero = ({
             )}
           </Button>
         </div>
+          </>
+        )}
 
         {/* Result block */}
         {loading && !result && (

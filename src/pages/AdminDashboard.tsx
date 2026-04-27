@@ -11,7 +11,7 @@ import {
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
   Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
-  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon
+  Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon, ScanSearch
   , Smartphone
 } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
@@ -45,6 +45,7 @@ import AdminFooterSettings from '@/components/AdminFooterSettings';
 import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
 import AdminContactSettings from '@/components/AdminContactSettings';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
+import AdminTruthCheck from '@/components/AdminTruthCheck';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
@@ -2281,6 +2282,7 @@ const AdminDashboard = () => {
         { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
         { icon: <Timer className="w-4 h-4" />, label: 'Guest Timer', path: '/admin/guest-timer' },
         { icon: <Users className="w-4 h-4" />, label: 'Registration Slots', path: '/admin/registration-slots' },
+        { icon: <ScanSearch className="w-4 h-4" />, label: 'Truth-Check', path: '/admin/truth-check' },
         { icon: <Layout className="w-4 h-4" />, label: 'Footer', path: '/admin/footer' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
@@ -2349,6 +2351,7 @@ const AdminDashboard = () => {
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />
           <Route path="welcome-message" element={<AdminWelcomeMessage />} />
           <Route path="contact" element={<AdminContactSettings />} />
+          <Route path="truth-check" element={<AdminTruthCheck />} />
           <Route path="settings" element={<AdminSettings />} />
         </Routes>
       </div>

@@ -47,6 +47,7 @@ import { HeroNextSteps } from "@/components/HeroNextSteps";
 import { JourneyCorridor } from "@/components/JourneyCorridor";
 import { ReviewerSpotlight } from "@/components/ReviewerSpotlight";
 import { TruthCheckHero } from "@/components/TruthCheckHero";
+import { useTruthCheckSettings } from "@/hooks/useTruthCheckSettings";
 
 
 const Index = () => { // hero-phase-v2
@@ -61,6 +62,7 @@ const Index = () => { // hero-phase-v2
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const [togglePulse, setTogglePulse] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const { settings: truthCheckSettings } = useTruthCheckSettings();
   
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
@@ -399,9 +401,11 @@ const Index = () => { // hero-phase-v2
             </div>
 
             {/* Truth-Check — the lovable moment */}
-            <div className={cn("w-full max-w-[1100px] mx-auto mt-3 text-start transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
-              <TruthCheckHero />
-            </div>
+            {truthCheckSettings.enabled && truthCheckSettings.showOnHomepage && (
+              <div className={cn("w-full max-w-[1100px] mx-auto mt-3 text-start transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+                <TruthCheckHero />
+              </div>
+            )}
 
             {/* Next Steps CTAs */}
             <HeroNextSteps />

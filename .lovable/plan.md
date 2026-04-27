@@ -1,94 +1,83 @@
-# R8ESTATE → MLP: The "Truth-Check" Lovable Moment
+## Goal
 
-You already have the hard parts built (AI verify-contract, on-device blur, `receipt_submissions`, Verified Buyer badge, trust-score pillars). What's missing is the **emotional payoff** — the single moment where a buyer feels: *"this platform just saved me 5M EGP."*
+Give admins a single control panel at `/admin/truth-check` to fully manage the Truth-Check feature: turn it on/off across the site, control where it appears (homepage card, dedicated `/truth-check` page, navbar/CTAs, link from CompareModal), edit its copy and example claims, and tune throttling — without touching code.
 
-This plan ships **one focused MLP feature** + two small surfacing wins, instead of spreading thin across the whole blueprint.
+## Where it appears today
 
----
+- **Homepage** (`src/pages/Index.tsx` line 403) — `<TruthCheckHero />` rendered between ReviewerSpotlight and HeroNextSteps.
+- **Dedicated page** at `/truth-check` (`src/pages/TruthCheck.tsx`, route in `src/App.tsx` line 221).
+- **Edge function** `supabase/functions/truth-check` performs the verdict.
 
-## 1. Truth-Check Hero Widget (NEW — the lovable moment)
+## Plan
 
-**Where:** New card in the homepage hero stack (between `HeroTrustShowcase` and `HeroNextSteps`), plus a deep-link route `/truth-check`. Mobile gets a compact entry chip in the hero CTAs.
+### 1. New admin component: `src/components/AdminTruthCheck.tsx`
 
-**The interaction (≤ 3 taps):**
-1. Buyer pastes a developer's marketing claim (Arabic or English) — e.g. *"تسليم في 2026، ١٠٠٪ على الخريطة، عائد استثماري ١٢٪"*.
-2. Optional: pick the developer from a typeahead (reuses `businessProfileSearch.ts`).
-3. Hits **"تحقّق من الحقيقة / Truth-Check"** → streaming AI verdict appears below.
+Single page with sections (mirrors `AdminWelcomeMessage.tsx` pattern using `platform_settings` upserts + sonner toasts):
 
-**The output (the "warranty of truth" feel):**
-- A verdict pill: ✅ Backed by buyers · ⚠️ Mixed signals · ❌ Contradicted by buyers
-- 2–4 short evidence bullets, each citing a *real* verified review or approved receipt (with reviewer first-name + verification badge inline).
-- A "Risk delta" line — e.g. *"3 verified buyers reported delivery slipped by 8 months on this developer's last 2 launches."*
-- CTA: **"See full trust report →"** linking to the developer's `/entity/...` page.
+**A. Master switch**
+- Toggle: `truth_check_enabled` (default `true`). When `false`, the homepage card AND the `/truth-check` page hide / redirect.
 
-**Why this is the MLP unlock:** it converts a passive directory into an active anxiety-management tool. A guest who pastes a brochure claim and gets contradicted by 3 verified contracts will tell their friends.
+**B. Placement controls** (each a Switch, all default `true`)
+- `truth_check_show_on_homepage` — controls `<TruthCheckHero />` on Index.
+- `truth_check_page_enabled` — controls the `/truth-check` route. When off, page redirects to `/` with a toast.
+- `truth_check_show_compare_link` — shows/hides the "Truth-Check this claim" entry the user previously asked for in CompareModal (we'll wire it conditionally; if not present yet it just becomes a no-op flag for future use).
 
-### Implementation
+**C. Copy & content**
+- `truth_check_page_title` (text)
+- `truth_check_page_subtitle` (textarea)
+- `truth_check_card_eyebrow` (text — the "R8 Truth-Check" pill on the homepage card)
+- `truth_check_example_claims` (textarea, one example per line — feeds the chip suggestions like "Delivery in 2026, 100% on schedule"). Min 0, max 6 lines.
+- "Reset to defaults" button per text field group.
 
-**New edge function:** `supabase/functions/truth-check/index.ts`
-- Input: `{ claim: string, developer_id?: string, lang?: 'ar' | 'en' }`.
-- Server-side: pull grounding context with the service role:
-  - Up to 25 most-recent **approved** reviews for the developer (or top-rated developers if no `developer_id`), prioritising verified buyers and contract-verified receipts (reuses logic in `useVerifiedBuyer.ts`).
-  - Aggregate stats from `trust_score_snapshots` (latest row): `computed_score`, `avg_rating`, `verified_pct`, `per_category_counts`.
-  - Approved `receipt_submissions` count where `authenticity_score >= 75` and `document_type IN ('reservation_form','payment_receipt','sale_contract')` → "N contract-verified buyers".
-- Compose a tightly scoped prompt to `google/gemini-3-flash-preview` via the Lovable AI Gateway, **streaming** SSE back to the client.
-- Use **tool calling** for the verdict header (verdict enum + 2–4 evidence items each linking back to a `review_id`), then stream a freeform short summary after. This guarantees structured citations.
-- Strict guardrails in the system prompt: *"Cite only the provided reviews/receipts. If evidence is insufficient, return verdict='insufficient_evidence' and say so plainly. Never fabricate buyer names or numbers."*
-- Handle 429 / 402 with the standard surfaced toasts.
-- Rate limit: 1 call / 10s per IP via in-memory map (acceptable for MLP; document the limitation).
+**D. Behaviour & safety**
+- `truth_check_throttle_seconds` (number, default 10) — used by the edge function's per-IP throttle.
+- `truth_check_min_claim_chars` (number, default 8).
+- `truth_check_require_auth` (switch, default `false`) — when on, the edge function rejects anonymous calls with a friendly "Sign in to use Truth-Check" message and the UI shows a sign-in CTA instead of the textarea for guests.
 
-**New component:** `src/components/TruthCheckHero.tsx`
-- Glassmorphism card matching `HeroTrustShowcase` (navy + gold). RTL-safe (`ms-`/`pe-`/`text-start`).
-- Textarea (max 500 chars) + developer typeahead + submit.
-- Streams tokens via the SSE pattern from `AIChatWidget.tsx`.
-- Renders verdict pill, evidence list (each row clickable → `/reviews?developer=...&highlight=<review_id>`), and the "See full trust report" CTA.
-- Empty state shows two pre-baked example claims (one positive, one suspicious) the user can tap to demo without typing — critical for the "wow" moment on first load.
-- Skeleton + abort controller to cancel mid-stream.
+**E. Live preview panel**
+- Read-only render of `<TruthCheckHero variant="compact" />` showing exactly what users see, reflecting current saved copy/examples.
 
-**New page:** `src/pages/TruthCheck.tsx` mounted at `/truth-check` in `App.tsx`. Pre-fills `?claim=` and `?developer=` query params for shareable links (smart-links friendly).
+### 2. New hook: `src/hooks/useTruthCheckSettings.ts`
 
-**i18n:** Add an Ammiya Arabic copy block + English fallback under a new `truthCheck.*` namespace in `src/i18n/locales/{ar,en}.json`. Keep the verdict labels short (≤ 3 words) for mobile.
+- Fetches all `truth_check_*` keys in one query, returns typed object with sensible defaults if a row is missing.
+- Exposes `{ settings, loading }`.
+- Used by: `Index.tsx` (to gate `<TruthCheckHero />`), `TruthCheck.tsx` page (gate + copy), `TruthCheckHero.tsx` (example chips, eyebrow text, auth gate).
 
-**Tracking:** Fire `corridor:engage` with `kind: 'truth_check'` on submit and on "See full report" click, so the Journey Corridor recognises it as a Choose-stage action.
+### 3. Wire conditional rendering
 
----
+- `src/pages/Index.tsx` — wrap `<TruthCheckHero />` in `settings.enabled && settings.showOnHomepage`.
+- `src/pages/TruthCheck.tsx` — if `!settings.enabled || !settings.pageEnabled` → `<Navigate to="/" />` + toast.
+- `src/components/TruthCheckHero.tsx` — read `eyebrow`, `exampleClaims`, `requireAuth` from settings; replace the hard-coded title/subtitle/example chips. Hide the textarea behind a sign-in CTA when `requireAuth && !user`.
 
-## 2. "Contract-Verified" surfacing (small wins, big trust signal)
+### 4. Edge function update: `supabase/functions/truth-check/index.ts`
 
-The badge logic exists (`useVerifiedBuyer.hasContractVerified`) but is barely visible. Two micro-changes:
+- On invocation, fetch the four behaviour keys via service role: `truth_check_enabled`, `truth_check_throttle_seconds`, `truth_check_min_claim_chars`, `truth_check_require_auth`.
+- If `enabled === false` → return `503` with `{ error: "Truth-Check is temporarily disabled by the admin." }`.
+- Use the dynamic throttle window and min-claim-chars instead of hard-coded `10_000` / `8`.
+- If `require_auth` and the request has no valid `Authorization` Bearer (validate via `supabase.auth.getUser`) → return `401`.
 
-- **`ReviewCard.tsx`**: when `hasContractVerified` for the reviewer, prepend a small gold shield chip *"عقد موثّق · Contract Verified"* with a tooltip explaining what it means. This is the visible *"warranty of truth"*.
-- **Entity profile header** (`ItemDetailSection.tsx` sidebar stats): add a one-line stat *"N contract-verified buyers"* under the existing review count, computed from approved `receipt_submissions` for that `developer_id`. Read-only, no schema change.
+### 5. Register in admin shell
 
----
+- Add nav item under the "Settings" group in `src/pages/AdminDashboard.tsx`:
+  `{ icon: <ScanSearch className="w-4 h-4" />, label: 'Truth-Check', path: '/admin/truth-check' }`
+- Add route: `<Route path="truth-check" element={<AdminTruthCheck />} />`.
+- Add import: `import AdminTruthCheck from '@/components/AdminTruthCheck';`
 
-## 3. Truth-Check entry point in the Compare flow (lightweight)
+### 6. Memory
 
-In `CompareModal.tsx`, add a single row above the comparison grid: *"Paste a claim either developer makes → Truth-Check it"*. Clicking opens the same `TruthCheckHero` component in a sheet, pre-populated with both `developer_id`s so the AI can rule on which one the claim better matches.
+Update `mem/features/truth-check.md` to document the admin control surface, the `truth_check_*` settings keys, and how to disable the feature without redeploying.
 
----
+## Technical details
 
-## What we're explicitly NOT doing in this iteration
-
-- No schema changes — every input already exists (`reviews`, `receipt_submissions`, `trust_score_snapshots`, `business_profiles`).
-- No "marketing render vs site progress" comparison slider — that needs a UGC photo upload pipeline + moderation, which is its own MLP and would dilute focus.
-- No new badge tier — the existing Verified Buyer / Contract Verified vocabulary is enough; we're just making it visible.
-- No crowdsourced heat map — promising but a separate build (geocoding + map clustering).
-
----
-
-## Risks & mitigations
-
-- **Hallucinated citations** → mitigated by tool-calling structured output that requires a `review_id` from the supplied list; the client will refuse to render any evidence row whose `review_id` isn't in the request payload.
-- **Sparse data on small developers** → verdict falls back to `insufficient_evidence` with a "Be the first to review" CTA, which itself drives the review funnel.
-- **Cost** → flash model + 25-review cap + 10s per-IP throttle keeps spend bounded; LOVABLE_API_KEY rate-limit errors are surfaced as toasts.
-- **Arabic/English mixed claims** → prompt explicitly accepts both and replies in the claim's primary language.
-
----
+- Storage: `platform_settings` table, `(key text PK, value text)` — already used by Welcome Message, Guest Timer, Registration Slots. Booleans stored as `"true"`/`"false"` strings (matches existing rows).
+- Defaults are coded in the hook so the feature works the same as today even if no `platform_settings` rows exist.
+- Realtime not required — admin save followed by client refetch on next page load is enough; we'll also fire a `localStorage` event so an open tab picks up changes after save.
+- Auth gating in the edge function uses `createClient` with the user's JWT to call `auth.getUser()`; service-role client is still used for data reads.
+- No DB migration required — `platform_settings` already exists with the right shape and RLS.
 
 ## Files touched
 
-- **New**: `supabase/functions/truth-check/index.ts`, `src/components/TruthCheckHero.tsx`, `src/pages/TruthCheck.tsx`
-- **Edited**: `src/App.tsx` (route), `src/pages/Index.tsx` (hero slot), `src/components/ReviewCard.tsx` (badge), `src/components/ItemDetailSection.tsx` (stat), `src/components/CompareModal.tsx` (entry row), `src/i18n/locales/{ar,en}.json` (copy), `src/lib/corridorEvents.ts` (new event kind), memory file `mem://features/truth-check` + index update.
+- **New**: `src/components/AdminTruthCheck.tsx`, `src/hooks/useTruthCheckSettings.ts`
+- **Edited**: `src/pages/AdminDashboard.tsx`, `src/pages/Index.tsx`, `src/pages/TruthCheck.tsx`, `src/components/TruthCheckHero.tsx`, `supabase/functions/truth-check/index.ts`, `mem/features/truth-check.md`
 
-Approve and I'll build it end-to-end in default mode.
+Approve and I'll build this end-to-end.
