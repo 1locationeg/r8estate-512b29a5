@@ -5,6 +5,7 @@ import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Star, BarChart3, BadgeCheck, Clock, ShieldCheck, Truck, HardHat, Wallet, Headphones } from "lucide-react";
+import { TrustScoreCalculator } from "@/components/TrustScoreCalculator";
 
 const PILLARS = [
   {
@@ -119,6 +120,10 @@ const AboutTrustMeter = () => {
           <code className="block text-center font-mono text-xs md:text-sm text-primary leading-relaxed break-words">
             TrustScore = Rating(60) + Volume(25) + Verification(10) + Recency(5)
           </code>
+        </section>
+
+        <section aria-label="interactive-calculator">
+          <TrustScoreCalculator />
         </section>
 
         <section aria-label="trust-pillars" className="space-y-3">
