@@ -847,12 +847,32 @@ export const WriteReviewModal = ({
   };
 
   const getRatingEncouragement = (r: number) => {
-    if (r >= 5) return "Tell others what made it special ✨";
-    if (r >= 4) return "Share what impressed you — it helps others choose wisely 💡";
-    if (r >= 3) return "Your balanced view helps the community decide fairly ⚖️";
-    if (r >= 2) return "Your honesty warns others — share what went wrong 🛡️";
-    if (r >= 1) return "We hear you. Share your story so others are protected 🛡️";
+    if (r >= 5) return t("form.encourage.r5", "Tell others what made it special ✨");
+    if (r >= 4) return t("form.encourage.r4", "Share what impressed you — it helps others choose wisely 💡");
+    if (r >= 3) return t("form.encourage.r3", "Your balanced view helps the community decide fairly ⚖️");
+    if (r >= 2) return t("form.encourage.r2", "Your honesty warns others — share what went wrong 🛡️");
+    if (r >= 1) return t("form.encourage.r1", "We hear you. Share your story so others are protected 🛡️");
     return "";
+  };
+
+  // Build the rating-aware impact-banner message (logged-in users only).
+  const getImpactBannerText = (r: number): string => {
+    if (r >= 5) return t("form.impactBanner.r5", "Your rating is saved ✓ — over 1,247 buyers will see this developer this week");
+    if (r >= 4) return t("form.impactBanner.r4", "Your view matters ✓ — you just helped 1,247 buyers decide with confidence");
+    if (r >= 3) return t("form.impactBanner.r3", "Thank you — your honesty helps buyers see the full picture");
+    return t("form.impactBanner.rLow", "We're sorry it went this way — your review protects future buyers");
+  };
+
+  // Move to Step 2; if chips were selected and the editor is empty, seed a draft sentence.
+  const goToPhase2 = () => {
+    if (selectedChips.length > 0 && !contentPlainText) {
+      const isAr = (typeof document !== "undefined" && document.documentElement.lang === "ar");
+      const seed = isAr
+        ? `اشتريت وحدتي في ${developerName}، وأبرز ما ميّز تجربتي: ${selectedChips.join("، ")}.`
+        : `I bought my unit at ${developerName}. What stood out the most: ${selectedChips.join(", ")}.`;
+      setContent(`<p>${seed}</p>`);
+    }
+    setPhase(2);
   };
 
   if (!open && !showSuccessOverlay) return null;
