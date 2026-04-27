@@ -579,6 +579,25 @@ export const WriteReviewModal = ({
 
     const submittedRating = rating;
 
+    const completionLevel =
+      phase === 1 ? "rating_only" : phase === 2 && hasContent ? "with_comment" : "full";
+    trackReviewFunnelEvent({
+      eventType: "review_submitted",
+      phase,
+      rating: submittedRating,
+      reviewId: savedReviewId,
+      developerId,
+      developerName,
+      selectedChips,
+      isGuest,
+      metadata: {
+        completion_level: completionLevel,
+        chip_count: selectedChips.length,
+        has_title: !!title,
+        has_attachments: attachments.length > 0,
+      },
+    });
+
     if (!isGuest && user) {
       const { count: totalReviews } = await supabase
         .from("reviews")
