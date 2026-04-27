@@ -40,7 +40,7 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
           </div>
 
           {/* Featured review — single, focused, centered */}
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/40 border border-border/40">
+          <div className="flex items-center gap-3 px-3 py-0 rounded-xl bg-muted/40 border border-border/40">
             <Avatar className="h-10 w-10 shrink-0 ring-2 ring-background shadow-sm">
               <AvatarFallback className="text-xs bg-primary/10 text-primary font-bold">
                 {FEATURED.initials}
