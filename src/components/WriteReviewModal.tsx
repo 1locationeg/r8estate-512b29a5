@@ -1503,7 +1503,7 @@ export const WriteReviewModal = ({
   return (
     <>
       <ConfettiCelebration trigger={firstReviewCelebration} duration={3500} particleCount={80} />
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={(v) => { if (!v) { safeClose(); } else { onOpenChange(true); } }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
           {/* Progress Header */}
           <div className="px-4 md:px-6 pt-4 md:pt-6 pb-0 space-y-3">
@@ -1523,11 +1523,11 @@ export const WriteReviewModal = ({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
-                    {t("form.step", "Step")} {phase} {t("form.of", "of")} 3
+                    {t("form.step", "Step")} {phase} {t("form.of", "of")} {TOTAL_STEPS}
                   </span>
                   <span className="font-medium text-foreground">{PHASE_LABELS[phase - 1]}</span>
                 </div>
-                <Progress value={(phase / 3) * 100} className="h-2" />
+                <Progress value={(phase / TOTAL_STEPS) * 100} className="h-2" />
               </div>
             )}
 
@@ -1554,11 +1554,12 @@ export const WriteReviewModal = ({
             ) : (
               <div
                 className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${(phase - 1) * 100}%)` }}
+                style={{ transform: `translateX(-${(phase - 1) * 100}%)`, width: `${TOTAL_STEPS * 100}%` }}
               >
-                <div className="w-full flex-shrink-0">{renderPhase1()}</div>
-                <div className="w-full flex-shrink-0">{renderPhase2()}</div>
-                <div className="w-full flex-shrink-0">{renderPhase3()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase1()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase2()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase3()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase4()}</div>
               </div>
             )}
           </div>
