@@ -1187,17 +1187,19 @@ export const WriteReviewModal = ({
 
       {/* Review Content — hero section */}
       <div className="space-y-2">
-        <ReviewRichEditor
-          content={content}
-          onChange={(html) => {
-            setContent(html);
-            const plainText = getPlainTextFromHtml(html);
-            const localCheck = checkContentLocally(plainText);
+        <Textarea
+          value={contentPlainText}
+          onChange={(e) => {
+            const text = e.target.value;
+            // Store as plain text wrapped in a paragraph so DB/HTML pipeline stays consistent
+            setContent(text ? `<p>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, "<br/>")}</p>` : "");
+            const localCheck = checkContentLocally(text);
             setLocalWarning(localCheck.blocked ? t("contentGuard.typingWarning") : null);
             if (aiModeration) setAiModeration(null);
           }}
           placeholder={t("form.review_placeholder", "Share your experience — what went well? What could improve?")}
-          rows={isMobile ? 4 : 5}
+          rows={isMobile ? 5 : 6}
+          className="text-sm resize-none"
         />
 
         {/* Action toolbar — Voice + AI Enhance only */}
