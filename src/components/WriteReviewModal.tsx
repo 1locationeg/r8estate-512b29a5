@@ -367,7 +367,6 @@ export const WriteReviewModal = ({
         if (error) throw error;
         setSavedReviewId(data.id);
       }
-      setShowThanksScreen(true);
     } catch (e) {
       console.error("Error saving rating:", e);
       toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
