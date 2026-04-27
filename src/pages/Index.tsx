@@ -62,6 +62,7 @@ const Index = () => { // hero-phase-v2
   const [showIndustryCategories, setShowIndustryCategories] = useState(false);
   const [togglePulse, setTogglePulse] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
+  const { settings: truthCheckSettings } = useTruthCheckSettings();
   
   const [showInsightsModal, setShowInsightsModal] = useState(false);
   const [showCompareModal, setShowCompareModal] = useState(false);
