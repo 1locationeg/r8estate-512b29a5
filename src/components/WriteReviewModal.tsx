@@ -398,6 +398,8 @@ export const WriteReviewModal = ({
     setSavedReviewId(null);
     setIsSaving(false);
     setShowEmojiBar(false);
+    setDraft(null);
+    setShowResumePrompt(false);
   };
 
   // ===================== PROGRESSIVE SAVE LOGIC =====================
