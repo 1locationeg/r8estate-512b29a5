@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
+import { trackReviewFunnelEvent } from "@/lib/reviewFunnelAnalytics";
 import { useTranslation } from "react-i18next";
 import { checkContentLocally, checkContentWithAI, type AIModerationResult } from "@/lib/contentGuard";
 import {
@@ -578,6 +579,25 @@ export const WriteReviewModal = ({
 
     const submittedRating = rating;
 
+    const completionLevel =
+      phase === 1 ? "rating_only" : phase === 2 && hasContent ? "with_comment" : "full";
+    trackReviewFunnelEvent({
+      eventType: "review_submitted",
+      phase,
+      rating: submittedRating,
+      reviewId: savedReviewId,
+      developerId,
+      developerName,
+      selectedChips,
+      isGuest,
+      metadata: {
+        completion_level: completionLevel,
+        chip_count: selectedChips.length,
+        has_title: !!title,
+        has_attachments: attachments.length > 0,
+      },
+    });
+
     if (!isGuest && user) {
       const { count: totalReviews } = await supabase
         .from("reviews")
@@ -872,6 +892,17 @@ export const WriteReviewModal = ({
         : `I bought my unit at ${developerName}. What stood out the most: ${selectedChips.join(", ")}.`;
       setContent(`<p>${seed}</p>`);
     }
+    trackReviewFunnelEvent({
+      eventType: "phase_advanced",
+      phase: 2,
+      rating,
+      reviewId: savedReviewId,
+      developerId,
+      developerName,
+      selectedChips,
+      isGuest,
+      metadata: { seededFromChips: selectedChips.length > 0 && !contentPlainText },
+    });
     setPhase(2);
   };
 
@@ -1122,6 +1153,13 @@ export const WriteReviewModal = ({
                 onClick={() => {
                   setRating(star);
                   if (!savedReviewId) saveRatingOnly(star);
+                  trackReviewFunnelEvent({
+                    eventType: "rating_selected",
+                    rating: star,
+                    developerId,
+                    developerName,
+                    isGuest,
+                  });
                 }}
                 disabled={isSaving}
               >
@@ -1182,9 +1220,22 @@ export const WriteReviewModal = ({
                     key={label}
                     type="button"
                     onClick={() =>
-                      setSelectedChips((prev) =>
-                        prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
-                      )
+                      setSelectedChips((prev) => {
+                        const isOn = prev.includes(label);
+                        const next = isOn ? prev.filter((x) => x !== label) : [...prev, label];
+                        trackReviewFunnelEvent({
+                          eventType: isOn ? "chip_deselected" : "chip_selected",
+                          chipLabel: label,
+                          chipSentiment: chip.sentiment,
+                          rating,
+                          selectedChips: next,
+                          reviewId: savedReviewId,
+                          developerId,
+                          developerName,
+                          isGuest,
+                        });
+                        return next;
+                      })
                     }
                     className={cn(
                       "rounded-full px-3 py-1.5 text-xs font-medium border transition-all min-h-[32px]",
