@@ -1621,6 +1621,18 @@ export const WriteReviewModal = ({
             onClick={async () => {
               if (Object.keys(categoryRatings).length > 0) await savePhase3();
               setPhase(4);
+              // Funnel analytics: did the user reach the 10× Trust Weight upsell?
+              trackReviewFunnelEvent({
+                eventType: "weight_multiplier_seen",
+                phase: 4,
+                rating,
+                reviewId: savedReviewId,
+                developerId,
+                developerName,
+                selectedChips,
+                isGuest,
+                metadata: { multiplier: 10 },
+              });
             }}
             className="gap-1 h-9"
           >
