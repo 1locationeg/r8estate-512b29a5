@@ -1825,5 +1825,39 @@
     "saveFailed": "Could not save the report. Please try again.",
     "saveAria": "Save this trust report to revisit later",
     "savedAria": "Trust report saved — click to remove"
+  },
+  "truthCheck": {
+    "title": "Truth-Check a marketing claim",
+    "subtitle": "Paste a brochure claim. We check it against verified buyer reviews — instantly.",
+    "subtitleDev": "Paste any claim about {{name}} and we'll check it against verified buyer reviews.",
+    "aiBadge": "AI · Verified buyers",
+    "placeholder": "e.g. \"Delivery in 2026, 100% on schedule, 12% ROI\"",
+    "tryExample": "Try:",
+    "example1": "Delivery in 2026, 100% on schedule, 12% guaranteed ROI",
+    "example2": "The biggest developer in New Cairo, never a single delivery delay",
+    "cta": "Truth-Check",
+    "checking": "Checking…",
+    "tooShort": "Paste a longer claim",
+    "tooShortDesc": "Add at least 8 characters from the developer's marketing copy.",
+    "rateLimited": "Slow down a sec",
+    "rateLimitedDesc": "You're sending checks too fast. Try again in a few seconds.",
+    "outOfCredits": "AI credits exhausted",
+    "outOfCreditsDesc": "Please top up Lovable AI credits in workspace settings.",
+    "failed": "Couldn't run Truth-Check",
+    "failedDesc": "Something went wrong on our side. Please try again.",
+    "viewReport": "See full trust report",
+    "trustScore": "Trust Score",
+    "contractCount": "{{n}} contract-verified buyers",
+    "disclaimer": "Grounded in approved reviews and contract receipts. AI summaries — always verify before signing.",
+    "pageEyebrow": "R8 Truth-Check",
+    "pageTitle": "Don't take the brochure's word for it.",
+    "pageSubtitle": "Paste any claim a developer is making. We'll check it against verified buyer reviews and contract receipts.",
+    "compareEntry": "Paste a claim either developer makes — we'll Truth-Check it against verified buyers.",
+    "verdict": {
+      "backed_by_buyers": "✅ Backed by buyers",
+      "mixed_signals": "⚠️ Mixed signals",
+      "contradicted_by_buyers": "❌ Contradicted by buyers",
+      "insufficient_evidence": "ℹ️ Not enough evidence"
+    }
   }
 }
