@@ -1639,7 +1639,7 @@ export const WriteReviewModal = ({
             ) : (
               <div
                 className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${(phase - 1) * 100}%)`, width: `${TOTAL_STEPS * 100}%` }}
+                style={{ transform: `translateX(-${(phase - 1) * (100 / TOTAL_STEPS)}%)`, width: `${TOTAL_STEPS * 100}%` }}
               >
                 <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase1()}</div>
                 <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase2()}</div>
