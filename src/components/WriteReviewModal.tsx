@@ -1693,20 +1693,90 @@ export const WriteReviewModal = ({
             </div>
 
             {/* Verification */}
-            <div className="bg-secondary/30 rounded-lg p-3 border border-border/50">
-              <label className="text-sm font-medium text-foreground mb-2 flex items-center gap-1.5">
-                <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification", "Verification")}
-                <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional", "Optional")}</Badge>
-              </label>
-              <p className="text-xs text-foreground/80 mb-2 leading-relaxed">
-                {t(
-                  "form.verification_desc",
-                  "Upload your booking receipt to earn the Verified Buyer badge and 2× points."
-                )}
-              </p>
-              <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => verificationInputRef.current?.click()}>
-                <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification", "Upload")}
+            <div className="rounded-xl p-3.5 border border-accent/30 bg-gradient-to-br from-accent/5 via-secondary/30 to-background">
+              {/* Header */}
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <label className="text-sm font-semibold text-foreground flex items-center gap-1.5">
+                  <ShieldCheck className="w-4 h-4 text-accent" />
+                  {t("form.purchase_verification", "Become a Verified Buyer")}
+                </label>
+                <Badge variant="secondary" className="text-[10px] shrink-0">{t("form.optional", "Optional")}</Badge>
+              </div>
+
+              {/* Benefits row */}
+              <div className="flex flex-wrap gap-1.5 mb-3">
+                <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 text-accent text-[11px] font-medium px-2 py-0.5">
+                  <BadgeCheck className="w-3 h-3" /> {t("form.verification_benefit_badge", "Verified Buyer badge")}
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 text-primary text-[11px] font-medium px-2 py-0.5">
+                  <Sparkles className="w-3 h-3" /> {t("form.verification_benefit_points", "2× points")}
+                </span>
+                <span className="inline-flex items-center gap-1 rounded-full bg-trust-excellent/10 text-trust-excellent text-[11px] font-medium px-2 py-0.5">
+                  <Eye className="w-3 h-3" /> {t("form.verification_benefit_priority", "Higher visibility")}
+                </span>
+              </div>
+
+              {/* What counts as proof */}
+              <div className="rounded-lg bg-background/60 border border-border/50 p-2.5 mb-2.5">
+                <p className="text-[11px] font-semibold text-foreground/90 mb-1.5 uppercase tracking-wide">
+                  {t("form.verification_accepts_title", "What counts as proof")}
+                </p>
+                <ul className="space-y-1 text-xs text-foreground/80">
+                  <li className="flex items-start gap-1.5">
+                    <Receipt className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+                    <span>{t("form.verification_accepts_receipt", "Booking receipt or down-payment slip")}</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <FileText className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+                    <span>{t("form.verification_accepts_contract", "Reservation form or contract page (1st page is enough)")}</span>
+                  </li>
+                  <li className="flex items-start gap-1.5">
+                    <ImageIcon className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+                    <span>{t("form.verification_accepts_screenshot", "Bank transfer screenshot showing the developer name")}</span>
+                  </li>
+                </ul>
+                <p className="text-[10.5px] text-muted-foreground mt-2 leading-relaxed">
+                  {t(
+                    "form.verification_redact_hint",
+                    "Tip: you can hide your unit number, price, or ID. We only need to see the developer name and date."
+                  )}
+                </p>
+              </div>
+
+              {/* How it works — 3 steps */}
+              <ol className="flex items-center gap-1 text-[10.5px] text-muted-foreground mb-2.5">
+                <li className="flex items-center gap-1">
+                  <span className="w-4 h-4 rounded-full bg-accent/15 text-accent font-bold flex items-center justify-center text-[10px]">1</span>
+                  <span>{t("form.verification_step_1", "Upload")}</span>
+                </li>
+                <span className="text-muted-foreground/50">›</span>
+                <li className="flex items-center gap-1">
+                  <span className="w-4 h-4 rounded-full bg-accent/15 text-accent font-bold flex items-center justify-center text-[10px]">2</span>
+                  <span>{t("form.verification_step_2", "We review (≤ 24h)")}</span>
+                </li>
+                <span className="text-muted-foreground/50">›</span>
+                <li className="flex items-center gap-1">
+                  <span className="w-4 h-4 rounded-full bg-accent/15 text-accent font-bold flex items-center justify-center text-[10px]">3</span>
+                  <span>{t("form.verification_step_3", "Badge appears on your review")}</span>
+                </li>
+              </ol>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-9 gap-1.5 text-xs w-full border-accent/40 hover:bg-accent/10"
+                onClick={() => verificationInputRef.current?.click()}
+              >
+                <Receipt className="w-3.5 h-3.5" />
+                {verificationFiles.length > 0
+                  ? t("form.verification_add_more", "Add another file")
+                  : t("form.upload_verification", "Upload proof (image or PDF)")}
               </Button>
+              <p className="text-[10.5px] text-muted-foreground mt-1.5 flex items-center gap-1 justify-center">
+                <Lock className="w-3 h-3" />
+                {t("form.verification_privacy", "Private — only our review team sees this. Never shown publicly.")}
+              </p>
               <input ref={verificationInputRef} type="file" className="hidden" accept="image/*,.pdf" multiple onChange={handleVerificationSelect} />
               {verificationFiles.length > 0 && (
                 <div className="mt-2 space-y-1">
