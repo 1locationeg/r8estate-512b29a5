@@ -215,6 +215,76 @@ export const WriteReviewModal = ({
     }
   }, [open]);
 
+  // ===== Look for an in-progress draft when the modal opens =====
+  useEffect(() => {
+    if (!open || !user || !developerId) return;
+    let cancelled = false;
+    (async () => {
+      setIsCheckingDraft(true);
+      try {
+        const { data, error } = await supabase
+          .from("reviews")
+          .select("id, rating, title, comment, experience_type, unit_type, is_anonymous, category_ratings, completion_level, created_at, developer_name")
+          .eq("user_id", user.id)
+          .eq("developer_id", developerId)
+          .neq("completion_level", "full")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (cancelled) return;
+        if (!error && data) {
+          setDraft(data);
+          setShowResumePrompt(true);
+        } else {
+          setDraft(null);
+          setShowResumePrompt(false);
+        }
+      } catch (e) {
+        console.warn("draft lookup failed", e);
+      } finally {
+        if (!cancelled) setIsCheckingDraft(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [open, user, developerId]);
+
+  const restoreDraft = () => {
+    if (!draft) return;
+    setSavedReviewId(draft.id);
+    setRating(draft.rating || 0);
+    setTitle(draft.title || "");
+    setContent(draft.comment || "");
+    setExperienceType(draft.experience_type || "");
+    setUnitType(draft.unit_type || "");
+    setIsAnonymous(!!draft.is_anonymous);
+    setCategoryRatings(draft.category_ratings || {});
+    // Resume on the next step the user hadn't completed.
+    if (draft.completion_level === "with_comment") {
+      setPhase(3);
+    } else if (draft.completion_level === "rating_only") {
+      setPhase(2);
+    } else {
+      setPhase(2);
+    }
+    setShowResumePrompt(false);
+  };
+
+  const discardDraft = async () => {
+    if (!draft) {
+      setShowResumePrompt(false);
+      return;
+    }
+    try {
+      await supabase.from("reviews").delete().eq("id", draft.id);
+    } catch (e) {
+      console.warn("draft discard failed", e);
+    }
+    setDraft(null);
+    setSavedReviewId(null);
+    setShowResumePrompt(false);
+    toast({ title: t("form.draft_discarded", "Started fresh"), description: t("form.draft_discarded_desc", "Your previous draft was removed.") });
+  };
+
   // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
   const [showThanksScreen, setShowThanksScreen] = useState(false);
