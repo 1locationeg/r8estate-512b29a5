@@ -276,6 +276,12 @@
     transition: background-color 0.3s ease;
   }
 
+  /* Sit the whole site on a soft warm neutral so cards on white pop subtly,
+     mirroring the reference design's calm canvas. */
+  body {
+    background-color: hsl(var(--page-bg));
+  }
+
   /* Arabic font when RTL is active */
   body.rtl,
   :root[lang="ar"] body {
@@ -317,7 +323,7 @@
 
   /* Typography Hierarchy — enforce clear visual scale */
   .heading-hero {
-    @apply text-3xl md:text-5xl font-black tracking-tight leading-tight;
+    @apply text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[1.05];
   }
   .heading-section {
     @apply text-xl md:text-2xl font-bold tracking-tight leading-snug;
@@ -330,6 +336,18 @@
   .section-divider {
     @apply w-full max-w-[200px] h-px mx-auto my-2;
     background: linear-gradient(90deg, transparent 0%, hsl(var(--border)) 50%, transparent 100%);
+  }
+
+  /* Tiny ALL-CAPS eyebrow used above section titles and pills.
+     Pairs with .heading-section for a confident editorial rhythm. */
+  .eyebrow {
+    @apply inline-flex items-center gap-1.5 text-[10px] sm:text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground;
+  }
+
+  /* Standard card hover — used across audience, developer, review, category cards
+     so every interactive surface lifts with the same physics. */
+  .card-hover {
+    @apply transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40;
   }
 }
 
