@@ -1,101 +1,116 @@
+# Categories Page → Reviews Hub Redesign (v2)
 
-## Goal
+Transform `/directory` from a "grid of icons" into a **Reviews Hub** so visitors instantly understand: *"This is where real buyers share real experiences."* The category grid stays — but is demoted below the social proof. Inspired by the uploaded mock, the page uses a **two-column layout** on desktop: a sticky **Filters sidebar** on the start side, and the main **reviews feed** in the center.
 
-Bring the homepage and shared UI primitives up to the polish level of the reference project (`bd194ed0`). The reference doesn't have *more* features — it just feels professional because it is **calm, consistent, well-spaced, and restrained**. We'll port that discipline onto our existing components without removing functionality.
+## Page Structure
 
-## What makes the reference look "designed"
+### Desktop layout (≥ md)
 
-After reading its `styles.css`, `Navbar`, `HeroSection`, `AudienceCards`, and `FeaturedDevelopers`:
-
-1. **One coherent palette** — Deep Teal primary, Amber accent, Coral destructive, soft warm cream `--page-bg`. No competing brand reds in the hero.
-2. **Generous, fluid type scale** — `font-size: clamp()` on body, `heading-hero` ≈ 6xl/7xl, big `font-black tracking-tight` headlines, tiny ALL-CAPS eyebrows with `tracking-[0.2em]`.
-3. **Consistent rhythm** — every section is `py-14`, container `max-w-6xl`, gaps `gap-4/5`, cards `rounded-2xl border border-border bg-card p-6`.
-4. **One CTA system** — pill `rounded-full` buttons, primary uses a teal→accent gradient with `shadow-lg shadow-primary/30`, secondary is `variant="outline" border-2`.
-5. **One card system** — `rounded-xl/2xl border border-border bg-card`, hover `-translate-y-0.5/1` + `hover:shadow-md/lg` + `hover:border-primary/40`. Used identically in audience cards, developer cards, testimonial.
-6. **Calm hero** — eyebrow pill → tagline → big shimmer headline → 2 CTAs → trust gauge → 1 floating testimonial → search bar → popular searches. Linear, single-column, lots of whitespace. Our hero crams ~10 widgets above the fold instead.
-7. **Sticky translucent navbar** — `bg-background/80 backdrop-blur` with `border-b border-border/60`, h-16, simple text links with `activeProps` highlighting.
-8. **Section headers** — left-aligned title + small subtitle on one row with a "View all →" link on the right (FeaturedDevelopers pattern). Consistent everywhere.
-
-## What we'll change in R8ESTATE
-
-### 1. Design token alignment (`src/index.css`)
-- Add a `--page-bg` token (soft cream) and apply it to `body` so the whole site sits on one warm neutral, not pure white.
-- Tighten the heading utilities `.heading-hero` / `.heading-section` to match the reference scale (mobile 30px → desktop 56–72px for hero; 20→24px for section).
-- Add a `.section-divider` utility (200px gradient line) and a `.eyebrow` utility (uppercase, `tracking-[0.2em]`, `text-[10px]`) for reuse.
-- Standardise card hover: add `.card-hover` utility (`hover:-translate-y-0.5 hover:shadow-md hover:border-primary/40 transition-all`).
-
-### 2. Hero polish (`src/components/HeroSection.tsx` or current hero stack on `Index.tsx`)
-Without removing existing widgets, **reorder + breathe**:
-- Eyebrow pill (Trust • Shield • Platform) — adopt reference styling.
-- Tagline (muted) → shimmer headline (single line, `font-black`, no decorative stars *above the fold*).
-- Exactly **2 CTAs** on the primary row: outline "See Real Owners" and gradient "Save Money". Move "AI Assistant" to a small text link below (current `HeroPowerCTAs` keeps its semantics, just visually quieter).
-- Single search bar in a `rounded-full border bg-card` shell (matches reference) + 3 popular-search chips.
-- Move `HeroTrustShowcase`, `ContractCheckCard`, `TruthCheckHero`, `MiniJourneyArc`, `HeroNextSteps` **below** the hero into clearly separated sections with consistent `py-14` rhythm — they remain, just stop fighting the headline.
-
-### 3. Homepage composition (`src/pages/Index.tsx`)
-Adopt the reference's narrative order while keeping all our unique sections:
 ```text
-Navbar → JourneyCorridor (slim) → Hero (calm) →
-HeroTrustShowcase → TrustStrip/CollectiveBuyerProtection →
-TractionStats → HowWeWork → AudienceSegmentCards →
-CompareEngineShowcase → FeaturedIdentitySpotlight →
-ReviewsCarousel → CommunityHighlights → BrowseCategoriesGrid →
-StepTimeline → PricingTeaser → JourneyCompleteCTA →
-SiteExperienceFeedback → Footer
+┌────────────────────────────────────────────────────────────────┐
+│ HUB HERO BAND (full width)                                     │
+│ Eyebrow: REVIEW HUB · TRUST PLATFORM                           │
+│ Headline: "Read what real buyers say — before you sign."      │
+│ KPIs: [12,480 reviews] [4.2★ avg] [86% verified]              │
+│ Search: 🔍 Search reviews, businesses, projects…              │
+├────────────────┬───────────────────────────────────────────────┤
+│  FILTERS       │  PERSONALIZED STRIP ("For you" — if signed-in)│
+│  (sticky)      │  Horizontal scroller of 4-6 ReviewCards       │
+│                ├───────────────────────────────────────────────┤
+│  Sort by       │  🔥 TRENDING REVIEWS                          │
+│   [Newest ▾]   │  Grid of 6 ReviewCards                        │
+│                ├───────────────────────────────────────────────┤
+│  Min rating    │  ⏱ JUST POSTED                                │
+│   [All ▾]      │  Compact live feed, 5 newest reviews          │
+│                ├───────────────────────────────────────────────┤
+│  Verified      │  📂 BROWSE BY CATEGORY                        │
+│   [All ▾]      │  Existing BrowseCategoriesGrid                │
+│                │  (Developers tile keeps "Start here" highlight)│
+│  Category      ├───────────────────────────────────────────────┤
+│   [All ▾]      │  ✍ WRITE-YOUR-REVIEW CTA strip                │
+└────────────────┴───────────────────────────────────────────────┘
 ```
-Wrap each in a shared `<HomeSection>` helper that enforces `py-14 md:py-16`, `container max-w-6xl px-4`, and the standard left-aligned header (title + subtitle + optional "View all" link).
 
-### 4. Section header standardisation
-Create `src/components/SectionHeader.tsx`:
-```tsx
-<SectionHeader
-  title="Top-rated developers"
-  subtitle="Highest trust scores from verified buyers"
-  viewAllHref="/businesses"
-/>
-```
-Replace ad-hoc headings inside ~10 homepage sections to remove the current variety of sizes/colors/alignments.
+### Mobile layout (< md)
+- Hero band stacks full-width.
+- Filters collapse into a single **"Filters"** pill button that opens a bottom-sheet (uses existing `Sheet` component).
+- All sections stack vertically in the same order.
 
-### 5. Card primitive consistency
-Audit and align these cards to the same `rounded-2xl border border-border bg-card p-6` + `card-hover` recipe (Arabic-friendly, RTL-safe):
-- `AudienceSegmentCards`
-- `FeaturedIdentitySpotlight`
-- `BrowseCategoriesGrid` tiles
-- `ReviewsCarousel` items
-- `CommunityHighlights` items
-- `PricingTeaser` plan cards
+## Section Details
 
-### 6. Navbar polish (`src/components/Navbar.tsx`)
-- Switch wrapper to `sticky top-0 z-40 border-b border-border/60 bg-background/80 backdrop-blur`.
-- Reduce nav links to 5 max (Businesses, Reviews, Community, Deals, Launches) with `activeProps` style; move overflow into the user dropdown / mobile sheet (mirrors reference).
-- Avatar dropdown becomes the single entry point for Dashboard / Messages / Leaderboard / Settings / Notifications / Sign out (we already have the pieces; just consolidate visual treatment).
+### Hub Hero Band
+- Eyebrow chip: `REVIEW HUB · TRUST PLATFORM`
+- Headline: *"Read what real buyers say — before you sign."*
+- 3 inline KPIs from DB: total reviews, avg rating, % verified.
+- Prominent search bar with rotating placeholder: *"Try 'Orascom O-West'", "Search 'Palm Hills delivery delays'", "Find 'Mountain View'"*.
 
-### 7. Buttons & inputs
-- Default size for hero/section CTAs becomes `size="lg" rounded-full px-6`.
-- Primary CTAs use the teal→amber gradient inline style from the reference for that "designed" feel.
-- Inputs in hero search adopt the pill-shell pattern (icon, borderless input, primary pill submit).
+### Filters Sidebar (new — inspired by uploaded mock)
+- Sticky `top-20` on desktop, scrolls with content otherwise.
+- Card with `FILTERS` eyebrow header.
+- 4 dropdowns (using existing shadcn `Select`):
+  - **Sort by**: Newest · Highest rated · Most helpful · Trending
+  - **Minimum rating**: All · 5★ · 4★+ · 3★+
+  - **Verified**: All · Verified buyers only
+  - **Category**: All · 18 segments
+- Active filters drive the Trending grid + Just Posted feed in real time.
+- "Reset filters" link at bottom when any filter ≠ default.
 
-## Out of scope (intentionally)
+### Personalized Strip ("For you")
+- Visible **only when** user signed-in OR has saved interests via `useTrackInterest`.
+- Pulls reviews where business categories overlap with user's tracked interests.
+- Horizontal snap scroller, 4–6 cards, RTL-safe (logical scroll padding).
+- If guest with no interests → section hidden.
 
-- No new features, no copy rewrites beyond labels needed for new section headers.
-- No removal of: gamification, R8 Agent, journey corridor, side rail, bottom nav, FAB, contract check, truth check, deal/launch widgets.
-- Arabic typography (Cairo/Almarai) and RTL logical properties are preserved exactly as today.
-- No backend / RLS / migration changes.
+### Trending Reviews
+- 6-card grid, 1-col mobile / 2-col tablet / 3-col desktop.
+- Reuses existing `ReviewCard` with a small "🔥 Trending" badge.
+- Driven by filters sidebar.
 
-## Files to touch
+### Just Posted
+- 5 newest reviews, compact single-line: `[avatar] [name + stars] — "First 80 chars…" · 4m ago · @Developer`.
+- Auto-refresh every 30s.
+- Click → entity profile, scrolled to the review.
 
-- `src/index.css` — tokens, heading utilities, `.card-hover`, `.eyebrow`, `.section-divider`.
-- `src/pages/Index.tsx` — reorder, wrap sections in `<HomeSection>`.
-- `src/components/SectionHeader.tsx` — **new**.
-- `src/components/HomeSection.tsx` — **new** (thin wrapper for spacing/container).
-- `src/components/Navbar.tsx` — translucent sticky shell, link consolidation.
-- Hero stack: `HeroSearchBar.tsx`, `HeroPowerCTAs`, `HeroTrustShowcase` — visual restraint pass.
-- Card components listed in §5 — token swap to the standard recipe.
+### Browse by Category (demoted)
+- Section header: *"Or browse all 18 categories"* — small, secondary.
+- Renders **existing** `BrowseCategoriesGrid` unchanged (Developers tile keeps "Start here" treatment).
+- Wrapped in `<HomeSection>`.
 
-## Acceptance
+### Write-Your-Review CTA strip
+- Full-width frosted strip in primary color.
+- Headline: *"Already a buyer? Your review protects 1,000+ next buyers."*
+- Button → opens existing `WriteReviewModal`.
 
-- Homepage scrolls as one calm narrative on desktop (1024–1440) and mobile (390): every section uses the same container width, vertical rhythm, and header pattern.
-- Only one CTA style above the fold; only one card style across the page.
-- Body sits on `--page-bg` cream; cards on white pop subtly.
-- No horizontal scroll at 390px; touch targets stay ≥44px (existing rule).
-- All Arabic strings still flow correctly under `dir="rtl"`.
+## Technical Implementation
+
+**New files:**
+- `src/components/hub/HubHeroBand.tsx` — eyebrow, headline, 3 KPIs, expanded search.
+- `src/components/hub/HubFiltersSidebar.tsx` — sticky filters card (Sort / Rating / Verified / Category) + reset link. Mobile variant renders inside a Sheet.
+- `src/components/hub/PersonalizedReviewsStrip.tsx` — uses `useAuth` + interest tracking to fetch matching reviews.
+- `src/components/hub/TrendingReviewsGrid.tsx` — receives filters via props, fetches from `reviews` table.
+- `src/components/hub/JustPostedFeed.tsx` — compact live feed with 30s refetch.
+- `src/components/hub/WriteReviewCtaStrip.tsx` — bottom CTA, opens existing modal.
+- `src/hooks/useHubFilters.ts` — small hook holding `{sort, minRating, verifiedOnly, category}` state shared between sidebar and feeds.
+
+**Modified files:**
+- `src/pages/Categories.tsx` — restructured into hero + 2-column grid (sidebar + feed) with all hub sections.
+
+**Data sources (all existing):**
+- `supabase.from("reviews").select(...)` for trending + just-posted (joined with `business_profiles` for the developer name).
+- `useAuth()` + interest tracking localStorage for personalization.
+
+**Design tokens / conventions:**
+- All colors via semantic tokens (`--primary`, `--muted-foreground`, `--journey-*`).
+- Use `.heading-section` and `.eyebrow` utilities from `index.css`.
+- Logical properties only (`ms-`, `pe-`, `text-start`, `start-*`).
+- 390px viewport safety: horizontal scrollers use `overflow-x-auto snap-x` with `scroll-padding-inline-start`.
+- 44px min touch targets on all interactive cards.
+
+## What stays the same
+- Route remains `/directory`. Navbar "Developers" button still points here.
+- `BrowseCategoriesGrid` logic (Developers-first ordering, expansion, DB merging) untouched.
+- Existing `ReviewCard` and `WriteReviewModal` reused.
+
+## Out of scope
+- No DB schema changes. Trending uses recency + helpful_count ordering — a true `views_count` can be added later.
+- New copy added inline with `isRTL` ternaries; can be extracted to i18n after approval.
