@@ -1,83 +1,122 @@
 ## Goal
 
-Give admins a single control panel at `/admin/truth-check` to fully manage the Truth-Check feature: turn it on/off across the site, control where it appears (homepage card, dedicated `/truth-check` page, navbar/CTAs, link from CompareModal), edit its copy and example claims, and tune throttling — without touching code.
+Re-shape the entire Write-a-Review flow to feel like Facebook's app-store review: every screen is calm, every screen has a **visible progress bar**, every screen has a **Submit / Save & Close** that persists what the user typed (so nothing is ever lost), and the user is gently motivated to keep going to deeper steps.
 
-## Where it appears today
+Two reference screens:
+- Image 1 → the **frictionless entry** (stars + optional title/review on one card).
+- Image 2 → the **deep review** (current Phase 2 layout: unit type, experience type, title, rich editor) — only shown when the user opts in.
 
-- **Homepage** (`src/pages/Index.tsx` line 403) — `<TruthCheckHero />` rendered between ReviewerSpotlight and HeroNextSteps.
-- **Dedicated page** at `/truth-check` (`src/pages/TruthCheck.tsx`, route in `src/App.tsx` line 221).
-- **Edge function** `supabase/functions/truth-check` performs the verdict.
+## The 4-step journey
 
-## Plan
+```text
+STEP 1 / 4 ────────────                Rate
+  Brand row · Tap to Rate · ★★★★★
+  ┌──────────────────────────┐
+  │ Title    Optional        │
+  │ Review   Optional        │
+  └──────────────────────────┘
+  Reviewing as: {nickname}
+  [ Submit ]      ← saves + closes
+  [ Add more details → ]   (motivator)
 
-### 1. New admin component: `src/components/AdminTruthCheck.tsx`
+STEP 2 / 4 ────────────────             Your Review (deep)
+  ★★★☆☆ 3/5  ·  Change                  +25 pts when complete
+  Unit type · Experience type · Title · Rich editor · Voice/AI/Emoji
+  [ Save & Close ]    [ Next → ]
 
-Single page with sections (mirrors `AdminWelcomeMessage.tsx` pattern using `platform_settings` upserts + sonner toasts):
+STEP 3 / 4 ────────────────────         Category Ratings
+  Mini star rows per category (Build, Location…)
+  [ Save & Close ]    [ Next → ]
 
-**A. Master switch**
-- Toggle: `truth_check_enabled` (default `true`). When `false`, the homepage card AND the `/truth-check` page hide / redirect.
+STEP 4 / 4 ────────────────────────     Proof & Polish
+  Photos · Documents · Secure contract · Verification · Anonymous toggle
+  [ Save & Close ]    [ Submit Review ]
+```
 
-**B. Placement controls** (each a Switch, all default `true`)
-- `truth_check_show_on_homepage` — controls `<TruthCheckHero />` on Index.
-- `truth_check_page_enabled` — controls the `/truth-check` route. When off, page redirects to `/` with a toast.
-- `truth_check_show_compare_link` — shows/hides the "Truth-Check this claim" entry the user previously asked for in CompareModal (we'll wire it conditionally; if not present yet it just becomes a no-op flag for future use).
+A thin progress bar `value={(step/4)*100}` sits at the top of **every** step. Label format: `Step X of 4 · {StepName}`.
 
-**C. Copy & content**
-- `truth_check_page_title` (text)
-- `truth_check_page_subtitle` (textarea)
-- `truth_check_card_eyebrow` (text — the "R8 Truth-Check" pill on the homepage card)
-- `truth_check_example_claims` (textarea, one example per line — feeds the chip suggestions like "Delivery in 2026, 100% on schedule"). Min 0, max 6 lines.
-- "Reset to defaults" button per text field group.
+## Core principles
 
-**D. Behaviour & safety**
-- `truth_check_throttle_seconds` (number, default 10) — used by the edge function's per-IP throttle.
-- `truth_check_min_claim_chars` (number, default 8).
-- `truth_check_require_auth` (switch, default `false`) — when on, the edge function rejects anonymous calls with a friendly "Sign in to use Truth-Check" message and the UI shows a sign-in CTA instead of the textarea for guests.
+1. **Always saving.** Every "Save & Close" / "Submit" button calls the right `savePhaseN()` for whatever fields are filled, then closes the modal. The DB row is updated with the highest `completion_level` reached (`rating_only` → `with_comment` → `full`) plus whatever optional fields are populated. No data is ever discarded.
+2. **Progress always visible.** The header progress bar is shown on Step 1 too (today it's hidden), so the user sees "I'm 25% in" the moment they tap a star.
+3. **Motivation, not pressure.** After Step 1's stars, a soft chip "✨ Add more details — earns +25 pts and helps buyers more" appears next to Submit. Same after Step 2 ("You're halfway there"), Step 3 ("One more — add proof for a verified badge").
+4. **Sentiment-aware micro-copy** on every step (re-uses existing `getRatingEncouragement`).
 
-**E. Live preview panel**
-- Read-only render of `<TruthCheckHero variant="compact" />` showing exactly what users see, reflecting current saved copy/examples.
+## Step-by-step changes
 
-### 2. New hook: `src/hooks/useTruthCheckSettings.ts`
+### Step 1 — new "Single-Screen Rate" (replaces today's Phase 1)
 
-- Fetches all `truth_check_*` keys in one query, returns typed object with sensible defaults if a row is missing.
-- Exposes `{ settings, loading }`.
-- Used by: `Index.tsx` (to gate `<TruthCheckHero />`), `TruthCheck.tsx` page (gate + copy), `TruthCheckHero.tsx` (example chips, eyebrow text, auth gate).
+Matches reference image 1:
+- Brand row: rounded-square logo (existing developer fields) + name + 1-line tagline.
+- "Tap to Rate:" label + 5 large stars (auto-saves `rating_only` on tap, as today).
+- Single soft-grey card with stacked rows: **Title — Optional**, **Review — Optional** (multi-line).
+- Footer: "Reviewing as: {nickname}" (guests can edit inline).
+- Buttons: **Submit** (primary, fires `savePhase2` if any text was typed, else just closes) + **Add more details →** (ghost, advances to Step 2).
+- Progress bar: shown, at 25%.
 
-### 3. Wire conditional rendering
+### Step 2 — "Deep Review" (matches reference image 2)
 
-- `src/pages/Index.tsx` — wrap `<TruthCheckHero />` in `settings.enabled && settings.showOnHomepage`.
-- `src/pages/TruthCheck.tsx` — if `!settings.enabled || !settings.pageEnabled` → `<Navigate to="/" />` + toast.
-- `src/components/TruthCheckHero.tsx` — read `eyebrow`, `exampleClaims`, `requireAuth` from settings; replace the hard-coded title/subtitle/example chips. Hide the textarea behind a sign-in CTA when `requireAuth && !user`.
+Today's Phase 2 layout, kept almost as-is. Only changes:
+- Header label becomes "Step 2 of 4 · Your Review" (today says "Step 2 of 3").
+- Bottom bar buttons relabeled:
+  - Left: ghost **Back**.
+  - Right group: ghost **Save & Close** (calls `savePhase2` then closes — no data lost) + primary **Next →** (calls `savePhase2` + advances to Step 3).
+- Add a tiny motivator chip above the action bar: "Halfway there — sub-ratings next help buyers compare 📊".
 
-### 4. Edge function update: `supabase/functions/truth-check/index.ts`
+### Step 3 — Category ratings (carved out of today's Phase 3 top half)
 
-- On invocation, fetch the four behaviour keys via service role: `truth_check_enabled`, `truth_check_throttle_seconds`, `truth_check_min_claim_chars`, `truth_check_require_auth`.
-- If `enabled === false` → return `503` with `{ error: "Truth-Check is temporarily disabled by the admin." }`.
-- Use the dynamic throttle window and min-claim-chars instead of hard-coded `10_000` / `8`.
-- If `require_auth` and the request has no valid `Authorization` Bearer (validate via `supabase.auth.getUser`) → return `401`.
+- Mini star rows for category metrics (`MiniStarRow` component, already exists).
+- Bottom bar: **Back** · **Save & Close** · **Next →**.
+- Progress bar at 75%.
+- Motivator chip: "Almost done — add proof on the next step for a verified badge 🛡️".
 
-### 5. Register in admin shell
+### Step 4 — Proof & polish (carved out of today's Phase 3 bottom half)
 
-- Add nav item under the "Settings" group in `src/pages/AdminDashboard.tsx`:
-  `{ icon: <ScanSearch className="w-4 h-4" />, label: 'Truth-Check', path: '/admin/truth-check' }`
-- Add route: `<Route path="truth-check" element={<AdminTruthCheck />} />`.
-- Add import: `import AdminTruthCheck from '@/components/AdminTruthCheck';`
+- Photos / Documents / SecureContractUpload / Verification upload / Anonymous toggle.
+- AI moderation warnings render here (last gate before final submit).
+- Bottom bar: **Back** · **Save & Close** · primary **Submit Review** (calls `savePhase3` with `completion_level: full`, fires confetti for first review, toast, closes).
+- Motivator chip: "You're a top contributor 🏆 — verified reviewers get 3× visibility".
 
-### 6. Memory
+### Header (shared across all steps)
 
-Update `mem/features/truth-check.md` to document the admin control surface, the `truth_check_*` settings keys, and how to disable the feature without redeploying.
+- Title: "Write a Review {for {Developer}}" (existing).
+- Sub-line: "Step X of 4 · {StepName}" + Progress bar (always visible, never hidden).
+- Star summary `★★★ 3/5 · Change` row visible from Step 2 onward (existing).
+- Top-right close (X) → if any unsaved changes on current step, auto-call the relevant `savePhaseN()` before closing. So even closing the modal never loses data.
 
-## Technical details
+## Save-on-exit guarantee
 
-- Storage: `platform_settings` table, `(key text PK, value text)` — already used by Welcome Message, Guest Timer, Registration Slots. Booleans stored as `"true"`/`"false"` strings (matches existing rows).
-- Defaults are coded in the hook so the feature works the same as today even if no `platform_settings` rows exist.
-- Realtime not required — admin save followed by client refetch on next page load is enough; we'll also fire a `localStorage` event so an open tab picks up changes after save.
-- Auth gating in the edge function uses `createClient` with the user's JWT to call `auth.getUser()`; service-role client is still used for data reads.
-- No DB migration required — `platform_settings` already exists with the right shape and RLS.
+Wire `onOpenChange(false)` (and the X button) to a single `safeClose()` helper:
 
-## Files touched
+```text
+safeClose():
+  if step === 1 && (title || content)       → savePhase2()
+  else if step === 2 && hasContent          → savePhase2()
+  else if step === 3 && anyCategoryRating   → savePhase3() (partial)
+  else if step === 4                        → savePhase3() (full)
+  finally → onOpenChange(false)
+```
 
-- **New**: `src/components/AdminTruthCheck.tsx`, `src/hooks/useTruthCheckSettings.ts`
-- **Edited**: `src/pages/AdminDashboard.tsx`, `src/pages/Index.tsx`, `src/pages/TruthCheck.tsx`, `src/components/TruthCheckHero.tsx`, `supabase/functions/truth-check/index.ts`, `mem/features/truth-check.md`
+This makes every screen behave like the user pressed "Save & Close" implicitly. No dialog, no confirmation — just silent save + close.
 
-Approve and I'll build this end-to-end.
+## Technical Implementation
+
+- **`src/components/WriteReviewModal.tsx`** (single file, biggest change):
+  - Rename internal state `phase` (1–3) → `step` (1–4). Add a `PHASE_LABELS` array of length 4.
+  - Split current `renderPhase3` into `renderStep3` (category ratings only) and `renderStep4` (attachments + verification + anonymous + moderation + final submit).
+  - Rewrite `renderStep1` to the new single-screen card (stars + Title input + Review textarea + Submit + "Add more details").
+  - Keep `renderStep2` (was `renderPhase2`) almost unchanged, just relabel buttons and add motivator chip.
+  - Add `safeClose()` helper; wire it to Dialog's `onOpenChange` and the explicit "Save & Close" buttons.
+  - Always render the progress bar (remove the `phase === 1` hide condition); update `value={(step / 4) * 100}`.
+  - Update the slide container: 4 panels instead of 3, `translateX(-${(step - 1) * 100}%)`.
+  - Add a small `MotivatorChip` inline component (no new file) used at the bottom of steps 1–3.
+- **`src/i18n/locales/en.json` & `ar.json`**: new keys
+  - `form.tapToRate`, `form.reviewingAs`, `form.submit`, `form.saveAndClose`, `form.addMoreDetails`,
+  - `form.motivator.step1`, `form.motivator.step2`, `form.motivator.step3`, `form.motivator.step4`,
+  - `form.stepName.rate`, `form.stepName.yourReview`, `form.stepName.categories`, `form.stepName.proof`.
+- **`mem://features/review-system`**: bump from 3-phase to 4-step Progressive-Save with always-visible progress and save-on-exit.
+
+## Out of scope
+
+- DB schema, edge functions, AI moderation, gamification rules, RTL/i18n infra — all unchanged.
+- WhatsApp share, post-submit thanks screen, confetti behavior — kept as-is and reused.
