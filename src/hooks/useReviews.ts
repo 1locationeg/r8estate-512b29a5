@@ -41,6 +41,10 @@ export function useReviews(developerId: string | undefined) {
         comment: r.comment || '',
         verified: r.is_verified,
         categoryRatings: r.category_ratings || {},
+        // Surfaced for the 10× weighting rule (read by trustScoreCalculator + ReviewCard)
+        verificationLevel: r.verification_level,
+        isAnonymous: r.is_anonymous,
+        userId: r.user_id,
       }));
 
       setDbReviews(mapped);
