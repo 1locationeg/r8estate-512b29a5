@@ -38,6 +38,7 @@ import {
   Mail,
   User,
   ShieldCheck,
+  BadgeCheck,
   AlertTriangle,
   ChevronRight,
   ChevronLeft,
