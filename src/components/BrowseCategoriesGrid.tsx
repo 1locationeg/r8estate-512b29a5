@@ -127,7 +127,19 @@ export const BrowseCategoriesGrid = ({ onSelectCategory, onSelectItem, searchQue
       });
   }, [expandedIdx]);
 
-  const filteredCategories = categories.map((category, originalIndex) => {
+  // Promote the Developers segment ("categories.shares" — Orascom, TMG,
+  // Palm Hills, SODIC, etc.) to the first slot so users land on it first
+  // when they open the grid. Original indices are preserved for downstream
+  // handlers (counts, expansion, navigation).
+  const developersFirstCategories = (() => {
+    const indexed = categories.map((category, originalIndex) => ({ category, originalIndex }));
+    const devIdx = indexed.findIndex(({ category }) => category.labelKey === "categories.shares");
+    if (devIdx <= 0) return indexed;
+    const [dev] = indexed.splice(devIdx, 1);
+    return [dev, ...indexed];
+  })();
+
+  const filteredCategories = developersFirstCategories.map(({ category, originalIndex }) => {
     const categoryName = t(category.labelKey).toLowerCase();
     const matchingItems = category.items.filter(
       item => item.nameEn.toLowerCase().includes(q) || item.nameAr.includes(q)
