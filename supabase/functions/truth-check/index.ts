@@ -147,13 +147,6 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
 
   try {
-    if (!checkThrottle(req)) {
-      return new Response(
-        JSON.stringify({ error: "Too many requests. Please wait a few seconds." }),
-        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } },
-      );
-    }
-
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const SUPABASE_URL = Deno.env.get("SUPABASE_URL");
     const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
@@ -165,6 +158,68 @@ Deno.serve(async (req) => {
       });
     }
 
+    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+      auth: { persistSession: false },
+    });
+
+    // Load admin-controlled settings
+    let tcEnabled = true;
+    let throttleSeconds = DEFAULT_THROTTLE_MS / 1000;
+    let minClaimChars = DEFAULT_MIN_CLAIM_CHARS;
+    let requireAuth = false;
+    try {
+      const { data: sRows } = await supabase
+        .from("platform_settings")
+        .select("key, value")
+        .in("key", [
+          "truth_check_enabled",
+          "truth_check_throttle_seconds",
+          "truth_check_min_claim_chars",
+          "truth_check_require_auth",
+        ]);
+      const m = new Map((sRows ?? []).map((r: any) => [r.key, r.value as string]));
+      if (m.get("truth_check_enabled") === "false") tcEnabled = false;
+      const ts = parseInt(m.get("truth_check_throttle_seconds") ?? "", 10);
+      if (Number.isFinite(ts) && ts >= 0) throttleSeconds = ts;
+      const mc = parseInt(m.get("truth_check_min_claim_chars") ?? "", 10);
+      if (Number.isFinite(mc) && mc >= 1) minClaimChars = mc;
+      if (m.get("truth_check_require_auth") === "true") requireAuth = true;
+    } catch (_e) {
+      // fall back to defaults
+    }
+
+    if (!tcEnabled) {
+      return new Response(
+        JSON.stringify({ error: "Truth-Check is temporarily disabled by the admin." }),
+        { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
+    if (requireAuth) {
+      const authHeader = req.headers.get("Authorization") ?? "";
+      const token = authHeader.startsWith("Bearer ") ? authHeader.slice(7) : "";
+      let ok = false;
+      if (token) {
+        try {
+          const { data, error } = await supabase.auth.getUser(token);
+          if (!error && data?.user) ok = true;
+        } catch (_e) { /* ignore */ }
+      }
+      if (!ok) {
+        return new Response(
+          JSON.stringify({ error: "Sign in required to use Truth-Check." }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+        );
+      }
+    }
+
+    if (!checkThrottle(req, throttleSeconds * 1000)) {
+      return new Response(
+        JSON.stringify({ error: "Too many requests. Please wait a few seconds." }),
+        { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } },
+      );
+    }
+
     const body = await req.json().catch(() => null);
     const claimRaw = typeof body?.claim === "string" ? body.claim.trim() : "";
     const developerId =
@@ -173,22 +228,19 @@ Deno.serve(async (req) => {
         : null;
     const lang: "ar" | "en" = body?.lang === "ar" ? "ar" : "en";
 
-    if (!claimRaw || claimRaw.length < 8) {
+    if (!claimRaw || claimRaw.length < minClaimChars) {
       return new Response(
         JSON.stringify({
           error:
             lang === "ar"
-              ? "اكتب الكلام اللي عاوز تتحقق منه (٨ حروف على الأقل)."
-              : "Please paste the claim you want to fact-check (8+ chars).",
+              ? `اكتب الكلام اللي عاوز تتحقق منه (${minClaimChars} حروف على الأقل).`
+              : `Please paste the claim you want to fact-check (${minClaimChars}+ chars).`,
         }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } },
       );
     }
 
     const claim = claimRaw.slice(0, CLAIM_MAX);
-    const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
-      auth: { persistSession: false },
-    });
 
     // ── Pull grounding context ────────────────────────────────────────────
     const reviewsQuery = supabase
