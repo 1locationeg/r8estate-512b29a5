@@ -2422,6 +2422,13 @@ export type Database = {
       }
       generate_embed_token: { Args: never; Returns: string }
       generate_nfc_tag_code: { Args: never; Returns: string }
+      get_business_contact: {
+        Args: { _business_id: string }
+        Returns: {
+          email: string
+          phone: string
+        }[]
+      }
       get_leaderboard: {
         Args: { _limit?: number }
         Returns: {
