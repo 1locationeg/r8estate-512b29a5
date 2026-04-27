@@ -215,6 +215,76 @@ export const WriteReviewModal = ({
     }
   }, [open]);
 
+  // ===== Look for an in-progress draft when the modal opens =====
+  useEffect(() => {
+    if (!open || !user || !developerId) return;
+    let cancelled = false;
+    (async () => {
+      setIsCheckingDraft(true);
+      try {
+        const { data, error } = await supabase
+          .from("reviews")
+          .select("id, rating, title, comment, experience_type, unit_type, is_anonymous, category_ratings, completion_level, created_at, developer_name")
+          .eq("user_id", user.id)
+          .eq("developer_id", developerId)
+          .neq("completion_level", "full")
+          .order("created_at", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        if (cancelled) return;
+        if (!error && data) {
+          setDraft(data);
+          setShowResumePrompt(true);
+        } else {
+          setDraft(null);
+          setShowResumePrompt(false);
+        }
+      } catch (e) {
+        console.warn("draft lookup failed", e);
+      } finally {
+        if (!cancelled) setIsCheckingDraft(false);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [open, user, developerId]);
+
+  const restoreDraft = () => {
+    if (!draft) return;
+    setSavedReviewId(draft.id);
+    setRating(draft.rating || 0);
+    setTitle(draft.title || "");
+    setContent(draft.comment || "");
+    setExperienceType(draft.experience_type || "");
+    setUnitType(draft.unit_type || "");
+    setIsAnonymous(!!draft.is_anonymous);
+    setCategoryRatings(draft.category_ratings || {});
+    // Resume on the next step the user hadn't completed.
+    if (draft.completion_level === "with_comment") {
+      setPhase(3);
+    } else if (draft.completion_level === "rating_only") {
+      setPhase(2);
+    } else {
+      setPhase(2);
+    }
+    setShowResumePrompt(false);
+  };
+
+  const discardDraft = async () => {
+    if (!draft) {
+      setShowResumePrompt(false);
+      return;
+    }
+    try {
+      await supabase.from("reviews").delete().eq("id", draft.id);
+    } catch (e) {
+      console.warn("draft discard failed", e);
+    }
+    setDraft(null);
+    setSavedReviewId(null);
+    setShowResumePrompt(false);
+    toast({ title: t("form.draft_discarded", "Started fresh"), description: t("form.draft_discarded_desc", "Your previous draft was removed.") });
+  };
+
   // 3-phase state + thanks interstitial
   const [phase, setPhase] = useState(1);
   const [showThanksScreen, setShowThanksScreen] = useState(false);
@@ -222,6 +292,11 @@ export const WriteReviewModal = ({
   // Progressive save: track the saved review ID
   const [savedReviewId, setSavedReviewId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+
+  // ===== Continue-your-review (draft resume) =====
+  const [draft, setDraft] = useState<any | null>(null);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [isCheckingDraft, setIsCheckingDraft] = useState(false);
 
   // Guest vs authenticated mode
   const isGuest = !user;
@@ -323,6 +398,8 @@ export const WriteReviewModal = ({
     setSavedReviewId(null);
     setIsSaving(false);
     setShowEmojiBar(false);
+    setDraft(null);
+    setShowResumePrompt(false);
   };
 
   // ===================== PROGRESSIVE SAVE LOGIC =====================
@@ -1518,7 +1595,7 @@ export const WriteReviewModal = ({
             </DialogHeader>
 
             {/* Progress Bar */}
-            {!showThanksScreen && (
+            {!showThanksScreen && !showResumePrompt && (
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
@@ -1531,7 +1608,7 @@ export const WriteReviewModal = ({
             )}
 
             {/* Star summary when past phase 1 */}
-            {phase > 1 && !showThanksScreen && (
+            {phase > 1 && !showThanksScreen && !showResumePrompt && (
               <div className="flex items-center gap-2 pb-1">
                 <div className="flex items-center gap-0.5">
                   {[1, 2, 3, 4, 5].map((s) => (
@@ -1548,7 +1625,61 @@ export const WriteReviewModal = ({
 
           {/* Phase Content */}
           <div className="overflow-hidden">
-            {showThanksScreen ? (
+            {showResumePrompt && draft ? (
+              <div className="px-4 md:px-6 py-6 space-y-5">
+                <div className="rounded-2xl border border-primary/20 bg-primary/5 p-5 space-y-4">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <PenLine className="w-5 h-5 text-primary" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base md:text-lg font-bold text-foreground">
+                        {t("form.resume_title", "Continue your review?")}
+                      </h3>
+                      <p className="text-xs md:text-sm text-muted-foreground mt-1">
+                        {t("form.resume_subtitle", "We saved your progress from last time. Pick up right where you left off.")}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Draft summary */}
+                  <div className="rounded-xl bg-background border border-border p-3 space-y-2">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((s) => (
+                          <Star key={s} className={cn("w-4 h-4", s <= (draft.rating || 0) ? "fill-accent text-accent" : "text-muted-foreground/30")} />
+                        ))}
+                      </div>
+                      <span className="text-xs font-medium text-foreground">{draft.rating}/5</span>
+                      <Badge variant="secondary" className="ms-auto text-[10px]">
+                        {draft.completion_level === "with_comment"
+                          ? t("form.resume_step_categories", "Step 3 · Categories")
+                          : t("form.resume_step_review", "Step 2 · Your Review")}
+                      </Badge>
+                    </div>
+                    {draft.title && (
+                      <p className="text-sm font-medium text-foreground line-clamp-1">{draft.title}</p>
+                    )}
+                    {draft.comment && (
+                      <p className="text-xs text-muted-foreground line-clamp-2">{getPlainTextFromHtml(draft.comment)}</p>
+                    )}
+                    <p className="text-[10px] text-muted-foreground">
+                      {t("form.resume_saved_at", "Saved")} {new Date(draft.created_at).toLocaleString()}
+                    </p>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <Button onClick={restoreDraft} className="flex-1 gap-2">
+                      <ChevronRight className="w-4 h-4" />
+                      {t("form.resume_continue", "Continue where I left off")}
+                    </Button>
+                    <Button onClick={discardDraft} variant="outline" className="flex-1">
+                      {t("form.resume_start_fresh", "Start fresh")}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            ) : showThanksScreen ? (
               renderThanksScreen()
             ) : (
               <div
