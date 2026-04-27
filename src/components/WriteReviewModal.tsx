@@ -1134,6 +1134,13 @@ export const WriteReviewModal = ({
                 onClick={() => {
                   setRating(star);
                   if (!savedReviewId) saveRatingOnly(star);
+                  trackReviewFunnelEvent({
+                    eventType: "rating_selected",
+                    rating: star,
+                    developerId,
+                    developerName,
+                    isGuest,
+                  });
                 }}
                 disabled={isSaving}
               >
