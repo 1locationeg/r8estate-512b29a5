@@ -245,7 +245,7 @@ Deno.serve(async (req) => {
     if (usable.length === 0) {
       return new Response(
         JSON.stringify({
-          verdict: "insufficient_evidence" satisfies Verdict,
+          verdict: "insufficient_evidence" as Verdict,
           headline:
             lang === "ar"
               ? "لسه مفيش تقييمات موثّقة كفاية على المطوّر ده."
