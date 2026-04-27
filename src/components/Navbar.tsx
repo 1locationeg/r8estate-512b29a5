@@ -51,7 +51,10 @@ export const Navbar = ({
   const navLinks = user ? userNavLinks : guestNavLinks;
 
   return (
-    <header className={`bg-background shadow-sm border-b leading-none ${userMode === "industry" ? "border-business-border/50" : "border-border"}`} style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}>
+    <header
+      className={`sticky top-0 z-40 backdrop-blur supports-[backdrop-filter]:bg-background/70 bg-background/85 border-b leading-none ${userMode === "industry" ? "border-business-border/50" : "border-border/60"}`}
+      style={{ paddingTop: 'env(safe-area-inset-top, 0px)' }}
+    >
       <div className="container mx-auto flex items-center justify-between gap-1 py-0 max-w-full" style={{ paddingLeft: 'max(0.5rem, env(safe-area-inset-left, 0.5rem))', paddingRight: 'max(0.5rem, env(safe-area-inset-right, 0.5rem))' }}>
         {/* Logo */}
         <button
