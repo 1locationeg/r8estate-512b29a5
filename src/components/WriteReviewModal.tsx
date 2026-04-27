@@ -436,6 +436,8 @@ export const WriteReviewModal = ({
       await savePhase2();
     } else if (phase === 3) {
       await savePhase3();
+    } else if (phase === 4) {
+      await savePhase3();
     }
 
     const submittedRating = rating;
@@ -456,6 +458,28 @@ export const WriteReviewModal = ({
 
     onReviewSubmitted?.();
     if (!isGuest) {
+      resetForm();
+      onOpenChange(false);
+    }
+  };
+
+  // ===================== SAVE-ON-EXIT GUARANTEE =====================
+  // Persists whatever the user entered before closing — no data is ever lost.
+  const safeClose = async () => {
+    try {
+      if (phase === 1 && savedReviewId && hasContent) {
+        await savePhase2();
+      } else if (phase === 2 && hasContent) {
+        await savePhase2();
+      } else if (phase === 3 && Object.keys(categoryRatings).length > 0) {
+        await savePhase3();
+      } else if (phase === 4) {
+        await savePhase3();
+      }
+    } catch (e) {
+      console.error("safeClose save error", e);
+    } finally {
+      onReviewSubmitted?.();
       resetForm();
       onOpenChange(false);
     }
