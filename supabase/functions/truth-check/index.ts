@@ -33,16 +33,17 @@ const CLAIM_MAX = 500;
 
 // In-memory throttle (best-effort; resets on cold start). Maps IP -> last call ms.
 const lastCallByIp = new Map<string, number>();
-const THROTTLE_MS = 10_000;
+const DEFAULT_THROTTLE_MS = 10_000;
+const DEFAULT_MIN_CLAIM_CHARS = 8;
 
-function checkThrottle(req: Request): boolean {
+function checkThrottle(req: Request, throttleMs: number): boolean {
   const ip =
     req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ||
     req.headers.get("cf-connecting-ip") ||
     "unknown";
   const now = Date.now();
   const last = lastCallByIp.get(ip) ?? 0;
-  if (now - last < THROTTLE_MS) return false;
+  if (now - last < throttleMs) return false;
   lastCallByIp.set(ip, now);
   // Cheap GC
   if (lastCallByIp.size > 5_000) {
