@@ -1487,6 +1487,9 @@ export const WriteReviewModal = ({
         </div>
       )}
 
+      {/* Disclaimer — gates final submission */}
+      <DisclaimerCheckbox checked={disclaimerAgreed} onCheckedChange={setDisclaimerAgreed} />
+
       {/* Navigation + Done */}
       <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
         <Button variant="ghost" size="sm" onClick={() => setPhase(3)} className="gap-1 h-9">
@@ -1509,7 +1512,7 @@ export const WriteReviewModal = ({
               setIsUploading(false);
               handleDone();
             }}
-            disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
+            disabled={isUploading || !disclaimerAgreed || (aiModeration?.suspicion_score ?? 0) > 80}
             className="gap-1.5 min-h-[44px]"
           >
             {isUploading ? (
