@@ -1744,6 +1744,63 @@ export type Database = {
         }
         Relationships: []
       }
+      review_funnel_events: {
+        Row: {
+          chip_label: string | null
+          chip_sentiment: string | null
+          created_at: string
+          developer_id: string | null
+          developer_name: string | null
+          event_type: string
+          id: string
+          is_guest: boolean | null
+          locale: string | null
+          metadata: Json | null
+          phase: number | null
+          rating: number | null
+          review_id: string | null
+          selected_chips: string[] | null
+          session_id: string
+          user_id: string | null
+        }
+        Insert: {
+          chip_label?: string | null
+          chip_sentiment?: string | null
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          event_type: string
+          id?: string
+          is_guest?: boolean | null
+          locale?: string | null
+          metadata?: Json | null
+          phase?: number | null
+          rating?: number | null
+          review_id?: string | null
+          selected_chips?: string[] | null
+          session_id: string
+          user_id?: string | null
+        }
+        Update: {
+          chip_label?: string | null
+          chip_sentiment?: string | null
+          created_at?: string
+          developer_id?: string | null
+          developer_name?: string | null
+          event_type?: string
+          id?: string
+          is_guest?: boolean | null
+          locale?: string | null
+          metadata?: Json | null
+          phase?: number | null
+          rating?: number | null
+          review_id?: string | null
+          selected_chips?: string[] | null
+          session_id?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       review_replies: {
         Row: {
           body: string
