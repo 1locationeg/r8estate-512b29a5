@@ -30,7 +30,7 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
           aria-hidden
         />
 
-        <div className="relative p-4 sm:p-5 flex flex-col gap-4">
+        <div className="relative px-4 sm:px-5 py-0 flex flex-col gap-4">
           {/* Header — centered, balanced hierarchy */}
           <div className="text-center space-y-1">
             <h3 className="text-sm sm:text-base font-bold text-foreground leading-snug">
