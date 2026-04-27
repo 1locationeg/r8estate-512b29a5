@@ -11,6 +11,7 @@ export type ReviewFunnelEventType =
   | "chip_selected"
   | "chip_deselected"
   | "phase_advanced"
+  | "weight_multiplier_seen"
   | "review_submitted";
 
 export interface ReviewFunnelEventInput {
