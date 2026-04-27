@@ -1533,6 +1533,9 @@ export const WriteReviewModal = ({
         </h3>
         <p className="text-xs text-muted-foreground mb-3">
           {t("form.categoryRatingsDesc", "Optional — helps others understand your experience better")}
+          <span className="ms-1 inline-flex items-center gap-1 text-primary font-semibold">
+            · {t("form.categoryRatingsBonus", "+5 pts per category rated")}
+          </span>
         </p>
 
         <div className="space-y-3">
