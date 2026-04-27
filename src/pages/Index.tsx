@@ -46,6 +46,7 @@ import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
 import { HeroNextSteps } from "@/components/HeroNextSteps";
 import { JourneyCorridor } from "@/components/JourneyCorridor";
 import { ReviewerSpotlight } from "@/components/ReviewerSpotlight";
+import { TruthCheckHero } from "@/components/TruthCheckHero";
 
 
 const Index = () => { // hero-phase-v2
@@ -395,6 +396,11 @@ const Index = () => { // hero-phase-v2
             {/* Reviewer Spotlight — social proof strip */}
             <div className={cn("w-full mt-3 transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
               <ReviewerSpotlight onWriteReview={() => navigate('/reviews')} />
+            </div>
+
+            {/* Truth-Check — the lovable moment */}
+            <div className={cn("w-full max-w-[1100px] mx-auto mt-3 text-start transition-all duration-300", searchFocused && "opacity-30 pointer-events-none")}>
+              <TruthCheckHero />
             </div>
 
             {/* Next Steps CTAs */}
