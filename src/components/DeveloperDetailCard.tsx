@@ -14,6 +14,7 @@ import { ReviewBlockedModal } from "./ReviewBlockedModal";
 import { DeveloperInsightsUpsell } from "./DeveloperInsightsUpsell";
 import { TrustScoreBreakdownModal } from "./TrustScoreBreakdown";
 import { VerificationLegend } from "./VerificationLegend";
+import { BadgeEarningTrail } from "./BadgeEarningTrail";
 import {
   calculateTrustScore,
   trustColorClass,
@@ -248,6 +249,14 @@ export const DeveloperDetailCard = ({
           <VerificationLegend
             developerVerified={developer.verified}
             reviews={dbReviews}
+          />
+        </div>
+
+        <div className="mt-4">
+          <BadgeEarningTrail
+            developerId={developer.id}
+            developerVerified={developer.verified}
+            reviews={reviews}
           />
         </div>
       </div>
