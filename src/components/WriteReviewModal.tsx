@@ -1291,14 +1291,9 @@ export const WriteReviewModal = ({
     </div>
   );
 
+  // STEP 3 — Category ratings only
   const renderPhase3 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-4">
-      {/* Motivational micro-copy */}
-      <p className="text-xs text-primary font-medium text-center">
-        {t("form.almostThere", "Almost there! Category ratings help buyers compare 📊")}
-      </p>
-
-      {/* Category Star Rows (instead of sliders) */}
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-1">
           {t("form.categoryRatings", "Rate specific categories")}
@@ -1319,7 +1314,43 @@ export const WriteReviewModal = ({
         </div>
       </div>
 
-      {/* Collapsible More Options (mobile) / expanded (desktop) */}
+      {/* Navigation */}
+      <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1 h-9">
+          <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
+        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => safeClose()}
+            className="text-muted-foreground h-9"
+          >
+            {t("form.saveAndClose", "Save & Close")}
+          </Button>
+          <Button
+            size="sm"
+            onClick={async () => {
+              if (Object.keys(categoryRatings).length > 0) await savePhase3();
+              setPhase(4);
+            }}
+            className="gap-1 h-9"
+          >
+            {t("form.next", "Next")} <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      <MotivatorChip
+        icon="🛡️"
+        text={t("form.motivator.step3", "Almost done — add proof next for a verified badge")}
+      />
+    </div>
+  );
+
+  // STEP 4 — Proof & Polish (attachments, verification, anonymous, final submit)
+  const renderPhase4 = () => (
+    <div className="p-4 md:p-6 pt-2 space-y-4">
       {!isGuest && (
         <Collapsible open={moreOptionsOpen} onOpenChange={setMoreOptionsOpen}>
           <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium text-foreground w-full py-2 md:hidden">
@@ -1430,32 +1461,42 @@ export const WriteReviewModal = ({
 
       {/* Navigation + Done */}
       <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
-        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1 h-9">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(3)} className="gap-1 h-9">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
-        <Button
-          size="sm"
-          onClick={async () => {
-            setIsUploading(true);
-            await savePhase3();
-            setIsUploading(false);
-            handleDone();
-          }}
-          disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
-          className="gap-1.5 min-h-[44px]"
-        >
-          {isUploading ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.saving", "Saving...")}</>
-          ) : (
-            <><Check className="w-4 h-4" /> {t("form.submitReview", "Submit Review")}</>
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => safeClose()}
+            className="text-muted-foreground h-9"
+          >
+            {t("form.saveAndClose", "Save & Close")}
+          </Button>
+          <Button
+            size="sm"
+            onClick={async () => {
+              setIsUploading(true);
+              await savePhase3();
+              setIsUploading(false);
+              handleDone();
+            }}
+            disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
+            className="gap-1.5 min-h-[44px]"
+          >
+            {isUploading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.saving", "Saving...")}</>
+            ) : (
+              <><Check className="w-4 h-4" /> {t("form.submitReview", "Submit Review")}</>
+            )}
+          </Button>
+        </div>
       </div>
 
-      {/* Completion micro-copy */}
-      <p className="text-xs text-center text-primary/70 font-medium pb-1">
-        {t("form.topContributor", "You're a top contributor! 🏆")}
-      </p>
+      <MotivatorChip
+        icon="🏆"
+        text={t("form.motivator.step4", "You're a top contributor — verified reviewers get 3× visibility")}
+      />
     </div>
   );
 
