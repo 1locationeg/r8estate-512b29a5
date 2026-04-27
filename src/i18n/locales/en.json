@@ -632,6 +632,8 @@
     "contract": {
       "title": "Secure contract verification",
       "subtitle": "We blur your name, ID, phone and contract value before anything is sent. Your private data never leaves your device unprotected.",
+      "weightTooltip": "Contract verified — this review counts 10× the weight of an anonymous comment in the developer's Trust Score.",
+      "contractVerifiedChip": "Contract Verified",
       "privacyBadge": "Auto-redacted",
       "takePhoto": "Take photo",
       "uploadFile": "Upload file",
@@ -953,10 +955,15 @@
     "categoryRatingsBonus": "+5 pts per category rated",
     "enhance_label": "Polish my writing ✨",
     "review_placeholder": "Share your experience — what went well? What could improve?",
-    "verification_desc": "Upload your booking receipt to earn the Verified Buyer badge and 2× points.",
+    "verification_desc": "Upload your booking receipt to earn 10× trust weight, the Verified Buyer badge, and 2× points.",
     "verification_benefit_badge": "Verified Buyer badge",
     "verification_benefit_points": "2× points",
+    "verification_benefit_weight": "10× trust weight",
     "verification_benefit_priority": "Higher visibility",
+    "verifiedBuyer": {
+      "weightHeadline": "Your review will count 10× more",
+      "weightSubline": "A contract-verified review carries 10× the weight of an anonymous comment in the developer's Trust Score."
+    },
     "verification_accepts_title": "What counts as proof",
     "verification_accepts_receipt": "Booking receipt or down-payment slip",
     "verification_accepts_contract": "Reservation form or contract page (1st page is enough)",
