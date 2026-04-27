@@ -2282,6 +2282,7 @@ const AdminDashboard = () => {
         { icon: <Activity className="w-4 h-4" />, label: 'Tracking', path: '/admin/tracking' },
         { icon: <Timer className="w-4 h-4" />, label: 'Guest Timer', path: '/admin/guest-timer' },
         { icon: <Users className="w-4 h-4" />, label: 'Registration Slots', path: '/admin/registration-slots' },
+        { icon: <ScanSearch className="w-4 h-4" />, label: 'Truth-Check', path: '/admin/truth-check' },
         { icon: <Layout className="w-4 h-4" />, label: 'Footer', path: '/admin/footer' },
         { icon: <Settings className="w-4 h-4" />, label: 'Settings', path: '/admin/settings' },
       ],
