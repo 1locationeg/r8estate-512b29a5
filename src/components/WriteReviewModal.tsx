@@ -873,6 +873,17 @@ export const WriteReviewModal = ({
         : `I bought my unit at ${developerName}. What stood out the most: ${selectedChips.join(", ")}.`;
       setContent(`<p>${seed}</p>`);
     }
+    trackReviewFunnelEvent({
+      eventType: "phase_advanced",
+      phase: 2,
+      rating,
+      reviewId: savedReviewId,
+      developerId,
+      developerName,
+      selectedChips,
+      isGuest,
+      metadata: { seededFromChips: selectedChips.length > 0 && !contentPlainText },
+    });
     setPhase(2);
   };
 
