@@ -928,69 +928,154 @@ export const WriteReviewModal = ({
 
   // ===================== PHASE RENDERERS =====================
 
-  const renderPhase1 = () => (
-    <div className="flex flex-col items-center py-6 px-4 space-y-6">
-      {isGuest && (
-        <div className="w-full max-w-xs">
-          <label className="text-sm font-medium text-foreground mb-1.5 block">{t("guestReview.yourName", "Your Name")}</label>
-          <Input
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-            placeholder={t("guestReview.namePlaceholder", "Enter your name (optional)")}
-          />
+  // STEP 1 — Facebook-style single-screen Rate card
+  const renderPhase1 = () => {
+    const userDisplayName =
+      (user?.user_metadata?.full_name as string) ||
+      (user?.user_metadata?.name as string) ||
+      user?.email ||
+      "";
+    return (
+      <div className="flex flex-col py-4 px-4 md:px-6 space-y-4">
+        {/* Brand row */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-border flex items-center justify-center text-primary font-bold text-lg shrink-0">
+            {(developerName || "?").charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-foreground truncate">{developerName}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {t("form.shareYourExperience", "Share your experience")}
+            </p>
+          </div>
         </div>
-      )}
 
-      <div className="text-center space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">
-          {t("form.howWouldYouRate", "How would you rate")}
-        </h3>
-        <p className="text-sm text-muted-foreground font-medium">{developerName}</p>
-      </div>
+        {/* Tap to Rate */}
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <span className="text-sm font-medium text-foreground">
+            {t("form.tapToRate", "Tap to Rate:")}
+          </span>
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className="p-0.5 transition-transform hover:scale-110 active:scale-95"
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                onClick={() => {
+                  setRating(star);
+                  if (!savedReviewId) saveRatingOnly(star);
+                }}
+                disabled={isSaving}
+              >
+                <Star
+                  className={cn(
+                    "w-8 h-8 md:w-10 md:h-10 transition-colors",
+                    (hoverRating || rating) >= star
+                      ? "fill-accent text-accent"
+                      : "text-muted-foreground/30"
+                  )}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <div className="flex items-center gap-2">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            type="button"
-            className="p-1 transition-transform hover:scale-110 active:scale-95"
-            onMouseEnter={() => setHoverRating(star)}
-            onMouseLeave={() => setHoverRating(0)}
-            onClick={() => {
-              setRating(star);
-              if (!savedReviewId) {
-                saveRatingOnly(star);
-              }
-            }}
-            disabled={isSaving}
-          >
-            <Star
-              className={cn(
-                "w-12 h-12 md:w-14 md:h-14 transition-colors",
-                (hoverRating || rating) >= star
-                  ? "fill-accent text-accent"
-                  : "text-muted-foreground/30"
-              )}
+        {rating > 0 && savedReviewId && !isSaving && (
+          <p className="text-xs text-primary/80 italic text-center">
+            {getRatingEncouragement(rating)}
+          </p>
+        )}
+
+        {/* Stacked Title + Review card (Facebook pattern) */}
+        <div className="rounded-xl bg-muted/40 border border-border divide-y divide-border overflow-hidden">
+          <div className="flex items-stretch">
+            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0 flex items-center">
+              {t("form.review_title", "Title")}
+            </label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t("form.optional", "Optional")}
+              maxLength={100}
+              className="border-0 bg-transparent focus-visible:ring-0 h-11 flex-1 px-2"
+              disabled={!rating}
             />
-          </button>
-        ))}
+          </div>
+          <div className="flex items-stretch">
+            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0">
+              {t("form.your_review", "Review")}
+            </label>
+            <Textarea
+              value={contentPlainText}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder={t("form.optional", "Optional")}
+              rows={3}
+              className="border-0 bg-transparent focus-visible:ring-0 resize-none flex-1 px-2 py-3"
+              disabled={!rating}
+            />
+          </div>
+        </div>
+
+        {/* Reviewing as */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span>{t("form.reviewingAs", "Reviewing as:")}</span>
+          {isGuest ? (
+            <Input
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              placeholder={t("guestReview.namePlaceholder", "Your name (optional)")}
+              className="h-7 text-xs flex-1 max-w-[180px]"
+            />
+          ) : (
+            <span className="font-medium text-foreground truncate">{userDisplayName}</span>
+          )}
+        </div>
+
+        {/* Action row: Submit + Add details motivator */}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-primary gap-1 h-9 px-2"
+            onClick={async () => {
+              if (hasContent || title) await savePhase2();
+              setPhase(2);
+            }}
+            disabled={!rating}
+          >
+            {t("form.addMoreDetails", "Add more details")} <ChevronRight className="w-4 h-4" />
+          </Button>
+          <Button
+            size="sm"
+            className="gap-1.5 min-h-[40px] px-5"
+            disabled={!rating || isSaving}
+            onClick={async () => {
+              if (hasContent || title) {
+                await savePhase2();
+              }
+              await handleDone();
+            }}
+          >
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            {t("form.submit", "Submit")}
+          </Button>
+        </div>
+
+        {/* Motivator nudge */}
+        {rating > 0 && (
+          <MotivatorChip
+            icon="✨"
+            text={t(
+              "form.motivator.step1",
+              "Add a few details — earn +25 pts and help buyers more"
+            )}
+          />
+        )}
       </div>
-
-      {rating > 0 && !isSaving && !showThanksScreen && savedReviewId && (
-        <div className="text-center space-y-2">
-          <p className="text-lg font-semibold text-foreground">{getRatingWord(rating)}</p>
-          <p className="text-xs text-muted-foreground italic">{getRatingEncouragement(rating)}</p>
-        </div>
-      )}
-
-      {isSaving && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          {t("form.savingRating", "Saving your rating...")}
-        </div>
-      )}
-    </div>
-  );
+    );
+  };
 
   const renderPhase2 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-3 md:space-y-4">
