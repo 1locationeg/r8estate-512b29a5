@@ -455,6 +455,45 @@
       }
     }
   },
+  "trail": {
+    "title": "Badge & verification trail",
+    "subtitle": "Every action that earned a badge or moved the score, with the date it happened.",
+    "empty": "No badges earned yet — the trail will start with the first verified action.",
+    "showAll": "Show all {{count}} events",
+    "showLess": "Show less",
+    "size": {
+      "early": "early",
+      "solid": "solid",
+      "strong": "statistically strong"
+    },
+    "event": {
+      "businessVerified": {
+        "title": "Verified Business badge issued",
+        "detail": "Trade license submitted and approved by R8ESTATE moderation."
+      },
+      "firstReview": {
+        "title": "First review received",
+        "detail": "{{author}} rated {{rating}}/5 — the trail begins."
+      },
+      "verifiedBuyer": {
+        "title": "Verified Buyer review added",
+        "detail": "{{author}} uploaded an approved purchase receipt and posted a {{rating}}★ review."
+      },
+      "identityLinked": {
+        "title": "Identity-linked review added",
+        "detail": "{{author}} linked a verified identity profile and posted a {{rating}}★ review."
+      },
+      "milestone": {
+        "title": "{{count}}-review milestone",
+        "detail": "Crossed {{count}} reviews — sample size now {{label}}."
+      },
+      "tier": {
+        "good": { "title": "Reached Good trust tier" },
+        "excellent": { "title": "Reached Excellent trust tier" },
+        "detail": "Cumulative score crossed {{score}} after {{count}} reviews."
+      }
+    }
+  },
   "reviews": {
     "title": "Reviews",
     "all": "All",
