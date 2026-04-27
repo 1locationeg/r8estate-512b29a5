@@ -1064,37 +1064,23 @@ export const WriteReviewModal = ({
           </p>
         )}
 
-        {/* Reviewing as */}
-        <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <span>{t("form.reviewingAs", "Reviewing as:")}</span>
-          {isGuest ? (
+        {/* Guest name input only — no "reviewing as" line for logged-in users */}
+        {isGuest && (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
             <Input
               value={guestName}
               onChange={(e) => setGuestName(e.target.value)}
               placeholder={t("guestReview.namePlaceholder", "Your name (optional)")}
-              className="h-7 text-xs flex-1 max-w-[180px]"
+              className="h-8 text-xs flex-1"
             />
-          ) : (
-            <span className="font-medium text-foreground truncate">{userDisplayName}</span>
-          )}
-        </div>
+          </div>
+        )}
 
-        {/* Action row: Submit + Add details motivator */}
-        <div className="flex items-center justify-between gap-2 pt-1">
-          <Button
-            variant="ghost"
-            size="sm"
-            className="text-primary gap-1 h-9 px-2"
-            onClick={async () => {
-              setPhase(2);
-            }}
-            disabled={!rating}
-          >
-            {t("form.addMoreDetails", "Add more details")} <ChevronRight className="w-4 h-4" />
-          </Button>
+        {/* Submit — primary action (rating-only) */}
+        <div className="pt-1">
           <Button
             size="sm"
-            className="gap-1.5 min-h-[40px] px-5"
+            className="gap-1.5 min-h-[44px] w-full"
             disabled={!rating || isSaving}
             onClick={async () => {
               await handleDone();
@@ -1105,15 +1091,29 @@ export const WriteReviewModal = ({
           </Button>
         </div>
 
-        {/* Motivator nudge */}
+        {/* Motivating card — single CTA into Step 2 */}
         {rating > 0 && (
-          <MotivatorChip
-            icon="✨"
-            text={t(
-              "form.motivator.step1",
-              "Add a few details — earn +25 pts and help buyers more"
-            )}
-          />
+          <button
+            type="button"
+            onClick={() => setPhase(2)}
+            className="w-full text-start rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-4 hover:border-primary/50 hover:shadow-md transition-all active:scale-[0.99] group"
+          >
+            <div className="flex items-start gap-3">
+              <div className="text-2xl shrink-0">✨</div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {t("form.motivator.goDeeperCard.title", "Tell your full story →")}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  {t(
+                    "form.motivator.goDeeperCard.subtitle",
+                    "Add a title & a few lines. Earn +25 pts and help thousands of buyers decide with confidence."
+                  )}
+                </p>
+              </div>
+              <ChevronRight className="w-5 h-5 text-primary mt-0.5 shrink-0 group-hover:translate-x-0.5 transition-transform" />
+            </div>
+          </button>
         )}
       </div>
     );
