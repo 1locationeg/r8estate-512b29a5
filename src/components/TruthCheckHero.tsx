@@ -225,6 +225,25 @@ export const TruthCheckHero = ({
           </div>
         </div>
 
+        {settings.requireAuth && !user ? (
+          <div className="rounded-xl border border-dashed border-primary/30 bg-primary/5 p-4 text-center">
+            <p className="text-sm text-foreground/90 mb-2 font-medium">
+              {t(
+                "truthCheck.signInRequired",
+                "Sign in to fact-check developer claims against verified buyer reviews.",
+              )}
+            </p>
+            <Button
+              size="sm"
+              onClick={() => navigate("/auth?next=/truth-check")}
+              className="gap-2"
+            >
+              <ScanSearch className="w-3.5 h-3.5" />
+              {t("truthCheck.signInCta", "Sign in to use Truth-Check")}
+            </Button>
+          </div>
+        ) : (
+          <>
         <Textarea
           value={claim}
           onChange={(e) => setClaim(e.target.value.slice(0, 500))}
@@ -261,7 +280,7 @@ export const TruthCheckHero = ({
           <Button
             size="sm"
             onClick={() => submit(claim)}
-            disabled={loading || claim.trim().length < 8}
+            disabled={loading || claim.trim().length < minChars}
             className="gap-2 min-h-[36px]"
           >
             {loading ? (
@@ -277,6 +296,8 @@ export const TruthCheckHero = ({
             )}
           </Button>
         </div>
+          </>
+        )}
 
         {/* Result block */}
         {loading && !result && (
