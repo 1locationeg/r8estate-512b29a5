@@ -917,6 +917,10 @@
     "saveAndClose": "Save & Close",
     "addMoreDetails": "Add more details",
     "shareYourExperience": "Share your experience",
+    "deepReview": {
+      "title": "Your story helps thousands of buyers",
+      "subtitle": "Share what worked, what didn't, and what you'd tell a friend. Detailed reviews earn +50 pts and a verified badge."
+    },
     "motivator": {
       "step1": "Add a few details — earn +25 pts and help buyers more",
       "step2": "Halfway there — sub-ratings next help buyers compare",
