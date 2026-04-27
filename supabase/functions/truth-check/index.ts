@@ -1,4 +1,4 @@
-// Truth-Check edge function — grounds AI verdict on a developer's marketing claim
+// Truth-Check edge function: grounds AI verdict on a developer's marketing claim
 // against verified buyer reviews + approved contract receipts.
 //
 // Returns a single non-streaming JSON response with:
