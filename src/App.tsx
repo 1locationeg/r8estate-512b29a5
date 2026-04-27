@@ -71,6 +71,7 @@ const ImpactPage = lazy(() => import("./pages/ImpactPage"));
 const R8Match = lazy(() => import("./pages/R8Match"));
 const NFCRedirect = lazy(() => import("./pages/NFCRedirect"));
 const AboutTrustMeter = lazy(() => import("./pages/AboutTrustMeter"));
+const CompareDevelopers = lazy(() => import("./pages/CompareDevelopers"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -215,6 +216,7 @@ const AppContent = () => {
           <Route path="/impact" element={<ImpactPage />} />
           <Route path="/match" element={<R8Match />} />
           <Route path="/about-trust-meter" element={<AboutTrustMeter />} />
+          <Route path="/compare" element={<CompareDevelopers />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />
