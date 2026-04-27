@@ -1121,6 +1121,24 @@ export const WriteReviewModal = ({
 
   const renderPhase2 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-3 md:space-y-4">
+      {/* Motivating hero banner — encourages deeper reviews */}
+      <div className="rounded-xl border border-primary/20 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-3 md:p-4">
+        <div className="flex items-start gap-3">
+          <div className="text-2xl shrink-0">✍️</div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-foreground">
+              {t("form.deepReview.title", "Your story helps thousands of buyers")}
+            </p>
+            <p className="text-xs text-muted-foreground mt-0.5">
+              {t(
+                "form.deepReview.subtitle",
+                "Share what worked, what didn't, and what you'd tell a friend. Detailed reviews earn +50 pts and a verified badge."
+              )}
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Context Field — chips or text input */}
       <div>
         <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
