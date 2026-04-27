@@ -1,5 +1,6 @@
-import { Star, PenLine, Coins } from 'lucide-react';
+import { Star, PenLine, Coins, Quote } from 'lucide-react';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { ReviewerBadge } from '@/components/ReviewerBadge';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -22,51 +23,75 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
 
   return (
     <div className="w-full max-w-2xl mx-auto">
-      <button
-        type="button"
-        onClick={handleClick}
-        className="group w-full flex items-center gap-2.5 sm:gap-3 p-2 sm:p-2.5 rounded-full border border-border/60 bg-card hover:bg-card/80 hover:border-primary/40 hover:shadow-sm transition-all text-left"
-      >
-        {/* Avatar */}
-        <Avatar className="h-8 w-8 sm:h-9 sm:w-9 shrink-0 ring-2 ring-background">
-          <AvatarFallback className="text-[10px] sm:text-xs bg-primary/10 text-primary font-bold">
-            {FEATURED.initials}
-          </AvatarFallback>
-        </Avatar>
+      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-card via-card to-primary/[0.03] shadow-sm">
+        {/* Decorative quote mark */}
+        <Quote
+          className="absolute -top-2 -right-2 w-20 h-20 text-primary/[0.05] rotate-180 pointer-events-none"
+          aria-hidden
+        />
 
-        {/* Proof — name + 5★ inline, snippet truncated */}
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5 mb-0.5">
-            <span className="text-[11px] sm:text-xs font-semibold text-foreground truncate">
-              {FEATURED.name}
-            </span>
-            <div className="flex gap-px shrink-0">
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star
-                  key={s}
-                  className={`w-2.5 h-2.5 ${
-                    s <= FEATURED.rating
-                      ? 'fill-accent text-accent'
-                      : 'text-muted-foreground/20'
-                  }`}
-                />
-              ))}
+        <div className="relative p-4 sm:p-5 flex flex-col gap-4">
+          {/* Header — centered, balanced hierarchy */}
+          <div className="text-center space-y-1">
+            <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-primary/70">
+              Reader Spotlight
+            </p>
+            <h3 className="text-sm sm:text-base font-bold text-foreground leading-snug">
+              Your review could save someone{' '}
+              <span className="text-primary">millions</span>
+            </h3>
+          </div>
+
+          {/* Featured review — single, focused, centered */}
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-muted/40 border border-border/40">
+            <Avatar className="h-10 w-10 shrink-0 ring-2 ring-background shadow-sm">
+              <AvatarFallback className="text-xs bg-primary/10 text-primary font-bold">
+                {FEATURED.initials}
+              </AvatarFallback>
+            </Avatar>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-1.5 mb-0.5">
+                <span className="text-xs font-semibold text-foreground truncate">
+                  {FEATURED.name}
+                </span>
+                <ReviewerBadge reviewCount={FEATURED.reviewCount} compact />
+                <div className="flex gap-px ml-auto shrink-0">
+                  {[1, 2, 3, 4, 5].map((s) => (
+                    <Star
+                      key={s}
+                      className={`w-3 h-3 ${
+                        s <= FEATURED.rating
+                          ? 'fill-accent text-accent'
+                          : 'text-muted-foreground/20'
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground italic leading-snug line-clamp-1">
+                "{FEATURED.snippet}"
+              </p>
             </div>
           </div>
-          <p className="text-[10px] sm:text-[11px] text-muted-foreground italic leading-tight truncate">
-            "{FEATURED.snippet}"
-          </p>
-        </div>
 
-        {/* Inline CTA pill */}
-        <span className="shrink-0 inline-flex items-center gap-1.5 h-8 sm:h-9 px-2.5 sm:px-3.5 rounded-full bg-primary text-primary-foreground text-[11px] sm:text-xs font-semibold shadow-sm group-hover:shadow-md transition-shadow">
-          <Coins className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-coin" />
-          <span className="text-coin font-bold">+25</span>
-          <span className="w-px h-3 bg-primary-foreground/25 mx-0.5 hidden sm:block" />
-          <PenLine className="w-3 h-3 sm:w-3.5 sm:h-3.5 hidden sm:block" />
-          <span className="hidden sm:inline">Review</span>
-        </span>
-      </button>
+          {/* CTA — centered, single anchor point */}
+          <div className="flex justify-center">
+            <Button
+              size="sm"
+              className="gap-2 h-9 px-4 text-xs shadow-sm hover:shadow-md transition-shadow"
+              onClick={handleClick}
+            >
+              <span className="flex items-center gap-1 text-coin font-bold">
+                <Coins className="w-3.5 h-3.5" />
+                +25
+              </span>
+              <span className="w-px h-3.5 bg-primary-foreground/25" />
+              <PenLine className="w-3.5 h-3.5" />
+              Write a Review
+            </Button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
