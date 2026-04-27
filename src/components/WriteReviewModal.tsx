@@ -134,7 +134,16 @@ const getCategoryMetricKeys = (category: string): string[] => {
   }
 };
 
-const PHASE_LABELS = ["Rating", "Your Review", "Category Ratings"];
+const PHASE_LABELS = ["Rate", "Your Review", "Category Ratings", "Proof & Polish"];
+const TOTAL_STEPS = 4;
+
+// ===================== MOTIVATOR CHIP =====================
+const MotivatorChip = ({ icon, text }: { icon: string; text: string }) => (
+  <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-primary/80 bg-primary/5 border border-primary/15 rounded-full px-3 py-1.5 mx-auto w-fit max-w-full">
+    <span>{icon}</span>
+    <span className="truncate">{text}</span>
+  </div>
+);
 
 // ===================== STAR ROW COMPONENT (for Phase 3) =====================
 
