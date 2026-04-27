@@ -1250,12 +1250,22 @@ export const WriteReviewModal = ({
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => {
-              safeClose();
+            onClick={async () => {
+              if (hasContent) {
+                const localCheck = checkContentLocally(contentPlainText);
+                if (localCheck.blocked) {
+                  setLocalWarning(t("contentGuard.profanity"));
+                  return;
+                }
+                await savePhase2();
+              }
+              await handleDone();
             }}
-            className="text-muted-foreground h-9"
+            disabled={isSaving}
+            className="text-primary h-9 gap-1.5"
           >
-            {t("form.saveAndClose", "Save & Close")}
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            {t("form.submit", "Submit")}
           </Button>
           <Button
             size="sm"
