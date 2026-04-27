@@ -1,4 +1,4 @@
-import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck, MessageSquare, Info } from "lucide-react";
+import { Star, Mic, Download, GitCompare, Bookmark, UserPlus, UserCheck, MessageSquare, Info, FileCheck2 } from "lucide-react";
 import { ShareMenu } from "./ShareMenu";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
 import { useTranslation } from "react-i18next";
@@ -30,6 +30,8 @@ import { useNavigate } from "react-router-dom";
 import { type SearchItem } from "@/data/searchIndex";
 import { useBusinessLogo } from "@/contexts/BusinessLogoContext";
 import { useStartChat } from "@/hooks/useStartChat";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
 import {
   Select,
   SelectContent,
@@ -52,6 +54,7 @@ export const DeveloperDetailCard = ({
   const { t } = useTranslation();
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { toast } = useToast();
   const { getLogoOverride } = useBusinessLogo();
   const logoSrc = getLogoOverride(developer.id, developer.name) || developer.logo;
   const { startChatWithBusinessId } = useStartChat();
@@ -61,6 +64,9 @@ export const DeveloperDetailCard = ({
   const [isReviewBlockedOpen, setIsReviewBlockedOpen] = useState(false);
   const [isCompareOpen, setIsCompareOpen] = useState(false);
   const [isBreakdownOpen, setIsBreakdownOpen] = useState(false);
+  const [isReportSaved, setIsReportSaved] = useState(false);
+  const [isSavingReport, setIsSavingReport] = useState(false);
+  const [isDownloading, setIsDownloading] = useState(false);
   const { isSaved, toggle: toggleSave } = useSavedItem(developer.id, "developer");
   const { isFollowing, toggle: toggleFollow } = useFollowBusiness(developer.id);
   const { isReviewable, parentName, childProjects } = useReviewability(developer.id);
@@ -78,6 +84,22 @@ export const DeveloperDetailCard = ({
       trackBuyerEngagement(user.id, 'developers_viewed');
     }
   }, [developer.id, user]);
+
+  // Check if a Trust Report for this developer is already saved
+  useEffect(() => {
+    if (!user) {
+      setIsReportSaved(false);
+      return;
+    }
+    supabase
+      .from("saved_items")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("item_id", developer.id)
+      .eq("item_type", "trust_report")
+      .maybeSingle()
+      .then(({ data }) => setIsReportSaved(!!data));
+  }, [user, developer.id]);
 
   const { reviews, dbReviews, refetch: refetchReviews } = useReviews(developer.id);
 
@@ -101,6 +123,73 @@ export const DeveloperDetailCard = ({
     reviewCount: developer.reviewCount,
     meta: { trustScore: breakdown.total, verified: developer.verified }
   }), [developer, logoSrc, breakdown.total]);
+
+  const handleDownloadReport = async () => {
+    if (isDownloading) return;
+    setIsDownloading(true);
+    try {
+      await downloadTrustReport(developerAsSearchItem, breakdown);
+      toast({
+        title: t("trustReport.downloaded", "Report downloaded"),
+        description: t("trustReport.downloadedDesc", "Saved to your device as PDF."),
+      });
+    } catch (e) {
+      console.error("Download report failed", e);
+      toast({
+        title: t("common.error", "Something went wrong"),
+        description: t("trustReport.downloadFailed", "Could not generate the report. Please try again."),
+        variant: "destructive",
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
+  const handleSaveReport = async () => {
+    if (!user) {
+      navigate("/auth");
+      return;
+    }
+    if (isSavingReport) return;
+    setIsSavingReport(true);
+    try {
+      if (isReportSaved) {
+        await supabase
+          .from("saved_items")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("item_id", developer.id)
+          .eq("item_type", "trust_report");
+        setIsReportSaved(false);
+        toast({
+          title: t("trustReport.removed", "Report removed"),
+          description: t("trustReport.removedDesc", "Removed from your saved reports."),
+        });
+      } else {
+        await supabase.from("saved_items").insert({
+          user_id: user.id,
+          item_id: developer.id,
+          item_type: "trust_report",
+          item_name: `${developer.name} — Trust Report (${breakdown.total}/100)`,
+          item_image: developer.logo || null,
+        });
+        setIsReportSaved(true);
+        toast({
+          title: t("trustReport.saved", "Report saved"),
+          description: t("trustReport.savedDesc", "Find it anytime in your Saved items."),
+        });
+      }
+    } catch (e) {
+      console.error("Save report failed", e);
+      toast({
+        title: t("common.error", "Something went wrong"),
+        description: t("trustReport.saveFailed", "Could not save the report. Please try again."),
+        variant: "destructive",
+      });
+    } finally {
+      setIsSavingReport(false);
+    }
+  };
 
   const developerReviews = useMemo(() => {
     let filtered = [...reviews];
@@ -216,9 +305,35 @@ export const DeveloperDetailCard = ({
         </div>
 
         <div className="flex flex-wrap items-center justify-center gap-2">
-          <button onClick={() => downloadTrustReport(developerAsSearchItem)} className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors">
+          <button
+            onClick={handleDownloadReport}
+            disabled={isDownloading}
+            className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors disabled:opacity-60"
+          >
             <Download className="w-4 h-4" />
-            {t("actions.downloadReport")}
+            {isDownloading
+              ? t("trustReport.preparing", "Preparing…")
+              : t("actions.downloadReport")}
+          </button>
+          <button
+            onClick={handleSaveReport}
+            disabled={isSavingReport}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-lg font-medium text-sm transition-colors disabled:opacity-60",
+              isReportSaved
+                ? "bg-trust-excellent/10 text-trust-excellent hover:bg-trust-excellent/20"
+                : "bg-secondary text-foreground hover:bg-secondary/80"
+            )}
+            title={
+              isReportSaved
+                ? t("trustReport.savedAria", "Trust report saved — click to remove")
+                : t("trustReport.saveAria", "Save this trust report to revisit later")
+            }
+          >
+            <FileCheck2 className="w-4 h-4" />
+            {isReportSaved
+              ? t("trustReport.savedShort", "Saved")
+              : t("trustReport.saveShort", "Save report")}
           </button>
           <button onClick={() => setIsCompareOpen(true)} className="flex items-center gap-2 px-4 py-2 bg-secondary text-foreground rounded-lg font-medium text-sm hover:bg-secondary/80 transition-colors">
             <GitCompare className="w-4 h-4" />
