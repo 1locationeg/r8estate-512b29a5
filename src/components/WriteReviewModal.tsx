@@ -380,6 +380,9 @@ export const WriteReviewModal = ({
   // Category sub-ratings (Phase 3)
   const [categoryRatings, setCategoryRatings] = useState<Record<string, number>>({});
 
+  // Word-cloud chips (Step 1) — selected chip labels (already-localized strings)
+  const [selectedChips, setSelectedChips] = useState<string[]>([]);
+
   // AI state
   const [aiTitleSuggestions, setAiTitleSuggestions] = useState<{ title: string; starter: string }[]>([]);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
@@ -456,6 +459,7 @@ export const WriteReviewModal = ({
     setShowEmojiBar(false);
     setDraft(null);
     setShowResumePrompt(false);
+    setSelectedChips([]);
   };
 
   // ===================== PROGRESSIVE SAVE LOGIC =====================
