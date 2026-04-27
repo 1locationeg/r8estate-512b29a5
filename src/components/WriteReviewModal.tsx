@@ -223,6 +223,11 @@ export const WriteReviewModal = ({
   const [savedReviewId, setSavedReviewId] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
 
+  // ===== Continue-your-review (draft resume) =====
+  const [draft, setDraft] = useState<any | null>(null);
+  const [showResumePrompt, setShowResumePrompt] = useState(false);
+  const [isCheckingDraft, setIsCheckingDraft] = useState(false);
+
   // Guest vs authenticated mode
   const isGuest = !user;
 
