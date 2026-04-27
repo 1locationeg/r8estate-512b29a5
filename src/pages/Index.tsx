@@ -47,6 +47,7 @@ import { HeroNextSteps } from "@/components/HeroNextSteps";
 import { JourneyCorridor } from "@/components/JourneyCorridor";
 import { ReviewerSpotlight } from "@/components/ReviewerSpotlight";
 import { TruthCheckHero } from "@/components/TruthCheckHero";
+import { useTruthCheckSettings } from "@/hooks/useTruthCheckSettings";
 
 
 const Index = () => { // hero-phase-v2
