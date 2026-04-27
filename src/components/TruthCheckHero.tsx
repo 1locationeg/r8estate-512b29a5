@@ -102,13 +102,10 @@ export const TruthCheckHero = ({
 
   const submit = async (claimText: string) => {
     const trimmed = claimText.trim();
-    if (trimmed.length < 8) {
+    if (trimmed.length < minChars) {
       toast({
         title: t("truthCheck.tooShort", "Paste a longer claim"),
-        description: t(
-          "truthCheck.tooShortDesc",
-          "Add at least 8 characters from the developer's marketing copy.",
-        ),
+        description: `Add at least ${minChars} characters from the developer's marketing copy.`,
       });
       return;
     }
