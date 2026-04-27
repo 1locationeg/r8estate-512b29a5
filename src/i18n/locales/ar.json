@@ -954,7 +954,21 @@
     "enhance_label": "حسّن صياغتي ✨",
     "voice_label": "صوت",
     "review_placeholder": "شاركنا تجربتك: ما الذي سار جيداً؟ وما الذي يحتاج إلى تحسين؟",
-    "verification_desc": "ارفع إيصال الحجز للحصول على شارة *مشتري موثّق* ومضاعفة النقاط (×2)."
+    "verification_desc": "ارفع إيصال الحجز للحصول على شارة *مشتري موثّق* ومضاعفة النقاط (×2).",
+    "purchase_verification": "كن مشتريًا موثّقًا",
+    "verification_benefit_badge": "شارة مشتري موثّق",
+    "verification_benefit_points": "نقاط مضاعفة ×٢",
+    "verification_benefit_priority": "ظهور أعلى لتقييمك",
+    "verification_accepts_title": "الإثباتات المقبولة",
+    "verification_accepts_receipt": "إيصال الحجز أو إيصال المقدم",
+    "verification_accepts_contract": "نموذج الحجز أو أول صفحة من العقد",
+    "verification_accepts_screenshot": "صورة من تحويل بنكي يظهر فيه اسم المطوّر",
+    "verification_redact_hint": "تقدر تخفي رقم الوحدة أو السعر أو الرقم القومي. كل اللي محتاجينه نشوف اسم المطوّر والتاريخ.",
+    "verification_step_1": "ارفع الإثبات",
+    "verification_step_2": "نراجعه خلال ٢٤ ساعة",
+    "verification_step_3": "الشارة تظهر على تقييمك",
+    "verification_add_more": "أضف ملفًا آخر",
+    "verification_privacy": "خاص — فريق المراجعة فقط هو من يطّلع على الملف، ولا يُعرض للعامة أبدًا."
   },
   "review": {
     "anonymous": "مجهول",
