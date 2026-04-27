@@ -388,6 +388,73 @@
     "documentationLegality": "Documentation & Legality",
     "customerService": "Customer Service"
   },
+  "trustMethod": {
+    "title": "How this Trust Score was earned",
+    "howCalculated": "How is this calculated?",
+    "total": "Total",
+    "basedOnReviews": "{{count}} reviews",
+    "readFull": "Read the full Trust Meter methodology",
+    "estimatedNotice": "No reviews on file yet — score is estimated from seed data and will recalculate as real reviews arrive.",
+    "confidence": {
+      "low": "Limited data",
+      "medium": "Moderate confidence",
+      "high": "High confidence"
+    },
+    "source": {
+      "fromReviews": "{{count}} reviews",
+      "estimated": "Estimated",
+      "estimatedTip": "No reviewers rated this category yet — estimated from overall score."
+    },
+    "pillar": {
+      "rating": {
+        "label": "What reviewers say",
+        "tooltip": "Average star rating across all approved reviews, scaled to 60 points.",
+        "detail": "{{avg}}★ average from {{count}} reviews"
+      },
+      "volume": {
+        "label": "Sample size",
+        "tooltip": "More reviews = more reliable signal. Full credit at 100+ reviews.",
+        "detail": "{{count}} total reviews"
+      },
+      "verification": {
+        "label": "Verified reviewers",
+        "tooltip": "Share of reviews from buyers with verified identity or proof of purchase.",
+        "detail": "{{count}} verified ({{pct}}%)"
+      },
+      "recency": {
+        "label": "Freshness",
+        "tooltip": "Share of reviews submitted in the last 90 days. Recent activity matters.",
+        "detail": "{{count}} reviews in the last 90 days"
+      }
+    },
+    "categories": {
+      "title": "Category breakdown",
+      "footnote": "Categories marked Estimated will become data-backed once at least one reviewer rates them."
+    },
+    "legend": {
+      "title": "How verifications are earned",
+      "statusEarned": "Earned",
+      "statusNotYet": "Not yet",
+      "countOnReviews": "{{count}} on this profile",
+      "verifiedBusiness": {
+        "title": "Verified Business",
+        "criterion": "Owner submitted a trade license and an admin approved the claim."
+      },
+      "verifiedBuyer": {
+        "title": "Verified Buyer",
+        "criterion": "Reviewer uploaded an approved purchase receipt for this developer."
+      },
+      "identity": {
+        "title": "Identity-Linked Reviewer",
+        "criterion": "Reviewer linked a verified Facebook or LinkedIn profile."
+      },
+      "kyc": {
+        "title": "KYC-Verified Reviewer",
+        "criterion": "Reviewer completed full KYC (national ID + selfie) reviewed by an admin.",
+        "statusHelp": "Visible per-review on each card"
+      }
+    }
+  },
   "reviews": {
     "title": "Reviews",
     "all": "All",
