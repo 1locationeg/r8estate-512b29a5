@@ -45,6 +45,8 @@ import {
   Check,
   PenLine,
   SmilePlus,
+  Eye,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
@@ -121,6 +123,60 @@ const getExperienceChips = (entityCategory: string, t: any): { key: string; labe
 };
 
 const EMOJI_QUICK = ["👍", "👎", "⭐", "🏠", "💰", "🔑", "📋", "✅", "❌", "🏗️", "😊", "😤"];
+
+// ===================== WORD-CLOUD CHIPS (per rating) =====================
+// White-Arabic + warm-EN labels. Sentiment drives chip color.
+type ChipSentiment = "pos" | "neg" | "neu";
+interface ChipDef { ar: string; en: string; sentiment: ChipSentiment }
+
+const CHIPS_BY_RATING: Record<number, ChipDef[]> = {
+  5: [
+    { ar: "تسليم في الموعد", en: "Delivered on time", sentiment: "pos" },
+    { ar: "جودة عالية", en: "High quality", sentiment: "pos" },
+    { ar: "موقع ممتاز", en: "Great location", sentiment: "pos" },
+    { ar: "خدمة ممتازة", en: "Excellent service", sentiment: "pos" },
+    { ar: "أمان وهدوء", en: "Safe & quiet", sentiment: "pos" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+    { ar: "استثمار ناجح", en: "Solid investment", sentiment: "neu" },
+  ],
+  4: [
+    { ar: "جودة جيدة", en: "Good quality", sentiment: "pos" },
+    { ar: "موقع ممتاز", en: "Great location", sentiment: "pos" },
+    { ar: "تأخير بسيط", en: "Minor delay", sentiment: "neg" },
+    { ar: "خدمة عملاء جيدة", en: "Helpful support", sentiment: "neu" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+    { ar: "ملاحظات على التشطيب", en: "Finishing issues", sentiment: "neg" },
+  ],
+  3: [
+    { ar: "تجربة متوسطة", en: "Average experience", sentiment: "neu" },
+    { ar: "تأخير في التسليم", en: "Delivery delay", sentiment: "neg" },
+    { ar: "ملاحظات على التشطيب", en: "Finishing issues", sentiment: "neg" },
+    { ar: "ضعف في خدمة العملاء", en: "Weak customer service", sentiment: "neg" },
+    { ar: "موقع جيد", en: "Good location", sentiment: "pos" },
+    { ar: "سعر مناسب", en: "Fair price", sentiment: "neu" },
+  ],
+  2: [
+    { ar: "تأخير في التسليم", en: "Late delivery", sentiment: "neg" },
+    { ar: "جودة منخفضة", en: "Low quality", sentiment: "neg" },
+    { ar: "مشاكل متعددة", en: "Multiple issues", sentiment: "neg" },
+    { ar: "خدمة سيئة", en: "Poor service", sentiment: "neg" },
+    { ar: "وعود لم تتحقق", en: "Unmet promises", sentiment: "neg" },
+    { ar: "سعر مرتفع", en: "Overpriced", sentiment: "neg" },
+  ],
+  1: [
+    { ar: "تجربة سيئة جداً", en: "Very poor experience", sentiment: "neg" },
+    { ar: "تأخير كبير", en: "Major delay", sentiment: "neg" },
+    { ar: "جودة سيئة", en: "Bad quality", sentiment: "neg" },
+    { ar: "لا أوصي به", en: "Wouldn't recommend", sentiment: "neg" },
+    { ar: "وعود مضللة", en: "Misleading promises", sentiment: "neg" },
+  ],
+};
+
+const CHIP_STYLES: Record<ChipSentiment, { bg: string; text: string; border: string }> = {
+  pos: { bg: "#e4f5ec", text: "#1a6635", border: "#b8e2c8" },
+  neg: { bg: "#fde8ec", text: "#a0102a", border: "#f5c5cd" },
+  neu: { bg: "#e0eaf5", text: "#0a3d62", border: "#b8d0e8" },
+};
 
 const getCategoryMetricKeys = (category: string): string[] => {
   switch (category) {
@@ -324,6 +380,9 @@ export const WriteReviewModal = ({
   // Category sub-ratings (Phase 3)
   const [categoryRatings, setCategoryRatings] = useState<Record<string, number>>({});
 
+  // Word-cloud chips (Step 1) — selected chip labels (already-localized strings)
+  const [selectedChips, setSelectedChips] = useState<string[]>([]);
+
   // AI state
   const [aiTitleSuggestions, setAiTitleSuggestions] = useState<{ title: string; starter: string }[]>([]);
   const [aiSuggestions, setAiSuggestions] = useState<string[]>([]);
@@ -400,6 +459,7 @@ export const WriteReviewModal = ({
     setShowEmojiBar(false);
     setDraft(null);
     setShowResumePrompt(false);
+    setSelectedChips([]);
   };
 
   // ===================== PROGRESSIVE SAVE LOGIC =====================
@@ -787,12 +847,32 @@ export const WriteReviewModal = ({
   };
 
   const getRatingEncouragement = (r: number) => {
-    if (r >= 5) return "Tell others what made it special ✨";
-    if (r >= 4) return "Share what impressed you — it helps others choose wisely 💡";
-    if (r >= 3) return "Your balanced view helps the community decide fairly ⚖️";
-    if (r >= 2) return "Your honesty warns others — share what went wrong 🛡️";
-    if (r >= 1) return "We hear you. Share your story so others are protected 🛡️";
+    if (r >= 5) return t("form.encourage.r5", "Tell others what made it special ✨");
+    if (r >= 4) return t("form.encourage.r4", "Share what impressed you — it helps others choose wisely 💡");
+    if (r >= 3) return t("form.encourage.r3", "Your balanced view helps the community decide fairly ⚖️");
+    if (r >= 2) return t("form.encourage.r2", "Your honesty warns others — share what went wrong 🛡️");
+    if (r >= 1) return t("form.encourage.r1", "We hear you. Share your story so others are protected 🛡️");
     return "";
+  };
+
+  // Build the rating-aware impact-banner message (logged-in users only).
+  const getImpactBannerText = (r: number): string => {
+    if (r >= 5) return t("form.impactBanner.r5", "Your rating is saved ✓ — over 1,247 buyers will see this developer this week");
+    if (r >= 4) return t("form.impactBanner.r4", "Your view matters ✓ — you just helped 1,247 buyers decide with confidence");
+    if (r >= 3) return t("form.impactBanner.r3", "Thank you — your honesty helps buyers see the full picture");
+    return t("form.impactBanner.rLow", "We're sorry it went this way — your review protects future buyers");
+  };
+
+  // Move to Step 2; if chips were selected and the editor is empty, seed a draft sentence.
+  const goToPhase2 = () => {
+    if (selectedChips.length > 0 && !contentPlainText) {
+      const isAr = (typeof document !== "undefined" && document.documentElement.lang === "ar");
+      const seed = isAr
+        ? `اشتريت وحدتي في ${developerName}، وأبرز ما ميّز تجربتي: ${selectedChips.join("، ")}.`
+        : `I bought my unit at ${developerName}. What stood out the most: ${selectedChips.join(", ")}.`;
+      setContent(`<p>${seed}</p>`);
+    }
+    setPhase(2);
   };
 
   if (!open && !showSuccessOverlay) return null;
@@ -1064,6 +1144,70 @@ export const WriteReviewModal = ({
           </p>
         )}
 
+        {/* Social Impact Banner — logged-in users only, after rating-only save */}
+        {!isGuest && rating > 0 && savedReviewId && !isSaving && (
+          <div
+            className="flex items-start gap-2 rounded-xl p-3 animate-fade-in"
+            style={{
+              background: "#fdf3d0",
+              border: "0.5px solid #f0d068",
+              animationDelay: "600ms",
+              animationFillMode: "both",
+            }}
+          >
+            <Eye className="w-4 h-4 mt-0.5 shrink-0" style={{ color: "#7a5500" }} />
+            <p className="text-xs leading-relaxed" style={{ color: "#7a5500" }}>
+              {getImpactBannerText(rating)}
+            </p>
+          </div>
+        )}
+
+        {/* Word-Cloud Chips — pick what fits, helps draft the review */}
+        {rating > 0 && savedReviewId && !isSaving && (
+          <div className="space-y-2">
+            <p
+              className="text-[12px] font-semibold uppercase text-muted-foreground"
+              style={{ letterSpacing: "0.06em" }}
+            >
+              {t("form.chips.header", "Pick what fits your experience")}
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {(CHIPS_BY_RATING[rating] || []).map((chip) => {
+                const isAr = (typeof document !== "undefined" && document.documentElement.lang === "ar");
+                const label = isAr ? chip.ar : chip.en;
+                const isSelected = selectedChips.includes(label);
+                const s = CHIP_STYLES[chip.sentiment];
+                return (
+                  <button
+                    key={label}
+                    type="button"
+                    onClick={() =>
+                      setSelectedChips((prev) =>
+                        prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
+                      )
+                    }
+                    className={cn(
+                      "rounded-full px-3 py-1.5 text-xs font-medium border transition-all min-h-[32px]",
+                      isSelected && "ring-2 ring-[#ed1b40] scale-105"
+                    )}
+                    style={{ background: s.bg, color: s.text, borderColor: s.border }}
+                  >
+                    {label}
+                  </button>
+                );
+              })}
+            </div>
+            <p
+              className="text-xs"
+              style={{ color: selectedChips.length > 0 ? "#1a6635" : undefined }}
+            >
+              {selectedChips.length > 0
+                ? t("form.chips.hintReady", "Great — continue to write your review")
+                : t("form.chips.hintEmpty", "Pick a few words and we'll help you draft the review ✨")}
+            </p>
+          </div>
+        )}
+
         {/* Guest name input only — no "reviewing as" line for logged-in users */}
         {isGuest && (
           <div className="flex items-center gap-2 text-xs text-muted-foreground">
@@ -1095,7 +1239,7 @@ export const WriteReviewModal = ({
         {rating > 0 && (
           <button
             type="button"
-            onClick={() => setPhase(2)}
+            onClick={goToPhase2}
             className="w-full text-start rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-accent/5 to-primary/5 p-4 hover:border-primary/50 hover:shadow-md transition-all active:scale-[0.99] group"
           >
             <div className="flex items-start gap-3">
@@ -1226,7 +1370,7 @@ export const WriteReviewModal = ({
                 disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {t("form.enhance_label", "AI Enhance")}
+                {t("form.enhance_label", "Polish my writing ✨")}
               </button>
             </>
           )}
@@ -1346,7 +1490,7 @@ export const WriteReviewModal = ({
                 disabled={isEnhancing || !hasContent}
               >
                 {isEnhancing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5" />}
-                {t("form.enhance_label", "AI Enhance")}
+                {t("form.enhance_label", "Polish my writing ✨")}
               </button>
             </>
           )}
@@ -1389,6 +1533,9 @@ export const WriteReviewModal = ({
         </h3>
         <p className="text-xs text-muted-foreground mb-3">
           {t("form.categoryRatingsDesc", "Optional — helps others understand your experience better")}
+          <span className="ms-1 inline-flex items-center gap-1 text-primary font-semibold">
+            · {t("form.categoryRatingsBonus", "+5 pts per category rated")}
+          </span>
         </p>
 
         <div className="space-y-3">
@@ -1500,7 +1647,12 @@ export const WriteReviewModal = ({
                 <Shield className="w-4 h-4 text-accent" /> {t("form.purchase_verification", "Verification")}
                 <Badge variant="secondary" className="text-[10px] ms-1">{t("form.optional", "Optional")}</Badge>
               </label>
-              <p className="text-xs text-muted-foreground mb-2">{t("form.verification_desc", "Upload proof of purchase for a verified badge")}</p>
+              <p className="text-xs text-foreground/80 mb-2 leading-relaxed">
+                {t(
+                  "form.verification_desc",
+                  "Upload your booking receipt to earn the Verified Buyer badge and 2× points."
+                )}
+              </p>
               <Button type="button" variant="outline" size="sm" className="h-8 gap-1.5 text-xs" onClick={() => verificationInputRef.current?.click()}>
                 <Receipt className="w-3.5 h-3.5" /> {t("form.upload_verification", "Upload")}
               </Button>

@@ -931,7 +931,29 @@
         "title": "Tell your full story →",
         "subtitle": "Add a title & a few lines. Earn +25 pts and help thousands of buyers decide with confidence."
       }
-    }
+    },
+    "encourage": {
+      "r5": "Tell others what made it special ✨",
+      "r4": "Share what impressed you — it helps others choose wisely 💡",
+      "r3": "Your balanced view helps the community decide fairly ⚖️",
+      "r2": "Your honesty warns others — share what went wrong 🛡️",
+      "r1": "We hear you. Share your story so others are protected 🛡️"
+    },
+    "impactBanner": {
+      "r5": "Your rating is saved ✓ — over 1,247 buyers will see this developer this week",
+      "r4": "Your view matters ✓ — you just helped 1,247 buyers decide with confidence",
+      "r3": "Thank you — your honesty helps buyers see the full picture",
+      "rLow": "We're sorry it went this way — your review protects future buyers"
+    },
+    "chips": {
+      "header": "Pick what fits your experience",
+      "hintEmpty": "Pick a few words and we'll help you draft the review ✨",
+      "hintReady": "Great — continue to write your review"
+    },
+    "categoryRatingsBonus": "+5 pts per category rated",
+    "enhance_label": "Polish my writing ✨",
+    "review_placeholder": "Share your experience — what went well? What could improve?",
+    "verification_desc": "Upload your booking receipt to earn the Verified Buyer badge and 2× points."
   },
   "review": {
     "anonymous": "Anonymous",
