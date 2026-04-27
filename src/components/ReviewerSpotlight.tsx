@@ -33,9 +33,6 @@ export const ReviewerSpotlight = ({ onWriteReview }: ReviewerSpotlightProps) => 
         <div className="relative p-4 sm:p-5 flex flex-col gap-4">
           {/* Header — centered, balanced hierarchy */}
           <div className="text-center space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.18em] font-bold text-primary/70">
-              Reader Spotlight
-            </p>
             <h3 className="text-sm sm:text-base font-bold text-foreground leading-snug">
               Your review could save someone{' '}
               <span className="text-primary">millions</span>
