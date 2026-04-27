@@ -1201,9 +1201,22 @@ export const WriteReviewModal = ({
                     key={label}
                     type="button"
                     onClick={() =>
-                      setSelectedChips((prev) =>
-                        prev.includes(label) ? prev.filter((x) => x !== label) : [...prev, label]
-                      )
+                      setSelectedChips((prev) => {
+                        const isOn = prev.includes(label);
+                        const next = isOn ? prev.filter((x) => x !== label) : [...prev, label];
+                        trackReviewFunnelEvent({
+                          eventType: isOn ? "chip_deselected" : "chip_selected",
+                          chipLabel: label,
+                          chipSentiment: chip.sentiment,
+                          rating,
+                          selectedChips: next,
+                          reviewId: savedReviewId,
+                          developerId,
+                          developerName,
+                          isGuest,
+                        });
+                        return next;
+                      })
                     }
                     className={cn(
                       "rounded-full px-3 py-1.5 text-xs font-medium border transition-all min-h-[32px]",
