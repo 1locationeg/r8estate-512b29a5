@@ -10,6 +10,8 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { cn } from "@/lib/utils";
 import { fireCorridorEngage } from "@/lib/corridorEvents";
+import { useTruthCheckSettings } from "@/hooks/useTruthCheckSettings";
+import { useAuth } from "@/contexts/AuthContext";
 
 export type TruthCheckVerdict =
   | "backed_by_buyers"
