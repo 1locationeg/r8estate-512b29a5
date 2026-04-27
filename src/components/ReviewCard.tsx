@@ -7,6 +7,7 @@ import { Review, ReviewerTier, developers } from "@/data/mockData";
 import { Card } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { ShareMenu } from "@/components/ShareMenu";
 import { SentimentBadge } from "@/components/SentimentBadge";
 import { ReviewReplyForm } from "@/components/ReviewReplyForm";
@@ -112,14 +113,26 @@ export const ReviewCard = ({ review, analysis }: ReviewCardProps) => {
                 compact
               />
               {hasContractVerified && (
-                <Badge
-                  variant="outline"
-                  className="text-[10px] md:text-xs px-1.5 py-0 h-5 flex items-center gap-1 border-accent/60 bg-accent/10 text-accent-foreground"
-                  title={t("verification.contract.contractVerifiedChip", "Contract Verified")}
-                >
-                  <FileCheck2 className="w-3 h-3 text-accent" />
-                  {t("verification.contract.contractVerifiedChip", "Contract Verified")}
-                </Badge>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] md:text-xs px-1.5 py-0 h-5 flex items-center gap-1 border-accent bg-accent text-accent-foreground font-semibold cursor-help"
+                      >
+                        <FileCheck2 className="w-3 h-3" />
+                        <span className="font-extrabold">10×</span>
+                        <span>{t("verification.contract.contractVerifiedChip", "Contract Verified")}</span>
+                      </Badge>
+                    </TooltipTrigger>
+                    <TooltipContent side="top" className="max-w-[240px] text-xs">
+                      {t(
+                        "verification.contract.weightTooltip",
+                        "Contract verified — this review counts 10× the weight of an anonymous comment in the developer's Trust Score."
+                      )}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
               )}
             </div>
             <div className="text-xs md:text-sm text-muted-foreground truncate">

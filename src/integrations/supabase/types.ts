@@ -2057,34 +2057,43 @@ export type Database = {
           avg_rating: number | null
           business_id: string
           computed_score: number | null
+          contract_verified_count: number | null
           created_at: string | null
           id: string
           per_category_counts: Json | null
           review_count: number | null
           snapshot_date: string
+          total_weight: number | null
           verified_pct: number | null
+          weighted_avg_rating: number | null
         }
         Insert: {
           avg_rating?: number | null
           business_id: string
           computed_score?: number | null
+          contract_verified_count?: number | null
           created_at?: string | null
           id?: string
           per_category_counts?: Json | null
           review_count?: number | null
           snapshot_date?: string
+          total_weight?: number | null
           verified_pct?: number | null
+          weighted_avg_rating?: number | null
         }
         Update: {
           avg_rating?: number | null
           business_id?: string
           computed_score?: number | null
+          contract_verified_count?: number | null
           created_at?: string | null
           id?: string
           per_category_counts?: Json | null
           review_count?: number | null
           snapshot_date?: string
+          total_weight?: number | null
           verified_pct?: number | null
+          weighted_avg_rating?: number | null
         }
         Relationships: []
       }

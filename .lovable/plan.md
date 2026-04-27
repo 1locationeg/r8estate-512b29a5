@@ -1,140 +1,88 @@
-# Boost the Arabic & English Reviewing System and Reviewer Experience
+## The Rule
 
-A focused, high-impact upgrade across the review modal, reviewer journey, and copy — in both Arabic (white-Arabic: warm-but-professional) and English. No schema changes; we layer on top of the existing 4-step `WriteReviewModal`, gamification, and verification systems.
+> A review with an OCR/AI-verified sales contract carries **10× the weight** of an anonymous comment when computing a developer's Trust Score, average rating, and category breakdowns.
 
-## Goals
+This turns "Verified Buyer" from a badge into actual scoring power — directly aligning incentives with the platform's anti-scam mission.
 
-1. Lower the friction of starting a review (1-tap stars + chips → AI draft).
-2. Raise the perceived value of writing a real review (impact, badges, points, visibility).
-3. Make reviewer status feel like a VIP identity (tiers, streaks, profile pride).
-4. Convert one review into more reviews (post-submit loop + referrals).
-5. Unify Arabic/English voice so both feel native — Arabic in clean white-Arabic, English warm and confident.
+## Weight Tiers
 
-## 1. WriteReviewModal — Step 1 (Rate)
+We map each review to a numeric `trust_weight` based on its strongest verification signal:
 
-Add **above** the existing "Tell your full story" motivator, in this order:
+| Tier | Signal | Weight |
+|---|---|---|
+| Contract-Verified | `verification_level = 'transaction'` (receipt/contract OCR-approved by admin) | **10.0** |
+| Identity-Verified | `verification_level = 'identity'` (KYC) | 3.0 |
+| Authenticated, Named | logged-in user, `is_anonymous = false`, `verification_level = 'none'` | 1.5 |
+| Authenticated, Anonymous | logged-in user, `is_anonymous = true` | 1.0 |
+| Guest/Unclaimed | `guest_reviews` row | 0.3 |
 
-- **Social Impact Banner** (logged-in users only, after `saveRatingOnly`)
-  - Soft amber card (`#fdf3d0` / border `#f0d068`), eye icon, 12px text in `#7a5500`.
-  - Rating-aware copy:
-    - 5★ AR: "تم حفظ تقييمك ✓ — أكثر من 1,247 مشتري سيطّلعون على هذا المشروع هذا الأسبوع"  
-      EN: "Your rating is saved ✓ — over 1,247 buyers will see this developer this week"
-    - 4★ AR: "رأيك مهم ✓ — ساعدت 1,247 مشتري في اتخاذ قرار صحيح"  
-      EN: "Your view matters ✓ — you just helped 1,247 buyers decide with confidence"
-    - 3★ AR: "شكراً لك — رأيك يساعد المشترين على معرفة الحقيقة"  
-      EN: "Thank you — your honesty helps buyers see the full picture"
-    - 1–2★ AR: "نأسف لتجربتك — رأيك يحمي المشترين القادمين"  
-      EN: "We're sorry it went this way — your review protects future buyers"
+Anonymous = the **floor (1.0)**, contract = **10×** that floor — exactly as stated. Other tiers sit on the curve so the system feels fair, not binary.
 
-- **Word-Cloud Chips** ("اختر ما ينطبق على تجربتك" / "Pick what fits your experience")
-  - 5–7 chips per rating bucket (positive / negative / neutral colors as specified).
-  - Multi-select; selected chips get red ring + slight scale.
-  - Hint line under chips:
-    - 0 selected AR: "اختر بعض الكلمات وسنساعدك في صياغة المراجعة ✨"  
-      EN: "Pick a few words and we'll help you draft the review ✨"
-    - ≥1 selected AR: "ممتاز — تابع لكتابة مراجعتك" (green `#1a6635`)  
-      EN: "Great — continue to write your review"
+## What Changes
 
-- **Pre-populate Step 2 textarea** when advancing, only if content is empty:  
-  AR: `اشتريت وحدتي في {developer}، وأبرز ما ميّز تجربتي: {chips}.`  
-  EN: `I bought my unit at {developer}. What stood out the most: {chips}.`
+### 1. Database — weighted aggregation (single source of truth)
 
-## 2. WriteReviewModal — Step 2 (Your Review) polish
+Update `public.recalculate_trust_score(p_developer_id text)` so all aggregates become **weighted**:
 
-- Replace ammiya nudges with white-Arabic copy (e.g. "قصتك تساعد آلاف المشترين" instead of "قصتك بتساعد آلاف المشترين").
-- Strengthen the AI Enhance button label:  
-  AR: "حسّن صياغتي ✨" • EN: "Polish my writing ✨"
-- Voice button tooltip:  
-  AR: "سجّل صوتك وسنحوّله نصاً" • EN: "Speak it — we'll transcribe"
-- Title suggestion pill:  
-  AR: "اقترح لي عنواناً" • EN: "Suggest a title"
+- New CTE that selects each approved review with a computed `w` (CASE on `verification_level`, `is_anonymous`, etc.).
+- `v_avg` → `SUM(rating * w) / SUM(w)` (weighted average rating).
+- `v_count` stays the raw count (volume pillar shouldn't be gameable by one whale).
+- `v_verified_count` becomes `SUM(w) FILTER (WHERE verification_level = 'transaction')` ÷ `SUM(w)` so the verification pillar reflects weight share, not headcount.
+- New columns on `trust_score_snapshots`:
+  - `weighted_avg_rating numeric`
+  - `contract_verified_count int`
+  - `total_weight numeric`
+- Per-category averages in the snapshot also become weighted.
 
-## 3. WriteReviewModal — Step 3 (Categories) and Step 4 (Proof)
+Trigger `reviews_trust_score_recalc` already fires on insert/update/delete — no change needed there. The contract-approval path in `AdminReceiptVerification.tsx` already updates `verification_level = 'transaction'`, which will now automatically re-trigger and amplify the score.
 
-- Reorder category metrics with short white-Arabic labels: التسليم / الجودة / الالتزام المالي / خدمة العملاء.
-- Add a small "+5 نقاط لكل تقييم تفصيلي" / "+5 pts per category rated" hint.
-- Step 4: highlight the verified-badge upside above the upload zone:  
-  AR: "ارفع إيصال الحجز واحصل على شارة *مشتري موثّق* + مضاعفة النقاط (×2)"  
-  EN: "Upload your booking receipt to earn the *Verified Buyer* badge and 2× points"
+### 2. Frontend — mirror the formula in `src/lib/trustScoreCalculator.ts`
 
-## 4. Post-submit reviewer loop (success overlay upgrade)
+- Add `getReviewWeight(review)` helper returning the same tier weights.
+- `calculateTrustScore` switches all aggregates to weighted versions so the live UI matches the DB snapshot.
+- Add a new field on `TrustScoreBreakdown`: `weightProfile: { contractCount, contractWeightShare, totalWeight }` for tooltips.
 
-Inside the existing `ReviewSuccessOverlay`:
+### 3. UI Surfaces
 
-- Show actual points awarded + streak status pulled from `useBuyerGamification`.
-- Add 3 sticky CTAs:
-  1. "راجع مطوراً آخر تعاملت معه" / "Review another developer you've dealt with" → opens dev picker.
-  2. "ادعُ صديقاً واكسبا معاً 50 نقطة" / "Invite a friend — both earn 50 pts" → copies their referral link.
-  3. "شارك مراجعتك" / "Share your review" → reuses existing share sheet.
-- Confetti only on `completion_level = 'full'` (already partially there).
+**Trust Score gauge tooltip (EntityPage):** new line — "X contract-verified reviews carry 10× weight."
 
-## 5. Reviewer Program landing (`/reviewer-program`) — copy + identity refresh
+**Reviews list (`ReviewCard`):** contract-verified reviews get a distinct gold "10× Verified" chip next to the existing "Verified Buyer" badge, with a tooltip explaining the multiplier.
 
-- Rewrite headline AR: "كن صوت السوق. واكسب من ثقتك." • EN: "Be the voice of the market. Earn from your trust."
-- Tier names cleaned up (white-Arabic): جديد / نشط / موثوق / خبير / نخبة — matching New / Active / Trusted / Expert / Elite.
-- Each tier card lists: required reviews, perks (badge, profile pin, priority moderation, monthly spotlight), and a single example perk illustration.
-- Add a "Why we built this" block (3 lines, soft navy card) — calm, professional, no slang.
+**WriteReviewModal — Verified Buyer step (Phase 4):** replace the existing "2× Points" copy on the multiplier card with **"10× Trust Weight"** as the headline benefit, keeping points as a secondary perk. This is the single biggest reviewer motivator on the platform — make it the hero.
 
-## 6. Buyer Dashboard reviewer block
+**ReviewerProgram landing page:** add a new section "Why your contract matters" with the weight ladder (1× → 3× → 10×) as a visual.
 
-Add (or refresh) a "My Reviewer Status" card on `/buyer`:
+### 4. i18n
 
-- Tier badge + progress bar to next tier ("3 مراجعات لتصبح *موثوقاً*" / "3 reviews to become *Trusted*").
-- Current streak pill ("🔥 streak 5 days").
-- Quick actions: "اكتب مراجعة جديدة" / "Write a new review", "تحقّق من حسابك" / "Verify your account".
-- Tiny "Top 12% of reviewers this month" social proof when applicable.
+Add keys in both `ar.json` and `en.json`:
+- `trust.weightMultiplier.contract` — "10× trust weight" / "وزن ثقة ×10"
+- `trust.weightMultiplier.tooltip` — short explanation
+- `form.verifiedBuyer.weightHeadline` — replaces points-first copy
+- `reviewerProgram.weightLadder.*` — section copy
 
-## 7. Notifications & retention nudges
+Arabic register stays in the established "White Arabic" tone (professional + warm).
 
-- New notification template after a review is approved:  
-  AR: "تمت الموافقة على مراجعتك — شاهدها {N} مشتري بالفعل"  
-  EN: "Your review is live — already seen by {N} buyers"
-- Weekly digest (use existing follow/notification infra; no schema change):  
-  AR: "هذا الأسبوع: مراجعتك ساعدت {N} مشتري في اتخاذ قرارهم"  
-  EN: "This week: your reviews helped {N} buyers decide"
-- Re-engagement after 30 days of inactivity for users with ≥1 review:  
-  AR: "افتقدناك — أكمل تجربتك في *{developer}* بمراجعة سريعة"  
-  EN: "We miss you — finish your experience at *{developer}* with a quick review"
+### 5. Analytics
 
-## 8. Referral hook inside the review flow
+Extend `review_funnel_events`: when a user reaches Phase 4 and sees the "10× Trust Weight" card, fire a `weight_multiplier_seen` event so we can measure if this messaging lifts contract-upload conversion.
 
-- After a successful submit, the second CTA ("Invite a friend") deep-links to the existing referral system.
-- Reuse `R8-XXXXXX` codes; copy refresh:  
-  AR: "ادعُ صديقاً يكتب مراجعته الأولى — تكسبان 50 نقطة لكل واحد"  
-  EN: "Invite a friend to write their first review — you both earn 50 pts"
+## Files to Change
 
-## 9. i18n cleanup pass (white-Arabic across the review system)
+- `supabase/migrations/<new>.sql` — rewrite `recalculate_trust_score` with weights + add snapshot columns
+- `src/lib/trustScoreCalculator.ts` — weighted formula + `getReviewWeight` export
+- `src/hooks/useReviews.ts` — surface `verification_level` and weight on the mapped review
+- `src/data/mockData.ts` (Review type) — add `verificationLevel` and `weight`
+- `src/components/ReviewCard.tsx` — render "10× Verified" chip
+- `src/components/WriteReviewModal.tsx` — Phase 4 verified-buyer card copy + analytics event
+- `src/components/EntityPage*` (trust gauge tooltip area) — weighted explainer
+- `src/pages/ReviewerProgram.tsx` — "Why your contract matters" section
+- `src/i18n/locales/ar.json`, `src/i18n/locales/en.json` — new keys
+- `src/lib/reviewFunnelAnalytics.ts` — new event type
 
-Single pass on `src/i18n/locales/ar.json` for all keys under `form.*`, `review.*`, `reviewer.*`, `gamification.*`:
+## Out of Scope
 
-- Remove ammiya particles (هنكتب → سنكتب, هتساعد → ستساعد, اللي → التي/الذي, عشان → لكي, كمان → أيضاً, ده → هذا) **without** turning it into heavy فصحى.
-- Keep contractions short and friendly: "شكراً لك"، "رأيك مهم"، "تابع"، "ابدأ"، "حسّن صياغتي".
-- Mirror tone in `en.json`: warm, confident, no exclamation spam — at most one per CTA.
+- Changing how `is_verified` is set today (admin-driven contract review stays the same).
+- Recomputing historical snapshots — the trigger will refresh on next write per developer; an optional one-off `SELECT recalculate_trust_score(id) FROM business_profiles` backfill can run after deploy if you want immediate updates.
+- Display of weight on guest reviews (kept invisible to avoid confusing first-time visitors).
 
-## 10. Visual identity polish
-
-- All new chips, banners, and tier badges use the existing palette: navy `#0a3d62`, gold `#fac417`, red `#ed1b40`, plus the soft sentiment tokens defined for chips.
-- Use `ms-/pe-/text-start` exclusively (no left/right physical classes).
-- All new touch targets ≥ 44px; banner padding `p-3`, chips `min-h-[32px]` with comfortable horizontal padding.
-
-## What we are NOT changing
-
-- `saveRatingOnly`, `savePhase2`, `savePhase3`, `handleDone` — untouched.
-- Supabase schema, RLS, edge functions — untouched.
-- Draft resume overlay, AI moderation pipeline (`review-integrity-check`), guest flow — untouched.
-- Existing motivator card and step structure stay; we only insert new blocks and rewrite copy.
-
-## Files we will edit
-
-- `src/components/WriteReviewModal.tsx` — chips constant, social impact banner, prepopulation helper, copy refresh on Steps 2–4.
-- `src/components/ReviewSuccessOverlay.tsx` (or equivalent) — points/streak readout + 3-CTA loop.
-- `src/pages/ReviewerProgram.tsx` — headline, tier cards, "why" block.
-- `src/pages/BuyerDashboard.tsx` — reviewer status card.
-- `src/i18n/locales/ar.json` and `src/i18n/locales/en.json` — full white-Arabic + warm-EN pass on review-related keys, plus new keys for chips, banner, success CTAs, notifications.
-- (Optional, light) `src/components/ReviewerBadge.tsx` — tier label strings only.
-
-## Open questions before we build
-
-1. Should the **referral** CTA in the success overlay open the existing referral page, or copy the link inline with a toast? (Default: copy inline, with a "Open referral page" link below.)
-2. For the **weekly digest** notification, do you want it sent through the existing in-app notifications only, or also via email when an email is on file? (Default: in-app only for now.)
-3. Should the Step-1 chips be **localized per language** (AR labels in AR, EN labels in EN), or always Arabic since most reviewers are Egyptian? (Default: localized per language.)
+After approval I'll implement the migration + code in one pass.

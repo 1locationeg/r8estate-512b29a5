@@ -1621,6 +1621,18 @@ export const WriteReviewModal = ({
             onClick={async () => {
               if (Object.keys(categoryRatings).length > 0) await savePhase3();
               setPhase(4);
+              // Funnel analytics: did the user reach the 10× Trust Weight upsell?
+              trackReviewFunnelEvent({
+                eventType: "weight_multiplier_seen",
+                phase: 4,
+                rating,
+                reviewId: savedReviewId,
+                developerId,
+                developerName,
+                selectedChips,
+                isGuest,
+                metadata: { multiplier: 10 },
+              });
             }}
             className="gap-1 h-9"
           >
@@ -1704,8 +1716,29 @@ export const WriteReviewModal = ({
                 <Badge variant="secondary" className="text-[10px] shrink-0">{t("form.optional", "Optional")}</Badge>
               </div>
 
+              {/* 10× Trust Weight headline — the single biggest reviewer motivator */}
+              <div className="rounded-lg border border-accent/40 bg-accent/10 px-3 py-2 mb-3 flex items-center gap-2">
+                <div className="shrink-0 w-9 h-9 rounded-full bg-accent text-accent-foreground font-extrabold text-sm flex items-center justify-center shadow-sm">
+                  10×
+                </div>
+                <div className="min-w-0">
+                  <p className="text-[12.5px] font-semibold text-foreground leading-tight">
+                    {t("form.verifiedBuyer.weightHeadline", "Your review will count 10× more")}
+                  </p>
+                  <p className="text-[10.5px] text-muted-foreground leading-snug">
+                    {t(
+                      "form.verifiedBuyer.weightSubline",
+                      "A contract-verified review carries 10× the weight of an anonymous comment in the developer's Trust Score."
+                    )}
+                  </p>
+                </div>
+              </div>
+
               {/* Benefits row */}
               <div className="flex flex-wrap gap-1.5 mb-3">
+                <span className="inline-flex items-center gap-1 rounded-full bg-accent text-accent-foreground text-[11px] font-semibold px-2 py-0.5">
+                  <ShieldCheck className="w-3 h-3" /> {t("form.verification_benefit_weight", "10× trust weight")}
+                </span>
                 <span className="inline-flex items-center gap-1 rounded-full bg-accent/10 text-accent text-[11px] font-medium px-2 py-0.5">
                   <BadgeCheck className="w-3 h-3" /> {t("form.verification_benefit_badge", "Verified Buyer badge")}
                 </span>
