@@ -3,10 +3,22 @@ import type { ReviewWithCategories } from "@/hooks/useReviews";
 /**
  * TrustScore Calculator — single source of truth for the developer detail page.
  *
+ * THE 10× RULE
+ * ─────────────
+ * A review backed by an OCR/AI-verified sales contract carries 10× the weight
+ * of an anonymous comment when computing the average rating, the verification
+ * pillar, and the overall Trust Score.
+ *
+ * Weight ladder (mirrored 1:1 in supabase/migrations/<latest>.sql):
+ *   - Contract-verified  → 10.0   (verification_level = "transaction")
+ *   - Identity-verified  →  3.0   (verification_level = "identity" OR is_verified)
+ *   - Logged-in, named   →  1.5
+ *   - Anonymous (floor)  →  1.0
+ *
  * Formula (max 100):
- *   ratingScore        = (avgRating / 5) * 60          // 60 pts — what reviewers say
+ *   ratingScore        = (weightedAvgRating / 5) * 60  // 60 pts — weighted by trust
  *   volumeScore        = log10(n+1)/log10(100) * 25    // 25 pts — sample size, full at 100 reviews
- *   verificationBoost  = verifiedRatio * 10            // 10 pts — % of verified reviews
+ *   verificationBoost  = contractWeightShare * 10      // 10 pts — share of trust weight from contract reviewers
  *   recencyAdjustment  = recentRatio * 5               //  5 pts — share of reviews in last 90d
  *
  * If there are zero real reviews, we fall back to the seed `trustScore` (mock data)
@@ -56,6 +68,11 @@ export interface TrustScoreBreakdown {
     recency: PillarBreakdown & { recentCount: number };
   };
   categoryScores: CategoryBreakdown[];
+  weightProfile: {
+    contractCount: number;
+    contractWeightShare: number; // 0..1 — share of total weight coming from contract-verified reviews
+    totalWeight: number;
+  };
 }
 
 export interface TrustScoreFallback {
@@ -70,6 +87,31 @@ const VERIFICATION_MAX = 10;
 const RECENCY_MAX = 5;
 const VOLUME_FULL_AT = 100; // 100 real reviews = full volume credit
 const RECENCY_WINDOW_MS = 90 * 24 * 60 * 60 * 1000;
+
+// Weight tiers — keep in lock-step with the SQL recalculate_trust_score function.
+export const TRUST_WEIGHT = {
+  CONTRACT: 10.0,
+  IDENTITY: 3.0,
+  NAMED: 1.5,
+  ANONYMOUS: 1.0,
+} as const;
+
+/**
+ * Determine the trust weight of a single review.
+ * Mirrors the CASE expression in the database function.
+ */
+export function getReviewWeight(review: ReviewWithCategories): number {
+  const r = review as any;
+  const level: string | undefined = r.verificationLevel;
+  if (level === "transaction" || r.hasContractVerified === true) return TRUST_WEIGHT.CONTRACT;
+  if (level === "identity" || r.identityVerified === true || review.verified || review.profileVerified) {
+    return TRUST_WEIGHT.IDENTITY;
+  }
+  if (r.isAnonymous === true) return TRUST_WEIGHT.ANONYMOUS;
+  // Authenticated, named author (default for reviews with a real author name)
+  if (review.author && review.author.length > 0) return TRUST_WEIGHT.NAMED;
+  return TRUST_WEIGHT.ANONYMOUS;
+}
 
 function clamp(n: number, min = 0, max = 100): number {
   return Math.max(min, Math.min(max, n));
@@ -92,16 +134,32 @@ export function calculateTrustScore(
   const realReviews = reviews ?? [];
   const hasRealData = realReviews.length > 0;
 
+  // ---- Per-review weights (the 10× rule lives here) ----
+  const weights = realReviews.map(getReviewWeight);
+  const totalWeight = weights.reduce((s, w) => s + w, 0);
+  const contractCount = realReviews.filter(
+    (r) => (r as any).verificationLevel === "transaction" || (r as any).hasContractVerified === true,
+  ).length;
+  const contractWeight = realReviews.reduce(
+    (s, r, i) =>
+      s +
+      ((r as any).verificationLevel === "transaction" || (r as any).hasContractVerified === true
+        ? weights[i]
+        : 0),
+    0,
+  );
+  const contractWeightShare = totalWeight > 0 ? contractWeight / totalWeight : 0;
+
   // ---- Pillar inputs ----
   const reviewCount = hasRealData ? realReviews.length : fallback.reviewCount || 0;
-  const avgRating = hasRealData
-    ? realReviews.reduce((sum, r) => sum + (r.rating || 0), 0) / realReviews.length
-    : fallback.rating || 0;
+  // Weighted average rating — a contract-verified 5★ counts 10× an anonymous 1★.
+  const avgRating = hasRealData && totalWeight > 0
+    ? realReviews.reduce((sum, r, i) => sum + (r.rating || 0) * weights[i], 0) / totalWeight
+    : (hasRealData ? 0 : fallback.rating || 0);
 
-  const verifiedCount = hasRealData
-    ? realReviews.filter((r) => r.verified || r.profileVerified).length
-    : 0;
-  const verifiedRatio = hasRealData ? verifiedCount / realReviews.length : 0;
+  // Verification pillar reflects WEIGHT share from contract-verified reviewers.
+  const verifiedCount = contractCount;
+  const verifiedRatio = contractWeightShare;
 
   const now = Date.now();
   const recentCount = hasRealData
@@ -196,6 +254,11 @@ export function calculateTrustScore(
       },
     },
     categoryScores,
+    weightProfile: {
+      contractCount,
+      contractWeightShare: Math.round(contractWeightShare * 1000) / 1000,
+      totalWeight: Math.round(totalWeight * 100) / 100,
+    },
   };
 }
 
