@@ -901,7 +901,19 @@
     "voice_done": "Voice captured",
     "voice_processing": "Processing voice...",
     "your_rating": "Your rating",
-    "your_review": "Your review"
+    "your_review": "Review",
+    "tapToRate": "Tap to Rate:",
+    "reviewingAs": "Reviewing as:",
+    "submit": "Submit",
+    "saveAndClose": "Save & Close",
+    "addMoreDetails": "Add more details",
+    "shareYourExperience": "Share your experience",
+    "motivator": {
+      "step1": "Add a few details — earn +25 pts and help buyers more",
+      "step2": "Halfway there — sub-ratings next help buyers compare",
+      "step3": "Almost done — add proof next for a verified badge",
+      "step4": "You're a top contributor — verified reviewers get 3× visibility"
+    }
   },
   "review": {
     "anonymous": "Anonymous",

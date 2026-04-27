@@ -134,7 +134,16 @@ const getCategoryMetricKeys = (category: string): string[] => {
   }
 };
 
-const PHASE_LABELS = ["Rating", "Your Review", "Category Ratings"];
+const PHASE_LABELS = ["Rate", "Your Review", "Category Ratings", "Proof & Polish"];
+const TOTAL_STEPS = 4;
+
+// ===================== MOTIVATOR CHIP =====================
+const MotivatorChip = ({ icon, text }: { icon: string; text: string }) => (
+  <div className="flex items-center justify-center gap-1.5 text-[11px] font-medium text-primary/80 bg-primary/5 border border-primary/15 rounded-full px-3 py-1.5 mx-auto w-fit max-w-full">
+    <span>{icon}</span>
+    <span className="truncate">{text}</span>
+  </div>
+);
 
 // ===================== STAR ROW COMPONENT (for Phase 3) =====================
 
@@ -358,7 +367,6 @@ export const WriteReviewModal = ({
         if (error) throw error;
         setSavedReviewId(data.id);
       }
-      setShowThanksScreen(true);
     } catch (e) {
       console.error("Error saving rating:", e);
       toast({ title: t("form.submission_error"), description: t("form.submission_error_desc"), variant: "destructive" });
@@ -427,6 +435,8 @@ export const WriteReviewModal = ({
       await savePhase2();
     } else if (phase === 3) {
       await savePhase3();
+    } else if (phase === 4) {
+      await savePhase3();
     }
 
     const submittedRating = rating;
@@ -447,6 +457,28 @@ export const WriteReviewModal = ({
 
     onReviewSubmitted?.();
     if (!isGuest) {
+      resetForm();
+      onOpenChange(false);
+    }
+  };
+
+  // ===================== SAVE-ON-EXIT GUARANTEE =====================
+  // Persists whatever the user entered before closing — no data is ever lost.
+  const safeClose = async () => {
+    try {
+      if (phase === 1 && savedReviewId && hasContent) {
+        await savePhase2();
+      } else if (phase === 2 && hasContent) {
+        await savePhase2();
+      } else if (phase === 3 && Object.keys(categoryRatings).length > 0) {
+        await savePhase3();
+      } else if (phase === 4) {
+        await savePhase3();
+      }
+    } catch (e) {
+      console.error("safeClose save error", e);
+    } finally {
+      onReviewSubmitted?.();
       resetForm();
       onOpenChange(false);
     }
@@ -895,69 +927,154 @@ export const WriteReviewModal = ({
 
   // ===================== PHASE RENDERERS =====================
 
-  const renderPhase1 = () => (
-    <div className="flex flex-col items-center py-6 px-4 space-y-6">
-      {isGuest && (
-        <div className="w-full max-w-xs">
-          <label className="text-sm font-medium text-foreground mb-1.5 block">{t("guestReview.yourName", "Your Name")}</label>
-          <Input
-            value={guestName}
-            onChange={(e) => setGuestName(e.target.value)}
-            placeholder={t("guestReview.namePlaceholder", "Enter your name (optional)")}
-          />
+  // STEP 1 — Facebook-style single-screen Rate card
+  const renderPhase1 = () => {
+    const userDisplayName =
+      (user?.user_metadata?.full_name as string) ||
+      (user?.user_metadata?.name as string) ||
+      user?.email ||
+      "";
+    return (
+      <div className="flex flex-col py-4 px-4 md:px-6 space-y-4">
+        {/* Brand row */}
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-xl bg-primary/10 border border-border flex items-center justify-center text-primary font-bold text-lg shrink-0">
+            {(developerName || "?").charAt(0).toUpperCase()}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-semibold text-foreground truncate">{developerName}</p>
+            <p className="text-xs text-muted-foreground truncate">
+              {t("form.shareYourExperience", "Share your experience")}
+            </p>
+          </div>
         </div>
-      )}
 
-      <div className="text-center space-y-2">
-        <h3 className="text-lg font-semibold text-foreground">
-          {t("form.howWouldYouRate", "How would you rate")}
-        </h3>
-        <p className="text-sm text-muted-foreground font-medium">{developerName}</p>
-      </div>
+        {/* Tap to Rate */}
+        <div className="flex items-center justify-between gap-3 pt-1">
+          <span className="text-sm font-medium text-foreground">
+            {t("form.tapToRate", "Tap to Rate:")}
+          </span>
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                className="p-0.5 transition-transform hover:scale-110 active:scale-95"
+                onMouseEnter={() => setHoverRating(star)}
+                onMouseLeave={() => setHoverRating(0)}
+                onClick={() => {
+                  setRating(star);
+                  if (!savedReviewId) saveRatingOnly(star);
+                }}
+                disabled={isSaving}
+              >
+                <Star
+                  className={cn(
+                    "w-8 h-8 md:w-10 md:h-10 transition-colors",
+                    (hoverRating || rating) >= star
+                      ? "fill-accent text-accent"
+                      : "text-muted-foreground/30"
+                  )}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
 
-      <div className="flex items-center gap-2">
-        {[1, 2, 3, 4, 5].map((star) => (
-          <button
-            key={star}
-            type="button"
-            className="p-1 transition-transform hover:scale-110 active:scale-95"
-            onMouseEnter={() => setHoverRating(star)}
-            onMouseLeave={() => setHoverRating(0)}
-            onClick={() => {
-              setRating(star);
-              if (!savedReviewId) {
-                saveRatingOnly(star);
-              }
-            }}
-            disabled={isSaving}
-          >
-            <Star
-              className={cn(
-                "w-12 h-12 md:w-14 md:h-14 transition-colors",
-                (hoverRating || rating) >= star
-                  ? "fill-accent text-accent"
-                  : "text-muted-foreground/30"
-              )}
+        {rating > 0 && savedReviewId && !isSaving && (
+          <p className="text-xs text-primary/80 italic text-center">
+            {getRatingEncouragement(rating)}
+          </p>
+        )}
+
+        {/* Stacked Title + Review card (Facebook pattern) */}
+        <div className="rounded-xl bg-muted/40 border border-border divide-y divide-border overflow-hidden">
+          <div className="flex items-stretch">
+            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0 flex items-center">
+              {t("form.review_title", "Title")}
+            </label>
+            <Input
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder={t("form.optional", "Optional")}
+              maxLength={100}
+              className="border-0 bg-transparent focus-visible:ring-0 h-11 flex-1 px-2"
+              disabled={!rating}
             />
-          </button>
-        ))}
+          </div>
+          <div className="flex items-stretch">
+            <label className="px-3 py-3 text-sm font-medium text-foreground w-20 shrink-0">
+              {t("form.your_review", "Review")}
+            </label>
+            <Textarea
+              value={contentPlainText}
+              onChange={(e) => setContent(e.target.value)}
+              placeholder={t("form.optional", "Optional")}
+              rows={3}
+              className="border-0 bg-transparent focus-visible:ring-0 resize-none flex-1 px-2 py-3"
+              disabled={!rating}
+            />
+          </div>
+        </div>
+
+        {/* Reviewing as */}
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <span>{t("form.reviewingAs", "Reviewing as:")}</span>
+          {isGuest ? (
+            <Input
+              value={guestName}
+              onChange={(e) => setGuestName(e.target.value)}
+              placeholder={t("guestReview.namePlaceholder", "Your name (optional)")}
+              className="h-7 text-xs flex-1 max-w-[180px]"
+            />
+          ) : (
+            <span className="font-medium text-foreground truncate">{userDisplayName}</span>
+          )}
+        </div>
+
+        {/* Action row: Submit + Add details motivator */}
+        <div className="flex items-center justify-between gap-2 pt-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-primary gap-1 h-9 px-2"
+            onClick={async () => {
+              if (hasContent || title) await savePhase2();
+              setPhase(2);
+            }}
+            disabled={!rating}
+          >
+            {t("form.addMoreDetails", "Add more details")} <ChevronRight className="w-4 h-4" />
+          </Button>
+          <Button
+            size="sm"
+            className="gap-1.5 min-h-[40px] px-5"
+            disabled={!rating || isSaving}
+            onClick={async () => {
+              if (hasContent || title) {
+                await savePhase2();
+              }
+              await handleDone();
+            }}
+          >
+            {isSaving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Check className="w-4 h-4" />}
+            {t("form.submit", "Submit")}
+          </Button>
+        </div>
+
+        {/* Motivator nudge */}
+        {rating > 0 && (
+          <MotivatorChip
+            icon="✨"
+            text={t(
+              "form.motivator.step1",
+              "Add a few details — earn +25 pts and help buyers more"
+            )}
+          />
+        )}
       </div>
-
-      {rating > 0 && !isSaving && !showThanksScreen && savedReviewId && (
-        <div className="text-center space-y-2">
-          <p className="text-lg font-semibold text-foreground">{getRatingWord(rating)}</p>
-          <p className="text-xs text-muted-foreground italic">{getRatingEncouragement(rating)}</p>
-        </div>
-      )}
-
-      {isSaving && (
-        <div className="flex items-center gap-2 text-sm text-muted-foreground">
-          <Loader2 className="w-4 h-4 animate-spin" />
-          {t("form.savingRating", "Saving your rating...")}
-        </div>
-      )}
-    </div>
-  );
+    );
+  };
 
   const renderPhase2 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-3 md:space-y-4">
@@ -1127,12 +1244,11 @@ export const WriteReviewModal = ({
             variant="ghost"
             size="sm"
             onClick={() => {
-              if (hasContent) savePhase2();
-              handleDone();
+              safeClose();
             }}
             className="text-muted-foreground h-9"
           >
-            {t("form.doneForNow", "Done")}
+            {t("form.saveAndClose", "Save & Close")}
           </Button>
           <Button
             size="sm"
@@ -1165,17 +1281,18 @@ export const WriteReviewModal = ({
           </Button>
         </div>
       </div>
+
+      {/* Motivator chip */}
+      <MotivatorChip
+        icon="📊"
+        text={t("form.motivator.step2", "Halfway there — sub-ratings next help buyers compare")}
+      />
     </div>
   );
 
+  // STEP 3 — Category ratings only
   const renderPhase3 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-4">
-      {/* Motivational micro-copy */}
-      <p className="text-xs text-primary font-medium text-center">
-        {t("form.almostThere", "Almost there! Category ratings help buyers compare 📊")}
-      </p>
-
-      {/* Category Star Rows (instead of sliders) */}
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-1">
           {t("form.categoryRatings", "Rate specific categories")}
@@ -1196,7 +1313,43 @@ export const WriteReviewModal = ({
         </div>
       </div>
 
-      {/* Collapsible More Options (mobile) / expanded (desktop) */}
+      {/* Navigation */}
+      <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1 h-9">
+          <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
+        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => safeClose()}
+            className="text-muted-foreground h-9"
+          >
+            {t("form.saveAndClose", "Save & Close")}
+          </Button>
+          <Button
+            size="sm"
+            onClick={async () => {
+              if (Object.keys(categoryRatings).length > 0) await savePhase3();
+              setPhase(4);
+            }}
+            className="gap-1 h-9"
+          >
+            {t("form.next", "Next")} <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
+      </div>
+
+      <MotivatorChip
+        icon="🛡️"
+        text={t("form.motivator.step3", "Almost done — add proof next for a verified badge")}
+      />
+    </div>
+  );
+
+  // STEP 4 — Proof & Polish (attachments, verification, anonymous, final submit)
+  const renderPhase4 = () => (
+    <div className="p-4 md:p-6 pt-2 space-y-4">
       {!isGuest && (
         <Collapsible open={moreOptionsOpen} onOpenChange={setMoreOptionsOpen}>
           <CollapsibleTrigger className="flex items-center gap-2 text-sm font-medium text-foreground w-full py-2 md:hidden">
@@ -1307,39 +1460,49 @@ export const WriteReviewModal = ({
 
       {/* Navigation + Done */}
       <div className="flex items-center justify-between pt-1 sticky bottom-0 bg-background pb-1">
-        <Button variant="ghost" size="sm" onClick={() => setPhase(2)} className="gap-1 h-9">
+        <Button variant="ghost" size="sm" onClick={() => setPhase(3)} className="gap-1 h-9">
           <ChevronLeft className="w-4 h-4" /> {t("form.back", "Back")}
         </Button>
-        <Button
-          size="sm"
-          onClick={async () => {
-            setIsUploading(true);
-            await savePhase3();
-            setIsUploading(false);
-            handleDone();
-          }}
-          disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
-          className="gap-1.5 min-h-[44px]"
-        >
-          {isUploading ? (
-            <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.saving", "Saving...")}</>
-          ) : (
-            <><Check className="w-4 h-4" /> {t("form.submitReview", "Submit Review")}</>
-          )}
-        </Button>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => safeClose()}
+            className="text-muted-foreground h-9"
+          >
+            {t("form.saveAndClose", "Save & Close")}
+          </Button>
+          <Button
+            size="sm"
+            onClick={async () => {
+              setIsUploading(true);
+              await savePhase3();
+              setIsUploading(false);
+              handleDone();
+            }}
+            disabled={isUploading || (aiModeration?.suspicion_score ?? 0) > 80}
+            className="gap-1.5 min-h-[44px]"
+          >
+            {isUploading ? (
+              <><Loader2 className="w-4 h-4 animate-spin" /> {t("form.saving", "Saving...")}</>
+            ) : (
+              <><Check className="w-4 h-4" /> {t("form.submitReview", "Submit Review")}</>
+            )}
+          </Button>
+        </div>
       </div>
 
-      {/* Completion micro-copy */}
-      <p className="text-xs text-center text-primary/70 font-medium pb-1">
-        {t("form.topContributor", "You're a top contributor! 🏆")}
-      </p>
+      <MotivatorChip
+        icon="🏆"
+        text={t("form.motivator.step4", "You're a top contributor — verified reviewers get 3× visibility")}
+      />
     </div>
   );
 
   return (
     <>
       <ConfettiCelebration trigger={firstReviewCelebration} duration={3500} particleCount={80} />
-      <Dialog open={open} onOpenChange={onOpenChange}>
+      <Dialog open={open} onOpenChange={(v) => { if (!v) { safeClose(); } else { onOpenChange(true); } }}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto p-0">
           {/* Progress Header */}
           <div className="px-4 md:px-6 pt-4 md:pt-6 pb-0 space-y-3">
@@ -1359,11 +1522,11 @@ export const WriteReviewModal = ({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
                   <span>
-                    {t("form.step", "Step")} {phase} {t("form.of", "of")} 3
+                    {t("form.step", "Step")} {phase} {t("form.of", "of")} {TOTAL_STEPS}
                   </span>
                   <span className="font-medium text-foreground">{PHASE_LABELS[phase - 1]}</span>
                 </div>
-                <Progress value={(phase / 3) * 100} className="h-2" />
+                <Progress value={(phase / TOTAL_STEPS) * 100} className="h-2" />
               </div>
             )}
 
@@ -1390,11 +1553,12 @@ export const WriteReviewModal = ({
             ) : (
               <div
                 className="flex transition-transform duration-300 ease-in-out"
-                style={{ transform: `translateX(-${(phase - 1) * 100}%)` }}
+                style={{ transform: `translateX(-${(phase - 1) * 100}%)`, width: `${TOTAL_STEPS * 100}%` }}
               >
-                <div className="w-full flex-shrink-0">{renderPhase1()}</div>
-                <div className="w-full flex-shrink-0">{renderPhase2()}</div>
-                <div className="w-full flex-shrink-0">{renderPhase3()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase1()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase2()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase3()}</div>
+                <div className="flex-shrink-0" style={{ width: `${100 / TOTAL_STEPS}%` }}>{renderPhase4()}</div>
               </div>
             )}
           </div>

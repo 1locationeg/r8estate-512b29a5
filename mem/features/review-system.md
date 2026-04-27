@@ -1,0 +1,6 @@
+---
+name: review-system
+description: 4-step Progressive-Save review flow (Rate → Deep Review → Categories → Proof) modeled on Facebook's app-store review pattern with always-visible progress and save-on-exit
+type: feature
+---
+The review system uses a 4-step Progressive-Save modal (Facebook-style). Step 1 ('Rate') is a single calm screen with the brand row, 'Tap to Rate' stars, and a stacked Title/Review card (both labeled Optional) — submitting just stars works (instant `rating_only` insert). Step 2 ('Your Review') is the deep narrative form (unit type, experience chips, rich editor, Voice/AI Enhance/Emoji). Step 3 ('Category Ratings') uses MiniStarRow per metric. Step 4 ('Proof & Polish') holds attachments, SecureContractUpload, verification, anonymous toggle, and the final Submit. **Every step shows the progress bar (`step/4 * 100`) and exposes a 'Save & Close' button**; closing the dialog (X or backdrop) calls `safeClose()` which persists whatever the user entered for the current step before unmounting — no data is ever lost. Each step ends with a sentiment-aware MotivatorChip nudging the user deeper (+25 pts copy, halfway, verified badge, top-contributor). DB lifecycle: `rating_only` → `with_comment` → `full` (set in savePhase2/savePhase3). HTML persisted, DOMPurify sanitizes on render.
