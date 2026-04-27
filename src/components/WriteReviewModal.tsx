@@ -1292,6 +1292,36 @@ export const WriteReviewModal = ({
   // STEP 3 — Category ratings only
   const renderPhase3 = () => (
     <div className="p-4 md:p-6 pt-2 space-y-4">
+      {/* Context — moved from Step 2 to keep Step 2 focused on writing */}
+      <div>
+        <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{contextField.label}</label>
+        {contextField.chips ? (
+          <ChipSelect
+            options={contextField.chips.map((c) => ({ key: c.toLowerCase(), label: c }))}
+            value={unitType}
+            onChange={setUnitType}
+          />
+        ) : (
+          <Input
+            value={unitType}
+            onChange={(e) => setUnitType(e.target.value)}
+            placeholder={contextField.placeholder}
+            className="h-9 text-sm"
+          />
+        )}
+      </div>
+
+      {!isGuest && (
+        <div>
+          <label className="text-xs font-medium text-muted-foreground mb-1.5 block">{t("form.experience_type", "Experience Type")}</label>
+          <ChipSelect
+            options={experienceChips}
+            value={experienceType}
+            onChange={setExperienceType}
+          />
+        </div>
+      )}
+
       <div>
         <h3 className="text-sm font-semibold text-foreground mb-1">
           {t("form.categoryRatings", "Rate specific categories")}
