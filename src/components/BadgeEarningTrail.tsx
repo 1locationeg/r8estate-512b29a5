@@ -32,6 +32,7 @@ interface TrailEvent {
   detail: string;
   icon: typeof ShieldCheck;
   tone: "excellent" | "good" | "fair" | "neutral";
+  estimated?: boolean;
 }
 
 interface BadgeEarningTrailProps {
@@ -125,16 +126,31 @@ export const BadgeEarningTrail = ({
 
     // 1. Verified Business
     if (developerVerified) {
+      // RLS hides business_claims.reviewed_at from non-claimant viewers, so
+      // claimDate will usually be null for visitors. Fall back to a sensible
+      // estimate: earliest verified-buyer review (proxy for "trust gate opened"),
+      // else the first review date, else today. Mark it so the UI can label it.
+      const estimatedFallback =
+        sorted.find((r) => r.verified)?.date ||
+        sorted[0]?.date ||
+        new Date().toISOString();
+      const isEstimated = !claimDate;
       list.push({
         kind: "business_verified",
-        date: claimDate || sorted[0]?.date || new Date().toISOString(),
+        date: claimDate || estimatedFallback,
         title: t("trail.event.businessVerified.title", "Verified Business badge issued"),
-        detail: t(
-          "trail.event.businessVerified.detail",
-          "Trade license submitted and approved by R8ESTATE moderation."
-        ),
+        detail: isEstimated
+          ? t(
+              "trail.event.businessVerified.detailEstimated",
+              "Trade license approved by R8ESTATE moderation. Exact approval date isn't visible to your role — date estimated from the earliest verified activity on file."
+            )
+          : t(
+              "trail.event.businessVerified.detail",
+              "Trade license submitted and approved by R8ESTATE moderation."
+            ),
         icon: KIND_ICON.business_verified,
         tone: KIND_TONE.business_verified,
+        estimated: isEstimated,
       });
     }
 
@@ -297,8 +313,28 @@ export const BadgeEarningTrail = ({
               <div className={cn(isRTL ? "pe-4" : "ps-4")}>
                 <div className="flex flex-wrap items-baseline justify-between gap-2 mb-0.5">
                   <p className="text-sm font-medium text-foreground">{ev.title}</p>
-                  <time className="text-[11px] font-mono text-muted-foreground tabular-nums">
+                  <time
+                    className="text-[11px] font-mono text-muted-foreground tabular-nums inline-flex items-center gap-1"
+                    title={
+                      ev.estimated
+                        ? t(
+                            "trail.estimatedTooltip",
+                            "Approximate date — exact award timestamp is restricted by privacy rules."
+                          )
+                        : undefined
+                    }
+                  >
+                    {ev.estimated && (
+                      <span className="text-muted-foreground/70" aria-hidden>
+                        ~
+                      </span>
+                    )}
                     {formatDate(ev.date, i18n.language)}
+                    {ev.estimated && (
+                      <span className="ms-1 px-1 py-px rounded text-[9px] font-semibold uppercase tracking-wide bg-muted text-muted-foreground border border-border">
+                        {t("trail.estimatedBadge", "est.")}
+                      </span>
+                    )}
                   </time>
                 </div>
                 <p className="text-xs text-muted-foreground leading-snug">{ev.detail}</p>
