@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 import { DisclaimerCheckbox } from "@/components/DisclaimerCheckbox";
+import { trackReviewFunnelEvent } from "@/lib/reviewFunnelAnalytics";
 import { useTranslation } from "react-i18next";
 import { checkContentLocally, checkContentWithAI, type AIModerationResult } from "@/lib/contentGuard";
 import {
