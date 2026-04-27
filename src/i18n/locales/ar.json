@@ -488,8 +488,12 @@
         "detail": "عدّى {{count}} تقييم — حجم العينة دلوقتي {{label}}."
       },
       "tier": {
-        "good": { "title": "وصل لمستوى ثقة \"كويس\"" },
-        "excellent": { "title": "وصل لمستوى ثقة \"ممتاز\"" },
+        "good": {
+          "title": "وصل لمستوى ثقة \"كويس\""
+        },
+        "excellent": {
+          "title": "وصل لمستوى ثقة \"ممتاز\""
+        },
         "detail": "الدرجة التراكمية عدّت {{score}} بعد {{count}} تقييم."
       }
     }
@@ -767,56 +771,8 @@
     "skipForNow": "تخطي الآن"
   },
   "community": {
-    "all": "الكل",
-    "questions": "أسئلة",
-    "discussions": "نقاشات",
-    "tips": "نصائح",
-    "experiences": "تجارب",
-    "polls": "استطلاعات",
-    "question": "سؤال",
-    "discussion": "نقاش",
-    "tip": "نصيحة",
-    "experience": "تجربة",
-    "poll": "استطلاع",
-    "trending": "الأكثر رواجاً",
-    "newest": "الأحدث",
-    "mostDiscussed": "الأكثر نقاشاً",
-    "whatsOnYourMind": "ما الذي يدور في ذهنك، {{name}}؟",
-    "guest": "زائر",
-    "showingAbout": "عرض النقاشات حول",
-    "thisDeveloper": "هذا المطور",
-    "searchPlaceholder": "ابحث في المجتمع...",
-    "postsCount": "{{count}} منشور",
-    "noPosts": "لا توجد منشورات بعد. ابدأ المحادثة!",
-    "createFirst": "أنشئ أول منشور",
-    "justNow": "الآن",
-    "beFirstAnswer": "كن أول من يجيب!",
-    "commentCount": "{{count}} تعليق",
-    "upvoteCount": "{{count}} تصويت",
-    "like": "إعجاب",
-    "liked": "أعجبني",
-    "comment": "تعليق",
-    "reply": "رد",
-    "backToCommunity": "العودة للمجتمع",
-    "anonymous": "مجهول",
-    "commentingAs": "التعليق بصفتك",
-    "writeComment": "اكتب تعليقاً...",
-    "noComments": "لا توجد تعليقات بعد. كن أول من يعلق!",
-    "startDiscussion": "بدء نقاش",
-    "taggedDeveloper": "سيتم ربط النقاش بهذا المطور",
-    "category": "الفئة",
-    "titlePlaceholder": "ماذا تريد أن تعرف عن مطور؟",
-    "bodyPlaceholder": "شارك التفاصيل...",
-    "cancel": "إلغاء",
-    "post": "نشر",
-    "askCommunity": "اسأل المجتمع",
-    "bridgeTitle": "معلومات المطور",
-    "bridgeTrustScore": "نقاط الثقة",
-    "bridgeSentimentRising": "صاعد",
-    "bridgeSentimentStable": "مستقر",
-    "bridgeSentimentDeclining": "متراجع",
-    "bridgeDownloadReport": "تحميل تقرير المشتري لـ {{name}}",
-    "bridgeVerifiedOnly": "للمشترين الموثقين فقط"
+    "referralNudge": "مساهمتك تصنع الفرق 🎁",
+    "referralNudgeDesc": "شارك خبرتك وساعد أصدقائك يختاروا صح"
   },
   "dashboard": {
     "memberSince": "عضو منذ",
@@ -1449,10 +1405,6 @@
     "rewardNote": "أنت وصديقك تحصلوا على رصيد معرفة لما يفعّل حسابه",
     "perReferral": "+٥٠ رصيد لكل دعوة"
   },
-  "community": {
-    "referralNudge": "مساهمتك تصنع الفرق 🎁",
-    "referralNudgeDesc": "شارك خبرتك وساعد أصدقائك يختاروا صح"
-  },
   "upsell": {
     "headline": "هل تريد رؤية الصورة الكاملة؟",
     "subtext": "لا تكتفِ بالتقييمات العامة. احصل على تقرير احترافي يحلل أداء المطور على مدار آخر 24 شهراً.",
@@ -1626,10 +1578,18 @@
     "title": "طريقك لبيت آمن",
     "startJourney": "ابدأ الرحلة",
     "tapExplore": "← اضغط لاستكشاف",
-    "research": { "subtitle": "اعرف مين تثق فيه" },
-    "choose": { "subtitle": "اختار مشاريع موثوقة" },
-    "finance": { "subtitle": "موّل بأمان" },
-    "protect": { "subtitle": "أمّن حقوقك" }
+    "research": {
+      "subtitle": "اعرف مين تثق فيه"
+    },
+    "choose": {
+      "subtitle": "اختار مشاريع موثوقة"
+    },
+    "finance": {
+      "subtitle": "موّل بأمان"
+    },
+    "protect": {
+      "subtitle": "أمّن حقوقك"
+    }
   },
   "journeyScroll": {
     "research": {
@@ -1866,5 +1826,20 @@
     "smartRecs": "توصيات ذكية",
     "smartRecsSub": "اقتراحات مخصصة بالذكاء الاصطناعي",
     "readyToChoose": "← جاهز للاختيار؟"
+  },
+  "trustReport": {
+    "saveShort": "احفظ التقرير",
+    "savedShort": "متحفوظ",
+    "saved": "التقرير اتحفظ",
+    "savedDesc": "هتلاقيه في تقاريرك المحفوظة في أي وقت.",
+    "removed": "التقرير اتشال",
+    "removedDesc": "شيلناه من تقاريرك المحفوظة.",
+    "downloaded": "التقرير اتنزّل",
+    "downloadedDesc": "اتحفظ على جهازك بصيغة PDF.",
+    "preparing": "بنحضّر…",
+    "downloadFailed": "معرفناش نعمل التقرير. جرّب تاني لو سمحت.",
+    "saveFailed": "معرفناش نحفظ التقرير. جرّب تاني لو سمحت.",
+    "saveAria": "احفظ تقرير الثقة ده عشان ترجعله بعدين",
+    "savedAria": "تقرير الثقة متحفوظ — اضغط للإزالة"
   }
 }
