@@ -237,7 +237,7 @@ const R8MapDemo = () => {
 
   return (
     <>
-      <style>{`.leaflet-tile-pane{filter:brightness(0.45) saturate(0.3) hue-rotate(180deg)}.leaflet-control-attribution{display:none!important}.leaflet-control-zoom{border:1px solid rgba(255,255,255,0.07)!important;border-radius:2px!important;background:#13171F!important}.leaflet-control-zoom a{background:#13171F!important;color:rgba(237,233,225,0.45)!important;border-color:rgba(255,255,255,0.07)!important}.leaflet-control-zoom a:hover{color:#C9A84C!important}`}</style>
+      <style>{`.leaflet-container{background:#e5e3df!important}.leaflet-control-attribution{display:none!important}.leaflet-control-zoom{border:1px solid rgba(0,0,0,0.12)!important;border-radius:6px!important;background:#fff!important;box-shadow:0 1px 4px rgba(0,0,0,0.2)!important}.leaflet-control-zoom a{background:#fff!important;color:#5f6368!important;border-color:rgba(0,0,0,0.08)!important}.leaflet-control-zoom a:hover{background:#f5f5f5!important;color:#202124!important}`}</style>
       <div className="h-screen flex flex-col bg-[#08090C] text-[#EDE9E1] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         {/* TOP BAR */}
         <div className="flex items-center justify-between px-4 md:px-5 h-[54px] shrink-0 bg-[#08090C]/97 border-b border-white/[0.07] z-[1000] relative">
