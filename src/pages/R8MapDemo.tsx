@@ -6,38 +6,43 @@ import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown, MapPin, C
 
 // ── PROJECT DATA ──
 const projects = [
-  { id: 1, name: "Marasem", dev: "Marasem", area: "New Cairo", lat: 30.030, lng: 31.470, score: 91, status: "On Track", delivery: "Q4 2025", reviews: 312, delay: 0, sentiment: ["Premium Quality", "Fast Delivery", "Clear Contract"] },
-  { id: 2, name: "Villette", dev: "Sodic", area: "New Cairo", lat: 30.022, lng: 31.455, score: 87, status: "On Track", delivery: "Q2 2025", reviews: 198, delay: 0, sentiment: ["Trusted Brand", "Good Finishing", "Responsive Team"] },
-  { id: 3, name: "Palm Hills NK", dev: "Palm Hills", area: "New Cairo", lat: 30.010, lng: 31.480, score: 82, status: "On Track", delivery: "Q3 2026", reviews: 245, delay: 0, sentiment: ["Solid Developer", "Great Location"] },
-  { id: 4, name: "IL Monte", dev: "Emaar", area: "New Cairo", lat: 30.038, lng: 31.462, score: 88, status: "Delivered", delivery: "Delivered", reviews: 401, delay: 0, sentiment: ["Excellent Finishing", "On Time", "Premium"] },
-  { id: 5, name: "Sarai", dev: "MNHD", area: "New Cairo", lat: 30.048, lng: 31.430, score: 71, status: "At Risk", delivery: "Q1 2026", reviews: 167, delay: 8, sentiment: ["Delayed", "Slow Updates", "Unresponsive"] },
-  { id: 6, name: "Hyde Park NK", dev: "Hyde Park", area: "New Cairo", lat: 30.055, lng: 31.445, score: 79, status: "On Track", delivery: "Q2 2026", reviews: 289, delay: 2, sentiment: ["Good Progress", "Minor Delays", "Nice Design"] },
-  { id: 7, name: "Mivida", dev: "Emaar", area: "New Cairo", lat: 30.018, lng: 31.490, score: 85, status: "On Track", delivery: "Q4 2025", reviews: 356, delay: 0, sentiment: ["Reliable", "Good Value", "Green Community"] },
-  { id: 8, name: "Capital Gardens", dev: "Madinet Masr", area: "New Cairo", lat: 30.062, lng: 31.410, score: 68, status: "Delayed", delivery: "Q3 2026", reviews: 134, delay: 12, sentiment: ["Multiple Delays", "Price Hikes", "Poor Comms"] },
-  { id: 9, name: "R7 District", dev: "NUCA", area: "New Capital", lat: 30.020, lng: 31.700, score: 65, status: "On Track", delivery: "Q2 2027", reviews: 89, delay: 0, sentiment: ["Slow Progress", "Uncertain Timeline", "Government Risk"] },
-  { id: 10, name: "Midtown Solo", dev: "Better Home", area: "New Capital", lat: 30.010, lng: 31.720, score: 43, status: "Delayed", delivery: "Q4 2026", reviews: 56, delay: 18, sentiment: ["Serious Delays", "No Updates", "Uncontactable"] },
-  { id: 11, name: "Entrada", dev: "City Edge", area: "New Capital", lat: 30.030, lng: 31.690, score: 72, status: "On Track", delivery: "Q1 2027", reviews: 142, delay: 3, sentiment: ["Average Progress", "Decent Quality"] },
-  { id: 12, name: "The Loft", dev: "OUD", area: "New Capital", lat: 30.015, lng: 31.710, score: 34, status: "Delayed", delivery: "Unknown", reviews: 31, delay: 24, sentiment: ["Frozen", "No Construction", "Refund Issues", "RUN"] },
-  { id: 13, name: "Westown", dev: "Sodic", area: "Sheikh Zayed", lat: 30.055, lng: 30.970, score: 86, status: "On Track", delivery: "Q3 2025", reviews: 267, delay: 0, sentiment: ["Trusted", "Good Finishing", "Responsive"] },
-  { id: 14, name: "Zed West", dev: "Ora", area: "Sheikh Zayed", lat: 30.062, lng: 30.950, score: 80, status: "On Track", delivery: "Q4 2026", reviews: 198, delay: 1, sentiment: ["Premium", "Naguib Sawiris", "Quality"] },
-  { id: 15, name: "Badya", dev: "Palm Hills", area: "6th October", lat: 30.005, lng: 30.940, score: 77, status: "On Track", delivery: "Q2 2026", reviews: 312, delay: 4, sentiment: ["Large Scale", "Slight Delays", "Good Vision"] },
-  { id: 16, name: "Hacienda Bay SZ", dev: "Palm Hills", area: "Sheikh Zayed", lat: 30.070, lng: 30.960, score: 83, status: "On Track", delivery: "Q1 2026", reviews: 178, delay: 0, sentiment: ["Premium Quality", "Fast Delivery"] },
-  { id: 17, name: "Swan Lake West", dev: "Hassan Allam", area: "6th October", lat: 29.998, lng: 30.950, score: 74, status: "At Risk", delivery: "Q3 2026", reviews: 145, delay: 6, sentiment: ["Slow Progress", "Good Location", "Some Delays"] },
-  { id: 18, name: "Bloom Fields", dev: "Tatweer Misr", area: "6th October", lat: 29.990, lng: 30.935, score: 55, status: "Delayed", delivery: "Q4 2026", reviews: 88, delay: 14, sentiment: ["Significant Delays", "Price Issues"] },
-  { id: 19, name: "Hacienda Bay", dev: "Palm Hills", area: "North Coast", lat: 31.050, lng: 29.820, score: 90, status: "Delivered", delivery: "Delivered", reviews: 520, delay: 0, sentiment: ["Best on NC", "Premium Finishing", "On Time"] },
-  { id: 20, name: "Marassi", dev: "Emaar", area: "North Coast", lat: 31.020, lng: 29.750, score: 88, status: "Delivered", delivery: "Delivered", reviews: 445, delay: 0, sentiment: ["Masterplan", "Great Resort", "Reliable"] },
-  { id: 21, name: "Fouka Bay", dev: "Tatweer Misr", area: "North Coast", lat: 31.080, lng: 29.860, score: 82, status: "On Track", delivery: "Q4 2025", reviews: 289, delay: 1, sentiment: ["Beautiful Design", "On Track", "Trusted Dev"] },
-  { id: 22, name: "Caesar Bay", dev: "Amer Group", area: "North Coast", lat: 31.100, lng: 29.900, score: 47, status: "Delayed", delivery: "Q2 2026", reviews: 134, delay: 16, sentiment: ["Major Delays", "Investor Concerns", "Risky"] },
-  { id: 23, name: "RAK", dev: "Unknown", area: "North Coast", lat: 31.060, lng: 29.780, score: 29, status: "Frozen", delivery: "Unknown", reviews: 45, delay: 36, sentiment: ["FROZEN", "Legal Issues", "Do Not Buy", "Lawsuit"] },
-  { id: 24, name: "Amwaj", dev: "La Vista", area: "North Coast", lat: 31.040, lng: 29.800, score: 78, status: "On Track", delivery: "Q3 2025", reviews: 201, delay: 2, sentiment: ["Reliable", "Good Amenities", "Minor Delays"] },
+  // ── New Cairo (5th Settlement / Tagamoa, ~30.02–30.04 N, 31.43–31.50 E) ──
+  { id: 1, name: "Marasem", dev: "Marasem", area: "New Cairo", lat: 30.0050, lng: 31.4980, score: 91, status: "On Track", delivery: "Q4 2025", reviews: 312, delay: 0, sentiment: ["Premium Quality", "Fast Delivery", "Clear Contract"] },
+  { id: 2, name: "Villette", dev: "Sodic", area: "New Cairo", lat: 30.0095, lng: 31.4920, score: 87, status: "On Track", delivery: "Q2 2025", reviews: 198, delay: 0, sentiment: ["Trusted Brand", "Good Finishing", "Responsive Team"] },
+  { id: 3, name: "Palm Hills NK", dev: "Palm Hills", area: "New Cairo", lat: 30.0210, lng: 31.5050, score: 82, status: "On Track", delivery: "Q3 2026", reviews: 245, delay: 0, sentiment: ["Solid Developer", "Great Location"] },
+  { id: 4, name: "IL Monte", dev: "Emaar", area: "New Cairo", lat: 30.0335, lng: 31.4790, score: 88, status: "Delivered", delivery: "Delivered", reviews: 401, delay: 0, sentiment: ["Excellent Finishing", "On Time", "Premium"] },
+  { id: 5, name: "Sarai", dev: "MNHD", area: "New Cairo", lat: 29.9710, lng: 31.5380, score: 71, status: "At Risk", delivery: "Q1 2026", reviews: 167, delay: 8, sentiment: ["Delayed", "Slow Updates", "Unresponsive"] },
+  { id: 6, name: "Hyde Park NK", dev: "Hyde Park", area: "New Cairo", lat: 30.0190, lng: 31.4700, score: 79, status: "On Track", delivery: "Q2 2026", reviews: 289, delay: 2, sentiment: ["Good Progress", "Minor Delays", "Nice Design"] },
+  { id: 7, name: "Mivida", dev: "Emaar", area: "New Cairo", lat: 30.0150, lng: 31.4845, score: 85, status: "On Track", delivery: "Q4 2025", reviews: 356, delay: 0, sentiment: ["Reliable", "Good Value", "Green Community"] },
+  { id: 8, name: "Capital Gardens", dev: "Madinet Masr", area: "New Cairo", lat: 29.9890, lng: 31.5170, score: 68, status: "Delayed", delivery: "Q3 2026", reviews: 134, delay: 12, sentiment: ["Multiple Delays", "Price Hikes", "Poor Comms"] },
+  // ── New Administrative Capital (~30.02 N, 31.74–31.80 E) ──
+  { id: 9, name: "R7 District", dev: "NUCA", area: "New Capital", lat: 30.0260, lng: 31.7450, score: 65, status: "On Track", delivery: "Q2 2027", reviews: 89, delay: 0, sentiment: ["Slow Progress", "Uncertain Timeline", "Government Risk"] },
+  { id: 10, name: "Midtown Solo", dev: "Better Home", area: "New Capital", lat: 30.0150, lng: 31.7780, score: 43, status: "Delayed", delivery: "Q4 2026", reviews: 56, delay: 18, sentiment: ["Serious Delays", "No Updates", "Uncontactable"] },
+  { id: 11, name: "Entrada", dev: "City Edge", area: "New Capital", lat: 30.0040, lng: 31.7620, score: 72, status: "On Track", delivery: "Q1 2027", reviews: 142, delay: 3, sentiment: ["Average Progress", "Decent Quality"] },
+  { id: 12, name: "The Loft", dev: "OUD", area: "New Capital", lat: 30.0320, lng: 31.7910, score: 34, status: "Delayed", delivery: "Unknown", reviews: 31, delay: 24, sentiment: ["Frozen", "No Construction", "Refund Issues", "RUN"] },
+  // ── Sheikh Zayed (~30.05–30.08 N, 30.97–31.02 E) ──
+  { id: 13, name: "Westown", dev: "Sodic", area: "Sheikh Zayed", lat: 30.0610, lng: 30.9870, score: 86, status: "On Track", delivery: "Q3 2025", reviews: 267, delay: 0, sentiment: ["Trusted", "Good Finishing", "Responsive"] },
+  { id: 14, name: "Zed West", dev: "Ora", area: "Sheikh Zayed", lat: 30.0540, lng: 31.0050, score: 80, status: "On Track", delivery: "Q4 2026", reviews: 198, delay: 1, sentiment: ["Premium", "Naguib Sawiris", "Quality"] },
+  { id: 16, name: "Hacienda Bay SZ", dev: "Palm Hills", area: "Sheikh Zayed", lat: 30.0760, lng: 30.9690, score: 83, status: "On Track", delivery: "Q1 2026", reviews: 178, delay: 0, sentiment: ["Premium Quality", "Fast Delivery"] },
+  // ── 6th of October City (~29.93–29.97 N, 30.90–30.95 E) ──
+  { id: 15, name: "Badya", dev: "Palm Hills", area: "6th October", lat: 29.9450, lng: 30.8980, score: 77, status: "On Track", delivery: "Q2 2026", reviews: 312, delay: 4, sentiment: ["Large Scale", "Slight Delays", "Good Vision"] },
+  { id: 17, name: "Swan Lake West", dev: "Hassan Allam", area: "6th October", lat: 29.9710, lng: 30.9320, score: 74, status: "At Risk", delivery: "Q3 2026", reviews: 145, delay: 6, sentiment: ["Slow Progress", "Good Location", "Some Delays"] },
+  { id: 18, name: "Bloom Fields", dev: "Tatweer Misr", area: "6th October", lat: 29.9560, lng: 30.9150, score: 55, status: "Delayed", delivery: "Q4 2026", reviews: 88, delay: 14, sentiment: ["Significant Delays", "Price Issues"] },
+  // ── North Coast (Sahel, Sidi Abdel Rahman ~30.92 N, 28.78–28.95 E) ──
+  { id: 19, name: "Hacienda Bay", dev: "Palm Hills", area: "North Coast", lat: 30.9180, lng: 28.9450, score: 90, status: "Delivered", delivery: "Delivered", reviews: 520, delay: 0, sentiment: ["Best on NC", "Premium Finishing", "On Time"] },
+  { id: 20, name: "Marassi", dev: "Emaar", area: "North Coast", lat: 30.9220, lng: 28.8550, score: 88, status: "Delivered", delivery: "Delivered", reviews: 445, delay: 0, sentiment: ["Masterplan", "Great Resort", "Reliable"] },
+  { id: 21, name: "Fouka Bay", dev: "Tatweer Misr", area: "North Coast", lat: 30.9520, lng: 28.7780, score: 82, status: "On Track", delivery: "Q4 2025", reviews: 289, delay: 1, sentiment: ["Beautiful Design", "On Track", "Trusted Dev"] },
+  { id: 22, name: "Caesar Bay", dev: "Amer Group", area: "North Coast", lat: 30.9650, lng: 28.7100, score: 47, status: "Delayed", delivery: "Q2 2026", reviews: 134, delay: 16, sentiment: ["Major Delays", "Investor Concerns", "Risky"] },
+  { id: 23, name: "RAK", dev: "Unknown", area: "North Coast", lat: 30.9050, lng: 29.0200, score: 29, status: "Frozen", delivery: "Unknown", reviews: 45, delay: 36, sentiment: ["FROZEN", "Legal Issues", "Do Not Buy", "Lawsuit"] },
+  { id: 24, name: "Amwaj", dev: "La Vista", area: "North Coast", lat: 30.8980, lng: 29.0850, score: 78, status: "On Track", delivery: "Q3 2025", reviews: 201, delay: 2, sentiment: ["Reliable", "Good Amenities", "Minor Delays"] },
 ];
 
 const heatZones = [
-  { lat: 30.030, lng: 31.460, r: 18000, color: "#2ECC71", opacity: 0.12 },
-  { lat: 30.020, lng: 31.700, r: 14000, color: "#F1C40F", opacity: 0.12 },
-  { lat: 30.060, lng: 30.960, r: 16000, color: "#2ECC71", opacity: 0.10 },
-  { lat: 29.995, lng: 30.942, r: 14000, color: "#E67E22", opacity: 0.13 },
-  { lat: 31.060, lng: 29.820, r: 22000, color: "#2ECC71", opacity: 0.10 },
+  { lat: 30.0200, lng: 31.4850, r: 9000, color: "#2ECC71", opacity: 0.12 }, // New Cairo
+  { lat: 30.0200, lng: 31.7700, r: 12000, color: "#F1C40F", opacity: 0.12 }, // New Capital
+  { lat: 30.0640, lng: 30.9900, r: 9000, color: "#2ECC71", opacity: 0.10 }, // Sheikh Zayed
+  { lat: 29.9560, lng: 30.9180, r: 9000, color: "#E67E22", opacity: 0.13 }, // 6th October
+  { lat: 30.9250, lng: 28.8800, r: 18000, color: "#2ECC71", opacity: 0.10 }, // North Coast
 ];
 
 type Project = typeof projects[number];
