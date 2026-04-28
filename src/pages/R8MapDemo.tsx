@@ -64,23 +64,22 @@ function statusClass(st: string) {
 
 function makeIcon(score: number) {
   const c = scoreColor(score);
-  // Convert score (0-100) to 0-5 stars (rounded to nearest half = full star display)
   const stars = Math.max(1, Math.min(5, Math.round(score / 20)));
   const starsHtml = Array.from({ length: 5 })
-    .map((_, i) => `<span style="color:${i < stars ? "#FFC107" : "rgba(255,255,255,0.25)"};font-size:8px;line-height:1">★</span>`)
+    .map((_, i) => `<span style="color:${i < stars ? "#fac417" : "rgba(255,255,255,0.55)"};font-size:14px;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,0.85),0 0 2px rgba(0,0,0,0.9)">★</span>`)
     .join("");
+  // Borderless: stars on top, big bold score below. Heavy text-shadow for legibility on any map tile.
+  const shadow = "0 1px 3px rgba(0,0,0,0.95),0 0 6px rgba(0,0,0,0.7),0 0 1px rgba(0,0,0,1)";
   return L.divIcon({
     html: `
-      <div style="position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;transform:translateY(-6px)">
-        <div style="background:#fff;border-radius:18px;padding:4px 8px 3px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.35),0 0 0 2px ${c};min-width:42px">
-          <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;color:${c};font-weight:700">${score}</span>
-          <div style="display:flex;gap:1px;margin-top:1px">${starsHtml}</div>
-        </div>
-        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin-top:-1px;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.4))"></div>
+      <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;pointer-events:auto;line-height:1">
+        <div style="display:flex;gap:2px;margin-bottom:2px">${starsHtml}</div>
+        <span style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:22px;line-height:1;color:${c};font-weight:900;text-shadow:${shadow};letter-spacing:0.5px">${score}</span>
+        <span style="width:8px;height:8px;border-radius:50%;background:${c};margin-top:3px;box-shadow:0 0 0 2px rgba(255,255,255,0.85),0 1px 3px rgba(0,0,0,0.6)"></span>
       </div>`,
     className: "",
-    iconSize: [50, 44],
-    iconAnchor: [25, 44],
+    iconSize: [78, 52],
+    iconAnchor: [39, 52],
   });
 }
 
