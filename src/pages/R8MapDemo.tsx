@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Search, X, Locate } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -64,11 +64,37 @@ function statusClass(st: string) {
 
 function makeIcon(score: number) {
   const c = scoreColor(score);
+  // Convert score (0-100) to 0-5 stars (rounded to nearest half = full star display)
+  const stars = Math.max(1, Math.min(5, Math.round(score / 20)));
+  const starsHtml = Array.from({ length: 5 })
+    .map((_, i) => `<span style="color:${i < stars ? "#FFC107" : "rgba(255,255,255,0.25)"};font-size:8px;line-height:1">★</span>`)
+    .join("");
   return L.divIcon({
-    html: `<div style="width:36px;height:36px;border-radius:50%;background:rgba(8,9,12,0.92);border:2px solid ${c};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:${c};box-shadow:0 0 12px ${c}55,0 2px 12px rgba(0,0,0,0.8);cursor:pointer">${score}</div>`,
+    html: `
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;transform:translateY(-6px)">
+        <div style="background:#fff;border-radius:18px;padding:4px 8px 3px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.35),0 0 0 2px ${c};min-width:42px">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;color:${c};font-weight:700">${score}</span>
+          <div style="display:flex;gap:1px;margin-top:1px">${starsHtml}</div>
+        </div>
+        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin-top:-1px;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.4))"></div>
+      </div>`,
     className: "",
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
+    iconSize: [50, 44],
+    iconAnchor: [25, 44],
+  });
+}
+
+function makeUserLocationIcon() {
+  return L.divIcon({
+    html: `
+      <div style="position:relative;width:18px;height:18px">
+        <div style="position:absolute;inset:0;border-radius:50%;background:#4285F4;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.15),0 2px 6px rgba(66,133,244,0.6)"></div>
+        <div style="position:absolute;inset:-6px;border-radius:50%;background:#4285F4;opacity:0.18;animation:userPulse 2s ease-out infinite"></div>
+      </div>
+      <style>@keyframes userPulse{0%{transform:scale(0.6);opacity:0.5}100%{transform:scale(2.2);opacity:0}}</style>`,
+    className: "",
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
   });
 }
 
@@ -89,6 +115,9 @@ const R8MapDemo = () => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Record<number, L.Marker>>({});
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const userAccuracyRef = useRef<L.Circle | null>(null);
+  const [userLocated, setUserLocated] = useState(false);
 
   const filtered = useMemo(() => {
     let list = projects;
@@ -126,7 +155,12 @@ const R8MapDemo = () => {
     if (!mapContainerRef.current || mapRef.current) return;
 
     const map = L.map(mapContainerRef.current, { zoomControl: false, attributionControl: false }).setView([30.06, 31.25], 9);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+    // Google-Maps-style tiles (Google Roadmap via mt servers — same look users know)
+    L.tileLayer("https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+      maxZoom: 20,
+      subdomains: ["0", "1", "2", "3"],
+      attribution: "© Google",
+    }).addTo(map);
     L.control.zoom({ position: "bottomleft" }).addTo(map);
 
     // Heat zones
@@ -140,6 +174,44 @@ const R8MapDemo = () => {
       map.remove();
       mapRef.current = null;
     };
+  }, []);
+
+  // Locate the user (You are here)
+  const locateUser = () => {
+    const map = mapRef.current;
+    if (!map || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        if (userMarkerRef.current) userMarkerRef.current.remove();
+        if (userAccuracyRef.current) userAccuracyRef.current.remove();
+        userAccuracyRef.current = L.circle([latitude, longitude], {
+          radius: accuracy,
+          color: "#4285F4",
+          weight: 1,
+          fillColor: "#4285F4",
+          fillOpacity: 0.12,
+        }).addTo(map);
+        userMarkerRef.current = L.marker([latitude, longitude], {
+          icon: makeUserLocationIcon(),
+          zIndexOffset: 1000,
+        })
+          .addTo(map)
+          .bindTooltip("You are here", { permanent: false, direction: "top", offset: [0, -8] });
+        map.setView([latitude, longitude], 12, { animate: true });
+        setUserLocated(true);
+      },
+      () => {
+        // Silently fail (permission denied / unavailable)
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
+    );
+  };
+
+  // Auto-attempt location on mount
+  useEffect(() => {
+    const t = setTimeout(locateUser, 600);
+    return () => clearTimeout(t);
   }, []);
 
   // Update markers when filtered changes
@@ -165,7 +237,7 @@ const R8MapDemo = () => {
 
   return (
     <>
-      <style>{`.leaflet-tile-pane{filter:brightness(0.45) saturate(0.3) hue-rotate(180deg)}.leaflet-control-attribution{display:none!important}.leaflet-control-zoom{border:1px solid rgba(255,255,255,0.07)!important;border-radius:2px!important;background:#13171F!important}.leaflet-control-zoom a{background:#13171F!important;color:rgba(237,233,225,0.45)!important;border-color:rgba(255,255,255,0.07)!important}.leaflet-control-zoom a:hover{color:#C9A84C!important}`}</style>
+      <style>{`.leaflet-container{background:#e5e3df!important}.leaflet-control-attribution{display:none!important}.leaflet-control-zoom{border:1px solid rgba(0,0,0,0.12)!important;border-radius:6px!important;background:#fff!important;box-shadow:0 1px 4px rgba(0,0,0,0.2)!important}.leaflet-control-zoom a{background:#fff!important;color:#5f6368!important;border-color:rgba(0,0,0,0.08)!important}.leaflet-control-zoom a:hover{background:#f5f5f5!important;color:#202124!important}`}</style>
       <div className="h-screen flex flex-col bg-[#08090C] text-[#EDE9E1] overflow-hidden" style={{ fontFamily: "'DM Sans', sans-serif" }}>
         {/* TOP BAR */}
         <div className="flex items-center justify-between px-4 md:px-5 h-[54px] shrink-0 bg-[#08090C]/97 border-b border-white/[0.07] z-[1000] relative">
@@ -291,7 +363,16 @@ const R8MapDemo = () => {
 
           {/* MAP */}
           <div className="flex-1 relative">
-            <div ref={mapContainerRef} className="w-full h-full" style={{ background: "#0d0f14" }} />
+            <div ref={mapContainerRef} className="w-full h-full" style={{ background: "#e5e3df" }} />
+
+            {/* Locate-me button (Google-Maps style) */}
+            <button
+              onClick={locateUser}
+              title={userLocated ? "Recenter on your location" : "Show my location"}
+              className="absolute bottom-[110px] right-4 z-[500] w-10 h-10 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.3)] border border-black/10 flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              <Locate className={`w-5 h-5 ${userLocated ? "text-[#4285F4]" : "text-[#5f6368]"}`} />
+            </button>
 
             {/* HUD */}
             <div className="absolute bottom-4 right-4 z-[500] flex flex-col gap-2 items-end">
