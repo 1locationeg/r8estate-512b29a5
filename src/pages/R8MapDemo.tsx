@@ -301,64 +301,59 @@ const R8MapDemo = () => {
 
         {/* MAIN */}
         <div className="flex flex-1 overflow-hidden relative">
-          {/* SIDEBAR */}
-          <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[320px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
-            <div className="p-4 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#fac417] animate-pulse" />
-                <div className="text-[10px] tracking-[2px] uppercase text-[#fac417] font-bold">AI Trust Filter</div>
-              </div>
-              <div className="relative mb-3">
+          {/* SIDEBAR — Projects-first layout */}
+          <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[340px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
+            {/* Sticky top: search + trust pills + result count */}
+            <div className="p-3 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
+              <div className="relative mb-2.5">
                 <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <input
-                  className="w-full min-h-[40px] bg-white/[0.08] border border-white/15 rounded-lg py-2 ps-9 pe-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#fac417]/60 focus:bg-white/[0.12] transition-all"
+                  className="w-full min-h-[42px] bg-white/[0.08] border border-white/15 rounded-lg py-2 ps-9 pe-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#fac417]/60 focus:bg-white/[0.12] transition-all"
                   placeholder="Search project, developer, area..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                 />
               </div>
 
-              {/* Zone filters */}
-              <div className="mb-3">
-                <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Trust Zone</div>
-                <div className="flex flex-wrap gap-2">
-                  {ZONES.map(z => (
+              {/* Trust zone pills — primary filter, always visible */}
+              <div className="flex flex-wrap gap-1.5">
+                {ZONES.map(z => {
+                  const on = activeZones.includes(z.label);
+                  return (
                     <button
                       key={z.label}
                       onClick={() => toggleZone(z.label)}
-                      className="text-[11px] font-bold px-3 py-1.5 min-h-[32px] rounded-full border-2 transition-all"
-                      style={activeZones.includes(z.label)
+                      className="text-[11px] font-bold px-2.5 py-1 min-h-[30px] rounded-full border transition-all"
+                      style={on
                         ? { borderColor: z.color, color: "#fff", background: z.color, boxShadow: `0 2px 10px ${z.color}66` }
                         : { borderColor: `${z.color}80`, color: z.color, background: `${z.color}1a` }}
                     >
-                      {z.label}
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: on ? "#fff" : z.color }} />
+                        {z.label}
+                      </span>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
 
-              {/* Area filters */}
-              <div>
-                <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Area</div>
-                <div className="flex flex-wrap gap-2">
-                  {AREAS.map(a => (
-                    <button
-                      key={a}
-                      onClick={() => toggleArea(a)}
-                      className={`text-[11px] font-semibold px-3 py-1.5 min-h-[32px] rounded-full border transition-all ${
-                        activeAreas.includes(a)
-                          ? "border-[#fac417] text-[#0a3d62] bg-[#fac417] shadow-[0_2px_10px_rgba(250,196,23,0.45)]"
-                          : "border-white/20 text-white/75 bg-white/5 hover:bg-white/10"
-                      }`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
+              {/* Result count + clear */}
+              <div className="flex items-center justify-between mt-2.5 px-0.5">
+                <span className="text-[11px] text-white/60 font-semibold">
+                  <span className="text-[#fac417]">{filtered.length}</span> of {projects.length} projects
+                </span>
+                {(activeZones.length > 0 || activeAreas.length > 0 || search) && (
+                  <button
+                    onClick={() => { setActiveZones([]); setActiveAreas([]); setSearch(""); }}
+                    className="text-[10px] text-white/55 hover:text-[#fac417] font-semibold tracking-wide uppercase"
+                  >
+                    Clear
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Project list */}
+            {/* Project list — gets the most space */}
             <div className="flex-1 overflow-y-auto">
               {filtered.map(p => (
                 <div
