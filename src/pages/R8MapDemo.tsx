@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X, Locate } from "lucide-react";
+import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -109,6 +109,8 @@ const R8MapDemo = () => {
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(null);
 
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -145,7 +147,15 @@ const R8MapDemo = () => {
   const selectProject = (p: Project) => {
     setSelected(p);
     setSidebarOpen(false);
-    if (mapRef.current) mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
+    if (mapRef.current) {
+      mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
+      // After pan settles, compute screen position for the floating info card.
+      setTimeout(() => {
+        if (!mapRef.current) return;
+        const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
+        setPopupPos({ x: pt.x, y: pt.y });
+      }, 520);
+    }
   };
 
   // Initialize Leaflet map
@@ -168,10 +178,33 @@ const R8MapDemo = () => {
 
     mapRef.current = map;
 
+    // Tap-on-map closes the floating card
+    map.on("click", () => setSelected(null));
+    // Keep info card glued to marker as user pans/zooms
+    const sync = () => {
+      setSelected((cur) => {
+        if (!cur || !mapRef.current) return cur;
+        const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
+        setPopupPos({ x: pt.x, y: pt.y });
+        return cur;
+      });
+    };
+    map.on("move", sync);
+    map.on("zoom", sync);
+
     return () => {
       map.remove();
       mapRef.current = null;
     };
+  }, []);
+
+  // ESC closes the floating card
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // Locate the user (You are here)
