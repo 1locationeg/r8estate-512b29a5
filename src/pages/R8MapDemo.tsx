@@ -64,11 +64,37 @@ function statusClass(st: string) {
 
 function makeIcon(score: number) {
   const c = scoreColor(score);
+  // Convert score (0-100) to 0-5 stars (rounded to nearest half = full star display)
+  const stars = Math.max(1, Math.min(5, Math.round(score / 20)));
+  const starsHtml = Array.from({ length: 5 })
+    .map((_, i) => `<span style="color:${i < stars ? "#FFC107" : "rgba(255,255,255,0.25)"};font-size:8px;line-height:1">★</span>`)
+    .join("");
   return L.divIcon({
-    html: `<div style="width:36px;height:36px;border-radius:50%;background:rgba(8,9,12,0.92);border:2px solid ${c};display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:13px;color:${c};box-shadow:0 0 12px ${c}55,0 2px 12px rgba(0,0,0,0.8);cursor:pointer">${score}</div>`,
+    html: `
+      <div style="position:relative;display:flex;flex-direction:column;align-items:center;cursor:pointer;transform:translateY(-6px)">
+        <div style="background:#fff;border-radius:18px;padding:4px 8px 3px;display:flex;flex-direction:column;align-items:center;box-shadow:0 2px 6px rgba(0,0,0,0.35),0 0 0 2px ${c};min-width:42px">
+          <span style="font-family:'Bebas Neue',sans-serif;font-size:14px;line-height:1;color:${c};font-weight:700">${score}</span>
+          <div style="display:flex;gap:1px;margin-top:1px">${starsHtml}</div>
+        </div>
+        <div style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin-top:-1px;filter:drop-shadow(0 1px 1px rgba(0,0,0,0.4))"></div>
+      </div>`,
     className: "",
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
+    iconSize: [50, 44],
+    iconAnchor: [25, 44],
+  });
+}
+
+function makeUserLocationIcon() {
+  return L.divIcon({
+    html: `
+      <div style="position:relative;width:18px;height:18px">
+        <div style="position:absolute;inset:0;border-radius:50%;background:#4285F4;border:3px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,0.15),0 2px 6px rgba(66,133,244,0.6)"></div>
+        <div style="position:absolute;inset:-6px;border-radius:50%;background:#4285F4;opacity:0.18;animation:userPulse 2s ease-out infinite"></div>
+      </div>
+      <style>@keyframes userPulse{0%{transform:scale(0.6);opacity:0.5}100%{transform:scale(2.2);opacity:0}}</style>`,
+    className: "",
+    iconSize: [18, 18],
+    iconAnchor: [9, 9],
   });
 }
 
