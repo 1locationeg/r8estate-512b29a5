@@ -363,7 +363,16 @@ const R8MapDemo = () => {
 
           {/* MAP */}
           <div className="flex-1 relative">
-            <div ref={mapContainerRef} className="w-full h-full" style={{ background: "#0d0f14" }} />
+            <div ref={mapContainerRef} className="w-full h-full" style={{ background: "#e5e3df" }} />
+
+            {/* Locate-me button (Google-Maps style) */}
+            <button
+              onClick={locateUser}
+              title={userLocated ? "Recenter on your location" : "Show my location"}
+              className="absolute bottom-[110px] right-4 z-[500] w-10 h-10 rounded-full bg-white shadow-[0_2px_6px_rgba(0,0,0,0.3)] border border-black/10 flex items-center justify-center hover:bg-gray-50 transition-colors"
+            >
+              <Locate className={`w-5 h-5 ${userLocated ? "text-[#4285F4]" : "text-[#5f6368]"}`} />
+            </button>
 
             {/* HUD */}
             <div className="absolute bottom-4 right-4 z-[500] flex flex-col gap-2 items-end">
