@@ -480,93 +480,115 @@ const R8MapDemo = () => {
               </div>
             </div>
 
-            {/* DETAIL PANEL */}
-            <div className={`absolute top-4 right-4 z-[500] w-[280px] bg-[#08090C]/96 border border-white/[0.07] rounded backdrop-blur-xl overflow-hidden transition-transform duration-300 ${selected ? "translate-x-0" : "translate-x-[320px]"}`}>
-              {selected && (
-                <>
-                  <div className="p-4 border-b border-white/[0.07] flex justify-between items-start">
-                    <div>
-                      <div className="font-['Bebas_Neue'] text-[24px] tracking-[2px] text-[#EDE9E1] leading-none mb-1">{selected.name}</div>
-                      <div className="text-[11px] font-mono text-[#EDE9E1]/45">{selected.area} · {selected.dev}</div>
+            {/* FLOATING INFO CARD — pinned to marker, Google-Maps-style */}
+            {selected && popupPos && (() => {
+              const c = scoreColor(selected.score);
+              const stars = Math.max(1, Math.min(5, Math.round(selected.score / 20)));
+              const rating = (selected.score / 20).toFixed(1);
+              // Card dims (matches max-w below)
+              const W = 300;
+              // Clamp horizontally inside the map container so it never overflows
+              const left = Math.max(12, Math.min((mapContainerRef.current?.clientWidth ?? W) - W - 12, popupPos.x - W / 2));
+              // Show above the marker; flip below if too close to top
+              const showBelow = popupPos.y < 280;
+              const top = showBelow ? popupPos.y + 30 : popupPos.y - 16;
+              return (
+                <div
+                  className="absolute z-[600] pointer-events-none"
+                  style={{ left, top, width: W, transform: showBelow ? "none" : "translateY(-100%)" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="pointer-events-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    {/* Header */}
+                    <div className="px-4 pt-3 pb-2.5 border-b border-black/5 relative">
+                      <button
+                        onClick={() => setSelected(null)}
+                        aria-label="Close"
+                        className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#5f6368] transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="text-[16px] font-bold text-[#0a3d62] leading-tight pe-8">{selected.name}</div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="font-bold text-[14px] text-[#0a3d62]">{rating}</span>
+                        <span className="flex items-center gap-[1px]">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "13px", lineHeight: 1 }}>★</span>
+                          ))}
+                        </span>
+                        <span className="text-[12px] text-[#5f6368]">({selected.reviews.toLocaleString()})</span>
+                      </div>
+                      <div className="text-[12px] text-[#5f6368] mt-0.5 truncate">
+                        {selected.dev} · <span className="text-[#0a3d62] font-medium">{selected.area}</span>
+                      </div>
                     </div>
-                    <button onClick={() => setSelected(null)} className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
 
-                  <div className="p-4">
-                    {/* Score circle */}
-                    <div className="flex items-center gap-3 mb-4">
+                    {/* Trust + status row */}
+                    <div className="px-4 py-3 flex items-center gap-3 bg-[#f8f9fa]">
                       <div
-                        className="w-16 h-16 rounded-full border-2 flex items-center justify-center font-['Bebas_Neue'] text-[28px]"
-                        style={{ borderColor: scoreColor(selected.score), color: scoreColor(selected.score), boxShadow: `0 0 16px ${scoreColor(selected.score)}44` }}
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-[18px] font-bold text-white shrink-0"
+                        style={{ background: c, boxShadow: `0 2px 8px ${c}55` }}
                       >
                         {selected.score}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] tracking-[1px] uppercase font-bold" style={{ color: c }}>
+                          {scoreGrade(selected.score)}
+                        </div>
+                        <div className="h-1.5 mt-1 rounded-full bg-black/10 overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: c }} />
+                        </div>
+                        <div className="text-[10px] text-[#5f6368] mt-1">Trust Score · {selected.score}/100</div>
+                      </div>
+                    </div>
+
+                    {/* Key metrics — compact grid */}
+                    <div className="px-4 py-3 grid grid-cols-3 gap-2 border-t border-black/5">
                       <div>
-                        <div className="font-mono text-[11px] tracking-[2px] uppercase" style={{ color: scoreColor(selected.score) }}>{scoreGrade(selected.score)}</div>
-                        <div className="text-[10px] text-[#EDE9E1]/40 font-mono mt-0.5">Trust Score</div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Status</div>
+                        <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(selected.status)}`}>
+                          {selected.status}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delivery</div>
+                        <div className="text-[12px] font-bold text-[#0a3d62]">{selected.delivery}</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delay</div>
+                        <div className={`text-[12px] font-bold ${selected.delay > 0 ? "text-[#E74C3C]" : "text-[#2ECC71]"}`}>
+                          {selected.delay > 0 ? `+${selected.delay}mo` : "None"}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Metrics */}
-                    <div className="space-y-2.5">
-                      {[
-                        { label: "DELIVERY STATUS", value: selected.status, isStatus: true },
-                        { label: "EXPECTED DELIVERY", value: selected.delivery },
-                        { label: "CURRENT DELAY", value: selected.delay > 0 ? `+${selected.delay} months` : "None", isDelay: true },
-                        { label: "VERIFIED REVIEWS", value: selected.reviews.toLocaleString() },
-                      ].map(m => (
-                        <div key={m.label} className="flex items-center justify-between py-1.5 border-b border-white/[0.05]">
-                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">{m.label}</span>
-                          {m.isStatus ? (
-                            <span className={`font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-sm ${statusClass(selected.status)}`}>
-                              {m.value}
-                            </span>
-                          ) : (
-                            <span className={`text-[12px] font-medium ${m.isDelay && selected.delay > 0 ? "text-[#E74C3C]" : m.isDelay ? "text-[#2ECC71]" : "text-[#EDE9E1]"}`}>
-                              {m.value}
-                            </span>
-                          )}
-                        </div>
+                    {/* Sentiment chips — top 3 only to keep it compact */}
+                    <div className="px-4 pb-3 flex flex-wrap gap-1">
+                      {selected.sentiment.slice(0, 3).map((s) => (
+                        <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0a3d62]/8 text-[#0a3d62]">
+                          {s}
+                        </span>
                       ))}
-
-                      {/* Trust bar */}
-                      <div className="pt-1">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">TRUST SCORE</span>
-                          <span className="text-[12px] font-medium" style={{ color: scoreColor(selected.score) }}>{selected.score}/100</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: scoreColor(selected.score) }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Sentiment */}
-                    <div className="mt-4">
-                      <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2">Buyer Sentiment</div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selected.sentiment.map((s, i) => {
-                          const colors = [
-                            { bg: "rgba(46,204,113,.15)", border: "#2ECC71" },
-                            { bg: "rgba(241,196,15,.12)", border: "#F1C40F" },
-                            { bg: "rgba(231,76,60,.12)", border: "#E74C3C" },
-                            { bg: "rgba(201,168,76,.12)", border: "#C9A84C" },
-                          ];
-                          const c = colors[i % 4];
-                          return (
-                            <span key={s} className="font-mono text-[9px] tracking-[0.5px] px-2 py-1 rounded-sm border" style={{ background: c.bg, borderColor: c.border, color: c.border }}>
-                              {s}
-                            </span>
-                          );
-                        })}
-                      </div>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
+                  {/* Tail pointer */}
+                  {!showBelow && (
+                    <div
+                      className="mx-auto"
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "8px solid transparent",
+                        borderRight: "8px solid transparent",
+                        borderTop: "10px solid #fff",
+                        marginTop: -1,
+                        filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
+                        marginInlineStart: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
