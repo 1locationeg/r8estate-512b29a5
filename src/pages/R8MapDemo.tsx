@@ -387,22 +387,60 @@ const R8MapDemo = () => {
               )}
             </div>
 
-            {/* Legend */}
-            <div className="p-4 border-t border-white/10 bg-black/20 backdrop-blur-sm">
-              <div className="text-[10px] tracking-[2px] uppercase text-[#fac417] font-bold mb-2.5">Trust Score Legend</div>
-              <div className="space-y-1.5">
-                {[
-                  { color: "#2ECC71", label: "80–100 Trusted" },
-                  { color: "#F1C40F", label: "60–79 Caution" },
-                  { color: "#E67E22", label: "40–59 Elevated Risk" },
-                  { color: "#E74C3C", label: "0–39 High Risk" },
-                ].map(l => (
-                  <div key={l.label} className="flex items-center gap-2 text-[11px] text-white/70">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color, boxShadow: `0 0 6px ${l.color}88` }} />
-                    {l.label}
+            {/* Collapsible "More filters" — Areas + Legend tucked away */}
+            <div className="border-t border-white/10 bg-black/25 backdrop-blur-sm shrink-0">
+              <button
+                onClick={() => setMoreFiltersOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-[11px] tracking-[1.5px] uppercase font-bold text-[#fac417] hover:bg-white/[0.04] transition-colors"
+                aria-expanded={moreFiltersOpen}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  More filters
+                  {activeAreas.length > 0 && (
+                    <span className="text-[10px] bg-[#fac417] text-[#0a3d62] px-1.5 py-0.5 rounded-full">{activeAreas.length}</span>
+                  )}
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${moreFiltersOpen ? "rotate-180" : ""}`} />
+              </button>
+              {moreFiltersOpen && (
+                <div className="px-4 pb-4 space-y-3">
+                  <div>
+                    <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Area</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {AREAS.map(a => (
+                        <button
+                          key={a}
+                          onClick={() => toggleArea(a)}
+                          className={`text-[11px] font-semibold px-2.5 py-1 min-h-[30px] rounded-full border transition-all ${
+                            activeAreas.includes(a)
+                              ? "border-[#fac417] text-[#0a3d62] bg-[#fac417]"
+                              : "border-white/20 text-white/75 bg-white/5 hover:bg-white/10"
+                          }`}
+                        >
+                          {a}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Trust Score Legend</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {[
+                        { color: "#2ECC71", label: "80–100 Trusted" },
+                        { color: "#F1C40F", label: "60–79 Caution" },
+                        { color: "#E67E22", label: "40–59 Elevated" },
+                        { color: "#E74C3C", label: "0–39 High Risk" },
+                      ].map(l => (
+                        <div key={l.label} className="flex items-center gap-2 text-[10px] text-white/70">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: l.color, boxShadow: `0 0 6px ${l.color}88` }} />
+                          {l.label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
