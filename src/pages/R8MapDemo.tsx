@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X, Locate } from "lucide-react";
+import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -109,6 +109,8 @@ const R8MapDemo = () => {
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
+  const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(null);
 
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -145,7 +147,15 @@ const R8MapDemo = () => {
   const selectProject = (p: Project) => {
     setSelected(p);
     setSidebarOpen(false);
-    if (mapRef.current) mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
+    if (mapRef.current) {
+      mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
+      // After pan settles, compute screen position for the floating info card.
+      setTimeout(() => {
+        if (!mapRef.current) return;
+        const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
+        setPopupPos({ x: pt.x, y: pt.y });
+      }, 520);
+    }
   };
 
   // Initialize Leaflet map
@@ -168,10 +178,33 @@ const R8MapDemo = () => {
 
     mapRef.current = map;
 
+    // Tap-on-map closes the floating card
+    map.on("click", () => setSelected(null));
+    // Keep info card glued to marker as user pans/zooms
+    const sync = () => {
+      setSelected((cur) => {
+        if (!cur || !mapRef.current) return cur;
+        const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
+        setPopupPos({ x: pt.x, y: pt.y });
+        return cur;
+      });
+    };
+    map.on("move", sync);
+    map.on("zoom", sync);
+
     return () => {
       map.remove();
       mapRef.current = null;
     };
+  }, []);
+
+  // ESC closes the floating card
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSelected(null);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
   }, []);
 
   // Locate the user (You are here)
@@ -268,64 +301,59 @@ const R8MapDemo = () => {
 
         {/* MAIN */}
         <div className="flex flex-1 overflow-hidden relative">
-          {/* SIDEBAR */}
-          <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[320px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
-            <div className="p-4 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#fac417] animate-pulse" />
-                <div className="text-[10px] tracking-[2px] uppercase text-[#fac417] font-bold">AI Trust Filter</div>
-              </div>
-              <div className="relative mb-3">
+          {/* SIDEBAR — Projects-first layout */}
+          <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[340px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
+            {/* Sticky top: search + trust pills + result count */}
+            <div className="p-3 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
+              <div className="relative mb-2.5">
                 <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-white/50" />
                 <input
-                  className="w-full min-h-[40px] bg-white/[0.08] border border-white/15 rounded-lg py-2 ps-9 pe-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#fac417]/60 focus:bg-white/[0.12] transition-all"
+                  className="w-full min-h-[42px] bg-white/[0.08] border border-white/15 rounded-lg py-2 ps-9 pe-3 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#fac417]/60 focus:bg-white/[0.12] transition-all"
                   placeholder="Search project, developer, area..."
                   value={search}
                   onChange={e => setSearch(e.target.value)}
                 />
               </div>
 
-              {/* Zone filters */}
-              <div className="mb-3">
-                <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Trust Zone</div>
-                <div className="flex flex-wrap gap-2">
-                  {ZONES.map(z => (
+              {/* Trust zone pills — primary filter, always visible */}
+              <div className="flex flex-wrap gap-1.5">
+                {ZONES.map(z => {
+                  const on = activeZones.includes(z.label);
+                  return (
                     <button
                       key={z.label}
                       onClick={() => toggleZone(z.label)}
-                      className="text-[11px] font-bold px-3 py-1.5 min-h-[32px] rounded-full border-2 transition-all"
-                      style={activeZones.includes(z.label)
+                      className="text-[11px] font-bold px-2.5 py-1 min-h-[30px] rounded-full border transition-all"
+                      style={on
                         ? { borderColor: z.color, color: "#fff", background: z.color, boxShadow: `0 2px 10px ${z.color}66` }
                         : { borderColor: `${z.color}80`, color: z.color, background: `${z.color}1a` }}
                     >
-                      {z.label}
+                      <span className="inline-flex items-center gap-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full" style={{ background: on ? "#fff" : z.color }} />
+                        {z.label}
+                      </span>
                     </button>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
 
-              {/* Area filters */}
-              <div>
-                <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Area</div>
-                <div className="flex flex-wrap gap-2">
-                  {AREAS.map(a => (
-                    <button
-                      key={a}
-                      onClick={() => toggleArea(a)}
-                      className={`text-[11px] font-semibold px-3 py-1.5 min-h-[32px] rounded-full border transition-all ${
-                        activeAreas.includes(a)
-                          ? "border-[#fac417] text-[#0a3d62] bg-[#fac417] shadow-[0_2px_10px_rgba(250,196,23,0.45)]"
-                          : "border-white/20 text-white/75 bg-white/5 hover:bg-white/10"
-                      }`}
-                    >
-                      {a}
-                    </button>
-                  ))}
-                </div>
+              {/* Result count + clear */}
+              <div className="flex items-center justify-between mt-2.5 px-0.5">
+                <span className="text-[11px] text-white/60 font-semibold">
+                  <span className="text-[#fac417]">{filtered.length}</span> of {projects.length} projects
+                </span>
+                {(activeZones.length > 0 || activeAreas.length > 0 || search) && (
+                  <button
+                    onClick={() => { setActiveZones([]); setActiveAreas([]); setSearch(""); }}
+                    className="text-[10px] text-white/55 hover:text-[#fac417] font-semibold tracking-wide uppercase"
+                  >
+                    Clear
+                  </button>
+                )}
               </div>
             </div>
 
-            {/* Project list */}
+            {/* Project list — gets the most space */}
             <div className="flex-1 overflow-y-auto">
               {filtered.map(p => (
                 <div
@@ -359,22 +387,60 @@ const R8MapDemo = () => {
               )}
             </div>
 
-            {/* Legend */}
-            <div className="p-4 border-t border-white/10 bg-black/20 backdrop-blur-sm">
-              <div className="text-[10px] tracking-[2px] uppercase text-[#fac417] font-bold mb-2.5">Trust Score Legend</div>
-              <div className="space-y-1.5">
-                {[
-                  { color: "#2ECC71", label: "80–100 Trusted" },
-                  { color: "#F1C40F", label: "60–79 Caution" },
-                  { color: "#E67E22", label: "40–59 Elevated Risk" },
-                  { color: "#E74C3C", label: "0–39 High Risk" },
-                ].map(l => (
-                  <div key={l.label} className="flex items-center gap-2 text-[11px] text-white/70">
-                    <span className="w-2.5 h-2.5 rounded-full" style={{ background: l.color, boxShadow: `0 0 6px ${l.color}88` }} />
-                    {l.label}
+            {/* Collapsible "More filters" — Areas + Legend tucked away */}
+            <div className="border-t border-white/10 bg-black/25 backdrop-blur-sm shrink-0">
+              <button
+                onClick={() => setMoreFiltersOpen(o => !o)}
+                className="w-full flex items-center justify-between px-4 py-3 text-[11px] tracking-[1.5px] uppercase font-bold text-[#fac417] hover:bg-white/[0.04] transition-colors"
+                aria-expanded={moreFiltersOpen}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <SlidersHorizontal className="w-3.5 h-3.5" />
+                  More filters
+                  {activeAreas.length > 0 && (
+                    <span className="text-[10px] bg-[#fac417] text-[#0a3d62] px-1.5 py-0.5 rounded-full">{activeAreas.length}</span>
+                  )}
+                </span>
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${moreFiltersOpen ? "rotate-180" : ""}`} />
+              </button>
+              {moreFiltersOpen && (
+                <div className="px-4 pb-4 space-y-3">
+                  <div>
+                    <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Area</div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {AREAS.map(a => (
+                        <button
+                          key={a}
+                          onClick={() => toggleArea(a)}
+                          className={`text-[11px] font-semibold px-2.5 py-1 min-h-[30px] rounded-full border transition-all ${
+                            activeAreas.includes(a)
+                              ? "border-[#fac417] text-[#0a3d62] bg-[#fac417]"
+                              : "border-white/20 text-white/75 bg-white/5 hover:bg-white/10"
+                          }`}
+                        >
+                          {a}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                ))}
-              </div>
+                  <div>
+                    <div className="text-[10px] tracking-[1.5px] uppercase text-white/55 mb-2 font-bold">Trust Score Legend</div>
+                    <div className="grid grid-cols-2 gap-1.5">
+                      {[
+                        { color: "#2ECC71", label: "80–100 Trusted" },
+                        { color: "#F1C40F", label: "60–79 Caution" },
+                        { color: "#E67E22", label: "40–59 Elevated" },
+                        { color: "#E74C3C", label: "0–39 High Risk" },
+                      ].map(l => (
+                        <div key={l.label} className="flex items-center gap-2 text-[10px] text-white/70">
+                          <span className="w-2 h-2 rounded-full shrink-0" style={{ background: l.color, boxShadow: `0 0 6px ${l.color}88` }} />
+                          {l.label}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
@@ -414,93 +480,115 @@ const R8MapDemo = () => {
               </div>
             </div>
 
-            {/* DETAIL PANEL */}
-            <div className={`absolute top-4 right-4 z-[500] w-[280px] bg-[#08090C]/96 border border-white/[0.07] rounded backdrop-blur-xl overflow-hidden transition-transform duration-300 ${selected ? "translate-x-0" : "translate-x-[320px]"}`}>
-              {selected && (
-                <>
-                  <div className="p-4 border-b border-white/[0.07] flex justify-between items-start">
-                    <div>
-                      <div className="font-['Bebas_Neue'] text-[24px] tracking-[2px] text-[#EDE9E1] leading-none mb-1">{selected.name}</div>
-                      <div className="text-[11px] font-mono text-[#EDE9E1]/45">{selected.area} · {selected.dev}</div>
+            {/* FLOATING INFO CARD — pinned to marker, Google-Maps-style */}
+            {selected && popupPos && (() => {
+              const c = scoreColor(selected.score);
+              const stars = Math.max(1, Math.min(5, Math.round(selected.score / 20)));
+              const rating = (selected.score / 20).toFixed(1);
+              // Card dims (matches max-w below)
+              const W = 300;
+              // Clamp horizontally inside the map container so it never overflows
+              const left = Math.max(12, Math.min((mapContainerRef.current?.clientWidth ?? W) - W - 12, popupPos.x - W / 2));
+              // Show above the marker; flip below if too close to top
+              const showBelow = popupPos.y < 280;
+              const top = showBelow ? popupPos.y + 30 : popupPos.y - 16;
+              return (
+                <div
+                  className="absolute z-[600] pointer-events-none"
+                  style={{ left, top, width: W, transform: showBelow ? "none" : "translateY(-100%)" }}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <div className="pointer-events-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
+                    {/* Header */}
+                    <div className="px-4 pt-3 pb-2.5 border-b border-black/5 relative">
+                      <button
+                        onClick={() => setSelected(null)}
+                        aria-label="Close"
+                        className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#5f6368] transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                      <div className="text-[16px] font-bold text-[#0a3d62] leading-tight pe-8">{selected.name}</div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="font-bold text-[14px] text-[#0a3d62]">{rating}</span>
+                        <span className="flex items-center gap-[1px]">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "13px", lineHeight: 1 }}>★</span>
+                          ))}
+                        </span>
+                        <span className="text-[12px] text-[#5f6368]">({selected.reviews.toLocaleString()})</span>
+                      </div>
+                      <div className="text-[12px] text-[#5f6368] mt-0.5 truncate">
+                        {selected.dev} · <span className="text-[#0a3d62] font-medium">{selected.area}</span>
+                      </div>
                     </div>
-                    <button onClick={() => setSelected(null)} className="text-[#EDE9E1]/40 hover:text-[#C9A84C] transition-colors">
-                      <X className="w-4 h-4" />
-                    </button>
-                  </div>
 
-                  <div className="p-4">
-                    {/* Score circle */}
-                    <div className="flex items-center gap-3 mb-4">
+                    {/* Trust + status row */}
+                    <div className="px-4 py-3 flex items-center gap-3 bg-[#f8f9fa]">
                       <div
-                        className="w-16 h-16 rounded-full border-2 flex items-center justify-center font-['Bebas_Neue'] text-[28px]"
-                        style={{ borderColor: scoreColor(selected.score), color: scoreColor(selected.score), boxShadow: `0 0 16px ${scoreColor(selected.score)}44` }}
+                        className="w-12 h-12 rounded-full flex items-center justify-center text-[18px] font-bold text-white shrink-0"
+                        style={{ background: c, boxShadow: `0 2px 8px ${c}55` }}
                       >
                         {selected.score}
                       </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-[10px] tracking-[1px] uppercase font-bold" style={{ color: c }}>
+                          {scoreGrade(selected.score)}
+                        </div>
+                        <div className="h-1.5 mt-1 rounded-full bg-black/10 overflow-hidden">
+                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: c }} />
+                        </div>
+                        <div className="text-[10px] text-[#5f6368] mt-1">Trust Score · {selected.score}/100</div>
+                      </div>
+                    </div>
+
+                    {/* Key metrics — compact grid */}
+                    <div className="px-4 py-3 grid grid-cols-3 gap-2 border-t border-black/5">
                       <div>
-                        <div className="font-mono text-[11px] tracking-[2px] uppercase" style={{ color: scoreColor(selected.score) }}>{scoreGrade(selected.score)}</div>
-                        <div className="text-[10px] text-[#EDE9E1]/40 font-mono mt-0.5">Trust Score</div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Status</div>
+                        <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(selected.status)}`}>
+                          {selected.status}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delivery</div>
+                        <div className="text-[12px] font-bold text-[#0a3d62]">{selected.delivery}</div>
+                      </div>
+                      <div>
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delay</div>
+                        <div className={`text-[12px] font-bold ${selected.delay > 0 ? "text-[#E74C3C]" : "text-[#2ECC71]"}`}>
+                          {selected.delay > 0 ? `+${selected.delay}mo` : "None"}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Metrics */}
-                    <div className="space-y-2.5">
-                      {[
-                        { label: "DELIVERY STATUS", value: selected.status, isStatus: true },
-                        { label: "EXPECTED DELIVERY", value: selected.delivery },
-                        { label: "CURRENT DELAY", value: selected.delay > 0 ? `+${selected.delay} months` : "None", isDelay: true },
-                        { label: "VERIFIED REVIEWS", value: selected.reviews.toLocaleString() },
-                      ].map(m => (
-                        <div key={m.label} className="flex items-center justify-between py-1.5 border-b border-white/[0.05]">
-                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">{m.label}</span>
-                          {m.isStatus ? (
-                            <span className={`font-mono text-[10px] tracking-[1px] px-2 py-0.5 rounded-sm ${statusClass(selected.status)}`}>
-                              {m.value}
-                            </span>
-                          ) : (
-                            <span className={`text-[12px] font-medium ${m.isDelay && selected.delay > 0 ? "text-[#E74C3C]" : m.isDelay ? "text-[#2ECC71]" : "text-[#EDE9E1]"}`}>
-                              {m.value}
-                            </span>
-                          )}
-                        </div>
+                    {/* Sentiment chips — top 3 only to keep it compact */}
+                    <div className="px-4 pb-3 flex flex-wrap gap-1">
+                      {selected.sentiment.slice(0, 3).map((s) => (
+                        <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0a3d62]/8 text-[#0a3d62]">
+                          {s}
+                        </span>
                       ))}
-
-                      {/* Trust bar */}
-                      <div className="pt-1">
-                        <div className="flex justify-between mb-1">
-                          <span className="font-mono text-[9px] tracking-[1px] text-[#EDE9E1]/40">TRUST SCORE</span>
-                          <span className="text-[12px] font-medium" style={{ color: scoreColor(selected.score) }}>{selected.score}/100</span>
-                        </div>
-                        <div className="h-1.5 rounded-full bg-white/[0.05] overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: scoreColor(selected.score) }} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Sentiment */}
-                    <div className="mt-4">
-                      <div className="font-mono text-[9px] tracking-[2px] uppercase text-[#EDE9E1]/40 mb-2">Buyer Sentiment</div>
-                      <div className="flex flex-wrap gap-1.5">
-                        {selected.sentiment.map((s, i) => {
-                          const colors = [
-                            { bg: "rgba(46,204,113,.15)", border: "#2ECC71" },
-                            { bg: "rgba(241,196,15,.12)", border: "#F1C40F" },
-                            { bg: "rgba(231,76,60,.12)", border: "#E74C3C" },
-                            { bg: "rgba(201,168,76,.12)", border: "#C9A84C" },
-                          ];
-                          const c = colors[i % 4];
-                          return (
-                            <span key={s} className="font-mono text-[9px] tracking-[0.5px] px-2 py-1 rounded-sm border" style={{ background: c.bg, borderColor: c.border, color: c.border }}>
-                              {s}
-                            </span>
-                          );
-                        })}
-                      </div>
                     </div>
                   </div>
-                </>
-              )}
-            </div>
+                  {/* Tail pointer */}
+                  {!showBelow && (
+                    <div
+                      className="mx-auto"
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "8px solid transparent",
+                        borderRight: "8px solid transparent",
+                        borderTop: "10px solid #fff",
+                        marginTop: -1,
+                        filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
+                        marginInlineStart: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })()}
           </div>
         </div>
       </div>
