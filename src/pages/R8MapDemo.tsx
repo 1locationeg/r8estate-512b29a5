@@ -768,8 +768,8 @@ const R8MapDemo = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Tail pointer */}
-                  {!showBelow && (
+                  {/* Tail pointer aimed at marker */}
+                  {!showBelow ? (
                     <div
                       className="mx-auto"
                       style={{
@@ -780,6 +780,19 @@ const R8MapDemo = () => {
                         marginTop: -1,
                         filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
                         marginInlineStart: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: -10,
+                        left: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                        width: 0, height: 0,
+                        borderLeft: "8px solid transparent",
+                        borderRight: "8px solid transparent",
+                        borderBottom: "10px solid #fff",
+                        filter: "drop-shadow(0 -2px 2px rgba(0,0,0,0.12))",
                       }}
                     />
                   )}
