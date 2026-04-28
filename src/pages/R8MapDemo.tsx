@@ -115,6 +115,9 @@ const R8MapDemo = () => {
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
   const markersRef = useRef<Record<number, L.Marker>>({});
+  const userMarkerRef = useRef<L.Marker | null>(null);
+  const userAccuracyRef = useRef<L.Circle | null>(null);
+  const [userLocated, setUserLocated] = useState(false);
 
   const filtered = useMemo(() => {
     let list = projects;
@@ -152,7 +155,12 @@ const R8MapDemo = () => {
     if (!mapContainerRef.current || mapRef.current) return;
 
     const map = L.map(mapContainerRef.current, { zoomControl: false, attributionControl: false }).setView([30.06, 31.25], 9);
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 18 }).addTo(map);
+    // Google-Maps-style tiles (Google Roadmap via mt servers — same look users know)
+    L.tileLayer("https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}", {
+      maxZoom: 20,
+      subdomains: ["0", "1", "2", "3"],
+      attribution: "© Google",
+    }).addTo(map);
     L.control.zoom({ position: "bottomleft" }).addTo(map);
 
     // Heat zones
@@ -166,6 +174,44 @@ const R8MapDemo = () => {
       map.remove();
       mapRef.current = null;
     };
+  }, []);
+
+  // Locate the user (You are here)
+  const locateUser = () => {
+    const map = mapRef.current;
+    if (!map || !navigator.geolocation) return;
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude, accuracy } = pos.coords;
+        if (userMarkerRef.current) userMarkerRef.current.remove();
+        if (userAccuracyRef.current) userAccuracyRef.current.remove();
+        userAccuracyRef.current = L.circle([latitude, longitude], {
+          radius: accuracy,
+          color: "#4285F4",
+          weight: 1,
+          fillColor: "#4285F4",
+          fillOpacity: 0.12,
+        }).addTo(map);
+        userMarkerRef.current = L.marker([latitude, longitude], {
+          icon: makeUserLocationIcon(),
+          zIndexOffset: 1000,
+        })
+          .addTo(map)
+          .bindTooltip("You are here", { permanent: false, direction: "top", offset: [0, -8] });
+        map.setView([latitude, longitude], 12, { animate: true });
+        setUserLocated(true);
+      },
+      () => {
+        // Silently fail (permission denied / unavailable)
+      },
+      { enableHighAccuracy: true, timeout: 8000, maximumAge: 60000 },
+    );
+  };
+
+  // Auto-attempt location on mount
+  useEffect(() => {
+    const t = setTimeout(locateUser, 600);
+    return () => clearTimeout(t);
   }, []);
 
   // Update markers when filtered changes
