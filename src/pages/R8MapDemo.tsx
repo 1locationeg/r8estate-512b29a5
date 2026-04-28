@@ -518,10 +518,17 @@ const R8MapDemo = () => {
               const stars = Math.max(1, Math.min(5, Math.round(hovered.score / 20)));
               const rating = (hovered.score / 20).toFixed(1);
               const W = 260;
+              const H_EST = 170; // estimated card height
+              const MARKER_GAP = 22; // clearance so card never sits on top of pin
+              const EDGE = 12;
               const containerW = mapContainerRef.current?.clientWidth ?? W;
-              const left = Math.max(12, Math.min(containerW - W - 12, hoverPos.x - W / 2));
-              const showBelow = hoverPos.y < 200;
-              const top = showBelow ? hoverPos.y + 28 : hoverPos.y - 14;
+              const containerH = mapContainerRef.current?.clientHeight ?? 800;
+              const spaceAbove = hoverPos.y;
+              const spaceBelow = containerH - hoverPos.y;
+              // Prefer above; flip below if not enough room above and below has more space
+              const showBelow = spaceAbove < H_EST + MARKER_GAP + EDGE && spaceBelow > spaceAbove;
+              const left = Math.max(EDGE, Math.min(containerW - W - EDGE, hoverPos.x - W / 2));
+              const top = showBelow ? hoverPos.y + MARKER_GAP : hoverPos.y - MARKER_GAP;
               return (
                 <div
                   className="absolute z-[550] pointer-events-auto cursor-pointer"
@@ -556,7 +563,8 @@ const R8MapDemo = () => {
                       </div>
                     </div>
                   </div>
-                  {!showBelow && (
+                  {/* Pointer arrow aimed back at the marker */}
+                  {!showBelow ? (
                     <div
                       style={{
                         width: 0, height: 0,
@@ -566,6 +574,19 @@ const R8MapDemo = () => {
                         marginTop: -1,
                         filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
                         marginInlineStart: Math.max(14, Math.min(W - 14, hoverPos.x - left)) - 7,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: -9,
+                        left: Math.max(14, Math.min(W - 14, hoverPos.x - left)) - 7,
+                        width: 0, height: 0,
+                        borderLeft: "7px solid transparent",
+                        borderRight: "7px solid transparent",
+                        borderBottom: "9px solid #fff",
+                        filter: "drop-shadow(0 -2px 2px rgba(0,0,0,0.12))",
                       }}
                     />
                   )}
@@ -657,11 +678,17 @@ const R8MapDemo = () => {
 
               // ── DESKTOP: Floating card pinned to marker ──
               const W = 300;
-              // Clamp horizontally inside the map container so it never overflows
-              const left = Math.max(12, Math.min((mapContainerRef.current?.clientWidth ?? W) - W - 12, popupPos.x - W / 2));
-              // Show above the marker; flip below if too close to top
-              const showBelow = popupPos.y < 280;
-              const top = showBelow ? popupPos.y + 30 : popupPos.y - 16;
+              const H_EST = 420; // estimated full card height
+              const MARKER_GAP = 24;
+              const EDGE = 12;
+              const containerW = mapContainerRef.current?.clientWidth ?? W;
+              const containerH = mapContainerRef.current?.clientHeight ?? 800;
+              const spaceAbove = popupPos.y;
+              const spaceBelow = containerH - popupPos.y;
+              // Prefer above; flip below if there isn't enough room above
+              const showBelow = spaceAbove < H_EST + MARKER_GAP + EDGE && spaceBelow > spaceAbove;
+              const left = Math.max(EDGE, Math.min(containerW - W - EDGE, popupPos.x - W / 2));
+              const top = showBelow ? popupPos.y + MARKER_GAP : popupPos.y - MARKER_GAP;
               return (
                 <div
                   className="absolute z-[600] pointer-events-none"
@@ -741,8 +768,8 @@ const R8MapDemo = () => {
                       ))}
                     </div>
                   </div>
-                  {/* Tail pointer */}
-                  {!showBelow && (
+                  {/* Tail pointer aimed at marker */}
+                  {!showBelow ? (
                     <div
                       className="mx-auto"
                       style={{
@@ -753,6 +780,19 @@ const R8MapDemo = () => {
                         marginTop: -1,
                         filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
                         marginInlineStart: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: -10,
+                        left: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
+                        width: 0, height: 0,
+                        borderLeft: "8px solid transparent",
+                        borderRight: "8px solid transparent",
+                        borderBottom: "10px solid #fff",
+                        filter: "drop-shadow(0 -2px 2px rgba(0,0,0,0.12))",
                       }}
                     />
                   )}
