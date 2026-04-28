@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X } from "lucide-react";
+import { ArrowLeft, Search, X, Locate } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
