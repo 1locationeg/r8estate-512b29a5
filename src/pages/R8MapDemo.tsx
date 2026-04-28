@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown, MapPin, Calendar, AlertTriangle } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -106,11 +106,20 @@ const ZONES = [
 const R8MapDemo = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Project | null>(null);
+  const [hovered, setHovered] = useState<Project | null>(null);
+  const [hoverPos, setHoverPos] = useState<{ x: number; y: number } | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== "undefined" ? window.innerWidth < 768 : false);
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -146,6 +155,7 @@ const R8MapDemo = () => {
 
   const selectProject = (p: Project) => {
     setSelected(p);
+    setHovered(null);
     setSidebarOpen(false);
     if (mapRef.current) {
       mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
@@ -157,6 +167,14 @@ const R8MapDemo = () => {
       }, 520);
     }
   };
+
+  const previewProject = (p: Project) => {
+    if (!mapRef.current || isMobile) return;
+    setHovered(p);
+    const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
+    setHoverPos({ x: pt.x, y: pt.y });
+  };
+  const clearPreview = () => { setHovered(null); setHoverPos(null); };
 
   // Initialize Leaflet map
   useEffect(() => {
@@ -179,13 +197,19 @@ const R8MapDemo = () => {
     mapRef.current = map;
 
     // Tap-on-map closes the floating card
-    map.on("click", () => setSelected(null));
+    map.on("click", () => { setSelected(null); clearPreview(); });
     // Keep info card glued to marker as user pans/zooms
     const sync = () => {
       setSelected((cur) => {
         if (!cur || !mapRef.current) return cur;
         const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
         setPopupPos({ x: pt.x, y: pt.y });
+        return cur;
+      });
+      setHovered((cur) => {
+        if (!cur || !mapRef.current) return cur;
+        const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
+        setHoverPos({ x: pt.x, y: pt.y });
         return cur;
       });
     };
@@ -258,9 +282,12 @@ const R8MapDemo = () => {
     filtered.forEach(p => {
       const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.score) }).addTo(map);
       marker.on("click", () => selectProject(p));
+      // Desktop hover preview
+      marker.on("mouseover", () => previewProject(p));
+      marker.on("mouseout", () => clearPreview());
       markersRef.current[p.id] = marker;
     });
-  }, [filtered]);
+  }, [filtered, isMobile]);
 
   const trusted = projects.filter(p => p.score >= 80).length;
   const caution = projects.filter(p => p.score >= 60 && p.score < 80).length;
