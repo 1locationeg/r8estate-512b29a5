@@ -64,22 +64,21 @@ function statusClass(st: string) {
 
 function makeIcon(score: number) {
   const c = scoreColor(score);
-  const stars = Math.max(1, Math.min(5, Math.round(score / 20)));
-  const starsHtml = Array.from({ length: 5 })
-    .map((_, i) => `<span style="color:${i < stars ? "#fac417" : "rgba(255,255,255,0.55)"};font-size:14px;line-height:1;text-shadow:0 1px 2px rgba(0,0,0,0.85),0 0 2px rgba(0,0,0,0.9)">★</span>`)
-    .join("");
-  // Borderless: stars on top, big bold score below. Heavy text-shadow for legibility on any map tile.
-  const shadow = "0 1px 3px rgba(0,0,0,0.95),0 0 6px rgba(0,0,0,0.7),0 0 1px rgba(0,0,0,1)";
+  // 5-star rating from score (e.g. 91 -> 4.6)
+  const rating = Math.max(1, Math.min(5, score / 20)).toFixed(1);
+  // Google-Maps-style filled pill: solid color background, white star + number, tail pointer below.
   return L.divIcon({
     html: `
-      <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;pointer-events:auto;line-height:1">
-        <div style="display:flex;gap:2px;margin-bottom:2px">${starsHtml}</div>
-        <span style="font-family:'Bebas Neue','Arial Black',sans-serif;font-size:22px;line-height:1;color:${c};font-weight:900;text-shadow:${shadow};letter-spacing:0.5px">${score}</span>
-        <span style="width:8px;height:8px;border-radius:50%;background:${c};margin-top:3px;box-shadow:0 0 0 2px rgba(255,255,255,0.85),0 1px 3px rgba(0,0,0,0.6)"></span>
+      <div style="display:flex;flex-direction:column;align-items:center;cursor:pointer;pointer-events:auto;line-height:1;filter:drop-shadow(0 2px 4px rgba(0,0,0,0.35))">
+        <div style="display:inline-flex;align-items:center;gap:4px;background:${c};color:#fff;font-family:'Inter','Arial',sans-serif;font-weight:800;font-size:14px;padding:5px 9px 5px 8px;border-radius:14px;border:2px solid #fff;white-space:nowrap">
+          <span style="font-size:13px;line-height:1">★</span>
+          <span style="line-height:1;letter-spacing:0.2px">${rating}</span>
+        </div>
+        <span style="width:0;height:0;border-left:5px solid transparent;border-right:5px solid transparent;border-top:7px solid ${c};margin-top:-1px;filter:drop-shadow(0 1px 0 #fff)"></span>
       </div>`,
     className: "",
-    iconSize: [78, 52],
-    iconAnchor: [39, 52],
+    iconSize: [70, 36],
+    iconAnchor: [35, 36],
   });
 }
 
