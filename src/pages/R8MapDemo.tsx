@@ -2,7 +2,7 @@ import React, { useState, useMemo, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown } from "lucide-react";
+import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown, MapPin, Calendar, AlertTriangle } from "lucide-react";
 
 // ── PROJECT DATA ──
 const projects = [
@@ -106,11 +106,20 @@ const ZONES = [
 const R8MapDemo = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Project | null>(null);
+  const [hovered, setHovered] = useState<Project | null>(null);
+  const [hoverPos, setHoverPos] = useState<{ x: number; y: number } | null>(null);
+  const [isMobile, setIsMobile] = useState<boolean>(typeof window !== "undefined" ? window.innerWidth < 768 : false);
   const [activeZones, setActiveZones] = useState<string[]>([]);
   const [activeAreas, setActiveAreas] = useState<string[]>([]);
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [moreFiltersOpen, setMoreFiltersOpen] = useState(false);
   const [popupPos, setPopupPos] = useState<{ x: number; y: number } | null>(null);
+
+  useEffect(() => {
+    const onResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
 
   const mapRef = useRef<L.Map | null>(null);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -146,6 +155,7 @@ const R8MapDemo = () => {
 
   const selectProject = (p: Project) => {
     setSelected(p);
+    setHovered(null);
     setSidebarOpen(false);
     if (mapRef.current) {
       mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
@@ -157,6 +167,14 @@ const R8MapDemo = () => {
       }, 520);
     }
   };
+
+  const previewProject = (p: Project) => {
+    if (!mapRef.current || isMobile) return;
+    setHovered(p);
+    const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
+    setHoverPos({ x: pt.x, y: pt.y });
+  };
+  const clearPreview = () => { setHovered(null); setHoverPos(null); };
 
   // Initialize Leaflet map
   useEffect(() => {
@@ -179,13 +197,19 @@ const R8MapDemo = () => {
     mapRef.current = map;
 
     // Tap-on-map closes the floating card
-    map.on("click", () => setSelected(null));
+    map.on("click", () => { setSelected(null); clearPreview(); });
     // Keep info card glued to marker as user pans/zooms
     const sync = () => {
       setSelected((cur) => {
         if (!cur || !mapRef.current) return cur;
         const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
         setPopupPos({ x: pt.x, y: pt.y });
+        return cur;
+      });
+      setHovered((cur) => {
+        if (!cur || !mapRef.current) return cur;
+        const pt = mapRef.current.latLngToContainerPoint([cur.lat, cur.lng]);
+        setHoverPos({ x: pt.x, y: pt.y });
         return cur;
       });
     };
@@ -258,9 +282,12 @@ const R8MapDemo = () => {
     filtered.forEach(p => {
       const marker = L.marker([p.lat, p.lng], { icon: makeIcon(p.score) }).addTo(map);
       marker.on("click", () => selectProject(p));
+      // Desktop hover preview
+      marker.on("mouseover", () => previewProject(p));
+      marker.on("mouseout", () => clearPreview());
       markersRef.current[p.id] = marker;
     });
-  }, [filtered]);
+  }, [filtered, isMobile]);
 
   const trusted = projects.filter(p => p.score >= 80).length;
   const caution = projects.filter(p => p.score >= 60 && p.score < 80).length;
@@ -480,12 +507,150 @@ const R8MapDemo = () => {
               </div>
             </div>
 
-            {/* FLOATING INFO CARD — pinned to marker, Google-Maps-style */}
-            {selected && popupPos && (() => {
+            {/* HOVER PREVIEW CARD — desktop only, pinned to marker, click to open full details */}
+            {hovered && hoverPos && !isMobile && !selected && (() => {
+              const c = scoreColor(hovered.score);
+              const stars = Math.max(1, Math.min(5, Math.round(hovered.score / 20)));
+              const rating = (hovered.score / 20).toFixed(1);
+              const W = 260;
+              const containerW = mapContainerRef.current?.clientWidth ?? W;
+              const left = Math.max(12, Math.min(containerW - W - 12, hoverPos.x - W / 2));
+              const showBelow = hoverPos.y < 200;
+              const top = showBelow ? hoverPos.y + 28 : hoverPos.y - 14;
+              return (
+                <div
+                  className="absolute z-[550] pointer-events-auto cursor-pointer"
+                  style={{ left, top, width: W, transform: showBelow ? "none" : "translateY(-100%)" }}
+                  onMouseEnter={() => setHovered(hovered)}
+                  onMouseLeave={clearPreview}
+                  onClick={(e) => { e.stopPropagation(); selectProject(hovered); }}
+                >
+                  <div className="bg-white rounded-xl shadow-[0_8px_24px_rgba(0,0,0,0.22)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+                    <div className="px-3.5 py-2.5">
+                      <div className="text-[14px] font-bold text-[#0a3d62] leading-tight truncate">{hovered.name}</div>
+                      <div className="flex items-center gap-1.5 mt-1">
+                        <span className="font-bold text-[13px] text-[#0a3d62]">{rating}</span>
+                        <span className="flex items-center gap-[1px]">
+                          {Array.from({ length: 5 }).map((_, i) => (
+                            <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "12px", lineHeight: 1 }}>★</span>
+                          ))}
+                        </span>
+                        <span className="text-[11px] text-[#5f6368]">({hovered.reviews})</span>
+                      </div>
+                      <div className="text-[11px] text-[#5f6368] mt-0.5 truncate">
+                        <MapPin className="inline w-3 h-3 -mt-0.5 me-0.5" />{hovered.area} · {hovered.dev}
+                      </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <span className="text-[10px] tracking-[1px] uppercase font-bold px-1.5 py-0.5 rounded text-white" style={{ background: c }}>
+                          {scoreGrade(hovered.score)}
+                        </span>
+                        <span className="text-[10px] text-[#5f6368]">Score {hovered.score}/100</span>
+                      </div>
+                      <div className="text-[10px] text-[#0a3d62]/70 font-semibold mt-2 text-center bg-[#fac417]/15 rounded py-1">
+                        Click for full details →
+                      </div>
+                    </div>
+                  </div>
+                  {!showBelow && (
+                    <div
+                      style={{
+                        width: 0, height: 0,
+                        borderLeft: "7px solid transparent",
+                        borderRight: "7px solid transparent",
+                        borderTop: "9px solid #fff",
+                        marginTop: -1,
+                        filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
+                        marginInlineStart: Math.max(14, Math.min(W - 14, hoverPos.x - left)) - 7,
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })()}
+
+            {/* FULL DETAILS — desktop floating card pinned to marker, mobile bottom sheet */}
+            {selected && (isMobile || popupPos) && (() => {
               const c = scoreColor(selected.score);
               const stars = Math.max(1, Math.min(5, Math.round(selected.score / 20)));
               const rating = (selected.score / 20).toFixed(1);
-              // Card dims (matches max-w below)
+
+              // ── MOBILE: Bottom sheet ──
+              if (isMobile) {
+                return (
+                  <>
+                    <div className="absolute inset-0 z-[590] bg-black/30 animate-in fade-in duration-200" onClick={() => setSelected(null)} />
+                    <div
+                      className="absolute left-0 right-0 bottom-0 z-[600] bg-white rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] animate-in slide-in-from-bottom duration-300 max-h-[75vh] overflow-y-auto"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <div className="sticky top-0 bg-white pt-2 pb-1">
+                        <div className="mx-auto w-10 h-1.5 rounded-full bg-black/15" />
+                      </div>
+                      <div className="px-5 pt-2 pb-5">
+                        <button
+                          onClick={() => setSelected(null)}
+                          aria-label="Close"
+                          className="absolute top-3 end-3 w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#5f6368]"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                        <div className="text-[20px] font-bold text-[#0a3d62] leading-tight pe-10">{selected.name}</div>
+                        <div className="flex items-center gap-2 mt-1.5">
+                          <span className="font-bold text-[16px] text-[#0a3d62]">{rating}</span>
+                          <span className="flex items-center gap-[1px]">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "16px", lineHeight: 1 }}>★</span>
+                            ))}
+                          </span>
+                          <span className="text-[13px] text-[#5f6368]">({selected.reviews.toLocaleString()} reviews)</span>
+                        </div>
+                        <div className="text-[13px] text-[#5f6368] mt-1">
+                          <MapPin className="inline w-3.5 h-3.5 -mt-0.5 me-1" />{selected.area} · <span className="text-[#0a3d62] font-medium">{selected.dev}</span>
+                        </div>
+
+                        <div className="mt-4 flex items-center gap-3 bg-[#f8f9fa] rounded-xl p-3">
+                          <div className="w-14 h-14 rounded-full flex items-center justify-center text-[20px] font-bold text-white shrink-0" style={{ background: c, boxShadow: `0 2px 8px ${c}55` }}>
+                            {selected.score}
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <div className="text-[11px] tracking-[1px] uppercase font-bold" style={{ color: c }}>{scoreGrade(selected.score)}</div>
+                            <div className="h-2 mt-1 rounded-full bg-black/10 overflow-hidden">
+                              <div className="h-full rounded-full" style={{ width: `${selected.score}%`, background: c }} />
+                            </div>
+                            <div className="text-[11px] text-[#5f6368] mt-1">Trust Score · {selected.score}/100</div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4 grid grid-cols-3 gap-3">
+                          <div className="rounded-lg border border-black/8 p-2.5">
+                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1">Status</div>
+                            <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(selected.status)}`}>{selected.status}</div>
+                          </div>
+                          <div className="rounded-lg border border-black/8 p-2.5">
+                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1"><Calendar className="inline w-3 h-3 me-0.5" />Delivery</div>
+                            <div className="text-[12px] font-bold text-[#0a3d62]">{selected.delivery}</div>
+                          </div>
+                          <div className="rounded-lg border border-black/8 p-2.5">
+                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1"><AlertTriangle className="inline w-3 h-3 me-0.5" />Delay</div>
+                            <div className={`text-[12px] font-bold ${selected.delay > 0 ? "text-[#E74C3C]" : "text-[#2ECC71]"}`}>{selected.delay > 0 ? `+${selected.delay}mo` : "None"}</div>
+                          </div>
+                        </div>
+
+                        <div className="mt-4">
+                          <div className="text-[10px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-2">Top Sentiment</div>
+                          <div className="flex flex-wrap gap-1.5">
+                            {selected.sentiment.map((s) => (
+                              <span key={s} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#0a3d62]/8 text-[#0a3d62]">{s}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </>
+                );
+              }
+
+              // ── DESKTOP: Floating card pinned to marker ──
               const W = 300;
               // Clamp horizontally inside the map container so it never overflows
               const left = Math.max(12, Math.min((mapContainerRef.current?.clientWidth ?? W) - W - 12, popupPos.x - W / 2));
