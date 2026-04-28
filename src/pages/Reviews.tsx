@@ -6,7 +6,7 @@ import { reviews as mockReviews, developers as mockDevelopers, Review, ReviewerT
 import { ReviewCard } from "@/components/ReviewCard";
 import { ReviewFilters, ReviewFilterType } from "@/components/ReviewFilters";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Plus, MessageSquare, Search } from "lucide-react";
+import { Plus, MessageSquare, Search, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { WriteReviewModal } from "@/components/WriteReviewModal";
@@ -17,6 +17,14 @@ import { StationPageWrapper } from "@/components/StationPageWrapper";
 import { localizeStoredReviewValue } from "@/lib/reviewCopy";
 import { BUSINESS_CATEGORIES } from "@/data/businessCategories";
 import { cn } from "@/lib/utils";
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { useHubFilters } from "@/hooks/useHubFilters";
+import { HubHeroBand } from "@/components/hub/HubHeroBand";
+import { HubFiltersSidebar } from "@/components/hub/HubFiltersSidebar";
+import { PersonalizedReviewsStrip } from "@/components/hub/PersonalizedReviewsStrip";
+import { TrendingReviewsGrid } from "@/components/hub/TrendingReviewsGrid";
+import { JustPostedFeed } from "@/components/hub/JustPostedFeed";
+import { WriteReviewCtaStrip } from "@/components/hub/WriteReviewCtaStrip";
 
 interface BusinessInfo {
   name: string;
@@ -25,15 +33,114 @@ interface BusinessInfo {
 
 const Reviews = () => {
   const { t } = useTranslation();
+  const { i18n } = useTranslation();
+  const isRTL = i18n.dir() === "rtl";
   const { user } = useAuth();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const showMineOnly = searchParams.get("mine") === "true";
+
+  // Hub state (used for the public hub view)
+  const [hubSearch, setHubSearch] = useState("");
+  const { filters: hubFilters, setFilters: setHubFilters, reset: resetHub, isDirty: hubDirty } = useHubFilters();
+
   const [dbReviews, setDbReviews] = useState<(Review & { userId?: string; developerName?: string })[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState<ReviewFilterType>("all");
   const writeReviewParam = searchParams.get("writeReview") === "true";
   const [writeModalOpen, setWriteModalOpen] = useState(writeReviewParam);
+
+  // ===== Public Reviews Hub (default view) =====
+  if (!showMineOnly) {
+    return (
+      <StationPageWrapper className="min-h-screen bg-background pb-16">
+        <HubHeroBand search={hubSearch} onSearchChange={setHubSearch} />
+
+        <div className="container mx-auto max-w-6xl px-4 py-6">
+          {/* Top action row */}
+          <div className="flex items-center justify-between mb-4 gap-2">
+            <div className="flex items-center gap-2">
+              {user && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="rounded-full text-xs"
+                  onClick={() => setSearchParams({ mine: "true" })}
+                >
+                  {t("reviews.myReviews", "My Reviews")}
+                </Button>
+              )}
+            </div>
+            <div className="flex items-center gap-2">
+              {/* Mobile filters trigger */}
+              <div className="md:hidden">
+                <Sheet>
+                  <SheetTrigger asChild>
+                    <Button variant="outline" size="sm" className="rounded-full">
+                      <SlidersHorizontal className="w-4 h-4 me-2" />
+                      {isRTL ? "الفلاتر" : "Filters"}
+                      {hubDirty && <span className="ms-2 w-2 h-2 rounded-full bg-primary" />}
+                    </Button>
+                  </SheetTrigger>
+                  <SheetContent side={isRTL ? "right" : "left"} className="w-80">
+                    <div className="pt-6">
+                      <HubFiltersSidebar
+                        filters={hubFilters}
+                        setFilters={setHubFilters}
+                        isDirty={hubDirty}
+                        reset={resetHub}
+                        embedded
+                      />
+                    </div>
+                  </SheetContent>
+                </Sheet>
+              </div>
+              <Button
+                size="sm"
+                className="rounded-full"
+                onClick={() => {
+                  if (user) setWriteModalOpen(true);
+                  else navigate("/auth");
+                }}
+              >
+                <Plus className="w-4 h-4 me-1" />
+                {isRTL ? "اكتب مراجعة" : "Write a review"}
+              </Button>
+            </div>
+          </div>
+
+          <div className="flex gap-6 items-start">
+            <HubFiltersSidebar
+              filters={hubFilters}
+              setFilters={setHubFilters}
+              isDirty={hubDirty}
+              reset={resetHub}
+            />
+
+            <div className="flex-1 min-w-0">
+              <PersonalizedReviewsStrip />
+              <TrendingReviewsGrid filters={hubFilters} search={hubSearch} />
+              <JustPostedFeed />
+              <WriteReviewCtaStrip />
+            </div>
+          </div>
+        </div>
+
+        {writeModalOpen && (
+          <WriteReviewModal
+            open={writeModalOpen}
+            onOpenChange={setWriteModalOpen}
+            developerId=""
+            developerName=""
+            onReviewSubmitted={() => {
+              setWriteModalOpen(false);
+              window.location.reload();
+            }}
+          />
+        )}
+      </StationPageWrapper>
+    );
+  }
 
   // New filter state
   const [selectedBusiness, setSelectedBusiness] = useState<string | null>(null);

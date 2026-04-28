@@ -1,83 +1,47 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { SlidersHorizontal } from "lucide-react";
+import { Search, X } from "lucide-react";
 import { BrowseCategoriesGrid } from "@/components/BrowseCategoriesGrid";
+import { PageHeader } from "@/components/PageHeader";
 import { StationPageWrapper } from "@/components/StationPageWrapper";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Button } from "@/components/ui/button";
-import { useHubFilters } from "@/hooks/useHubFilters";
-import { HubHeroBand } from "@/components/hub/HubHeroBand";
-import { HubFiltersSidebar } from "@/components/hub/HubFiltersSidebar";
-import { PersonalizedReviewsStrip } from "@/components/hub/PersonalizedReviewsStrip";
-import { TrendingReviewsGrid } from "@/components/hub/TrendingReviewsGrid";
-import { JustPostedFeed } from "@/components/hub/JustPostedFeed";
-import { WriteReviewCtaStrip } from "@/components/hub/WriteReviewCtaStrip";
 
 const Categories = () => {
   const { i18n } = useTranslation();
   const isRTL = i18n.dir() === "rtl";
   const [search, setSearch] = useState("");
-  const { filters, setFilters, reset, isDirty } = useHubFilters();
 
   return (
     <StationPageWrapper className="min-h-screen bg-background pb-16">
-      <HubHeroBand search={search} onSearchChange={setSearch} />
+      <PageHeader
+        title={isRTL ? "الفئات" : "Categories"}
+        breadcrumbs={[{ label: isRTL ? "الفئات" : "Categories" }]}
+      />
 
-      <div className="container mx-auto max-w-6xl px-4 py-6">
-        {/* Mobile filters trigger */}
-        <div className="md:hidden mb-4 flex justify-end">
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="outline" size="sm" className="rounded-full">
-                <SlidersHorizontal className="w-4 h-4 me-2" />
-                {isRTL ? "الفلاتر" : "Filters"}
-                {isDirty && <span className="ms-2 w-2 h-2 rounded-full bg-primary" />}
-              </Button>
-            </SheetTrigger>
-            <SheetContent side={isRTL ? "right" : "left"} className="w-80">
-              <div className="pt-6">
-                <HubFiltersSidebar
-                  filters={filters}
-                  setFilters={setFilters}
-                  isDirty={isDirty}
-                  reset={reset}
-                  embedded
-                />
-              </div>
-            </SheetContent>
-          </Sheet>
-        </div>
-
-        <div className="flex gap-6 items-start">
-          <HubFiltersSidebar
-            filters={filters}
-            setFilters={setFilters}
-            isDirty={isDirty}
-            reset={reset}
+      {/* Search bar */}
+      <div className="px-4 pb-3 max-w-5xl mx-auto pt-2">
+        <div className="relative">
+          <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder={isRTL ? "ابحث عن فئة أو شركة..." : "Search categories or businesses..."}
+            className="w-full h-9 ps-9 pe-8 rounded-lg border border-border bg-secondary/40 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all"
+            dir={isRTL ? "rtl" : "ltr"}
           />
-
-          <div className="flex-1 min-w-0">
-            <PersonalizedReviewsStrip />
-            <TrendingReviewsGrid filters={filters} search={search} />
-            <JustPostedFeed />
-
-            {/* Browse by category — demoted */}
-            <section className="mt-10">
-              <header className="mb-3">
-                <h2 className="text-lg md:text-xl font-bold text-foreground">
-                  {isRTL ? "أو تصفّح كل الفئات" : "Or browse all categories"}
-                </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
-                  {isRTL ? "18 قطاعاً — ابدأ بالمطورين" : "18 segments — start with Developers"}
-                </p>
-              </header>
-              <BrowseCategoriesGrid searchQuery={search} />
-            </section>
-
-            <WriteReviewCtaStrip />
-          </div>
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className="absolute end-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-secondary transition-colors"
+            >
+              <X className="w-3.5 h-3.5 text-muted-foreground" />
+            </button>
+          )}
         </div>
       </div>
+
+      {/* Grid */}
+      <BrowseCategoriesGrid searchQuery={search} />
     </StationPageWrapper>
   );
 };
