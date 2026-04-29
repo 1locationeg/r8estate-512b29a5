@@ -193,15 +193,10 @@ const R8MapDemo = () => {
   const selectProject = (p: Project) => {
     setSelected(p);
     setHovered(null);
-    setSidebarOpen(false);
+    // Open the side panel so the detail view is visible (especially on mobile)
+    setSidebarOpen(true);
     if (mapRef.current) {
       mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
-      // After pan settles, compute screen position for the floating info card.
-      setTimeout(() => {
-        if (!mapRef.current) return;
-        const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
-        setPopupPos({ x: pt.x, y: pt.y });
-      }, 520);
     }
   };
 
