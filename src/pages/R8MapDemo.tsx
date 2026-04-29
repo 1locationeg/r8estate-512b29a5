@@ -4,6 +4,38 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { ArrowLeft, Search, X, Locate, SlidersHorizontal, ChevronDown, MapPin, Calendar, AlertTriangle } from "lucide-react";
 
+// ── MOCK REVIEWERS POOL (deterministic per project) ──
+const REVIEWER_POOL = [
+  { name: "Ahmed H.", initials: "AH", color: "#0a3d62", verified: true,  tier: "Gold",   role: "Verified Buyer" },
+  { name: "Sara M.",  initials: "SM", color: "#ed1b40", verified: true,  tier: "Elite",  role: "Verified Buyer" },
+  { name: "Omar K.",  initials: "OK", color: "#2ECC71", verified: true,  tier: "Silver", role: "Resident" },
+  { name: "Mona R.",  initials: "MR", color: "#fac417", verified: false, tier: "Bronze", role: "Prospect" },
+  { name: "Youssef A.",initials: "YA",color: "#0a3d62", verified: true,  tier: "Gold",   role: "Investor" },
+  { name: "Layla S.", initials: "LS", color: "#9b59b6", verified: true,  tier: "Silver", role: "Verified Buyer" },
+  { name: "Karim N.", initials: "KN", color: "#16a085", verified: false, tier: "New",    role: "Prospect" },
+  { name: "Nour E.",  initials: "NE", color: "#e67e22", verified: true,  tier: "Gold",   role: "Resident" },
+];
+
+// Build deterministic reviews per project so the same project always shows the same reviews
+function getProjectReviews(p: { id: number; score: number; sentiment: string[] }) {
+  const count = 3 + (p.id % 3); // 3–5 reviews shown
+  const out: { reviewer: typeof REVIEWER_POOL[number]; stars: number; daysAgo: number; text: string }[] = [];
+  for (let i = 0; i < count; i++) {
+    const reviewer = REVIEWER_POOL[(p.id + i * 3) % REVIEWER_POOL.length];
+    // Stars cluster around the project rating with slight variance
+    const base = Math.max(1, Math.min(5, Math.round(p.score / 20)));
+    const variance = ((p.id + i) % 3) - 1; // -1, 0, +1
+    const stars = Math.max(1, Math.min(5, base + variance));
+    const sentimentSnippet = p.sentiment[i % p.sentiment.length] ?? "Good experience";
+    const positive = stars >= 4;
+    const text = positive
+      ? `${sentimentSnippet}. Smooth handover and the team kept us updated through every milestone.`
+      : `${sentimentSnippet}. Construction pace was slower than promised — communication could be much better.`;
+    out.push({ reviewer, stars, daysAgo: 3 + ((p.id * 7 + i * 11) % 90), text });
+  }
+  return out;
+}
+
 // ── PROJECT DATA ──
 const projects = [
   // ── New Cairo (5th Settlement / Tagamoa, ~30.02–30.04 N, 31.43–31.50 E) ──
