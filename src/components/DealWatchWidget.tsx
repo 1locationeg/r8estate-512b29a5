@@ -98,7 +98,7 @@ export const DealWatchWidget = () => {
       onClick={() => navigate("/deal-watch")}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex flex-col items-center gap-1.5 p-3 md:p-4 rounded-xl border ring-1 bg-gradient-to-br ${urgencyRing} ${urgencyGlow} hover:shadow-lg transition-all text-center group overflow-hidden`}
+      className={`relative h-full w-full flex flex-col items-center gap-1.5 p-4 md:p-5 rounded-2xl border ring-1 bg-gradient-to-br ${urgencyRing} ${urgencyGlow} hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-center group overflow-hidden`}
     >
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
 
