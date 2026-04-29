@@ -50,8 +50,8 @@ export const CollectiveBuyerProtection = () => {
   const protectedCount = useCountUp(323, 1800);
 
   const riskKeywords = isAr
-    ? ["نصب", "تأخير", "بلا حماية"]
-    : ["Scams", "Delays", "No Protection"];
+    ? ["تأخير", "بلا حماية"]
+    : ["Delays", "No Protection"];
 
   const shareText = isAr
     ? "847 مليون جنيه في خطر — احمي فلوسك مع R8ESTATE"
