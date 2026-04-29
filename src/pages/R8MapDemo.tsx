@@ -140,6 +140,174 @@ const ZONES = [
   { label: "At Risk", min: 0, max: 59, color: "#E74C3C" },
 ];
 
+// ── DETAIL PANEL — replaces the sidebar list when a project is selected ──
+function DetailPanel({
+  project,
+  onBack,
+  onShowOnMap,
+}: {
+  project: Project;
+  onBack: () => void;
+  onShowOnMap: () => void;
+}) {
+  const c = scoreColor(project.score);
+  const stars = Math.max(1, Math.min(5, Math.round(project.score / 20)));
+  const rating = (project.score / 20).toFixed(1);
+  const reviews = getProjectReviews(project);
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Sticky header: Back button + Show on map */}
+      <div className="sticky top-0 z-10 bg-[#0a3d62]/95 backdrop-blur-md border-b border-white/10 px-3 py-2.5 flex items-center justify-between gap-2">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 text-[12px] font-bold text-white/90 hover:text-[#fac417] hover:bg-white/5 rounded-md transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to list
+        </button>
+        <button
+          onClick={onShowOnMap}
+          className="md:hidden inline-flex items-center gap-1.5 min-h-[36px] px-3 py-1.5 text-[11px] font-bold text-[#0a3d62] bg-[#fac417] rounded-md shadow-md"
+        >
+          <MapPin className="w-3.5 h-3.5" />
+          Show on map
+        </button>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Hero */}
+        <div className="px-4 pt-4 pb-3 border-b border-white/10">
+          <div className="text-[20px] font-bold text-white leading-tight">{project.name}</div>
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+            <span className="font-bold text-[16px] text-white">{rating}</span>
+            <span className="flex items-center gap-[1px]">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} style={{ color: i < stars ? "#fac417" : "rgba(255,255,255,0.25)", fontSize: "16px", lineHeight: 1 }}>★</span>
+              ))}
+            </span>
+            <span className="text-[12px] text-white/65">({project.reviews.toLocaleString()} reviews)</span>
+          </div>
+          <div className="text-[12px] text-white/70 mt-1.5">
+            <MapPin className="inline w-3.5 h-3.5 -mt-0.5 me-1 text-[#fac417]" />
+            {project.area} · <span className="text-white font-medium">{project.dev}</span>
+          </div>
+        </div>
+
+        {/* Trust score block */}
+        <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center text-[20px] font-bold text-white shrink-0"
+            style={{ background: c, boxShadow: `0 2px 12px ${c}88` }}
+          >
+            {project.score}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[10px] tracking-[1px] uppercase font-bold" style={{ color: c }}>{scoreGrade(project.score)}</div>
+            <div className="h-1.5 mt-1 rounded-full bg-white/15 overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${project.score}%`, background: c }} />
+            </div>
+            <div className="text-[10px] text-white/60 mt-1">Trust Score · {project.score}/100</div>
+          </div>
+        </div>
+
+        {/* Key metrics grid */}
+        <div className="px-4 py-3 grid grid-cols-3 gap-2 border-b border-white/10">
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">Status</div>
+            <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(project.status)}`}>
+              {project.status}
+            </div>
+          </div>
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">
+              <Calendar className="inline w-3 h-3 me-0.5" />Delivery
+            </div>
+            <div className="text-[12px] font-bold text-white">{project.delivery}</div>
+          </div>
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">
+              <AlertTriangle className="inline w-3 h-3 me-0.5" />Delay
+            </div>
+            <div className={`text-[12px] font-bold ${project.delay > 0 ? "text-[#ff8a8a]" : "text-[#7ee2a3]"}`}>
+              {project.delay > 0 ? `+${project.delay}mo` : "None"}
+            </div>
+          </div>
+        </div>
+
+        {/* Sentiment chips */}
+        <div className="px-4 py-3 border-b border-white/10">
+          <div className="text-[10px] tracking-[1px] uppercase text-white/55 font-bold mb-2">Top Sentiment</div>
+          <div className="flex flex-wrap gap-1.5">
+            {project.sentiment.map((s) => (
+              <span key={s} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#fac417]/15 text-[#fac417] border border-[#fac417]/30">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews */}
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="text-[10px] tracking-[1px] uppercase text-white/55 font-bold">
+              Reviews ({project.reviews.toLocaleString()})
+            </div>
+            <div className="flex items-center -space-x-2">
+              {reviews.slice(0, 4).map((r, i) => (
+                <div
+                  key={i}
+                  className="w-7 h-7 rounded-full border-2 border-[#0a3d62] flex items-center justify-center text-[10px] font-bold text-white"
+                  style={{ background: r.reviewer.color }}
+                  title={r.reviewer.name}
+                >
+                  {r.reviewer.initials}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2.5">
+            {reviews.map((r, i) => (
+              <div key={i} className="rounded-xl bg-white/[0.06] border border-white/10 p-3">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
+                    style={{ background: r.reviewer.color }}
+                  >
+                    {r.reviewer.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[13px] font-bold text-white truncate">{r.reviewer.name}</span>
+                      {r.reviewer.verified && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#2ECC71]/20 text-[#7ee2a3]">✓ VERIFIED</span>
+                      )}
+                      <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-[#fac417]/20 text-[#fac417]">{r.reviewer.tier}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="flex items-center gap-[1px]">
+                        {Array.from({ length: 5 }).map((_, k) => (
+                          <span key={k} style={{ color: k < r.stars ? "#fac417" : "rgba(255,255,255,0.25)", fontSize: "11px", lineHeight: 1 }}>★</span>
+                        ))}
+                      </span>
+                      <span className="text-[10px] text-white/55">· {r.reviewer.role} · {r.daysAgo}d ago</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[12px] text-white/85 leading-snug mt-2">{r.text}</p>
+              </div>
+            ))}
+          </div>
+          <button className="mt-3 w-full text-[12px] font-bold text-[#0a3d62] bg-[#fac417] hover:bg-[#fac417]/90 rounded-lg py-2.5 transition-colors shadow-lg">
+            Read all {project.reviews.toLocaleString()} reviews →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const R8MapDemo = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Project | null>(null);
