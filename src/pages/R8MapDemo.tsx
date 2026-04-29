@@ -855,6 +855,59 @@ const R8MapDemo = () => {
                         </span>
                       ))}
                     </div>
+
+                    {/* Reviews & Reviewers — DESKTOP */}
+                    <div className="px-4 pb-3 border-t border-black/5 pt-3">
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold">
+                          Reviews ({selected.reviews.toLocaleString()})
+                        </div>
+                        <div className="flex items-center -space-x-1.5">
+                          {getProjectReviews(selected).slice(0, 4).map((r, i) => (
+                            <div
+                              key={i}
+                              className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-bold text-white"
+                              style={{ background: r.reviewer.color }}
+                              title={r.reviewer.name}
+                            >
+                              {r.reviewer.initials}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
+                        {getProjectReviews(selected).slice(0, 3).map((r, i) => (
+                          <div key={i} className="rounded-lg bg-[#f8f9fa] p-2.5">
+                            <div className="flex items-center gap-2">
+                              <div
+                                className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
+                                style={{ background: r.reviewer.color }}
+                              >
+                                {r.reviewer.initials}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-1 flex-wrap">
+                                  <span className="text-[11px] font-bold text-[#0a3d62] truncate">{r.reviewer.name}</span>
+                                  {r.reviewer.verified && (
+                                    <span className="text-[8px] font-bold px-1 py-px rounded bg-[#2ECC71]/15 text-[#2ECC71]">✓</span>
+                                  )}
+                                  <span className="flex items-center gap-[1px] ms-auto">
+                                    {Array.from({ length: 5 }).map((_, k) => (
+                                      <span key={k} style={{ color: k < r.stars ? "#fac417" : "#dadce0", fontSize: "9px", lineHeight: 1 }}>★</span>
+                                    ))}
+                                  </span>
+                                </div>
+                                <div className="text-[9px] text-[#5f6368]">{r.reviewer.tier} · {r.reviewer.role} · {r.daysAgo}d ago</div>
+                              </div>
+                            </div>
+                            <p className="text-[10.5px] text-[#3c4043] leading-snug mt-1.5 line-clamp-2">{r.text}</p>
+                          </div>
+                        ))}
+                      </div>
+                      <button className="mt-2 w-full text-[10px] font-bold text-[#0a3d62] bg-[#fac417]/15 hover:bg-[#fac417]/25 rounded-md py-1.5 transition-colors">
+                        Read all {selected.reviews.toLocaleString()} reviews →
+                      </button>
+                    </div>
                   </div>
                   {/* Tail pointer aimed at marker */}
                   {!showBelow ? (
