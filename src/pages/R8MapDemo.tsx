@@ -766,7 +766,7 @@ const R8MapDemo = () => {
 
               // ── DESKTOP: Floating card pinned to marker ──
               const W = 300;
-              const H_EST = 420; // estimated full card height
+              const H_EST = 620; // estimated full card height (incl. reviews list)
               const MARKER_GAP = 24;
               const EDGE = 12;
               const containerW = mapContainerRef.current?.clientWidth ?? W;
