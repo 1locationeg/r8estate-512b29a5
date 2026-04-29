@@ -702,6 +702,62 @@ const R8MapDemo = () => {
                             ))}
                           </div>
                         </div>
+
+                        {/* Reviews & Reviewers — MOBILE */}
+                        <div className="mt-5">
+                          <div className="flex items-center justify-between mb-2">
+                            <div className="text-[10px] tracking-[1px] uppercase text-[#5f6368] font-bold">
+                              Reviews ({selected.reviews.toLocaleString()})
+                            </div>
+                            <div className="flex items-center -space-x-2">
+                              {getProjectReviews(selected).slice(0, 4).map((r, i) => (
+                                <div
+                                  key={i}
+                                  className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-white"
+                                  style={{ background: r.reviewer.color }}
+                                  title={r.reviewer.name}
+                                >
+                                  {r.reviewer.initials}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                          <div className="space-y-2.5">
+                            {getProjectReviews(selected).map((r, i) => (
+                              <div key={i} className="rounded-xl border border-black/8 bg-white p-3">
+                                <div className="flex items-center gap-2.5">
+                                  <div
+                                    className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
+                                    style={{ background: r.reviewer.color }}
+                                  >
+                                    {r.reviewer.initials}
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1.5 flex-wrap">
+                                      <span className="text-[13px] font-bold text-[#0a3d62] truncate">{r.reviewer.name}</span>
+                                      {r.reviewer.verified && (
+                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#2ECC71]/15 text-[#2ECC71]">✓ VERIFIED</span>
+                                      )}
+                                      <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-[#fac417]/15 text-[#0a3d62]">{r.reviewer.tier}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5 mt-0.5">
+                                      <span className="flex items-center gap-[1px]">
+                                        {Array.from({ length: 5 }).map((_, k) => (
+                                          <span key={k} style={{ color: k < r.stars ? "#fac417" : "#dadce0", fontSize: "11px", lineHeight: 1 }}>★</span>
+                                        ))}
+                                      </span>
+                                      <span className="text-[10px] text-[#5f6368]">· {r.reviewer.role} · {r.daysAgo}d ago</span>
+                                    </div>
+                                  </div>
+                                </div>
+                                <p className="text-[12px] text-[#3c4043] leading-snug mt-2">{r.text}</p>
+                              </div>
+                            ))}
+                          </div>
+                          <button className="mt-3 w-full text-[12px] font-bold text-[#0a3d62] bg-[#fac417]/15 hover:bg-[#fac417]/25 rounded-lg py-2.5 transition-colors">
+                            Read all {selected.reviews.toLocaleString()} reviews →
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </>
