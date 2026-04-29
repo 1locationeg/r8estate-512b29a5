@@ -89,9 +89,9 @@ export const CollectiveBuyerProtection = () => {
           </div>
 
           {/* Row 2: Risk keyword pills */}
-          <div className="flex items-center gap-3 flex-wrap">
+          <div className="grid grid-cols-2 gap-2">
             {riskKeywords.map((word, i) => (
-              <div key={i} className="flex items-center gap-1 bg-red-100/60 dark:bg-red-900/20 rounded-full px-2.5 py-0.5">
+              <div key={i} className="flex items-center justify-center gap-1.5 bg-red-100/60 dark:bg-red-900/20 rounded-full px-3 py-1">
                 <X className="h-3.5 w-3.5 text-destructive shrink-0" />
                 <span className="text-sm font-bold text-foreground">{word}</span>
               </div>
