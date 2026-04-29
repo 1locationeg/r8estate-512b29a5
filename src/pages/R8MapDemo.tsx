@@ -140,6 +140,174 @@ const ZONES = [
   { label: "At Risk", min: 0, max: 59, color: "#E74C3C" },
 ];
 
+// ── DETAIL PANEL — replaces the sidebar list when a project is selected ──
+function DetailPanel({
+  project,
+  onBack,
+  onShowOnMap,
+}: {
+  project: Project;
+  onBack: () => void;
+  onShowOnMap: () => void;
+}) {
+  const c = scoreColor(project.score);
+  const stars = Math.max(1, Math.min(5, Math.round(project.score / 20)));
+  const rating = (project.score / 20).toFixed(1);
+  const reviews = getProjectReviews(project);
+
+  return (
+    <div className="flex flex-col h-full">
+      {/* Sticky header: Back button + Show on map */}
+      <div className="sticky top-0 z-10 bg-[#0a3d62]/95 backdrop-blur-md border-b border-white/10 px-3 py-2.5 flex items-center justify-between gap-2">
+        <button
+          onClick={onBack}
+          className="inline-flex items-center gap-1.5 min-h-[36px] px-2.5 py-1.5 text-[12px] font-bold text-white/90 hover:text-[#fac417] hover:bg-white/5 rounded-md transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to list
+        </button>
+        <button
+          onClick={onShowOnMap}
+          className="md:hidden inline-flex items-center gap-1.5 min-h-[36px] px-3 py-1.5 text-[11px] font-bold text-[#0a3d62] bg-[#fac417] rounded-md shadow-md"
+        >
+          <MapPin className="w-3.5 h-3.5" />
+          Show on map
+        </button>
+      </div>
+
+      {/* Scrollable content */}
+      <div className="flex-1 overflow-y-auto">
+        {/* Hero */}
+        <div className="px-4 pt-4 pb-3 border-b border-white/10">
+          <div className="text-[20px] font-bold text-white leading-tight">{project.name}</div>
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+            <span className="font-bold text-[16px] text-white">{rating}</span>
+            <span className="flex items-center gap-[1px]">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <span key={i} style={{ color: i < stars ? "#fac417" : "rgba(255,255,255,0.25)", fontSize: "16px", lineHeight: 1 }}>★</span>
+              ))}
+            </span>
+            <span className="text-[12px] text-white/65">({project.reviews.toLocaleString()} reviews)</span>
+          </div>
+          <div className="text-[12px] text-white/70 mt-1.5">
+            <MapPin className="inline w-3.5 h-3.5 -mt-0.5 me-1 text-[#fac417]" />
+            {project.area} · <span className="text-white font-medium">{project.dev}</span>
+          </div>
+        </div>
+
+        {/* Trust score block */}
+        <div className="px-4 py-3 border-b border-white/10 flex items-center gap-3">
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center text-[20px] font-bold text-white shrink-0"
+            style={{ background: c, boxShadow: `0 2px 12px ${c}88` }}
+          >
+            {project.score}
+          </div>
+          <div className="flex-1 min-w-0">
+            <div className="text-[10px] tracking-[1px] uppercase font-bold" style={{ color: c }}>{scoreGrade(project.score)}</div>
+            <div className="h-1.5 mt-1 rounded-full bg-white/15 overflow-hidden">
+              <div className="h-full rounded-full transition-all duration-500" style={{ width: `${project.score}%`, background: c }} />
+            </div>
+            <div className="text-[10px] text-white/60 mt-1">Trust Score · {project.score}/100</div>
+          </div>
+        </div>
+
+        {/* Key metrics grid */}
+        <div className="px-4 py-3 grid grid-cols-3 gap-2 border-b border-white/10">
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">Status</div>
+            <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(project.status)}`}>
+              {project.status}
+            </div>
+          </div>
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">
+              <Calendar className="inline w-3 h-3 me-0.5" />Delivery
+            </div>
+            <div className="text-[12px] font-bold text-white">{project.delivery}</div>
+          </div>
+          <div>
+            <div className="text-[9px] tracking-[1px] uppercase text-white/55 font-bold mb-1">
+              <AlertTriangle className="inline w-3 h-3 me-0.5" />Delay
+            </div>
+            <div className={`text-[12px] font-bold ${project.delay > 0 ? "text-[#ff8a8a]" : "text-[#7ee2a3]"}`}>
+              {project.delay > 0 ? `+${project.delay}mo` : "None"}
+            </div>
+          </div>
+        </div>
+
+        {/* Sentiment chips */}
+        <div className="px-4 py-3 border-b border-white/10">
+          <div className="text-[10px] tracking-[1px] uppercase text-white/55 font-bold mb-2">Top Sentiment</div>
+          <div className="flex flex-wrap gap-1.5">
+            {project.sentiment.map((s) => (
+              <span key={s} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#fac417]/15 text-[#fac417] border border-[#fac417]/30">
+                {s}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Reviews */}
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between mb-2.5">
+            <div className="text-[10px] tracking-[1px] uppercase text-white/55 font-bold">
+              Reviews ({project.reviews.toLocaleString()})
+            </div>
+            <div className="flex items-center -space-x-2">
+              {reviews.slice(0, 4).map((r, i) => (
+                <div
+                  key={i}
+                  className="w-7 h-7 rounded-full border-2 border-[#0a3d62] flex items-center justify-center text-[10px] font-bold text-white"
+                  style={{ background: r.reviewer.color }}
+                  title={r.reviewer.name}
+                >
+                  {r.reviewer.initials}
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="space-y-2.5">
+            {reviews.map((r, i) => (
+              <div key={i} className="rounded-xl bg-white/[0.06] border border-white/10 p-3">
+                <div className="flex items-center gap-2.5">
+                  <div
+                    className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
+                    style={{ background: r.reviewer.color }}
+                  >
+                    {r.reviewer.initials}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-[13px] font-bold text-white truncate">{r.reviewer.name}</span>
+                      {r.reviewer.verified && (
+                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#2ECC71]/20 text-[#7ee2a3]">✓ VERIFIED</span>
+                      )}
+                      <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-[#fac417]/20 text-[#fac417]">{r.reviewer.tier}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 mt-0.5">
+                      <span className="flex items-center gap-[1px]">
+                        {Array.from({ length: 5 }).map((_, k) => (
+                          <span key={k} style={{ color: k < r.stars ? "#fac417" : "rgba(255,255,255,0.25)", fontSize: "11px", lineHeight: 1 }}>★</span>
+                        ))}
+                      </span>
+                      <span className="text-[10px] text-white/55">· {r.reviewer.role} · {r.daysAgo}d ago</span>
+                    </div>
+                  </div>
+                </div>
+                <p className="text-[12px] text-white/85 leading-snug mt-2">{r.text}</p>
+              </div>
+            ))}
+          </div>
+          <button className="mt-3 w-full text-[12px] font-bold text-[#0a3d62] bg-[#fac417] hover:bg-[#fac417]/90 rounded-lg py-2.5 transition-colors shadow-lg">
+            Read all {project.reviews.toLocaleString()} reviews →
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const R8MapDemo = () => {
   const [search, setSearch] = useState("");
   const [selected, setSelected] = useState<Project | null>(null);
@@ -193,15 +361,10 @@ const R8MapDemo = () => {
   const selectProject = (p: Project) => {
     setSelected(p);
     setHovered(null);
-    setSidebarOpen(false);
+    // Open the side panel so the detail view is visible (especially on mobile)
+    setSidebarOpen(true);
     if (mapRef.current) {
       mapRef.current.panTo([p.lat, p.lng], { animate: true, duration: 0.5 });
-      // After pan settles, compute screen position for the floating info card.
-      setTimeout(() => {
-        if (!mapRef.current) return;
-        const pt = mapRef.current.latLngToContainerPoint([p.lat, p.lng]);
-        setPopupPos({ x: pt.x, y: pt.y });
-      }, 520);
     }
   };
 
@@ -367,6 +530,18 @@ const R8MapDemo = () => {
         <div className="flex flex-1 overflow-hidden relative">
           {/* SIDEBAR — Projects-first layout */}
           <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[340px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
+            {selected ? (
+              // ── DETAIL MODE: side panel takes over with full project info ──
+              <DetailPanel
+                project={selected}
+                onBack={() => setSelected(null)}
+                onShowOnMap={() => {
+                  if (mapRef.current) mapRef.current.flyTo([selected.lat, selected.lng], 14, { duration: 0.6 });
+                  setSidebarOpen(false); // mobile: hide panel so user sees the map
+                }}
+              />
+            ) : (
+            <>
             {/* Sticky top: search + trust pills + result count */}
             <div className="p-3 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
               <div className="relative mb-2.5">
@@ -506,6 +681,8 @@ const R8MapDemo = () => {
                 </div>
               )}
             </div>
+            </>
+            )}
           </div>
 
           {/* MAP */}
@@ -618,321 +795,6 @@ const R8MapDemo = () => {
                         borderLeft: "7px solid transparent",
                         borderRight: "7px solid transparent",
                         borderBottom: "9px solid #fff",
-                        filter: "drop-shadow(0 -2px 2px rgba(0,0,0,0.12))",
-                      }}
-                    />
-                  )}
-                </div>
-              );
-            })()}
-
-            {/* FULL DETAILS — desktop floating card pinned to marker, mobile bottom sheet */}
-            {selected && (isMobile || popupPos) && (() => {
-              const c = scoreColor(selected.score);
-              const stars = Math.max(1, Math.min(5, Math.round(selected.score / 20)));
-              const rating = (selected.score / 20).toFixed(1);
-
-              // ── MOBILE: Bottom sheet ──
-              if (isMobile) {
-                return (
-                  <>
-                    <div className="absolute inset-0 z-[590] bg-black/30 animate-in fade-in duration-200" onClick={() => setSelected(null)} />
-                    <div
-                      className="absolute left-0 right-0 bottom-0 z-[600] bg-white rounded-t-2xl shadow-[0_-8px_30px_rgba(0,0,0,0.25)] animate-in slide-in-from-bottom duration-300 max-h-[75vh] overflow-y-auto"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <div className="sticky top-0 bg-white pt-2 pb-1">
-                        <div className="mx-auto w-10 h-1.5 rounded-full bg-black/15" />
-                      </div>
-                      <div className="px-5 pt-2 pb-5">
-                        <button
-                          onClick={() => setSelected(null)}
-                          aria-label="Close"
-                          className="absolute top-3 end-3 w-9 h-9 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#5f6368]"
-                        >
-                          <X className="w-5 h-5" />
-                        </button>
-                        <div className="text-[20px] font-bold text-[#0a3d62] leading-tight pe-10">{selected.name}</div>
-                        <div className="flex items-center gap-2 mt-1.5">
-                          <span className="font-bold text-[16px] text-[#0a3d62]">{rating}</span>
-                          <span className="flex items-center gap-[1px]">
-                            {Array.from({ length: 5 }).map((_, i) => (
-                              <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "16px", lineHeight: 1 }}>★</span>
-                            ))}
-                          </span>
-                          <span className="text-[13px] text-[#5f6368]">({selected.reviews.toLocaleString()} reviews)</span>
-                        </div>
-                        <div className="text-[13px] text-[#5f6368] mt-1">
-                          <MapPin className="inline w-3.5 h-3.5 -mt-0.5 me-1" />{selected.area} · <span className="text-[#0a3d62] font-medium">{selected.dev}</span>
-                        </div>
-
-                        <div className="mt-4 flex items-center gap-3 bg-[#f8f9fa] rounded-xl p-3">
-                          <div className="w-14 h-14 rounded-full flex items-center justify-center text-[20px] font-bold text-white shrink-0" style={{ background: c, boxShadow: `0 2px 8px ${c}55` }}>
-                            {selected.score}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="text-[11px] tracking-[1px] uppercase font-bold" style={{ color: c }}>{scoreGrade(selected.score)}</div>
-                            <div className="h-2 mt-1 rounded-full bg-black/10 overflow-hidden">
-                              <div className="h-full rounded-full" style={{ width: `${selected.score}%`, background: c }} />
-                            </div>
-                            <div className="text-[11px] text-[#5f6368] mt-1">Trust Score · {selected.score}/100</div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4 grid grid-cols-3 gap-3">
-                          <div className="rounded-lg border border-black/8 p-2.5">
-                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1">Status</div>
-                            <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(selected.status)}`}>{selected.status}</div>
-                          </div>
-                          <div className="rounded-lg border border-black/8 p-2.5">
-                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1"><Calendar className="inline w-3 h-3 me-0.5" />Delivery</div>
-                            <div className="text-[12px] font-bold text-[#0a3d62]">{selected.delivery}</div>
-                          </div>
-                          <div className="rounded-lg border border-black/8 p-2.5">
-                            <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-1"><AlertTriangle className="inline w-3 h-3 me-0.5" />Delay</div>
-                            <div className={`text-[12px] font-bold ${selected.delay > 0 ? "text-[#E74C3C]" : "text-[#2ECC71]"}`}>{selected.delay > 0 ? `+${selected.delay}mo` : "None"}</div>
-                          </div>
-                        </div>
-
-                        <div className="mt-4">
-                          <div className="text-[10px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-2">Top Sentiment</div>
-                          <div className="flex flex-wrap gap-1.5">
-                            {selected.sentiment.map((s) => (
-                              <span key={s} className="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-[#0a3d62]/8 text-[#0a3d62]">{s}</span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Reviews & Reviewers — MOBILE */}
-                        <div className="mt-5">
-                          <div className="flex items-center justify-between mb-2">
-                            <div className="text-[10px] tracking-[1px] uppercase text-[#5f6368] font-bold">
-                              Reviews ({selected.reviews.toLocaleString()})
-                            </div>
-                            <div className="flex items-center -space-x-2">
-                              {getProjectReviews(selected).slice(0, 4).map((r, i) => (
-                                <div
-                                  key={i}
-                                  className="w-7 h-7 rounded-full border-2 border-white flex items-center justify-center text-[10px] font-bold text-white"
-                                  style={{ background: r.reviewer.color }}
-                                  title={r.reviewer.name}
-                                >
-                                  {r.reviewer.initials}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                          <div className="space-y-2.5">
-                            {getProjectReviews(selected).map((r, i) => (
-                              <div key={i} className="rounded-xl border border-black/8 bg-white p-3">
-                                <div className="flex items-center gap-2.5">
-                                  <div
-                                    className="w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-bold text-white shrink-0"
-                                    style={{ background: r.reviewer.color }}
-                                  >
-                                    {r.reviewer.initials}
-                                  </div>
-                                  <div className="flex-1 min-w-0">
-                                    <div className="flex items-center gap-1.5 flex-wrap">
-                                      <span className="text-[13px] font-bold text-[#0a3d62] truncate">{r.reviewer.name}</span>
-                                      {r.reviewer.verified && (
-                                        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded bg-[#2ECC71]/15 text-[#2ECC71]">✓ VERIFIED</span>
-                                      )}
-                                      <span className="text-[9px] font-semibold px-1.5 py-0.5 rounded bg-[#fac417]/15 text-[#0a3d62]">{r.reviewer.tier}</span>
-                                    </div>
-                                    <div className="flex items-center gap-1.5 mt-0.5">
-                                      <span className="flex items-center gap-[1px]">
-                                        {Array.from({ length: 5 }).map((_, k) => (
-                                          <span key={k} style={{ color: k < r.stars ? "#fac417" : "#dadce0", fontSize: "11px", lineHeight: 1 }}>★</span>
-                                        ))}
-                                      </span>
-                                      <span className="text-[10px] text-[#5f6368]">· {r.reviewer.role} · {r.daysAgo}d ago</span>
-                                    </div>
-                                  </div>
-                                </div>
-                                <p className="text-[12px] text-[#3c4043] leading-snug mt-2">{r.text}</p>
-                              </div>
-                            ))}
-                          </div>
-                          <button className="mt-3 w-full text-[12px] font-bold text-[#0a3d62] bg-[#fac417]/15 hover:bg-[#fac417]/25 rounded-lg py-2.5 transition-colors">
-                            Read all {selected.reviews.toLocaleString()} reviews →
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                );
-              }
-
-              // ── DESKTOP: Floating card pinned to marker ──
-              const W = 300;
-              const H_EST = 620; // estimated full card height (incl. reviews list)
-              const MARKER_GAP = 24;
-              const EDGE = 12;
-              const containerW = mapContainerRef.current?.clientWidth ?? W;
-              const containerH = mapContainerRef.current?.clientHeight ?? 800;
-              const spaceAbove = popupPos.y;
-              const spaceBelow = containerH - popupPos.y;
-              // Prefer above; flip below if there isn't enough room above
-              const showBelow = spaceAbove < H_EST + MARKER_GAP + EDGE && spaceBelow > spaceAbove;
-              const left = Math.max(EDGE, Math.min(containerW - W - EDGE, popupPos.x - W / 2));
-              const top = showBelow ? popupPos.y + MARKER_GAP : popupPos.y - MARKER_GAP;
-              return (
-                <div
-                  className="absolute z-[600] pointer-events-none"
-                  style={{ left, top, width: W, transform: showBelow ? "none" : "translateY(-100%)" }}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="pointer-events-auto bg-white rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.25)] border border-black/5 overflow-hidden animate-in fade-in zoom-in-95 duration-200">
-                    {/* Header */}
-                    <div className="px-4 pt-3 pb-2.5 border-b border-black/5 relative">
-                      <button
-                        onClick={() => setSelected(null)}
-                        aria-label="Close"
-                        className="absolute top-2 end-2 w-8 h-8 rounded-full bg-black/5 hover:bg-black/10 flex items-center justify-center text-[#5f6368] transition-colors"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                      <div className="text-[16px] font-bold text-[#0a3d62] leading-tight pe-8">{selected.name}</div>
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className="font-bold text-[14px] text-[#0a3d62]">{rating}</span>
-                        <span className="flex items-center gap-[1px]">
-                          {Array.from({ length: 5 }).map((_, i) => (
-                            <span key={i} style={{ color: i < stars ? "#fac417" : "#dadce0", fontSize: "13px", lineHeight: 1 }}>★</span>
-                          ))}
-                        </span>
-                        <span className="text-[12px] text-[#5f6368]">({selected.reviews.toLocaleString()})</span>
-                      </div>
-                      <div className="text-[12px] text-[#5f6368] mt-0.5 truncate">
-                        {selected.dev} · <span className="text-[#0a3d62] font-medium">{selected.area}</span>
-                      </div>
-                    </div>
-
-                    {/* Trust + status row */}
-                    <div className="px-4 py-3 flex items-center gap-3 bg-[#f8f9fa]">
-                      <div
-                        className="w-12 h-12 rounded-full flex items-center justify-center text-[18px] font-bold text-white shrink-0"
-                        style={{ background: c, boxShadow: `0 2px 8px ${c}55` }}
-                      >
-                        {selected.score}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="text-[10px] tracking-[1px] uppercase font-bold" style={{ color: c }}>
-                          {scoreGrade(selected.score)}
-                        </div>
-                        <div className="h-1.5 mt-1 rounded-full bg-black/10 overflow-hidden">
-                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${selected.score}%`, background: c }} />
-                        </div>
-                        <div className="text-[10px] text-[#5f6368] mt-1">Trust Score · {selected.score}/100</div>
-                      </div>
-                    </div>
-
-                    {/* Key metrics — compact grid */}
-                    <div className="px-4 py-3 grid grid-cols-3 gap-2 border-t border-black/5">
-                      <div>
-                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Status</div>
-                        <div className={`text-[11px] font-bold px-1.5 py-0.5 rounded inline-block ${statusClass(selected.status)}`}>
-                          {selected.status}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delivery</div>
-                        <div className="text-[12px] font-bold text-[#0a3d62]">{selected.delivery}</div>
-                      </div>
-                      <div>
-                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold mb-0.5">Delay</div>
-                        <div className={`text-[12px] font-bold ${selected.delay > 0 ? "text-[#E74C3C]" : "text-[#2ECC71]"}`}>
-                          {selected.delay > 0 ? `+${selected.delay}mo` : "None"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Sentiment chips — top 3 only to keep it compact */}
-                    <div className="px-4 pb-3 flex flex-wrap gap-1">
-                      {selected.sentiment.slice(0, 3).map((s) => (
-                        <span key={s} className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-[#0a3d62]/8 text-[#0a3d62]">
-                          {s}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* Reviews & Reviewers — DESKTOP */}
-                    <div className="px-4 pb-3 border-t border-black/5 pt-3">
-                      <div className="flex items-center justify-between mb-2">
-                        <div className="text-[9px] tracking-[1px] uppercase text-[#5f6368] font-bold">
-                          Reviews ({selected.reviews.toLocaleString()})
-                        </div>
-                        <div className="flex items-center -space-x-1.5">
-                          {getProjectReviews(selected).slice(0, 4).map((r, i) => (
-                            <div
-                              key={i}
-                              className="w-6 h-6 rounded-full border-2 border-white flex items-center justify-center text-[9px] font-bold text-white"
-                              style={{ background: r.reviewer.color }}
-                              title={r.reviewer.name}
-                            >
-                              {r.reviewer.initials}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="space-y-2 max-h-[180px] overflow-y-auto pr-1">
-                        {getProjectReviews(selected).slice(0, 3).map((r, i) => (
-                          <div key={i} className="rounded-lg bg-[#f8f9fa] p-2.5">
-                            <div className="flex items-center gap-2">
-                              <div
-                                className="w-7 h-7 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
-                                style={{ background: r.reviewer.color }}
-                              >
-                                {r.reviewer.initials}
-                              </div>
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-1 flex-wrap">
-                                  <span className="text-[11px] font-bold text-[#0a3d62] truncate">{r.reviewer.name}</span>
-                                  {r.reviewer.verified && (
-                                    <span className="text-[8px] font-bold px-1 py-px rounded bg-[#2ECC71]/15 text-[#2ECC71]">✓</span>
-                                  )}
-                                  <span className="flex items-center gap-[1px] ms-auto">
-                                    {Array.from({ length: 5 }).map((_, k) => (
-                                      <span key={k} style={{ color: k < r.stars ? "#fac417" : "#dadce0", fontSize: "9px", lineHeight: 1 }}>★</span>
-                                    ))}
-                                  </span>
-                                </div>
-                                <div className="text-[9px] text-[#5f6368]">{r.reviewer.tier} · {r.reviewer.role} · {r.daysAgo}d ago</div>
-                              </div>
-                            </div>
-                            <p className="text-[10.5px] text-[#3c4043] leading-snug mt-1.5 line-clamp-2">{r.text}</p>
-                          </div>
-                        ))}
-                      </div>
-                      <button className="mt-2 w-full text-[10px] font-bold text-[#0a3d62] bg-[#fac417]/15 hover:bg-[#fac417]/25 rounded-md py-1.5 transition-colors">
-                        Read all {selected.reviews.toLocaleString()} reviews →
-                      </button>
-                    </div>
-                  </div>
-                  {/* Tail pointer aimed at marker */}
-                  {!showBelow ? (
-                    <div
-                      className="mx-auto"
-                      style={{
-                        width: 0, height: 0,
-                        borderLeft: "8px solid transparent",
-                        borderRight: "8px solid transparent",
-                        borderTop: "10px solid #fff",
-                        marginTop: -1,
-                        filter: "drop-shadow(0 2px 2px rgba(0,0,0,0.15))",
-                        marginInlineStart: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
-                      }}
-                    />
-                  ) : (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: -10,
-                        left: Math.max(16, Math.min(W - 16, popupPos.x - left)) - 8,
-                        width: 0, height: 0,
-                        borderLeft: "8px solid transparent",
-                        borderRight: "8px solid transparent",
-                        borderBottom: "10px solid #fff",
                         filter: "drop-shadow(0 -2px 2px rgba(0,0,0,0.12))",
                       }}
                     />
