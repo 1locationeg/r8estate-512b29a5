@@ -362,6 +362,18 @@ const R8MapDemo = () => {
         <div className="flex flex-1 overflow-hidden relative">
           {/* SIDEBAR — Projects-first layout */}
           <div className={`${sidebarOpen ? "translate-x-0" : "-translate-x-full"} md:translate-x-0 absolute md:relative z-[200] w-[340px] max-w-[88vw] shrink-0 bg-gradient-to-b from-[#0a3d62] via-[#0d4574] to-[#0a3d62] border-e border-[#fac417]/15 flex flex-col overflow-hidden transition-transform duration-300 h-full shadow-2xl`}>
+            {selected ? (
+              // ── DETAIL MODE: side panel takes over with full project info ──
+              <DetailPanel
+                project={selected}
+                onBack={() => setSelected(null)}
+                onShowOnMap={() => {
+                  if (mapRef.current) mapRef.current.flyTo([selected.lat, selected.lng], 14, { duration: 0.6 });
+                  setSidebarOpen(false); // mobile: hide panel so user sees the map
+                }}
+              />
+            ) : (
+            <>
             {/* Sticky top: search + trust pills + result count */}
             <div className="p-3 border-b border-white/10 bg-white/[0.03] backdrop-blur-sm">
               <div className="relative mb-2.5">
