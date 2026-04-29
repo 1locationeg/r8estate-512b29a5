@@ -620,12 +620,11 @@ const R8MapDemo = () => {
                 </div>
               );
             })()}
-
-            {/* FULL DETAILS — desktop floating card pinned to marker, mobile bottom sheet */}
-            {selected && (isMobile || popupPos) && (() => {
-              const c = scoreColor(selected.score);
-              const stars = Math.max(1, Math.min(5, Math.round(selected.score / 20)));
-              const rating = (selected.score / 20).toFixed(1);
+          </div>
+        </div>
+      </div>
+    </>
+  );
 };
 
 export default R8MapDemo;
