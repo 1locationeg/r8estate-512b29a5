@@ -81,7 +81,7 @@ export const LaunchWatchWidget = () => {
   return (
     <button
       onClick={() => navigate("/launch-watch")}
-      className="relative flex flex-col items-center gap-1.5 p-3 pt-4 md:p-4 md:pt-5 rounded-xl border ring-1 ring-primary/20 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent hover:shadow-lg transition-all text-center group overflow-hidden"
+      className="relative h-full w-full flex flex-col items-center gap-1.5 p-4 md:p-5 rounded-2xl border ring-1 ring-primary/20 border-primary/40 bg-gradient-to-br from-primary/10 via-primary/5 to-transparent hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 text-center group overflow-hidden"
     >
       <div className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/10 to-transparent pointer-events-none" />
 

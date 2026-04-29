@@ -138,7 +138,7 @@ export const MarketPulseWidget = ({ onClick }: { onClick: () => void }) => {
       onClick={onClick}
       onMouseEnter={() => { hoveredRef.current = true; }}
       onMouseLeave={() => { hoveredRef.current = false; }}
-      className={`relative flex flex-col items-center gap-1 p-3 md:p-4 rounded-xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-lg ${cfg.glow} transition-all text-center group overflow-hidden`}
+      className={`relative h-full w-full flex flex-col items-center gap-1 p-4 md:p-5 rounded-2xl border ${cfg.border} bg-gradient-to-br ${cfg.bg} hover:shadow-md hover:-translate-y-0.5 ${cfg.glow} transition-all duration-200 text-center group overflow-hidden`}
     >
       <div className="flex items-center gap-1.5">
         <Sparkles className={`w-3.5 h-3.5 ${cfg.iconColor}`} />

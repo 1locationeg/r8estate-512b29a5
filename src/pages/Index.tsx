@@ -8,6 +8,8 @@ import { JourneyScrollSections } from "@/components/JourneyScrollSections";
 import { FeaturedIdentitySpotlight } from "@/components/FeaturedIdentitySpotlight";
 import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
+import { HomeSection } from "@/components/HomeSection";
+import { SectionHeader } from "@/components/SectionHeader";
 
 import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
 import { HeroCategoryItems, categories as heroCategoryList } from "@/components/HeroCategoryItems";
@@ -461,145 +463,165 @@ const Index = () => { // hero-phase-v2
           </div>
 
           <div data-zone="2">
-          {/* FeaturedIdentitySpotlight */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
+          {/* Spotlight */}
+          <HomeSection>
+            <SectionHeader
+              eyebrow={t("home.spotlightEyebrow", "SPOTLIGHT")}
+              title={t("home.spotlightTitle", "Featured this week")}
+            />
             <FeaturedIdentitySpotlight />
-          </div>
-          {/* CompareEngineShowcase */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
+          </HomeSection>
+
+          {/* Compare engine */}
+          <HomeSection>
+            <SectionHeader
+              eyebrow={t("home.compareEyebrow", "COMPARE")}
+              title={t("home.compareTitle", "Compare developers side by side")}
+            />
             <CompareEngineShowcase />
-          </div>
-          <div className="section-divider" />
-          {/* Quick Actions + Widgets */}
-          <div className="w-full max-w-[1100px] mx-auto px-3 sm:px-4 md:px-8 lg:px-12 py-4 md:py-6">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
-              {quickActions.map((action) => {
-                const Icon = action.icon;
-                return (
-                  <button key={action.title} onClick={() => handleQuickAction(action.key)} className="flex flex-col items-start gap-1.5 p-3 md:p-4 rounded-xl border border-border/60 bg-card/80 backdrop-blur-sm hover:border-primary/30 hover:shadow-[0_0_20px_-6px_hsl(var(--primary)/0.15)] transition-all duration-500 text-start group">
-                    <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center group-hover:scale-105 transition-transform duration-500">
-                      <Icon className={`w-4 h-4 text-primary`} />
-                    </div>
-                    <span className="text-xs font-bold text-foreground leading-tight">{action.title}</span>
-                    <span className="text-[10px] text-muted-foreground leading-snug">{action.desc}</span>
-                  </button>
-                );
-              })}
+          </HomeSection>
+
+          {/* Quick Actions — finance corridor */}
+          <HomeSection>
+            <SectionHeader
+              eyebrow={t("home.financeEyebrow", "FINANCE & PROTECT")}
+              title={t("home.financeTitle", "Tools to verify before you sign")}
+              subtitle={t("home.financeSubtitle", "Live deals, launches, contract checks and market pulse — one place.")}
+            />
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
               <DealWatchWidget />
               <LaunchWatchWidget />
               <ContractCheckCard onClick={() => setShowContractModal(true)} />
               <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
             </div>
-          </div>
-          <div className="section-divider" />
+          </HomeSection>
           </div>
 
           {/* ─── Below-the-fold: unified sections ─── */}
           <section className="flex-1 flex flex-col">
-            <div data-zone="3" className="w-full max-w-[1440px] mx-auto flex-1 flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12 pt-0 pb-safe">
+            <div data-zone="3" className="w-full">
 
-              {/* Trust Strip — softened */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6">
-                <div className="flex items-center justify-between gap-1.5 py-2.5 px-3 rounded-xl bg-muted/60 border border-border/40 overflow-x-auto scrollbar-hide">
-                  <div className="flex items-center gap-1 md:gap-1.5 bg-background/80 rounded-full py-1.5 px-2 md:px-3 border border-border/30 flex-1 justify-center min-w-0">
-                    <Sparkles className="w-3 h-3 md:w-3.5 md:h-3.5 text-muted-foreground shrink-0" />
-                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.verifiedReviews")}</span>
-                  </div>
-                  <div className="flex items-center gap-1 md:gap-1.5 bg-background/80 rounded-full py-1.5 px-2 md:px-3 border border-border/30 flex-1 justify-center min-w-0">
-                    <Fingerprint className="w-3 h-3 md:w-3.5 md:h-3.5 text-muted-foreground shrink-0" />
-                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.realBuyers")}</span>
-                  </div>
-                  <div className="flex items-center gap-1 md:gap-1.5 bg-background/80 rounded-full py-1.5 px-2 md:px-3 border border-border/30 flex-1 justify-center min-w-0">
-                    <ShieldCheck className="w-3 h-3 md:w-3.5 md:h-3.5 text-muted-foreground shrink-0" />
-                    <span className="text-[8px] md:text-[11px] font-medium text-foreground truncate">{t("widgets.realExperts")}</span>
-                  </div>
+              {/* Trust strip — single readable pill row */}
+              <HomeSection compact>
+                <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 py-2 px-3 rounded-2xl bg-muted/50 border border-border/50">
+                  <span className="inline-flex items-center gap-1.5 bg-background/90 rounded-full py-1.5 px-3 border border-border/40 text-xs md:text-sm font-semibold text-foreground">
+                    <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span className="truncate">{t("widgets.verifiedReviews")}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 bg-background/90 rounded-full py-1.5 px-3 border border-border/40 text-xs md:text-sm font-semibold text-foreground">
+                    <Fingerprint className="w-3.5 h-3.5 text-primary shrink-0" />
+                    <span className="truncate">{t("widgets.realBuyers")}</span>
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 bg-background/90 rounded-full py-1.5 px-3 border border-border/40 text-xs md:text-sm font-semibold text-foreground">
+                    <ShieldCheck className="w-3.5 h-3.5 text-verified shrink-0" />
+                    <span className="truncate">{t("widgets.realExperts")}</span>
+                  </span>
                 </div>
-              </div>
-
-              <div className="section-divider" />
+              </HomeSection>
 
               {/* HowWeWork */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6">
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.howEyebrow", "HOW IT WORKS")}
+                  title={t("home.howTitle", "Three steps to a confident decision")}
+                />
                 <HowWeWork />
-              </div>
+              </HomeSection>
 
-              {/* AudienceSegmentCards */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><AudienceSegmentCards /></div>
+              {/* Audience Segments */}
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.audienceEyebrow", "WHO IT'S FOR")}
+                  title={t("home.audienceTitle", "Built for everyone in the journey")}
+                />
+                <AudienceSegmentCards />
+              </HomeSection>
 
-              <div className="section-divider" />
+              {/* Community */}
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.communityEyebrow", "COMMUNITY")}
+                  title={t("home.communityTitle", "Conversations from real buyers")}
+                  viewAllHref="/community"
+                  viewAllLabel={t("home.viewAll", "View all")}
+                />
+                <CommunityHighlights />
+              </HomeSection>
 
-              {/* CommunityHighlights */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><CommunityHighlights /></div>
+              {/* Reviews */}
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.reviewsEyebrow", "REAL BUYERS")}
+                  title={t("home.reviewsTitle", "What buyers are saying")}
+                  viewAllHref="/reviews"
+                  viewAllLabel={t("home.viewAll", "View all")}
+                />
+                <ReviewsCarousel />
+              </HomeSection>
 
-              <div className="section-divider" />
+              {/* Pricing */}
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.pricingEyebrow", "UPGRADE")}
+                  title={t("home.pricingTitle", "Plans for businesses that earn trust")}
+                  centered
+                />
+                <PricingTeaser />
+              </HomeSection>
 
-              {/* Trust Badges */}
-              <div className="flex flex-wrap items-center justify-center gap-2 py-4 my-0 px-0 md:py-[20px] sm:gap-0">
-                <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-verified/30 border-s-2 border-s-verified bg-verified/5 text-xs sm:text-sm font-semibold text-verified-foreground cursor-pointer hover:bg-verified/10 transition-colors">
-                  <Shield className="w-3.5 h-3.5 text-verified" />
-                  {t("hero.benefit_zero_risk")}
-                </button>
-                <button onClick={() => document.getElementById('trust-showcase')?.scrollIntoView({ behavior: 'smooth', block: 'center' })} className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-accent/30 border-s-2 border-s-accent bg-accent/5 text-xs sm:text-sm font-semibold text-accent-foreground cursor-pointer hover:bg-accent/10 transition-colors">
-                  <CheckCircle className="w-3.5 h-3.5 text-accent" />
-                  {t("hero.benefit_confident")}
-                </button>
-              </div>
+              {/* SDG */}
+              <HomeSection compact>
+                <SDGAlignmentStrip />
+              </HomeSection>
+              </div>{/* end zone 3 */}
 
-              {/* ReviewsCarousel */}
-              <div className="w-full max-w-[1100px] py-2 md:py-0"><ReviewsCarousel /></div>
-
-              <div className="section-divider" />
-
-              {/* Pricing Teaser */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><PricingTeaser /></div>
-
-              {/* SDG Alignment Strip */}
-              <div className="w-full max-w-[1100px] py-2 md:py-3"><SDGAlignmentStrip /></div>
-
-              <div className="section-divider" />
-              </div>{/* end zone 3 inner */}
-
-              <div data-zone="4" className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
+              <div data-zone="4" className="w-full">
               {/* Journey Complete CTA */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><JourneyCompleteCTA /></div>
-
-              <div className="section-divider" />
+              <HomeSection>
+                <JourneyCompleteCTA />
+              </HomeSection>
 
               {/* Site Experience Feedback */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6"><SiteExperienceFeedback /></div>
-
-              <div className="section-divider" />
+              <HomeSection compact>
+                <SiteExperienceFeedback />
+              </HomeSection>
 
               {/* Category Links */}
-              <div className="w-full max-w-[1100px] py-4 md:py-6">
+              <HomeSection>
+                <SectionHeader
+                  eyebrow={t("home.browseEyebrow", "BROWSE")}
+                  title={t("home.browseTitle", "Find your next move by category")}
+                />
                 <HeroCategoryLinks
                   activeView={activeView}
                   onViewSelect={(view) => { setActiveView((prev) => prev === view ? null : view); setSelectedDeveloperId(null); setSpecialViewItem(null); }}
                   onSelectItem={(item) => { setSpecialViewItem(item); setActiveView(null); setSelectedDeveloperId(null); }}
                   onCategorySelect={(catKey) => { setExternalCategory(catKey); setActiveView(null); setSelectedDeveloperId(null); setSpecialViewItem(null); setTimeout(() => setExternalCategory(null), 100); }}
                 />
-              </div>
+              </HomeSection>
               </div>{/* end zone 4 */}
 
-              <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center px-3 sm:px-4 md:px-8 lg:px-12">
-                {specialViewItem && (
-                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                    <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
+              {(specialViewItem || selectedDeveloper) && (
+                <HomeSection>
+                  <div id="item-detail-section" className="scroll-mt-32 md:scroll-mt-36">
+                    {specialViewItem ? (
+                      <ItemDetailSection item={specialViewItem} onClose={() => setSpecialViewItem(null)} />
+                    ) : selectedDeveloper ? (
+                      <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
+                    ) : null}
                   </div>
-                )}
-                {selectedDeveloper && !specialViewItem && (
-                  <div className="w-full max-w-[1100px] mt-8 scroll-mt-32 md:scroll-mt-36" id="item-detail-section">
-                    <DeveloperDetailCard developer={selectedDeveloper} onClose={() => setSelectedDeveloperId(null)} />
-                  </div>
-                )}
-                <div className="section-divider" />
-                {!specialViewItem && !selectedDeveloper && (
-                  <>
-                    <div className="section-divider" />
-                    <div className="w-full max-w-[1100px] py-4 md:py-6"><SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} /></div>
-                  </>
-                )}
-              </div>
+                </HomeSection>
+              )}
+
+              {!specialViewItem && !selectedDeveloper && (
+                <HomeSection>
+                  <SectionHeader
+                    eyebrow={t("home.forYouEyebrow", "FOR YOU")}
+                    title={t("home.forYouTitle", "Recommended for your search")}
+                  />
+                  <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
+                </HomeSection>
+              )}
           </section>
         </>
       ) : (

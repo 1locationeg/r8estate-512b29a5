@@ -41,7 +41,7 @@ const ContractCheckCard = ({ onClick }: ContractCheckCardProps) => {
   return (
     <button
       onClick={onClick}
-      className={`relative h-full w-full flex flex-col items-center gap-1 p-3 md:p-4 rounded-xl border bg-card text-center transition-colors duration-300 cursor-pointer ${style.border}`}
+      className={`relative h-full w-full flex flex-col items-center gap-1 p-4 md:p-5 rounded-2xl border bg-card shadow-sm hover:shadow-md hover:-translate-y-0.5 text-center transition-all duration-200 cursor-pointer ${style.border}`}
     >
       <div className="flex items-center gap-1.5">
         <Scale className={`w-4 h-4 transition-colors duration-300 ${style.headerIcon}`} />
