@@ -319,7 +319,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
               onFocus={handleFocus}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              placeholder={isAr ? "ابحث عن" : "Search for"}
+              placeholder={i18n.language === "ar" ? "ابحث عن" : "Search for"}
               className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
               style={{ fontSize: isMobile ? '16px' : undefined }}
             />
