@@ -309,7 +309,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           </button>
 
           {/* Search Input */}
-          <div className="flex-1 min-w-[140px] md:min-w-[260px] relative overflow-hidden">
+          <div className="flex-1 min-w-0 relative overflow-hidden">
             <input
               data-hero-search
               ref={inputRef}
@@ -326,10 +326,11 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           </div>
 
           {/* Voice Search Button */}
+          {/* Voice Search Button */}
           <button
             onClick={handleVoiceSearch}
             className={cn(
-              "relative flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
+              "relative hidden sm:flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
               isListening
                 ? "bg-destructive text-destructive-foreground"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -343,12 +344,12 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           </button>
 
           {/* Search Icon */}
-          <Search className="w-5 h-5 text-muted-foreground me-2" />
+          <Search className="w-5 h-5 text-muted-foreground hidden sm:block me-1" />
 
           {/* Validate Decision Button */}
           <button 
             onClick={handleValidateDecision}
-            className="hidden sm:flex items-center px-4 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
+            className="flex items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
           >
             {t("hero.validateDecision")}
           </button>
