@@ -138,11 +138,8 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
   const isMobile = useIsMobile();
 
   const handleFocus = useCallback(() => {
-    if (blurTimeoutRef.current) {
-      clearTimeout(blurTimeoutRef.current);
-    }
-    setIsFocused(true);
-    onFocusChange?.(true);
+    // Navigate to full search page instead of inline expand
+    searchNavigate("/search");
   }, [onFocusChange]);
 
   useEffect(() => {
@@ -325,7 +322,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
             className="relative z-20 flex min-w-0 flex-1 self-stretch overflow-hidden cursor-text"
             onPointerDownCapture={(event) => {
               if ((event.target as HTMLElement).closest("button")) return;
-              inputRef.current?.focus({ preventScroll: true });
+              searchNavigate("/search");
             }}
           >
             <input
