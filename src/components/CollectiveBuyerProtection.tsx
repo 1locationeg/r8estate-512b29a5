@@ -110,8 +110,8 @@ export const CollectiveBuyerProtection = () => {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-6">
-          <div className="flex flex-col gap-1 md:flex-1 md:min-w-0">
+        <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 flex flex-col items-center text-center gap-3 md:flex-row md:items-center md:justify-between md:text-start md:gap-6">
+          <div className="flex flex-col items-center gap-1 md:items-start md:flex-1 md:min-w-0">
             <div className="flex items-center gap-2">
               <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
@@ -119,7 +119,7 @@ export const CollectiveBuyerProtection = () => {
               </span>
             </div>
             <div ref={protectedCount.ref}>
-              <span className="text-2xl md:text-4xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center gap-2 flex-wrap">
+              <span className="text-2xl md:text-4xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center justify-center md:justify-start gap-2 flex-wrap">
                 {protectedCount.value}+
                 <span className="flex -space-x-2 rtl:space-x-reverse">
                   {avatars.map((src, i) => (
@@ -139,7 +139,7 @@ export const CollectiveBuyerProtection = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-3 md:shrink-0">
+          <div className="flex items-center justify-center gap-3 md:shrink-0">
             <Button
               size="sm"
               className="text-xs md:text-sm font-bold bg-journey-protect hover:bg-journey-protect/90 text-white md:h-10 md:px-5"
