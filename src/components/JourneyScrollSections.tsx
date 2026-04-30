@@ -152,9 +152,9 @@ const ResearchStorySection = ({
   const activeStory = STORIES[storyIndex];
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-1">
       {/* Storytelling wrapper */}
-      <div className="relative rounded-2xl border border-journey-research/15 bg-gradient-to-br from-journey-research/8 to-transparent p-4 space-y-3 overflow-hidden">
+      <div className="relative rounded-2xl border border-journey-research/15 bg-gradient-to-br from-journey-research/8 to-transparent p-2 space-y-1 overflow-hidden">
         {/* Search bar */}
         <HeroSearchBar
           onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
