@@ -71,16 +71,16 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
 
-        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-2 px-4 py-3 md:px-6 md:py-4">
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-3 px-4 py-3 md:px-6 md:py-4 md:flex-row md:items-center md:justify-between md:gap-6">
           {/* Row 1: Header + Counter */}
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-0.5 md:flex-1 md:min-w-0">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-destructive shrink-0" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-destructive">
                 {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
               </span>
             </div>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] ltr:ml-6 rtl:mr-6">
+            <span className="text-2xl md:text-4xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] ltr:ml-6 rtl:mr-6">
               {riskAmount.value}M EGP
             </span>
             <span className="text-xs text-muted-foreground ltr:ml-6 rtl:mr-6">
@@ -89,11 +89,11 @@ export const CollectiveBuyerProtection = () => {
           </div>
 
           {/* Row 2: Risk keyword pills */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-end md:shrink-0">
             {riskKeywords.map((word, i) => (
-              <div key={i} className="flex items-center justify-center gap-1.5 bg-red-100/60 dark:bg-red-900/20 rounded-full px-3 py-1">
+              <div key={i} className="flex items-center justify-center gap-1.5 bg-red-100/60 dark:bg-red-900/20 rounded-full px-3 py-1.5 md:px-4 md:py-2">
                 <X className="h-3.5 w-3.5 text-destructive shrink-0" />
-                <span className="text-sm font-bold text-foreground">{word}</span>
+                <span className="text-sm md:text-base font-bold text-foreground whitespace-nowrap">{word}</span>
               </div>
             ))}
           </div>
@@ -110,37 +110,39 @@ export const CollectiveBuyerProtection = () => {
             backgroundSize: "24px 24px",
           }}
         />
-        <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 space-y-2">
-          <div className="flex items-center gap-2">
-            <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
-            <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
-              {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
-            </span>
-          </div>
-          <div ref={protectedCount.ref}>
-            <span className="text-2xl md:text-3xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center gap-2">
-              {protectedCount.value}+
-              <span className="flex -space-x-2 rtl:space-x-reverse">
-                {avatars.map((src, i) => (
-                  <img
-                    key={i}
-                    src={src}
-                    alt=""
-                    loading="lazy"
-                    width={28}
-                    height={28}
-                    className="h-7 w-7 rounded-full border-2 border-journey-protect/30 object-cover"
-                  />
-                ))}
+        <div className="relative z-10 px-4 py-3 md:px-6 md:py-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between md:gap-6">
+          <div className="flex flex-col gap-1 md:flex-1 md:min-w-0">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-journey-protect shrink-0" />
+              <span className="text-[11px] font-bold uppercase tracking-wider text-journey-protect">
+                {isAr ? "مع R8ESTATE" : "WITH R8ESTATE"}
               </span>
-              {isAr ? "محمي" : "Protected"}
-            </span>
+            </div>
+            <div ref={protectedCount.ref}>
+              <span className="text-2xl md:text-4xl font-black tabular-nums text-journey-protect drop-shadow-[0_0_8px_rgba(34,197,94,0.2)] flex items-center gap-2 flex-wrap">
+                {protectedCount.value}+
+                <span className="flex -space-x-2 rtl:space-x-reverse">
+                  {avatars.map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt=""
+                      loading="lazy"
+                      width={28}
+                      height={28}
+                      className="h-7 w-7 md:h-8 md:w-8 rounded-full border-2 border-journey-protect/30 object-cover"
+                    />
+                  ))}
+                </span>
+                {isAr ? "محمي" : "Protected"}
+              </span>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 md:shrink-0">
             <Button
               size="sm"
-              className="text-xs font-bold bg-journey-protect hover:bg-journey-protect/90 text-white"
+              className="text-xs md:text-sm font-bold bg-journey-protect hover:bg-journey-protect/90 text-white md:h-10 md:px-5"
               onClick={() => navigate("/reviews")}
             >
               {isAr ? "احمي شرايك" : "Protect My Purchase"}
