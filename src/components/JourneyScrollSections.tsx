@@ -312,6 +312,7 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
 /* ─── Compact Hook Button ─── */
 const StationCompactHook = ({ station, onExpand }: { station: StationData; onExpand: () => void }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   if (station.key === "research") {
     return (
