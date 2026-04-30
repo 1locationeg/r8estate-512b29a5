@@ -1,49 +1,30 @@
-import { useState, useMemo, useCallback, useRef, useEffect, Fragment } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchPhrases } from "@/hooks/useSearchPhrases";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, MessageSquare, Building2, Users, CheckCircle, Mic, X } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
-import { TrustInsightsModal } from "@/components/TrustInsightsModal";
-import { SearchSuggestions } from "@/components/SearchSuggestions";
-import { ResearchToolkitPanel } from "@/components/ResearchToolkitPanel";
-import { ItemDetailSection } from "@/components/ItemDetailSection";
-import { WriteReviewModal } from "@/components/WriteReviewModal";
-import { CompareModal } from "@/components/CompareModal";
-import { type SearchItem, type SearchCategory, getSearchIndex } from "@/data/searchIndex";
+import { type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { categories, calculateEngagementScore, type CategoryItem } from "@/components/HeroCategoryItems";
 import { TractionStats } from "@/components/TractionStats";
-import { addToSearchHistory } from "@/lib/searchHistory";
 
 interface HeroSearchBarProps {
   onSelectDeveloper: (developerId: string) => void;
   onSelectItem?: (item: SearchItem) => void;
   onFocusChange?: (focused: boolean) => void;
   showQuickIcons?: boolean;
-  showResearchHub?: boolean;
 }
 
-export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, showQuickIcons = true, showResearchHub = false }: HeroSearchBarProps) => {
+export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, showQuickIcons = true }: HeroSearchBarProps) => {
   const { t, i18n } = useTranslation();
-  const [query, setQuery] = useState("");
-  const [isFocused, setIsFocused] = useState(false);
-  const [isAIModalOpen, setIsAIModalOpen] = useState(false);
-  const [selectedIndex, setSelectedIndex] = useState(-1);
-  const [selectedItem, setSelectedItem] = useState<SearchItem | null>(null);
-  const [reviewItem, setReviewItem] = useState<SearchItem | null>(null);
-  const [compareItem, setCompareItem] = useState<SearchItem | null>(null);
-  const [isListening, setIsListening] = useState(false);
   const [placeholderIndex, setPlaceholderIndex] = useState(0);
   const [placeholderVisible, setPlaceholderVisible] = useState(true);
 
   const trustPhrases = useSearchPhrases();
 
   useEffect(() => {
-    if (query || isFocused) return;
     const interval = setInterval(() => {
       setPlaceholderVisible(false);
       setTimeout(() => {
@@ -52,408 +33,90 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
       }, 400);
     }, 3500);
     return () => clearInterval(interval);
-  }, [query, isFocused, trustPhrases.length]);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const recognitionRef = useRef<any>(null);
-
-  // Reset selected index when query changes
-  useEffect(() => {
-    setSelectedIndex(-1);
-  }, [query]);
+  }, [trustPhrases.length]);
 
   const searchNavigate = useNavigate();
 
-  const handleSelect = useCallback((item: SearchItem) => {
-    addToSearchHistory(item.name);
-    setQuery("");
-    setIsFocused(false);
-    window.dispatchEvent(new CustomEvent("corridor:engage", { detail: { zone: 1, action: "search" } }));
-
-    if (item.meta?.dynamicBusinessProfile) {
-      searchNavigate(`/entity/${item.id}`);
-      return;
-    }
-    
-    if (item.category === 'developers') {
-      onSelectDeveloper(item.id);
-    } else if (onSelectItem) {
-      onSelectItem(item);
-    } else {
-      searchNavigate(`/entity/${item.id}`);
-    }
-  }, [onSelectDeveloper, onSelectItem, searchNavigate]);
-
-  const handleCloseDetail = useCallback(() => {
-    setSelectedItem(null);
-  }, []);
-
-  const handleWriteReview = useCallback((item: SearchItem) => {
-    setReviewItem(item);
-    setIsFocused(false);
-  }, []);
-
-  const handleCompare = useCallback((item: SearchItem) => {
-    setCompareItem(item);
-    setIsFocused(false);
-  }, []);
-
-  const handleValidateDecision = useCallback(() => {
-    // If there's a query with results, open the first result
-    // Otherwise, show a prompt to search first
-    if (query.trim()) {
-      setIsFocused(true);
-    } else {
-      inputRef.current?.focus();
-    }
-  }, [query]);
-
-  const handleCorrection = useCallback((corrected: string) => {
-    setQuery(corrected);
-    inputRef.current?.focus();
-  }, []);
-
-  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
-    if (!isFocused) return;
-
-    switch (e.key) {
-      case 'ArrowDown':
-        e.preventDefault();
-        setSelectedIndex(prev => prev + 1);
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        setSelectedIndex(prev => Math.max(-1, prev - 1));
-        break;
-      case 'Escape':
-        dismissFocus();
-        break;
-      case 'Enter':
-        // If an item is selected, trigger selection
-        // This would need access to the flat items list
-        break;
-    }
-  }, [isFocused]);
-
-  const isMobile = useIsMobile();
-
-  const handleFocus = useCallback(() => {
-    // Navigate to full search page instead of inline expand
+  const goToSearch = useCallback(() => {
     searchNavigate("/search");
-  }, [onFocusChange]);
-
-  useEffect(() => {
-    if (!isFocused) return;
-    const focusFrame = requestAnimationFrame(() => {
-      inputRef.current?.focus({ preventScroll: true });
-    });
-    return () => cancelAnimationFrame(focusFrame);
-  }, [isFocused]);
-
-  const dismissFocus = useCallback(() => {
-    setIsFocused(false);
-    setSelectedIndex(-1);
-    setQuery("");
-    inputRef.current?.blur();
-    onFocusChange?.(false);
-  }, [onFocusChange]);
-
-  const handleBlur = useCallback(() => {
-    if (isMobile) return; // On mobile, only dismiss via Cancel/Esc
-    blurTimeoutRef.current = setTimeout(() => {
-      setIsFocused(false);
-      setSelectedIndex(-1);
-      onFocusChange?.(false);
-    }, 200);
-  }, [isMobile, onFocusChange]);
-
-  // Voice search handler
-  const handleVoiceSearch = useCallback(() => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      toast.error(t("hero.voiceNotSupported"));
-      return;
-    }
-
-    if (isListening && recognitionRef.current) {
-      recognitionRef.current.stop();
-      setIsListening(false);
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognitionRef.current = recognition;
-    recognition.lang = i18n.language === "ar" ? "ar-EG" : "en-US";
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      setQuery(transcript);
-      setIsFocused(true);
-      inputRef.current?.focus();
-    };
-
-    recognition.onend = () => setIsListening(false);
-    recognition.onerror = () => setIsListening(false);
-
-    setIsListening(true);
-    recognition.start();
-  }, [isListening, i18n.language, t]);
-
-  // Cleanup timeout on unmount
-  useEffect(() => {
-    return () => {
-      if (blurTimeoutRef.current) {
-        clearTimeout(blurTimeoutRef.current);
-      }
-      if (recognitionRef.current) {
-        recognitionRef.current.abort();
-      }
-    };
-  }, []);
-
-  // Mobile full-screen overlay
-  if (isMobile && isFocused) {
-    return (
-      <>
-        <div className="fixed inset-0 z-50 bg-background flex flex-col transition-all duration-300 ease-in-out animate-fade-in">
-          {/* Top bar with input + cancel */}
-          <div className="flex items-center gap-2 px-4 pt-3 pb-3 border-b border-border/40 safe-top">
-            <div
-              className="flex-1 relative"
-              onPointerDown={() => inputRef.current?.focus({ preventScroll: true })}
-            >
-              <Search className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-              <input
-                data-hero-search
-                ref={inputRef}
-                type="text"
-                value={query}
-                onChange={(e) => setQuery(e.target.value)}
-                onFocus={handleFocus}
-                onKeyDown={handleKeyDown}
-                placeholder={trustPhrases[placeholderIndex]}
-                autoFocus
-                className="w-full ps-9 pe-3 py-3 bg-secondary/60 border border-border/60 rounded-xl text-base text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
-                style={{ fontSize: '16px' }}
-              />
-            </div>
-            <button
-              onClick={dismissFocus}
-              className="flex items-center justify-center px-3 py-3 text-sm font-medium text-primary hover:text-primary/80 transition-colors whitespace-nowrap"
-            >
-              Cancel
-            </button>
-          </div>
-
-          {/* Full-screen search results */}
-          <div className="flex-1 overflow-y-auto search-suggestions-scrollbar">
-            <SearchSuggestions
-              query={query}
-              isOpen={true}
-              onSelect={(item) => { dismissFocus(); handleSelect(item); }}
-              onCorrection={handleCorrection}
-              onWriteReview={handleWriteReview}
-              onCompare={handleCompare}
-              selectedIndex={selectedIndex}
-              className="relative top-auto mt-0 rounded-none border-0 shadow-none max-h-none"
-            />
-            {showResearchHub && !query && (
-              <ResearchToolkitPanel
-                onClose={dismissFocus}
-                onOpenCompare={() => { setCompareItem({} as any); }}
-                onOpenAIAgent={() => { setIsAIModalOpen(true); }}
-              />
-            )}
-          </div>
-
-          {/* Sticky footer - Validate Decision */}
-          <div className="sticky bottom-0 px-4 py-3 bg-card/95 backdrop-blur-md border-t border-border/40 safe-bottom">
-            <button
-              onClick={handleValidateDecision}
-              className="w-full flex items-center justify-center gap-2 px-5 py-3 bg-accent text-accent-foreground rounded-xl font-semibold text-sm hover:bg-accent/90 transition-colors"
-            >
-              <Sparkles className="w-4 h-4" />
-              {t("hero.validateDecision")}
-            </button>
-          </div>
-        </div>
-
-        {/* Modals still rendered */}
-        <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
-        <WriteReviewModal
-          open={!!reviewItem}
-          onOpenChange={(open) => !open && setReviewItem(null)}
-          developerName={reviewItem?.name || ""}
-          developerId={reviewItem?.id || ""}
-        />
-        <CompareModal
-          item={compareItem}
-          open={!!compareItem}
-          onClose={() => setCompareItem(null)}
-        />
-      
-      </>
-    );
-  }
+  }, [searchNavigate]);
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      {/* Search + Suggestions anchor */}
-      <div className="relative">
-        {/* Search Container with glow on focus */}
-        <div className={cn(
-          "relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full my-[8px]",
-          isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
-        )}>
-          {/* Ask AI Button */}
-          <button 
-            onClick={() => setIsAIModalOpen(true)}
-            className="group flex shrink-0 items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all relative overflow-hidden"
-          >
-            <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
-            <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:animate-spin" style={{ animationDuration: '1.5s' }} />
-            <span>{t("hero.askAI")}</span>
-          </button>
+      {/* Search Container - navigates to /search on click */}
+      <div
+        className="relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full my-[8px] cursor-pointer hover:shadow-lg hover:border-primary/30"
+        onClick={goToSearch}
+        role="button"
+        tabIndex={0}
+        onKeyDown={(e) => { if (e.key === "Enter") goToSearch(); }}
+      >
+        {/* Ask AI Badge */}
+        <span className="group flex shrink-0 items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap relative overflow-hidden">
+          <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+          <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />
+          <span>{t("hero.askAI")}</span>
+        </span>
 
-          {/* Search Input */}
-          <div
-            className="relative z-20 flex min-w-0 flex-1 self-stretch overflow-hidden cursor-text"
-            onPointerDownCapture={(event) => {
-              if ((event.target as HTMLElement).closest("button")) return;
-              searchNavigate("/search");
-            }}
-          >
-            <input
-              data-hero-search
-              ref={inputRef}
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={handleFocus}
-              onBlur={handleBlur}
-              onKeyDown={handleKeyDown}
-              placeholder={i18n.language === "ar" ? "ابحث عن" : "Search for"}
-              className="relative z-10 min-h-[40px] w-full cursor-text px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none"
-              style={{ fontSize: isMobile ? '16px' : undefined }}
-            />
-          </div>
-
-          {/* Voice Search Button */}
-          {/* Voice Search Button */}
-          <button
-            onClick={handleVoiceSearch}
-            className={cn(
-              "relative hidden sm:flex shrink-0 items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
-              isListening
-                ? "bg-destructive text-destructive-foreground"
-                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-            )}
-            title={t("hero.voiceSearch")}
-          >
-            <Mic className="w-4 h-4 md:w-5 md:h-5" />
-            {isListening && (
-              <span className="absolute top-0.5 end-0.5 w-2 h-2 bg-destructive rounded-full animate-ping" />
-            )}
-          </button>
-
-          {/* Search Icon */}
-          <Search className="pointer-events-none w-5 h-5 text-muted-foreground hidden sm:block me-1 shrink-0" />
-
-          {/* Validate Decision Button */}
-          <button 
-            onClick={handleValidateDecision}
-            className="flex shrink-0 items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
-          >
-            {t("hero.validateDecision")}
-          </button>
-          </div>
-
-          {/* SearchSuggestions anchored directly under input */}
-          <SearchSuggestions
-            query={query}
-            isOpen={isFocused}
-            onSelect={handleSelect}
-            onCorrection={handleCorrection}
-            onWriteReview={handleWriteReview}
-            onCompare={handleCompare}
-            selectedIndex={selectedIndex}
-          />
-          {showResearchHub && isFocused && !query && (
-            <div className="absolute top-full left-0 right-0 z-50 mt-1 max-h-[70vh] overflow-y-auto rounded-xl border border-border bg-background shadow-xl">
-              <ResearchToolkitPanel
-                onClose={dismissFocus}
-                onOpenCompare={() => { setCompareItem({} as any); }}
-                onOpenAIAgent={() => { setIsAIModalOpen(true); }}
-              />
-            </div>
-          )}
+        {/* Placeholder text */}
+        <div className="flex-1 min-w-0 min-h-[40px] flex items-center px-3 py-2 md:py-2.5">
+          <span className={cn(
+            "text-sm md:text-base text-muted-foreground truncate transition-opacity duration-300",
+            placeholderVisible ? "opacity-100" : "opacity-0"
+          )}>
+            {trustPhrases[placeholderIndex]}
+          </span>
         </div>
 
-        {showQuickIcons && (
-          <div className="flex items-center justify-center gap-3 mt-2">
-            <TooltipProvider delayDuration={200}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/deal-watch")} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
-                    <Zap className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Trending</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/categories", { state: { view: "bestOf" } })} className="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer flex items-center justify-center">
-                    <Trophy className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>BEST OF 2026</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/categories", { state: { view: "trending" } })} className="w-8 h-8 rounded-full bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-colors cursor-pointer flex items-center justify-center">
-                    <TrendingUp className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>Trending Projects</TooltipContent>
-              </Tooltip>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button onClick={() => searchNavigate("/launch-watch")} className="w-8 h-8 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer flex items-center justify-center">
-                    <Rocket className="w-4 h-4" />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>New Launches</TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </div>
-        )}
+        {/* Search Icon */}
+        <Search className="w-5 h-5 text-muted-foreground me-1 shrink-0" />
 
-      {/* AI Trust Insights Modal */}
-      <TrustInsightsModal open={isAIModalOpen} onOpenChange={setIsAIModalOpen} />
+        {/* Validate Decision Badge */}
+        <span className="flex shrink-0 items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap">
+          {t("hero.validateDecision")}
+        </span>
+      </div>
 
-      {/* Write Review Modal */}
-      <WriteReviewModal
-        open={!!reviewItem}
-        onOpenChange={(open) => !open && setReviewItem(null)}
-        developerName={reviewItem?.name || ""}
-        developerId={reviewItem?.id || ""}
-      />
-      
-      {/* Item Detail Section - Inline on page */}
-      {selectedItem && (
-        <ItemDetailSection 
-          item={selectedItem} 
-          onClose={handleCloseDetail} 
-        />
+      {/* KPI Quick Icons */}
+      {showQuickIcons && (
+        <div className="flex items-center justify-center gap-3 mt-2">
+          <TooltipProvider delayDuration={200}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={(e) => { e.stopPropagation(); searchNavigate("/deal-watch"); }} className="w-8 h-8 rounded-full bg-destructive/10 text-destructive hover:bg-destructive/20 transition-colors cursor-pointer flex items-center justify-center">
+                  <Zap className="w-4 h-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Trending</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={(e) => { e.stopPropagation(); searchNavigate("/categories", { state: { view: "bestOf" } }); }} className="w-8 h-8 rounded-full bg-primary/10 text-primary hover:bg-primary/20 transition-colors cursor-pointer flex items-center justify-center">
+                  <Trophy className="w-4 h-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>BEST OF 2026</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={(e) => { e.stopPropagation(); searchNavigate("/categories", { state: { view: "trending" } }); }} className="w-8 h-8 rounded-full bg-accent/10 text-accent-foreground hover:bg-accent/20 transition-colors cursor-pointer flex items-center justify-center">
+                  <TrendingUp className="w-4 h-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>Trending Projects</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button onClick={(e) => { e.stopPropagation(); searchNavigate("/launch-watch"); }} className="w-8 h-8 rounded-full bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer flex items-center justify-center">
+                  <Rocket className="w-4 h-4" />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>New Launches</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       )}
-      {/* Compare Modal */}
-      <CompareModal
-        item={compareItem}
-        open={!!compareItem}
-        onClose={() => setCompareItem(null)}
-      />
+
     </div>
   );
 };
