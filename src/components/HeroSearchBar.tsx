@@ -319,27 +319,10 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
               onFocus={handleFocus}
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
-              placeholder=""
+              placeholder={isAr ? "ابحث عن" : "Search for"}
               className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
               style={{ fontSize: isMobile ? '16px' : undefined }}
             />
-            {/* Animated trust placeholder */}
-            {!query && (
-              <div className="absolute inset-0 flex items-center px-3 pointer-events-none overflow-hidden">
-                <span
-                  className={cn(
-                    "text-sm md:text-base text-muted-foreground transition-all duration-400 ease-out truncate",
-                    "bg-gradient-to-r from-muted-foreground via-primary/60 to-muted-foreground bg-[length:200%_100%] bg-clip-text",
-                    placeholderVisible
-                      ? "opacity-100 translate-y-0 animate-[shimmer_3s_ease-in-out_infinite]"
-                      : "opacity-0 translate-y-2"
-                  )}
-                  style={{ WebkitTextFillColor: placeholderVisible ? 'transparent' : undefined }}
-                >
-                  {trustPhrases[placeholderIndex]}
-                </span>
-              </div>
-            )}
           </div>
 
           {/* Voice Search Button */}
