@@ -71,25 +71,25 @@ export const CollectiveBuyerProtection = () => {
           }}
         />
 
-        <div ref={riskAmount.ref} className="relative z-10 flex flex-col gap-3 px-4 py-3 md:px-6 md:py-4 md:flex-row md:items-center md:justify-between md:gap-6">
+        <div ref={riskAmount.ref} className="relative z-10 flex flex-col items-center text-center gap-3 px-4 py-3 md:px-6 md:py-4 md:flex-row md:items-center md:justify-between md:text-start md:gap-6">
           {/* Row 1: Header + Counter */}
-          <div className="flex flex-col gap-0.5 md:flex-1 md:min-w-0">
+          <div className="flex flex-col items-center gap-0.5 md:items-start md:flex-1 md:min-w-0">
             <div className="flex items-center gap-2">
               <Shield className="h-4 w-4 text-destructive shrink-0" />
               <span className="text-[11px] font-bold uppercase tracking-wider text-destructive">
                 {isAr ? "بدون R8ESTATE" : "Without R8ESTATE"}
               </span>
             </div>
-            <span className="text-2xl md:text-4xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] ltr:ml-6 rtl:mr-6">
+            <span className="text-2xl md:text-4xl font-black tabular-nums text-destructive drop-shadow-[0_0_8px_rgba(239,68,68,0.2)] md:ms-6">
               {riskAmount.value}M EGP
             </span>
-            <span className="text-xs text-muted-foreground ltr:ml-6 rtl:mr-6">
+            <span className="text-xs text-muted-foreground md:ms-6">
               {isAr ? "في خطر عبر مشتري العقارات في مصر" : "at risk across Egyptian off-plan buyers"}
             </span>
           </div>
 
           {/* Row 2: Risk keyword pills */}
-          <div className="grid grid-cols-2 gap-2 md:flex md:flex-wrap md:justify-end md:shrink-0">
+          <div className="grid grid-cols-2 gap-2 w-full md:w-auto md:flex md:flex-wrap md:justify-end md:shrink-0">
             {riskKeywords.map((word, i) => (
               <div key={i} className="flex items-center justify-center gap-1.5 bg-red-100/60 dark:bg-red-900/20 rounded-full px-3 py-1.5 md:px-4 md:py-2">
                 <X className="h-3.5 w-3.5 text-destructive shrink-0" />
