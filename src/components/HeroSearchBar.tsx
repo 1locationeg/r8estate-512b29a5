@@ -301,15 +301,23 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           {/* Ask AI Button */}
           <button 
             onClick={() => setIsAIModalOpen(true)}
-            className="group flex items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all relative overflow-hidden"
+            className="group flex shrink-0 items-center gap-1.5 px-3 py-2 md:px-4 md:py-2.5 bg-gradient-to-r from-primary to-primary/85 text-primary-foreground rounded-lg font-medium text-xs md:text-sm whitespace-nowrap hover:from-primary/90 hover:to-primary/80 transition-all relative overflow-hidden"
           >
-            <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
+            <span className="pointer-events-none absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent translate-x-[-200%] group-hover:translate-x-[200%] transition-transform duration-700" />
             <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4 group-hover:animate-spin" style={{ animationDuration: '1.5s' }} />
             <span>{t("hero.askAI")}</span>
           </button>
 
           {/* Search Input */}
-          <div className="flex-1 min-w-0 relative overflow-hidden">
+          <div
+            className="relative z-20 flex min-w-0 flex-1 self-stretch overflow-hidden"
+            onMouseDown={(event) => {
+              if (event.target === event.currentTarget) {
+                event.preventDefault();
+                inputRef.current?.focus();
+              }
+            }}
+          >
             <input
               data-hero-search
               ref={inputRef}
@@ -320,7 +328,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               placeholder={i18n.language === "ar" ? "ابحث عن" : "Search for"}
-              className="w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none relative z-10"
+              className="relative z-10 min-h-[40px] w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none"
               style={{ fontSize: isMobile ? '16px' : undefined }}
             />
           </div>
@@ -330,7 +338,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           <button
             onClick={handleVoiceSearch}
             className={cn(
-              "relative hidden sm:flex items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
+              "relative hidden sm:flex shrink-0 items-center justify-center w-8 h-8 md:w-9 md:h-9 rounded-lg transition-all",
               isListening
                 ? "bg-destructive text-destructive-foreground"
                 : "text-muted-foreground hover:text-foreground hover:bg-secondary"
@@ -344,12 +352,12 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           </button>
 
           {/* Search Icon */}
-          <Search className="w-5 h-5 text-muted-foreground hidden sm:block me-1" />
+          <Search className="pointer-events-none w-5 h-5 text-muted-foreground hidden sm:block me-1 shrink-0" />
 
           {/* Validate Decision Button */}
           <button 
             onClick={handleValidateDecision}
-            className="flex items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
+            className="flex shrink-0 items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap hover:bg-accent/90 transition-colors"
           >
             {t("hero.validateDecision")}
           </button>
