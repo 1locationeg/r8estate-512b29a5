@@ -309,7 +309,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
           </button>
 
           {/* Search Input */}
-          <div className="flex-1 relative overflow-hidden">
+          <div className="flex-1 min-w-[140px] md:min-w-[260px] relative overflow-hidden">
             <input
               data-hero-search
               ref={inputRef}
