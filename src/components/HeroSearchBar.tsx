@@ -295,7 +295,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
       <div className="relative">
         {/* Search Container with glow on focus */}
         <div className={cn(
-          "relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full",
+          "relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full my-[8px]",
           isFocused && "z-50 ai-shimmer-border shadow-lg shadow-primary/10"
         )}>
           {/* Ask AI Button */}
