@@ -276,7 +276,7 @@ const Index = () => { // hero-phase-v2
     <div className="w-full flex flex-col items-center pt-1 px-2 md:px-4 lg:px-6">
       <div className="w-full max-w-[1440px] mx-auto flex flex-col items-center">
         {/* Hero Card */}
-        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0">
+        <div className="relative w-full max-w-[1100px] rounded-2xl border border-primary/15 bg-card shadow-sm p-2 md:p-3 mt-0 py-[2px]">
           <div className="relative text-center">
              <p
               className="inline-flex items-center gap-1.5 text-[10px] sm:text-xs md:text-sm font-semibold tracking-[0.18em] uppercase mb-2 rounded-full px-3.5 py-1.5 bg-[#e8f5e9]/70 backdrop-blur-sm text-[#2e7d32] select-none cursor-default"
