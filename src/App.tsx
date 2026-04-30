@@ -54,6 +54,7 @@ const Leaderboard = lazy(() => import("./pages/Leaderboard"));
 const Rewards = lazy(() => import("./pages/Rewards"));
 const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
+const BrowseLaunches = lazy(() => import("./pages/BrowseLaunches"));
 const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
 const Messages = lazy(() => import("./pages/Messages"));
@@ -194,6 +195,7 @@ const AppContent = () => {
           <Route path="/leaderboard" element={<Leaderboard />} />
           <Route path="/deal-watch" element={<DealWatch />} />
           <Route path="/launch-watch" element={<LaunchWatch />} />
+          <Route path="/browse-launches" element={<BrowseLaunches />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/rewards" element={<Rewards />} />
