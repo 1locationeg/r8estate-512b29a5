@@ -145,6 +145,14 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
     onFocusChange?.(true);
   }, [onFocusChange]);
 
+  useEffect(() => {
+    if (!isFocused) return;
+    const focusFrame = requestAnimationFrame(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    });
+    return () => cancelAnimationFrame(focusFrame);
+  }, [isFocused]);
+
   const dismissFocus = useCallback(() => {
     setIsFocused(false);
     setSelectedIndex(-1);
@@ -215,14 +223,18 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
         <div className="fixed inset-0 z-50 bg-background flex flex-col transition-all duration-300 ease-in-out animate-fade-in">
           {/* Top bar with input + cancel */}
           <div className="flex items-center gap-2 px-4 pt-3 pb-3 border-b border-border/40 safe-top">
-            <div className="flex-1 relative">
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <div
+              className="flex-1 relative"
+              onPointerDown={() => inputRef.current?.focus({ preventScroll: true })}
+            >
+              <Search className="pointer-events-none absolute start-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <input
                 data-hero-search
                 ref={inputRef}
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
+                onFocus={handleFocus}
                 onKeyDown={handleKeyDown}
                 placeholder={trustPhrases[placeholderIndex]}
                 autoFocus
@@ -310,12 +322,10 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
 
           {/* Search Input */}
           <div
-            className="relative z-20 flex min-w-0 flex-1 self-stretch overflow-hidden"
-            onMouseDown={(event) => {
-              if (event.target === event.currentTarget) {
-                event.preventDefault();
-                inputRef.current?.focus();
-              }
+            className="relative z-20 flex min-w-0 flex-1 self-stretch overflow-hidden cursor-text"
+            onPointerDownCapture={(event) => {
+              if ((event.target as HTMLElement).closest("button")) return;
+              inputRef.current?.focus({ preventScroll: true });
             }}
           >
             <input
@@ -328,7 +338,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
               onBlur={handleBlur}
               onKeyDown={handleKeyDown}
               placeholder={i18n.language === "ar" ? "ابحث عن" : "Search for"}
-              className="relative z-10 min-h-[40px] w-full px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none"
+              className="relative z-10 min-h-[40px] w-full cursor-text px-3 py-2 md:py-2.5 bg-transparent text-sm md:text-base text-foreground focus:outline-none"
               style={{ fontSize: isMobile ? '16px' : undefined }}
             />
           </div>
