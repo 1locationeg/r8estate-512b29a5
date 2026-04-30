@@ -312,6 +312,7 @@ const StationExpandedContent = ({ stationKey, onCollapse }: { stationKey: string
 /* ─── Compact Hook Button ─── */
 const StationCompactHook = ({ station, onExpand }: { station: StationData; onExpand: () => void }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   if (station.key === "research") {
     return (
@@ -322,7 +323,7 @@ const StationCompactHook = ({ station, onExpand }: { station: StationData; onExp
   }
 
   return (
-    <button onClick={onExpand} className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl border-2 font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg group" style={{ borderColor: `hsl(${station.hslVar})`, color: `hsl(${station.hslVar})`, backgroundColor: `hsl(${station.hslVar} / 0.06)` }}>
+    <button onClick={() => { if (station.key === "choose") { navigate("/browse-launches"); return; } onExpand(); }} className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl border-2 font-semibold text-sm transition-all hover:scale-105 hover:shadow-lg group" style={{ borderColor: `hsl(${station.hslVar})`, color: `hsl(${station.hslVar})`, backgroundColor: `hsl(${station.hslVar} / 0.06)` }}>
       <station.icon className="w-5 h-5" />
       {t(station.hookLabelKey, station.key === "choose" ? "Browse launches" : station.key === "finance" ? "See deals" : "Join community")}
       <ChevronUp className="w-4 h-4 rotate-180 group-hover:translate-y-0.5 transition-transform" />
