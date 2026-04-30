@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Forward, Copy, Check, MessageCircle } from "lucide-react";
+import { Share2, Forward, Copy, Check, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -90,7 +90,7 @@ export const ShareMenu = ({
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button variant={variant} size={size} className={className}>
-          <Forward className="w-4 h-4 text-current" />
+          <Share2 className="w-4 h-4 text-current" />
           {!iconOnly && <span>{label || t("share.share")}</span>}
         </Button>
       </PopoverTrigger>
