@@ -159,7 +159,6 @@ const ResearchStorySection = ({
         <HeroSearchBar
           onSelectDeveloper={(id) => { onCollapse(); navigate(`/entity/${id}`); }}
           onSelectItem={(item) => { onCollapse(); navigate(`/entity/${item.id}`); }}
-          showResearchHub={true}
         />
 
         {/* Stats row */}
@@ -317,7 +316,7 @@ const StationCompactHook = ({ station, onExpand }: { station: StationData; onExp
   if (station.key === "research") {
     return (
       <div className="w-full max-w-sm mx-auto">
-        <HeroSearchBar onSelectDeveloper={() => {}} showResearchHub={true} />
+        <HeroSearchBar onSelectDeveloper={() => {}} />
       </div>
     );
   }
