@@ -73,6 +73,7 @@ const NFCRedirect = lazy(() => import("./pages/NFCRedirect"));
 const AboutTrustMeter = lazy(() => import("./pages/AboutTrustMeter"));
 const CompareDevelopers = lazy(() => import("./pages/CompareDevelopers"));
 const TruthCheck = lazy(() => import("./pages/TruthCheck"));
+const SearchPage = lazy(() => import("./pages/SearchPage"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -177,6 +178,7 @@ const AppContent = () => {
       <Suspense fallback={<RouteLoader />}>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/search" element={<SearchPage />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
