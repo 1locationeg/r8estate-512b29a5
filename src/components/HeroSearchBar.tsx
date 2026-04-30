@@ -45,7 +45,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
     <div className="w-full max-w-3xl mx-auto">
       {/* Search Container - navigates to /search on click */}
       <div
-        className="relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full my-[8px] cursor-pointer hover:shadow-lg hover:border-primary/30"
+        className="relative flex items-center gap-2 bg-card/80 backdrop-blur-md border border-border/60 rounded-xl p-1.5 md:p-2 shadow-md shadow-primary/[0.04] transition-all duration-300 ease-in-out w-full cursor-pointer hover:shadow-lg hover:border-primary/30"
         onClick={goToSearch}
         role="button"
         tabIndex={0}
@@ -88,7 +88,7 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
 
       {/* KPI Quick Icons */}
       {showQuickIcons && (
-        <div className="flex items-center justify-center gap-3 mt-2">
+        <div className="flex items-center justify-center gap-3 mt-1">
           <TooltipProvider delayDuration={200}>
             <Tooltip>
               <TooltipTrigger asChild>
