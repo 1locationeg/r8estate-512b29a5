@@ -5,7 +5,7 @@ import { AIChatWidget } from "./AIChatWidget";
 import { MessageSquare, Sparkles } from "lucide-react";
 
 const WhatsAppAIIcon = ({ size = 28 }: { size?: number }) => (
-  <svg viewBox="0 0 48 48" width={size} height={size} fill="none" className="my-[25px] mx-[52px] px-[4px] py-[20px]">
+  <svg viewBox="0 0 48 48" width={size} height={size} fill="none">
     <circle cx="24" cy="24" r="22" fill="#25D366" />
     <path
       d="M24 8C15.163 8 8 15.163 8 24c0 2.828.744 5.485 2.042 7.789L8 40l8.41-1.978A15.936 15.936 0 0024 40c8.837 0 16-7.163 16-16S32.837 8 24 8zm0 28.8a12.736 12.736 0 01-6.502-1.781l-.466-.278-4.832 1.13 1.15-4.712-.304-.486A12.747 12.747 0 0111.2 24c0-7.07 5.73-12.8 12.8-12.8S36.8 16.93 36.8 24 31.07 36.8 24 36.8z"
@@ -67,7 +67,7 @@ export const FloatingChatFAB = () => {
 
   return (
     <>
-      <div className={`fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom)+4px)] md:bottom-6 ltr:right-[env(safe-area-inset-right,0px)] rtl:left-[env(safe-area-inset-left,0px)] z-40 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`} ref={menuRef}>
+      <div className={`fixed bottom-[calc(3.5rem+env(safe-area-inset-bottom)+4px)] md:bottom-6 ltr:right-[calc(env(safe-area-inset-right,0px)+12px)] rtl:left-[calc(env(safe-area-inset-left,0px)+12px)] z-40 transition-opacity duration-700 ${visible ? "opacity-100" : "opacity-0 pointer-events-none"}`} ref={menuRef}>
         {/* Option buttons */}
         <div
           className={`flex flex-col items-end gap-2 mb-2 transition-all duration-200 ${
@@ -95,7 +95,7 @@ export const FloatingChatFAB = () => {
           onClick={() => setMenuOpen(!menuOpen)}
           className="flex items-center justify-center transition-all hover:scale-105 bg-transparent border-none p-0"
         >
-          <WhatsAppAIIcon size={40} />
+          <WhatsAppAIIcon size={44} />
         </button>
       </div>
 
