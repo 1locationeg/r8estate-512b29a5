@@ -38,6 +38,36 @@ const SearchPage = () => {
     inputRef.current?.focus({ preventScroll: true });
   }, []);
 
+  // Auto-start voice search if ?voice=1
+  const shouldAutoVoice = searchParams.get("voice") === "1";
+  const voiceTriggeredRef = useRef(false);
+  useEffect(() => {
+    if (!shouldAutoVoice || voiceTriggeredRef.current) return;
+    voiceTriggeredRef.current = true;
+    // Small delay to let component mount
+    const timer = setTimeout(() => {
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (!SpeechRecognition) {
+        toast.error(t("hero.voiceNotSupported"));
+        return;
+      }
+      const recognition = new SpeechRecognition();
+      recognitionRef.current = recognition;
+      recognition.lang = i18n.language === "ar" ? "ar-EG" : "en-US";
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+      recognition.onresult = (event: any) => {
+        setQuery(event.results[0][0].transcript);
+        inputRef.current?.focus();
+      };
+      recognition.onend = () => setIsListening(false);
+      recognition.onerror = () => setIsListening(false);
+      setIsListening(true);
+      recognition.start();
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [shouldAutoVoice, i18n.language, t]);
+
   // Placeholder rotation
   useEffect(() => {
     if (query) return;

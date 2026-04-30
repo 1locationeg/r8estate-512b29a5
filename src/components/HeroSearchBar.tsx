@@ -1,7 +1,7 @@
 import { useState, useMemo, useCallback, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSearchPhrases } from "@/hooks/useSearchPhrases";
-import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Search, Sparkles, Award, TrendingUp, Zap, Star, Trophy, Rocket, Heart, Share2, MessageCircle, Mic } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { cn } from "@/lib/utils";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
@@ -69,7 +69,16 @@ export const HeroSearchBar = ({ onSelectDeveloper, onSelectItem, onFocusChange, 
         </div>
 
         {/* Search Icon */}
-        <Search className="w-5 h-5 text-muted-foreground me-1 shrink-0" />
+        <Search className="w-5 h-5 text-muted-foreground shrink-0" />
+
+        {/* Voice Search */}
+        <button
+          onClick={(e) => { e.stopPropagation(); searchNavigate("/search?voice=1"); }}
+          className="shrink-0 flex items-center justify-center w-9 h-9 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all"
+          aria-label={t("hero.voiceSearch", "Voice search")}
+        >
+          <Mic className="w-4 h-4 md:w-5 md:h-5" />
+        </button>
 
         {/* Validate Decision Badge */}
         <span className="flex shrink-0 items-center px-3 py-2 md:px-5 md:py-2.5 bg-accent text-accent-foreground rounded-lg font-semibold text-xs md:text-sm whitespace-nowrap">
