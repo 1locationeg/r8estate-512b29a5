@@ -17,9 +17,35 @@ export type DemoNavGroup = {
   items: DemoSection[];
 };
 
+type Accent = "primary" | "business" | "admin";
+
+const ACCENT_CLASSES: Record<Accent, { avatar: string; activeBg: string; activeText: string; activeBorder: string; iconText: string }> = {
+  primary: {
+    avatar: "bg-primary",
+    activeBg: "bg-primary/10",
+    activeText: "text-primary",
+    activeBorder: "border-primary",
+    iconText: "text-primary",
+  },
+  business: {
+    avatar: "bg-emerald-600",
+    activeBg: "bg-emerald-600/10",
+    activeText: "text-emerald-700",
+    activeBorder: "border-emerald-600",
+    iconText: "text-emerald-700",
+  },
+  admin: {
+    avatar: "bg-rose-600",
+    activeBg: "bg-rose-600/10",
+    activeText: "text-rose-700",
+    activeBorder: "border-rose-600",
+    iconText: "text-rose-700",
+  },
+};
+
 interface Props {
   portalLabel: string;
-  portalAccent: string; // e.g. "primary" | "amber-500" | "emerald-500"
+  portalAccent: Accent;
   user: { name: string; subtitle: string; avatar?: string };
   groups: DemoNavGroup[];
   defaultKey?: string;
@@ -31,6 +57,7 @@ export function DemoShell({ portalLabel, portalAccent, user, groups, defaultKey,
   const [active, setActive] = useState<string>(defaultKey || allItems[0]?.key);
 
   const activeItem = allItems.find((i) => i.key === active) || allItems[0];
+  const ac = ACCENT_CLASSES[portalAccent];
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr] gap-4">
@@ -39,7 +66,7 @@ export function DemoShell({ portalLabel, portalAccent, user, groups, defaultKey,
         <Card className="p-3">
           {/* Portal header */}
           <div className="flex items-center gap-2 px-2 pb-2 mb-2 border-b border-border">
-            <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold", `bg-${portalAccent}`)}>
+            <div className={cn("w-8 h-8 rounded-full flex items-center justify-center text-white text-xs font-bold", ac.avatar)}>
               {user.name.charAt(0)}
             </div>
             <div className="min-w-0 flex-1">
@@ -72,7 +99,7 @@ export function DemoShell({ portalLabel, portalAccent, user, groups, defaultKey,
                         className={cn(
                           "w-full flex items-center gap-2 px-3 py-2 rounded-lg text-[13px] font-medium text-start transition-all border-s-2",
                           isActive
-                            ? `bg-${portalAccent}/10 text-${portalAccent} border-${portalAccent}`
+                            ? cn(ac.activeBg, ac.activeText, ac.activeBorder)
                             : "text-muted-foreground hover:bg-muted hover:text-foreground border-transparent"
                         )}
                       >
@@ -97,7 +124,7 @@ export function DemoShell({ portalLabel, portalAccent, user, groups, defaultKey,
           <div>
             <p className="text-xs text-muted-foreground">{portalLabel} dashboard</p>
             <h2 className="text-xl font-bold flex items-center gap-2">
-              <activeItem.icon className={cn("w-5 h-5", `text-${portalAccent}`)} />
+              <activeItem.icon className={cn("w-5 h-5", ac.iconText)} />
               {activeItem.label}
             </h2>
           </div>
