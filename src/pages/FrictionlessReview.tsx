@@ -82,13 +82,9 @@ const FrictionlessReview = () => {
   useEffect(() => {
     if (!token) return;
     (async () => {
-      const { data } = await supabase
-        .from("pending_reviews")
-        .select("first_name, project_name, developer_id, developer_name")
-        .eq("token", token)
-        .eq("is_used", false)
-        .maybeSingle();
-      if (data) setPrefill(data);
+      const { data } = await supabase.rpc("get_pending_review_by_token", { _token: token });
+      const row = Array.isArray(data) ? data[0] : data;
+      if (row) setPrefill(row);
     })();
   }, [token]);
 
@@ -207,7 +203,7 @@ const FrictionlessReview = () => {
 
       // Mark token as used
       if (token) {
-        await supabase.from("pending_reviews").update({ is_used: true }).eq("token", token);
+        await supabase.rpc("mark_pending_review_used", { _token: token });
       }
 
       setSubmitted(true);
