@@ -2514,6 +2514,15 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_pending_review_by_token: {
+        Args: { _token: string }
+        Returns: {
+          developer_id: string
+          developer_name: string
+          first_name: string
+          project_name: string
+        }[]
+      }
       get_profiles_count: { Args: never; Returns: number }
       get_user_role: {
         Args: { _user_id: string }
@@ -2544,6 +2553,7 @@ export type Database = {
       }
       increment_engagement: { Args: { _field: string }; Returns: undefined }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      mark_pending_review_used: { Args: { _token: string }; Returns: boolean }
       recalculate_trust_score: {
         Args: { p_developer_id: string }
         Returns: undefined
