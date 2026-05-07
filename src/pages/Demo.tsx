@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check } from "lucide-react";
 import { toast } from "sonner";
