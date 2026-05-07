@@ -14,6 +14,7 @@ type Role = "buyer" | "business" | "admin";
 
 const TOURS: Record<Role, TourStep[]> = {
   buyer: [
+    { selector: '[data-tour="buyer-sidebar"]', title: "Buyer Navigation", body: "Switch sections — overview, reviews, alerts, achievements, community, and more. All read-only." },
     { selector: '[data-tour="buyer-hero"]', title: "Your Buyer Profile", body: "Track your tier, points, and journey to becoming an Elite Reviewer." },
     { selector: '[data-tour="buyer-kpis"]', title: "Activity at a Glance", body: "Followed developers, saved projects, and earned credits live here." },
     { selector: '[data-tour="buyer-insights"]', title: "AI Trust Insights", body: "We notify you when a developer's score changes or a verified review matches your interests." },
@@ -21,12 +22,14 @@ const TOURS: Record<Role, TourStep[]> = {
     { selector: '[data-tour="buyer-followed"]', title: "Followed Developers", body: "Stay close to the developers you're considering. We track every signal." },
   ],
   business: [
+    { selector: '[data-tour="biz-sidebar"]', title: "Business Navigation", body: "Profile, reviews inbox, projects, deals, launches, widgets, NFC tags — manage your reputation end-to-end." },
     { selector: '[data-tour="biz-hero"]', title: "Your Business Profile", body: "Verified status, plan, and live trust score — all in one place." },
     { selector: '[data-tour="biz-kpis"]', title: "Reputation KPIs", body: "Reviews, leads, profile views, and trust score trend at a glance." },
     { selector: '[data-tour="biz-reviews"]', title: "Reviews Inbox", body: "Reply to verified buyers. Contract-verified reviews carry 10× the weight in your trust score." },
     { selector: '[data-tour="biz-upgrade"]', title: "Pro Insights", body: "Unlock competitor benchmarking, AI sentiment analysis, and lead scoring." },
   ],
   admin: [
+    { selector: '[data-tour="admin-sidebar"]', title: "Admin Navigation", body: "8 grouped sections covering users, moderation, AI tools, content, communications, finance, and settings." },
     { selector: '[data-tour="admin-hero"]', title: "Admin Console", body: "Real-time platform health, sync status, and incident view." },
     { selector: '[data-tour="admin-kpis"]', title: "Platform KPIs", body: "Users, businesses, reviews, and pending moderation flags." },
     { selector: '[data-tour="admin-verifications"]', title: "Verification Queue", body: "Approve or reject buyer KYC and business license submissions." },
