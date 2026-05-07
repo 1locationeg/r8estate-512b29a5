@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Play, ArrowRight, Sparkles } from "lucide-react";
+import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift } from "lucide-react";
+import { toast } from "sonner";
 import { DemoBuyerView } from "@/components/demo/DemoBuyerView";
 import { DemoBusinessView } from "@/components/demo/DemoBusinessView";
 import { DemoAdminView } from "@/components/demo/DemoAdminView";
@@ -37,6 +38,31 @@ export default function Demo() {
   const [role, setRole] = useState<Role>("buyer");
   const [tourOpen, setTourOpen] = useState(false);
 
+  const demoUrl = typeof window !== "undefined"
+    ? `${window.location.origin}/demo`
+    : "https://meter.r8estate.com/demo";
+  // Referral link — earns Insight Credits when the invitee signs up via /demo
+  const referralUrl = `${demoUrl}?ref=demo-share`;
+
+  const copyLink = async (url: string, label: string) => {
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success(`${label} copied!`, { description: url });
+    } catch {
+      toast.error("Couldn't copy. Long-press to copy manually.", { description: url });
+    }
+  };
+
+  const shareLink = async (url: string, title: string) => {
+    if (typeof navigator !== "undefined" && (navigator as any).share) {
+      try {
+        await (navigator as any).share({ title, text: "Explore R8ESTATE — the trust platform for Egyptian real estate.", url });
+        return;
+      } catch { /* user cancelled */ }
+    }
+    copyLink(url, "Link");
+  };
+
   return (
     <div className="min-h-screen bg-muted/30">
       {/* Header banner */}
@@ -53,6 +79,12 @@ export default function Demo() {
             </div>
           </div>
           <div className="flex items-center gap-2">
+            <Button size="sm" variant="secondary" onClick={() => copyLink(demoUrl, "Demo link")} title="Copy demo link">
+              <Copy className="w-3.5 h-3.5 me-1" /> <span className="hidden sm:inline">Copy link</span>
+            </Button>
+            <Button size="sm" variant="secondary" onClick={() => shareLink(demoUrl, "R8ESTATE Live Demo")} title="Share demo">
+              <Share2 className="w-3.5 h-3.5 me-1" /> <span className="hidden sm:inline">Share</span>
+            </Button>
             <Button size="sm" variant="secondary" onClick={() => setTourOpen(true)}>
               <Play className="w-3.5 h-3.5 me-1" /> Take Tour
             </Button>
@@ -98,6 +130,33 @@ export default function Demo() {
 
         {/* Bottom CTA */}
         <div className="border-t border-border/50 pt-6 pb-12 text-center">
+          {/* Referral block — earn Insight Credits */}
+          <div className="max-w-xl mx-auto mb-8 rounded-2xl border border-amber-300/50 bg-gradient-to-br from-amber-50 to-white p-5 text-start">
+            <div className="flex items-center gap-2 mb-2">
+              <div className="w-9 h-9 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center">
+                <Gift className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="font-bold text-sm">Share &amp; earn Insight Credits</p>
+                <p className="text-xs text-muted-foreground">You and your friend both get rewarded when they sign up.</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 mt-3">
+              <input
+                readOnly
+                value={referralUrl}
+                className="flex-1 min-w-0 text-xs px-3 py-2 rounded-lg border border-border bg-background font-mono"
+                onFocus={(e) => e.currentTarget.select()}
+              />
+              <Button size="sm" variant="outline" onClick={() => copyLink(referralUrl, "Referral link")}>
+                <Copy className="w-3.5 h-3.5 me-1" /> Copy
+              </Button>
+              <Button size="sm" className="bg-amber-500 hover:bg-amber-600 text-white" onClick={() => shareLink(referralUrl, "Join me on R8ESTATE")}>
+                <Share2 className="w-3.5 h-3.5 me-1" /> Share
+              </Button>
+            </div>
+          </div>
+
           <h2 className="text-xl font-bold mb-2">Ready to use the real platform?</h2>
           <p className="text-sm text-muted-foreground mb-4">Free to start. No credit card required.</p>
           <Button asChild size="lg" className="bg-amber-500 hover:bg-amber-600 text-white">
