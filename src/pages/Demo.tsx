@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift } from "lucide-react";
+import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check } from "lucide-react";
 import { toast } from "sonner";
 import { DemoBuyerView } from "@/components/demo/DemoBuyerView";
 import { DemoBusinessView } from "@/components/demo/DemoBusinessView";
@@ -11,6 +11,65 @@ import { DemoAdminView } from "@/components/demo/DemoAdminView";
 import { DemoTour, type TourStep } from "@/components/demo/DemoTour";
 
 type Role = "buyer" | "business" | "admin";
+
+const ROLE_META: Record<Role, {
+  icon: React.ComponentType<{ className?: string }>;
+  emoji: string;
+  title: string;
+  hero: string;
+  subtitle: string;
+  perks: string[];
+  // tailwind classes — must be static for JIT to pick up
+  card: string;
+  cardActive: string;
+  iconWrap: string;
+  badge: string;
+  glow: string;
+  pageTint: string;
+}> = {
+  buyer: {
+    icon: User,
+    emoji: "👤",
+    title: "I'm a Buyer",
+    hero: "You're the hero — make every pound count.",
+    subtitle: "Verified reviews, AI trust insights, and contract checks built for you.",
+    perks: ["Compare developers", "Earn Insight Credits", "Scan contracts in 30s"],
+    card: "border-primary/20 bg-gradient-to-br from-primary/5 to-background hover:border-primary/40",
+    cardActive: "border-primary bg-gradient-to-br from-primary/15 to-primary/5 ring-2 ring-primary/30",
+    iconWrap: "bg-primary text-primary-foreground",
+    badge: "bg-primary/10 text-primary",
+    glow: "shadow-[0_8px_30px_-6px_hsl(var(--primary)/0.4)]",
+    pageTint: "from-primary/5 via-background to-background",
+  },
+  business: {
+    icon: Building2,
+    emoji: "🏢",
+    title: "I'm a Business",
+    hero: "Own your reputation. Win more buyers.",
+    subtitle: "Verified reviews inbox, trust analytics, lead pipeline, and embeddable widgets.",
+    perks: ["Reply to verified buyers", "Track trust score live", "Embed widgets anywhere"],
+    card: "border-emerald-600/20 bg-gradient-to-br from-emerald-50 to-background hover:border-emerald-600/40",
+    cardActive: "border-emerald-600 bg-gradient-to-br from-emerald-600/15 to-emerald-50 ring-2 ring-emerald-600/30",
+    iconWrap: "bg-emerald-600 text-white",
+    badge: "bg-emerald-600/10 text-emerald-700",
+    glow: "shadow-[0_8px_30px_-6px_rgba(5,150,105,0.4)]",
+    pageTint: "from-emerald-600/5 via-background to-background",
+  },
+  admin: {
+    icon: Shield,
+    emoji: "🛡️",
+    title: "I'm an Admin",
+    hero: "Steer the platform. Protect the trust.",
+    subtitle: "Moderation queues, AI fraud detection, finance, and platform-wide controls.",
+    perks: ["Approve KYC & claims", "AI-flagged fraud queue", "Run the trust engine"],
+    card: "border-rose-600/20 bg-gradient-to-br from-rose-50 to-background hover:border-rose-600/40",
+    cardActive: "border-rose-600 bg-gradient-to-br from-rose-600/15 to-rose-50 ring-2 ring-rose-600/30",
+    iconWrap: "bg-rose-600 text-white",
+    badge: "bg-rose-600/10 text-rose-700",
+    glow: "shadow-[0_8px_30px_-6px_rgba(225,29,72,0.4)]",
+    pageTint: "from-rose-600/5 via-background to-background",
+  },
+};
 
 const TOURS: Record<Role, TourStep[]> = {
   buyer: [
@@ -40,6 +99,7 @@ const TOURS: Record<Role, TourStep[]> = {
 export default function Demo() {
   const [role, setRole] = useState<Role>("buyer");
   const [tourOpen, setTourOpen] = useState(false);
+  const meta = ROLE_META[role];
 
   const demoUrl = typeof window !== "undefined"
     ? `${window.location.origin}/demo`
@@ -67,7 +127,7 @@ export default function Demo() {
   };
 
   return (
-    <div className="min-h-screen bg-muted/30">
+    <div className={`min-h-screen bg-gradient-to-b ${meta.pageTint} transition-colors duration-500`}>
       {/* Header banner */}
       <div className="sticky top-0 z-40 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground border-b border-primary/30 shadow-md">
         <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
@@ -102,34 +162,79 @@ export default function Demo() {
       <div className="max-w-[1200px] mx-auto px-4 pt-6">
         <div className="text-center max-w-2xl mx-auto mb-5">
           <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary bg-primary/10 px-3 py-1 rounded-full mb-3">
-            <Sparkles className="w-3 h-3" /> Interactive product preview
+            <Sparkles className="w-3 h-3" /> Step into the role
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-2">See R8ESTATE through every role's eyes</h1>
+          <h1 className="text-2xl md:text-3xl font-bold mb-2">Pick who you are. Live the dashboard.</h1>
           <p className="text-sm text-muted-foreground">
-            Switch between Buyer, Business, and Admin to discover the dashboard, journey, and tools each role uses. Click <strong>Take Tour</strong> for a guided walkthrough.
+            Each role gets its own colors, tools, and journey. Choose yours to feel the platform from the inside.
           </p>
         </div>
 
-        {/* Tabs */}
-        <Tabs value={role} onValueChange={(v) => { setRole(v as Role); setTourOpen(false); }}>
-          <TabsList className="grid grid-cols-3 w-full max-w-xl mx-auto h-auto p-1">
-            <TabsTrigger value="buyer" className="py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              👤 Buyer
-            </TabsTrigger>
-            <TabsTrigger value="business" className="py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              🏢 Business
-            </TabsTrigger>
-            <TabsTrigger value="admin" className="py-2.5 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
-              🛡️ Admin
-            </TabsTrigger>
-          </TabsList>
+        {/* Role hero cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6">
+          {(Object.keys(ROLE_META) as Role[]).map((r) => {
+            const m = ROLE_META[r];
+            const Icon = m.icon;
+            const isActive = role === r;
+            return (
+              <button
+                key={r}
+                onClick={() => { setRole(r); setTourOpen(false); }}
+                className={`text-start p-4 rounded-2xl border-2 transition-all duration-300 ${isActive ? `${m.cardActive} ${m.glow} scale-[1.02]` : `${m.card} hover:scale-[1.01]`}`}
+              >
+                <div className="flex items-start gap-3">
+                  <div className={`w-11 h-11 rounded-xl flex items-center justify-center text-lg font-bold flex-shrink-0 ${m.iconWrap}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <p className="font-bold text-base">{m.title}</p>
+                      {isActive && (
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${m.badge} flex items-center gap-1`}>
+                          <Check className="w-3 h-3" /> ACTIVE
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-muted-foreground mt-0.5">{m.subtitle}</p>
+                  </div>
+                </div>
+                <ul className="mt-3 space-y-1">
+                  {m.perks.map((p) => (
+                    <li key={p} className="text-[11px] text-muted-foreground flex items-center gap-1.5">
+                      <span className={`w-1 h-1 rounded-full ${m.iconWrap}`} /> {p}
+                    </li>
+                  ))}
+                </ul>
+              </button>
+            );
+          })}
+        </div>
 
-          <div className="mt-5 pb-12">
-            <TabsContent value="buyer"><DemoBuyerView /></TabsContent>
-            <TabsContent value="business"><DemoBusinessView /></TabsContent>
-            <TabsContent value="admin"><DemoAdminView /></TabsContent>
+        {/* Active-role hero banner — makes the user feel like the hero */}
+        <div key={role} className={`mb-5 rounded-2xl border-2 p-5 md:p-6 animate-fade-in ${meta.cardActive} ${meta.glow}`}>
+          <div className="flex items-center gap-4 flex-wrap">
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${meta.iconWrap}`}>
+              <meta.icon className="w-7 h-7" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className={`text-[10px] font-bold uppercase tracking-widest ${meta.badge} inline-block px-2 py-0.5 rounded mb-1`}>
+                You are now: {meta.emoji} {role.charAt(0).toUpperCase() + role.slice(1)}
+              </p>
+              <h2 className="text-xl md:text-2xl font-bold leading-tight">{meta.hero}</h2>
+              <p className="text-sm text-muted-foreground mt-1">{meta.subtitle}</p>
+            </div>
+            <Button size="sm" onClick={() => setTourOpen(true)} variant="outline" className="border-2">
+              <Play className="w-3.5 h-3.5 me-1" /> Tour this role
+            </Button>
           </div>
-        </Tabs>
+        </div>
+
+        {/* Active role view */}
+        <div key={`view-${role}`} className="animate-fade-in pb-12">
+          {role === "buyer" && <DemoBuyerView />}
+          {role === "business" && <DemoBusinessView />}
+          {role === "admin" && <DemoAdminView />}
+        </div>
 
         {/* Bottom CTA */}
         <div className="border-t border-border/50 pt-6 pb-12 text-center">
