@@ -74,6 +74,7 @@ const AboutTrustMeter = lazy(() => import("./pages/AboutTrustMeter"));
 const CompareDevelopers = lazy(() => import("./pages/CompareDevelopers"));
 const TruthCheck = lazy(() => import("./pages/TruthCheck"));
 const SearchPage = lazy(() => import("./pages/SearchPage"));
+const Demo = lazy(() => import("./pages/Demo"));
 
 // Redirect old /developer/* routes to /business/*
 const RedirectDeveloperToBusiness = () => {
@@ -221,6 +222,7 @@ const AppContent = () => {
           <Route path="/about-trust-meter" element={<AboutTrustMeter />} />
           <Route path="/compare" element={<CompareDevelopers />} />
           <Route path="/truth-check" element={<TruthCheck />} />
+          <Route path="/demo" element={<Demo />} />
           <Route path="/developer/*" element={<RedirectDeveloperToBusiness />} />
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />
