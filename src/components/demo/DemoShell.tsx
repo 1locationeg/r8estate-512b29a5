@@ -35,11 +35,11 @@ const ACCENT_CLASSES: Record<Accent, { avatar: string; activeBg: string; activeT
     iconText: "text-emerald-700",
   },
   admin: {
-    avatar: "bg-rose-600",
-    activeBg: "bg-rose-600/10",
-    activeText: "text-rose-700",
-    activeBorder: "border-rose-600",
-    iconText: "text-rose-700",
+    avatar: "bg-indigo-600",
+    activeBg: "bg-indigo-600/10",
+    activeText: "text-indigo-700",
+    activeBorder: "border-indigo-600",
+    iconText: "text-indigo-700",
   },
 };
 
@@ -136,22 +136,42 @@ export function DemoShell({ portalLabel, portalAccent, user, groups, defaultKey,
   );
 }
 
-/* Helper: simple placeholder panel for sections we haven't deeply mocked */
+/* Mock dashboard panel: KPI strip + activity list, populated from `lines` */
 export function DemoPlaceholder({ title, lines }: { title: string; lines: string[] }) {
+  const seed = title.length;
+  const kpis = [
+    { l: "This week", v: 12 + (seed * 3) % 80, c: "text-primary" },
+    { l: "Total", v: (140 + seed * 17).toLocaleString(), c: "text-emerald-600" },
+    { l: "Pending", v: 1 + (seed % 9), c: "text-amber-600" },
+  ];
   return (
-    <Card className="p-5 space-y-3">
-      <h3 className="font-bold">{title}</h3>
-      <ul className="space-y-2 text-sm text-muted-foreground">
-        {lines.map((l, i) => (
-          <li key={i} className="flex items-start gap-2">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary mt-2 flex-shrink-0" />
-            {l}
-          </li>
+    <div className="space-y-4">
+      <div className="grid grid-cols-3 gap-3">
+        {kpis.map((k) => (
+          <Card key={k.l} className="p-3">
+            <p className={cn("text-xl font-bold", k.c)}>{k.v}</p>
+            <p className="text-[11px] text-muted-foreground">{k.l}</p>
+          </Card>
         ))}
-      </ul>
-      <div className="pt-2 text-xs text-muted-foreground border-t border-border">
-        This is a read-only preview. Sign up free to use the full feature.
       </div>
-    </Card>
+      <Card className="p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="font-bold text-sm">{title}</h3>
+          <Badge variant="outline" className="text-[10px]">{lines.length} items</Badge>
+        </div>
+        <div className="space-y-2">
+          {lines.map((l, i) => (
+            <div key={i} className="flex items-center gap-3 p-3 rounded-lg border border-border hover:bg-muted/40 transition">
+              <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center font-bold text-xs flex-shrink-0">
+                {i + 1}
+              </div>
+              <p className="flex-1 text-sm">{l}</p>
+              <Badge variant="secondary" className="text-[10px] hidden sm:inline-flex">Live</Badge>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <p className="text-[11px] text-muted-foreground text-center">Read-only preview. Sign up free to interact.</p>
+    </div>
   );
 }

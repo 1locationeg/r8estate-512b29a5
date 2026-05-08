@@ -18,7 +18,7 @@ const block = () => toast.info("Admin actions are disabled in demo →", {
 function Overview() {
   return (
     <div className="space-y-4">
-      <Card data-tour="admin-hero" className="p-5 bg-gradient-to-br from-rose-600/10 via-background to-amber-500/10 border-rose-600/20">
+      <Card data-tour="admin-hero" className="p-5 bg-gradient-to-br from-indigo-600/10 via-background to-amber-500/10 border-indigo-600/20">
         <div className="flex items-center justify-between flex-wrap gap-3">
           <div>
             <p className="text-sm text-muted-foreground">Admin Console</p>
@@ -30,7 +30,7 @@ function Overview() {
           </div>
           <div className="text-end">
             <p className="text-xs text-muted-foreground">Today</p>
-            <p className="text-2xl font-bold text-rose-700">+248 new users</p>
+            <p className="text-2xl font-bold text-indigo-700">+248 new users</p>
           </div>
         </div>
       </Card>
