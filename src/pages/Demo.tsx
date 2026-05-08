@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check } from "lucide-react";
+import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check, Home } from "lucide-react";
 import { toast } from "sonner";
 import { DemoBuyerView } from "@/components/demo/DemoBuyerView";
 import { DemoBusinessView } from "@/components/demo/DemoBusinessView";
@@ -131,7 +131,10 @@ export default function Demo() {
       <div className="sticky top-0 z-40 bg-gradient-to-r from-primary via-primary/90 to-primary/80 text-primary-foreground border-b border-primary/30 shadow-md">
         <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3 flex-wrap">
           <div className="flex items-center gap-2 min-w-0">
-            <Eye className="w-5 h-5 shrink-0" />
+            <Link to="/" className="shrink-0 p-1.5 rounded-lg hover:bg-white/20 transition-colors" title="Home">
+              <Home className="w-5 h-5" />
+            </Link>
+            <Eye className="w-5 h-5 shrink-0 hidden sm:block" />
             <div className="min-w-0">
               <p className="font-bold text-sm sm:text-base flex items-center gap-2">
                 R8ESTATE Live Demo
