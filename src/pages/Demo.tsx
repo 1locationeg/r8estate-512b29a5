@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check, Home } from "lucide-react";
+import { Play, ArrowRight, Sparkles, Copy, Share2, Gift, User, Building2, Shield, Check, Home } from "lucide-react";
 import { toast } from "sonner";
 import { DemoBuyerView } from "@/components/demo/DemoBuyerView";
 import { DemoBusinessView } from "@/components/demo/DemoBusinessView";
