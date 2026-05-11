@@ -354,7 +354,7 @@ const Auth = () => {
                       <div>
                         <p className="text-xs font-bold text-foreground">{t('auth.businessAccount', 'Business Account')}</p>
                         <p className="text-[11px] italic text-[hsl(var(--professionals))] font-medium">
-                          ✦ {t('auth.business.professional.subtag', 'Professional edition — built for individuals, not companies')}
+                          ✦ {t('auth.business.professional.subtag', 'Real estate experts  edition ')}
                         </p>
                       </div>
                     </div>
