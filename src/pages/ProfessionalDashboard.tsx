@@ -161,10 +161,15 @@ export default function ProfessionalDashboard() {
           />
           {/* AI badge */}
           <div className="relative max-w-6xl mx-auto px-4 md:px-6 pt-5">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20 text-[10px] font-semibold tracking-wider uppercase text-white">
-              <Bot className="w-3 h-3" />
-              <span>AI-powered cockpit</span>
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <div className="flex items-center justify-between gap-2">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20 text-[10px] font-semibold tracking-wider uppercase text-white">
+                <Bot className="w-3 h-3" />
+                <span>{t('professional.dashboard.ai_cockpit')}</span>
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              </div>
+              <div className="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur border border-white/20">
+                <span className="text-white"><LanguageSwitcher /></span>
+              </div>
             </div>
           </div>
 
@@ -206,7 +211,7 @@ export default function ProfessionalDashboard() {
 
               {/* Trust ring */}
               <div className="hidden sm:block">
-                <TrustRing value={pro.trustScore} />
+                <TrustRing value={pro.trustScore} label={t('professional.dashboard.trust_label')} />
               </div>
 
               {/* CTAs */}
@@ -214,26 +219,26 @@ export default function ProfessionalDashboard() {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button asChild size="icon" className="bg-white hover:bg-white/90" style={{ color: NAVY }}>
-                      <Link to={trustUrl} aria-label="View trust page"><Eye className="w-4 h-4" /></Link>
+                      <Link to={trustUrl} aria-label={t('professional.dashboard.view_trust')}><Eye className="w-4 h-4" /></Link>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>View my trust page</TooltipContent>
+                  <TooltipContent>{t('professional.dashboard.view_trust')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white" aria-label="Share">
+                    <Button size="icon" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white" aria-label={t('professional.dashboard.share')}>
                       <Share2 className="w-4 h-4" />
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Share my page</TooltipContent>
+                  <TooltipContent>{t('professional.dashboard.share')}</TooltipContent>
                 </Tooltip>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button asChild size="icon" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white" aria-label="Edit profile settings">
+                    <Button asChild size="icon" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white" aria-label={t('professional.dashboard.edit_settings')}>
                       <Link to="/pro-settings"><Settings className="w-4 h-4" /></Link>
                     </Button>
                   </TooltipTrigger>
-                  <TooltipContent>Edit name &amp; avatar</TooltipContent>
+                  <TooltipContent>{t('professional.dashboard.edit_settings')}</TooltipContent>
                 </Tooltip>
               </div>
             </div>
@@ -263,7 +268,7 @@ export default function ProfessionalDashboard() {
                       </div>
                     </Card>
                   </TooltipTrigger>
-                  <TooltipContent>{s.label} (last 30 days)</TooltipContent>
+                  <TooltipContent>{s.label} {t('professional.dashboard.stats.last30')}</TooltipContent>
                 </Tooltip>
               );
             })}
@@ -280,10 +285,10 @@ export default function ProfessionalDashboard() {
               <MiniRing value={completionPct} size={72} stroke={8} color="white" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider opacity-90">
-                  <Sparkles className="w-3 h-3" /> Boost your trust page
+                  <Sparkles className="w-3 h-3" /> {t('professional.dashboard.booster.kicker')}
                 </div>
                 <div className="text-base md:text-lg font-extrabold mt-0.5">
-                  {100 - completionPct}% to Elite — finish 3 quick steps
+                  {t('professional.dashboard.booster.title', { pct: 100 - completionPct })}
                 </div>
                 <div className="flex flex-wrap gap-1.5 mt-2.5">
                   {nextSteps.map(s => (
@@ -294,7 +299,7 @@ export default function ProfessionalDashboard() {
                 </div>
               </div>
               <Button size="sm" className="bg-white hover:bg-white/90 font-bold shrink-0" style={{ color: NAVY }}>
-                Boost now <ArrowRight className="w-4 h-4 ms-1.5" />
+                {t('professional.dashboard.booster.cta')} <ArrowRight className="w-4 h-4 ms-1.5" />
               </Button>
             </div>
           </Card>
@@ -308,7 +313,7 @@ export default function ProfessionalDashboard() {
               <Card className="p-4 md:p-5 border-[hsl(var(--professionals)/0.15)]">
                 <div className="flex items-center gap-2 mb-3">
                   <Zap className="w-4 h-4" style={{ color: PRO }} />
-                  <h3 className="text-sm font-bold uppercase tracking-wider">Your unfair advantages</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-wider">{t('professional.dashboard.benefits.title')}</h3>
                 </div>
                 <div className="grid grid-cols-3 sm:grid-cols-6 gap-2 md:gap-3">
                   {benefits.map((b) => {
@@ -337,7 +342,7 @@ export default function ProfessionalDashboard() {
               <Card className="p-4 md:p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Target className="w-4 h-4" style={{ color: PRO }} />
-                  <h3 className="text-sm font-bold uppercase tracking-wider">Manage page</h3>
+                  <h3 className="text-sm font-bold uppercase tracking-wider">{t('professional.dashboard.manage')}</h3>
                 </div>
                 <div className="flex gap-2 overflow-x-auto -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap pb-1">
                   {quickActions.map(a => {
@@ -364,8 +369,8 @@ export default function ProfessionalDashboard() {
                 <div className="flex items-center gap-3 mb-3">
                   <MiniRing value={completionPct} />
                   <div>
-                    <div className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">Profile strength</div>
-                    <div className="text-base font-extrabold">{completed} of {completion.length} done</div>
+                    <div className="text-xs font-bold uppercase tracking-wider text-[hsl(var(--muted-foreground))]">{t('professional.dashboard.strength')}</div>
+                    <div className="text-base font-extrabold">{t('professional.dashboard.done_of', { done: completed, total: completion.length })}</div>
                   </div>
                 </div>
                 <ul className="space-y-1.5">
@@ -383,7 +388,7 @@ export default function ProfessionalDashboard() {
               <Card className="p-4 md:p-5">
                 <div className="flex items-center gap-2 mb-3">
                   <Users className="w-4 h-4" style={{ color: PRO }} />
-                  <h3 className="text-xs font-bold uppercase tracking-wider">Who looked at you</h3>
+                  <h3 className="text-xs font-bold uppercase tracking-wider">{t('professional.dashboard.viewers')}</h3>
                 </div>
                 <div className="space-y-2">
                   {[
@@ -409,10 +414,10 @@ export default function ProfessionalDashboard() {
               <Card className="p-4 md:p-5 border-0 text-[hsl(var(--primary))]"
                 style={{ background: `linear-gradient(135deg, ${GOLD}33, ${GOLD}11)` }}>
                 <Gift className="w-5 h-5" style={{ color: GOLD }} />
-                <h3 className="font-extrabold text-sm mt-1.5">Refer a colleague</h3>
-                <p className="text-[11px] opacity-80 mt-0.5 mb-2.5">Earn Insight Credits together.</p>
+                <h3 className="font-extrabold text-sm mt-1.5">{t('professional.dashboard.refer')}</h3>
+                <p className="text-[11px] opacity-80 mt-0.5 mb-2.5">{t('professional.dashboard.refer_sub')}</p>
                 <Button size="sm" className="w-full font-bold" style={{ background: NAVY, color: 'white' }}>
-                  Get my link
+                  {t('professional.dashboard.refer_cta')}
                 </Button>
               </Card>
 
@@ -424,15 +429,15 @@ export default function ProfessionalDashboard() {
                 <div className="relative">
                   <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider opacity-90">
                     <Bot className="w-3 h-3" />
-                    AI coach
+                    {t('professional.dashboard.coach')}
                     <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   </div>
                   <p className="text-sm font-bold leading-snug mt-2">
-                    You&rsquo;re 1 endorsement away from a visibility boost.
+                    {t('professional.dashboard.coach_msg')}
                   </p>
                   <Button asChild size="sm" variant="secondary" className="mt-3 bg-white/15 backdrop-blur border border-white/20 hover:bg-white/25 text-white">
                     <Link to="/community">
-                      <TrendingUp className="w-3.5 h-3.5 me-1.5" /> Open community
+                      <TrendingUp className="w-3.5 h-3.5 me-1.5" /> {t('professional.dashboard.open_community')}
                     </Link>
                   </Button>
                 </div>
