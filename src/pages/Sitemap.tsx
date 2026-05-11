@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/Footer";
@@ -9,6 +9,7 @@ import { PUBLIC_ROUTES } from "@/data/routeRegistry";
 import { categories as heroCats } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Download, Map, Globe, ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const BASE_URL = "https://meter.r8estate.com";
 
@@ -50,7 +51,10 @@ function buildGrouped() {
   return grouped;
 }
 
-function generateXml(grouped: Record<string, { name: string; path: string }[]>) {
+function generateXml(
+  grouped: Record<string, { name: string; path: string }[]>,
+  professionals: { name: string; path: string }[] = []
+) {
   const urls: string[] = [];
   const add = (loc: string, priority: string, changefreq: string) => {
     urls.push(`  <url>\n    <loc>${loc}</loc>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`);
@@ -64,6 +68,10 @@ function generateXml(grouped: Record<string, { name: string; path: string }[]>) 
     for (const item of items) {
       add(`${BASE_URL}${item.path}`, "0.6", "monthly");
     }
+  }
+
+  for (const pro of professionals) {
+    add(`${BASE_URL}${pro.path}`, "0.7", "weekly");
   }
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
@@ -91,9 +99,26 @@ const CollapsibleSection = ({ title, count, children }: { title: string; count: 
 const Sitemap = () => {
   const { t } = useTranslation();
   const grouped = buildGrouped();
+  const [professionals, setProfessionals] = useState<{ name: string; path: string }[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, user_account_kinds!inner(account_kind)")
+        .eq("user_account_kinds.account_kind", "professional")
+        .not("full_name", "is", null);
+      if (!data) return;
+      const slugify = (n: string) =>
+        n.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+      setProfessionals(
+        data.map((r: any) => ({ name: r.full_name as string, path: `/pro/${slugify(r.full_name)}` }))
+      );
+    })();
+  }, []);
 
   const handleDownload = () => {
-    const xml = generateXml(grouped);
+    const xml = generateXml(grouped, professionals);
     const blob = new Blob([xml], { type: "text/xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -154,6 +179,21 @@ const Sitemap = () => {
               </CollapsibleSection>
             );
           })}
+
+          {professionals.length > 0 && (
+            <CollapsibleSection title="Professionals" count={professionals.length}>
+              {professionals.map((p) => (
+                <Link
+                  key={p.path}
+                  to={p.path}
+                  className="flex items-center gap-2 text-sm text-primary hover:underline py-1"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                  {p.name}
+                </Link>
+              ))}
+            </CollapsibleSection>
+          )}
         </div>
       </main>
       <Footer />
