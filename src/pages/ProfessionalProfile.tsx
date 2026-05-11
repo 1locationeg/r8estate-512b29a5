@@ -351,8 +351,8 @@ const ProfessionalProfilePage = () => {
                       <EditableField
                         value={pro.location}
                         onSave={(v) => save({ location: v || null })}
-                        placeholder="City, Country"
-                        label="Location"
+                        placeholder={t('professional.profile.editable.location_ph')}
+                        label={t('professional.profile.editable.location_label')}
                       >
                         <span>{pro.location}</span>
                       </EditableField>
@@ -360,8 +360,7 @@ const ProfessionalProfilePage = () => {
                       pro.location
                     )}
                   </span>
-                  <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />Replies {pro.responseTime}</span>
-                  {/* (intentionally retained Clock label structure; replaced with i18n below) */}
+                  <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{t('professional.profile.replies_in', { time: pro.responseTime })}</span>
                   <span className="hidden sm:inline-flex items-center gap-1">
                     <Languages className="w-3 h-3" />
                     {isOwner ? (
@@ -374,8 +373,8 @@ const ProfessionalProfilePage = () => {
                               : null,
                           })
                         }
-                        placeholder="Arabic, English"
-                        label="Languages (comma separated)"
+                        placeholder={t('professional.profile.editable.languages_ph')}
+                        label={t('professional.profile.editable.languages_label')}
                       >
                         <span>{pro.languages.join(' · ')}</span>
                       </EditableField>
