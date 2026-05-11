@@ -183,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
           updateReturningDeviceState(false);
           return;
         }
@@ -200,13 +201,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           setTimeout(async () => {
             if (!isMounted) return;
-            const [profileData, roleData] = await Promise.all([
+            const [profileData, roleData, accountKindData] = await Promise.all([
               fetchProfile(session.user.id),
               fetchUserRole(session.user.id),
+              fetchAccountKind(session.user.id),
             ]);
             if (isMounted) {
               setProfile(profileData);
               setRole(roleData);
+              setAccountKindState(accountKindData);
             }
 
             // Claim any pending guest review after login/signup verification
@@ -215,6 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
         }
 
         // Update returning-device state after auth change
@@ -238,6 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
           updateReturningDeviceState(false);
           return;
         }
@@ -248,13 +253,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           registerDevice(session.user.id, session.user.email || '');
           refreshDeviceExpiry();
-          const [profileData, roleData] = await Promise.all([
+          const [profileData, roleData, accountKindData] = await Promise.all([
             fetchProfile(session.user.id),
             fetchUserRole(session.user.id),
+            fetchAccountKind(session.user.id),
           ]);
           if (isMounted) {
             setProfile(profileData);
             setRole(roleData);
+            setAccountKindState(accountKindData);
           }
         }
 
