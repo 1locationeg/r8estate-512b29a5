@@ -393,7 +393,7 @@ const ProfessionalProfilePage = () => {
         <nav className="sticky top-0 z-30 bg-background/85 backdrop-blur border-b border-border mt-6">
           <div className="max-w-[1100px] mx-auto px-4 md:px-6 overflow-x-auto">
             <ul className="flex items-center gap-1 py-2 min-w-max">
-              {SECTIONS.map(s => (
+              {sections.map(s => (
                 <li key={s.id}>
                   <button
                     onClick={() => scrollTo(s.id)}
@@ -691,7 +691,7 @@ const ProfessionalProfilePage = () => {
                 style={{ background: 'radial-gradient(circle at 50% 0%, hsl(var(--professionals)/0.18), transparent 60%)' }}
               />
               <div className="relative flex flex-col items-center">
-                <TrustRing score={pro.trustScore} size={104} />
+                <TrustRing score={pro.trustScore} size={104} label={t('professional.profile.trust_ring_label')} />
                 <div className="mt-3 flex flex-wrap justify-center gap-1">
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-verified/10 text-[10px] font-bold text-verified-foreground border border-verified/40">
                     <Shield className="w-3 h-3 text-verified" /> Verified
