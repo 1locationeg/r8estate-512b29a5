@@ -461,6 +461,11 @@ const AdminUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
+  const [accountKinds, setAccountKinds] = useState<Record<string, string>>({});
+
+  const slugifyName = (s: string) =>
+    s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
@@ -484,6 +489,18 @@ const AdminUsers = () => {
       } else {
         setUsers(data?.users || []);
         setCallerPermission(data?.callerPermission || null);
+      }
+      // Load account_kind map
+      const list = Array.isArray(data) ? data : (data?.users || []);
+      const ids = list.map((u: any) => u.id).filter(Boolean);
+      if (ids.length > 0) {
+        const { data: kinds } = await supabase
+          .from('user_account_kinds')
+          .select('user_id, account_kind')
+          .in('user_id', ids);
+        const map: Record<string, string> = {};
+        (kinds || []).forEach((k: any) => { map[k.user_id] = k.account_kind; });
+        setAccountKinds(map);
       }
     } catch (err: any) {
       toast.error('Failed to load users');
