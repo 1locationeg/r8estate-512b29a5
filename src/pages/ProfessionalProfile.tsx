@@ -478,8 +478,21 @@ const ProfessionalProfilePage = () => {
           <div className="lg:col-span-2 space-y-5 min-w-0">
             {/* About — compressed */}
             <section id="about" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-2">About</h2>
-              <p className="text-sm text-foreground leading-relaxed mb-3">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">About</h2>
+                {isOwner && (
+                  <EditableField
+                    value={pro.bio}
+                    onSave={(v) => save({ bio: v || null })}
+                    multiline
+                    placeholder="Tell buyers your story…"
+                    label="Bio"
+                  >
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-[hsl(var(--professionals))] cursor-pointer">Edit</span>
+                  </EditableField>
+                )}
+              </div>
+              <p className="text-sm text-foreground leading-relaxed mb-3 whitespace-pre-wrap">
                 {bioOpen ? pro.bio : firstSentence}
                 {pro.bio.length > firstSentence.length && (
                   <button onClick={() => setBioOpen(o => !o)} className="ms-1 text-[hsl(var(--professionals))] font-semibold hover:underline">
@@ -651,6 +664,14 @@ const ProfessionalProfilePage = () => {
                 ))}
               </div>
             </section>
+
+            {/* Custom sections (owner-editable) */}
+            <CustomSections
+              sections={pageData?.sections ?? []}
+              isOwner={isOwner}
+              onUpsert={upsertSection}
+              onRemove={removeSection}
+            />
           </div>
 
           {/* RIGHT RAIL */}
