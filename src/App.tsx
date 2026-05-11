@@ -56,6 +56,7 @@ const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
 const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
+const ProfessionalProfilePage = lazy(() => import("./pages/ProfessionalProfile"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
