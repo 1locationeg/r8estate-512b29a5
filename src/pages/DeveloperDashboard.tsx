@@ -2,6 +2,7 @@
 import { useEffect, useState, useMemo, useRef } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { getDashboardRouteForRole } from '@/lib/dashboardRoute';
 import { supabase } from '@/integrations/supabase/client';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { NavGroup } from '@/components/DashboardSidebar';
@@ -1095,7 +1096,7 @@ const DevBusinessProfile = () => {
 const DeveloperDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, role, profile, isLoading } = useAuth();
+  const { user, role, accountKind, profile, isLoading } = useAuth();
   const [addBusinessOpen, setAddBusinessOpen] = useState(false);
   const { profile: businessProfile } = useBusinessProfile();
 
@@ -1103,11 +1104,12 @@ const DeveloperDashboard = () => {
     if (!isLoading) {
       if (!user) navigate('/auth');
       else if (role !== 'business' && role !== 'admin') navigate('/buyer');
+      else if (role === 'business' && accountKind === 'professional') navigate(getDashboardRouteForRole(role, accountKind));
     }
-  }, [user, role, isLoading, navigate]);
+  }, [user, role, accountKind, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
-  if (!user || (role !== 'business' && role !== 'admin')) return null;
+  if (!user || (role !== 'business' && role !== 'admin') || (role === 'business' && accountKind === 'professional')) return null;
 
   const subPath = location.pathname.replace('/business', '').replace('/', '');
   const pageTitle = subPath ? subPath.charAt(0).toUpperCase() + subPath.slice(1) : 'Dashboard';
