@@ -281,7 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signUp = async (email: string, password: string, fullName?: string, accountType?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, accountType?: string, accountKind?: AccountKind) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -292,6 +292,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: {
           full_name: fullName,
           account_type: accountType || 'buyer',
+          account_kind: accountKind || accountType || 'buyer',
         },
       },
     });
@@ -344,6 +345,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setProfile(null);
     setRole(null);
+    setAccountKindState(null);
     // After explicit logout, device is known but blocked
     setIsReturningDevice(false);
     setReturningDeviceEmail(null);
@@ -356,6 +358,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         profile,
         role,
+        accountKind,
         isLoading,
         isReturningDevice,
         returningDeviceEmail,
@@ -365,6 +368,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithApple,
         signOut,
         refreshProfile,
+        setAccountKind,
       }}
     >
       {children}
