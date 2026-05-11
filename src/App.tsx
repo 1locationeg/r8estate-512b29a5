@@ -58,6 +58,7 @@ const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
 const ProfessionalProfilePage = lazy(() => import("./pages/ProfessionalProfile"));
 const ProfessionalDashboard = lazy(() => import("./pages/ProfessionalDashboard"));
+const ProfessionalSettings = lazy(() => import("./pages/ProfessionalSettings"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
@@ -201,6 +202,7 @@ const AppContent = () => {
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/pro/:slug" element={<ProfessionalProfilePage />} />
           <Route path="/pro-dashboard" element={<ProfessionalDashboard />} />
+          <Route path="/pro-settings" element={<ProfessionalSettings />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/businesses" element={<Businesses />} />

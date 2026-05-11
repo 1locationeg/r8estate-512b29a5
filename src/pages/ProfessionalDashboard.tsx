@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import {
   Eye, Share2, Star, ThumbsUp, Briefcase, Award, Users, TrendingUp,
   Link2, ExternalLink, Sparkles, MessageSquare, Gift, Camera,
-  CheckCircle2, Globe, Crown, Zap, Target, Bot, ArrowRight,
+  CheckCircle2, Globe, Crown, Zap, Target, Bot, ArrowRight, Settings,
 } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -209,6 +209,14 @@ export default function ProfessionalDashboard() {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Share my page</TooltipContent>
+                </Tooltip>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button asChild size="icon" variant="outline" className="bg-white/10 border-white/40 text-white hover:bg-white/20 hover:text-white" aria-label="Edit profile settings">
+                      <Link to="/pro-settings"><Settings className="w-4 h-4" /></Link>
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>Edit name &amp; avatar</TooltipContent>
                 </Tooltip>
               </div>
             </div>
