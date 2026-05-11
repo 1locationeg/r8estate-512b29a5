@@ -104,15 +104,21 @@ const BENEFIT_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 };
 
 const ProfessionalProfilePage = () => {
-  const { slug = 'ahmed-hassan' } = useParams();
   const { t, i18n } = useTranslation();
   const { profile, accountKind } = useAuth();
-  const basePro = useMemo(() => getMockProfessional(slug), [slug]);
+  const { slug = 'ahmed-hassan' } = useParams();
+  // Fall back to the default template so any slug (e.g. a freshly signed-up
+  // professional whose page hasn't been authored yet) still renders rather
+  // than 404'ing. Real identity is overlaid below.
+  const basePro = useMemo(
+    () => getMockProfessional(slug) ?? getMockProfessional('ahmed-hassan'),
+    [slug],
+  );
   const { isOwner, data: pageData, save, uploadCover, upsertSection, removeSection } = useProfessionalPage();
   // Overlay the signed-in professional's identity on top of the mock template
   const pro: ProfessionalProfile | null = useMemo(() => {
     if (!basePro) return null;
-    const merged: ProfessionalProfile = { ...basePro };
+    const merged: ProfessionalProfile = { ...basePro, slug };
     if (accountKind === 'professional' && profile?.full_name) {
       merged.name = profile.full_name;
       merged.avatar = profile.avatar_url ?? basePro.avatar;
@@ -124,7 +130,7 @@ const ProfessionalProfilePage = () => {
       if (pageData.languages && pageData.languages.length) merged.languages = pageData.languages;
     }
     return merged;
-  }, [basePro, profile, accountKind, pageData]);
+  }, [basePro, profile, accountKind, pageData, slug]);
   const [activeSection, setActiveSection] = useState('about');
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [bioOpen, setBioOpen] = useState(false);
