@@ -197,6 +197,7 @@ const AppContent = () => {
           <Route path="/launch-watch" element={<LaunchWatch />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
+          <Route path="/pro/:slug" element={<ProfessionalProfilePage />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/businesses" element={<Businesses />} />
