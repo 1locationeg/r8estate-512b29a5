@@ -32,9 +32,10 @@ export const UserAvatarAnchor = ({
   const sizeClass = size === "sm" ? "h-8 w-8" : "h-9 w-9";
   const iconSize = size === "sm" ? "w-5 h-5" : "w-6 h-6";
 
+  const isProfessional = typeof window !== "undefined" && localStorage.getItem("oauth_account_kind") === "professional";
   const dashRoute = getDashboardRoute?.() || (
     role === "admin" ? "/admin" :
-    role === "business" ? "/business" :
+    role === "business" ? (isProfessional ? "/pro-dashboard" : "/business") :
     "/buyer"
   );
 
@@ -92,7 +93,7 @@ export const UserAvatarAnchor = ({
           <div className="flex flex-col">
             <span className="font-medium">{profile?.full_name || "User"}</span>
             <span className="text-xs text-muted-foreground">{user.email}</span>
-            <span className="text-xs text-primary mt-1 capitalize">{role || "Buyer"}</span>
+            <span className="text-xs text-primary mt-1 capitalize">{isProfessional ? "Professional" : (role || "Buyer")}</span>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
