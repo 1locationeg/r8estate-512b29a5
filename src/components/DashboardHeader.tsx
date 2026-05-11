@@ -42,8 +42,9 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
   };
 
   const getDashboardRoute = () => {
+    const isProfessional = typeof window !== "undefined" && localStorage.getItem("oauth_account_kind") === "professional";
     if (role === 'admin') return '/admin';
-    if (role === 'business') return '/business';
+    if (role === 'business') return isProfessional ? '/pro-dashboard' : '/business';
     return '/buyer';
   };
 

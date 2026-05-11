@@ -91,7 +91,6 @@ const Auth = () => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       localStorage.removeItem('oauth_account_type');
       const kind = oauthAccountKind;
-      localStorage.removeItem('oauth_account_kind');
       if (role === 'admin') navigate('/admin');
       else if (role === 'business') {
         if (kind === 'professional') navigate('/pro-dashboard');
