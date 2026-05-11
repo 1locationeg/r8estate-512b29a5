@@ -10,11 +10,12 @@ import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { useTruthCheckSettings } from "@/hooks/useTruthCheckSettings";
 import { Loader2 } from "lucide-react";
+import { getDashboardRouteForRole } from "@/lib/dashboardRoute";
 
 const TruthCheck = () => {
   const { t } = useTranslation();
   const [params] = useSearchParams();
-  const { signOut, role } = useAuth();
+  const { signOut, role, accountKind } = useAuth();
   const navigate = useNavigate();
   const { toast } = useToast();
   const { settings, loading } = useTruthCheckSettings();
@@ -34,11 +35,7 @@ const TruthCheck = () => {
     navigate("/");
   };
 
-  const getDashboardRoute = () => {
-    if (role === "admin") return "/admin";
-    if (role === "business") return "/business";
-    return "/buyer";
-  };
+  const getDashboardRoute = () => getDashboardRouteForRole(role, accountKind);
 
   if (loading) {
     return (
