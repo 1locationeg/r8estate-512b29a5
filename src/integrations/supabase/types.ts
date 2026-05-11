@@ -2584,6 +2584,20 @@ export type Database = {
           project_name: string
         }[]
       }
+      get_professional_by_slug: {
+        Args: { _slug: string }
+        Returns: {
+          avatar_url: string
+          bio: string
+          cover_url: string
+          full_name: string
+          headline: string
+          languages: string[]
+          location: string
+          sections: Json
+          user_id: string
+        }[]
+      }
       get_profiles_count: { Args: never; Returns: number }
       get_user_role: {
         Args: { _user_id: string }
