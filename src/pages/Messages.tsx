@@ -9,23 +9,20 @@ import { NewConversationDialog } from '@/components/NewConversationDialog';
 import { MessageSquare, Settings2, ArrowLeft } from 'lucide-react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { cn } from '@/lib/utils';
+import { getDashboardRouteForRole } from '@/lib/dashboardRoute';
 import { StationPageWrapper } from '@/components/StationPageWrapper';
 import { Button } from '@/components/ui/button';
 
 const Messages = () => {
   const { t } = useTranslation();
-  const { user, role, isLoading } = useAuth();
+  const { user, role, accountKind, isLoading } = useAuth();
   const { conversations, loading, startConversation } = useConversations();
   const [activeConv, setActiveConv] = useState<Conversation | null>(null);
   const [showSettings, setShowSettings] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const getDashboardRoute = () => {
-    if (role === 'admin') return '/admin';
-    if (role === 'business') return '/business';
-    return '/buyer';
-  };
+  const getDashboardRoute = () => getDashboardRouteForRole(role, accountKind);
 
   const handleBack = () => {
     if (window.history.length > 2) {
