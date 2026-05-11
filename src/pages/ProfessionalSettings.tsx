@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Loader2, Upload, ArrowLeft, ExternalLink, User as UserIcon } from 'lucide-react';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
@@ -20,6 +21,7 @@ const nameSchema = z
   .max(80, 'Name must be 80 characters or less');
 
 const ProfessionalSettings = () => {
+  const { t } = useTranslation();
   const { user, profile, isLoading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -48,11 +50,11 @@ const ProfessionalSettings = () => {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith('image/')) {
-      toast.error('Please choose an image file');
+      toast.error(t('professional.settings.img_required'));
       return;
     }
     if (file.size > 5 * 1024 * 1024) {
-      toast.error('Image must be under 5 MB');
+      toast.error(t('professional.settings.img_too_big'));
       return;
     }
     setUploading(true);
@@ -65,7 +67,7 @@ const ProfessionalSettings = () => {
       if (upErr) throw upErr;
       const { data } = supabase.storage.from('avatars').getPublicUrl(path);
       setAvatarUrl(data.publicUrl);
-      toast.success('Avatar uploaded — remember to save');
+      toast.success(t('professional.settings.uploaded'));
     } catch (err: any) {
       toast.error(err.message || 'Upload failed');
     } finally {
@@ -88,9 +90,9 @@ const ProfessionalSettings = () => {
         .eq('user_id', user.id);
       if (error) throw error;
       await refreshProfile();
-      toast.success('Profile updated');
+      toast.success(t('professional.settings.saved'));
     } catch (err: any) {
-      toast.error(err.message || 'Could not save');
+      toast.error(err.message || t('professional.settings.save_failed'));
     } finally {
       setSaving(false);
     }
@@ -112,24 +114,22 @@ const ProfessionalSettings = () => {
       <div className="max-w-[760px] mx-auto px-4 md:px-6 py-6 md:py-10">
         <div className="flex items-center justify-between mb-6 gap-3">
           <Link to="/pro-dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground min-h-[44px]">
-            <ArrowLeft className="w-4 h-4" /> Dashboard
+            <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {t('professional.settings.back')}
           </Link>
           <Button variant="outline" size="sm" className="gap-1.5 min-h-[44px]" onClick={() => navigate('/pro/ahmed-hassan')}>
-            <ExternalLink className="w-4 h-4" /> View Trust Page
+            <ExternalLink className="w-4 h-4" /> {t('professional.settings.view_trust')}
           </Button>
         </div>
 
         <header className="mb-6">
-          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">Profile settings</h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Your name and avatar appear on your public Trust Page and across R8ESTATE.
-          </p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-foreground tracking-tight">{t('professional.settings.title')}</h1>
+          <p className="text-sm text-muted-foreground mt-1">{t('professional.settings.sub')}</p>
         </header>
 
         <div className="bg-card border border-border rounded-2xl p-5 md:p-6 space-y-6">
           {/* Avatar */}
           <section>
-            <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">Avatar</Label>
+            <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">{t('professional.settings.avatar')}</Label>
             <div className="mt-3 flex items-center gap-4">
               <Avatar className="h-20 w-20 rounded-2xl border-2 border-border ring-2 ring-[hsl(var(--professionals)/0.4)]">
                 <AvatarImage src={previewAvatar} alt={fullName || 'You'} className="rounded-2xl" />
@@ -154,9 +154,9 @@ const ProfessionalSettings = () => {
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                  {uploading ? 'Uploading…' : 'Upload new image'}
+                  {uploading ? t('professional.settings.uploading') : t('professional.settings.upload')}
                 </Button>
-                <p className="text-[11px] text-muted-foreground mt-2">JPG, PNG or WEBP · max 5 MB</p>
+                <p className="text-[11px] text-muted-foreground mt-2">{t('professional.settings.avatar_hint')}</p>
               </div>
             </div>
           </section>
@@ -164,30 +164,28 @@ const ProfessionalSettings = () => {
           {/* Name */}
           <section>
             <Label htmlFor="full-name" className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
-              Display name
+              {t('professional.settings.name')}
             </Label>
             <Input
               id="full-name"
               value={fullName}
               onChange={(e) => setFullName(e.target.value)}
               maxLength={80}
-              placeholder="e.g. Osama Ibrahim"
+              placeholder={t('professional.settings.name_ph')}
               className="mt-2 min-h-[44px]"
             />
-            <p className="text-[11px] text-muted-foreground mt-1.5">
-              This is the name buyers see on your Trust Page.
-            </p>
+            <p className="text-[11px] text-muted-foreground mt-1.5">{t('professional.settings.name_hint')}</p>
           </section>
 
           {/* Email — read-only */}
           <section>
-            <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">Email</Label>
+            <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">{t('professional.settings.email')}</Label>
             <Input value={user.email ?? ''} disabled className="mt-2 min-h-[44px] bg-muted/40" />
           </section>
 
           <div className="pt-2 flex flex-col sm:flex-row gap-2 justify-end border-t border-border">
             <Button variant="outline" size="sm" className="min-h-[44px]" onClick={() => navigate(-1)}>
-              Cancel
+              {t('professional.settings.cancel')}
             </Button>
             <Button
               size="sm"
@@ -196,7 +194,7 @@ const ProfessionalSettings = () => {
               onClick={handleSave}
             >
               {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-              Save changes
+              {t('professional.settings.save')}
             </Button>
           </div>
         </div>
