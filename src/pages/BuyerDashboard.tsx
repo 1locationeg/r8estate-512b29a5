@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useLocation, Routes, Route } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { getDashboardRouteForRole } from '@/lib/dashboardRoute';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { Loader2, LayoutDashboard, Star, Heart, Search, Settings, TrendingUp, Building2, MessageSquare, Bell, Shield, Award, CheckCircle2, Camera, Mail, Phone, User, Calendar, MapPin, Wallet, Edit3, Save, BadgeCheck, Sparkles, Activity, Eye, FileText, Users, Trophy, Gift, Bookmark, Coins, ArrowUp, ArrowRight, Flame, ExternalLink } from 'lucide-react';
@@ -1154,7 +1155,7 @@ const BuyerProfile = () => {
 
 const BuyerDashboard = () => {
   const navigate = useNavigate();
-  const { user, role, isLoading } = useAuth();
+  const { user, role, accountKind, isLoading } = useAuth();
 
   useEffect(() => {
     if (isLoading) return;
@@ -1165,14 +1166,14 @@ const BuyerDashboard = () => {
     }
 
     if (role === 'business') {
-      navigate('/business');
+      navigate(getDashboardRouteForRole(role, accountKind));
       return;
     }
 
     if (role === 'admin') {
       navigate('/admin');
     }
-  }, [user, role, isLoading, navigate]);
+  }, [user, role, accountKind, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || role === 'business' || role === 'admin') return null;
