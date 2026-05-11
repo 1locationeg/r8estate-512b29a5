@@ -11,6 +11,7 @@ import { useBuyerGamification } from '@/hooks/useBuyerGamification';
 import { getStationForRoute } from '@/lib/journeyStations';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
+import { getDashboardRouteForRole } from '@/lib/dashboardRoute';
 
 interface DashboardHeaderProps {
   title: string;
@@ -22,7 +23,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useTranslation();
-  const { role, signOut, user } = useAuth();
+  const { role, accountKind, signOut, user } = useAuth();
   const [moreMenuOpen, setMoreMenuOpen] = useState(false);
   const isBuyer = role === 'buyer' || role === 'user';
   const gamification = useBuyerGamification();
@@ -41,12 +42,7 @@ export const DashboardHeader = ({ title, breadcrumb, onMenuToggle }: DashboardHe
     protect: "bg-journey-protect/10",
   };
 
-  const getDashboardRoute = () => {
-    const isProfessional = typeof window !== "undefined" && localStorage.getItem("oauth_account_kind") === "professional";
-    if (role === 'admin') return '/admin';
-    if (role === 'business') return isProfessional ? '/pro-dashboard' : '/business';
-    return '/buyer';
-  };
+  const getDashboardRoute = () => getDashboardRouteForRole(role, accountKind);
 
   // Parse breadcrumb into segments
   const breadcrumbSegments = breadcrumb?.split('>').map(s => s.trim()).filter(Boolean) || [];
