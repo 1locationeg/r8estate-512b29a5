@@ -80,6 +80,7 @@ function MiniRing({ value, size = 56, stroke = 6, color = PRO }: { value: number
 }
 
 export default function ProfessionalDashboard() {
+  const { t } = useTranslation();
   const { user, profile } = useAuth();
   const basePro = useMemo(() => getMockProfessional('ahmed-hassan')!, []);
   const signedInName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
@@ -92,43 +93,43 @@ export default function ProfessionalDashboard() {
   const trustUrl = `/pro/${pro.slug}`;
 
   const stats = [
-    { label: 'Profile views', short: 'Views', value: '2,418', delta: '+34%', icon: Eye, spark: [4, 6, 5, 8, 7, 10, 12] },
-    { label: 'Trust page shares', short: 'Shares', value: '127', delta: '+18%', icon: Share2, spark: [3, 4, 3, 5, 6, 5, 8] },
-    { label: 'New endorsements', short: 'Endorsed', value: '24', delta: '+9', icon: ThumbsUp, spark: [2, 3, 4, 3, 5, 6, 7] },
-    { label: 'Hire requests', short: 'Hires', value: '11', delta: '+4', icon: Briefcase, spark: [1, 2, 1, 3, 2, 4, 5] },
+    { label: t('professional.dashboard.stats.views'), short: t('professional.dashboard.stats.views_short'), value: '2,418', delta: '+34%', icon: Eye, spark: [4, 6, 5, 8, 7, 10, 12] },
+    { label: t('professional.dashboard.stats.shares'), short: t('professional.dashboard.stats.shares_short'), value: '127', delta: '+18%', icon: Share2, spark: [3, 4, 3, 5, 6, 5, 8] },
+    { label: t('professional.dashboard.stats.endorsements'), short: t('professional.dashboard.stats.endorsements_short'), value: '24', delta: '+9', icon: ThumbsUp, spark: [2, 3, 4, 3, 5, 6, 7] },
+    { label: t('professional.dashboard.stats.hires'), short: t('professional.dashboard.stats.hires_short'), value: '11', delta: '+4', icon: Briefcase, spark: [1, 2, 1, 3, 2, 4, 5] },
   ];
 
   const benefits = [
-    { icon: Crown, title: 'Prestige', tip: 'A verified, public trust page that signals you are a serious, accountable professional.' },
-    { icon: Eye, title: 'Visibility', tip: 'Indexed on r8estate, surfaced in category pages, shareable across WhatsApp, Instagram, LinkedIn.' },
-    { icon: Sparkles, title: 'Expertise', tip: 'Showcase certifications, deals, portfolio, awards & specialties in one place.' },
-    { icon: Target, title: 'Faster close', tip: 'Buyers arrive pre-warmed: they read verified reviews, hesitation drops, the close gets faster.' },
-    { icon: Briefcase, title: 'Get hired', tip: 'Developers, brokerages and service firms can discover and contact you directly.' },
-    { icon: Globe, title: 'One link', tip: 'Aggregate LinkedIn, Instagram, YouTube, TikTok & more — give every lead one source of truth.' },
+    { icon: Crown, title: t('professional.dashboard.benefits.prestige'), tip: t('professional.dashboard.benefits.prestige_tip') },
+    { icon: Eye, title: t('professional.dashboard.benefits.visibility'), tip: t('professional.dashboard.benefits.visibility_tip') },
+    { icon: Sparkles, title: t('professional.dashboard.benefits.expertise'), tip: t('professional.dashboard.benefits.expertise_tip') },
+    { icon: Target, title: t('professional.dashboard.benefits.faster'), tip: t('professional.dashboard.benefits.faster_tip') },
+    { icon: Briefcase, title: t('professional.dashboard.benefits.hired'), tip: t('professional.dashboard.benefits.hired_tip') },
+    { icon: Globe, title: t('professional.dashboard.benefits.onelink'), tip: t('professional.dashboard.benefits.onelink_tip') },
   ];
 
   const completion = [
-    { label: 'Profile photo', done: true, points: 5 },
-    { label: 'Headline & bio', done: true, points: 10 },
-    { label: '3 socials connected', done: true, points: 10 },
-    { label: '3 portfolio projects', done: true, points: 15 },
-    { label: 'Verified certificate', done: true, points: 15 },
-    { label: 'Verify phone', done: false, points: 10 },
-    { label: '5 skill endorsements', done: false, points: 15 },
-    { label: 'Publish a community post', done: false, points: 10 },
-    { label: 'Invite 3 colleagues', done: false, points: 10 },
+    { label: t('professional.dashboard.completion.photo'), done: true, points: 5 },
+    { label: t('professional.dashboard.completion.bio'), done: true, points: 10 },
+    { label: t('professional.dashboard.completion.socials'), done: true, points: 10 },
+    { label: t('professional.dashboard.completion.portfolio'), done: true, points: 15 },
+    { label: t('professional.dashboard.completion.cert'), done: true, points: 15 },
+    { label: t('professional.dashboard.completion.phone'), done: false, points: 10 },
+    { label: t('professional.dashboard.completion.endorsements5'), done: false, points: 15 },
+    { label: t('professional.dashboard.completion.post'), done: false, points: 10 },
+    { label: t('professional.dashboard.completion.invite'), done: false, points: 10 },
   ];
   const completed = completion.filter(c => c.done).length;
   const completionPct = Math.round((completed / completion.length) * 100);
   const nextSteps = completion.filter(c => !c.done).slice(0, 3);
 
   const quickActions = [
-    { icon: Award, label: 'Certificate' },
-    { icon: Briefcase, label: 'Experience' },
-    { icon: Camera, label: 'Portfolio' },
-    { icon: Globe, label: 'Socials' },
-    { icon: ThumbsUp, label: 'Endorsement' },
-    { icon: MessageSquare, label: 'Ask review' },
+    { icon: Award, label: t('professional.dashboard.actions.certificate') },
+    { icon: Briefcase, label: t('professional.dashboard.actions.experience') },
+    { icon: Camera, label: t('professional.dashboard.actions.portfolio') },
+    { icon: Globe, label: t('professional.dashboard.actions.socials') },
+    { icon: ThumbsUp, label: t('professional.dashboard.actions.endorsement') },
+    { icon: MessageSquare, label: t('professional.dashboard.actions.ask_review') },
   ];
 
   return (
