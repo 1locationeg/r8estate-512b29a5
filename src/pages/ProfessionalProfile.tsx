@@ -17,6 +17,10 @@ import { generateAvatar } from '@/lib/avatarUtils';
 import { toast } from 'sonner';
 import { getMockProfessional, type ProfessionalProfile } from '@/data/mockProfessionals';
 import { useAuth } from '@/contexts/AuthContext';
+import { useProfessionalPage } from '@/hooks/useProfessionalPage';
+import { EditableField } from '@/components/professional-edit/EditableField';
+import { CoverEditor } from '@/components/professional-edit/CoverEditor';
+import { CustomSections } from '@/components/professional-edit/CustomSections';
 
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   linkedin: Linkedin, instagram: Instagram, youtube: Youtube,
@@ -109,18 +113,23 @@ const ProfessionalProfilePage = () => {
   const { slug = 'ahmed-hassan' } = useParams();
   const { profile, accountKind } = useAuth();
   const basePro = useMemo(() => getMockProfessional(slug), [slug]);
+  const { isOwner, data: pageData, save, uploadCover, upsertSection, removeSection } = useProfessionalPage();
   // Overlay the signed-in professional's identity on top of the mock template
   const pro: ProfessionalProfile | null = useMemo(() => {
     if (!basePro) return null;
+    const merged: ProfessionalProfile = { ...basePro };
     if (accountKind === 'professional' && profile?.full_name) {
-      return {
-        ...basePro,
-        name: profile.full_name,
-        avatar: profile.avatar_url ?? basePro.avatar,
-      };
+      merged.name = profile.full_name;
+      merged.avatar = profile.avatar_url ?? basePro.avatar;
     }
-    return basePro;
-  }, [basePro, profile, accountKind]);
+    if (pageData) {
+      if (pageData.headline) merged.headline = pageData.headline;
+      if (pageData.bio) merged.bio = pageData.bio;
+      if (pageData.location) merged.location = pageData.location;
+      if (pageData.languages && pageData.languages.length) merged.languages = pageData.languages;
+    }
+    return merged;
+  }, [basePro, profile, accountKind, pageData]);
   const [activeSection, setActiveSection] = useState('about');
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [bioOpen, setBioOpen] = useState(false);
