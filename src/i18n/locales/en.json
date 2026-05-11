@@ -2124,7 +2124,13 @@
       },
       "cover": {
         "edit": "Edit cover",
-        "uploading": "Uploading…"
+        "uploading": "Uploading…",
+        "editor_title": "Adjust your cover image",
+        "recommended": "Recommended size: {{w}} × {{h}} px (16:6). Drag to reposition, pinch / slider to zoom.",
+        "zoom": "Zoom",
+        "rotate": "Rotate 90°",
+        "apply": "Apply",
+        "cancel": "Cancel"
       },
       "custom": {
         "eyebrow": "Custom section",
