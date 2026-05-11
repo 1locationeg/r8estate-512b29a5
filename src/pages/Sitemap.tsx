@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { Footer } from "@/components/Footer";
@@ -9,6 +9,7 @@ import { PUBLIC_ROUTES } from "@/data/routeRegistry";
 import { categories as heroCats } from "@/components/HeroCategoryItems";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, ChevronRight, Download, Map, Globe, ExternalLink } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 const BASE_URL = "https://meter.r8estate.com";
 
@@ -91,9 +92,26 @@ const CollapsibleSection = ({ title, count, children }: { title: string; count: 
 const Sitemap = () => {
   const { t } = useTranslation();
   const grouped = buildGrouped();
+  const [professionals, setProfessionals] = useState<{ name: string; path: string }[]>([]);
+
+  useEffect(() => {
+    (async () => {
+      const { data } = await supabase
+        .from("profiles")
+        .select("full_name, user_account_kinds!inner(account_kind)")
+        .eq("user_account_kinds.account_kind", "professional")
+        .not("full_name", "is", null);
+      if (!data) return;
+      const slugify = (n: string) =>
+        n.trim().toLowerCase().replace(/[^a-z0-9\s-]/g, "").replace(/\s+/g, "-");
+      setProfessionals(
+        data.map((r: any) => ({ name: r.full_name as string, path: `/pro/${slugify(r.full_name)}` }))
+      );
+    })();
+  }, []);
 
   const handleDownload = () => {
-    const xml = generateXml(grouped);
+    const xml = generateXml(grouped, professionals);
     const blob = new Blob([xml], { type: "text/xml" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
