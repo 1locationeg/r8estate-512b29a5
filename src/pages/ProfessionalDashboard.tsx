@@ -85,11 +85,25 @@ export default function ProfessionalDashboard() {
   const basePro = useMemo(() => getMockProfessional('ahmed-hassan')!, []);
   const signedInName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
   const signedInAvatar = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-') || basePro.slug;
+  const personalSlug = useMemo(
+    () => (signedInName ? slugify(signedInName) : basePro.slug),
+    [signedInName, basePro.slug],
+  );
   const pro = useMemo(() => ({
     ...basePro,
+    slug: personalSlug,
     name: signedInName || basePro.name,
     avatar: signedInAvatar || basePro.avatar || generateAvatar(signedInName || basePro.name, 'developer'),
-  }), [basePro, signedInAvatar, signedInName]);
+  }), [basePro, signedInAvatar, signedInName, personalSlug]);
   const trustUrl = `/pro/${pro.slug}`;
 
   const stats = [

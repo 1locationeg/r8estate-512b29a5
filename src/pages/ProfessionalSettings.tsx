@@ -116,7 +116,11 @@ const ProfessionalSettings = () => {
           <Link to="/pro-dashboard" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground min-h-[44px]">
             <ArrowLeft className="w-4 h-4 rtl:rotate-180" /> {t('professional.settings.back')}
           </Link>
-          <Button variant="outline" size="sm" className="gap-1.5 min-h-[44px]" onClick={() => navigate('/pro/ahmed-hassan')}>
+          <Button variant="outline" size="sm" className="gap-1.5 min-h-[44px]" onClick={() => {
+            const name = profile?.full_name || user?.email?.split('@')[0] || 'ahmed-hassan';
+            const slug = name.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-') || 'ahmed-hassan';
+            navigate(`/pro/${slug}`);
+          }}>
             <ExternalLink className="w-4 h-4" /> {t('professional.settings.view_trust')}
           </Button>
         </div>
