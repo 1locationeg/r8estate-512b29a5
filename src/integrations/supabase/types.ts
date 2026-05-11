@@ -2628,6 +2628,13 @@ export type Database = {
       }
       increment_engagement: { Args: { _field: string }; Returns: undefined }
       is_super_admin: { Args: { _user_id: string }; Returns: boolean }
+      list_professional_slugs: {
+        Args: never
+        Returns: {
+          slug: string
+          updated_at: string
+        }[]
+      }
       mark_pending_review_used: { Args: { _token: string }; Returns: boolean }
       recalculate_trust_score: {
         Args: { p_developer_id: string }
