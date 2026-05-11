@@ -127,6 +127,7 @@ const Auth = () => {
 
     try {
       if (isNewUser) {
+        if (isProfessionalMode) localStorage.setItem('oauth_account_kind', 'professional');
         const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'business' : 'buyer');
         if (error) {
           if (error.message.includes('already registered')) {
