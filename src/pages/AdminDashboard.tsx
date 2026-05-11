@@ -693,6 +693,36 @@ const AdminUsers = () => {
   };
 
   const handleRemoveAdmin = async (userId: string) => {
+    return _handleRemoveAdmin(userId);
+  };
+
+  const handleAccountKindChange = async (userId: string, kind: 'buyer' | 'business' | 'professional') => {
+    setUpdatingId(userId);
+    try {
+      const { error } = await supabase.rpc('admin_set_account_kind' as any, {
+        _target_user: userId,
+        _kind: kind,
+      });
+      if (error) throw error;
+      setAccountKinds((prev) => ({ ...prev, [userId]: kind }));
+      if (kind === 'professional') {
+        const target = users.find((u) => u.id === userId);
+        const slug = target?.full_name ? slugifyName(target.full_name) : '';
+        toast.success('Upgraded to Professional', {
+          description: slug ? `Trust Page: /pro/${slug}` : 'Trust Page is live',
+          action: slug ? { label: 'Open', onClick: () => window.open(`/pro/${slug}`, '_blank') } : undefined,
+        });
+      } else {
+        toast.success(`Account set to ${kind}`);
+      }
+    } catch (err: any) {
+      toast.error(`Failed to upgrade: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const _handleRemoveAdmin = async (userId: string) => {
     if (!isSuperAdmin) {
       toast.error('Only the Super Admin can remove admins');
       return;
