@@ -24,7 +24,7 @@ const Auth = () => {
   const isAr = i18n.language === 'ar';
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const { user, role, signIn, signUp, signInWithGoogle, signInWithApple, refreshProfile, isLoading: authLoading } = useAuth();
+  const { user, role, accountKind, signIn, signUp, signInWithGoogle, signInWithApple, refreshProfile, setAccountKind, isLoading: authLoading } = useAuth();
   const { toast } = useToast();
 
   const isBusinessMode = searchParams.get('type') === 'business';
@@ -68,6 +68,11 @@ const Auth = () => {
     await refreshProfile();
   };
 
+  const persistProfessionalKind = async () => {
+    localStorage.setItem('oauth_account_kind', 'professional');
+    await setAccountKind('professional');
+  };
+
   useEffect(() => {
     if (authLoading || !requiresBusinessRoleSync) return;
     let isMounted = true;
@@ -75,6 +80,7 @@ const Auth = () => {
       setIsSyncingBusinessRole(true);
       try {
         await promoteToBusinessRole();
+        if (oauthAccountKind === 'professional') await persistProfessionalKind();
         localStorage.removeItem('oauth_account_type');
       } catch {
         toast({ title: 'Business upgrade requires approval', description: 'Please submit a business upgrade request from your dashboard.' });
@@ -90,7 +96,7 @@ const Auth = () => {
   useEffect(() => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       localStorage.removeItem('oauth_account_type');
-      const kind = oauthAccountKind;
+      const kind = accountKind || oauthAccountKind;
       if (role === 'admin') navigate('/admin');
       else if (role === 'business') {
         if (kind === 'professional') navigate('/pro-dashboard');
@@ -98,7 +104,7 @@ const Auth = () => {
       }
       else navigate('/buyer');
     }
-  }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate, oauthAccountKind]);
+  }, [user, role, accountKind, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate, oauthAccountKind]);
 
   const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault();
@@ -127,7 +133,7 @@ const Auth = () => {
     try {
       if (isNewUser) {
         if (isProfessionalMode) localStorage.setItem('oauth_account_kind', 'professional');
-        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'business' : 'buyer');
+        const { error } = await signUp(email, password, fullName, accountType === 'business' ? 'business' : 'buyer', isProfessionalMode ? 'professional' : accountType);
         if (error) {
           if (error.message.includes('already registered')) {
             toast({ title: 'Account exists', description: 'An account with this email already exists. Try signing in.', variant: 'destructive' });
@@ -151,6 +157,7 @@ const Auth = () => {
           return;
         }
         if (shouldSyncBusiness) {
+          if (isProfessionalMode) await persistProfessionalKind();
           toast({ title: 'Business upgrade requires approval', description: 'Submit a business upgrade request from your dashboard.' });
           localStorage.removeItem('oauth_account_type');
         }
