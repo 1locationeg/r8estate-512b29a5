@@ -19,6 +19,16 @@ const STATIC_ROUTES = [
   { loc: "/reviewer-program", priority: "0.7", changefreq: "monthly" },
   { loc: "/impact", priority: "0.6", changefreq: "monthly" },
   { loc: "/products", priority: "0.6", changefreq: "monthly" },
+  { loc: "/products/r8-map", priority: "0.6", changefreq: "monthly" },
+  { loc: "/compare", priority: "0.7", changefreq: "weekly" },
+  { loc: "/truth-check", priority: "0.7", changefreq: "weekly" },
+  { loc: "/match", priority: "0.7", changefreq: "weekly" },
+  { loc: "/search", priority: "0.6", changefreq: "weekly" },
+  { loc: "/copilot", priority: "0.6", changefreq: "weekly" },
+  { loc: "/portfolio", priority: "0.5", changefreq: "monthly" },
+  { loc: "/insights", priority: "0.6", changefreq: "weekly" },
+  { loc: "/install", priority: "0.4", changefreq: "monthly" },
+  { loc: "/demo", priority: "0.4", changefreq: "monthly" },
   { loc: "/sitemap", priority: "0.4", changefreq: "monthly" },
   { loc: "/privacy", priority: "0.3", changefreq: "yearly" },
   { loc: "/terms", priority: "0.3", changefreq: "yearly" },
@@ -52,13 +62,28 @@ Deno.serve(async (_req) => {
     console.error("entity fetch failed", err);
   }
 
+  let professionalUrls = "";
+  try {
+    const { data } = await supabase.rpc("list_professional_slugs");
+    if (Array.isArray(data)) {
+      professionalUrls = data
+        .map(
+          (p: { slug: string; updated_at: string | null }) =>
+            `<url><loc>${SITE}/pro/${escape(p.slug)}</loc><lastmod>${(p.updated_at ?? today).split("T")[0]}</lastmod><changefreq>weekly</changefreq><priority>0.7</priority></url>`
+        )
+        .join("");
+    }
+  } catch (err) {
+    console.error("professional fetch failed", err);
+  }
+
   const staticUrls = STATIC_ROUTES.map(
     (r) =>
       `<url><loc>${SITE}${r.loc}</loc><lastmod>${today}</lastmod><changefreq>${r.changefreq}</changefreq><priority>${r.priority}</priority></url>`
   ).join("");
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${entityUrls}</urlset>`;
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${staticUrls}${entityUrls}${professionalUrls}</urlset>`;
 
   return new Response(xml, {
     headers: {
