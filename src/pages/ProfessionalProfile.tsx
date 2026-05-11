@@ -183,8 +183,15 @@ const ProfessionalProfilePage = () => {
     );
   }
 
+  // If the signed-in pro lands on someone else's (or a template) slug, push
+  // them to their own canonical /pro/<their-name> URL so share/copy is correct.
+  if (ownerSlug && ownerSlug !== slug) {
+    return <Navigate to={`/pro/${ownerSlug}`} replace />;
+  }
+
   const handleShare = async () => {
-    const url = `${window.location.origin}/pro/${pro.slug}`;
+    const shareSlug = ownerSlug ?? pro.slug;
+    const url = `${window.location.origin}/pro/${shareSlug}`;
     try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
