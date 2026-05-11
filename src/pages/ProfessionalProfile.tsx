@@ -198,9 +198,22 @@ const ProfessionalProfilePage = () => {
           <div
             className="relative h-44 md:h-60 w-full overflow-hidden"
             style={{
-              background: 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 35%, hsl(var(--professionals)) 100%)',
+              background: pageData?.cover_url
+                ? undefined
+                : 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 35%, hsl(var(--professionals)) 100%)',
             }}
           >
+            {pageData?.cover_url && (
+              <>
+                <img
+                  src={pageData.cover_url}
+                  alt="Cover"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/30 to-transparent" />
+              </>
+            )}
+            {isOwner && <CoverEditor onUpload={uploadCover} />}
             {/* AI mesh */}
             <div className="absolute inset-0 opacity-60"
               style={{
@@ -247,7 +260,20 @@ const ProfessionalProfilePage = () => {
                       </span>
                     )}
                   </div>
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-1">{pro.headline}</p>
+                  {isOwner ? (
+                    <div className="mb-3 pe-7">
+                      <EditableField
+                        value={pro.headline}
+                        onSave={(v) => save({ headline: v || null })}
+                        placeholder="Your one-line headline"
+                        label="Headline"
+                      >
+                        <p className="text-sm text-muted-foreground line-clamp-1">{pro.headline}</p>
+                      </EditableField>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-muted-foreground mb-3 line-clamp-1">{pro.headline}</p>
+                  )}
 
                   {/* Big-impact metric strip */}
                   <div className="flex items-center flex-wrap gap-x-4 gap-y-2">
@@ -311,9 +337,43 @@ const ProfessionalProfilePage = () => {
                   <span className="text-xs font-bold text-accent-foreground">TOP 1% in {pro.location.split(',')[0]} · 2024</span>
                 </div>
                 <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
-                  <span className="inline-flex items-center gap-1"><MapPin className="w-3 h-3" />{pro.location}</span>
+                  <span className="inline-flex items-center gap-1">
+                    <MapPin className="w-3 h-3" />
+                    {isOwner ? (
+                      <EditableField
+                        value={pro.location}
+                        onSave={(v) => save({ location: v || null })}
+                        placeholder="City, Country"
+                        label="Location"
+                      >
+                        <span>{pro.location}</span>
+                      </EditableField>
+                    ) : (
+                      pro.location
+                    )}
+                  </span>
                   <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />Replies {pro.responseTime}</span>
-                  <span className="hidden sm:inline-flex items-center gap-1"><Languages className="w-3 h-3" />{pro.languages.join(' · ')}</span>
+                  <span className="hidden sm:inline-flex items-center gap-1">
+                    <Languages className="w-3 h-3" />
+                    {isOwner ? (
+                      <EditableField
+                        value={pro.languages.join(', ')}
+                        onSave={(v) =>
+                          save({
+                            languages: v
+                              ? v.split(',').map((s) => s.trim()).filter(Boolean)
+                              : null,
+                          })
+                        }
+                        placeholder="Arabic, English"
+                        label="Languages (comma separated)"
+                      >
+                        <span>{pro.languages.join(' · ')}</span>
+                      </EditableField>
+                    ) : (
+                      pro.languages.join(' · ')
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
