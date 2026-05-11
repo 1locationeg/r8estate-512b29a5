@@ -1561,6 +1561,42 @@ export type Database = {
           },
         ]
       }
+      professional_pages: {
+        Row: {
+          bio: string | null
+          cover_url: string | null
+          created_at: string
+          headline: string | null
+          languages: string[] | null
+          location: string | null
+          sections: Json
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          cover_url?: string | null
+          created_at?: string
+          headline?: string | null
+          languages?: string[] | null
+          location?: string | null
+          sections?: Json
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          cover_url?: string | null
+          created_at?: string
+          headline?: string | null
+          languages?: string[] | null
+          location?: string | null
+          sections?: Json
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
