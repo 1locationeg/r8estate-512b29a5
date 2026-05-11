@@ -56,6 +56,7 @@ const DealWatch = lazy(() => import("./pages/DealWatch"));
 const LaunchWatch = lazy(() => import("./pages/LaunchWatch"));
 const EmbedWidget = lazy(() => import("./pages/EmbedWidget"));
 const EntityPage = lazy(() => import("./pages/EntityPage"));
+const ProfessionalProfilePage = lazy(() => import("./pages/ProfessionalProfile"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
@@ -197,6 +198,7 @@ const AppContent = () => {
           <Route path="/launch-watch" element={<LaunchWatch />} />
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
+          <Route path="/pro/:slug" element={<ProfessionalProfilePage />} />
           <Route path="/rewards" element={<Rewards />} />
           <Route path="/copilot" element={<CopilotPage />} />
           <Route path="/businesses" element={<Businesses />} />
