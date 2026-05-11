@@ -51,7 +51,10 @@ function buildGrouped() {
   return grouped;
 }
 
-function generateXml(grouped: Record<string, { name: string; path: string }[]>) {
+function generateXml(
+  grouped: Record<string, { name: string; path: string }[]>,
+  professionals: { name: string; path: string }[] = []
+) {
   const urls: string[] = [];
   const add = (loc: string, priority: string, changefreq: string) => {
     urls.push(`  <url>\n    <loc>${loc}</loc>\n    <changefreq>${changefreq}</changefreq>\n    <priority>${priority}</priority>\n  </url>`);
@@ -65,6 +68,10 @@ function generateXml(grouped: Record<string, { name: string; path: string }[]>) 
     for (const item of items) {
       add(`${BASE_URL}${item.path}`, "0.6", "monthly");
     }
+  }
+
+  for (const pro of professionals) {
+    add(`${BASE_URL}${pro.path}`, "0.7", "weekly");
   }
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.join("\n")}\n</urlset>`;
