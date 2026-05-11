@@ -85,7 +85,7 @@ export function useProfessionalPage() {
       setData(next);
       const { error } = await supabase
         .from('professional_pages')
-        .upsert(
+        .upsert([
           {
             user_id: user.id,
             cover_url: next.cover_url,
@@ -95,8 +95,7 @@ export function useProfessionalPage() {
             languages: next.languages,
             sections: next.sections as unknown as object,
           },
-          { onConflict: 'user_id' },
-        );
+        ], { onConflict: 'user_id' });
       if (error) {
         console.error('[professional_pages] save', error);
         toast.error('Could not save changes');
