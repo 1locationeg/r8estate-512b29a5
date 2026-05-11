@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Plus, Pencil, Trash2, Check, X, Sparkles } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,6 +16,7 @@ interface CustomSectionsProps {
 export function CustomSections({ sections, isOwner, onUpsert, onRemove }: CustomSectionsProps) {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draft, setDraft] = useState<CustomSection | null>(null);
+  const { t } = useTranslation();
 
   const startNew = () => {
     const s: CustomSection = {
@@ -67,27 +69,27 @@ export function CustomSections({ sections, isOwner, onUpsert, onRemove }: Custom
                 <div className="flex items-center gap-2">
                   <Sparkles className="w-4 h-4 text-[hsl(var(--professionals))]" />
                   <span className="text-[10px] uppercase tracking-wider font-bold text-muted-foreground">
-                    Custom section
+                    {t('professional.profile.custom.eyebrow')}
                   </span>
                 </div>
                 <Input
                   value={draft?.title ?? ''}
                   onChange={(e) => draft && setDraft({ ...draft, title: e.target.value })}
-                  placeholder="Section title (e.g. Awards, Press, Video tour)"
+                  placeholder={t('professional.profile.custom.title_ph')}
                   className="font-bold"
                 />
                 <Textarea
                   value={draft?.body ?? ''}
                   onChange={(e) => draft && setDraft({ ...draft, body: e.target.value })}
-                  placeholder="Tell buyers what makes this special…"
+                  placeholder={t('professional.profile.custom.body_ph')}
                   rows={6}
                 />
                 <div className="flex gap-2">
                   <Button size="sm" onClick={commit} disabled={!draft?.title.trim()} className="gap-1 h-8">
-                    <Check className="w-3.5 h-3.5" /> Save
+                    <Check className="w-3.5 h-3.5" /> {t('professional.profile.custom.save')}
                   </Button>
                   <Button size="sm" variant="ghost" onClick={cancel} className="gap-1 h-8">
-                    <X className="w-3.5 h-3.5" /> Cancel
+                    <X className="w-3.5 h-3.5" /> {t('professional.profile.custom.cancel')}
                   </Button>
                 </div>
               </div>
@@ -100,14 +102,14 @@ export function CustomSections({ sections, isOwner, onUpsert, onRemove }: Custom
                       <button
                         onClick={() => startEdit(s)}
                         className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                        title="Edit section"
+                        title={t('professional.profile.custom.edit')}
                       >
                         <Pencil className="w-3.5 h-3.5" />
                       </button>
                       <button
                         onClick={() => onRemove(s.id)}
                         className="inline-flex items-center justify-center w-7 h-7 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                        title="Delete section"
+                        title={t('professional.profile.custom.delete')}
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -126,7 +128,7 @@ export function CustomSections({ sections, isOwner, onUpsert, onRemove }: Custom
           onClick={startNew}
           className="w-full flex items-center justify-center gap-2 py-4 rounded-xl border-2 border-dashed border-border hover:border-[hsl(var(--professionals)/0.5)] hover:bg-[hsl(var(--professionals)/0.04)] transition-colors text-sm font-semibold text-muted-foreground hover:text-[hsl(var(--professionals))]"
         >
-          <Plus className="w-4 h-4" /> Add a section
+          <Plus className="w-4 h-4" /> {t('professional.profile.custom.add')}
         </button>
       )}
     </>
