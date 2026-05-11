@@ -196,7 +196,7 @@ const ProfessionalProfilePage = () => {
 
   return (
     <TooltipProvider delayDuration={150}>
-      <div className="min-h-screen bg-background overflow-x-hidden">
+      <div className="emerald-mode min-h-screen bg-background overflow-x-hidden">
         <Navbar
           userMode="buyers"
           onSwitchToBusinessView={() => {}}

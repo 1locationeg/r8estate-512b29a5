@@ -101,7 +101,7 @@ const ProfessionalSettings = () => {
   const previewAvatar = avatarUrl || generateAvatar(fullName || 'Pro', 'developer');
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="emerald-mode min-h-screen bg-background">
       <Navbar
         userMode="buyers"
         onSwitchToBusinessView={() => {}}
