@@ -2037,7 +2037,105 @@
       "save_failed": "Could not save"
     },
     "profile": {
-      "verified": "Verified professional"
+      "verified": "Verified professional",
+      "not_found_title": "Professional not found",
+      "not_found_desc": "No Trust Page exists for \"{{slug}}\".",
+      "return_home": "Return home",
+      "share_copied": "Trust Page link copied",
+      "share_failed": "Could not copy link",
+      "verified_pro": "Verified Pro",
+      "contact": "Contact",
+      "message": "Message",
+      "share_tooltip": "Share Trust Page",
+      "save_tooltip": "Save",
+      "refer_tooltip": "Refer a friend",
+      "top_in": "TOP 1% in {{city}} · {{year}}",
+      "replies_in": "Replies {{time}}",
+      "trust_short": "trust",
+      "deals_short": "deals",
+      "years_suffix": "y",
+      "sections": {
+        "about": "About",
+        "experience": "Experience",
+        "reviews": "Reviews",
+        "skills": "Skills",
+        "portfolio": "Portfolio",
+        "certificates": "Certificates",
+        "faq": "FAQ"
+      },
+      "stats": {
+        "rating": "Rating",
+        "trust": "Trust",
+        "deals": "Deals",
+        "replies": "Replies"
+      },
+      "why_pick": "Why buyers pick {{name}}",
+      "benefits": {
+        "shield_title": "Delivery-first",
+        "shield_desc": "Filters developers by track record so you avoid handover delays.",
+        "wallet_title": "Plan structuring",
+        "wallet_desc": "Designs payment plans that match your real cash flow timeline.",
+        "heart_title": "No pressure",
+        "heart_desc": "Patience-driven approach — never pushes a deal that does not fit you.",
+        "crown_title": "Top developers",
+        "crown_desc": "Active deals across SODIC, Palm Hills, Mountain View, Emaar, and more.",
+        "zap_title": "Fast replies",
+        "zap_desc": "Replies in {{time}} on average — verified by platform tracking.",
+        "file_title": "Contract help",
+        "file_desc": "Walks you through the contract clauses before you sign — for free."
+      },
+      "verified_deal": "Verified deal",
+      "about_title": "About",
+      "edit": "Edit",
+      "read_more": "Read more",
+      "less": "Less",
+      "write_review": "Write a review",
+      "verified_count": "{{count}} verified",
+      "show_less": "Show less",
+      "show_all": "Show all {{count}} reviews",
+      "recent_deals": "Recent deals",
+      "credentials": "Credentials",
+      "present": "Present",
+      "trust_ring_label": "Trust",
+      "trust_chips": {
+        "verified": "Verified",
+        "top_responder": "Top responder",
+        "elite": "Elite"
+      },
+      "request_call": "Request a call",
+      "send_message": "Send message",
+      "currently_at": "Currently at",
+      "verified_socials": "Verified socials",
+      "ai_insight": "AI insight",
+      "ai_insight_pre": "Replies ",
+      "ai_insight_highlight": "3× faster",
+      "ai_insight_post": " than other Pros in {{city}}.",
+      "refer_card": "Share & earn Insight Credits",
+      "share_trust_page": "Share Trust Page",
+      "editable": {
+        "headline_ph": "Your one-line headline",
+        "headline_label": "Headline",
+        "location_ph": "City, Country",
+        "location_label": "Location",
+        "languages_ph": "Arabic, English",
+        "languages_label": "Languages (comma separated)",
+        "bio_ph": "Tell buyers your story…",
+        "bio_label": "Bio"
+      },
+      "cover": {
+        "edit": "Edit cover",
+        "uploading": "Uploading…"
+      },
+      "custom": {
+        "eyebrow": "Custom section",
+        "title_ph": "Section title (e.g. Awards, Press, Video tour)",
+        "body_ph": "Tell buyers what makes this special…",
+        "save": "Save",
+        "cancel": "Cancel",
+        "edit": "Edit section",
+        "delete": "Delete section",
+        "add": "Add a section"
+      }
     }
   }
 }
