@@ -7,6 +7,7 @@ import { registerDevice, markIntentionalLogout, refreshDeviceExpiry, checkDevice
 
 type AppRole = 'user' | 'buyer' | 'business' | 'admin';
 type AccountTypeIntent = 'buyer' | 'business';
+type AccountKind = 'buyer' | 'business' | 'professional';
 
 interface Profile {
   id: string;
@@ -32,17 +33,19 @@ interface AuthContextType {
   session: Session | null;
   profile: Profile | null;
   role: AppRole | null;
+  accountKind: AccountKind | null;
   isLoading: boolean;
   /** True when no active session but device was previously registered (known device) */
   isReturningDevice: boolean;
   /** Email hint from device token for returning-user UX */
   returningDeviceEmail: string | null;
-  signUp: (email: string, password: string, fullName?: string, accountType?: string) => Promise<{ error: Error | null }>;
+  signUp: (email: string, password: string, fullName?: string, accountType?: string, accountKind?: AccountKind) => Promise<{ error: Error | null }>;
   signIn: (email: string, password: string) => Promise<{ error: Error | null }>;
   signInWithGoogle: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
   signInWithApple: (accountType?: AccountTypeIntent) => Promise<{ error: Error | null }>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
+  setAccountKind: (accountKind: AccountKind) => Promise<AccountKind | null>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -52,6 +55,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [role, setRole] = useState<AppRole | null>(null);
+  const [accountKind, setAccountKindState] = useState<AccountKind | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   // Returning device state — computed after auth hydration completes
@@ -85,14 +89,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const fetchAccountKind = async (userId: string): Promise<AccountKind | null> => {
+    try {
+      const { data, error } = await (supabase as any)
+        .from('user_account_kinds')
+        .select('account_kind')
+        .eq('user_id', userId)
+        .maybeSingle();
+
+      if (error) throw error;
+      return (data?.account_kind as AccountKind | undefined) || null;
+    } catch (error) {
+      console.error('Error fetching account kind:', error);
+      return null;
+    }
+  };
+
   const refreshProfile = async () => {
     if (!user) return;
-    const [profileData, roleData] = await Promise.all([
+    const [profileData, roleData, accountKindData] = await Promise.all([
       fetchProfile(user.id),
       fetchUserRole(user.id),
+      fetchAccountKind(user.id),
     ]);
     setProfile(profileData);
     setRole(roleData);
+    setAccountKindState(accountKindData);
+  };
+
+  const setAccountKind = async (kind: AccountKind): Promise<AccountKind | null> => {
+    try {
+      const { data, error } = await (supabase as any).rpc('set_my_account_kind', { _account_kind: kind });
+      if (error) throw error;
+      const savedKind = (data as AccountKind) || kind;
+      setAccountKindState(savedKind);
+      return savedKind;
+    } catch (error) {
+      console.error('Error setting account kind:', error);
+      return null;
+    }
   };
 
   // Compute returning-device state whenever auth finishes loading
@@ -148,6 +183,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
           updateReturningDeviceState(false);
           return;
         }
@@ -165,13 +201,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           setTimeout(async () => {
             if (!isMounted) return;
-            const [profileData, roleData] = await Promise.all([
+            const [profileData, roleData, accountKindData] = await Promise.all([
               fetchProfile(session.user.id),
               fetchUserRole(session.user.id),
+              fetchAccountKind(session.user.id),
             ]);
             if (isMounted) {
               setProfile(profileData);
               setRole(roleData);
+              setAccountKindState(accountKindData);
             }
 
             // Claim any pending guest review after login/signup verification
@@ -180,6 +218,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         } else {
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
         }
 
         // Update returning-device state after auth change
@@ -203,6 +242,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           setUser(null);
           setProfile(null);
           setRole(null);
+          setAccountKindState(null);
           updateReturningDeviceState(false);
           return;
         }
@@ -213,13 +253,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (session?.user) {
           registerDevice(session.user.id, session.user.email || '');
           refreshDeviceExpiry();
-          const [profileData, roleData] = await Promise.all([
+          const [profileData, roleData, accountKindData] = await Promise.all([
             fetchProfile(session.user.id),
             fetchUserRole(session.user.id),
+            fetchAccountKind(session.user.id),
           ]);
           if (isMounted) {
             setProfile(profileData);
             setRole(roleData);
+            setAccountKindState(accountKindData);
           }
         }
 
@@ -239,7 +281,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const signUp = async (email: string, password: string, fullName?: string, accountType?: string) => {
+  const signUp = async (email: string, password: string, fullName?: string, accountType?: string, accountKind?: AccountKind) => {
     const redirectUrl = `${window.location.origin}/`;
     
     const { error } = await supabase.auth.signUp({
@@ -250,6 +292,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         data: {
           full_name: fullName,
           account_type: accountType || 'buyer',
+          account_kind: accountKind || accountType || 'buyer',
         },
       },
     });
@@ -302,6 +345,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setSession(null);
     setProfile(null);
     setRole(null);
+    setAccountKindState(null);
     // After explicit logout, device is known but blocked
     setIsReturningDevice(false);
     setReturningDeviceEmail(null);
@@ -314,6 +358,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         session,
         profile,
         role,
+        accountKind,
         isLoading,
         isReturningDevice,
         returningDeviceEmail,
@@ -323,6 +368,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         signInWithApple,
         signOut,
         refreshProfile,
+        setAccountKind,
       }}
     >
       {children}

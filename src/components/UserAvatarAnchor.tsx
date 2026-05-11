@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { UserCircle, LayoutDashboard, Mail, LogOut, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { getDashboardRouteForRole } from "@/lib/dashboardRoute";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -27,17 +28,13 @@ export const UserAvatarAnchor = ({
 }: UserAvatarAnchorProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role, isLoading: authLoading } = useAuth();
+  const { user, profile, role, accountKind, isLoading: authLoading } = useAuth();
 
   const sizeClass = size === "sm" ? "h-8 w-8" : "h-9 w-9";
   const iconSize = size === "sm" ? "w-5 h-5" : "w-6 h-6";
 
-  const isProfessional = typeof window !== "undefined" && localStorage.getItem("oauth_account_kind") === "professional";
-  const dashRoute = getDashboardRoute?.() || (
-    role === "admin" ? "/admin" :
-    role === "business" ? (isProfessional ? "/pro-dashboard" : "/business") :
-    "/buyer"
-  );
+  const isProfessional = accountKind === "professional" || (typeof window !== "undefined" && localStorage.getItem("oauth_account_kind") === "professional");
+  const dashRoute = isProfessional ? "/pro-dashboard" : (getDashboardRoute?.() || getDashboardRouteForRole(role, accountKind));
 
   const initials = profile?.full_name?.charAt(0) || user?.email?.charAt(0) || "U";
 

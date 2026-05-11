@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, Routes, Route, useLocation } from 'react-router-dom';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
+import { getDashboardRouteForRole } from '@/lib/dashboardRoute';
 import { DashboardLayout } from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -2184,16 +2185,16 @@ const AdminBusiness = () => {
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, role, isLoading } = useAuth();
+  const { user, role, accountKind, isLoading } = useAuth();
 
   useEffect(() => {
     if (!isLoading) {
       if (!user) navigate('/auth');
       else if (role !== 'admin') {
-        navigate(role === 'business' ? '/business' : '/buyer');
+        navigate(getDashboardRouteForRole(role, accountKind));
       }
     }
-  }, [user, role, isLoading, navigate]);
+  }, [user, role, accountKind, isLoading, navigate]);
 
   if (isLoading) return <div className="min-h-screen flex items-center justify-center bg-background"><Loader2 className="w-8 h-8 animate-spin text-primary" /></div>;
   if (!user || role !== 'admin') return null;

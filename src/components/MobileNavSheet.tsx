@@ -26,7 +26,7 @@ export const MobileNavSheet = ({
 }: MobileNavSheetProps) => {
   const { t, i18n } = useTranslation();
   const navigate = useNavigate();
-  const { user, profile, role, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
+  const { user, profile, role, accountKind, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { unreadCount } = useMessageUnreadCount();
   const isAr = i18n.language === "ar";
   const isRTL = i18n.dir() === "rtl";
@@ -83,7 +83,7 @@ export const MobileNavSheet = ({
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-foreground truncate">{profile?.full_name || t("nav.user_fallback")}</p>
                   <p className="text-sm text-muted-foreground truncate">{user.email}</p>
-                  <p className="text-xs text-primary capitalize">{role || t("nav.role_buyer")}</p>
+                  <p className="text-xs text-primary capitalize">{accountKind === "professional" ? "Professional" : (role || t("nav.role_buyer"))}</p>
                 </div>
               </div>
             </div>

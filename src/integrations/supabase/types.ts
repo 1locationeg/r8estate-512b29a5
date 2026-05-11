@@ -2097,6 +2097,27 @@ export type Database = {
         }
         Relationships: []
       }
+      user_account_kinds: {
+        Row: {
+          account_kind: string
+          created_at: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          account_kind?: string
+          created_at?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          account_kind?: string
+          created_at?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_interests: {
         Row: {
           created_at: string
@@ -2558,6 +2579,7 @@ export type Database = {
         Args: { p_developer_id: string }
         Returns: undefined
       }
+      set_my_account_kind: { Args: { _account_kind: string }; Returns: string }
       set_my_account_type: {
         Args: { _account_type: string }
         Returns: Database["public"]["Enums"]["app_role"]
