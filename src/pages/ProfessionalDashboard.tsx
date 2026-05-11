@@ -148,7 +148,7 @@ export default function ProfessionalDashboard() {
 
   return (
     <TooltipProvider delayDuration={200}>
-      <div className="min-h-screen bg-[hsl(var(--page-bg))]">
+      <div className="emerald-mode min-h-screen bg-[hsl(var(--page-bg))]">
         {/* ── HERO ─────────────────────────────────────────── */}
         <div
           className="relative overflow-hidden border-b"
