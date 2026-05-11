@@ -461,6 +461,11 @@ const AdminUsers = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [callerPermission, setCallerPermission] = useState<string | null>(null);
   const [selectedUser, setSelectedUser] = useState<typeof users[0] | null>(null);
+  const [accountKinds, setAccountKinds] = useState<Record<string, string>>({});
+
+  const slugifyName = (s: string) =>
+    s.toLowerCase().normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-').replace(/-+/g, '-');
 
   const availableRoles: Array<{ value: string; label: string; color: string }> = [
     { value: 'buyer', label: 'Buyer', color: 'bg-accent/20 text-accent-foreground' },
@@ -484,6 +489,18 @@ const AdminUsers = () => {
       } else {
         setUsers(data?.users || []);
         setCallerPermission(data?.callerPermission || null);
+      }
+      // Load account_kind map
+      const list = Array.isArray(data) ? data : (data?.users || []);
+      const ids = list.map((u: any) => u.id).filter(Boolean);
+      if (ids.length > 0) {
+        const { data: kinds } = await supabase
+          .from('user_account_kinds')
+          .select('user_id, account_kind')
+          .in('user_id', ids);
+        const map: Record<string, string> = {};
+        (kinds || []).forEach((k: any) => { map[k.user_id] = k.account_kind; });
+        setAccountKinds(map);
       }
     } catch (err: any) {
       toast.error('Failed to load users');
@@ -676,6 +693,36 @@ const AdminUsers = () => {
   };
 
   const handleRemoveAdmin = async (userId: string) => {
+    return _handleRemoveAdmin(userId);
+  };
+
+  const handleAccountKindChange = async (userId: string, kind: 'buyer' | 'business' | 'professional') => {
+    setUpdatingId(userId);
+    try {
+      const { error } = await supabase.rpc('admin_set_account_kind' as any, {
+        _target_user: userId,
+        _kind: kind,
+      });
+      if (error) throw error;
+      setAccountKinds((prev) => ({ ...prev, [userId]: kind }));
+      if (kind === 'professional') {
+        const target = users.find((u) => u.id === userId);
+        const slug = target?.full_name ? slugifyName(target.full_name) : '';
+        toast.success('Upgraded to Professional', {
+          description: slug ? `Trust Page: /pro/${slug}` : 'Trust Page is live',
+          action: slug ? { label: 'Open', onClick: () => window.open(`/pro/${slug}`, '_blank') } : undefined,
+        });
+      } else {
+        toast.success(`Account set to ${kind}`);
+      }
+    } catch (err: any) {
+      toast.error(`Failed to upgrade: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
+
+  const _handleRemoveAdmin = async (userId: string) => {
     if (!isSuperAdmin) {
       toast.error('Only the Super Admin can remove admins');
       return;
@@ -950,6 +997,49 @@ const AdminUsers = () => {
                             <ExternalLink className="w-3 h-3 me-1" />Open Page
                           </Button>
                         )}
+                        {(() => {
+                          const isPro = accountKinds[u.id] === 'professional';
+                          const isUpdating = updatingId === u.id;
+                          const slug = u.full_name ? slugifyName(u.full_name) : '';
+                          return (
+                            <>
+                              <Button
+                                type="button"
+                                size="sm"
+                                variant={isPro ? 'default' : 'outline'}
+                                disabled={isUpdating}
+                                className={`text-[10px] h-7 px-2 ${isPro ? 'bg-emerald-600 hover:bg-emerald-700 text-white' : 'border-emerald-600/50 text-emerald-700 hover:bg-emerald-50'}`}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  void handleAccountKindChange(u.id, isPro ? 'buyer' : 'professional');
+                                }}
+                                title={isPro ? 'Revert to Buyer' : 'Upgrade to Professional'}
+                              >
+                                {isUpdating ? (
+                                  <Loader2 className="w-3 h-3 animate-spin" />
+                                ) : isPro ? (
+                                  <><CheckCircle className="w-3 h-3 me-0.5" />Professional</>
+                                ) : (
+                                  <><Sparkles className="w-3 h-3 me-0.5" />Make Pro</>
+                                )}
+                              </Button>
+                              {isPro && slug && (
+                                <Button
+                                  type="button"
+                                  size="sm"
+                                  variant="ghost"
+                                  className="text-[10px] h-7 px-2"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(`/pro/${slug}`, '_blank');
+                                  }}
+                                >
+                                  <ExternalLink className="w-3 h-3 me-1" />Trust Page
+                                </Button>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     </td>
                   )}
