@@ -179,6 +179,21 @@ const Sitemap = () => {
               </CollapsibleSection>
             );
           })}
+
+          {professionals.length > 0 && (
+            <CollapsibleSection title="Professionals" count={professionals.length}>
+              {professionals.map((p) => (
+                <Link
+                  key={p.path}
+                  to={p.path}
+                  className="flex items-center gap-2 text-sm text-primary hover:underline py-1"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-muted-foreground" />
+                  {p.name}
+                </Link>
+              ))}
+            </CollapsibleSection>
+          )}
         </div>
       </main>
       <Footer />
