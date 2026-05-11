@@ -45,6 +45,7 @@ const Auth = () => {
   const [whatsappNumber, setWhatsappNumber] = useState<string | null>(null);
 
   const oauthAccountType = localStorage.getItem('oauth_account_type');
+  const oauthAccountKind = localStorage.getItem('oauth_account_kind');
   const isBusinessGoogleCallback = Boolean(oauthAccountType === 'business' && user);
   const requiresBusinessRoleSync = Boolean(
     isBusinessGoogleCallback && role !== 'business' && role !== 'admin'
@@ -89,11 +90,16 @@ const Auth = () => {
   useEffect(() => {
     if (!authLoading && !isSyncingBusinessRole && user && !requiresBusinessRoleSync) {
       localStorage.removeItem('oauth_account_type');
+      const kind = oauthAccountKind;
+      localStorage.removeItem('oauth_account_kind');
       if (role === 'admin') navigate('/admin');
-      else if (role === 'business') navigate('/business');
+      else if (role === 'business') {
+        if (kind === 'professional') navigate('/pro/ahmed-hassan');
+        else navigate('/business');
+      }
       else navigate('/buyer');
     }
-  }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate]);
+  }, [user, role, authLoading, isSyncingBusinessRole, requiresBusinessRoleSync, navigate, oauthAccountKind]);
 
   const handleEmailContinue = (e: React.FormEvent) => {
     e.preventDefault();
@@ -159,6 +165,7 @@ const Auth = () => {
   const handleGoogleAuth = async () => {
     setIsLoading(true);
     try {
+      if (isProfessionalMode) localStorage.setItem('oauth_account_kind', 'professional');
       const { error } = await signInWithGoogle(accountType);
       if (error) toast({ title: 'Google sign in failed', description: error.message, variant: 'destructive' });
     } finally {
@@ -169,6 +176,7 @@ const Auth = () => {
   const handleAppleAuth = async () => {
     setIsLoading(true);
     try {
+      if (isProfessionalMode) localStorage.setItem('oauth_account_kind', 'professional');
       const { error } = await signInWithApple(accountType);
       if (error) toast({ title: 'Apple sign in failed', description: error.message, variant: 'destructive' });
     } finally {
