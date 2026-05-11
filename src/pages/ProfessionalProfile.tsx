@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
   Star, Shield, MapPin, Clock, Briefcase, Languages, Share2, Heart, UserPlus,
   Phone, Mail, Building2, Award, GraduationCap, Sparkles, BadgeCheck, ThumbsUp,
@@ -27,15 +29,7 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   facebook: Facebook, tiktok: MessageCircle, x: MessageCircle, website: Globe,
 };
 
-const SECTIONS = [
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'reviews', label: 'Reviews' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'portfolio', label: 'Portfolio' },
-  { id: 'certificates', label: 'Certificates' },
-  { id: 'faq', label: 'FAQ' },
-];
+const SECTION_IDS = ['about', 'experience', 'reviews', 'skills', 'portfolio', 'certificates', 'faq'] as const;
 
 const Stars = ({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md' | 'lg' }) => {
   const cls = size === 'lg' ? 'w-5 h-5' : size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5';
@@ -49,7 +43,7 @@ const Stars = ({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md' | 'lg
 };
 
 // Animated SVG trust ring
-const TrustRing = ({ score, size = 92 }: { score: number; size?: number }) => {
+const TrustRing = ({ score, size = 92, label }: { score: number; size?: number; label: string }) => {
   const stroke = 8;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -68,7 +62,7 @@ const TrustRing = ({ score, size = 92 }: { score: number; size?: number }) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-extrabold text-[hsl(var(--professionals))] leading-none">{score}</span>
-        <span className="text-[9px] uppercase tracking-wider text-[hsl(var(--professionals))]/80 font-bold">Trust</span>
+        <span className="text-[9px] uppercase tracking-wider text-[hsl(var(--professionals))]/80 font-bold">{label}</span>
       </div>
     </div>
   );
@@ -111,6 +105,7 @@ const BENEFIT_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 
 const ProfessionalProfilePage = () => {
   const { slug = 'ahmed-hassan' } = useParams();
+  const { t, i18n } = useTranslation();
   const { profile, accountKind } = useAuth();
   const basePro = useMemo(() => getMockProfessional(slug), [slug]);
   const { isOwner, data: pageData, save, uploadCover, upsertSection, removeSection } = useProfessionalPage();
@@ -135,6 +130,18 @@ const ProfessionalProfilePage = () => {
   const [bioOpen, setBioOpen] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
+  // Sync HTML dir with current language so the Trust Page mirrors correctly in Arabic.
+  useEffect(() => {
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', i18n.language);
+  }, [i18n.language]);
+
+  const sections = useMemo(
+    () => SECTION_IDS.map((id) => ({ id, label: t(`professional.profile.sections.${id}`) })),
+    [t, i18n.language],
+  );
+
   // Rotate emotional quotes
   useEffect(() => {
     if (!pro) return;
@@ -146,9 +153,9 @@ const ProfessionalProfilePage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Professional not found</h1>
-          <p className="text-muted-foreground mb-4">No Trust Page exists for "{slug}".</p>
-          <Link to="/" className="text-[hsl(var(--professionals))] underline">Return home</Link>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{t('professional.profile.not_found_title')}</h1>
+          <p className="text-muted-foreground mb-4">{t('professional.profile.not_found_desc', { slug })}</p>
+          <Link to="/" className="text-[hsl(var(--professionals))] underline">{t('professional.profile.return_home')}</Link>
         </div>
       </div>
     );
@@ -156,8 +163,8 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const url = `${window.location.origin}/pro/${pro.slug}`;
-    try { await navigator.clipboard.writeText(url); toast.success('Trust Page link copied'); }
-    catch { toast.error('Could not copy link'); }
+    try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
+    catch { toast.error(t('professional.profile.share_failed')); }
   };
 
   const scrollTo = (id: string) => {
@@ -169,12 +176,12 @@ const ProfessionalProfilePage = () => {
 
   // Derived benefits — 6 icon tiles
   const benefits = [
-    { key: 'shield', title: 'Delivery-first', desc: 'Filters developers by track record so you avoid handover delays.' },
-    { key: 'wallet', title: 'Plan structuring', desc: 'Designs payment plans that match your real cash flow timeline.' },
-    { key: 'heart', title: 'No pressure', desc: 'Patience-driven approach — never pushes a deal that does not fit you.' },
-    { key: 'crown', title: 'Top developers', desc: `Active deals across SODIC, Palm Hills, Mountain View, Emaar, and more.` },
-    { key: 'zap', title: 'Fast replies', desc: `Replies in ${pro.responseTime} on average — verified by platform tracking.` },
-    { key: 'file', title: 'Contract help', desc: 'Walks you through the contract clauses before you sign — for free.' },
+    { key: 'shield', title: t('professional.profile.benefits.shield_title'), desc: t('professional.profile.benefits.shield_desc') },
+    { key: 'wallet', title: t('professional.profile.benefits.wallet_title'), desc: t('professional.profile.benefits.wallet_desc') },
+    { key: 'heart', title: t('professional.profile.benefits.heart_title'), desc: t('professional.profile.benefits.heart_desc') },
+    { key: 'crown', title: t('professional.profile.benefits.crown_title'), desc: t('professional.profile.benefits.crown_desc') },
+    { key: 'zap', title: t('professional.profile.benefits.zap_title'), desc: t('professional.profile.benefits.zap_desc', { time: pro.responseTime }) },
+    { key: 'file', title: t('professional.profile.benefits.file_title'), desc: t('professional.profile.benefits.file_desc') },
   ];
 
   const topQuote = pro.reviews[quoteIdx];
@@ -256,17 +263,18 @@ const ProfessionalProfilePage = () => {
                       <span className="relative inline-flex items-center gap-1 px-2 py-0.5 bg-verified/10 border border-verified rounded-full overflow-hidden">
                         <span className="absolute inset-0 -translate-x-full animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                         <Shield className="w-3.5 h-3.5 text-verified fill-verified relative" />
-                        <span className="text-[10px] font-bold text-verified-foreground relative">Verified Pro</span>
+                        <span className="text-[10px] font-bold text-verified-foreground relative">{t('professional.profile.verified_pro')}</span>
                       </span>
                     )}
+                    <span className="ms-auto"><LanguageSwitcher /></span>
                   </div>
                   {isOwner ? (
                     <div className="mb-3 pe-7">
                       <EditableField
                         value={pro.headline}
                         onSave={(v) => save({ headline: v || null })}
-                        placeholder="Your one-line headline"
-                        label="Headline"
+                        placeholder={t('professional.profile.editable.headline_ph')}
+                        label={t('professional.profile.editable.headline_label')}
                       >
                         <p className="text-sm text-muted-foreground line-clamp-1">{pro.headline}</p>
                       </EditableField>
@@ -286,18 +294,18 @@ const ProfessionalProfilePage = () => {
                     <div className="inline-flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-[hsl(var(--professionals))]" />
                       <span className="text-base font-extrabold text-[hsl(var(--professionals))]">{pro.trustScore}</span>
-                      <span className="text-[11px] text-muted-foreground">trust</span>
+                      <span className="text-[11px] text-muted-foreground">{t('professional.profile.trust_short')}</span>
                     </div>
                     <div className="hidden md:block w-px h-6 bg-border" />
                     <div className="inline-flex items-center gap-1.5">
                       <HeartHandshake className="w-4 h-4 text-foreground" />
                       <span className="text-base font-extrabold text-foreground">{pro.dealsClosed}</span>
-                      <span className="text-[11px] text-muted-foreground">deals</span>
+                      <span className="text-[11px] text-muted-foreground">{t('professional.profile.deals_short')}</span>
                     </div>
                     <div className="hidden md:block w-px h-6 bg-border" />
                     <div className="inline-flex items-center gap-1.5">
                       <Briefcase className="w-4 h-4 text-foreground" />
-                      <span className="text-base font-extrabold text-foreground">{pro.yearsExperience}y</span>
+                      <span className="text-base font-extrabold text-foreground">{pro.yearsExperience}{t('professional.profile.years_suffix')}</span>
                     </div>
                   </div>
                 </div>
@@ -305,27 +313,27 @@ const ProfessionalProfilePage = () => {
                 {/* CTAs */}
                 <div className="flex md:flex-col gap-2 md:items-end">
                   <Button size="sm" className="gap-1.5 bg-[hsl(var(--professionals))] hover:bg-[hsl(var(--professionals)/0.9)] text-[hsl(var(--professionals-foreground))] shadow-lg shadow-[hsl(var(--professionals)/0.3)] flex-1 md:flex-none min-h-[44px]">
-                    <Phone className="w-4 h-4" /> Contact
+                    <Phone className="w-4 h-4" /> {t('professional.profile.contact')}
                   </Button>
                   <Button size="sm" variant="outline" className="gap-1.5 flex-1 md:flex-none min-h-[44px]">
-                    <Mail className="w-4 h-4" /> Message
+                    <Mail className="w-4 h-4" /> {t('professional.profile.message')}
                   </Button>
                   <div className="flex gap-1">
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]" onClick={handleShare}>
                         <Share2 className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Share Trust Page</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.share_tooltip')}</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]">
                         <Heart className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Save</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.save_tooltip')}</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]">
                         <UserPlus className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Refer a friend</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.refer_tooltip')}</TooltipContent></Tooltip>
                   </div>
                 </div>
               </div>
@@ -334,7 +342,7 @@ const ProfessionalProfilePage = () => {
               <div className="mt-4 pt-4 border-t border-border flex items-center justify-between flex-wrap gap-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/20 via-accent/30 to-accent/20 border border-accent/40">
                   <Trophy className="w-4 h-4 text-accent-foreground" />
-                  <span className="text-xs font-bold text-accent-foreground">TOP 1% in {pro.location.split(',')[0]} · 2024</span>
+                  <span className="text-xs font-bold text-accent-foreground">{t('professional.profile.top_in', { city: pro.location.split(',')[0], year: 2024 })}</span>
                 </div>
                 <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                   <span className="inline-flex items-center gap-1">
@@ -343,8 +351,8 @@ const ProfessionalProfilePage = () => {
                       <EditableField
                         value={pro.location}
                         onSave={(v) => save({ location: v || null })}
-                        placeholder="City, Country"
-                        label="Location"
+                        placeholder={t('professional.profile.editable.location_ph')}
+                        label={t('professional.profile.editable.location_label')}
                       >
                         <span>{pro.location}</span>
                       </EditableField>
@@ -352,7 +360,7 @@ const ProfessionalProfilePage = () => {
                       pro.location
                     )}
                   </span>
-                  <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />Replies {pro.responseTime}</span>
+                  <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />{t('professional.profile.replies_in', { time: pro.responseTime })}</span>
                   <span className="hidden sm:inline-flex items-center gap-1">
                     <Languages className="w-3 h-3" />
                     {isOwner ? (
@@ -365,8 +373,8 @@ const ProfessionalProfilePage = () => {
                               : null,
                           })
                         }
-                        placeholder="Arabic, English"
-                        label="Languages (comma separated)"
+                        placeholder={t('professional.profile.editable.languages_ph')}
+                        label={t('professional.profile.editable.languages_label')}
                       >
                         <span>{pro.languages.join(' · ')}</span>
                       </EditableField>
@@ -384,7 +392,7 @@ const ProfessionalProfilePage = () => {
         <nav className="sticky top-0 z-30 bg-background/85 backdrop-blur border-b border-border mt-6">
           <div className="max-w-[1100px] mx-auto px-4 md:px-6 overflow-x-auto">
             <ul className="flex items-center gap-1 py-2 min-w-max">
-              {SECTIONS.map(s => (
+              {sections.map(s => (
                 <li key={s.id}>
                   <button
                     onClick={() => scrollTo(s.id)}
@@ -405,10 +413,10 @@ const ProfessionalProfilePage = () => {
         {/* TRUST AT A GLANCE — 4 visual tiles */}
         <section className="max-w-[1100px] mx-auto px-4 md:px-6 pt-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatTile icon={Star} value={pro.rating.toFixed(1)} label="Rating" spark={[4.6, 4.7, 4.7, 4.8, 4.9, 4.9]} color="accent" />
-            <StatTile icon={ShieldCheck} value={String(pro.trustScore)} label="Trust" spark={[78, 82, 85, 88, 91, 94]} color="professionals" />
-            <StatTile icon={HeartHandshake} value={String(pro.dealsClosed)} label="Deals" spark={[60, 78, 95, 110, 128, 142]} color="primary" />
-            <StatTile icon={Zap} value={pro.responseTime} label="Replies" spark={[6, 5, 4, 3, 3, 2]} color="verified" />
+            <StatTile icon={Star} value={pro.rating.toFixed(1)} label={t('professional.profile.stats.rating')} spark={[4.6, 4.7, 4.7, 4.8, 4.9, 4.9]} color="accent" />
+            <StatTile icon={ShieldCheck} value={String(pro.trustScore)} label={t('professional.profile.stats.trust')} spark={[78, 82, 85, 88, 91, 94]} color="professionals" />
+            <StatTile icon={HeartHandshake} value={String(pro.dealsClosed)} label={t('professional.profile.stats.deals')} spark={[60, 78, 95, 110, 128, 142]} color="primary" />
+            <StatTile icon={Zap} value={pro.responseTime} label={t('professional.profile.stats.replies')} spark={[6, 5, 4, 3, 3, 2]} color="verified" />
           </div>
         </section>
 
@@ -416,7 +424,7 @@ const ProfessionalProfilePage = () => {
         <section className="max-w-[1100px] mx-auto px-4 md:px-6 pt-6">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-[hsl(var(--professionals))]" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Why buyers pick {pro.name.split(' ')[0]}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.why_pick', { name: pro.name.split(' ')[0] })}</h2>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
             {benefits.map(b => {
@@ -458,7 +466,7 @@ const ProfessionalProfilePage = () => {
                   <span className="text-[11px] text-muted-foreground">· {topQuote.dealType}</span>
                   {topQuote.verified && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-verified-foreground">
-                      <BadgeCheck className="w-3 h-3 text-verified" /> Verified deal
+                      <BadgeCheck className="w-3 h-3 text-verified" /> {t('professional.profile.verified_deal')}
                     </span>
                   )}
                 </div>
@@ -479,16 +487,16 @@ const ProfessionalProfilePage = () => {
             {/* About — compressed */}
             <section id="about" className="bg-card border border-border rounded-xl p-5">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">About</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.about_title')}</h2>
                 {isOwner && (
                   <EditableField
                     value={pro.bio}
                     onSave={(v) => save({ bio: v || null })}
                     multiline
-                    placeholder="Tell buyers your story…"
-                    label="Bio"
+                    placeholder={t('professional.profile.editable.bio_ph')}
+                    label={t('professional.profile.editable.bio_label')}
                   >
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-[hsl(var(--professionals))] cursor-pointer">Edit</span>
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-[hsl(var(--professionals))] cursor-pointer">{t('professional.profile.edit')}</span>
                   </EditableField>
                 )}
               </div>
@@ -496,7 +504,7 @@ const ProfessionalProfilePage = () => {
                 {bioOpen ? pro.bio : firstSentence}
                 {pro.bio.length > firstSentence.length && (
                   <button onClick={() => setBioOpen(o => !o)} className="ms-1 text-[hsl(var(--professionals))] font-semibold hover:underline">
-                    {bioOpen ? 'Less' : 'Read more'}
+                    {bioOpen ? t('professional.profile.less') : t('professional.profile.read_more')}
                   </button>
                 )}
               </p>
@@ -511,14 +519,14 @@ const ProfessionalProfilePage = () => {
 
             {/* Experience — compressed timeline */}
             <section id="experience" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">Experience</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">{t('professional.profile.sections.experience')}</h2>
               <ol className="relative ms-2 space-y-4 border-s-2 border-[hsl(var(--professionals)/0.2)] ps-5">
                 {pro.experience.map((e, i) => (
                   <li key={i} className="relative">
                     <span className="absolute -start-[25px] top-1 w-3.5 h-3.5 rounded-full bg-[hsl(var(--professionals))] ring-4 ring-card shadow" />
                     <div className="flex items-baseline justify-between flex-wrap gap-2">
                       <h3 className="text-sm font-bold text-foreground">{e.role}</h3>
-                      <span className="text-[10px] text-muted-foreground font-medium">{e.start} – {e.end ?? 'Present'}</span>
+                      <span className="text-[10px] text-muted-foreground font-medium">{e.start} – {e.end ?? t('professional.profile.present')}</span>
                     </div>
                     <Badge variant="outline" className="text-[10px] mt-1 mb-2 border-[hsl(var(--professionals)/0.3)] text-[hsl(var(--professionals))]">
                       {e.company}
@@ -539,16 +547,16 @@ const ProfessionalProfilePage = () => {
             {/* Reviews */}
             <section id="reviews" className="bg-card border border-border rounded-xl p-5">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Reviews</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.sections.reviews')}</h2>
                 <Button size="sm" variant="outline" className="gap-1.5 min-h-[44px]">
-                  <Star className="w-3.5 h-3.5" /> Write a review
+                  <Star className="w-3.5 h-3.5" /> {t('professional.profile.write_review')}
                 </Button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5 p-4 rounded-xl bg-gradient-to-br from-[hsl(var(--professionals)/0.06)] to-accent/5 border border-border">
                 <div className="text-center sm:text-start">
                   <div className="text-4xl font-extrabold text-foreground leading-none">{pro.rating.toFixed(1)}</div>
                   <Stars value={pro.rating} size="md" />
-                  <p className="text-[11px] text-muted-foreground mt-1">{pro.reviewCount} verified</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{t('professional.profile.verified_count', { count: pro.reviewCount })}</p>
                 </div>
                 <div className="sm:col-span-2 space-y-1">
                   {pro.ratingBreakdown.map(rb => (
@@ -583,7 +591,7 @@ const ProfessionalProfilePage = () => {
                 ))}
                 {pro.reviews.length > 2 && (
                   <button onClick={() => setShowAllReviews(s => !s)} className="w-full text-center text-xs font-semibold text-[hsl(var(--professionals))] py-2 hover:underline min-h-[44px]">
-                    {showAllReviews ? 'Show less' : `Show all ${pro.reviews.length} reviews`}
+                    {showAllReviews ? t('professional.profile.show_less') : t('professional.profile.show_all', { count: pro.reviews.length })}
                   </button>
                 )}
               </div>
@@ -591,7 +599,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Skills — compact grid */}
             <section id="skills" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Skills</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.sections.skills')}</h2>
               <div className="flex flex-wrap gap-2">
                 {pro.skills.map(s => (
                   <div key={s.name} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40 border border-border hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -606,7 +614,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Portfolio */}
             <section id="portfolio" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Recent deals</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.recent_deals')}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {pro.portfolio.map((p, i) => (
                   <div key={i} className="p-3 rounded-lg border border-border hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -623,7 +631,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Certificates + Education combined */}
             <section id="certificates" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Credentials</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.credentials')}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {pro.certificates.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 p-2.5 rounded-lg border border-border">
@@ -651,7 +659,7 @@ const ProfessionalProfilePage = () => {
 
             {/* FAQ */}
             <section id="faq" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">FAQ</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.sections.faq')}</h2>
               <div className="space-y-2">
                 {pro.faqs.map((f, i) => (
                   <details key={i} className="group rounded-lg border border-border p-3 hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -682,16 +690,16 @@ const ProfessionalProfilePage = () => {
                 style={{ background: 'radial-gradient(circle at 50% 0%, hsl(var(--professionals)/0.18), transparent 60%)' }}
               />
               <div className="relative flex flex-col items-center">
-                <TrustRing score={pro.trustScore} size={104} />
+                <TrustRing score={pro.trustScore} size={104} label={t('professional.profile.trust_ring_label')} />
                 <div className="mt-3 flex flex-wrap justify-center gap-1">
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-verified/10 text-[10px] font-bold text-verified-foreground border border-verified/40">
-                    <Shield className="w-3 h-3 text-verified" /> Verified
+                    <Shield className="w-3 h-3 text-verified" /> {t('professional.profile.trust_chips.verified')}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[hsl(var(--professionals)/0.1)] text-[10px] font-bold text-[hsl(var(--professionals))] border border-[hsl(var(--professionals)/0.3)]">
-                    <Zap className="w-3 h-3" /> Top responder
+                    <Zap className="w-3 h-3" /> {t('professional.profile.trust_chips.top_responder')}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/15 text-[10px] font-bold text-accent-foreground border border-accent/40">
-                    <Crown className="w-3 h-3" /> Elite
+                    <Crown className="w-3 h-3" /> {t('professional.profile.trust_chips.elite')}
                   </span>
                 </div>
               </div>
@@ -700,17 +708,17 @@ const ProfessionalProfilePage = () => {
             {/* Sticky quick contact */}
             <div className="bg-card border border-border rounded-2xl p-4 space-y-2">
               <Button size="sm" className="w-full gap-1.5 bg-[hsl(var(--professionals))] hover:bg-[hsl(var(--professionals)/0.9)] text-[hsl(var(--professionals-foreground))] min-h-[44px]">
-                <Phone className="w-4 h-4" /> Request a call
+                <Phone className="w-4 h-4" /> {t('professional.profile.request_call')}
               </Button>
               <Button size="sm" variant="outline" className="w-full gap-1.5 min-h-[44px]">
-                <Mail className="w-4 h-4" /> Send message
+                <Mail className="w-4 h-4" /> {t('professional.profile.send_message')}
               </Button>
             </div>
 
             {/* Affiliation */}
             {pro.affiliation && (
               <Link to={pro.affiliation.slug ? `/entity/${pro.affiliation.slug}` : '#'} className="block bg-card border border-border rounded-2xl p-4 hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Currently at</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{t('professional.profile.currently_at')}</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[hsl(var(--professionals)/0.15)] flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5 text-[hsl(var(--professionals))]" />
@@ -726,7 +734,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Verified socials — compact icon row */}
             <div className="bg-card border border-border rounded-2xl p-4">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Verified socials</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{t('professional.profile.verified_socials')}</p>
               <div className="flex flex-wrap gap-2">
                 {pro.socials.map((s, i) => {
                   const Icon = SOCIAL_ICONS[s.platform] ?? Globe;
@@ -765,9 +773,11 @@ const ProfessionalProfilePage = () => {
                   <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] uppercase tracking-wider text-white/70 font-bold">AI insight</p>
+                  <p className="text-[10px] uppercase tracking-wider text-white/70 font-bold">{t('professional.profile.ai_insight')}</p>
                   <p className="text-xs font-semibold text-white leading-snug mt-0.5">
-                    Replies <span className="font-extrabold text-accent">3× faster</span> than other Pros in {pro.location.split(',')[0]}.
+                    {t('professional.profile.ai_insight_pre')}
+                    <span className="font-extrabold text-accent">{t('professional.profile.ai_insight_highlight')}</span>
+                    {t('professional.profile.ai_insight_post', { city: pro.location.split(',')[0] })}
                   </p>
                 </div>
               </div>
@@ -776,9 +786,9 @@ const ProfessionalProfilePage = () => {
             {/* Refer */}
             <div className="bg-gradient-to-br from-accent/15 to-accent/5 border border-accent/40 rounded-2xl p-4 text-center">
               <UserPlus className="w-5 h-5 text-accent-foreground mx-auto mb-1.5" />
-              <p className="text-xs font-bold text-foreground mb-2">Share & earn Insight Credits</p>
+              <p className="text-xs font-bold text-foreground mb-2">{t('professional.profile.refer_card')}</p>
               <Button size="sm" variant="outline" className="w-full gap-1.5 min-h-[44px] border-accent/40" onClick={handleShare}>
-                <Share2 className="w-3.5 h-3.5" /> Share Trust Page
+                <Share2 className="w-3.5 h-3.5" /> {t('professional.profile.share_trust_page')}
               </Button>
             </div>
           </aside>

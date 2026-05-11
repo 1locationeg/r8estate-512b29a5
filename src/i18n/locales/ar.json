@@ -2081,7 +2081,105 @@
       "save_failed": "ما اتحفظش"
     },
     "profile": {
-      "verified": "محترف موثّق"
+      "verified": "محترف موثّق",
+      "not_found_title": "المحترف غير موجود",
+      "not_found_desc": "لا توجد صفحة ثقة بالاسم \"{{slug}}\".",
+      "return_home": "العودة للرئيسية",
+      "share_copied": "تم نسخ رابط صفحة الثقة",
+      "share_failed": "تعذّر نسخ الرابط",
+      "verified_pro": "محترف موثّق",
+      "contact": "تواصل",
+      "message": "رسالة",
+      "share_tooltip": "مشاركة صفحة الثقة",
+      "save_tooltip": "حفظ",
+      "refer_tooltip": "ادعُ صديق",
+      "top_in": "ضمن أفضل 1٪ في {{city}} · {{year}}",
+      "replies_in": "بيرد خلال {{time}}",
+      "trust_short": "ثقة",
+      "deals_short": "صفقات",
+      "years_suffix": "س",
+      "sections": {
+        "about": "نبذة",
+        "experience": "الخبرة",
+        "reviews": "التقييمات",
+        "skills": "المهارات",
+        "portfolio": "أعمال سابقة",
+        "certificates": "شهادات",
+        "faq": "أسئلة شائعة"
+      },
+      "stats": {
+        "rating": "التقييم",
+        "trust": "الثقة",
+        "deals": "الصفقات",
+        "replies": "الردود"
+      },
+      "why_pick": "ليه المشترين بيختاروا {{name}}",
+      "benefits": {
+        "shield_title": "تسليم أولاً",
+        "shield_desc": "بنفلتر المطورين حسب سجل التسليم عشان تتجنب التأخير.",
+        "wallet_title": "تنظيم الخطة",
+        "wallet_desc": "بيصمم خطط سداد متوافقة مع تدفقك المالي الحقيقي.",
+        "heart_title": "بدون ضغط",
+        "heart_desc": "أسلوب صبور — مفيش ضغط على صفقة مش مناسبة ليك.",
+        "crown_title": "كبار المطورين",
+        "crown_desc": "صفقات نشطة مع SODIC وPalm Hills وMountain View وEmaar وغيرهم.",
+        "zap_title": "ردود سريعة",
+        "zap_desc": "بيرد خلال {{time}} في المتوسط — موثّق عبر المنصة.",
+        "file_title": "مساعدة في العقد",
+        "file_desc": "بيشرح لك بنود العقد قبل التوقيع — مجانًا."
+      },
+      "verified_deal": "صفقة موثّقة",
+      "about_title": "نبذة",
+      "edit": "تعديل",
+      "read_more": "اقرأ المزيد",
+      "less": "أقل",
+      "write_review": "اكتب تقييم",
+      "verified_count": "{{count}} موثّق",
+      "show_less": "عرض أقل",
+      "show_all": "عرض كل التقييمات ({{count}})",
+      "recent_deals": "صفقات حديثة",
+      "credentials": "المؤهلات",
+      "present": "حتى الآن",
+      "trust_ring_label": "ثقة",
+      "trust_chips": {
+        "verified": "موثّق",
+        "top_responder": "أسرع رد",
+        "elite": "نخبة"
+      },
+      "request_call": "اطلب مكالمة",
+      "send_message": "ابعت رسالة",
+      "currently_at": "بيشتغل حاليًا في",
+      "verified_socials": "حسابات موثّقة",
+      "ai_insight": "رؤية الذكاء",
+      "ai_insight_pre": "بيرد ",
+      "ai_insight_highlight": "أسرع ٣ مرات",
+      "ai_insight_post": " من باقي المحترفين في {{city}}.",
+      "refer_card": "شارك واكسب نقاط Insight",
+      "share_trust_page": "شارك صفحة الثقة",
+      "editable": {
+        "headline_ph": "عنوانك في سطر واحد",
+        "headline_label": "العنوان",
+        "location_ph": "المدينة، الدولة",
+        "location_label": "الموقع",
+        "languages_ph": "العربية، الإنجليزية",
+        "languages_label": "اللغات (مفصولة بفاصلة)",
+        "bio_ph": "احكي قصتك للمشترين…",
+        "bio_label": "نبذة"
+      },
+      "cover": {
+        "edit": "تعديل الغلاف",
+        "uploading": "جارٍ الرفع…"
+      },
+      "custom": {
+        "eyebrow": "قسم مخصص",
+        "title_ph": "عنوان القسم (مثل: جوائز، صحافة، جولة فيديو)",
+        "body_ph": "احكي للمشترين إيه اللي بيميز ده…",
+        "save": "حفظ",
+        "cancel": "إلغاء",
+        "edit": "تعديل القسم",
+        "delete": "حذف القسم",
+        "add": "إضافة قسم"
+      }
     }
   }
 }
