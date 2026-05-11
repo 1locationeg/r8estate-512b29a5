@@ -8,8 +8,11 @@ import {
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { useAuth } from '@/contexts/AuthContext';
 import { getMockProfessional } from '@/data/mockProfessionals';
+import { generateAvatar } from '@/lib/avatarUtils';
 
 const PRO = 'hsl(var(--professionals))';
 const NAVY = 'hsl(var(--primary))';
@@ -75,7 +78,15 @@ function MiniRing({ value, size = 56, stroke = 6, color = PRO }: { value: number
 }
 
 export default function ProfessionalDashboard() {
-  const pro = useMemo(() => getMockProfessional('ahmed-hassan')!, []);
+  const { user, profile } = useAuth();
+  const basePro = useMemo(() => getMockProfessional('ahmed-hassan')!, []);
+  const signedInName = profile?.full_name || user?.user_metadata?.full_name || user?.email?.split('@')[0];
+  const signedInAvatar = profile?.avatar_url || user?.user_metadata?.avatar_url || user?.user_metadata?.picture;
+  const pro = useMemo(() => ({
+    ...basePro,
+    name: signedInName || basePro.name,
+    avatar: signedInAvatar || basePro.avatar || generateAvatar(signedInName || basePro.name, 'developer'),
+  }), [basePro, signedInAvatar, signedInName]);
   const trustUrl = `/pro/${pro.slug}`;
 
   const stats = [
@@ -158,12 +169,15 @@ export default function ProfessionalDashboard() {
             <div className="flex items-center gap-4 md:gap-5">
               {/* Avatar */}
               <div className="relative shrink-0">
-                <div
-                  className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-white text-2xl font-bold ring-4 ring-white/30"
-                  style={{ background: `linear-gradient(135deg, ${PRO}, ${GOLD})` }}
-                >
-                  {pro.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
-                </div>
+                <Avatar className="w-16 h-16 md:w-20 md:h-20 ring-4 ring-white/30">
+                  <AvatarImage src={pro.avatar} alt={pro.name} className="object-cover" />
+                  <AvatarFallback
+                    className="text-white text-2xl font-bold"
+                    style={{ background: `linear-gradient(135deg, ${PRO}, ${GOLD})` }}
+                  >
+                    {pro.name.split(' ').map(n => n[0]).join('').slice(0, 2)}
+                  </AvatarFallback>
+                </Avatar>
                 {pro.verified && (
                   <span className="absolute -bottom-1 -end-1 w-6 h-6 rounded-full bg-emerald-500 ring-2 ring-white flex items-center justify-center">
                     <CheckCircle2 className="w-3.5 h-3.5 text-white" />
