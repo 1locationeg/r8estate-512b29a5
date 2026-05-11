@@ -14,6 +14,16 @@ import { Slider } from '@/components/ui/slider';
 export const COVER_OUTPUT_W = 1600;
 export const COVER_OUTPUT_H = 600;
 const ASPECT = COVER_OUTPUT_W / COVER_OUTPUT_H;
+/**
+ * Fraction of the cover (from the bottom) that the identity card overlaps
+ * on the live page. Hero is 176px (mobile) / 240px (desktop), card overlaps
+ * 32px / 40px → ~17-18%. We round up to 20% for a comfortable safe margin.
+ */
+const SAFE_BOTTOM_FRACTION = 0.2;
+/** Avatar sits in the bottom-start corner of the identity card, which itself
+ *  is inset on desktop. Mark a small bottom-start zone so faces / logos don't
+ *  end up tucked behind the avatar puck. */
+const SAFE_AVATAR_FRACTION = 0.18;
 
 interface CoverCropperModalProps {
   open: boolean;
@@ -68,6 +78,7 @@ export function CoverCropperModal({ open, file, busy, onCancel, onConfirm }: Cov
 
         <div className="relative w-full h-[40vh] sm:h-[50vh] bg-muted">
           {src && (
+            <>
             <Cropper
               image={src}
               crop={crop}
@@ -81,10 +92,44 @@ export function CoverCropperModal({ open, file, busy, onCancel, onConfirm }: Cov
               showGrid
               objectFit="contain"
             />
+            {/* Safe-area overlay — shows the zone covered by the identity card
+                + avatar on the live page so users keep faces / logos visible. */}
+            <div className="pointer-events-none absolute inset-0 z-10 flex items-center justify-center">
+              <div
+                className="relative"
+                style={{ aspectRatio: `${ASPECT}`, height: '100%', maxWidth: '100%' }}
+              >
+                <div
+                  className="absolute inset-x-0 bottom-0 border-t-2 border-dashed border-[hsl(var(--accent))]"
+                  style={{
+                    height: `${SAFE_BOTTOM_FRACTION * 100}%`,
+                    background:
+                      'repeating-linear-gradient(135deg, hsl(var(--accent)/0.18) 0 8px, transparent 8px 16px)',
+                  }}
+                >
+                  <span className="absolute top-1 start-1 text-[10px] font-bold uppercase tracking-wider text-[hsl(var(--accent))] bg-card/85 px-1.5 py-0.5 rounded">
+                    {t('professional.profile.cover.safe_card')}
+                  </span>
+                </div>
+                <div
+                  className="absolute bottom-0 start-0 rounded-tr-2xl border-t-2 border-e-2 border-dashed border-[hsl(var(--professionals))]"
+                  style={{
+                    width: `${SAFE_AVATAR_FRACTION * 100}%`,
+                    aspectRatio: '1 / 1',
+                    background: 'hsl(var(--professionals)/0.18)',
+                  }}
+                />
+              </div>
+            </div>
+            </>
           )}
         </div>
 
         <div className="px-4 md:px-6 py-3 space-y-3 border-t border-border bg-card">
+          <p className="text-[11px] text-muted-foreground leading-snug">
+            <span className="inline-block w-2 h-2 align-middle me-1 rounded-sm bg-[hsl(var(--accent)/0.4)] border border-[hsl(var(--accent))]" />
+            {t('professional.profile.cover.safe_hint')}
+          </p>
           <div className="flex items-center gap-3">
             <ZoomOut className="w-4 h-4 text-muted-foreground shrink-0" />
             <Slider
