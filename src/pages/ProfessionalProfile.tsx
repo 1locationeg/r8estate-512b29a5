@@ -413,10 +413,10 @@ const ProfessionalProfilePage = () => {
         {/* TRUST AT A GLANCE — 4 visual tiles */}
         <section className="max-w-[1100px] mx-auto px-4 md:px-6 pt-6">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            <StatTile icon={Star} value={pro.rating.toFixed(1)} label="Rating" spark={[4.6, 4.7, 4.7, 4.8, 4.9, 4.9]} color="accent" />
-            <StatTile icon={ShieldCheck} value={String(pro.trustScore)} label="Trust" spark={[78, 82, 85, 88, 91, 94]} color="professionals" />
-            <StatTile icon={HeartHandshake} value={String(pro.dealsClosed)} label="Deals" spark={[60, 78, 95, 110, 128, 142]} color="primary" />
-            <StatTile icon={Zap} value={pro.responseTime} label="Replies" spark={[6, 5, 4, 3, 3, 2]} color="verified" />
+            <StatTile icon={Star} value={pro.rating.toFixed(1)} label={t('professional.profile.stats.rating')} spark={[4.6, 4.7, 4.7, 4.8, 4.9, 4.9]} color="accent" />
+            <StatTile icon={ShieldCheck} value={String(pro.trustScore)} label={t('professional.profile.stats.trust')} spark={[78, 82, 85, 88, 91, 94]} color="professionals" />
+            <StatTile icon={HeartHandshake} value={String(pro.dealsClosed)} label={t('professional.profile.stats.deals')} spark={[60, 78, 95, 110, 128, 142]} color="primary" />
+            <StatTile icon={Zap} value={pro.responseTime} label={t('professional.profile.stats.replies')} spark={[6, 5, 4, 3, 3, 2]} color="verified" />
           </div>
         </section>
 
@@ -424,7 +424,7 @@ const ProfessionalProfilePage = () => {
         <section className="max-w-[1100px] mx-auto px-4 md:px-6 pt-6">
           <div className="flex items-center gap-2 mb-3">
             <Sparkles className="w-4 h-4 text-[hsl(var(--professionals))]" />
-            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Why buyers pick {pro.name.split(' ')[0]}</h2>
+            <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.why_pick', { name: pro.name.split(' ')[0] })}</h2>
           </div>
           <div className="grid grid-cols-3 md:grid-cols-6 gap-2 md:gap-3">
             {benefits.map(b => {
@@ -466,7 +466,7 @@ const ProfessionalProfilePage = () => {
                   <span className="text-[11px] text-muted-foreground">· {topQuote.dealType}</span>
                   {topQuote.verified && (
                     <span className="inline-flex items-center gap-1 text-[10px] text-verified-foreground">
-                      <BadgeCheck className="w-3 h-3 text-verified" /> Verified deal
+                      <BadgeCheck className="w-3 h-3 text-verified" /> {t('professional.profile.verified_deal')}
                     </span>
                   )}
                 </div>
@@ -487,16 +487,16 @@ const ProfessionalProfilePage = () => {
             {/* About — compressed */}
             <section id="about" className="bg-card border border-border rounded-xl p-5">
               <div className="flex items-center justify-between mb-2">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">About</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.about_title')}</h2>
                 {isOwner && (
                   <EditableField
                     value={pro.bio}
                     onSave={(v) => save({ bio: v || null })}
                     multiline
-                    placeholder="Tell buyers your story…"
-                    label="Bio"
+                    placeholder={t('professional.profile.editable.bio_ph')}
+                    label={t('professional.profile.editable.bio_label')}
                   >
-                    <span className="text-[10px] uppercase tracking-wider font-bold text-[hsl(var(--professionals))] cursor-pointer">Edit</span>
+                    <span className="text-[10px] uppercase tracking-wider font-bold text-[hsl(var(--professionals))] cursor-pointer">{t('professional.profile.edit')}</span>
                   </EditableField>
                 )}
               </div>
@@ -504,7 +504,7 @@ const ProfessionalProfilePage = () => {
                 {bioOpen ? pro.bio : firstSentence}
                 {pro.bio.length > firstSentence.length && (
                   <button onClick={() => setBioOpen(o => !o)} className="ms-1 text-[hsl(var(--professionals))] font-semibold hover:underline">
-                    {bioOpen ? 'Less' : 'Read more'}
+                    {bioOpen ? t('professional.profile.less') : t('professional.profile.read_more')}
                   </button>
                 )}
               </p>
@@ -519,14 +519,14 @@ const ProfessionalProfilePage = () => {
 
             {/* Experience — compressed timeline */}
             <section id="experience" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">Experience</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-4">{t('professional.profile.sections.experience')}</h2>
               <ol className="relative ms-2 space-y-4 border-s-2 border-[hsl(var(--professionals)/0.2)] ps-5">
                 {pro.experience.map((e, i) => (
                   <li key={i} className="relative">
                     <span className="absolute -start-[25px] top-1 w-3.5 h-3.5 rounded-full bg-[hsl(var(--professionals))] ring-4 ring-card shadow" />
                     <div className="flex items-baseline justify-between flex-wrap gap-2">
                       <h3 className="text-sm font-bold text-foreground">{e.role}</h3>
-                      <span className="text-[10px] text-muted-foreground font-medium">{e.start} – {e.end ?? 'Present'}</span>
+                      <span className="text-[10px] text-muted-foreground font-medium">{e.start} – {e.end ?? t('professional.profile.present')}</span>
                     </div>
                     <Badge variant="outline" className="text-[10px] mt-1 mb-2 border-[hsl(var(--professionals)/0.3)] text-[hsl(var(--professionals))]">
                       {e.company}
@@ -547,16 +547,16 @@ const ProfessionalProfilePage = () => {
             {/* Reviews */}
             <section id="reviews" className="bg-card border border-border rounded-xl p-5">
               <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
-                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">Reviews</h2>
+                <h2 className="text-sm font-bold uppercase tracking-wider text-foreground">{t('professional.profile.sections.reviews')}</h2>
                 <Button size="sm" variant="outline" className="gap-1.5 min-h-[44px]">
-                  <Star className="w-3.5 h-3.5" /> Write a review
+                  <Star className="w-3.5 h-3.5" /> {t('professional.profile.write_review')}
                 </Button>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5 p-4 rounded-xl bg-gradient-to-br from-[hsl(var(--professionals)/0.06)] to-accent/5 border border-border">
                 <div className="text-center sm:text-start">
                   <div className="text-4xl font-extrabold text-foreground leading-none">{pro.rating.toFixed(1)}</div>
                   <Stars value={pro.rating} size="md" />
-                  <p className="text-[11px] text-muted-foreground mt-1">{pro.reviewCount} verified</p>
+                  <p className="text-[11px] text-muted-foreground mt-1">{t('professional.profile.verified_count', { count: pro.reviewCount })}</p>
                 </div>
                 <div className="sm:col-span-2 space-y-1">
                   {pro.ratingBreakdown.map(rb => (
@@ -591,7 +591,7 @@ const ProfessionalProfilePage = () => {
                 ))}
                 {pro.reviews.length > 2 && (
                   <button onClick={() => setShowAllReviews(s => !s)} className="w-full text-center text-xs font-semibold text-[hsl(var(--professionals))] py-2 hover:underline min-h-[44px]">
-                    {showAllReviews ? 'Show less' : `Show all ${pro.reviews.length} reviews`}
+                    {showAllReviews ? t('professional.profile.show_less') : t('professional.profile.show_all', { count: pro.reviews.length })}
                   </button>
                 )}
               </div>
@@ -599,7 +599,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Skills — compact grid */}
             <section id="skills" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Skills</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.sections.skills')}</h2>
               <div className="flex flex-wrap gap-2">
                 {pro.skills.map(s => (
                   <div key={s.name} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-muted/40 border border-border hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -614,7 +614,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Portfolio */}
             <section id="portfolio" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Recent deals</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.recent_deals')}</h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                 {pro.portfolio.map((p, i) => (
                   <div key={i} className="p-3 rounded-lg border border-border hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -631,7 +631,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Certificates + Education combined */}
             <section id="certificates" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">Credentials</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.credentials')}</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {pro.certificates.map((c, i) => (
                   <div key={i} className="flex items-start gap-2 p-2.5 rounded-lg border border-border">
@@ -659,7 +659,7 @@ const ProfessionalProfilePage = () => {
 
             {/* FAQ */}
             <section id="faq" className="bg-card border border-border rounded-xl p-5">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">FAQ</h2>
+              <h2 className="text-sm font-bold uppercase tracking-wider text-foreground mb-3">{t('professional.profile.sections.faq')}</h2>
               <div className="space-y-2">
                 {pro.faqs.map((f, i) => (
                   <details key={i} className="group rounded-lg border border-border p-3 hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
@@ -693,13 +693,13 @@ const ProfessionalProfilePage = () => {
                 <TrustRing score={pro.trustScore} size={104} label={t('professional.profile.trust_ring_label')} />
                 <div className="mt-3 flex flex-wrap justify-center gap-1">
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-verified/10 text-[10px] font-bold text-verified-foreground border border-verified/40">
-                    <Shield className="w-3 h-3 text-verified" /> Verified
+                    <Shield className="w-3 h-3 text-verified" /> {t('professional.profile.trust_chips.verified')}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-[hsl(var(--professionals)/0.1)] text-[10px] font-bold text-[hsl(var(--professionals))] border border-[hsl(var(--professionals)/0.3)]">
-                    <Zap className="w-3 h-3" /> Top responder
+                    <Zap className="w-3 h-3" /> {t('professional.profile.trust_chips.top_responder')}
                   </span>
                   <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-accent/15 text-[10px] font-bold text-accent-foreground border border-accent/40">
-                    <Crown className="w-3 h-3" /> Elite
+                    <Crown className="w-3 h-3" /> {t('professional.profile.trust_chips.elite')}
                   </span>
                 </div>
               </div>
@@ -708,17 +708,17 @@ const ProfessionalProfilePage = () => {
             {/* Sticky quick contact */}
             <div className="bg-card border border-border rounded-2xl p-4 space-y-2">
               <Button size="sm" className="w-full gap-1.5 bg-[hsl(var(--professionals))] hover:bg-[hsl(var(--professionals)/0.9)] text-[hsl(var(--professionals-foreground))] min-h-[44px]">
-                <Phone className="w-4 h-4" /> Request a call
+                <Phone className="w-4 h-4" /> {t('professional.profile.request_call')}
               </Button>
               <Button size="sm" variant="outline" className="w-full gap-1.5 min-h-[44px]">
-                <Mail className="w-4 h-4" /> Send message
+                <Mail className="w-4 h-4" /> {t('professional.profile.send_message')}
               </Button>
             </div>
 
             {/* Affiliation */}
             {pro.affiliation && (
               <Link to={pro.affiliation.slug ? `/entity/${pro.affiliation.slug}` : '#'} className="block bg-card border border-border rounded-2xl p-4 hover:border-[hsl(var(--professionals)/0.4)] transition-colors">
-                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Currently at</p>
+                <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{t('professional.profile.currently_at')}</p>
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-[hsl(var(--professionals)/0.15)] flex items-center justify-center shrink-0">
                     <Building2 className="w-5 h-5 text-[hsl(var(--professionals))]" />
@@ -734,7 +734,7 @@ const ProfessionalProfilePage = () => {
 
             {/* Verified socials — compact icon row */}
             <div className="bg-card border border-border rounded-2xl p-4">
-              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">Verified socials</p>
+              <p className="text-[10px] uppercase tracking-wider text-muted-foreground font-bold mb-2">{t('professional.profile.verified_socials')}</p>
               <div className="flex flex-wrap gap-2">
                 {pro.socials.map((s, i) => {
                   const Icon = SOCIAL_ICONS[s.platform] ?? Globe;
@@ -773,9 +773,11 @@ const ProfessionalProfilePage = () => {
                   <Bot className="w-4 h-4 text-white" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-[10px] uppercase tracking-wider text-white/70 font-bold">AI insight</p>
+                  <p className="text-[10px] uppercase tracking-wider text-white/70 font-bold">{t('professional.profile.ai_insight')}</p>
                   <p className="text-xs font-semibold text-white leading-snug mt-0.5">
-                    Replies <span className="font-extrabold text-accent">3× faster</span> than other Pros in {pro.location.split(',')[0]}.
+                    {t('professional.profile.ai_insight_pre')}
+                    <span className="font-extrabold text-accent">{t('professional.profile.ai_insight_highlight')}</span>
+                    {t('professional.profile.ai_insight_post', { city: pro.location.split(',')[0] })}
                   </p>
                 </div>
               </div>
@@ -784,9 +786,9 @@ const ProfessionalProfilePage = () => {
             {/* Refer */}
             <div className="bg-gradient-to-br from-accent/15 to-accent/5 border border-accent/40 rounded-2xl p-4 text-center">
               <UserPlus className="w-5 h-5 text-accent-foreground mx-auto mb-1.5" />
-              <p className="text-xs font-bold text-foreground mb-2">Share & earn Insight Credits</p>
+              <p className="text-xs font-bold text-foreground mb-2">{t('professional.profile.refer_card')}</p>
               <Button size="sm" variant="outline" className="w-full gap-1.5 min-h-[44px] border-accent/40" onClick={handleShare}>
-                <Share2 className="w-3.5 h-3.5" /> Share Trust Page
+                <Share2 className="w-3.5 h-3.5" /> {t('professional.profile.share_trust_page')}
               </Button>
             </div>
           </aside>
