@@ -1,5 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
   Star, Shield, MapPin, Clock, Briefcase, Languages, Share2, Heart, UserPlus,
   Phone, Mail, Building2, Award, GraduationCap, Sparkles, BadgeCheck, ThumbsUp,
@@ -27,15 +29,7 @@ const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> 
   facebook: Facebook, tiktok: MessageCircle, x: MessageCircle, website: Globe,
 };
 
-const SECTIONS = [
-  { id: 'about', label: 'About' },
-  { id: 'experience', label: 'Experience' },
-  { id: 'reviews', label: 'Reviews' },
-  { id: 'skills', label: 'Skills' },
-  { id: 'portfolio', label: 'Portfolio' },
-  { id: 'certificates', label: 'Certificates' },
-  { id: 'faq', label: 'FAQ' },
-];
+const SECTION_IDS = ['about', 'experience', 'reviews', 'skills', 'portfolio', 'certificates', 'faq'] as const;
 
 const Stars = ({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md' | 'lg' }) => {
   const cls = size === 'lg' ? 'w-5 h-5' : size === 'md' ? 'w-4 h-4' : 'w-3.5 h-3.5';
@@ -49,7 +43,7 @@ const Stars = ({ value, size = 'sm' }: { value: number; size?: 'sm' | 'md' | 'lg
 };
 
 // Animated SVG trust ring
-const TrustRing = ({ score, size = 92 }: { score: number; size?: number }) => {
+const TrustRing = ({ score, size = 92, label }: { score: number; size?: number; label: string }) => {
   const stroke = 8;
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
@@ -68,7 +62,7 @@ const TrustRing = ({ score, size = 92 }: { score: number; size?: number }) => {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-2xl font-extrabold text-[hsl(var(--professionals))] leading-none">{score}</span>
-        <span className="text-[9px] uppercase tracking-wider text-[hsl(var(--professionals))]/80 font-bold">Trust</span>
+        <span className="text-[9px] uppercase tracking-wider text-[hsl(var(--professionals))]/80 font-bold">{label}</span>
       </div>
     </div>
   );
@@ -111,6 +105,7 @@ const BENEFIT_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 
 const ProfessionalProfilePage = () => {
   const { slug = 'ahmed-hassan' } = useParams();
+  const { t, i18n } = useTranslation();
   const { profile, accountKind } = useAuth();
   const basePro = useMemo(() => getMockProfessional(slug), [slug]);
   const { isOwner, data: pageData, save, uploadCover, upsertSection, removeSection } = useProfessionalPage();
@@ -135,6 +130,18 @@ const ProfessionalProfilePage = () => {
   const [bioOpen, setBioOpen] = useState(false);
   const [showAllReviews, setShowAllReviews] = useState(false);
 
+  // Sync HTML dir with current language so the Trust Page mirrors correctly in Arabic.
+  useEffect(() => {
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    document.documentElement.setAttribute('dir', dir);
+    document.documentElement.setAttribute('lang', i18n.language);
+  }, [i18n.language]);
+
+  const sections = useMemo(
+    () => SECTION_IDS.map((id) => ({ id, label: t(`professional.profile.sections.${id}`) })),
+    [t, i18n.language],
+  );
+
   // Rotate emotional quotes
   useEffect(() => {
     if (!pro) return;
@@ -146,9 +153,9 @@ const ProfessionalProfilePage = () => {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center p-6">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">Professional not found</h1>
-          <p className="text-muted-foreground mb-4">No Trust Page exists for "{slug}".</p>
-          <Link to="/" className="text-[hsl(var(--professionals))] underline">Return home</Link>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{t('professional.profile.not_found_title')}</h1>
+          <p className="text-muted-foreground mb-4">{t('professional.profile.not_found_desc', { slug })}</p>
+          <Link to="/" className="text-[hsl(var(--professionals))] underline">{t('professional.profile.return_home')}</Link>
         </div>
       </div>
     );
@@ -156,8 +163,8 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const url = `${window.location.origin}/pro/${pro.slug}`;
-    try { await navigator.clipboard.writeText(url); toast.success('Trust Page link copied'); }
-    catch { toast.error('Could not copy link'); }
+    try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
+    catch { toast.error(t('professional.profile.share_failed')); }
   };
 
   const scrollTo = (id: string) => {
@@ -169,12 +176,12 @@ const ProfessionalProfilePage = () => {
 
   // Derived benefits — 6 icon tiles
   const benefits = [
-    { key: 'shield', title: 'Delivery-first', desc: 'Filters developers by track record so you avoid handover delays.' },
-    { key: 'wallet', title: 'Plan structuring', desc: 'Designs payment plans that match your real cash flow timeline.' },
-    { key: 'heart', title: 'No pressure', desc: 'Patience-driven approach — never pushes a deal that does not fit you.' },
-    { key: 'crown', title: 'Top developers', desc: `Active deals across SODIC, Palm Hills, Mountain View, Emaar, and more.` },
-    { key: 'zap', title: 'Fast replies', desc: `Replies in ${pro.responseTime} on average — verified by platform tracking.` },
-    { key: 'file', title: 'Contract help', desc: 'Walks you through the contract clauses before you sign — for free.' },
+    { key: 'shield', title: t('professional.profile.benefits.shield_title'), desc: t('professional.profile.benefits.shield_desc') },
+    { key: 'wallet', title: t('professional.profile.benefits.wallet_title'), desc: t('professional.profile.benefits.wallet_desc') },
+    { key: 'heart', title: t('professional.profile.benefits.heart_title'), desc: t('professional.profile.benefits.heart_desc') },
+    { key: 'crown', title: t('professional.profile.benefits.crown_title'), desc: t('professional.profile.benefits.crown_desc') },
+    { key: 'zap', title: t('professional.profile.benefits.zap_title'), desc: t('professional.profile.benefits.zap_desc', { time: pro.responseTime }) },
+    { key: 'file', title: t('professional.profile.benefits.file_title'), desc: t('professional.profile.benefits.file_desc') },
   ];
 
   const topQuote = pro.reviews[quoteIdx];
@@ -256,17 +263,18 @@ const ProfessionalProfilePage = () => {
                       <span className="relative inline-flex items-center gap-1 px-2 py-0.5 bg-verified/10 border border-verified rounded-full overflow-hidden">
                         <span className="absolute inset-0 -translate-x-full animate-[shimmer_3s_infinite] bg-gradient-to-r from-transparent via-white/40 to-transparent" />
                         <Shield className="w-3.5 h-3.5 text-verified fill-verified relative" />
-                        <span className="text-[10px] font-bold text-verified-foreground relative">Verified Pro</span>
+                        <span className="text-[10px] font-bold text-verified-foreground relative">{t('professional.profile.verified_pro')}</span>
                       </span>
                     )}
+                    <span className="ms-auto"><LanguageSwitcher /></span>
                   </div>
                   {isOwner ? (
                     <div className="mb-3 pe-7">
                       <EditableField
                         value={pro.headline}
                         onSave={(v) => save({ headline: v || null })}
-                        placeholder="Your one-line headline"
-                        label="Headline"
+                        placeholder={t('professional.profile.editable.headline_ph')}
+                        label={t('professional.profile.editable.headline_label')}
                       >
                         <p className="text-sm text-muted-foreground line-clamp-1">{pro.headline}</p>
                       </EditableField>
@@ -286,18 +294,18 @@ const ProfessionalProfilePage = () => {
                     <div className="inline-flex items-center gap-1.5">
                       <ShieldCheck className="w-4 h-4 text-[hsl(var(--professionals))]" />
                       <span className="text-base font-extrabold text-[hsl(var(--professionals))]">{pro.trustScore}</span>
-                      <span className="text-[11px] text-muted-foreground">trust</span>
+                      <span className="text-[11px] text-muted-foreground">{t('professional.profile.trust_short')}</span>
                     </div>
                     <div className="hidden md:block w-px h-6 bg-border" />
                     <div className="inline-flex items-center gap-1.5">
                       <HeartHandshake className="w-4 h-4 text-foreground" />
                       <span className="text-base font-extrabold text-foreground">{pro.dealsClosed}</span>
-                      <span className="text-[11px] text-muted-foreground">deals</span>
+                      <span className="text-[11px] text-muted-foreground">{t('professional.profile.deals_short')}</span>
                     </div>
                     <div className="hidden md:block w-px h-6 bg-border" />
                     <div className="inline-flex items-center gap-1.5">
                       <Briefcase className="w-4 h-4 text-foreground" />
-                      <span className="text-base font-extrabold text-foreground">{pro.yearsExperience}y</span>
+                      <span className="text-base font-extrabold text-foreground">{pro.yearsExperience}{t('professional.profile.years_suffix')}</span>
                     </div>
                   </div>
                 </div>
@@ -305,27 +313,27 @@ const ProfessionalProfilePage = () => {
                 {/* CTAs */}
                 <div className="flex md:flex-col gap-2 md:items-end">
                   <Button size="sm" className="gap-1.5 bg-[hsl(var(--professionals))] hover:bg-[hsl(var(--professionals)/0.9)] text-[hsl(var(--professionals-foreground))] shadow-lg shadow-[hsl(var(--professionals)/0.3)] flex-1 md:flex-none min-h-[44px]">
-                    <Phone className="w-4 h-4" /> Contact
+                    <Phone className="w-4 h-4" /> {t('professional.profile.contact')}
                   </Button>
                   <Button size="sm" variant="outline" className="gap-1.5 flex-1 md:flex-none min-h-[44px]">
-                    <Mail className="w-4 h-4" /> Message
+                    <Mail className="w-4 h-4" /> {t('professional.profile.message')}
                   </Button>
                   <div className="flex gap-1">
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]" onClick={handleShare}>
                         <Share2 className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Share Trust Page</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.share_tooltip')}</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]">
                         <Heart className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Save</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.save_tooltip')}</TooltipContent></Tooltip>
                     <Tooltip><TooltipTrigger asChild>
                       <Button size="icon" variant="ghost" className="h-9 w-9 min-h-[44px] min-w-[44px]">
                         <UserPlus className="w-4 h-4" />
                       </Button>
-                    </TooltipTrigger><TooltipContent>Refer a friend</TooltipContent></Tooltip>
+                    </TooltipTrigger><TooltipContent>{t('professional.profile.refer_tooltip')}</TooltipContent></Tooltip>
                   </div>
                 </div>
               </div>
@@ -334,7 +342,7 @@ const ProfessionalProfilePage = () => {
               <div className="mt-4 pt-4 border-t border-border flex items-center justify-between flex-wrap gap-2">
                 <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-accent/20 via-accent/30 to-accent/20 border border-accent/40">
                   <Trophy className="w-4 h-4 text-accent-foreground" />
-                  <span className="text-xs font-bold text-accent-foreground">TOP 1% in {pro.location.split(',')[0]} · 2024</span>
+                  <span className="text-xs font-bold text-accent-foreground">{t('professional.profile.top_in', { city: pro.location.split(',')[0], year: 2024 })}</span>
                 </div>
                 <div className="flex items-center gap-3 text-[11px] text-muted-foreground">
                   <span className="inline-flex items-center gap-1">
@@ -353,6 +361,7 @@ const ProfessionalProfilePage = () => {
                     )}
                   </span>
                   <span className="inline-flex items-center gap-1"><Clock className="w-3 h-3" />Replies {pro.responseTime}</span>
+                  {/* (intentionally retained Clock label structure; replaced with i18n below) */}
                   <span className="hidden sm:inline-flex items-center gap-1">
                     <Languages className="w-3 h-3" />
                     {isOwner ? (
