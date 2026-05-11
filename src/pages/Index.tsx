@@ -42,6 +42,7 @@ import ContractCheckCard from "@/components/ContractCheckCard";
 import ContractUploadModal from "@/components/ContractUploadModal";
 import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from "@/components/ui/tooltip";
 import { useAuth } from "@/contexts/AuthContext";
+import { getDashboardRouteForRole } from "@/lib/dashboardRoute";
 import { useToast } from "@/hooks/use-toast";
 import { Navbar } from "@/components/Navbar";
 import { CopilotBriefBanner } from "@/components/CopilotBriefBanner";
@@ -106,7 +107,7 @@ const Index = () => { // hero-phase-v2
       clearInterval(starInterval);
     };
   }, []);
-  const { user, profile, role, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
+  const { user, profile, role, accountKind, signOut, isLoading, isReturningDevice, returningDeviceEmail } = useAuth();
   const { toast } = useToast();
   const detailScrollTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const longPressRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -211,11 +212,7 @@ const Index = () => { // hero-phase-v2
     });
   };
 
-  const getDashboardRoute = () => {
-    if (role === 'admin') return '/admin';
-    if (role === 'business') return '/business';
-    return '/buyer';
-  };
+  const getDashboardRoute = () => getDashboardRouteForRole(role, accountKind);
 
   const switchToBusinessView = () => {
     setUserMode("industry");
@@ -695,7 +692,7 @@ const Index = () => { // hero-phase-v2
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-                <button onClick={() => navigate(role === 'business' || role === 'admin' ? role === 'admin' ? '/admin' : '/business' : '/auth?type=business')} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
+                <button onClick={() => navigate(role === 'business' || role === 'admin' ? getDashboardRoute() : '/auth?type=business')} className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-primary-foreground rounded-lg font-semibold hover:bg-primary/90 transition-colors text-sm">
                   {role === 'business' || role === 'admin' ? 'Go to Dashboard' : 'Claim Your Business Profile'}
                   <ArrowRight className="w-4 h-4" />
                 </button>
