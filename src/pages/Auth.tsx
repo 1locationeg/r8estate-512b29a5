@@ -11,6 +11,7 @@ import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff, S
 import { BrandLogo } from '@/components/BrandLogo';
 import { RegistrationSlotsBanner } from '@/components/RegistrationSlotsBanner';
 import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { z } from 'zod';
 
 const emailSchema = z.string().email('Please enter a valid email address');
@@ -231,12 +232,21 @@ const Auth = () => {
           <Shield className="w-4 h-4 text-accent" />
           <span>{isAr ? 'تقييمات عقارية موثقة · منصة مصر الأولى للثقة' : "Verified real estate reviews · Egypt's #1 trust platform"}</span>
         </div>
-        <button
-          onClick={() => navigate('/auth')}
-          className="hidden sm:inline-flex items-center gap-1 bg-primary-foreground text-primary px-3 py-1 rounded-full text-xs font-semibold hover:opacity-90 transition-opacity"
-        >
-          {isAr ? 'سجّل مجاناً →' : 'Sign up free →'}
-        </button>
+        <div className="flex items-center gap-3">
+          <button
+            onClick={() => i18n.changeLanguage(isAr ? 'en' : 'ar')}
+            className="inline-flex items-center gap-1 bg-primary-foreground/10 hover:bg-primary-foreground/20 text-primary-foreground px-2.5 py-1 rounded-full text-[11px] font-bold tracking-wider transition"
+            aria-label={isAr ? 'Switch to English' : 'التحويل للعربية'}
+          >
+            {isAr ? 'EN' : 'ع'}
+          </button>
+          <button
+            onClick={() => navigate('/auth')}
+            className="hidden sm:inline-flex items-center gap-1 bg-primary-foreground text-primary px-3 py-1 rounded-full text-xs font-semibold hover:opacity-90 transition-opacity"
+          >
+            {isAr ? 'سجّل مجاناً →' : 'Sign up free →'}
+          </button>
+        </div>
       </div>
 
       {/* Back to home */}

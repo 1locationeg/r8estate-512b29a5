@@ -655,7 +655,6 @@
       "protectedTitle": "Protected before upload",
       "noFieldsDetected": "No sensitive fields were detected. You can still submit.",
       "flagsTitle": "Authenticity signals",
-      "contractVerifiedChip": "Contract Verified",
       "labels": {
         "authentic": "Authentic",
         "needs_review": "Needs review",
@@ -883,7 +882,7 @@
     "recording_desc": "Speak now — your voice is being recorded.",
     "review_enhanced": "Review enhanced",
     "review_enhanced_desc": "Your review has been improved by AI.",
-    "review_placeholder": "Tell your story: Before R8ESTATE, I was about to... Then I discovered...",
+    "review_placeholder": "Share your experience — what went well? What could improve?",
     "review_required": "Review required",
     "review_required_desc": "Please write your review.",
     "review_submitted": "Review submitted!",
@@ -906,7 +905,7 @@
     "upload_failed_desc": "Could not upload file. Please try again.",
     "upload_verification": "Upload verification",
     "uploading": "Uploading...",
-    "verification_desc": "Upload proof of purchase for a verified badge.",
+    "verification_desc": "Upload your booking receipt to earn 10× trust weight, the Verified Buyer badge, and 2× points.",
     "voice": "Voice",
     "voice_converting": "Converting speech...",
     "voice_done": "Voice captured",
@@ -954,8 +953,6 @@
     },
     "categoryRatingsBonus": "+5 pts per category rated",
     "enhance_label": "Polish my writing ✨",
-    "review_placeholder": "Share your experience — what went well? What could improve?",
-    "verification_desc": "Upload your booking receipt to earn 10× trust weight, the Verified Buyer badge, and 2× points.",
     "verification_benefit_badge": "Verified Buyer badge",
     "verification_benefit_points": "2× points",
     "verification_benefit_weight": "10× trust weight",
@@ -1930,6 +1927,117 @@
       "mixed_signals": "⚠️ Mixed signals",
       "contradicted_by_buyers": "❌ Contradicted by buyers",
       "insufficient_evidence": "ℹ️ Not enough evidence"
+    }
+  },
+  "professional": {
+    "auth": {
+      "tagline": "Egypt's Real Estate Trust Platform",
+      "signin_title": "Welcome back",
+      "signin_sub": "Sign in to continue your trust journey",
+      "signup_title": "Create your account",
+      "signup_sub": "Join the trust platform — start in 30 seconds",
+      "google": "Continue with Google",
+      "or": "or",
+      "email": "Email",
+      "password": "Password",
+      "fullname": "Full name",
+      "fullname_ph": "e.g. Osama Ibrahim",
+      "signin": "Sign in",
+      "signup": "Create account",
+      "have_account": "Already have an account?",
+      "no_account": "New here?",
+      "forgot": "Forgot password?"
+    },
+    "dashboard": {
+      "ai_cockpit": "AI-powered cockpit",
+      "view_trust": "View my trust page",
+      "share": "Share my page",
+      "edit_settings": "Edit name & avatar",
+      "stats": {
+        "views": "Profile views",
+        "views_short": "Views",
+        "shares": "Trust page shares",
+        "shares_short": "Shares",
+        "endorsements": "New endorsements",
+        "endorsements_short": "Endorsed",
+        "hires": "Hire requests",
+        "hires_short": "Hires",
+        "last30": "(last 30 days)"
+      },
+      "booster": {
+        "kicker": "Boost your trust page",
+        "title": "{{pct}}% to Elite — finish 3 quick steps",
+        "cta": "Boost now"
+      },
+      "benefits": {
+        "title": "Your unfair advantages",
+        "prestige": "Prestige",
+        "prestige_tip": "A verified, public trust page that signals you are a serious, accountable professional.",
+        "visibility": "Visibility",
+        "visibility_tip": "Indexed on r8estate, surfaced in category pages, shareable across WhatsApp, Instagram, LinkedIn.",
+        "expertise": "Expertise",
+        "expertise_tip": "Showcase certifications, deals, portfolio, awards & specialties in one place.",
+        "faster": "Faster close",
+        "faster_tip": "Buyers arrive pre-warmed: they read verified reviews, hesitation drops, the close gets faster.",
+        "hired": "Get hired",
+        "hired_tip": "Developers, brokerages and service firms can discover and contact you directly.",
+        "onelink": "One link",
+        "onelink_tip": "Aggregate LinkedIn, Instagram, YouTube, TikTok & more — give every lead one source of truth."
+      },
+      "manage": "Manage page",
+      "actions": {
+        "certificate": "Certificate",
+        "experience": "Experience",
+        "portfolio": "Portfolio",
+        "socials": "Socials",
+        "endorsement": "Endorsement",
+        "ask_review": "Ask review"
+      },
+      "completion": {
+        "photo": "Profile photo",
+        "bio": "Headline & bio",
+        "socials": "3 socials connected",
+        "portfolio": "3 portfolio projects",
+        "cert": "Verified certificate",
+        "phone": "Verify phone",
+        "endorsements5": "5 skill endorsements",
+        "post": "Publish a community post",
+        "invite": "Invite 3 colleagues"
+      },
+      "strength": "Profile strength",
+      "done_of": "{{done}} of {{total}} done",
+      "viewers": "Who looked at you",
+      "refer": "Refer a colleague",
+      "refer_sub": "Earn Insight Credits together.",
+      "refer_cta": "Get my link",
+      "coach": "AI coach",
+      "coach_msg": "You're 1 endorsement away from a visibility boost.",
+      "open_community": "Open community",
+      "trust_label": "TRUST"
+    },
+    "settings": {
+      "back": "Dashboard",
+      "view_trust": "View Trust Page",
+      "title": "Profile settings",
+      "sub": "Your name and avatar appear on your public Trust Page and across R8ESTATE.",
+      "avatar": "Avatar",
+      "upload": "Upload new image",
+      "uploading": "Uploading…",
+      "avatar_hint": "JPG, PNG or WEBP · max 5 MB",
+      "name": "Display name",
+      "name_ph": "e.g. Osama Ibrahim",
+      "name_hint": "This is the name buyers see on your Trust Page.",
+      "email": "Email",
+      "cancel": "Cancel",
+      "save": "Save changes",
+      "saved": "Profile updated",
+      "uploaded": "Avatar uploaded — remember to save",
+      "img_required": "Please choose an image file",
+      "img_too_big": "Image must be under 5 MB",
+      "save_failed": "Could not save"
+    },
+    "profile": {
+      "verified": "Verified professional"
     }
   }
 }
