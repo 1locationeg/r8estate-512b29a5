@@ -2130,7 +2130,9 @@
         "zoom": "Zoom",
         "rotate": "Rotate 90°",
         "apply": "Apply",
-        "cancel": "Cancel"
+        "cancel": "Cancel",
+        "safe_card": "Card area",
+        "safe_hint": "Keep faces, logos and key text outside the dashed zones — that's where the identity card and avatar will sit."
       },
       "custom": {
         "eyebrow": "Custom section",
