@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import {
   Eye, Share2, Star, ThumbsUp, Briefcase, Award, Users, TrendingUp,
   Link2, ExternalLink, Sparkles, MessageSquare, Gift, Camera,
@@ -13,6 +14,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 import { useAuth } from '@/contexts/AuthContext';
 import { getMockProfessional } from '@/data/mockProfessionals';
 import { generateAvatar } from '@/lib/avatarUtils';
+import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 
 const PRO = 'hsl(var(--professionals))';
 const NAVY = 'hsl(var(--primary))';
@@ -33,7 +35,7 @@ function Sparkline({ points, color = PRO }: { points: number[]; color?: string }
   );
 }
 
-function TrustRing({ value, size = 84, stroke = 7, color = 'white' }: { value: number; size?: number; stroke?: number; color?: string }) {
+function TrustRing({ value, size = 84, stroke = 7, color = 'white', label = 'TRUST' }: { value: number; size?: number; stroke?: number; color?: string; label?: string }) {
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
   const off = c - (value / 100) * c;
@@ -49,7 +51,7 @@ function TrustRing({ value, size = 84, stroke = 7, color = 'white' }: { value: n
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
         <span className="text-xl font-extrabold leading-none" style={{ color }}>{value}</span>
-        <span className="text-[9px] font-semibold tracking-wider opacity-80" style={{ color }}>TRUST</span>
+        <span className="text-[9px] font-semibold tracking-wider opacity-80" style={{ color }}>{label}</span>
       </div>
       <span
         className="absolute inset-0 rounded-full animate-ping"
