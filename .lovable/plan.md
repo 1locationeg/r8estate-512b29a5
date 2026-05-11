@@ -1,87 +1,119 @@
 ## Goal
-Make `/pro-dashboard` feel like a visual, motivating cockpit for an individual professional — not a wall of text. Reduce copy, lead with icons + numbers + progress, align with R8ESTATE branding (Navy / Gold / Red) plus the Professionals accent (teal), and add a subtle AI-vibe layer (glow, soft gradient mesh, animated pulse).
+Redesign the public Trust Page at `/pro/:slug` (`src/pages/ProfessionalProfile.tsx`) so a buyer instantly *feels* they've found an expert: trust score, stars, and benefits hit first; storytelling stays but as visual moments, not paragraphs. Align with R8ESTATE branding (Navy / Gold / Red) + Professionals teal accent + a subtle AI-vibe layer.
 
 ## Design direction
 
-Visual language
-- Hero: compact gradient banner (Navy → Professionals teal) with a soft animated AI mesh + glow orb. Just an avatar, name, tier chip, Trust Score ring, and 2 CTAs. No paragraph copy.
-- Cards: frosted glass (`backdrop-blur`, white/8 border), gold accent on highlights, teal for professional accent.
-- Iconography over sentences: each tile = icon + 1–3 word label + number. Tooltips hold the long explanation.
-- Subtle motion: pulse on Trust Score ring, shimmer on incomplete steps, animated gradient on "Boost" CTA.
-
-Color tokens (existing only)
-- Primary surface: `--professionals` (teal accent)
-- Highlight: `--gold` for rewards / boosts
-- Alert / urgency: `--red` for missing critical steps
-- Background gradient mesh uses `--navy` + `--professionals` at low alpha
+Visual principles
+- Lead with numbers + icons: stars, trust score, deals — visible above the fold without scroll on desktop and at top of mobile.
+- Replace dense paragraphs with chips, tiles, sparklines, ribbons.
+- Storytelling stays — but as visual "moments" (emotional one-liners, big quote cards, before/after style stats).
+- Branding: Navy primary surface, Professionals teal accent, Gold for trophy / hero metric, Red only for risk/missing.
+- AI vibe: animated gradient mesh in hero, soft glow orb behind avatar, pulse on Trust Score ring, shimmer on "Verified Pro" badge.
 
 ## New layout (top → bottom)
 
 ```text
 ┌───────────────────────────────────────────────────────────┐
-│  HERO  avatar │ name + tier chip │ Trust Ring 78 │ [View] │
-│        (gradient + AI mesh, ~140px tall, no paragraph)    │
+│ HERO  (Navy→Teal gradient + AI mesh + glow orb)           │
+│  ┌────────┐  Name · 👑 Elite · ✓ Verified Pro             │
+│  │ Avatar │  Headline (one short line)                     │
+│  │  ring  │  ⭐4.9 (87) · TrustRing 94 · 142 deals · 9y    │
+│  └────────┘  [Contact] [Message]  ·  ♡ 🔗 ↗               │
+│  ribbon: "TOP 1% in New Cairo · 2024"  (gold)             │
 ├───────────────────────────────────────────────────────────┤
-│  4 STAT TILES   icon · big number · sparkline · delta     │
-│  (views, shares, endorsements, hires)                     │
+│ TRUST AT A GLANCE  (4 visual tiles, no paragraphs)        │
+│  ⭐ 4.9     🛡 94      🤝 142     ⏱ <2h                   │
+│  Reviews   Trust      Deals      Replies                  │
+│  sparkline sparkline  sparkline  pulse dot                │
 ├───────────────────────────────────────────────────────────┤
-│  TRUST PAGE BOOSTER (full width, gold glow)               │
-│   Ring 56% · "Reach Elite" · 3 next-step chips            │
-│   [Verify phone +10] [Get 5 endorsements +15] [Post +10]  │
+│ WHY BUYERS PICK AHMED  (6 icon benefit tiles)             │
+│  🛡 Delivery-first   💰 Plan structuring   🎯 No pressure │
+│  🏛 Top developers   🌍 GCC investors      📞 Always on   │
+│  (icon + 2-word title; long copy in tooltip on hover)     │
+├───────────────────────────────────────────────────────────┤
+│ EMOTIONAL QUOTE STRIP (full-width gold card)              │
+│  "Saved us from a 4.2M EGP mistake." — Mona K.            │
+│  (rotates 3 quotes, no extra body copy)                    │
 ├───────────────────┬───────────────────────────────────────┤
-│ BENEFITS GRID     │ RIGHT RAIL                            │
-│ 6 icon tiles,     │  • Profile strength ring + checklist  │
-│ 1-line each,      │  • Who viewed you (3 avatars)         │
-│ tooltip on hover  │  • Refer a colleague (gold card)      │
-│ (no paragraphs)   │  • AI Coach card (teal, animated)     │
+│ STORY (left)      │ RIGHT RAIL                            │
+│  • About: 1 line  │  Trust Score donut + 3 signal chips   │
+│    + chip cloud   │  Quick Contact (sticky)               │
+│  • Experience:    │  Languages · Coverage map pin         │
+│    visual time-   │  Refer a friend (gold mini)           │
+│    line, 1-line   │  AI Insight card (teal, animated)     │
+│    bullets        │   "Replies 3× faster than peers"      │
+│  • Reviews:       │                                        │
+│    big rating     │                                        │
+│    block + cards  │                                        │
+│  • Skills/Cert/   │                                        │
+│    Edu/FAQ as     │                                        │
+│    compact accord │                                        │
 └───────────────────┴───────────────────────────────────────┘
 ```
 
 ### Sections in detail
 
-1. Hero (visual, ~3 words of copy)
-   - Background: linear-gradient(navy → professionals) + radial AI mesh + 1 floating glow orb.
-   - Left: circular avatar with teal ring, tier emoji badge.
-   - Center: name, tier chip, verified tick.
-   - Right: animated Trust Score donut (SVG) showing number, with pulse.
-   - Two icon-only CTAs: "View" and "Share" (label hidden on mobile).
-   - Removes the welcome paragraph and the long subtitle.
+1. Hero (visual, branded, AI vibe)
+   - Background: `linear-gradient(135deg, hsl(var(--navy)), hsl(var(--professionals)))` + radial AI mesh + 1 floating glow orb behind avatar (already-supported CSS, no new deps).
+   - Avatar: square-rounded with animated teal ring, gold tier badge floating on the corner.
+   - Identity row: name + 👑 tier chip + ✓ Verified Pro shimmer badge.
+   - Headline: shortened to one emotional line.
+   - Inline metric strip: ⭐ rating · TrustRing 94 · deals · years (icon + number, no labels).
+   - CTAs: primary "Contact" (teal), secondary "Message". Save / Share / Refer become icon-only buttons.
+   - Gold ribbon under hero ("TOP 1% in New Cairo · 2024") if applicable.
 
-2. Stat tiles (4)
-   - Replace label-heavy text with: big number, micro-label (1–2 words), inline mini sparkline, colored delta pill.
-   - Hover reveals tooltip with longer label.
+2. Trust at a Glance strip (new, replaces old "stat row")
+   - 4 frosted tiles (Navy on white card): big number + icon + 1-word label + mini sparkline / pulse dot.
 
-3. Trust Page Booster (new, replaces "Why your trust page is your unfair advantage" essay)
-   - One row, gold-tinted card with subtle animated gradient.
-   - Left: progress ring + "56% to Elite".
-   - Right: 3 action chips (next best steps) with point rewards.
-   - Single CTA "Boost now".
+3. Why Buyers Pick {Name} (new, replaces long About paragraph as the hook)
+   - 6 icon tiles (icon + 2-word benefit). Long descriptions in tooltips.
+   - Derived from `pro.specialties` + a small benefit map; no schema changes.
 
-4. Benefits grid (compressed)
-   - Keep the 6 benefits but as icon tiles only: icon + 2-word title.
-   - Long descriptions move into hover tooltip / popover.
-   - Optional flip-on-hover micro-interaction.
+4. Emotional quote strip (new)
+   - Gold-tinted full-width card. Single rotating verified-buyer quote (sourced from existing `pro.reviews`). One line. No body text.
 
-5. Quick actions
-   - Convert to a horizontal scroll rail of icon chips (Add cert, Add experience, Add portfolio, Connect socials, Request endorsement, Ask review).
+5. About / Experience (compressed)
+   - About: one short emotional sentence (first sentence of `pro.bio`) + chip cloud of specialties. Full bio behind "Read more".
+   - Experience: vertical timeline kept but each role = role + company chip + max 2 one-line highlights (rest hidden behind "+N more").
 
-6. Right rail
-   - Profile strength: replace 9-row checklist with a ring + 3 visible "next steps" (collapsible "see all").
-   - Who viewed you: avatars with 1-line label.
-   - Refer a colleague: gold card, single CTA, gift icon.
-   - AI Coach card (new, AI vibe): teal gradient with animated sparkles; one rotating tip ("Your trust page is 1 endorsement away from Elite").
+6. Reviews
+   - Keep the big rating block (4.9, stars, breakdown bars) — this *is* visual.
+   - Review cards: tighten copy density, show first 2 reviews then "Show all".
+
+7. Skills / Portfolio / Certificates / Education / FAQ
+   - Convert to compact accordions with icon + count badge in the trigger.
+
+8. Right rail (sticky on desktop)
+   - Trust Score donut (animated, pulse) + 3 signal chips (Verified Pro, Top responder, Repeat clients).
+   - Sticky Quick Contact card (Contact + Message buttons).
+   - Languages + coverage as icon chips.
+   - Refer-a-friend gold mini card.
+   - **AI Insight card (new, AI vibe)**: teal gradient, animated sparkles, one rotating data line ("Replies 3× faster than peers in New Cairo").
+
+### Color tokens (existing only)
+- `hsl(var(--navy))` hero base
+- `hsl(var(--professionals))` accent, ring, primary CTA, AI card
+- `hsl(var(--gold))` ribbon, tier badge, refer card, emotional quote strip
+- `hsl(var(--red))` only used if a missing/at-risk signal appears
+- Verified token kept for the shimmer badge
+
+### Motion
+- Pulse on Trust Score ring
+- Shimmer on Verified Pro badge
+- Gradient drift on hero AI mesh
+- Sparkle motion on AI Insight card
+- All using existing `animate-pulse` / keyframes in `index.css`; no new deps.
 
 ## Technical notes
 
-- File: rewrite `src/pages/ProfessionalDashboard.tsx` only. No DB/auth changes.
-- Use existing tokens: `hsl(var(--professionals))`, `hsl(var(--navy))`, `hsl(var(--gold))`, `hsl(var(--red))`. No hex colors.
-- AI mesh: pure CSS (radial-gradients + `animate-pulse` / custom keyframes already in `index.css`); no new deps.
-- Trust ring + sparklines: inline SVG components (small, no chart lib).
-- Tooltips: `@/components/ui/tooltip` (already in project).
-- Respect mobile safety: 390px viewport, `ms-/pe-` logical properties, 44px touch targets, `text-start`.
-- Keep all existing routes/links (`/pro/:slug`, `/community`).
+- File: rewrite `src/pages/ProfessionalProfile.tsx` only.
+- Reuse: `TrustGaugeMini`, `Stars` (already in file), `Avatar`, `Badge`, `Button`, `Tooltip`.
+- Add small inline SVG components inside the file: `TrustRing`, `Sparkline` (no chart lib).
+- Tooltips for benefit tiles via `@/components/ui/tooltip`.
+- Mobile safety: 390px viewport, logical props (`ms-/pe-/text-start`), 44px touch targets.
+- No DB changes, no new routes, no auth changes, no edits to mock data shape — derive benefits/quotes from existing fields (`specialties`, `reviews`, `tier`, `responseTime`, `dealsClosed`).
 
 ## Out of scope
-- No backend changes, no new tables.
-- No changes to Business Dashboard.
-- No new pages or routes.
+- Backend, auth, schema, mock data shape changes.
+- Changes to dashboards or other pages.
+- New routes or new dependencies.
