@@ -94,7 +94,7 @@ const Auth = () => {
       localStorage.removeItem('oauth_account_kind');
       if (role === 'admin') navigate('/admin');
       else if (role === 'business') {
-        if (kind === 'professional') navigate('/pro/ahmed-hassan');
+        if (kind === 'professional') navigate('/pro-dashboard');
         else navigate('/business');
       }
       else navigate('/buyer');
