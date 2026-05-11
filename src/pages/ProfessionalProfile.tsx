@@ -16,6 +16,7 @@ import { Navbar } from '@/components/Navbar';
 import { generateAvatar } from '@/lib/avatarUtils';
 import { toast } from 'sonner';
 import { getMockProfessional, type ProfessionalProfile } from '@/data/mockProfessionals';
+import { useAuth } from '@/contexts/AuthContext';
 
 const SOCIAL_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
   linkedin: Linkedin, instagram: Instagram, youtube: Youtube,
@@ -106,7 +107,20 @@ const BENEFIT_ICONS: Record<string, React.ComponentType<{ className?: string }>>
 
 const ProfessionalProfilePage = () => {
   const { slug = 'ahmed-hassan' } = useParams();
-  const pro: ProfessionalProfile | null = useMemo(() => getMockProfessional(slug), [slug]);
+  const { profile, accountKind } = useAuth();
+  const basePro = useMemo(() => getMockProfessional(slug), [slug]);
+  // Overlay the signed-in professional's identity on top of the mock template
+  const pro: ProfessionalProfile | null = useMemo(() => {
+    if (!basePro) return null;
+    if (accountKind === 'professional' && profile?.full_name) {
+      return {
+        ...basePro,
+        name: profile.full_name,
+        avatar: profile.avatar_url ?? basePro.avatar,
+      };
+    }
+    return basePro;
+  }, [basePro, profile, accountKind]);
   const [activeSection, setActiveSection] = useState('about');
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [bioOpen, setBioOpen] = useState(false);
