@@ -93,7 +93,7 @@ export function useProfessionalPage() {
             bio: next.bio,
             location: next.location,
             languages: next.languages,
-            sections: next.sections as unknown as object,
+            sections: next.sections as unknown as never,
           },
         ], { onConflict: 'user_id' });
       if (error) {
