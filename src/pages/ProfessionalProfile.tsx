@@ -236,7 +236,7 @@ const ProfessionalProfilePage = () => {
             />
           </div>
 
-          <div className="max-w-[1100px] mx-auto px-4 md:px-6 -mt-20 md:-mt-24 relative">
+          <div className="max-w-[1100px] mx-auto px-4 md:px-6 -mt-8 md:-mt-10 relative">
             <div className="bg-card/95 backdrop-blur-xl border border-border rounded-2xl p-4 md:p-6 shadow-2xl">
               <div className="flex flex-col md:flex-row gap-4 md:gap-6 md:items-center">
                 {/* Avatar with glow + tier badge */}
