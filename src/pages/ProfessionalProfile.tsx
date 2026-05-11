@@ -108,6 +108,34 @@ const ProfessionalProfilePage = () => {
   const { t, i18n } = useTranslation();
   const { profile, accountKind } = useAuth();
   const { slug = 'ahmed-hassan' } = useParams();
+  // Resolve the slug to a real professional account so admins (and any
+  // visitor) opening /pro/<name> see that account owner's details, not the
+  // mock template. Falls back gracefully when no match is found.
+  const [slugOwner, setSlugOwner] = useState<{
+    user_id: string;
+    full_name: string | null;
+    avatar_url: string | null;
+    cover_url: string | null;
+    headline: string | null;
+    bio: string | null;
+    location: string | null;
+    languages: string[] | null;
+    sections: unknown;
+  } | null>(null);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      const { data, error } = await supabase.rpc('get_professional_by_slug', { _slug: slug });
+      if (cancelled) return;
+      if (error) {
+        console.error('[get_professional_by_slug]', error);
+        setSlugOwner(null);
+      } else {
+        setSlugOwner(Array.isArray(data) && data.length ? (data[0] as typeof slugOwner) : null);
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [slug]);
   // Build the signed-in professional's own slug from their account name so the
   // public Trust Page URL always reflects "the link is the name of the account".
   const slugify = (s: string) =>
@@ -136,10 +164,23 @@ const ProfessionalProfilePage = () => {
   const pro: ProfessionalProfile | null = useMemo(() => {
     if (!basePro) return null;
     const merged: ProfessionalProfile = { ...basePro, slug };
-    if (accountKind === 'professional' && profile?.full_name) {
+    // 1) If the slug resolves to a real professional account, overlay THAT
+    //    user's identity + saved Trust Page content.
+    if (slugOwner?.full_name) {
+      merged.name = slugOwner.full_name;
+      merged.avatar = slugOwner.avatar_url ?? basePro.avatar;
+      if (slugOwner.headline) merged.headline = slugOwner.headline;
+      if (slugOwner.bio) merged.bio = slugOwner.bio;
+      if (slugOwner.location) merged.location = slugOwner.location;
+      if (slugOwner.languages && slugOwner.languages.length) merged.languages = slugOwner.languages;
+    } else if (accountKind === 'professional' && profile?.full_name) {
+      // 2) Otherwise, if the signed-in viewer is themselves a professional,
+      //    overlay their identity (covers the "viewing your own page" case).
       merged.name = profile.full_name;
       merged.avatar = profile.avatar_url ?? basePro.avatar;
     }
+    // 3) Always let the signed-in owner's locally-edited page data win for
+    //    their own Trust Page (matches existing edit-in-place behaviour).
     if (pageData) {
       if (pageData.headline) merged.headline = pageData.headline;
       if (pageData.bio) merged.bio = pageData.bio;
@@ -147,7 +188,7 @@ const ProfessionalProfilePage = () => {
       if (pageData.languages && pageData.languages.length) merged.languages = pageData.languages;
     }
     return merged;
-  }, [basePro, profile, accountKind, pageData, slug]);
+  }, [basePro, profile, accountKind, pageData, slug, slugOwner]);
   const [activeSection, setActiveSection] = useState('about');
   const [quoteIdx, setQuoteIdx] = useState(0);
   const [bioOpen, setBioOpen] = useState(false);
