@@ -84,7 +84,14 @@ const ProfessionalProfilePage = () => {
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
-      <Navbar />
+      <Navbar
+        userMode="buyers"
+        onSwitchToBusinessView={() => {}}
+        onSwitchToBuyerView={() => {}}
+        togglePulse={false}
+        onSignOut={() => {}}
+        getDashboardRoute={() => '/buyer'}
+      />
 
       {/* Cover + Hero */}
       <header className="relative">
