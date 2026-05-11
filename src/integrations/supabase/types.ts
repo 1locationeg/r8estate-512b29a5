@@ -2523,6 +2523,10 @@ export type Database = {
       }
     }
     Functions: {
+      admin_set_account_kind: {
+        Args: { _kind: string; _target_user: string }
+        Returns: string
+      }
       broadcast_notification: {
         Args: {
           _message: string

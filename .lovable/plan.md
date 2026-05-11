@@ -1,82 +1,31 @@
 ## Goal
+Let a Super Admin upgrade any user to a **Professional** account directly from the Admin → Users table, which immediately gives them a working Trust / Professional Profile page (e.g. `/pro/<their-name>`).
 
-Move the **Trust Page** (`/pro/:slug`) and **Professional Dashboard** (`/pro-dashboard`, `/pro-settings`) away from the current rainbow palette (amber + navy + gold + red + teal + green) to a single, calm, high‑end **Emerald Jewel** identity with a **matte velvet** finish. Keep the rest of the platform (homepage, buyer flows, dev pages) untouched.
+## How it will work
 
-## Visual direction — "Emerald Velvet"
+1. **Admin UI** — In the User Management table (and the user detail sheet), add a new pill button **"Make Professional"** next to the existing Buyer / Business / Admin role buttons.
+   - If the user is already a professional, the pill turns green and shows **"Professional ✓"** with a "Revert to Buyer" option.
+   - Add an **"Open Trust Page"** quick link (uses their name slug) once they are professional, mirroring the existing "Open Page" link for businesses.
 
-One dominant deep-emerald hue, neutral ivory/stone surfaces, no competing accents.
+2. **What the upgrade does** (single click, atomic):
+   - Sets `user_account_kinds.account_kind = 'professional'` for that user.
+   - Initialises a default professional profile entry so their `/pro/<slug>` page resolves immediately (uses their `full_name` and avatar from `profiles`).
+   - Sends them an in-app notification: *"You've been upgraded to a Professional account — your Trust Page is live."*
+   - Toast confirmation in the admin UI with a "View Trust Page" link.
 
-```
-Emerald Deep      hsl(158 64% 18%)   ← primary, headings, key icons
-Emerald Mid       hsl(158 52% 28%)   ← hover, rings
-Emerald Soft      hsl(158 35% 92%)   ← secondary surfaces, chips
-Ivory             hsl(40 30% 98%)    ← page bg (warm, not white)
-Stone Border      hsl(40 12% 88%)    ← borders, dividers
-Charcoal Ink      hsl(160 12% 14%)   ← body text
-Muted Ink         hsl(160 8% 42%)    ← secondary text
-Champagne Hint    hsl(40 35% 70%)    ← used ONLY for star ratings + verified tick
-```
+3. **Permissions** — Only Super Admin (and admins with edit permission) can perform the upgrade. Reuses the existing `is_super_admin` / `has_role` checks already used in the User Management screen.
 
-No multi-stop gradients on chrome. Only allowed gradient: a barely-there radial glow `from emerald/8 → transparent` behind the avatar / trust ring. Cards use **matte velvet** = solid `bg-card` + `border border-stone` + `shadow-[0_1px_2px_rgba(20,40,30,0.04),0_8px_24px_-12px_rgba(20,60,40,0.12)]`. No frosted blur on these two surfaces.
+4. **Slug behaviour** — Reuses the existing `slugify(full_name)` already added to `ProfessionalProfile.tsx`. If the resulting slug collides with another professional, append a short suffix.
 
-## Scope
+## Technical details
 
-In:
-- `src/pages/ProfessionalProfile.tsx` (Trust Page)
-- `src/pages/ProfessionalDashboard.tsx`
-- `src/pages/ProfessionalSettings.tsx`
-- `src/components/professional-edit/*` (cover editor, custom sections, editable field, cropper safe-area lines)
-- `src/index.css` — add a new `.emerald-mode` class that remaps tokens (mirrors how `.business-mode` / `.services-mode` / `.professionals-mode` already work)
+- **DB migration**: new RPC `admin_set_account_kind(_target_user uuid, _kind text)` — security-definer, restricted to admins, upserts into `user_account_kinds` and inserts a notification row. No schema changes needed beyond the function.
+- **Frontend**:
+  - `src/pages/AdminDashboard.tsx` — add `handleAccountKindChange`, render the new pill in the table row + detail sheet.
+  - `src/components/AdminUserDetailSheet.tsx` — same control inside the sheet.
+  - Refresh `nonAdminUsers` after success (extend the user query to also fetch `account_kind` per user so the button state is accurate).
+- **Trust page**: no changes needed — `ProfessionalProfile.tsx` already overlays signed-in professional identity onto the template, so the page works as soon as `account_kind = 'professional'`.
 
-Out of scope:
-- Homepage, buyer dashboard, dev directory, community, copilot — they keep current theme.
-- No DB / business-logic changes.
-
-## Implementation steps
-
-1. **Add `.emerald-mode` token block in `src/index.css`** (next to `.professionals-mode`):
-   - Remap `--primary`, `--primary-foreground`, `--accent`, `--secondary`, `--ring`, `--verified`, `--border`, `--muted`, `--muted-foreground`, `--card`, `--background`, `--page-bg` to the emerald + ivory + stone scale above.
-   - Add three velvet-specific vars: `--velvet-shadow`, `--velvet-glow`, `--champagne` (for stars only).
-
-2. **Wrap the three pages in the mode** by adding `className="emerald-mode"` on the outer `<div>` of:
-   - `ProfessionalProfile.tsx`
-   - `ProfessionalDashboard.tsx`
-   - `ProfessionalSettings.tsx`
-   This automatically retones every `bg-primary`, `text-primary`, `border-border`, `bg-accent`, etc. without touching component files.
-
-3. **Purge hard-coded color references** inside the three pages and `professional-edit/` components:
-   - Replace any `text-[hsl(var(--professionals))]`, `bg-amber-*`, `text-gold-*`, `from-navy-*`, `bg-gradient-to-*` chrome with semantic tokens (`text-primary`, `bg-secondary`, `border-border`).
-   - Trust ring + sparkline: switch stroke from `--professionals` to `--primary`; keep the soft glow as `--primary / 0.18` blur.
-   - Stars stay champagne (`text-[hsl(var(--champagne))] fill-[hsl(var(--champagne))]`) — the only non-emerald accent allowed.
-   - Remove the colored "journey station" tints inherited from `StationPageWrapper` on these routes (skip wrapping or pass a neutral override).
-
-4. **Velvet card utility** in `index.css`:
-   ```css
-   .card-velvet {
-     @apply bg-card border border-border rounded-xl;
-     box-shadow: var(--velvet-shadow);
-   }
-   ```
-   Replace the ad‑hoc card classes on Trust Page sections (About, Experience, Skills, Portfolio, Certificates, FAQ, Custom sections) with `card-velvet`.
-
-5. **Cover & avatar polish**:
-   - Cover overlay: replace current dark gradient with a single `bg-gradient-to-t from-[hsl(160_30%_8%/0.55)] to-transparent` for legible identity text.
-   - Avatar ring: 3px solid emerald with a 1px inner ivory hairline (matte jewel-cut feel) instead of the current colored glow.
-   - Cropper safe-area dashed lines: emerald `--primary / 0.4`.
-
-6. **Buttons / chips on these pages**:
-   - Primary CTA: solid emerald, white text, no gradient, subtle 1px inner highlight via `box-shadow: inset 0 1px 0 hsl(0 0% 100% / 0.12)`.
-   - Secondary: ivory bg, emerald border + text.
-   - Badges (verified, top-rated): emerald-soft bg + emerald-deep text, except the verified tick which uses champagne.
-
-7. **Dashboard sidebar tone**: on `/pro-dashboard` and `/pro-settings`, override sidebar tokens inside `.emerald-mode` so the existing navy sidebar becomes deep-emerald with ivory text — keeps structural parity with other dashboards.
-
-8. **Save a memory** `mem://design/trust-page-theme` capturing the Emerald Velvet palette + the `.emerald-mode` scoping rule so future edits don't reintroduce the old multi-color tokens on these pages.
-
-## Acceptance check
-
-- Loading `/pro/ahmed-hassan`, `/pro-dashboard`, `/pro-settings` shows a single emerald hue across all chrome — no amber, no navy, no gold gradients, no teal.
-- Stars + verified tick are the only champagne touches.
-- Cards feel matte (solid surface, soft long shadow, no glassy blur).
-- Homepage and other routes are visually unchanged.
-- Light/dark contrast: body text ≥ AA on ivory; primary CTA ≥ AA on emerald.
+## Out of scope
+- Billing / paid plan flows (this is an admin-granted upgrade).
+- Editing the professional profile content from the admin panel (the user edits their own page after upgrade).
