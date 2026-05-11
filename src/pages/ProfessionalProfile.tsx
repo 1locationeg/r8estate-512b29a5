@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, Navigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import {
@@ -107,6 +107,22 @@ const ProfessionalProfilePage = () => {
   const { t, i18n } = useTranslation();
   const { profile, accountKind } = useAuth();
   const { slug = 'ahmed-hassan' } = useParams();
+  // Build the signed-in professional's own slug from their account name so the
+  // public Trust Page URL always reflects "the link is the name of the account".
+  const slugify = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9\s-]/g, '')
+      .trim()
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-');
+  const ownerSlug = useMemo(() => {
+    if (accountKind !== 'professional') return null;
+    const name = profile?.full_name?.trim();
+    return name ? slugify(name) || null : null;
+  }, [profile?.full_name, accountKind]);
   // Fall back to the default template so any slug (e.g. a freshly signed-up
   // professional whose page hasn't been authored yet) still renders rather
   // than 404'ing. Real identity is overlaid below.
@@ -167,8 +183,15 @@ const ProfessionalProfilePage = () => {
     );
   }
 
+  // If the signed-in pro lands on someone else's (or a template) slug, push
+  // them to their own canonical /pro/<their-name> URL so share/copy is correct.
+  if (ownerSlug && ownerSlug !== slug) {
+    return <Navigate to={`/pro/${ownerSlug}`} replace />;
+  }
+
   const handleShare = async () => {
-    const url = `${window.location.origin}/pro/${pro.slug}`;
+    const shareSlug = ownerSlug ?? pro.slug;
+    const url = `${window.location.origin}/pro/${shareSlug}`;
     try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
