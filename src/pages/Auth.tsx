@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { supabase } from '@/integrations/supabase/client';
-import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff, Star, CheckCircle, UserCheck, BarChart3 } from 'lucide-react';
+import { Mail, Lock, User, ArrowLeft, Loader2, Building2, Shield, Eye, EyeOff, Star, CheckCircle, UserCheck, BarChart3, HardHat } from 'lucide-react';
 import { BrandLogo } from '@/components/BrandLogo';
 import { RegistrationSlotsBanner } from '@/components/RegistrationSlotsBanner';
 import { DisclaimerCheckbox } from '@/components/DisclaimerCheckbox';
@@ -28,6 +28,7 @@ const Auth = () => {
   const { toast } = useToast();
 
   const isBusinessMode = searchParams.get('type') === 'business';
+  const isProfessionalMode = isBusinessMode && searchParams.get('kind') === 'professional';
   const isReviewIntent = searchParams.get('intent') === 'review';
   const [accountType, setAccountType] = useState<AccountType>(isBusinessMode ? 'business' : 'buyer');
   const [step, setStep] = useState<Step>('social');
@@ -338,12 +339,23 @@ const Auth = () => {
                     </button>
                   </p>
 
-                  {isBusinessMode && (
+                  {isBusinessMode && !isProfessionalMode && (
                     <div className="mb-5 p-3 rounded-xl bg-[hsl(105,50%,95%)] border border-[hsl(105,50%,80%)] flex items-center gap-3">
                       <Building2 className="w-5 h-5 text-[hsl(105,50%,30%)] shrink-0" />
                       <div>
                         <p className="text-xs font-bold text-foreground">{t('auth.businessAccount', 'Business Account')}</p>
                         <p className="text-[11px] text-muted-foreground">{t('auth.businessDesc', 'Manage projects & developer profile')}</p>
+                      </div>
+                    </div>
+                  )}
+                  {isProfessionalMode && (
+                    <div className="mb-5 p-3 rounded-xl bg-[hsl(var(--professionals)/0.10)] border border-[hsl(var(--professionals)/0.35)] flex items-center gap-3">
+                      <HardHat className="w-5 h-5 text-[hsl(var(--professionals))] shrink-0" />
+                      <div>
+                        <p className="text-xs font-bold text-foreground">{t('auth.businessAccount', 'Business Account')}</p>
+                        <p className="text-[11px] italic text-[hsl(var(--professionals))] font-medium">
+                          ✦ {t('auth.business.professional.subtag', 'Professional edition — built for individuals, not companies')}
+                        </p>
                       </div>
                     </div>
                   )}

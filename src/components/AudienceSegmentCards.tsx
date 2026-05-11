@@ -44,7 +44,7 @@ const segments = [
   {
     key: "professionals",
     icon: HardHat,
-    cta: "/auth?type=business",
+    cta: "/auth?type=business&kind=professional",
     color: {
       iconBg: "bg-professionals/10",
       iconText: "text-professionals",
