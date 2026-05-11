@@ -19,6 +19,7 @@ import { generateAvatar } from '@/lib/avatarUtils';
 import { toast } from 'sonner';
 import { getMockProfessional, type ProfessionalProfile } from '@/data/mockProfessionals';
 import { useAuth } from '@/contexts/AuthContext';
+import { supabase } from '@/integrations/supabase/client';
 import { useProfessionalPage } from '@/hooks/useProfessionalPage';
 import { EditableField } from '@/components/professional-edit/EditableField';
 import { CoverEditor } from '@/components/professional-edit/CoverEditor';
@@ -225,7 +226,10 @@ const ProfessionalProfilePage = () => {
           onSwitchToBusinessView={() => {}}
           onSwitchToBuyerView={() => {}}
           togglePulse={false}
-          onSignOut={() => {}}
+          onSignOut={async () => {
+            await supabase.auth.signOut();
+            window.location.href = '/';
+          }}
           getDashboardRoute={() => '/buyer'}
         />
 
