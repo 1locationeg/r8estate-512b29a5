@@ -6,6 +6,7 @@ import { MoreHorizontal } from "lucide-react";
 import { MobileNavSheet } from "@/components/MobileNavSheet";
 import { useAuth } from "@/contexts/AuthContext";
 import { getStationForRoute } from "@/lib/journeyStations";
+import { getDashboardRouteForRole } from "@/lib/dashboardRoute";
 import logoIcon from "@/assets/logo-icon.png";
 
 const STATION_TEXT: Record<string, string> = {
@@ -19,7 +20,7 @@ export const BottomNav = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, signOut } = useAuth();
+  const { user, role, accountKind, signOut } = useAuth();
   const [moreOpen, setMoreOpen] = useState(false);
 
   // Hide BottomNav entirely on messages page (chat has its own nav)
@@ -112,9 +113,7 @@ export const BottomNav = () => {
         open={moreOpen}
         onOpenChange={setMoreOpen}
         onSignOut={signOut}
-        getDashboardRoute={() =>
-          user ? "/buyer" : "/auth"
-        }
+        getDashboardRoute={() => user ? getDashboardRouteForRole(role, accountKind) : "/auth"}
       />
     </>
   );
