@@ -234,7 +234,9 @@ const ProfessionalProfilePage = () => {
   const handleShare = async () => {
     const shareSlug = ownerSlug ?? pro.slug;
     const url = `https://meter.r8estate.com/p/${encodeURIComponent(shareSlug)}`;
-    const text = `${pro.name} — R8ESTATE Trust Page\n${pro.headline || pro.bio || 'Professional credibility, reviews, achievements, and trusted real estate experience.'}\n${url}`;
+    const stars = `${'★'.repeat(Math.round(pro.rating))}${'☆'.repeat(5 - Math.round(pro.rating))}`;
+    const reviewLabel = pro.reviewCount === 1 ? 'review' : 'reviews';
+    const text = `${pro.name} — R8ESTATE Trust Page\n${stars} ${pro.rating.toFixed(1)} · ${pro.reviewCount} ${reviewLabel}\n${pro.headline || pro.bio || 'Professional credibility, reviews, achievements, and trusted real estate experience.'}\n${url}`;
     try { await navigator.clipboard.writeText(text); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
