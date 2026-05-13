@@ -37,6 +37,7 @@ export function CoverEditor({ onUpload }: CoverEditorProps) {
         onClick={() => inputRef.current?.click()}
         disabled={busy}
         className="absolute top-3 end-3 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-background/80 backdrop-blur-md border border-border text-xs font-semibold text-foreground hover:bg-background transition-colors shadow-lg z-10 min-h-[36px]"
+        title="Upload, crop, zoom, rotate and reposition your cover (1600 × 600 px, 8:3)"
       >
         {busy ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Camera className="w-3.5 h-3.5" />}
         {busy ? t('professional.profile.cover.uploading') : t('professional.profile.cover.edit')}
