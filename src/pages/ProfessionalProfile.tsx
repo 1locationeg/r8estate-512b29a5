@@ -303,7 +303,13 @@ const ProfessionalProfilePage = () => {
             )}
             {isOwner && (
               <>
-                <CoverEditor onUpload={uploadCover} />
+                <CoverEditor
+                  onUpload={(croppedFile, opts) =>
+                    uploadCover(croppedFile, { sourceFile: opts.sourceFile, crop: opts.crop })
+                  }
+                  sourceUrl={pageData?.cover_source_url ?? null}
+                  initialCrop={pageData?.cover_crop ?? null}
+                />
                 <div className="absolute top-3 start-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-semibold text-foreground shadow">
                   <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent))]" />
                   1600 × 600 px · 8:3
