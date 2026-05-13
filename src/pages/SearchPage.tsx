@@ -87,7 +87,9 @@ const SearchPage = () => {
 
   const handleSelect = useCallback((item: SearchItem) => {
     addToSearchHistory(item.name);
-    if (item.meta?.dynamicBusinessProfile) {
+    if (item.meta?.professionalSlug) {
+      navigate(`/pro/${item.meta.professionalSlug}`);
+    } else if (item.meta?.dynamicBusinessProfile) {
       navigate(`/entity/${item.id}`);
     } else if (item.category === "developers") {
       navigate(`/entity/${item.id}`);
