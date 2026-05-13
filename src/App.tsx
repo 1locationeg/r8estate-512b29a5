@@ -20,6 +20,7 @@ import { LiveMarketPulse } from "./components/LiveMarketPulse";
 
 import { BottomNav } from "./components/BottomNav";
 import { DynamicMeta } from "@/components/DynamicMeta";
+import { RouteHead } from "@/components/RouteHead";
 import { TrackingManager } from "@/components/TrackingManager";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
@@ -180,6 +181,8 @@ const AppContent = () => {
       <GuestTimerBanner />
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>
+        <RouteHead />
+        <main>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/search" element={<SearchPage />} />
@@ -233,6 +236,7 @@ const AppContent = () => {
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </main>
       </Suspense>
       <BottomNav />
       <PWAInstallBanner />

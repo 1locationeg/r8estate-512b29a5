@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import "./i18n"; // Must be first — sets up language detection, dir, and body class
+import { HelmetProvider } from "react-helmet-async";
 import App from "./App.tsx";
 import "./index.css";
 
@@ -58,7 +59,11 @@ const dismissBootShell = () => {
   setTimeout(() => shell.remove(), 450);
 };
 
-createRoot(document.getElementById("root")!).render(<App />);
+createRoot(document.getElementById("root")!).render(
+  <HelmetProvider>
+    <App />
+  </HelmetProvider>
+);
 
 requestAnimationFrame(() => {
   requestAnimationFrame(dismissBootShell);

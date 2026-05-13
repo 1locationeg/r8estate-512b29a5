@@ -1,4 +1,5 @@
 import { useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { Footer } from "@/components/Footer";
 
 const PAGES: Record<string, { title: string; content: string }> = {
@@ -57,8 +58,35 @@ const StaticPage = () => {
   const slug = pathname.replace(/^\//, "");
   const page = PAGES[slug] || { title: "Page Not Found", content: "The page you're looking for doesn't exist." };
 
+  // Build FAQPage JSON-LD from the inline Q/A content on /faq.
+  const faqJsonLd =
+    slug === "faq"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: page.content
+            .split(/\n\n+/)
+            .map((block) => {
+              const q = block.match(/Q:\s*(.+)/)?.[1]?.trim();
+              const a = block.match(/A:\s*([\s\S]+)/)?.[1]?.trim();
+              if (!q || !a) return null;
+              return {
+                "@type": "Question",
+                name: q,
+                acceptedAnswer: { "@type": "Answer", text: a },
+              };
+            })
+            .filter(Boolean),
+        }
+      : null;
+
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {faqJsonLd && (
+        <Helmet>
+          <script type="application/ld+json">{JSON.stringify(faqJsonLd)}</script>
+        </Helmet>
+      )}
       <main className="flex-1 container mx-auto px-4 py-12 max-w-3xl">
         <h1 className="text-3xl font-bold text-foreground mb-6">{page.title}</h1>
         <div className="prose prose-slate dark:prose-invert max-w-none">
