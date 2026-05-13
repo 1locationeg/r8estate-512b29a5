@@ -1600,6 +1600,8 @@ export type Database = {
       professional_pages: {
         Row: {
           bio: string | null
+          cover_crop: Json | null
+          cover_source_url: string | null
           cover_url: string | null
           created_at: string
           headline: string | null
@@ -1611,6 +1613,8 @@ export type Database = {
         }
         Insert: {
           bio?: string | null
+          cover_crop?: Json | null
+          cover_source_url?: string | null
           cover_url?: string | null
           created_at?: string
           headline?: string | null
@@ -1622,6 +1626,8 @@ export type Database = {
         }
         Update: {
           bio?: string | null
+          cover_crop?: Json | null
+          cover_source_url?: string | null
           cover_url?: string | null
           created_at?: string
           headline?: string | null
