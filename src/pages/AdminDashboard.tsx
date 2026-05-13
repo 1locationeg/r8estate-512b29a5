@@ -41,6 +41,7 @@ import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
+import SharePreviewManager from '@/components/admin/SharePreviewManager';
 import AdminNFCManagement from '@/components/AdminNFCManagement';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
@@ -2342,6 +2343,7 @@ const AdminDashboard = () => {
         { icon: <Code className="w-4 h-4" />, label: 'Widgets', path: '/admin/widgets' },
         { icon: <TrendingUp className="w-4 h-4" />, label: 'Upsell Teaser', path: '/admin/upsell' },
         { icon: <LinkIcon className="w-4 h-4" />, label: 'Smart Links', path: '/admin/smart-links' },
+        { icon: <ImageIcon className="w-4 h-4" />, label: 'Share Previews', path: '/admin/share-previews' },
         { icon: <Smartphone className="w-4 h-4" />, label: 'NFC Tags', path: '/admin/nfc' },
       ],
     },
@@ -2437,6 +2439,7 @@ const AdminDashboard = () => {
           <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
+          <Route path="share-previews" element={<SharePreviewManager />} />
           <Route path="nfc" element={<AdminNFCManagement />} />
           <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />
