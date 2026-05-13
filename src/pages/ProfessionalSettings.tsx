@@ -32,6 +32,9 @@ const ProfessionalSettings = () => {
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [coverUploading, setCoverUploading] = useState(false);
+  const coverBoxRef = useRef<HTMLDivElement>(null);
+  const [coverSize, setCoverSize] = useState<{ w: number | null; h: number }>({ w: null, h: 220 });
+  const dragStateRef = useRef<{ axis: 'x' | 'y' | 'xy'; startX: number; startY: number; startW: number; startH: number } | null>(null);
   const { data: pageData, uploadCover, save: savePage } = useProfessionalPage();
 
   useEffect(() => {
@@ -70,6 +73,40 @@ const ProfessionalSettings = () => {
     } finally {
       setCoverUploading(false);
     }
+  };
+
+  const beginResize = (axis: 'x' | 'y' | 'xy') => (e: React.PointerEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    const box = coverBoxRef.current;
+    if (!box) return;
+    const rect = box.getBoundingClientRect();
+    dragStateRef.current = {
+      axis,
+      startX: e.clientX,
+      startY: e.clientY,
+      startW: rect.width,
+      startH: rect.height,
+    };
+    (e.target as HTMLElement).setPointerCapture(e.pointerId);
+    const onMove = (ev: PointerEvent) => {
+      const s = dragStateRef.current;
+      if (!s) return;
+      const parent = box.parentElement;
+      const maxW = parent ? parent.getBoundingClientRect().width : rect.width;
+      const dx = ev.clientX - s.startX;
+      const dy = ev.clientY - s.startY;
+      setCoverSize((prev) => ({
+        w: s.axis === 'y' ? prev.w : Math.max(240, Math.min(maxW, s.startW + dx)),
+        h: s.axis === 'x' ? prev.h : Math.max(80, Math.min(600, s.startH + dy)),
+      }));
+    };
+    const onUp = () => {
+      dragStateRef.current = null;
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', onUp);
+    };
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', onUp);
   };
 
   const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -162,12 +199,21 @@ const ProfessionalSettings = () => {
             <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
               {t('professional.settings.cover', 'Cover image')}
             </Label>
-            <div className="mt-3 relative w-full aspect-[16/6] rounded-xl overflow-hidden border border-border bg-muted/40">
+            <div
+              ref={coverBoxRef}
+              className="mt-3 relative rounded-xl overflow-hidden border border-border bg-muted/40 select-none"
+              style={{
+                width: coverSize.w ? `${coverSize.w}px` : '100%',
+                height: `${coverSize.h}px`,
+                maxWidth: '100%',
+              }}
+            >
               {pageData?.cover_url ? (
                 <img
                   src={pageData.cover_url}
                   alt="Trust Page cover"
-                  className="absolute inset-0 w-full h-full object-cover"
+                  className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+                  draggable={false}
                 />
               ) : (
                 <div
@@ -179,12 +225,53 @@ const ProfessionalSettings = () => {
                 />
               )}
               {!pageData?.cover_url && (
-                <div className="absolute inset-0 flex items-center justify-center text-primary-foreground/80 text-xs gap-1.5">
+                <div className="absolute inset-0 flex items-center justify-center text-primary-foreground/80 text-xs gap-1.5 pointer-events-none">
                   <ImageIcon className="w-4 h-4" />
                   {t('professional.settings.cover_empty', 'No cover yet — recommended 1600×600')}
                 </div>
               )}
+
+              {/* Live size badge */}
+              <div className="absolute top-2 start-2 px-2 py-0.5 rounded-md bg-background/85 backdrop-blur text-[10px] font-mono text-foreground border border-border pointer-events-none">
+                {Math.round(coverBoxRef.current?.getBoundingClientRect().width ?? coverSize.w ?? 0)} × {Math.round(coverSize.h)}
+              </div>
+
+              {/* Right edge — width handle */}
+              <div
+                role="slider"
+                aria-label="Resize cover width"
+                onPointerDown={beginResize('x')}
+                className="absolute top-0 end-0 h-full w-2 cursor-ew-resize flex items-center justify-center group"
+              >
+                <div className="w-1 h-10 rounded-full bg-foreground/30 group-hover:bg-primary transition-colors" />
+              </div>
+
+              {/* Bottom edge — height handle */}
+              <div
+                role="slider"
+                aria-label="Resize cover height"
+                onPointerDown={beginResize('y')}
+                className="absolute bottom-0 start-0 w-full h-2 cursor-ns-resize flex items-center justify-center group"
+              >
+                <div className="h-1 w-10 rounded-full bg-foreground/30 group-hover:bg-primary transition-colors" />
+              </div>
+
+              {/* Bottom-right corner — both axes */}
+              <div
+                role="slider"
+                aria-label="Resize cover"
+                onPointerDown={beginResize('xy')}
+                className="absolute bottom-0 end-0 w-4 h-4 cursor-nwse-resize bg-primary/80 hover:bg-primary"
+                style={{ clipPath: 'polygon(100% 0, 100% 100%, 0 100%)' }}
+              />
             </div>
+            <button
+              type="button"
+              onClick={() => setCoverSize({ w: null, h: 220 })}
+              className="mt-2 text-[11px] text-muted-foreground hover:text-foreground underline-offset-2 hover:underline"
+            >
+              Reset size
+            </button>
             <input
               ref={coverInputRef}
               type="file"
