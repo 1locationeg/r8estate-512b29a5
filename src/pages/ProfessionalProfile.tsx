@@ -233,10 +233,14 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const shareSlug = ownerSlug ?? pro.slug;
-    // Smart short-link: /p/<slug> emits per-pro OG via Helmet for
-    // JS-executing crawlers, then redirects humans to /pro/<slug>.
-    // Result: clean meter.r8estate.com URL + rich preview cards.
-    const url = `${window.location.origin}/p/${shareSlug}`;
+    // WhatsApp / LinkedIn / Slack do NOT execute JavaScript, so a
+    // client-side Helmet head can never populate OG for them. The
+    // only way to deliver a real per-pro preview (cover image +
+    // description) is to share an URL whose server response already
+    // contains the og:* tags. Our `og-professional` edge function
+    // returns exactly that, then meta-refreshes humans onward to
+    // /pro/<slug>. So we share the edge-function URL directly.
+    const url = `https://mcekdnvxeblikixmfyni.supabase.co/functions/v1/og-professional?slug=${encodeURIComponent(shareSlug)}`;
     try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
