@@ -135,17 +135,22 @@ Deno.serve(async (req) => {
         title = `${pro.full_name} — ${BRAND} Trust Page`;
       }
       if (pro?.cover_url) {
-        image = pro.cover_url;
+        image = toPreviewImageUrl(pro.cover_url);
+      }
+      if (pro?.headline) {
+        description = compactDescription(`${pro.headline}. ${DEFAULT_DESCRIPTION}`);
+      } else if (pro?.bio) {
+        description = compactDescription(pro.bio);
       }
 
       if (override && override.enabled) {
         if (override.title) title = override.title;
-        if (override.image_url) image = override.image_url;
+        if (override.image_url) image = toPreviewImageUrl(override.image_url);
         if (override.description) {
-          description = override.description;
+          description = compactDescription(override.description);
         } else if (override.body_html) {
-          const text = stripHtml(override.body_html);
-          if (text) description = text.slice(0, 280);
+          const text = compactDescription(override.body_html);
+          if (text) description = text;
         }
       }
     }
