@@ -26,14 +26,19 @@ function toPreviewImageUrl(imageUrl: string) {
       "/storage/v1/object/public/",
       "/storage/v1/render/image/public/",
     );
-    parsed.searchParams.set("width", "1200");
-    parsed.searchParams.set("height", "630");
+    parsed.searchParams.set("width", "600");
+    parsed.searchParams.set("height", "315");
     parsed.searchParams.set("resize", "cover");
-    parsed.searchParams.set("quality", "60");
+    parsed.searchParams.set("quality", "70");
     return parsed.toString();
   } catch {
     return imageUrl;
   }
+}
+
+function ratingLine(rating = 4.9, reviewCount = 87) {
+  const filled = Math.max(0, Math.min(5, Math.round(rating)));
+  return `${"★".repeat(filled)}${"☆".repeat(5 - filled)} ${rating.toFixed(1)} · ${reviewCount} ${reviewCount === 1 ? "review" : "reviews"}`;
 }
 
 function escapeHtml(s: string) {
@@ -78,8 +83,9 @@ function buildHtml(meta: {
 <meta property="og:description" content="${d}"/>
 <meta property="og:image" content="${i}"/>
 <meta property="og:image:secure_url" content="${i}"/>
-<meta property="og:image:width" content="1200"/>
-<meta property="og:image:height" content="630"/>
+<meta property="og:image:type" content="image/png"/>
+<meta property="og:image:width" content="600"/>
+<meta property="og:image:height" content="315"/>
 <meta property="og:image:alt" content="${t}"/>
 <meta property="og:url" content="${shareUrl}"/>
 <meta name="twitter:card" content="summary_large_image"/>
