@@ -182,6 +182,7 @@ const AppContent = () => {
       <GuestTimerExpiredModal />
       <Suspense fallback={<RouteLoader />}>
         <RouteHead />
+        <main>
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/search" element={<SearchPage />} />
@@ -235,6 +236,7 @@ const AppContent = () => {
           <Route path="/widgets" element={<Navigate to="/business/widgets" replace />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
+        </main>
       </Suspense>
       <BottomNav />
       <PWAInstallBanner />
