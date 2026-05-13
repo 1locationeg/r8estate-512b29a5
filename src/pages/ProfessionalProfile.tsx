@@ -276,18 +276,19 @@ const ProfessionalProfilePage = () => {
 
         {/* HERO — Navy → Professionals gradient + AI mesh */}
         <header className="relative">
+          {(() => null)()}
           <div
             className="relative h-44 md:h-60 w-full overflow-hidden"
             style={{
-              background: pageData?.cover_url
+              background: (pageData?.cover_url || slugOwner?.cover_url)
                 ? undefined
                 : 'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 35%, hsl(var(--professionals)) 100%)',
             }}
           >
-            {pageData?.cover_url && (
+            {(pageData?.cover_url || slugOwner?.cover_url) && (
               <>
                 <img
-                  src={pageData.cover_url}
+                  src={(pageData?.cover_url || slugOwner?.cover_url) as string}
                   alt="Cover"
                   className="absolute inset-0 w-full h-full object-cover"
                 />
