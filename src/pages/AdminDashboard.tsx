@@ -11,7 +11,7 @@ import {
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
-  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
+  Plus, Trash2, TestTube, ExternalLink, Globe, Image as ImageIcon, MessageSquareHeart,
   Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon, ScanSearch
   , Smartphone
 } from 'lucide-react';
