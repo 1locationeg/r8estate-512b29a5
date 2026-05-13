@@ -58,7 +58,8 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   units: <LayoutGrid className="w-6 h-6" />,
   'property-types': <Building className="w-6 h-6" />,
   categories: <FolderOpen className="w-6 h-6" />,
-  reviews: <Star className="w-6 h-6" />
+  reviews: <Star className="w-6 h-6" />,
+  professionals: <Users className="w-6 h-6" />
 };
 
 // Category-specific trust breakdown metrics

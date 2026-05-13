@@ -47,7 +47,8 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   units: <LayoutGrid className="w-5 h-5" />,
   'property-types': <Building className="w-5 h-5" />,
   categories: <FolderOpen className="w-5 h-5" />,
-  reviews: <Star className="w-5 h-5" />
+  reviews: <Star className="w-5 h-5" />,
+  professionals: <Users className="w-5 h-5" />
 };
 
 const getCategoryMetricKeys = (category: SearchCategory): string[] => {
