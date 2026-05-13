@@ -12,6 +12,11 @@ const DEFAULT_OG_IMAGE =
   "https://mcekdnvxeblikixmfyni.supabase.co/storage/v1/object/public/og-assets/r8estate-og.png";
 const DEFAULT_DESCRIPTION =
   "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience.";
+const htmlHeaders = {
+  ...corsHeaders,
+  "Content-Type": "application/xhtml+xml; charset=utf-8",
+  "Cache-Control": "no-store, max-age=0",
+};
 
 function toPreviewImageUrl(imageUrl: string) {
   try {
@@ -24,7 +29,7 @@ function toPreviewImageUrl(imageUrl: string) {
     parsed.searchParams.set("width", "1200");
     parsed.searchParams.set("height", "630");
     parsed.searchParams.set("resize", "cover");
-    parsed.searchParams.set("quality", "85");
+    parsed.searchParams.set("quality", "60");
     return parsed.toString();
   } catch {
     return imageUrl;
@@ -53,12 +58,14 @@ function buildHtml(meta: {
   title: string;
   description: string;
   image: string;
-  url: string;
+  shareUrl: string;
+  targetUrl: string;
 }) {
   const t = escapeHtml(meta.title);
   const d = escapeHtml(meta.description);
   const i = escapeHtml(meta.image);
-  const u = escapeHtml(meta.url);
+  const shareUrl = escapeHtml(meta.shareUrl);
+  const targetUrl = escapeHtml(meta.targetUrl);
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -74,20 +81,26 @@ function buildHtml(meta: {
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta property="og:image:alt" content="${t}"/>
-<meta property="og:url" content="${u}"/>
+<meta property="og:url" content="${shareUrl}"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="${t}"/>
 <meta name="twitter:description" content="${d}"/>
 <meta name="twitter:image" content="${i}"/>
 <meta name="twitter:image:alt" content="${t}"/>
 <meta name="robots" content="noindex,follow"/>
-<link rel="canonical" href="${u}"/>
+<link rel="canonical" href="${shareUrl}"/>
 </head>
 <body>
-<script>window.location.replace(${JSON.stringify(meta.url)});</script>
-<p>Open <a href="${u}">${BRAND}</a>.</p>
+<script>window.location.replace(${JSON.stringify(meta.targetUrl)});</script>
+<p>Open <a href="${targetUrl}">${BRAND}</a>.</p>
 </body>
 </html>`;
+}
+
+function htmlResponse(html: string) {
+  return new Response(new Blob([html], { type: "application/xhtml+xml; charset=utf-8" }), {
+    headers: htmlHeaders,
+  });
 }
 
 Deno.serve(async (req) => {
@@ -104,6 +117,7 @@ Deno.serve(async (req) => {
     if (slug === "og-professional") slug = null;
   }
 
+  const shareUrl = slug ? `${SITE_URL}/p/${slug}` : SITE_URL;
   const targetUrl = slug ? `${SITE_URL}/pro/${slug}` : SITE_URL;
 
   try {
@@ -155,24 +169,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    const html = buildHtml({ title, description, image, url: targetUrl });
-    return new Response(html, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=300",
-      },
-    });
+    const html = buildHtml({ title, description, image, shareUrl, targetUrl });
+    return htmlResponse(html);
   } catch (err) {
     console.error("og-professional error:", err);
     const html = buildHtml({
       title: `${BRAND} — Professional Trust Page`,
       description: DEFAULT_DESCRIPTION,
       image: DEFAULT_OG_IMAGE,
-      url: targetUrl,
+      shareUrl,
+      targetUrl,
     });
-    return new Response(html, {
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
+    return htmlResponse(html);
   }
 });

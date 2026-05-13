@@ -233,15 +233,9 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const shareSlug = ownerSlug ?? pro.slug;
-    // WhatsApp / LinkedIn / Slack do NOT execute JavaScript, so a
-    // client-side Helmet head can never populate OG for them. The
-    // only way to deliver a real per-pro preview (cover image +
-    // description) is to share an URL whose server response already
-    // contains the og:* tags. Our `og-professional` edge function
-    // returns exactly that, then meta-refreshes humans onward to
-    // /pro/<slug>. So we share the edge-function URL directly.
-    const url = `https://mcekdnvxeblikixmfyni.supabase.co/functions/v1/og-professional?slug=${encodeURIComponent(shareSlug)}`;
-    try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
+    const url = `https://meter.r8estate.com/p/${encodeURIComponent(shareSlug)}`;
+    const text = `${pro.name} — R8ESTATE Trust Page\n${pro.headline || pro.bio || 'Professional credibility, reviews, achievements, and trusted real estate experience.'}\n${url}`;
+    try { await navigator.clipboard.writeText(text); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
 
