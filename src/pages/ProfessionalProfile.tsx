@@ -278,7 +278,7 @@ const ProfessionalProfilePage = () => {
         <header className="relative">
           {(() => null)()}
           <div
-            className="relative h-44 md:h-60 w-full overflow-hidden"
+            className="relative h-44 md:h-auto md:aspect-[8/3] md:max-h-[420px] w-full overflow-hidden"
             style={{
               background: (pageData?.cover_url || slugOwner?.cover_url)
                 ? undefined
@@ -295,7 +295,15 @@ const ProfessionalProfilePage = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/70 via-primary/30 to-transparent" />
               </>
             )}
-            {isOwner && <CoverEditor onUpload={uploadCover} />}
+            {isOwner && (
+              <>
+                <CoverEditor onUpload={uploadCover} />
+                <div className="absolute top-3 start-3 z-10 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-background/80 backdrop-blur-md border border-border text-[10px] font-semibold text-foreground shadow">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[hsl(var(--accent))]" />
+                  1600 × 600 px · 8:3
+                </div>
+              </>
+            )}
             {/* AI mesh */}
             <div className="absolute inset-0 opacity-60"
               style={{
