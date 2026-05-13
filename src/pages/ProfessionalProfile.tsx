@@ -233,9 +233,10 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const shareSlug = ownerSlug ?? pro.slug;
-    // Always copy the clean canonical URL — humans see a trustworthy
-    // r8estate.com link instead of a raw Supabase function URL.
-    const url = `${window.location.origin}/pro/${shareSlug}`;
+    // Smart short-link: /p/<slug> emits per-pro OG via Helmet for
+    // JS-executing crawlers, then redirects humans to /pro/<slug>.
+    // Result: clean meter.r8estate.com URL + rich preview cards.
+    const url = `${window.location.origin}/p/${shareSlug}`;
     try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
