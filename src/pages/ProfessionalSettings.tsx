@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import { Loader2, Upload, ArrowLeft, ExternalLink, User as UserIcon } from 'lucide-react';
+import { Loader2, Upload, ArrowLeft, ExternalLink, User as UserIcon, ImageIcon, Trash2 } from 'lucide-react';
 import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -13,6 +13,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { generateAvatar } from '@/lib/avatarUtils';
 import { toast } from 'sonner';
+import { useProfessionalPage } from '@/hooks/useProfessionalPage';
 
 const nameSchema = z
   .string()
@@ -25,10 +26,13 @@ const ProfessionalSettings = () => {
   const { user, profile, isLoading, refreshProfile } = useAuth();
   const navigate = useNavigate();
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const coverInputRef = useRef<HTMLInputElement>(null);
   const [fullName, setFullName] = useState('');
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [coverUploading, setCoverUploading] = useState(false);
+  const { data: pageData, uploadCover, save: savePage } = useProfessionalPage();
 
   useEffect(() => {
     if (profile) {
@@ -45,6 +49,28 @@ const ProfessionalSettings = () => {
     );
   }
   if (!user) return <Navigate to="/auth" replace />;
+
+  const handleCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (coverInputRef.current) coverInputRef.current.value = '';
+    if (!file) return;
+    setCoverUploading(true);
+    try {
+      await uploadCover(file);
+    } finally {
+      setCoverUploading(false);
+    }
+  };
+
+  const handleRemoveCover = async () => {
+    setCoverUploading(true);
+    try {
+      await savePage({ cover_url: null });
+      toast.success(t('professional.settings.saved'));
+    } finally {
+      setCoverUploading(false);
+    }
+  };
 
   const handleAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -131,6 +157,76 @@ const ProfessionalSettings = () => {
         </header>
 
         <div className="bg-card border border-border rounded-2xl p-5 md:p-6 space-y-6">
+          {/* Cover image */}
+          <section>
+            <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">
+              {t('professional.settings.cover', 'Cover image')}
+            </Label>
+            <div className="mt-3 relative w-full aspect-[16/6] rounded-xl overflow-hidden border border-border bg-muted/40">
+              {pageData?.cover_url ? (
+                <img
+                  src={pageData.cover_url}
+                  alt="Trust Page cover"
+                  className="absolute inset-0 w-full h-full object-cover"
+                />
+              ) : (
+                <div
+                  className="absolute inset-0"
+                  style={{
+                    background:
+                      'linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--primary)) 35%, hsl(var(--professionals)) 100%)',
+                  }}
+                />
+              )}
+              {!pageData?.cover_url && (
+                <div className="absolute inset-0 flex items-center justify-center text-primary-foreground/80 text-xs gap-1.5">
+                  <ImageIcon className="w-4 h-4" />
+                  {t('professional.settings.cover_empty', 'No cover yet — recommended 1600×600')}
+                </div>
+              )}
+            </div>
+            <input
+              ref={coverInputRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleCover}
+            />
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-1.5 min-h-[44px]"
+                disabled={coverUploading}
+                onClick={() => coverInputRef.current?.click()}
+              >
+                {coverUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
+                {coverUploading
+                  ? t('professional.settings.uploading')
+                  : pageData?.cover_url
+                    ? t('professional.settings.cover_replace', 'Replace cover')
+                    : t('professional.settings.cover_upload', 'Upload cover')}
+              </Button>
+              {pageData?.cover_url && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="sm"
+                  className="gap-1.5 min-h-[44px] text-destructive hover:text-destructive"
+                  disabled={coverUploading}
+                  onClick={handleRemoveCover}
+                >
+                  <Trash2 className="w-4 h-4" />
+                  {t('professional.settings.cover_remove', 'Remove')}
+                </Button>
+              )}
+            </div>
+            <p className="text-[11px] text-muted-foreground mt-2">
+              {t('professional.settings.cover_hint', 'Shown as the banner on your public Trust Page. Max 8MB.')}
+            </p>
+          </section>
+
           {/* Avatar */}
           <section>
             <Label className="text-xs uppercase tracking-wider font-bold text-muted-foreground">{t('professional.settings.avatar')}</Label>
