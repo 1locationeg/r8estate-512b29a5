@@ -5,6 +5,7 @@ import { Loader2, ZoomIn, ZoomOut, RotateCw, Check, X } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Slider } from '@/components/ui/slider';
+import type { CoverCropState } from '@/hooks/useProfessionalPage';
 
 /**
  * Renders a crop / zoom / rotate editor for the Trust Page cover image.
@@ -28,31 +29,40 @@ const SAFE_AVATAR_FRACTION = 0.18;
 interface CoverCropperModalProps {
   open: boolean;
   file: File | null;
+  sourceUrl?: string | null;
+  initialCrop?: CoverCropState | null;
   busy: boolean;
   onCancel: () => void;
-  onConfirm: (file: File) => Promise<void> | void;
+  onConfirm: (file: File, crop: CoverCropState) => Promise<void> | void;
 }
 
-export function CoverCropperModal({ open, file, busy, onCancel, onConfirm }: CoverCropperModalProps) {
+export function CoverCropperModal({ open, file, sourceUrl, initialCrop, busy, onCancel, onConfirm }: CoverCropperModalProps) {
   const { t } = useTranslation();
   const [src, setSrc] = useState<string | null>(null);
-  const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
-  const [rotation, setRotation] = useState(0);
+  const [crop, setCrop] = useState({ x: initialCrop?.x ?? 0, y: initialCrop?.y ?? 0 });
+  const [zoom, setZoom] = useState(initialCrop?.zoom ?? 1);
+  const [rotation, setRotation] = useState(initialCrop?.rotation ?? 0);
   const [pixels, setPixels] = useState<Area | null>(null);
 
   useEffect(() => {
-    if (!file) {
-      setSrc(null);
+    if (!open) return;
+    if (file) {
+      const url = URL.createObjectURL(file);
+      setSrc(url);
+      setCrop({ x: initialCrop?.x ?? 0, y: initialCrop?.y ?? 0 });
+      setZoom(initialCrop?.zoom ?? 1);
+      setRotation(initialCrop?.rotation ?? 0);
+      return () => URL.revokeObjectURL(url);
+    }
+    if (sourceUrl) {
+      setSrc(sourceUrl);
+      setCrop({ x: initialCrop?.x ?? 0, y: initialCrop?.y ?? 0 });
+      setZoom(initialCrop?.zoom ?? 1);
+      setRotation(initialCrop?.rotation ?? 0);
       return;
     }
-    const url = URL.createObjectURL(file);
-    setSrc(url);
-    setCrop({ x: 0, y: 0 });
-    setZoom(1);
-    setRotation(0);
-    return () => URL.revokeObjectURL(url);
-  }, [file]);
+    setSrc(null);
+  }, [file, sourceUrl, open, initialCrop]);
 
   const onComplete = useCallback((_: Area, areaPixels: Area) => setPixels(areaPixels), []);
 
@@ -61,7 +71,7 @@ export function CoverCropperModal({ open, file, busy, onCancel, onConfirm }: Cov
     const blob = await renderCroppedImage(src, pixels, rotation);
     if (!blob) return;
     const out = new File([blob], `cover-${Date.now()}.jpg`, { type: 'image/jpeg' });
-    await onConfirm(out);
+    await onConfirm(out, { x: crop.x, y: crop.y, zoom, rotation, areaPixels: pixels });
   };
 
   return (
