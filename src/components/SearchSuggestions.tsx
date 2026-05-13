@@ -66,8 +66,10 @@ export const SearchSuggestions = ({
   const [aiLoading, setAiLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<SearchCategory | 'all'>('all');
   const [remoteBusinessItems, setRemoteBusinessItems] = useState<SearchItem[]>([]);
+  const [remoteProfessionalItems, setRemoteProfessionalItems] = useState<SearchItem[]>([]);
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const businessDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const professionalsDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { trackSearch } = useTrackInterest();
 
   const handleSelect = (item: SearchItem) => {
@@ -108,6 +110,38 @@ export const SearchSuggestions = ({
 
     return () => {
       if (businessDebounceRef.current) clearTimeout(businessDebounceRef.current);
+    };
+  }, [isOpen, query]);
+
+  // Fetch real professional Trust Pages by name
+  useEffect(() => {
+    if (professionalsDebounceRef.current) clearTimeout(professionalsDebounceRef.current);
+    const q = query.trim();
+    if (!isOpen || q.length < 2) {
+      setRemoteProfessionalItems([]);
+      return;
+    }
+    professionalsDebounceRef.current = setTimeout(async () => {
+      const { data, error } = await supabase.rpc('search_professionals', { _q: q });
+      if (error || !data) {
+        setRemoteProfessionalItems([]);
+        return;
+      }
+      setRemoteProfessionalItems(
+        (data as Array<{ slug: string; full_name: string; avatar_url: string | null; headline: string | null; location: string | null }>)
+          .filter((r) => r.slug && r.full_name)
+          .map((r) => ({
+            id: `pro:${r.slug}`,
+            name: r.full_name,
+            category: 'professionals' as SearchCategory,
+            subtitle: r.headline || r.location || 'Trust Page',
+            image: r.avatar_url || undefined,
+            meta: { professionalSlug: r.slug },
+          }))
+      );
+    }, 250);
+    return () => {
+      if (professionalsDebounceRef.current) clearTimeout(professionalsDebounceRef.current);
     };
   }, [isOpen, query]);
 
@@ -152,6 +186,7 @@ export const SearchSuggestions = ({
       const mergedGroupedResults = {
         ...searchResults.groupedResults,
         developers: mergedDevelopers,
+        professionals: remoteProfessionalItems as (SearchItem & { score: number })[],
       };
       const flat: SearchItem[] = [];
       
@@ -181,7 +216,7 @@ export const SearchSuggestions = ({
         flatItems: flat 
       };
     }
-  }, [query, remoteBusinessItems]);
+  }, [query, remoteBusinessItems, remoteProfessionalItems]);
   
   // Scroll selected item into view
   useEffect(() => {
