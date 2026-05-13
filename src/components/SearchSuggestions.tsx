@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search, TrendingUp, Flame } from "lucide-react";
+import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search, TrendingUp, Flame, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
@@ -29,6 +29,7 @@ const categoryFilters: { key: SearchCategory | 'all'; icon: React.ReactNode; lab
   { key: 'projects', icon: <Home className="w-3.5 h-3.5" />, label: 'Projects', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
   { key: 'locations', icon: <MapPin className="w-3.5 h-3.5" />, label: 'Locations', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
   { key: 'brokers', icon: <Users className="w-3.5 h-3.5" />, label: 'Brokers', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  { key: 'professionals', icon: <UserCheck className="w-3.5 h-3.5" />, label: 'Professionals', color: 'bg-teal-500/10 text-teal-600 border-teal-500/20' },
   { key: 'units', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'Units', color: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
   { key: 'apps', icon: <Smartphone className="w-3.5 h-3.5" />, label: 'Apps', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' },
 ];
@@ -42,10 +43,11 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   units: <LayoutGrid className="w-4 h-4" />,
   'property-types': <Building className="w-4 h-4" />,
   categories: <FolderOpen className="w-4 h-4" />,
-  reviews: <Star className="w-4 h-4" />
+  reviews: <Star className="w-4 h-4" />,
+  professionals: <UserCheck className="w-4 h-4" />
 };
 
-const categoryOrder: SearchCategory[] = ['developers', 'locations', 'projects', 'property-types', 'units', 'categories', 'brokers', 'apps'];
+const categoryOrder: SearchCategory[] = ['developers', 'professionals', 'locations', 'projects', 'property-types', 'units', 'categories', 'brokers', 'apps'];
 
 export const SearchSuggestions = ({
   query,
