@@ -233,13 +233,9 @@ const ProfessionalProfilePage = () => {
 
   const handleShare = async () => {
     const shareSlug = ownerSlug ?? pro.slug;
-    // Use the og-professional edge function URL so crawlers (WhatsApp,
-    // LinkedIn, Facebook) read the per-professional cover image and
-    // tagline. The function meta-refresh redirects humans to /pro/<slug>.
-    const projectId = import.meta.env.VITE_SUPABASE_PROJECT_ID;
-    const url = projectId
-      ? `https://${projectId}.supabase.co/functions/v1/og-professional?slug=${encodeURIComponent(shareSlug)}`
-      : `${window.location.origin}/pro/${shareSlug}`;
+    // Always copy the clean canonical URL — humans see a trustworthy
+    // r8estate.com link instead of a raw Supabase function URL.
+    const url = `${window.location.origin}/pro/${shareSlug}`;
     try { await navigator.clipboard.writeText(url); toast.success(t('professional.profile.share_copied')); }
     catch { toast.error(t('professional.profile.share_failed')); }
   };
