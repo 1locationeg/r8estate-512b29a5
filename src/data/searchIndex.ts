@@ -10,7 +10,8 @@ export type SearchCategory =
   | 'units' 
   | 'property-types'
   | 'categories'
-  | 'reviews';
+  | 'reviews'
+  | 'professionals';
 
 export interface SearchItem {
   id: string;
@@ -228,7 +229,8 @@ export function performSearch(query: string, limit: number = 15): SearchResults 
     units: [],
     'property-types': [],
     categories: [],
-    reviews: []
+    reviews: [],
+    professionals: []
   };
   
   for (const item of matchedItems) {
@@ -274,7 +276,8 @@ export function getPopularItems(): Record<SearchCategory, SearchItem[]> {
     categories: index
       .filter(i => i.category === 'categories')
       .slice(0, 4),
-    reviews: []
+    reviews: [],
+    professionals: []
   };
   
   return popular;
