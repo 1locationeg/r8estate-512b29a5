@@ -13,6 +13,24 @@ const DEFAULT_OG_IMAGE =
 const DEFAULT_DESCRIPTION =
   "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience.";
 
+function toPreviewImageUrl(imageUrl: string) {
+  try {
+    const parsed = new URL(imageUrl);
+    if (!parsed.pathname.includes("/storage/v1/object/public/")) return imageUrl;
+    parsed.pathname = parsed.pathname.replace(
+      "/storage/v1/object/public/",
+      "/storage/v1/render/image/public/",
+    );
+    parsed.searchParams.set("width", "1200");
+    parsed.searchParams.set("height", "630");
+    parsed.searchParams.set("resize", "cover");
+    parsed.searchParams.set("quality", "85");
+    return parsed.toString();
+  } catch {
+    return imageUrl;
+  }
+}
+
 function escapeHtml(s: string) {
   return s
     .replace(/&/g, "&amp;")
@@ -24,6 +42,11 @@ function escapeHtml(s: string) {
 
 function stripHtml(s: string) {
   return s.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function compactDescription(s: string) {
+  const text = stripHtml(s).replace(/\s+/g, " ").trim();
+  return text.length > 220 ? `${text.slice(0, 217).trim()}...` : text;
 }
 
 function buildHtml(meta: {
@@ -47,18 +70,22 @@ function buildHtml(meta: {
 <meta property="og:title" content="${t}"/>
 <meta property="og:description" content="${d}"/>
 <meta property="og:image" content="${i}"/>
+<meta property="og:image:secure_url" content="${i}"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="${t}"/>
 <meta property="og:url" content="${u}"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="${t}"/>
 <meta name="twitter:description" content="${d}"/>
 <meta name="twitter:image" content="${i}"/>
-<meta http-equiv="refresh" content="0;url=${u}"/>
+<meta name="twitter:image:alt" content="${t}"/>
+<meta name="robots" content="noindex,follow"/>
 <link rel="canonical" href="${u}"/>
 </head>
 <body>
-<p>Redirecting to <a href="${u}">${BRAND}</a>…</p>
+<script>window.location.replace(${JSON.stringify(meta.url)});</script>
+<p>Open <a href="${u}">${BRAND}</a>.</p>
 </body>
 </html>`;
 }
