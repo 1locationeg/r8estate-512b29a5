@@ -63,6 +63,7 @@ const ProfessionalSettings = lazy(() => import("./pages/ProfessionalSettings"));
 const Messages = lazy(() => import("./pages/Messages"));
 const FrictionlessReview = lazy(() => import("./pages/FrictionlessReview"));
 const SmartLinkRedirect = lazy(() => import("./components/SmartLinkRedirect"));
+const ProShortLink = lazy(() => import("./pages/ProShortLink"));
 const CopilotPage = lazy(() => import("./pages/CopilotPage"));
 const Sitemap = lazy(() => import("./pages/Sitemap"));
 const StaticPage = lazy(() => import("./pages/StaticPage"));
@@ -165,6 +166,7 @@ const AppContent = () => {
           <Route path="/review" element={<FrictionlessReview />} />
           <Route path="/go/:slug" element={<SmartLinkRedirect />} />
           <Route path="/go" element={<Navigate to="/" replace />} />
+          <Route path="/p/:slug" element={<ProShortLink />} />
           <Route path="/n/:tagCode" element={<NFCRedirect />} />
         </Routes>
       </Suspense>
