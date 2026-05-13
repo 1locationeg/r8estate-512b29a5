@@ -12,13 +12,10 @@ const DEFAULT_OG_IMAGE =
   "https://mcekdnvxeblikixmfyni.supabase.co/storage/v1/object/public/og-assets/r8estate-og.png";
 const DEFAULT_DESCRIPTION =
   "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience.";
-const htmlEncoder = new TextEncoder();
-
 const htmlHeaders = {
   ...corsHeaders,
-  "content-type": "text/html; charset=utf-8",
-  "cache-control": "no-store, max-age=0",
-  "x-content-type-options": "nosniff",
+  "Content-Type": "text/html; charset=utf-8",
+  "Cache-Control": "no-store, max-age=0",
 };
 
 function toPreviewImageUrl(imageUrl: string) {
@@ -101,7 +98,9 @@ function buildHtml(meta: {
 }
 
 function htmlResponse(html: string) {
-  return new Response(htmlEncoder.encode(html), { headers: htmlHeaders });
+  return new Response(new Blob([html], { type: "text/html; charset=utf-8" }), {
+    headers: htmlHeaders,
+  });
 }
 
 Deno.serve(async (req) => {
