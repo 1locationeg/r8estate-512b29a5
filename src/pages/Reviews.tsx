@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useSearchParams } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
 import { supabase } from "@/integrations/supabase/client";
 import { reviews as mockReviews, developers as mockDevelopers, Review, ReviewerTier } from "@/data/mockData";
 import { ReviewCard } from "@/components/ReviewCard";
@@ -291,6 +292,27 @@ const Reviews = () => {
 
   return (
     <StationPageWrapper className="min-h-screen bg-background pb-16">
+      <Helmet>
+        <script type="application/ld+json">{JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          name: "Verified Real Estate Reviews",
+          description: "Latest verified buyer reviews of Egyptian real estate developers and projects on R8ESTATE Meter.",
+          url: "https://meter.r8estate.com/reviews",
+          isPartOf: { "@type": "WebSite", name: "R8ESTATE Meter", url: "https://meter.r8estate.com" },
+          ...(stats.total > 0
+            ? {
+                aggregateRating: {
+                  "@type": "AggregateRating",
+                  ratingValue: stats.avg,
+                  reviewCount: stats.total,
+                  bestRating: 5,
+                  worstRating: 1,
+                },
+              }
+            : {}),
+        })}</script>
+      </Helmet>
       <PageHeader
         title={t("reviews.totalReviews", "Reviews")}
         breadcrumbs={[{ label: t("reviews.totalReviews", "Reviews") }]}
