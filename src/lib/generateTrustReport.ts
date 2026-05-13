@@ -47,6 +47,7 @@ const getCategoryLabel = (cat: SearchCategory): string => {
     "property-types": "Property Type",
     categories: "Category",
     reviews: "Review",
+    professionals: "Professional",
   };
   return labels[cat] || cat;
 };

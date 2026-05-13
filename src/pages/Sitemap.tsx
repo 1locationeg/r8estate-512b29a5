@@ -23,6 +23,7 @@ const CATEGORY_LABELS: Record<SearchCategory, string> = {
   "property-types": "Property Types",
   categories: "Categories",
   reviews: "Reviews",
+  professionals: "Professionals",
 };
 
 /** Merge search-index entities with hero-category items (deduplicated). */

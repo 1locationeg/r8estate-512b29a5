@@ -31,6 +31,7 @@ const getCategoryLabel = (cat: SearchCategory): string => {
     developers: "Developer", projects: "Project", locations: "Location",
     brokers: "Broker", apps: "App", units: "Unit Type",
     "property-types": "Property Type", categories: "Category", reviews: "Review",
+    professionals: "Professional",
   };
   return labels[cat] || cat;
 };

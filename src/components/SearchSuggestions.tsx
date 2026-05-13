@@ -1,6 +1,6 @@
 import { useMemo, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search, TrendingUp, Flame } from "lucide-react";
+import { Building2, MapPin, Home, FolderOpen, Users, Smartphone, LayoutGrid, Star, ArrowRight, Sparkles, Building, Mic, FileDown, GitCompare, PenLine, Loader2, Search, TrendingUp, Flame, UserCheck } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { performSearch, getPopularItems, type SearchItem, type SearchCategory } from "@/data/searchIndex";
 import { downloadTrustReport } from "@/lib/generateTrustReport";
@@ -29,6 +29,7 @@ const categoryFilters: { key: SearchCategory | 'all'; icon: React.ReactNode; lab
   { key: 'projects', icon: <Home className="w-3.5 h-3.5" />, label: 'Projects', color: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20' },
   { key: 'locations', icon: <MapPin className="w-3.5 h-3.5" />, label: 'Locations', color: 'bg-amber-500/10 text-amber-600 border-amber-500/20' },
   { key: 'brokers', icon: <Users className="w-3.5 h-3.5" />, label: 'Brokers', color: 'bg-purple-500/10 text-purple-600 border-purple-500/20' },
+  { key: 'professionals', icon: <UserCheck className="w-3.5 h-3.5" />, label: 'Professionals', color: 'bg-teal-500/10 text-teal-600 border-teal-500/20' },
   { key: 'units', icon: <LayoutGrid className="w-3.5 h-3.5" />, label: 'Units', color: 'bg-rose-500/10 text-rose-600 border-rose-500/20' },
   { key: 'apps', icon: <Smartphone className="w-3.5 h-3.5" />, label: 'Apps', color: 'bg-cyan-500/10 text-cyan-600 border-cyan-500/20' },
 ];
@@ -42,10 +43,11 @@ const categoryIcons: Record<SearchCategory, React.ReactNode> = {
   units: <LayoutGrid className="w-4 h-4" />,
   'property-types': <Building className="w-4 h-4" />,
   categories: <FolderOpen className="w-4 h-4" />,
-  reviews: <Star className="w-4 h-4" />
+  reviews: <Star className="w-4 h-4" />,
+  professionals: <UserCheck className="w-4 h-4" />
 };
 
-const categoryOrder: SearchCategory[] = ['developers', 'locations', 'projects', 'property-types', 'units', 'categories', 'brokers', 'apps'];
+const categoryOrder: SearchCategory[] = ['developers', 'professionals', 'locations', 'projects', 'property-types', 'units', 'categories', 'brokers', 'apps'];
 
 export const SearchSuggestions = ({
   query,
@@ -64,8 +66,10 @@ export const SearchSuggestions = ({
   const [aiLoading, setAiLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState<SearchCategory | 'all'>('all');
   const [remoteBusinessItems, setRemoteBusinessItems] = useState<SearchItem[]>([]);
+  const [remoteProfessionalItems, setRemoteProfessionalItems] = useState<SearchItem[]>([]);
   const aiDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const businessDebounceRef = useRef<ReturnType<typeof setTimeout>>();
+  const professionalsDebounceRef = useRef<ReturnType<typeof setTimeout>>();
   const { trackSearch } = useTrackInterest();
 
   const handleSelect = (item: SearchItem) => {
@@ -106,6 +110,38 @@ export const SearchSuggestions = ({
 
     return () => {
       if (businessDebounceRef.current) clearTimeout(businessDebounceRef.current);
+    };
+  }, [isOpen, query]);
+
+  // Fetch real professional Trust Pages by name
+  useEffect(() => {
+    if (professionalsDebounceRef.current) clearTimeout(professionalsDebounceRef.current);
+    const q = query.trim();
+    if (!isOpen || q.length < 2) {
+      setRemoteProfessionalItems([]);
+      return;
+    }
+    professionalsDebounceRef.current = setTimeout(async () => {
+      const { data, error } = await supabase.rpc('search_professionals', { _q: q });
+      if (error || !data) {
+        setRemoteProfessionalItems([]);
+        return;
+      }
+      setRemoteProfessionalItems(
+        (data as Array<{ slug: string; full_name: string; avatar_url: string | null; headline: string | null; location: string | null }>)
+          .filter((r) => r.slug && r.full_name)
+          .map((r) => ({
+            id: `pro:${r.slug}`,
+            name: r.full_name,
+            category: 'professionals' as SearchCategory,
+            subtitle: r.headline || r.location || 'Trust Page',
+            image: r.avatar_url || undefined,
+            meta: { professionalSlug: r.slug },
+          }))
+      );
+    }, 250);
+    return () => {
+      if (professionalsDebounceRef.current) clearTimeout(professionalsDebounceRef.current);
     };
   }, [isOpen, query]);
 
@@ -150,6 +186,7 @@ export const SearchSuggestions = ({
       const mergedGroupedResults = {
         ...searchResults.groupedResults,
         developers: mergedDevelopers,
+        professionals: remoteProfessionalItems as (SearchItem & { score: number })[],
       };
       const flat: SearchItem[] = [];
       
@@ -179,7 +216,7 @@ export const SearchSuggestions = ({
         flatItems: flat 
       };
     }
-  }, [query, remoteBusinessItems]);
+  }, [query, remoteBusinessItems, remoteProfessionalItems]);
   
   // Scroll selected item into view
   useEffect(() => {
