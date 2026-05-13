@@ -10,9 +10,19 @@ export type CustomSection = {
   order: number;
 };
 
+export type CoverCropState = {
+  x: number;
+  y: number;
+  zoom: number;
+  rotation: number;
+  areaPixels: { x: number; y: number; width: number; height: number };
+};
+
 export type ProfessionalPageData = {
   user_id: string;
   cover_url: string | null;
+  cover_source_url: string | null;
+  cover_crop: CoverCropState | null;
   headline: string | null;
   bio: string | null;
   location: string | null;
@@ -22,6 +32,8 @@ export type ProfessionalPageData = {
 
 const EMPTY: Omit<ProfessionalPageData, 'user_id'> = {
   cover_url: null,
+  cover_source_url: null,
+  cover_crop: null,
   headline: null,
   bio: null,
   location: null,
@@ -59,9 +71,15 @@ export function useProfessionalPage() {
         console.error('[professional_pages] load', error);
         setData({ user_id: user.id, ...EMPTY });
       } else if (row) {
+        const r = row as typeof row & {
+          cover_source_url?: string | null;
+          cover_crop?: unknown;
+        };
         setData({
           user_id: row.user_id,
           cover_url: row.cover_url,
+          cover_source_url: r.cover_source_url ?? null,
+          cover_crop: (r.cover_crop as CoverCropState | null) ?? null,
           headline: row.headline,
           bio: row.bio,
           location: row.location,
@@ -89,6 +107,8 @@ export function useProfessionalPage() {
           {
             user_id: user.id,
             cover_url: next.cover_url,
+            cover_source_url: next.cover_source_url,
+            cover_crop: next.cover_crop as unknown as never,
             headline: next.headline,
             bio: next.bio,
             location: next.location,
@@ -105,7 +125,10 @@ export function useProfessionalPage() {
   );
 
   const uploadCover = useCallback(
-    async (file: File) => {
+    async (
+      file: File,
+      opts?: { sourceFile?: File | null; crop?: CoverCropState | null },
+    ) => {
       if (!user) return;
       if (!file.type.startsWith('image/')) {
         toast.error('Please select an image file');
@@ -126,10 +149,27 @@ export function useProfessionalPage() {
         return;
       }
       const { data: urlData } = supabase.storage.from('professional-covers').getPublicUrl(path);
-      await save({ cover_url: urlData.publicUrl });
+
+      let sourceUrl = data?.cover_source_url ?? null;
+      if (opts?.sourceFile) {
+        const sext = opts.sourceFile.name.split('.').pop() || 'jpg';
+        const spath = `${user.id}/source-${Date.now()}.${sext}`;
+        const { error: sErr } = await supabase.storage
+          .from('professional-covers')
+          .upload(spath, opts.sourceFile, { upsert: true, contentType: opts.sourceFile.type });
+        if (!sErr) {
+          sourceUrl = supabase.storage.from('professional-covers').getPublicUrl(spath).data.publicUrl;
+        }
+      }
+
+      await save({
+        cover_url: urlData.publicUrl,
+        cover_source_url: sourceUrl,
+        cover_crop: opts?.crop ?? data?.cover_crop ?? null,
+      });
       toast.success('Cover updated');
     },
-    [user, save],
+    [user, save, data],
   );
 
   const upsertSection = useCallback(
