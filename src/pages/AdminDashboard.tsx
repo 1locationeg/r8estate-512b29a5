@@ -11,7 +11,7 @@ import {
   Loader2, LayoutDashboard, Users, Building2, MessageSquare, 
   Shield, Settings, BarChart3, AlertTriangle, CheckCircle, 
   Ban, Eye, TrendingUp, Star, Sparkles, Megaphone, Phone, 
-  Plus, Trash2, TestTube, ExternalLink, Globe, Image, MessageSquareHeart,
+  Plus, Trash2, TestTube, ExternalLink, Globe, Image as ImageIcon, MessageSquareHeart,
   Bot, PenTool, CreditCard, Receipt, DollarSign, FolderTree, Navigation, Mail, Layout, Briefcase, Zap, UserCheck, Search, Lock, Tag, Activity, Rocket, Code, ShieldCheck, Gift, ShieldAlert, Flag, Timer, Link as LinkIcon, ScanSearch
   , Smartphone
 } from 'lucide-react';
@@ -41,6 +41,7 @@ import AdminCommunityModeration from '@/components/AdminCommunityModeration';
 import AdminContentReports from '@/components/AdminContentReports';
 import AdminGuestTimer from '@/components/AdminGuestTimer';
 import AdminSmartLinks from '@/components/AdminSmartLinks';
+import SharePreviewManager from '@/components/admin/SharePreviewManager';
 import AdminNFCManagement from '@/components/AdminNFCManagement';
 import AdminFooterSettings from '@/components/AdminFooterSettings';
 import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
@@ -2342,6 +2343,7 @@ const AdminDashboard = () => {
         { icon: <Code className="w-4 h-4" />, label: 'Widgets', path: '/admin/widgets' },
         { icon: <TrendingUp className="w-4 h-4" />, label: 'Upsell Teaser', path: '/admin/upsell' },
         { icon: <LinkIcon className="w-4 h-4" />, label: 'Smart Links', path: '/admin/smart-links' },
+        { icon: <ImageIcon className="w-4 h-4" />, label: 'Share Previews', path: '/admin/share-previews' },
         { icon: <Smartphone className="w-4 h-4" />, label: 'NFC Tags', path: '/admin/nfc' },
       ],
     },
@@ -2437,6 +2439,7 @@ const AdminDashboard = () => {
           <Route path="content-reports" element={<AdminContentReports />} />
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
+          <Route path="share-previews" element={<SharePreviewManager />} />
           <Route path="nfc" element={<AdminNFCManagement />} />
           <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />

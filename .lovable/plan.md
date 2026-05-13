@@ -1,31 +1,77 @@
 ## Goal
-Let a Super Admin upgrade any user to a **Professional** account directly from the Admin → Users table, which immediately gives them a working Trust / Professional Profile page (e.g. `/pro/<their-name>`).
 
-## How it will work
+When a professional shares their `/pro/:slug` link on WhatsApp / LinkedIn / Facebook, the link preview should show:
+- **Image**: their cover photo (not the generic R8ESTATE banner)
+- **Text**: "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience."
 
-1. **Admin UI** — In the User Management table (and the user detail sheet), add a new pill button **"Make Professional"** next to the existing Buyer / Business / Admin role buttons.
-   - If the user is already a professional, the pill turns green and shows **"Professional ✓"** with a "Revert to Buyer" option.
-   - Add an **"Open Trust Page"** quick link (uses their name slug) once they are professional, mirroring the existing "Open Page" link for businesses.
+Plus an admin control to override the preview (image + rich text) per professional URL — useful for marketing campaigns and offers.
 
-2. **What the upgrade does** (single click, atomic):
-   - Sets `user_account_kinds.account_kind = 'professional'` for that user.
-   - Initialises a default professional profile entry so their `/pro/<slug>` page resolves immediately (uses their `full_name` and avatar from `profiles`).
-   - Sends them an in-app notification: *"You've been upgraded to a Professional account — your Trust Page is live."*
-   - Toast confirmation in the admin UI with a "View Trust Page" link.
+---
 
-3. **Permissions** — Only Super Admin (and admins with edit permission) can perform the upgrade. Reuses the existing `is_super_admin` / `has_role` checks already used in the User Management screen.
+## Why a new edge function is needed
 
-4. **Slug behaviour** — Reuses the existing `slugify(full_name)` already added to `ProfessionalProfile.tsx`. If the resulting slug collides with another professional, append a short suffix.
+Social crawlers (WhatsApp, LinkedIn, Facebook, Slack) do **not** execute JavaScript, so they only ever read the static `index.html`. React-helmet/per-route meta tags are invisible to them. The existing `og-community` function already solves this for community posts using a meta-refresh redirect pattern — we'll mirror it for professionals.
 
-## Technical details
+---
 
-- **DB migration**: new RPC `admin_set_account_kind(_target_user uuid, _kind text)` — security-definer, restricted to admins, upserts into `user_account_kinds` and inserts a notification row. No schema changes needed beyond the function.
-- **Frontend**:
-  - `src/pages/AdminDashboard.tsx` — add `handleAccountKindChange`, render the new pill in the table row + detail sheet.
-  - `src/components/AdminUserDetailSheet.tsx` — same control inside the sheet.
-  - Refresh `nonAdminUsers` after success (extend the user query to also fetch `account_kind` per user so the button state is accurate).
-- **Trust page**: no changes needed — `ProfessionalProfile.tsx` already overlays signed-in professional identity onto the template, so the page works as soon as `account_kind = 'professional'`.
+## Plan
 
-## Out of scope
-- Billing / paid plan flows (this is an admin-granted upgrade).
-- Editing the professional profile content from the admin panel (the user edits their own page after upgrade).
+### 1. Database — admin overrides table
+
+New migration creating `og_overrides`:
+- `id`, `slug` (unique, the `/pro/:slug` value), `image_url` (nullable), `body_html` (nullable, rich text), `title` (nullable), `description` (nullable), `enabled` (bool), timestamps
+- RLS: public SELECT (so the edge function can read with anon key), INSERT/UPDATE/DELETE restricted to admins via `has_role(auth.uid(), 'admin')`
+- A small storage bucket `og-professional-assets` (public) for admin-uploaded marketing images
+
+### 2. Edge function — `og-professional`
+
+`supabase/functions/og-professional/index.ts` (modeled on `og-community`):
+- Accepts `?slug=mohamed-mahmoud`
+- Looks up `og_overrides` first → if `enabled`, use its image/title/description/body
+- Otherwise calls `get_professional_by_slug` and uses `cover_url` + the standard tagline
+- Returns HTML with `og:title`, `og:description`, `og:image`, `twitter:card`, and a `<meta http-equiv="refresh">` redirect to `https://meter.r8estate.com/pro/:slug`
+- Falls back to default OG image if no cover
+
+### 3. Share link wiring
+
+In `ProfessionalProfile.tsx`, the existing share/copy-link button copies the **edge-function URL** (`https://mcekdnvxeblikixmfyni.supabase.co/functions/v1/og-professional?slug=...`) instead of the raw `/pro/:slug` URL. Crawlers see rich preview, humans get redirected to the SPA.
+
+Optional convenience: add a friendlier alias `meter.r8estate.com/s/pro/:slug` later — out of scope for this pass.
+
+### 4. Admin dashboard control
+
+Add a new section in `AdminDashboard.tsx` called **"Trust Page Share Previews"**:
+- Table listing all professionals (slug + name) with current override status
+- "Edit preview" opens a modal with:
+  - Slug field (auto-filled, read-only)
+  - Image picker: upload to `og-professional-assets` OR paste URL OR "Use cover photo" (clears override → falls back to cover)
+  - Title input (optional override)
+  - Description input (optional override; default is the new tagline)
+  - **TipTap rich-text editor** for `body_html` (used as the long-form description for crawlers that render it; we'll also strip-to-plaintext for `og:description` if title/description are empty)
+  - Enable toggle + Save / Reset buttons
+- Live preview card showing how the share will look (mimics WhatsApp/LinkedIn card)
+
+### 5. Default tagline rollout
+
+Replace the hard-coded community-style description in the new function with the requested copy:
+> "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience."
+
+---
+
+## Files touched
+
+**New**
+- `supabase/migrations/<timestamp>_og_overrides.sql`
+- `supabase/functions/og-professional/index.ts`
+- `src/components/admin/SharePreviewManager.tsx` (admin UI + TipTap editor + live preview)
+
+**Edited**
+- `src/pages/ProfessionalProfile.tsx` — share/copy-link uses edge-function URL
+- `src/pages/AdminDashboard.tsx` — mount the new manager as a tab/section
+
+---
+
+## Caveats to flag
+
+- WhatsApp aggressively caches previews. Existing shared links won't refresh until WhatsApp re-fetches (usually after ~7 days, or via a query param tweak).
+- The edge-function URL is what gets shared. Humans clicking it are redirected to `/pro/:slug` instantly via `meta refresh` — the URL bar briefly shows the function host. If you want the URL bar to always show `meter.r8estate.com`, that requires a custom-domain rewrite which Lovable's static hosting doesn't support today.

@@ -1439,6 +1439,42 @@ export type Database = {
         }
         Relationships: []
       }
+      og_overrides: {
+        Row: {
+          body_html: string | null
+          created_at: string
+          description: string | null
+          enabled: boolean
+          id: string
+          image_url: string | null
+          slug: string
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          body_html?: string | null
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          image_url?: string | null
+          slug: string
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          body_html?: string | null
+          created_at?: string
+          description?: string | null
+          enabled?: boolean
+          id?: string
+          image_url?: string | null
+          slug?: string
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       onboarding_progress: {
         Row: {
           completed_at: string | null
