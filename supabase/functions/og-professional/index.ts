@@ -14,7 +14,7 @@ const DEFAULT_DESCRIPTION =
   "R8ESTATE professional trust page — showcasing real client reviews, expertise, achievements, certifications, and trusted off-plan real estate experience.";
 const htmlHeaders = {
   ...corsHeaders,
-  "Content-Type": "text/html; charset=utf-8",
+  "Content-Type": "application/xhtml+xml; charset=utf-8",
   "Cache-Control": "no-store, max-age=0",
 };
 
@@ -98,7 +98,7 @@ function buildHtml(meta: {
 }
 
 function htmlResponse(html: string) {
-  return new Response(new Blob([html], { type: "text/html; charset=utf-8" }), {
+  return new Response(new Blob([html], { type: "application/xhtml+xml; charset=utf-8" }), {
     headers: htmlHeaders,
   });
 }
