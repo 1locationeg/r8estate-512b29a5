@@ -2640,6 +2640,16 @@ export type Database = {
         Args: { p_developer_id: string }
         Returns: undefined
       }
+      search_professionals: {
+        Args: { _q: string }
+        Returns: {
+          avatar_url: string
+          full_name: string
+          headline: string
+          location: string
+          slug: string
+        }[]
+      }
       set_my_account_kind: { Args: { _account_kind: string }; Returns: string }
       set_my_account_type: {
         Args: { _account_type: string }
