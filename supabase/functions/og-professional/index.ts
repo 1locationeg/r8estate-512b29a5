@@ -118,6 +118,7 @@ Deno.serve(async (req) => {
     if (slug === "og-professional") slug = null;
   }
 
+  const shareUrl = slug ? `${SITE_URL}/p/${slug}` : SITE_URL;
   const targetUrl = slug ? `${SITE_URL}/pro/${slug}` : SITE_URL;
 
   try {
@@ -169,24 +170,17 @@ Deno.serve(async (req) => {
       }
     }
 
-    const html = buildHtml({ title, description, image, url: targetUrl });
-    return new Response(html, {
-      headers: {
-        ...corsHeaders,
-        "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=300",
-      },
-    });
+    const html = buildHtml({ title, description, image, shareUrl, targetUrl });
+    return htmlResponse(html);
   } catch (err) {
     console.error("og-professional error:", err);
     const html = buildHtml({
       title: `${BRAND} — Professional Trust Page`,
       description: DEFAULT_DESCRIPTION,
       image: DEFAULT_OG_IMAGE,
-      url: targetUrl,
+      shareUrl,
+      targetUrl,
     });
-    return new Response(html, {
-      headers: { ...corsHeaders, "Content-Type": "text/html; charset=utf-8" },
-    });
+    return htmlResponse(html);
   }
 });
