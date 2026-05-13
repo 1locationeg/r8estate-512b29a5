@@ -157,20 +157,23 @@ Deno.serve(async (req) => {
       if (pro?.cover_url) {
         image = toPreviewImageUrl(pro.cover_url);
       }
+      const socialProof = ratingLine();
       if (pro?.headline) {
-        description = compactDescription(`${pro.headline}. ${DEFAULT_DESCRIPTION}`);
+        description = compactDescription(`${socialProof} — ${pro.headline}. ${DEFAULT_DESCRIPTION}`);
       } else if (pro?.bio) {
-        description = compactDescription(pro.bio);
+        description = compactDescription(`${socialProof} — ${pro.bio}`);
+      } else if (pro?.full_name) {
+        description = compactDescription(`${socialProof} — ${DEFAULT_DESCRIPTION}`);
       }
 
       if (override && override.enabled) {
         if (override.title) title = override.title;
         if (override.image_url) image = toPreviewImageUrl(override.image_url);
         if (override.description) {
-          description = compactDescription(override.description);
+          description = compactDescription(`${socialProof} — ${override.description}`);
         } else if (override.body_html) {
           const text = compactDescription(override.body_html);
-          if (text) description = text;
+          if (text) description = compactDescription(`${socialProof} — ${text}`);
         }
       }
     }
