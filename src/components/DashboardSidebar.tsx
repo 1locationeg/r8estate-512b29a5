@@ -12,6 +12,7 @@ import { LogOut, ChevronDown, Coins, Trophy, Building2 } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { cn } from '@/lib/utils';
 import { VerifiedBuyerBadge } from '@/components/VerifiedBuyerBadge';
+import { AvatarWithOverlay } from '@/components/AvatarWithOverlay';
 
 interface NavItem {
   icon: React.ReactNode;
@@ -210,18 +211,19 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
         <div className="flex flex-col items-center text-center">
           {/* Avatar with tier badge + online dot */}
           <div className="relative mb-3">
-            <Avatar className={cn(
-              "h-[72px] w-[72px] ring-[3px]",
-              isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
-            )}>
-              <AvatarImage src={profile?.avatar_url || undefined} />
-              <AvatarFallback className={cn(
+            <AvatarWithOverlay
+              audience={isBusinessPortal ? 'businesses' : 'buyers'}
+              src={profile?.avatar_url || undefined}
+              fallback={profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
+              fallbackClassName={cn(
                 "text-xl font-bold",
                 isBusinessPortal ? "bg-business-border text-white" : "bg-primary text-primary-foreground"
+              )}
+              className={cn(
+              "h-[72px] w-[72px] ring-[3px]",
+              isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
               )}>
-                {profile?.full_name?.charAt(0) || user?.email?.charAt(0) || 'U'}
-              </AvatarFallback>
-            </Avatar>
+            />
             {/* Tier badge — top-start (buyer) */}
             {isBuyerPortal && !gamification.isLoading && (
               <span className="absolute -top-0.5 -start-0.5 w-[22px] h-[22px] rounded-full bg-coin border-[2.5px] border-white flex items-center justify-center text-[10px]">
