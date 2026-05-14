@@ -49,6 +49,7 @@ import AdminContactSettings from '@/components/AdminContactSettings';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import AdminTruthCheck from '@/components/AdminTruthCheck';
 import AdminAvatarOverlays from '@/components/admin/AdminAvatarOverlays';
+import { AccountAvatarUploader } from '@/components/AccountAvatarUploader';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
@@ -1699,6 +1700,7 @@ const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
     <div className="max-w-lg space-y-4">
+      <AccountAvatarUploader audience="admins" />
       {[
         { title: 'Auto-approve reviews', desc: 'Automatically approve reviews from verified users' },
         { title: 'Email notifications', desc: 'Send email alerts for flagged content' },
