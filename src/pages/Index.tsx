@@ -500,7 +500,7 @@ const Index = () => { // hero-phase-v2
             <div data-zone="3" className="w-full">
 
               {/* Trust strip — single readable pill row */}
-              <HomeSection compact>
+              <SectionGate sectionKey="trust_strip"><HomeSection compact>
                 <div className="flex flex-wrap items-center justify-center gap-2 md:gap-3 py-2 px-3 rounded-2xl bg-muted/50 border border-border/50">
                   <span className="inline-flex items-center gap-1.5 bg-background/90 rounded-full py-1.5 px-3 border border-border/40 text-xs md:text-sm font-semibold text-foreground">
                     <Sparkles className="w-3.5 h-3.5 text-primary shrink-0" />
@@ -515,28 +515,28 @@ const Index = () => { // hero-phase-v2
                     <span className="truncate">{t("widgets.realExperts")}</span>
                   </span>
                 </div>
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* HowWeWork */}
-              <HomeSection>
+              <SectionGate sectionKey="how_we_work"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.howEyebrow", "HOW IT WORKS")}
                   title={t("home.howTitle", "Three steps to a confident decision")}
                 />
                 <HowWeWork />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Audience Segments */}
-              <HomeSection>
+              <SectionGate sectionKey="audience_segments"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.audienceEyebrow", "WHO IT'S FOR")}
                   title={t("home.audienceTitle", "Built for everyone in the journey")}
                 />
                 <AudienceSegmentCards />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Community */}
-              <HomeSection>
+              <SectionGate sectionKey="community_highlights"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.communityEyebrow", "COMMUNITY")}
                   title={t("home.communityTitle", "Conversations from real buyers")}
@@ -544,10 +544,10 @@ const Index = () => { // hero-phase-v2
                   viewAllLabel={t("home.viewAll", "View all")}
                 />
                 <CommunityHighlights />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Reviews */}
-              <HomeSection>
+              <SectionGate sectionKey="reviews_carousel"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.reviewsEyebrow", "REAL BUYERS")}
                   title={t("home.reviewsTitle", "What buyers are saying")}
@@ -555,37 +555,37 @@ const Index = () => { // hero-phase-v2
                   viewAllLabel={t("home.viewAll", "View all")}
                 />
                 <ReviewsCarousel />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Pricing */}
-              <HomeSection>
+              <SectionGate sectionKey="pricing_teaser"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.pricingEyebrow", "UPGRADE")}
                   title={t("home.pricingTitle", "Plans for businesses that earn trust")}
                   centered
                 />
                 <PricingTeaser />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* SDG */}
-              <HomeSection compact>
+              <SectionGate sectionKey="sdg_strip"><HomeSection compact>
                 <SDGAlignmentStrip />
-              </HomeSection>
+              </HomeSection></SectionGate>
               </div>{/* end zone 3 */}
 
               <div data-zone="4" className="w-full">
               {/* Journey Complete CTA */}
-              <HomeSection>
+              <SectionGate sectionKey="journey_complete_cta"><HomeSection>
                 <JourneyCompleteCTA />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Site Experience Feedback */}
-              <HomeSection compact>
+              <SectionGate sectionKey="site_experience_feedback"><HomeSection compact>
                 <SiteExperienceFeedback />
-              </HomeSection>
+              </HomeSection></SectionGate>
 
               {/* Category Links */}
-              <HomeSection>
+              <SectionGate sectionKey="hero_category_links"><HomeSection>
                 <SectionHeader
                   eyebrow={t("home.browseEyebrow", "BROWSE")}
                   title={t("home.browseTitle", "Find your next move by category")}
@@ -596,7 +596,7 @@ const Index = () => { // hero-phase-v2
                   onSelectItem={(item) => { setSpecialViewItem(item); setActiveView(null); setSelectedDeveloperId(null); }}
                   onCategorySelect={(catKey) => { setExternalCategory(catKey); setActiveView(null); setSelectedDeveloperId(null); setSpecialViewItem(null); setTimeout(() => setExternalCategory(null), 100); }}
                 />
-              </HomeSection>
+              </HomeSection></SectionGate>
               </div>{/* end zone 4 */}
 
               {(specialViewItem || selectedDeveloper) && (
@@ -612,13 +612,13 @@ const Index = () => { // hero-phase-v2
               )}
 
               {!specialViewItem && !selectedDeveloper && (
-                <HomeSection>
+                <SectionGate sectionKey="smart_recommendations"><HomeSection>
                   <SectionHeader
                     eyebrow={t("home.forYouEyebrow", "FOR YOU")}
                     title={t("home.forYouTitle", "Recommended for your search")}
                   />
                   <SmartRecommendations onSelectDeveloper={setSelectedDeveloperId} />
-                </HomeSection>
+                </HomeSection></SectionGate>
               )}
           </section>
         </>
