@@ -48,6 +48,8 @@ import AdminWelcomeMessage from '@/components/AdminWelcomeMessage';
 import AdminContactSettings from '@/components/AdminContactSettings';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import AdminTruthCheck from '@/components/AdminTruthCheck';
+import AdminAvatarOverlays from '@/components/admin/AdminAvatarOverlays';
+import { AccountAvatarUploader } from '@/components/AccountAvatarUploader';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
 
@@ -1698,6 +1700,7 @@ const AdminSettings = () => (
   <div>
     <h2 className="text-2xl font-bold text-foreground mb-4">Platform Settings</h2>
     <div className="max-w-lg space-y-4">
+      <AccountAvatarUploader audience="admins" />
       {[
         { title: 'Auto-approve reviews', desc: 'Automatically approve reviews from verified users' },
         { title: 'Email notifications', desc: 'Send email alerts for flagged content' },
@@ -2344,6 +2347,7 @@ const AdminDashboard = () => {
         { icon: <TrendingUp className="w-4 h-4" />, label: 'Upsell Teaser', path: '/admin/upsell' },
         { icon: <LinkIcon className="w-4 h-4" />, label: 'Smart Links', path: '/admin/smart-links' },
         { icon: <ImageIcon className="w-4 h-4" />, label: 'Share Previews', path: '/admin/share-previews' },
+        { icon: <Sparkles className="w-4 h-4" />, label: 'Avatar Overlays', path: '/admin/avatar-overlays' },
         { icon: <Smartphone className="w-4 h-4" />, label: 'NFC Tags', path: '/admin/nfc' },
       ],
     },
@@ -2440,6 +2444,7 @@ const AdminDashboard = () => {
           <Route path="guest-timer" element={<AdminGuestTimer />} />
           <Route path="smart-links" element={<AdminSmartLinks />} />
           <Route path="share-previews" element={<SharePreviewManager />} />
+          <Route path="avatar-overlays" element={<AdminAvatarOverlays />} />
           <Route path="nfc" element={<AdminNFCManagement />} />
           <Route path="footer" element={<AdminFooterSettings />} />
           <Route path="registration-slots" element={<AdminRegistrationSlots />} />

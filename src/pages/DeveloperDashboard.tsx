@@ -48,6 +48,7 @@ import { ReviewReplyForm } from '@/components/ReviewReplyForm';
 import { BusinessCategoryPicker } from '@/components/BusinessCategoryPicker';
 import BusinessWidgets from '@/components/BusinessWidgets';
 import BusinessNFC from '@/components/BusinessNFC';
+import { AccountAvatarUploader } from '@/components/AccountAvatarUploader';
 import { Code, Smartphone } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 // Use first developer as "my business"
@@ -681,6 +682,7 @@ const DevSettings = () => {
     <div>
       <h2 className="text-2xl font-bold text-foreground mb-4">Account Details</h2>
       <div className="max-w-lg space-y-6">
+        <AccountAvatarUploader audience="businesses" />
         <div className="bg-card border border-border rounded-xl p-5">
           <h3 className="font-semibold text-foreground mb-4">Company Information</h3>
           <div className="space-y-3">

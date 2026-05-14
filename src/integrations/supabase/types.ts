@@ -92,6 +92,51 @@ export type Database = {
         }
         Relationships: []
       }
+      avatar_overlays: {
+        Row: {
+          audience: string
+          created_at: string
+          created_by: string | null
+          end_at: string | null
+          icon_url: string
+          id: string
+          is_active: boolean
+          name: string
+          position: string
+          size_percent: number
+          start_at: string | null
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          end_at?: string | null
+          icon_url: string
+          id?: string
+          is_active?: boolean
+          name: string
+          position?: string
+          size_percent?: number
+          start_at?: string | null
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          created_by?: string | null
+          end_at?: string | null
+          icon_url?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          position?: string
+          size_percent?: number
+          start_at?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       business_claims: {
         Row: {
           admin_notes: string | null

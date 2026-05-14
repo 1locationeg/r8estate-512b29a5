@@ -10,6 +10,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { BusinessLogoProvider } from "@/contexts/BusinessLogoContext";
 import { BusinessProfileProvider } from "@/contexts/BusinessProfileContext";
 import { GuestTimerProvider } from "@/contexts/GuestTimerContext";
+import { AvatarOverlayProvider } from "@/contexts/AvatarOverlayContext";
 import { GuestTimerBanner } from "@/components/GuestTimerBanner";
 import { GuestTimerExpiredModal } from "@/components/GuestTimerExpiredModal";
 import { PWAInstallBanner } from "@/components/PWAInstallBanner";
@@ -121,6 +122,7 @@ const App = () => (
         <AuthProvider>
           <BusinessProfileProvider>
           <BusinessLogoProvider>
+          <AvatarOverlayProvider>
           <GuestTimerProvider>
             <Toaster />
             <Sonner />
@@ -130,6 +132,7 @@ const App = () => (
               <AppContent />
             </BrowserRouter>
           </GuestTimerProvider>
+          </AvatarOverlayProvider>
           </BusinessLogoProvider>
           </BusinessProfileProvider>
         </AuthProvider>
