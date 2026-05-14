@@ -220,9 +220,9 @@ const SidebarContent = ({ navItems, portalLabel, companyInfo, bottomAction, onNa
                 isBusinessPortal ? "bg-business-border text-white" : "bg-primary text-primary-foreground"
               )}
               className={cn(
-              "h-[72px] w-[72px] ring-[3px]",
-              isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
-              )}>
+                "h-[72px] w-[72px] ring-[3px]",
+                isBusinessPortal ? "ring-business-border/20" : "ring-primary/20"
+              )}
             />
             {/* Tier badge — top-start (buyer) */}
             {isBuyerPortal && !gamification.isLoading && (
