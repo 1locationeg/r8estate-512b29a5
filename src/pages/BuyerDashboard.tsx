@@ -670,13 +670,13 @@ const BuyerProfile = () => {
 
     setUploadingAvatar(true);
     try {
-      const fileExt = file.name.split('.').pop();
-      const filePath = `${user.id}/avatar.${fileExt}`;
+      const fileExt = file.name.split('.').pop()?.toLowerCase() || 'png';
+      const filePath = `${user.id}/avatar-${Date.now()}.${fileExt}`;
 
       // Upload to storage
       const { error: uploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file, { upsert: true });
+        .upload(filePath, file, { contentType: file.type });
 
       if (uploadError) throw uploadError;
 
@@ -689,10 +689,15 @@ const BuyerProfile = () => {
       const avatarUrl = `${publicUrl}?t=${Date.now()}`;
 
       // Update profile
-      const { error: updateError } = await supabase
+      const { error: updateError } = await (supabase as any)
         .from('profiles')
-        .update({ avatar_url: avatarUrl, updated_at: new Date().toISOString() })
-        .eq('user_id', user.id);
+        .upsert({
+          user_id: user.id,
+          email: user.email,
+          full_name: profile?.full_name || user.user_metadata?.full_name || user.email?.split('@')[0] || null,
+          avatar_url: avatarUrl,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' });
 
       if (updateError) throw updateError;
 
