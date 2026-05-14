@@ -129,7 +129,19 @@ const ProfessionalSettings = () => {
       });
       if (upErr) throw upErr;
       const { data } = supabase.storage.from('avatars').getPublicUrl(path);
-      setAvatarUrl(data.publicUrl);
+      const freshUrl = `${data.publicUrl}?t=${Date.now()}`;
+      const { error: profileErr } = await (supabase as any)
+        .from('profiles')
+        .upsert({
+          user_id: user.id,
+          email: user.email,
+          full_name: fullName || profile?.full_name || user.email?.split('@')[0] || null,
+          avatar_url: freshUrl,
+          updated_at: new Date().toISOString(),
+        }, { onConflict: 'user_id' });
+      if (profileErr) throw profileErr;
+      setAvatarUrl(freshUrl);
+      await refreshProfile();
       toast.success(t('professional.settings.uploaded'));
     } catch (err: any) {
       toast.error(err.message || 'Upload failed');
