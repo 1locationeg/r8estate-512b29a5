@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, type ChangeEvent } from 'react';
 import { Camera, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { AvatarWithOverlay } from '@/components/AvatarWithOverlay';
@@ -16,7 +16,7 @@ export function AccountAvatarUploader({ audience = 'all', title = 'Profile photo
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
 
-  const uploadAvatar = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const uploadAvatar = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file || !user) return;
     if (!file.type.startsWith('image/')) { toast.error('Please choose an image file'); return; }
