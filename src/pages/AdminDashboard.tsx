@@ -49,6 +49,7 @@ import AdminContactSettings from '@/components/AdminContactSettings';
 import AdminRegistrationSlots from '@/components/AdminRegistrationSlots';
 import AdminTruthCheck from '@/components/AdminTruthCheck';
 import AdminAvatarOverlays from '@/components/admin/AdminAvatarOverlays';
+import AdminSectionsManager from '@/components/admin/AdminSectionsManager';
 import { AccountAvatarUploader } from '@/components/AccountAvatarUploader';
 import { AdminUserDetailSheet } from '@/components/AdminUserDetailSheet';
 import { AdminCreateBusinessModal } from '@/components/AdminCreateBusinessModal';
@@ -1913,7 +1914,7 @@ const AdminTransactions = () => <PlaceholderSection title="Transactions" icon={D
 const AdminCategories = () => <PlaceholderSection title="Categories" icon={FolderTree} />;
 const AdminNavigation = () => <PlaceholderSection title="Navigation" icon={Navigation} />;
 const AdminNewsletter = () => <PlaceholderSection title="Newsletter" icon={Mail} />;
-const AdminSections = () => <PlaceholderSection title="Sections" icon={Layout} />;
+const AdminSections = () => <AdminSectionsManager />;
 const AdminBusiness = () => {
   const [businesses, setBusinesses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

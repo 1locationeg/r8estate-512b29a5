@@ -974,6 +974,45 @@ export type Database = {
         }
         Relationships: []
       }
+      homepage_sections: {
+        Row: {
+          audience: string
+          created_at: string
+          description: string | null
+          id: string
+          is_visible: boolean
+          key: string
+          label: string
+          phase: string
+          sort_order: number
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          key: string
+          label: string
+          phase?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          created_at?: string
+          description?: string | null
+          id?: string
+          is_visible?: boolean
+          key?: string
+          label?: string
+          phase?: string
+          sort_order?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       journey_progress: {
         Row: {
           id: string
