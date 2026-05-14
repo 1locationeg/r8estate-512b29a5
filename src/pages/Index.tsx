@@ -462,25 +462,25 @@ const Index = () => { // hero-phase-v2
 
           <div data-zone="2">
           {/* Spotlight */}
-          <HomeSection>
+          <SectionGate sectionKey="spotlight"><HomeSection>
             <SectionHeader
               eyebrow={t("home.spotlightEyebrow", "SPOTLIGHT")}
               title={t("home.spotlightTitle", "Featured this week")}
             />
             <FeaturedIdentitySpotlight />
-          </HomeSection>
+          </HomeSection></SectionGate>
 
           {/* Compare engine */}
-          <HomeSection>
+          <SectionGate sectionKey="compare_engine"><HomeSection>
             <SectionHeader
               eyebrow={t("home.compareEyebrow", "COMPARE")}
               title={t("home.compareTitle", "Compare developers side by side")}
             />
             <CompareEngineShowcase />
-          </HomeSection>
+          </HomeSection></SectionGate>
 
           {/* Quick Actions — finance corridor */}
-          <HomeSection>
+          <SectionGate sectionKey="finance_grid"><HomeSection>
             <SectionHeader
               eyebrow={t("home.financeEyebrow", "FINANCE & PROTECT")}
               title={t("home.financeTitle", "Tools to verify before you sign")}
@@ -492,7 +492,7 @@ const Index = () => { // hero-phase-v2
               <ContractCheckCard onClick={() => setShowContractModal(true)} />
               <MarketPulseWidget onClick={() => handleQuickAction('insights')} />
             </div>
-          </HomeSection>
+          </HomeSection></SectionGate>
           </div>
 
           {/* ─── Below-the-fold: unified sections ─── */}
