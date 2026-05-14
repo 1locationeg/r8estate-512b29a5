@@ -11,6 +11,7 @@ import { CompareModal } from "@/components/CompareModal";
 import { HomeSection } from "@/components/HomeSection";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionGate } from "@/components/SectionGate";
+import { ProGTMHero } from "@/components/ProGTMHero";
 
 import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
 import { HeroCategoryItems, categories as heroCategoryList } from "@/components/HeroCategoryItems";
@@ -461,6 +462,13 @@ const Index = () => { // hero-phase-v2
           </div>
 
           <div data-zone="2">
+          {/* Pro GTM concentrated hero — toggle from /admin/sections */}
+          <SectionGate sectionKey="pro_final_cta">
+            <HomeSection>
+              <ProGTMHero />
+            </HomeSection>
+          </SectionGate>
+
           {/* Spotlight */}
           <SectionGate sectionKey="spotlight"><HomeSection>
             <SectionHeader
