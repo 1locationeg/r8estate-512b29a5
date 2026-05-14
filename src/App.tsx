@@ -209,6 +209,7 @@ const AppContent = () => {
           <Route path="/categories" element={<Categories />} />
           <Route path="/entity/:id" element={<EntityPage />} />
           <Route path="/pro/:slug" element={<ProfessionalProfilePage />} />
+          <Route path="/pro/onboarding" element={<ProOnboarding />} />
           <Route path="/pro-dashboard" element={<ProfessionalDashboard />} />
           <Route path="/pro-settings" element={<ProfessionalSettings />} />
           <Route path="/rewards" element={<Rewards />} />
