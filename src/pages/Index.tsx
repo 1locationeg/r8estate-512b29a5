@@ -10,6 +10,7 @@ import { TrustInsightsModal } from "@/components/TrustInsightsModal";
 import { CompareModal } from "@/components/CompareModal";
 import { HomeSection } from "@/components/HomeSection";
 import { SectionHeader } from "@/components/SectionHeader";
+import { SectionGate } from "@/components/SectionGate";
 
 import { HeroTrustShowcase } from "@/components/HeroTrustShowcase";
 import { HeroCategoryItems, categories as heroCategoryList } from "@/components/HeroCategoryItems";
